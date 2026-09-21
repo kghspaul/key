@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>雜誌文意字彙練習．詳解</title>
+<title>雜誌文意字彙練習．亂序詳解</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@500;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
   :root{
     color-scheme: light;
@@ -17,13 +17,11 @@
     --ink:#24262A;
     --ink-soft:#63665F;
     --ink-faint:#94978D;
-    --margin:#8C3229;
+    --margin:#3A5A7A;
     --red:#A6321D;
     --red-soft:#C65A3E;
-    --red-wash:#F4E3DD;
     --green:#3A5A40;
     --focus:#1D4E89;
-    --radius:2px;
   }
   *{box-sizing:border-box;}
   html{scroll-padding-top: calc(128px + env(safe-area-inset-top,0px));}
@@ -41,263 +39,123 @@
   }
   :focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
 
-  header.hero{
-    max-width:640px;
-    margin:0 auto;
-    padding:30px 20px 18px;
-  }
+  header.hero{ max-width:640px; margin:0 auto; padding:30px 20px 18px; }
   .kicker{
     font-family:'JetBrains Mono',monospace;
-    font-size:12px;
-    letter-spacing:.04em;
-    color:var(--red);
-    display:flex;
-    align-items:center;
-    gap:8px;
+    font-size:12px; letter-spacing:.04em; color:var(--margin);
+    display:flex; align-items:center; gap:8px;
   }
-  .kicker::before{
-    content:"";
-    width:7px;height:7px;border-radius:50%;
-    background:var(--red);
-    display:inline-block;
-  }
+  .kicker::before{ content:""; width:7px;height:7px;border-radius:50%; background:var(--margin); display:inline-block; }
   h1{
-    font-family:'Noto Serif TC',serif;
-    font-weight:700;
-    font-size:26px;
-    line-height:1.35;
-    margin:10px 0 6px;
-    letter-spacing:.01em;
+    font-family:'Noto Serif TC',serif; font-weight:700; font-size:26px;
+    line-height:1.35; margin:10px 0 6px; letter-spacing:.01em;
   }
   h1 em{
-    font-style:normal;
-    color:var(--red);
-    text-decoration:underline;
-    text-decoration-color:var(--red-soft);
-    text-decoration-thickness:2px;
-    text-underline-offset:3px;
+    font-style:normal; color:var(--margin);
+    text-decoration:underline; text-decoration-color:#8FA9BC;
+    text-decoration-thickness:2px; text-underline-offset:3px;
   }
-  .hero-sub{
-    color:var(--ink-soft);
-    font-size:14.5px;
-    line-height:1.6;
-    max-width:52ch;
-  }
+  .hero-sub{ color:var(--ink-soft); font-size:14.5px; line-height:1.6; max-width:52ch; }
   .hero-meta{
-    margin-top:16px;
-    display:flex;
-    gap:18px;
-    font-family:'JetBrains Mono',monospace;
-    font-size:12px;
-    color:var(--ink-faint);
+    margin-top:16px; display:flex; gap:18px;
+    font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--ink-faint);
   }
   .hero-meta b{ color:var(--ink); font-weight:700; }
 
   .toolbar{
-    position:sticky;
-    top:0;
-    z-index:20;
+    position:sticky; top:0; z-index:20;
     background:rgba(238,234,224,.94);
     backdrop-filter:saturate(140%) blur(6px);
     border-bottom:1px solid var(--rule);
     padding-top:env(safe-area-inset-top,0px);
   }
   .nav{
-    max-width:640px;
-    margin:0 auto;
-    display:flex;
-    gap:8px;
-    overflow-x:auto;
-    padding:10px 20px;
-    scrollbar-width:none;
+    max-width:640px; margin:0 auto; display:flex; gap:8px;
+    overflow-x:auto; padding:10px 20px; scrollbar-width:none;
   }
   .nav::-webkit-scrollbar{display:none;}
   .navchip{
     flex:0 0 auto;
-    font-family:'JetBrains Mono',monospace;
-    font-size:12.5px;
-    color:var(--ink-soft);
-    background:transparent;
-    border:1px solid var(--rule);
-    border-radius:999px;
-    padding:6px 11px;
-    display:flex;
-    align-items:center;
-    gap:6px;
-    cursor:pointer;
-    white-space:nowrap;
+    font-family:'JetBrains Mono',monospace; font-size:12.5px;
+    color:var(--ink-soft); background:transparent;
+    border:1px solid var(--rule); border-radius:999px;
+    padding:6px 12px; cursor:pointer; white-space:nowrap;
     transition:background .15s, color .15s, border-color .15s;
   }
-  .navchip.active{
-    background:var(--ink);
-    border-color:var(--ink);
-    color:#F3EFE4;
-  }
-  .navchip-count{
-    font-size:10.5px;
-    color:var(--ink-faint);
-    background:rgba(0,0,0,.05);
-    border-radius:999px;
-    padding:1px 6px;
-  }
-  .navchip.active .navchip-count{
-    color:#cfc8b4;
-    background:rgba(255,255,255,.12);
-  }
+  .navchip.active{ background:var(--ink); border-color:var(--ink); color:#F3EFE4; }
+
   .controls{
-    max-width:640px;
-    margin:0 auto;
-    padding:0 20px 12px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
+    max-width:640px; margin:0 auto; padding:0 20px 12px;
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
   }
-  .progress{
-    font-family:'JetBrains Mono',monospace;
-    font-size:11.5px;
-    color:var(--ink-faint);
-  }
+  .progress{ font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--ink-faint); }
   .progress b{ color:var(--red); font-weight:700; }
   .reveal-toggle{
-    font-family:'JetBrains Mono',monospace;
-    font-size:12px;
-    color:var(--card);
-    background:var(--red);
-    border:1px solid var(--red);
-    border-radius:999px;
-    padding:7px 14px;
-    cursor:pointer;
-    letter-spacing:.02em;
-  }
-  .reveal-toggle.is-off{
-    background:transparent;
-    color:var(--red);
+    font-family:'JetBrains Mono',monospace; font-size:12px;
+    color:var(--card); background:var(--red); border:1px solid var(--red);
+    border-radius:999px; padding:7px 14px; cursor:pointer; letter-spacing:.02em;
   }
 
-  main{
-    max-width:640px;
-    margin:0 auto;
-    padding:8px 16px 0;
-  }
+  main{ max-width:640px; margin:0 auto; padding:8px 16px 0; }
 
-  .unit-section{
-    margin-top:26px;
-    scroll-margin-top:110px;
+  .range-section{ margin-top:26px; scroll-margin-top:110px; }
+  .range-head{
+    display:flex; align-items:baseline; gap:10px;
+    padding:0 4px 8px; border-bottom:2px solid var(--ink);
   }
-  .unit-head{
-    display:flex;
-    align-items:baseline;
-    gap:10px;
-    padding:0 4px 8px;
-    border-bottom:2px solid var(--ink);
-  }
-  .unit-head .u-label{
-    font-family:'Noto Serif TC',serif;
-    font-weight:700;
-    font-size:19px;
-  }
-  .unit-head .u-count{
-    font-family:'JetBrains Mono',monospace;
-    font-size:11.5px;
-    color:var(--ink-faint);
-  }
+  .range-head .r-label{ font-family:'JetBrains Mono',monospace; font-weight:700; font-size:15px; color:var(--margin); }
+  .range-head .r-count{ font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--ink-faint); }
 
   .qlist{ list-style:none; margin:0; padding:0; }
 
   .qcard{
-    position:relative;
-    background:var(--card);
+    position:relative; background:var(--card);
     border-bottom:1px solid var(--rule);
     padding:16px 14px 16px 46px;
-    cursor:pointer;
-    -webkit-tap-highlight-color:transparent;
+    cursor:pointer; -webkit-tap-highlight-color:transparent;
   }
   .qcard::before{
-    /* red margin rule, notebook-style */
-    content:"";
-    position:absolute;
-    left:30px; top:0; bottom:0;
-    width:1px;
-    background:var(--margin);
-    opacity:.55;
+    content:""; position:absolute; left:30px; top:0; bottom:0; width:1px;
+    background:var(--margin); opacity:.55;
   }
   .qnum{
-    position:absolute;
-    left:6px; top:16px;
-    width:20px;
-    font-family:'JetBrains Mono',monospace;
-    font-size:11px;
-    color:var(--ink-faint);
-    text-align:right;
+    position:absolute; left:6px; top:16px; width:20px;
+    font-family:'JetBrains Mono',monospace; font-size:11px;
+    color:var(--ink-faint); text-align:right;
   }
-  .q-en{
-    font-size:16px;
-    line-height:1.75;
-    color:var(--ink);
-  }
+  .q-en{ font-size:16px; line-height:1.75; color:var(--ink); }
   .blank{
-    font-family:'JetBrains Mono',monospace;
-    font-weight:700;
-    font-size:15px;
-    letter-spacing:.01em;
-    color:var(--ink-faint);
-    border-bottom:1.5px dashed var(--ink-faint);
-    padding:0 1px;
+    font-family:'JetBrains Mono',monospace; font-weight:700; font-size:15px;
+    letter-spacing:.01em; color:var(--ink-faint);
+    border-bottom:1.5px dashed var(--ink-faint); padding:0 1px;
   }
   .answer-ink{
     display:none;
-    font-family:'Caveat',cursive;
-    font-weight:700;
-    font-size:21px;
-    color:var(--red);
-    margin-left:2px;
-    white-space:nowrap;
+    font-family:Arial, Helvetica, 'Segoe UI', sans-serif;
+    font-weight:700; font-size:15.5px; letter-spacing:.01em;
+    color:var(--red); margin-left:2px; white-space:nowrap;
   }
   .qcard.revealed .blank{
-    color:var(--ink-faint);
-    text-decoration:line-through;
-    text-decoration-color:var(--ink-faint);
-    opacity:.55;
-    border-bottom-style:solid;
+    color:var(--ink-faint); text-decoration:line-through;
+    text-decoration-color:var(--ink-faint); opacity:.55; border-bottom-style:solid;
   }
   .qcard.revealed .answer-ink{ display:inline; }
 
-  .q-zh{
-    margin-top:8px;
-    font-family:'Noto Serif TC',serif;
-    font-size:13.5px;
-    line-height:1.85;
-    color:var(--ink-soft);
-  }
+  .q-zh{ margin-top:8px; font-family:'Noto Serif TC',serif; font-size:13.5px; line-height:1.85; color:var(--ink-soft); }
 
   .q-foot{
-    margin-top:9px;
-    display:flex;
-    align-items:center;
-    gap:8px;
-    font-family:'JetBrains Mono',monospace;
-    font-size:10.5px;
-    color:var(--ink-faint);
+    margin-top:9px; display:flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-faint);
   }
-  .tap-hint{
-    display:inline-flex;
-    align-items:center;
-    gap:5px;
-  }
+  .tap-hint{ display:inline-flex; align-items:center; gap:5px; }
   .qcard.revealed .tap-hint::before{ content:"✓ "; color:var(--green); }
   .qcard:not(.revealed) .tap-hint::before{ content:"點按查看答案"; }
   .qcard.revealed .tap-hint::before{ content:"答案：" attr(data-word); }
 
   footer{
-    max-width:640px;
-    margin:34px auto 0;
-    padding:18px 20px 0;
+    max-width:640px; margin:34px auto 0; padding:18px 20px 0;
     border-top:1px solid var(--rule);
-    font-family:'JetBrains Mono',monospace;
-    font-size:11px;
-    color:var(--ink-faint);
-    text-align:center;
+    font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-faint); text-align:center;
   }
 
   @media (min-width:640px){
@@ -310,29 +168,24 @@
 <body>
 
 <header class="hero">
-  <div class="kicker">詳解 · 對答案模式</div>
-  <h1>雜誌文意字彙練習<br><em>順序詳解</em></h1>
-  <p class="hero-sub">先自行填空作答，再點每一題查看正確答案與中文翻譯；也可以用上方按鈕直接切到某個 Unit，或一次顯示全部答案。</p>
+  <div class="kicker">詳解 · 亂序版 · 對答案模式</div>
+  <h1>雜誌文意字彙練習<br><em>亂序詳解</em></h1>
+  <p class="hero-sub">此份題目已重新洗牌、不按課本單元排序。先自行作答，再點每一題查看正確答案與中文翻譯；可用上方按鈕跳到題號區間，或一次顯示全部答案。</p>
   <div class="hero-meta">
     <span><b id="metaTotal">0</b> 題</span>
-    <span><b id="metaUnits">0</b> 個 Unit</span>
     <span><b id="metaRevealed">0</b> 已顯示</span>
   </div>
 </header>
 
 <div class="toolbar">
   <nav class="nav" id="navBar">
-<button class="navchip" data-unit="U2" onclick="jumpTo('U2')">U2<span class="navchip-count">12</span></button>
-<button class="navchip" data-unit="U11" onclick="jumpTo('U11')">U11<span class="navchip-count">12</span></button>
-<button class="navchip" data-unit="U13" onclick="jumpTo('U13')">U13<span class="navchip-count">14</span></button>
-<button class="navchip" data-unit="9w1 U1" onclick="jumpTo('9w1-U1')">9w1 U1<span class="navchip-count">7</span></button>
-<button class="navchip" data-unit="9w1 U2" onclick="jumpTo('9w1-U2')">9w1 U2<span class="navchip-count">14</span></button>
-<button class="navchip" data-unit="9w1 U3" onclick="jumpTo('9w1-U3')">9w1 U3<span class="navchip-count">7</span></button>
-<button class="navchip" data-unit="9w2 U4" onclick="jumpTo('9w2-U4')">9w2 U4<span class="navchip-count">13</span></button>
-<button class="navchip" data-unit="9w2 U5" onclick="jumpTo('9w2-U5')">9w2 U5<span class="navchip-count">8</span></button>
-<button class="navchip" data-unit="9w2 U6" onclick="jumpTo('9w2-U6')">9w2 U6<span class="navchip-count">13</span></button>
-<button class="navchip" data-unit="9w3 U8" onclick="jumpTo('9w3-U8')">9w3 U8<span class="navchip-count">13</span></button>
-<button class="navchip" data-unit="9w3 U9" onclick="jumpTo('9w3-U9')">9w3 U9<span class="navchip-count">14</span></button>
+<button class="navchip" data-range="1-20" onclick="jumpTo('r1-20')">1–20</button>
+<button class="navchip" data-range="21-40" onclick="jumpTo('r21-40')">21–40</button>
+<button class="navchip" data-range="41-60" onclick="jumpTo('r41-60')">41–60</button>
+<button class="navchip" data-range="61-80" onclick="jumpTo('r61-80')">61–80</button>
+<button class="navchip" data-range="81-100" onclick="jumpTo('r81-100')">81–100</button>
+<button class="navchip" data-range="101-120" onclick="jumpTo('r101-120')">101–120</button>
+<button class="navchip" data-range="121-127" onclick="jumpTo('r121-127')">121–127</button>
 
   </nav>
   <div class="controls">
@@ -344,44 +197,42 @@
 <main id="main"></main>
 
 <footer>
-  雜誌文意字彙練習．順序詳解 — 共 <span id="footTotal">0</span> 題，全部整理自原始講義
+  雜誌文意字彙練習．亂序詳解 — 共 <span id="footTotal">0</span> 題，全部整理自原始講義
 </footer>
 
 <script>
-const DATA = [{"unit": "U2", "num": 1, "word": "inspiration", "en": "Emma found i________n while visiting the quiet village during her summer vacation. The beautiful scenery encouraged her to start painting again.", "zh": "Emma 在暑假造訪寧靜村莊時找到了靈感。美麗的景色鼓勵她重新開始畫畫。", "blank": "i________n"}, {"unit": "U2", "num": 2, "word": "deadly", "en": "The poisonous snake can be d____y if medical treatment is delayed. Local residents have been warned to avoid walking alone in the forest.", "zh": "如果延誤治療，這種毒蛇可能會致命。當地居民已被警告避免獨自在森林中行走。", "blank": "d____y"}, {"unit": "U2", "num": 3, "word": "physical", "en": "Regular exercise improves p______l health and helps people maintain strong muscles. Kevin goes swimming three times a week after finishing work.", "zh": "規律運動能改善身體健康，並幫助人們維持強壯的肌肉。Kevin 每週下班後游泳三次。", "blank": "p______l"}, {"unit": "U2", "num": 4, "word": "numerous", "en": "The museum contains n______s paintings from different periods of European history. Visitors can spend hours exploring the impressive collection.", "zh": "這間博物館收藏了許多來自歐洲不同歷史時期的畫作。遊客可以花數小時探索這批令人印象深刻的收藏。", "blank": "n______s"}, {"unit": "U2", "num": 5, "word": "disguise", "en": "The detective wore a d_____e while observing the suspect near the train station. Nobody recognized the detective because of the unusual clothing.", "zh": "偵探在火車站附近監視嫌疑犯時進行了偽裝。沒有人認出這名偵探，因為他的服裝很不尋常。", "blank": "d_____e"}, {"unit": "U2", "num": 6, "word": "throne", "en": "The young prince finally sat on the t____e after his father retired from the kingdom. Thousands of citizens gathered outside the palace to celebrate.", "zh": "年輕王子在父親退位後終於坐上王位。數千名市民聚集在皇宮外慶祝。", "blank": "t____e"}, {"unit": "U2", "num": 7, "word": "intelligence", "en": "The detective relied on i________e rather than physical strength to solve the difficult case. Careful reasoning helped Marcus identify the hidden connection.", "zh": "這名偵探依靠智慧而非體力來解決棘手的案件。仔細推理幫助 Marcus找出隱藏的關聯。", "blank": "i________e"}, {"unit": "U2", "num": 8, "word": "aspect", "en": "One important a_____t of learning a language is regular practice. Students who use English every day usually become more confident speakers.", "zh": "學習語言的一個重要面向是規律練習。每天使用英文的學生通常會變得更有自信。", "blank": "a_____t"}, {"unit": "U2", "num": 9, "word": "essentially", "en": "The two proposals are e________y the same despite their different names. Both plans require the government to invest more money in transportation.", "zh": "儘管名稱不同，這兩項提案基本上是相同的。兩項計畫都要求政府投入更多資金在交通運輸上。", "blank": "e________y"}, {"unit": "U2", "num": 10, "word": "context", "en": "The meaning of the word can change depending on the c_____t. Reading the entire paragraph helps students understand the writer's intended meaning.", "zh": "這個單字的意思可能會根據上下文改變。閱讀整個段落能幫助學生理解作者想表達的意思。", "blank": "c_____t"}, {"unit": "U2", "num": 11, "word": "endure", "en": "The hikers had to e____e several hours of heavy rain before reaching the shelter. Despite the difficult conditions, everyone remained calm.", "zh": "登山客必須忍受數小時的大雨才能抵達避難所。儘管環境艱困，所有人仍保持冷靜。", "blank": "e____e"}, {"unit": "U2", "num": 12, "word": "universal", "en": "The desire for friendship seems u_______l among people of different cultures. Although customs vary, most people want meaningful relationships.", "zh": "對友誼的渴望似乎存在於不同文化的人們之中。雖然習俗各不相同，大多數人都希望建立有意義的人際關係。", "blank": "u_______l"}, {"unit": "U11", "num": 13, "word": "predict", "en": "Weather experts p____t that a strong storm will reach the coast tomorrow morning. Local authorities have already prepared emergency shelters.", "zh": "氣象專家預測強烈暴風雨將在明天早上抵達海岸。地方當局已經準備緊急避難所。", "blank": "p____t"}, {"unit": "U11", "num": 14, "word": "backyard", "en": "Ethan built a small vegetable garden in his b______d last spring. His family now grows tomatoes, peppers, and several kinds of herbs there.", "zh": "Ethan 去年春天在後院打造一座小菜園。他的家人現在在那裡種番茄、辣椒和幾種香草。", "blank": "b______d"}, {"unit": "U11", "num": 15, "word": "workout", "en": "Jessica designed a short w_____t for people with busy schedules. The routine includes stretching, squats, and several strength exercises.", "zh": "Jessica 為生活忙碌的人設計了一套簡短的運動。這套運動包含伸展、深蹲和幾項肌力訓練。", "blank": "w_____t"}, {"unit": "U11", "num": 16, "word": "demand", "en": "The growing population d_____ds more housing and better public transportation. City officials are considering several solutions to meet residents' needs.", "zh": "人口成長需要更多住宅和更完善的大眾運輸。市政府官員正在考慮幾種解決方案，以滿足居民需求。", "blank": "d_____ds"}, {"unit": "U11", "num": 17, "word": "sustain", "en": "The small farm cannot s_____n such a large population without additional water supplies. Farmers are looking for more efficient irrigation methods.", "zh": "沒有額外水源，這座小農場無法維持這麼多人口的需求。農民正在尋找更有效率的灌溉方式。", "blank": "s_____n"}, {"unit": "U11", "num": 18, "word": "rally", "en": "Thousands of supporters attended the r____y in the city center on Saturday. The event was organized to raise awareness about environmental protection.", "zh": "星期六有數千名支持者參加市中心的集會。這場活動是為了提高大眾對環境保護的意識。", "blank": "r____y"}, {"unit": "U11", "num": 19, "word": "incredible", "en": "The view from the mountain was i________e after the clouds disappeared. Sarah could see the ocean, villages, and distant islands from the summit.", "zh": "雲層散去後，山上的景色令人難以置信。Sarah 從山頂可以看到海洋、村莊和遠方的島嶼。", "blank": "i________e"}, {"unit": "U11", "num": 20, "word": "percent", "en": "Only thirty p_____t of the original forest remains in this region. Environmental groups are asking the government to protect the remaining land.", "zh": "這個地區只剩下原始森林的百分之三十。環保團體要求政府保護剩餘的土地。", "blank": "p_____t"}, {"unit": "U11", "num": 21, "word": "accelerate", "en": "The new train system will a________e travel between the two major cities. Officials expect the journey to become thirty minutes shorter.", "zh": "新的火車系統將加快兩座主要城市之間的交通。官員預期旅程將縮短三十分鐘。", "blank": "a________e"}, {"unit": "U11", "num": 22, "word": "pace", "en": "Maria walked at a comfortable p___e during the long hike. She wanted to save enough energy for the difficult climb later that afternoon.", "zh": "Maria 在長途健行時以舒服的步調行走。她想保留足夠體力應付當天下午的艱難攀爬。", "blank": "p___e"}, {"unit": "U11", "num": 23, "word": "statistic", "en": "One surprising s______c shows that many young adults now prefer public transportation. The survey also found convenience was their main reason.", "zh": "一項令人驚訝的統計數據顯示，許多年輕人現在比較喜歡大眾運輸。調查也發現便利性是主要原因。", "blank": "s______c"}, {"unit": "U11", "num": 24, "word": "competitor", "en": "The young athlete trained every morning to become a stronger c________r. Her coach believed regular practice would prepare her for the championship.", "zh": "這名年輕運動員每天早晨訓練，以成為更強的競爭者。她的教練相信規律練習能讓她為錦標賽做好準備。", "blank": "c________r"}, {"unit": "U13", "num": 25, "word": "scam", "en": "The elderly man nearly lost his savings because of an online s___m. His daughter noticed the suspicious message and contacted the bank.", "zh": "這名老人差點因為網路詐騙而失去積蓄。他的女兒注意到可疑訊息後聯絡銀行。", "blank": "s___m"}, {"unit": "U13", "num": 26, "word": "elaborate", "en": "The chef prepared an e_______e meal for the visiting guests. The dinner included several courses, handmade desserts, and carefully decorated dishes.", "zh": "主廚為來訪客人準備了一頓精心製作的餐點。晚餐包含數道菜、手工甜點和精心裝飾的料理。", "blank": "e_______e"}, {"unit": "U13", "num": 27, "word": "convincing", "en": "The lawyer presented a c________g argument during the trial. Several pieces of evidence supported the explanation and changed the judge's view.", "zh": "律師在審判中提出令人信服的論點。幾項證據支持這個說法，並改變法官的看法。", "blank": "c________g"}, {"unit": "U13", "num": 28, "word": "scheme", "en": "The government introduced a new s_____e to encourage people to use bicycles. Residents can receive financial support when purchasing approved electric bikes.", "zh": "政府推出一項新計畫，鼓勵民眾使用自行車。居民購買核准的電動自行車時可以獲得經濟補助。", "blank": "s_____e"}, {"unit": "U13", "num": 29, "word": "commission", "en": "The artist received a large c________n for creating a painting for the new hotel. The hotel owner wanted a colorful artwork for the entrance hall.", "zh": "這名藝術家收到一筆高額委託，為新飯店創作一幅畫。飯店老闆希望入口大廳有一件色彩繽紛的藝術作品。", "blank": "c________n"}, {"unit": "U13", "num": 30, "word": "psychology", "en": "Professor Chen studies p________y to understand how people make decisions. Her research focuses on the relationship between emotions and consumer behavior.", "zh": "Chen 教授研究心理學，以了解人們如何做決定。她的研究著重於情緒與消費者行為之間的關係。", "blank": "p________y"}, {"unit": "U13", "num": 31, "word": "greed", "en": "The novel explores how g___d can destroy relationships between family members. The main character becomes increasingly selfish after gaining control of the family business.", "zh": "這部小說探討貪婪如何摧毀家人之間的關係。主角掌控家族企業後變得越來越自私。", "blank": "g___d"}, {"unit": "U13", "num": 32, "word": "investigate", "en": "The police will i________e the strange disappearance of the valuable painting. Several security cameras recorded unusual activity that night.", "zh": "警方將調查那幅珍貴畫作的離奇失蹤。幾支監視器在當晚拍到異常活動。", "blank": "i________e"}, {"unit": "U13", "num": 33, "word": "thoroughly", "en": "The doctor examined the patient t________y before recommending any treatment. The careful examination helped identify the real cause of the problem.", "zh": "醫生在建議任何治療方式前徹底檢查了病人。仔細的檢查幫助找出問題真正的原因。", "blank": "t________y"}, {"unit": "U13", "num": 34, "word": "suspicious", "en": "The police noticed a s________s vehicle parked outside the bank. The driver left quickly after seeing officers approach the area.", "zh": "警方注意到一輛可疑的車停在銀行外。駕駛看到警察靠近後迅速離開。", "blank": "s________s"}, {"unit": "U13", "num": 35, "word": "financial", "en": "The company is facing serious f_______l problems after losing several major customers. Managers are trying to reduce expenses without firing employees.", "zh": "這家公司失去幾個重要客戶後正面臨嚴重的財務問題。經理正試圖在不解雇員工的情況下降低支出。", "blank": "f_______l"}, {"unit": "U13", "num": 36, "word": "mislead", "en": "The advertisement may m_____d customers by showing an unrealistically low price. The company later added extra fees that were not clearly explained.", "zh": "這則廣告可能會透過顯示不切實際的低價來誤導消費者。這家公司後來增加了一些沒有清楚說明的額外費用。", "blank": "m_____d"}, {"unit": "U13", "num": 37, "word": "profile", "en": "The magazine published a detailed p_____e of the successful entrepreneur. The article described her childhood, education, and rise to international fame.", "zh": "這本雜誌刊登了一篇關於這位成功企業家的詳細人物專訪。文章描述她的童年、教育以及成名國際的過程。", "blank": "p_____e"}, {"unit": "U13", "num": 38, "word": "alert", "en": "The security guard remained a____t throughout the night shift. His careful attention helped him notice a broken window near the entrance.", "zh": "保全在整個夜班期間都保持警覺。他的仔細注意讓他發現入口附近有一扇破窗。", "blank": "a____t"}, {"unit": "9w1 U1", "num": 39, "word": "unidentified", "en": "Officer Chang reported an u____ied vehicle parked right outside the local bank. The police are currently trying to figure out who owns this mysterious car.", "zh": "張警官報告有一輛身分不明的車輛停在當地銀行外。警方目前正試圖查明這輛神祕汽車的車主是誰。", "blank": "u____ied"}, {"unit": "9w1 U1", "num": 40, "word": "phenomenon", "en": "The northern lights are a beautiful p____n observed mainly in polar regions. Emily traveled all the way to Iceland just to witness this natural event.", "zh": "北極光是主要在極地地區觀察到的美麗現象。艾蜜莉大老遠跑到冰島，只為了親眼目睹這個自然事件。", "blank": "p____n"}, {"unit": "9w1 U1", "num": 41, "word": "radars", "en": "The military base installed new r____rs along the southern coastline yesterday. General Wang expects these advanced devices to detect approaching aircraft much more effectively.", "zh": "軍事基地昨天在南部海岸線安裝了新的雷達。王將軍期望這些先進設備能更有效地偵測到靠近的飛機。", "blank": "r____rs"}, {"unit": "9w1 U1", "num": 42, "word": "sensors", "en": "The smart home system uses highly sensitive s____rs to monitor indoor temperatures. Mr. Lin relies on these small gadgets to keep his living room comfortable.", "zh": "智慧家庭系統使用高靈敏度的感測器來監控室內溫度。林先生依賴這些小裝置來保持客廳的舒適。", "blank": "s____rs"}, {"unit": "9w1 U1", "num": 43, "word": "personnel", "en": "All company p____l are required to attend the safety training session tomorrow. Manager Huang wants every single employee to understand the new emergency evacuation procedures.", "zh": "公司所有人員都必須參加明天的安全培訓課程。黃經理希望每一位員工都能了解新的緊急疏散程序。", "blank": "p____l"}, {"unit": "9w1 U1", "num": 44, "word": "strengthened", "en": "The city council s____ned the old bridge before the upcoming typhoon season. Mayor Chen hopes these crucial repairs will prevent the structure from collapsing under heavy winds.", "zh": "市議會在即將到來的颱風季之前加固了這座舊橋。陳市長希望這些關鍵的維修能防止建築物在強風中倒塌。", "blank": "s____ned"}, {"unit": "9w1 U1", "num": 45, "word": "mysterious", "en": "A m____s stranger left a locked wooden box on the front porch. Detective Lin spent hours trying to figure out who delivered the secret package.", "zh": "一個神祕的陌生人在前廊留下了一個上鎖的木盒。林探長花了幾個小時試圖查明是誰送來了這個祕密包裹。", "blank": "m____s"}, {"unit": "9w1 U2", "num": 46, "word": "communication", "en": "Effective c____n is the key to solving conflicts within any corporate team. Alice always encourages her colleagues to share their honest thoughts and feelings openly.", "zh": "有效的溝通是解決任何企業團隊內部衝突的關鍵。愛麗絲總是鼓勵她的同事公開分享他們真實的想法和感受。", "blank": "c____n"}, {"unit": "9w1 U2", "num": 47, "word": "conventional", "en": "The farmer uses c____l farming methods rather than expensive modern technologies. Uncle Lee prefers traditional techniques that have been passed down for many generations.", "zh": "這位農夫使用傳統的耕作方法，而不是昂貴的現代科技。李叔叔偏好已經傳承了許多代的傳統技術。", "blank": "c____l"}, {"unit": "9w1 U2", "num": 48, "word": "fascinating", "en": "The museum exhibition features a f____ing collection of ancient Egyptian artifacts. Professor Chang spent the entire afternoon admiring the incredibly interesting historical items on display.", "zh": "博物館的展覽以一系列迷人的古埃及文物為特色。張教授花了整個下午欣賞展出的極其有趣的歷史物品。", "blank": "f____ing"}, {"unit": "9w1 U2", "num": 49, "word": "generates", "en": "The new solar panel system g____tes enough electricity to power the entire building. Mr. Chen is very proud of this eco-friendly facility that produces abundant clean energy.", "zh": "新的太陽能板系統產生足夠的電力來供應整棟大樓。陳先生非常自豪這個能產生豐富乾淨能源的環保設施。", "blank": "g____tes"}, {"unit": "9w1 U2", "num": 50, "word": "scent", "en": "The sweet s____t of fresh roses filled the beautifully decorated living room. Grandma Lin always enjoys breathing in the wonderful smell of her blooming garden.", "zh": "新鮮玫瑰的甜美香氣充滿了裝飾美麗的客廳。林奶奶總是喜歡呼吸她盛開花園的美妙氣味。", "blank": "s____t"}, {"unit": "9w1 U2", "num": 51, "word": "prompted", "en": "The sudden heavy rain p____ted the organizers to cancel the outdoor concert. Manager Wu had to make the quick decision to ensure the safety of all attendees.", "zh": "突然的傾盆大雨促使主辦單位取消了戶外演唱會。吳經理必須做出快速的決定，以確保所有參加者的安全。", "blank": "p____ted"}, {"unit": "9w1 U2", "num": 52, "word": "nutrients", "en": "Green leafy vegetables provide essential n____ts for proper brain and body development. Doctor Huang advises all her patients to consume these healthy components every day.", "zh": "綠葉蔬菜為大腦和身體的適當發展提供必需的營養素。黃醫師建議她所有的病患每天都要攝取這些健康的成分。", "blank": "n____ts"}, {"unit": "9w1 U2", "num": 53, "word": "harsh", "en": "The explorers faced h____h weather conditions during their long journey across Antarctica. Captain Smith warned everyone about the dangerously cold and unforgiving freezing winds.", "zh": "探險家們在橫越南極洲的漫長旅程中面臨了惡劣的天氣條件。史密斯船長警告所有人要注意危險寒冷且無情的刺骨寒風。", "blank": "h____h"}, {"unit": "9w1 U2", "num": 54, "word": "essential", "en": "Water is an e____l element for the survival of all living creatures. Professor Wang always emphasizes how absolutely necessary this simple liquid is for biology.", "zh": "水是所有生物生存不可或缺的元素。王教授總是強調這種簡單的液體對生物學來說是多麼絕對必要。", "blank": "e____l"}, {"unit": "9w1 U2", "num": 55, "word": "absorbs", "en": "The dark sponge easily a____bs large amounts of liquid from the kitchen counter. Mother Chen uses it to completely soak up the spilled milk in seconds.", "zh": "深色海綿很容易從廚房流理台上吸收大量的液體。陳媽媽用它在幾秒鐘內完全吸乾灑出來的牛奶。", "blank": "a____bs"}, {"unit": "9w1 U2", "num": 56, "word": "otherwise", "en": "You must submit the application form by Friday; o____e, you will lose the opportunity. Manager Lee warned the students that failing to meet the deadline would result in rejection.", "zh": "你必須在星期五前提交申請表；否則，你將失去這個機會。李經理警告學生，未能趕上截止日期將導致被拒絕。", "blank": "o____e"}, {"unit": "9w1 U2", "num": 57, "word": "exceeds", "en": "The weight of this massive package clearly e____ds the strict airline limit. Mr. Zhang will have to pay an extra fee because his luggage is too heavy.", "zh": "這個巨大包裹的重量明顯超過了嚴格的航空公司限制。張先生將不得不支付額外費用，因為他的行李太重了。", "blank": "e____ds"}, {"unit": "9w1 U2", "num": 58, "word": "physics", "en": "Many high school students find p____s to be an incredibly difficult science subject. Teacher Wu spends extra time explaining the complex laws of motion and energy.", "zh": "許多高中生覺得物理是一門極其困難的科學科目。吳老師花了額外的時間解釋運動和能量的複雜定律。", "blank": "p____s"}, {"unit": "9w1 U2", "num": 59, "word": "behavior", "en": "The sudden aggressive b____r of the neighborhood dog frightened the little children. Mr. Chen promised to train his pet to act much more politely in public spaces.", "zh": "鄰居狗突然的攻擊行為嚇壞了小孩子們。陳先生承諾會訓練他的寵物在公共場所表現得更有禮貌。", "blank": "b____r"}, {"unit": "9w1 U3", "num": 60, "word": "recipe", "en": "Grandmother passed down her secret chicken soup r____e to the younger family members. Jessica uses these exact instructions whenever she wants to cook a warm, traditional meal.", "zh": "祖母將她的祕密雞湯食譜傳給了年輕的家庭成員。潔西卡每當想煮一頓溫暖的傳統餐點時，都會使用這些精確的指示。", "blank": "r____e"}, {"unit": "9w1 U3", "num": 61, "word": "pasta", "en": "The Italian restaurant serves incredibly delicious p____a with fresh tomato sauce. David always orders the spaghetti whenever he visits this charming little dining place.", "zh": "這家義大利餐廳供應極其美味的義大利麵和新鮮番茄醬。大衛每次造訪這家迷人的小餐館時總是點義大利麵。", "blank": "p____a"}, {"unit": "9w1 U3", "num": 62, "word": "variation", "en": "The sudden v____n in local temperature caused many people to catch a cold. Doctor Lee noticed that this weather change led to crowded hospital waiting rooms.", "zh": "當地溫度的突然變化導致許多人感冒。李醫師注意到這種天氣變化導致醫院候診室擠滿了人。", "blank": "v____n"}, {"unit": "9w1 U3", "num": 63, "word": "combination", "en": "The unique c____n of sweet and sour flavors makes this dish extremely popular. Chef Wang perfectly mixed the ingredients to create a highly enjoyable dining experience.", "zh": "甜與酸的獨特組合使得這道菜極受歡迎。王主廚完美地混合了這些食材，創造出高度令人愉悅的用餐體驗。", "blank": "c____n"}, {"unit": "9w1 U3", "num": 64, "word": "ultimately", "en": "The hard-working student u____y achieved his lifelong dream of becoming a doctor. Jason pushed through years of intense studying and finally graduated from the medical school.", "zh": "這位努力的學生最終實現了他成為醫生的畢生夢想。傑森熬過了多年高強度的學習，終於從醫學院畢業。", "blank": "u____y"}, {"unit": "9w1 U3", "num": 65, "word": "generation", "en": "The younger g____n often relies heavily on smartphones for daily social interactions. Grandfather Lin finds it difficult to understand how teenagers communicate entirely through tiny screens.", "zh": "年輕一代通常嚴重依賴智慧型手機進行日常社交互動。林爺爺覺得很難理解青少年如何完全透過小螢幕來溝通。", "blank": "g____n"}, {"unit": "9w1 U3", "num": 66, "word": "deserves", "en": "After working continuously for fourteen hours, the exhausted nurse d____es a long break. Supervisor Huang told her to go home immediately and get some well-earned rest.", "zh": "連續工作了十四個小時後，筋疲力盡的護理師值得一個長假。黃主管告訴她立刻回家，獲得應得的休息。", "blank": "d____es"}, {"unit": "9w2 U4", "num": 67, "word": "breakthrough", "en": "Dr. Chen announced a major b____h in cancer research yesterday. The dedicated medical team finally discovered a new treatment after years of hard work.", "zh": "陳博士昨天宣布了癌症研究的一項重大突破。這個專注的醫療團隊經過多年的努力，終於發現了一種新的療法。", "blank": "b____h"}, {"unit": "9w2 U4", "num": 68, "word": "laboratory", "en": "The university recently built a highly advanced l____y for chemical experiments. Professor Lin expects the new research facility to attract many top scientists to Taiwan.", "zh": "該大學最近為化學實驗建立了一個高度先進的實驗室。林教授期望這個新的研究設施能吸引許多頂尖科學家來到台灣。", "blank": "l____y"}, {"unit": "9w2 U4", "num": 69, "word": "workshop", "en": "Manager Lee organized a practical w____p to improve employees' communication skills. All the participants found the intensive training session extremely helpful for their daily tasks.", "zh": "李經理舉辦了一場實用的工作坊來提升員工的溝通技巧。所有參與者都覺得這場密集的培訓課程對他們的日常工作極有幫助。", "blank": "w____p"}, {"unit": "9w2 U4", "num": 70, "word": "calculation", "en": "Engineer Wu made a precise c____n before building the suspension bridge. He needed to ensure the mathematical result was perfectly accurate for safety reasons.", "zh": "吳工程師在建造吊橋前進行了精確的計算。出於安全考量，他必須確保數學結果完全準確。", "blank": "c____n"}, {"unit": "9w2 U4", "num": 71, "word": "envisions", "en": "Mayor Chen boldly e____ns a city fully powered by renewable energy. He imagines a green and sustainable future for all the local residents.", "zh": "陳市長大膽地設想了一個完全由再生能源供電的城市。他為所有當地居民想像了一個綠色且永續的未來。", "blank": "e____ns"}, {"unit": "9w2 U4", "num": 72, "word": "striking", "en": "There is a s____king resemblance between the famous actor and his younger brother. Director Huang immediately noticed how remarkably similar they looked in the audition.", "zh": "這位著名男演員和他的弟弟之間有著驚人的相似之處。黃導演在試鏡時立刻注意到他們長得極其相似。", "blank": "s____king"}, {"unit": "9w2 U4", "num": 73, "word": "insight", "en": "The experienced consultant provided valuable i____t into the changing consumer market. Manager Zhao appreciated this deep understanding of the current economic trends.", "zh": "這位經驗豐富的顧問對不斷變化的消費市場提供了寶貴的見解。趙經理很感激對當前經濟趨勢的深刻理解。", "blank": "i____t"}, {"unit": "9w2 U4", "num": 74, "word": "formula", "en": "The secret f____a for this popular soda has been protected for over a century. Mr. Chang refuses to reveal the exact recipe that makes the drink so delicious.", "zh": "這款受歡迎汽水的秘密配方已經被保護了一個多世紀。張先生拒絕透露讓這款飲料如此美味的確切配方。", "blank": "f____a"}, {"unit": "9w2 U4", "num": 75, "word": "equation", "en": "Finding the value of the unknown variable in this e____n is quite challenging. Student Lin spent thirty minutes solving the difficult math problem.", "zh": "在這個方程式中找出未知變數的值是相當具挑戰性的。林同學花了三十分鐘解決這個困難的數學問題。", "blank": "e____n"}, {"unit": "9w2 U4", "num": 76, "word": "orbits", "en": "The communications satellite continuously o____ts the Earth at a very high speed. Engineer Chen monitors its circular path every single day to ensure stable signals.", "zh": "通訊衛星持續以極高的速度環繞地球運行。陳工程師每天監控其圓形軌道以確保訊號穩定。", "blank": "o____ts"}, {"unit": "9w2 U4", "num": 77, "word": "abstract", "en": "The contemporary art museum features many a____t paintings by local artists. Viewers like Mrs. Wang often find it difficult to understand these non-realistic artworks.", "zh": "當代藝術博物館展出許多當地藝術家的抽象畫。像王太太這樣的觀眾通常覺得很難理解這些非寫實的藝術品。", "blank": "a____t"}, {"unit": "9w2 U4", "num": 78, "word": "contribution", "en": "The wealthy businessman made a significant c____n to the local orphanage. Director Lin deeply appreciated this generous donation to help the poor children.", "zh": "這位富有的商人對當地孤兒院做出了重大貢獻。林主任深深感激這筆幫助貧困兒童的慷慨捐款。", "blank": "c____n"}, {"unit": "9w2 U4", "num": 79, "word": "forged", "en": "The two rival tech companies f____ged a strong partnership to develop new software. CEO Chen believed that building this alliance would greatly benefit both organizations.", "zh": "兩家競爭的科技公司建立了強大的合作夥伴關係以開發新軟體。陳執行長相信建立這個聯盟將使雙方組織都大受裨益。", "blank": "f____ged"}, {"unit": "9w2 U5", "num": 80, "word": "grip", "en": "The mountain climber maintained a tight g____p on the wet and slippery rock. John knew that losing his firm hold could lead to a very dangerous fall.", "zh": "登山者緊緊抓著濕滑的岩石。約翰知道失去穩固的抓地力可能會導致非常危險的墜落。", "blank": "g____p"}, {"unit": "9w2 U5", "num": 81, "word": "adjustment", "en": "The tailor made a slight a____t to the waistline of the wedding dress. Mary requested this minor alteration to ensure the gown fit her perfectly.", "zh": "裁縫對婚紗的腰線做了輕微的調整。瑪麗要求這項小幅修改，以確保禮服完美合身。", "blank": "a____t"}, {"unit": "9w2 U5", "num": 82, "word": "adjusts", "en": "The smart thermostat automatically a____ts the room temperature based on the weather outside. Father Lin loves how the device regulates the cold air without manual control.", "zh": "智慧恆溫器會根據室外天氣自動調整室內溫度。林爸爸很喜歡這個設備無需手動控制就能調節冷氣的方式。", "blank": "a____ts"}, {"unit": "9w2 U5", "num": 83, "word": "strains", "en": "Reading small text in the dark severely s____ns your sensitive eyes. Doctor Wu always warns his patients that doing so can damage their vision over time.", "zh": "在黑暗中閱讀小文字會嚴重讓你不適的眼睛感到疲勞。吳醫師總是警告他的病人，這樣做久了會損害他們的視力。", "blank": "s____ns"}, {"unit": "9w2 U5", "num": 84, "word": "flexible", "en": "The yoga instructor has a highly f____e body due to years of daily practice. Miss Chen can easily bend and stretch her limbs into incredibly difficult poses.", "zh": "由於多年的日常練習，這位瑜珈教練擁有高度柔軟的身體。陳小姐可以輕鬆地將她的四肢彎曲和伸展成極度困難的姿勢。", "blank": "f____e"}, {"unit": "9w2 U5", "num": 85, "word": "loosened", "en": "The tired businessman quickly l____ned his tight tie after leaving the office. Mr. Wang felt much more comfortable once the pressure around his neck was gone.", "zh": "疲倦的商人在離開辦公室後迅速鬆開了他緊繃的領帶。一旦脖子周圍的壓力消失，王先生覺得舒服多了。", "blank": "l____ned"}, {"unit": "9w2 U5", "num": 86, "word": "slightly", "en": "The new smartphone model is s____y thinner than the previous version. Customer Lin barely noticed the minor difference in thickness when holding both devices.", "zh": "新款智慧型手機型號比先前的版本稍微薄一點。林顧客在拿著兩款設備時，幾乎沒有注意到厚度上細微的差異。", "blank": "s____y"}, {"unit": "9w2 U5", "num": 87, "word": "demonstrates", "en": "The science teacher constantly d____es exciting chemical reactions in front of the classroom. Mr. Yang loves to show his curious students exactly how these experiments work.", "zh": "自然老師經常在教室前面示範令人興奮的化學反應。楊老師喜歡向他充滿好奇心的學生展示這些實驗確切的運作方式。", "blank": "d____es"}, {"unit": "9w2 U6", "num": 88, "word": "beloved", "en": "The famous author dedicated his final novel to his b____ved wife. Mr. Chang wanted to show how much he deeply cherished and adored her.", "zh": "這位著名作家將他最後的一本小說獻給他深愛的妻子。張先生想表達他有多麼深深地珍視和愛慕她。", "blank": "b____ved"}, {"unit": "9w2 U6", "num": 89, "word": "highlights", "en": "The evening news broadcast showed the amazing h____ts of the championship baseball game. David enjoyed watching those most exciting and memorable moments over and over again.", "zh": "晚間新聞廣播播出了冠軍棒球賽精彩的精華片段。大衛喜歡一遍又一遍地觀看那些最令人興奮和難忘的時刻。", "blank": "h____ts"}, {"unit": "9w2 U6", "num": 90, "word": "performer", "en": "The street p____r played a beautiful melody on his acoustic guitar. Many pedestrians stopped to listen to the talented musician play near the subway station.", "zh": "街頭表演者用他的木吉他彈奏出美麗的旋律。許多行人停下來聆聽這位才華洋溢的音樂家在地鐵站附近的演奏。", "blank": "p____r"}, {"unit": "9w2 U6", "num": 91, "word": "compelling", "en": "The clever lawyer presented a highly c____ling argument to the jury. Attorney Chen provided such convincing evidence that everyone believed his client was innocent.", "zh": "聰明的律師向陪審團提出了極具說服力的論點。陳律師提供了如此令人信服的證據，以至於每個人都相信他的委託人是無辜的。", "blank": "c____ling"}, {"unit": "9w2 U6", "num": 92, "word": "luxury", "en": "The wealthy celebrity purchased a beautiful l____y yacht for his summer vacation. Mr. Wang enjoys spending his money on expensive and high-end items.", "zh": "這位富有的名人為他的暑假買了一艘美麗的豪華遊艇。王先生喜歡把錢花在昂貴且高檔的物品上。", "blank": "l____y"}, {"unit": "9w2 U6", "num": 93, "word": "elaborately", "en": "The grand ballroom was e____y decorated with crystal chandeliers and fresh roses. Manager Huang spent a huge budget making the venue look incredibly detailed and fancy.", "zh": "宏偉的宴會廳裡精心裝飾著水晶吊燈和新鮮的玫瑰。黃經理花了龐大的預算讓場地看起來無比精緻華麗。", "blank": "e____y"}, {"unit": "9w2 U6", "num": 94, "word": "surroundings", "en": "The frightened stray cat carefully observed its unfamiliar s____gs before stepping out of the alley. The poor animal needed to make sure the new environment was safe from danger.", "zh": "受驚的流浪貓在走出巷子前，仔細觀察了牠不熟悉的周圍環境。這隻可憐的動物需要確保新環境安全無虞。", "blank": "s____gs"}, {"unit": "9w2 U6", "num": 95, "word": "imaginative", "en": "The i____e child built an entire castle using only cardboard boxes and tape. Mother Chen was amazed by her son's creative and original ideas.", "zh": "這個充滿想像力的孩子只用厚紙箱和膠帶就建了一整座城堡。陳媽媽對兒子充滿創意和原創的想法感到驚訝。", "blank": "i____e"}, {"unit": "9w2 U6", "num": 96, "word": "artistic", "en": "The talented student displayed great a____c skills during the annual painting competition. Teacher Lin praised her beautiful use of colors and creative expression.", "zh": "這位才華洋溢的學生在年度繪畫比賽中展現了出色的藝術技巧。林老師稱讚她對色彩的美麗運用和創意表達。", "blank": "a____c"}, {"unit": "9w2 U6", "num": 97, "word": "atmosphere", "en": "The romantic restaurant provides a quiet and intimate a____e for couples. Mr. Zhao loves taking his wife there because the mood is always incredibly relaxing.", "zh": "這家浪漫的餐廳為情侶提供了一個安靜且私密的氛圍。趙先生喜歡帶他妻子去那裡，因為氣氛總是極度令人放鬆。", "blank": "a____e"}, {"unit": "9w2 U6", "num": 98, "word": "gallery", "en": "The famous photographer displayed his latest landscape pictures in the local downtown g____y. Curator Huang invited art collectors to view the stunning exhibition yesterday evening.", "zh": "這位著名的攝影師在當地市中心的畫廊展示了他最新的風景照片。黃館長昨天傍晚邀請了藝術收藏家來參觀這場令人驚嘆的展覽。", "blank": "g____y"}, {"unit": "9w2 U6", "num": 99, "word": "architecture", "en": "The ancient temple is a perfect example of traditional Chinese a____e. Professor Chang always brings his students here to study the unique building design.", "zh": "這座古廟是中國傳統建築的完美典範。張教授總是帶他的學生來這裡研究這獨特的建築設計。", "blank": "a____e"}, {"unit": "9w2 U6", "num": 100, "word": "professional", "en": "The company hired a p____l photographer to take pictures for their new marketing campaign. Manager Wu wanted an experienced expert who could deliver high-quality images.", "zh": "公司聘請了一位專業攝影師為他們的新行銷活動拍照。吳經理需要一位能提供高品質影像的經驗豐富專家。", "blank": "p____l"}, {"unit": "9w3 U8", "num": 101, "word": "coincidence", "en": "It was a pure c____e that Manager Lin and his brother wore the exact same tie today. The two men had not planned their matching outfits beforehand.", "zh": "林經理和他的兄弟今天戴了完全相同的領帶，這純粹是巧合。這兩個男人事先並沒有計畫要穿搭相配的服裝。", "blank": "c____e"}, {"unit": "9w3 U8", "num": 102, "word": "invade", "en": "The aggressive army decided to i____e the neighboring country during the harsh winter. General Wang ordered his troops to cross the northern border at midnight.", "zh": "具侵略性的軍隊決定在嚴冬期間入侵鄰國。王將軍命令他的部隊在午夜越過北部邊界。", "blank": "i____e"}, {"unit": "9w3 U8", "num": 103, "word": "overthrow", "en": "The angry citizens planned to o____w the corrupt government after weeks of protests. Leader Chen organized a massive strike to bring down the current president.", "zh": "憤怒的市民計畫在數週的抗議後推翻腐敗的政府。陳領袖組織了一場大規模罷工，以拉下現任總統。", "blank": "o____w"}, {"unit": "9w3 U8", "num": 104, "word": "rigid", "en": "The strict school maintains a very r____d schedule for all its boarding students. Principal Wu does not allow any changes to the daily timetable.", "zh": "這所嚴格的學校為所有住宿生維持著非常死板的時間表。吳校長不允許對每日作息表做任何更改。", "blank": "r____d"}, {"unit": "9w3 U8", "num": 105, "word": "labor", "en": "The heavy construction requires an incredible amount of physical l____r from the workers. Foreman Zhang hired fifty strong men to lift the massive steel beams.", "zh": "這項繁重的建築工程需要工人付出驚人的體力勞動。張工頭雇用了五十名強壯的男子來搬運巨大的鋼樑。", "blank": "l____r"}, {"unit": "9w3 U8", "num": 106, "word": "peasant", "en": "The humble p____t grew wheat and vegetables on a small plot of land. Farmer Wang lived a simple agricultural life without any modern luxuries.", "zh": "這位謙卑的農民在一小塊土地上種植小麥和蔬菜。王農夫過著沒有任何現代奢侈品的簡單農業生活。", "blank": "p____t"}, {"unit": "9w3 U8", "num": 107, "word": "noble", "en": "The generous n____e donated half of his fortune to build a new hospital. Lord Chang believed that helping the poor was his highest duty.", "zh": "這位慷慨的貴族捐出了他一半的財產來建造一家新醫院。張爵士認為幫助窮人是他最高的職責。", "blank": "n____e"}, {"unit": "9w3 U8", "num": 108, "word": "encounter", "en": "Hikers often e____r dangerous wild animals in this remote mountain area. Guide Wu always carries bear spray to protect his tourist groups.", "zh": "登山客經常在這個偏遠的山區遭遇危險的野生動物。吳導遊總是隨身攜帶防熊噴霧以保護他的旅遊團。", "blank": "e____r"}, {"unit": "9w3 U8", "num": 109, "word": "feast", "en": "The grand f____t included roasted pork, fresh seafood, and sweet desserts. Chef Liu prepared this amazing banquet to celebrate the glorious victory.", "zh": "這場盛大的宴會包括了烤豬肉、新鮮海鮮和甜點。劉主廚準備了這場令人驚嘆的盛宴來慶祝光榮的勝利。", "blank": "f____t"}, {"unit": "9w3 U8", "num": 110, "word": "merge", "en": "The two small tech companies decided to m____e into one large corporation. CEO Wang believes this combination will significantly increase their market share.", "zh": "兩家小型科技公司決定合併成一家大企業。王執行長相信這種結合將會顯著增加他們的市占率。", "blank": "m____e"}, {"unit": "9w3 U8", "num": 111, "word": "distinct", "en": "The beautiful bird has a very d____t red mark on its chest. Photographer Lin easily identified the rare species among the other flying creatures.", "zh": "這隻美麗的鳥胸前有一個非常明顯的紅色印記。林攝影師很容易就能在其他飛行生物中辨認出這個稀有物種。", "blank": "d____t"}, {"unit": "9w3 U8", "num": 112, "word": "endure", "en": "The marathon runners must e____e extreme physical exhaustion to finish the race. Coach Yang trains his athletes to push through the intense muscle pain.", "zh": "馬拉松跑者必須忍受極度的體力透支才能完成比賽。楊教練訓練他的運動員熬過強烈的肌肉疼痛。", "blank": "e____e"}, {"unit": "9w3 U8", "num": 113, "word": "reminder", "en": "The loud r____r on my phone woke me up for the morning meeting. Secretary Lin set this alarm to ensure I would never be late.", "zh": "我手機上大聲的提醒鈴聲把我叫醒去參加早會。林秘書設定了這個鬧鐘以確保我絕不會遲到。", "blank": "r____r"}, {"unit": "9w3 U9", "num": 114, "word": "presentation", "en": "The nervous student delivered a perfect p____n about global warming yesterday. Classmate Wu praised her clear slides and confident speaking style.", "zh": "緊張的學生昨天發表了一場關於全球暖化的完美簡報。吳同學稱讚了她清晰的投影片和自信的演說風格。", "blank": "p____n"}, {"unit": "9w3 U9", "num": 115, "word": "boost", "en": "The new advertising campaign will definitely b____t our monthly sales figures. Manager Huang believes the creative posters can attract far more teenage customers.", "zh": "新的廣告活動肯定會提升我們每月的銷售數字。黃經理相信這些有創意的海報能吸引多得多的青少年顧客。", "blank": "b____t"}, {"unit": "9w3 U9", "num": 116, "word": "accomplished", "en": "The dedicated team perfectly a____hed all their project goals ahead of schedule. Director Chen rewarded everyone with a large bonus for their impressive success.", "zh": "這個盡責的團隊在進度前完美達成了他們所有的專案目標。陳總監用大筆獎金獎勵了每個人，以表彰他們令人印象深刻的成功。", "blank": "a____hed"}, {"unit": "9w3 U9", "num": 117, "word": "purchase", "en": "The wealthy customer decided to p____e the luxurious sports car immediately. Salesman Lin happily prepared the official documents for this expensive transaction.", "zh": "這位富有的顧客決定立刻購買這輛豪華跑車。林業務員開心地為這筆昂貴的交易準備了正式文件。", "blank": "p____e"}, {"unit": "9w3 U9", "num": 118, "word": "trigger", "en": "The loud fireworks could easily t____r an anxiety attack for the rescue dog. Owner Wang keeps the poor animal in a quiet room during the festival.", "zh": "大聲的煙火很容易引發這隻救援犬的焦慮發作。王主人在節慶期間將這隻可憐的動物關在安靜的房間裡。", "blank": "t____r"}, {"unit": "9w3 U9", "num": 119, "word": "psychology", "en": "The fascinating field of p____y studies how the human mind works. Professor Chang explains complex mental processes to her university students.", "zh": "迷人的心理學領域研究人類大腦的運作方式。張教授向她的大學生解釋複雜的心理過程。", "blank": "p____y"}, {"unit": "9w3 U9", "num": 120, "word": "stability", "en": "The thick metal base provides excellent s____y for the tall floor lamp. Designer Wu ensured the heavy object would never fall over easily.", "zh": "厚實的金屬底座為高大的落地燈提供了極佳的穩定性。吳設計師確保這個重物絕對不會輕易倒下。", "blank": "s____y"}, {"unit": "9w3 U9", "num": 121, "word": "participant", "en": "Every single p____t must sign a safety waiver before joining the extreme marathon. Organizer Lin strictly enforces this rule to protect the runners.", "zh": "每一位參加者在加入這場極限馬拉松之前，都必須簽署一份安全免責聲明。林主辦人嚴格執行這項規定以保護跑者。", "blank": "p____t"}, {"unit": "9w3 U9", "num": 122, "word": "implication", "en": "The hidden i____n in his speech suggested that massive layoffs were coming. Employee Zhang felt very anxious after hearing the manager's subtle warning.", "zh": "他演講中隱含的暗示表明即將進行大規模裁員。張員工在聽到經理微妙的警告後感到非常焦慮。", "blank": "i____n"}, {"unit": "9w3 U9", "num": 123, "word": "motivation", "en": "The promised bonus served as a strong m____n for the sales team. Manager Lee knew that extra money would encourage everyone to work harder.", "zh": "承諾的獎金成為了業務團隊強大的動力。李經理知道額外的金錢會鼓勵每個人更努力工作。", "blank": "m____n"}, {"unit": "9w3 U9", "num": 124, "word": "polished", "en": "The professional speaker delivered a highly p____hed speech at the annual conference. Audience members were deeply impressed by her flawless and smooth delivery.", "zh": "這位專業講者在年度會議上發表了一場極度精鍊的演講。觀眾對她完美無瑕且流暢的表達留下了深刻的印象。", "blank": "p____hed"}, {"unit": "9w3 U9", "num": 125, "word": "outfit", "en": "The stylish o____t perfectly matched the elegant atmosphere of the evening gala. Model Lin received numerous compliments on her beautiful dress and matching shoes.", "zh": "這套時尚的服裝完美搭配了晚會優雅的氛圍。林模特兒的漂亮禮服和相配的鞋子收到了無數的讚美。", "blank": "o____t"}, {"unit": "9w3 U9", "num": 126, "word": "reinforce", "en": "The construction crew used thick steel bars to r____e the concrete walls. Engineer Yang wanted to ensure the tall building could survive massive earthquakes.", "zh": "施工團隊使用了粗鋼筋來加固混凝土牆。楊工程師想要確保這棟高樓能撐過大地震。", "blank": "r____e"}, {"unit": "9w3 U9", "num": 127, "word": "accessible", "en": "The newly built subway station is completely a____e to wheelchair users. Mayor Zhao installed several modern elevators to help disabled passengers travel easily.", "zh": "新建的地鐵站對輪椅使用者來說是完全無障礙的。趙市長安裝了幾部現代化的電梯，以幫助身障乘客輕鬆出行。", "blank": "a____e"}];
+const DATA = [{"num": 1, "word": "psychology", "en": "Understanding p________y can help teachers respond to students more effectively. Different students may react differently to the same classroom situation.", "zh": "了解心理學能幫助老師更有效地回應學生。不同學生可能會對相同的課堂情境產生不同反應。", "blank": "p________y"}, {"num": 2, "word": "intelligence", "en": "Artificial i________e is changing how companies analyze information. The technology can process enormous amounts of data within a short period.", "zh": "人工智慧正在改變公司分析資訊的方式。這項科技能在短時間內處理大量資料。", "blank": "i________e"}, {"num": 3, "word": "numerous", "en": "N______s students joined the environmental campaign last Saturday. Their participation helped the school collect hundreds of used plastic bottles.", "zh": "上週六有許多學生參加環保活動。他們的參與幫助學校收集了數百個使用過的塑膠瓶。", "blank": "N______s"}, {"num": 4, "word": "striking", "en": "The sunset painted the evening sky with bright red and orange colors. Photographer Liu captured this incredibly s____king view with his expensive camera.", "zh": "夕陽將傍晚的天空染成了鮮豔的紅色和橘色。劉攝影師用他昂貴的相機捕捉了這個極度引人注目的景色。", "blank": "s____king"}, {"num": 5, "word": "communications", "en": "The massive earthquake completely destroyed the town's internet and phone lines. Engineer Wang worked day and night to restore c____ns for the trapped residents.", "zh": "大地震徹底摧毀了該鎮的網路和電話線。王工程師日以繼夜地工作，為受困居民恢復通訊。", "blank": "c____ns"}, {"num": 6, "word": "triggered", "en": "The factory installed highly sensitive smoke detectors in every single hallway. A small puff of smoke accidentally t____red the loud emergency alarms.", "zh": "工廠在每一條走廊都安裝了高靈敏度的煙霧探測器。一小陣煙霧意外地觸發了大聲的緊急警報。", "blank": "t____red"}, {"num": 7, "word": "scheme", "en": "The company developed a s_____e to reduce unnecessary packaging. Managers hope the plan will lower costs and reduce environmental waste.", "zh": "公司制定一項計畫來減少不必要的包裝。經理希望這項計畫能降低成本並減少環境浪費。", "blank": "s_____e"}, {"num": 8, "word": "formulas", "en": "The chemistry students struggled to memorize the complex chemical equations. Teacher Wang wrote all the important f____as on the blackboard to help them review.", "zh": "化學系學生努力記住複雜的化學方程式。王老師把所有重要的公式寫在黑板上以幫助他們複習。", "blank": "f____as"}, {"num": 9, "word": "atmospheres", "en": "The astronomer studies the thick gases surrounding different planets in our solar system. Dr. Wu discovered that these alien a____res are often toxic to human beings.", "zh": "天文學家研究環繞在我們太陽系不同行星周圍的濃厚氣體。吳博士發現這些外星大氣對人類通常是有毒的。", "blank": "a____res"}, {"num": 10, "word": "galleries", "en": "Paris is globally renowned for its world-class art museums and exhibition spaces. Tourist Lin spent an entire week exploring various famous g____ies across the beautiful city.", "zh": "巴黎以其世界級的藝術博物館和展覽空間而聞名全球。林遊客花了整整一個星期的時間探索這座美麗城市中各種著名的畫廊。", "blank": "g____ies"}, {"num": 11, "word": "behaviors", "en": "The psychologist spent years observing how young monkeys interact with their mothers. Dr. Wang recorded various interesting social b____rs among the primates in the jungle.", "zh": "心理學家花了多年時間觀察小猴子如何與母親互動。王博士記錄了叢林中靈長類動物之間各種有趣的社會行為。", "blank": "b____rs"}, {"num": 12, "word": "orbit", "en": "The rocket successfully carried the telescope into outer space yesterday morning. Captain Lee confirmed that the device had entered its designated o____t around the moon.", "zh": "火箭昨天早上成功將望遠鏡帶入外太空。李船長確認該設備已經進入其指定的繞月軌道。", "blank": "o____t"}, {"num": 13, "word": "breakthroughs", "en": "Professor Wang and his team experienced countless failures in the past decade. However, their recent technological b____hs completely changed the smartphone industry.", "zh": "王教授和他的團隊在過去十年中經歷了無數次的失敗。然而，他們最近的科技突破徹底改變了智慧型手機產業。", "blank": "b____hs"}, {"num": 14, "word": "reminder", "en": "The painful scar on his arm always brings back terrible memories. John views the permanent mark as a daily r____r of the tragic car accident.", "zh": "他手臂上痛苦的疤痕總是喚起可怕的回憶。約翰將這個永久的印記視為那場悲慘車禍的日常提醒。", "blank": "r____r"}, {"num": 15, "word": "contributions", "en": "The mayor thanked all the dedicated volunteers during the annual community dinner. Mr. Huang recognized their valuable c____ns to cleaning up the neighborhood parks.", "zh": "市長在年度社區晚宴上感謝了所有盡責的志工。黃先生表彰了他們在清理社區公園方面所做的寶貴貢獻。", "blank": "c____ns"}, {"num": 16, "word": "accelerated", "en": "The car a________ted rapidly after the traffic light turned green. Within seconds, the driver had reached the speed limit.", "zh": "交通號誌轉綠後，汽車迅速加速。幾秒內，駕駛就已經達到速限。", "blank": "a________ted"}, {"num": 17, "word": "combinations", "en": "The safety lock requires three numbers to be turned in the exact order. Kevin tried multiple c____ns before finally managing to open the heavy metal safe.", "zh": "安全鎖需要按精確順序轉動三個數字。凱文嘗試了多種組合，最後終於成功打開了沉重的金屬保險箱。", "blank": "c____ns"}, {"num": 18, "word": "exceeded", "en": "The successful fundraising campaign went far beyond everyone's initial expectations. Director Lin was thrilled that the total donations e____ded the original goal by one million dollars.", "zh": "成功的募款活動遠遠超出了每個人的初步預期。林主任對於總捐款數額超過原定目標一百萬元感到非常興奮。", "blank": "e____ded"}, {"num": 19, "word": "reinforces", "en": "The teacher gives students a weekly quiz to review the previous lessons. Mr. Chang uses these short tests to r____es important mathematical concepts.", "zh": "老師每週給學生小測驗以複習之前的課程。張老師利用這些簡短的考試來強化重要的數學概念。", "blank": "r____es"}, {"num": 20, "word": "pace", "en": "The teacher encouraged the students to work at their own p___e. Taking short breaks helped several students remain focused longer.", "zh": "老師鼓勵學生按照自己的步調學習。短暫休息幫助幾名學生維持更長時間的專注。", "blank": "p___e"}, {"num": 21, "word": "presentation", "en": "The marketing manager prepared multiple visual charts for the important client meeting. Director Zhao expects this professional p____n to win the huge contract.", "zh": "行銷經理為重要的客戶會議準備了多張視覺圖表。趙總監期望這場專業的簡報能贏得這份巨額合約。", "blank": "p____n"}, {"num": 22, "word": "variations", "en": "The composer wrote several different versions of the main theme song. Pianist Chou played all the beautiful v____ns during his impressive solo concert.", "zh": "作曲家寫了幾種不同版本的主題曲。鋼琴家周在他令人印象深刻的獨奏會上演奏了所有美麗的變奏。", "blank": "v____ns"}, {"num": 23, "word": "sensor", "en": "Dr. Wu placed a small device near the entrance of the laboratory. The motion s____r immediately triggered the alarm when someone walked past the door.", "zh": "吳博士在實驗室入口附近放置了一個小裝置。當有人走過門口時，動作感測器立刻觸發了警報。", "blank": "s____r"}, {"num": 24, "word": "adjustments", "en": "The mechanic checked the engine and noticed a few loose parts. Mr. Zhao made several quick a____ts to make the car run smoothly again.", "zh": "技師檢查了引擎，並注意到幾個鬆動的零件。趙先生做了幾次快速調整，讓汽車再次平順運行。", "blank": "a____ts"}, {"num": 25, "word": "unidentified", "en": "Professor Lee found a strange fossil during his long expedition in Africa. The species remains u____ied because it does not match any known biological records.", "zh": "李教授在漫長的非洲考察中發現了一塊奇怪的化石。該物種仍然未經確認，因為牠與任何已知的生物紀錄都不吻合。", "blank": "u____ied"}, {"num": 26, "word": "predict", "en": "Nobody could p____t how quickly the new technology would become popular. Within two years, millions of people had started using the application.", "zh": "沒有人能預測這項新科技會多快普及。兩年內，就有數百萬人開始使用這個應用程式。", "blank": "p____t"}, {"num": 27, "word": "loosens", "en": "A good massage helps to relax tight muscles after an intense workout. Coach Zhang recommends stretching because it effectively l____ns the tension in your body.", "zh": "良好的按摩有助於在激烈的運動後放鬆緊繃的肌肉。張教練建議拉伸，因為它能有效地鬆開你身體的緊繃感。", "blank": "l____ns"}, {"num": 28, "word": "overthrow", "en": "The evil king ruled the peaceful kingdom with extreme cruelty for many decades. A group of brave knights finally managed to o____w his terrible reign.", "zh": "邪惡的國王以極端的殘酷統治了這個和平的王國數十年。一群勇敢的騎士最終成功推翻了他可怕的統治。", "blank": "o____w"}, {"num": 29, "word": "invaded", "en": "The destructive bugs quickly destroyed all the crops in the local farm. It was a complete disaster when those insects i____ded Farmer Chen's precious tomato fields.", "zh": "具破壞性的蟲子迅速摧毀了當地農場裡所有的農作物。當那些昆蟲入侵陳農夫珍貴的番茄田時，這完全是一場災難。", "blank": "i____ded"}, {"num": 30, "word": "commission", "en": "The real estate agent earns a c________n whenever a property is successfully sold. The payment is usually calculated as a percentage of the sale price.", "zh": "房仲每成功售出一間房屋就會獲得一筆佣金。這筆款項通常按照售價的一定百分比計算。", "blank": "c________n"}, {"num": 31, "word": "harsher", "en": "The judge decided to give the criminal a much stricter punishment this time. Lawyer Chen argued that the h____er penalty was truly necessary for public safety.", "zh": "法官決定這次給予罪犯嚴格得多的懲罰。陳律師主張為了公眾安全，更嚴厲的刑罰確實是必要的。", "blank": "h____er"}, {"num": 32, "word": "equations", "en": "The physics test covered various topics about motion and gravity. Professor Wu required the class to use specific e____ns to calculate the final answers.", "zh": "物理考試涵蓋了關於運動和引力的各種主題。吳教授要求全班使用特定的方程式來計算最終答案。", "blank": "e____ns"}, {"num": 33, "word": "coincidence", "en": "Amanda met her elementary school teacher at a coffee shop in Paris. Emily could not believe such an amazing c____e happened during their vacation.", "zh": "阿曼達在巴黎的咖啡廳遇見了她的小學老師。艾蜜莉無法相信在他們的假期中會發生如此驚人的巧合。", "blank": "c____e"}, {"num": 34, "word": "deserved", "en": "The brave firefighter rescued three little puppies from the burning apartment building. Mayor Chen announced that the local hero truly d____ved the city's highest honor.", "zh": "勇敢的消防員從燃燒的公寓大樓裡救出了三隻小狗。陳市長宣布這位當地英雄確實配得上這座城市的最高榮譽。", "blank": "d____ved"}, {"num": 35, "word": "backyard", "en": "The children spent the afternoon playing basketball in the b______d. Their parents watched from the kitchen while preparing dinner.", "zh": "孩子們整個下午都在後院打籃球。他們的父母一邊準備晚餐，一邊從廚房觀看。", "blank": "b______d"}, {"num": 36, "word": "prompt", "en": "The customer service team always tries to resolve complaints as quickly as possible. Director Yang appreciates their p____t responses to every client's urgent issues.", "zh": "客服團隊總是試圖盡快解決客訴。楊主任很欣賞他們對每位客戶緊急問題的迅速回應。", "blank": "p____t"}, {"num": 37, "word": "elaborate", "en": "The architect presented an e_______e design for the new cultural center. The detailed plan included a theater, library, and outdoor garden.", "zh": "建築師為新的文化中心提出精心設計的方案。詳細計畫包含劇院、圖書館和戶外花園。", "blank": "e_______e"}, {"num": 38, "word": "laboratories", "en": "Tech companies invest heavily in developing new products every year. Mr. Zhang regularly visits different secret l____ies to check on the progress of these inventions.", "zh": "科技公司每年在開發新產品上投入巨資。張先生定期視察不同的秘密實驗室，以檢查這些發明的進度。", "blank": "l____ies"}, {"num": 39, "word": "phenomenon", "en": "Scientists have been studying the sudden drop in local ocean temperatures. David believes this rare p____n is caused by recent changes in the global climate.", "zh": "科學家們一直在研究當地海洋溫度的突然下降。大衛認為這種罕見的現象是由最近全球氣候變化所引起的。", "blank": "p____n"}, {"num": 40, "word": "alert", "en": "The sudden alarm a_____d everyone in the building. Employees quickly left their offices after hearing the emergency signal.", "zh": "突然響起的警報使大樓裡的每個人都提高警覺。員工聽到緊急訊號後迅速離開辦公室。", "blank": "a_____d"}, {"num": 41, "word": "otherwise", "en": "John needs to study harder for the upcoming final examination. He will o____e fail the difficult math test prepared by Teacher Huang.", "zh": "約翰需要為即將到來的期末考更用功讀書。否則他將無法通過黃老師準備的困難數學考試。", "blank": "o____e"}, {"num": 42, "word": "scents", "en": "The perfume store offers many different fragrances for customers to choose from. Amanda spent hours testing various floral s____ts before making her final purchase.", "zh": "香水店提供許多不同的香氣供顧客選擇。阿曼達花了幾個小時測試各種花香，然後才做出最後的購買決定。", "blank": "s____ts"}, {"num": 43, "word": "luxuries", "en": "The travelers enjoyed fine dining, spa treatments, and private beach access. Mrs. Lin appreciated all the wonderful l____ies provided by the five-star resort.", "zh": "旅客們享受了精緻的餐飲、水療護理和私人海灘通道。林太太很感激這家五星級度假村提供的所有美好奢華享受。", "blank": "l____ies"}, {"num": 44, "word": "merge", "en": "The narrow country road connects with the busy modern highway up ahead. Driver Chen needs to carefully m____e into the fast-moving traffic.", "zh": "狹窄的鄉間小路與前方繁忙的現代高速公路相連。陳駕駛需要小心地匯入快速移動的車流中。", "blank": "m____e"}, {"num": 45, "word": "investigate", "en": "Journalists i________ted the company's financial records for several months. Their report revealed several questionable transactions.", "zh": "記者調查這家公司的財務紀錄好幾個月。他們的報導揭露了幾筆可疑交易。", "blank": "i________ted"}, {"num": 46, "word": "feasts", "en": "The hungry travelers attended many grand banquets during their European tour. They truly enjoyed the delicious holiday f____ts hosted by the generous villagers.", "zh": "飢餓的旅客在他們的歐洲之旅中參加了許多盛大的宴席。他們真的很享受由慷慨村民所主辦的美味節日盛宴。", "blank": "f____ts"}, {"num": 47, "word": "absorbed", "en": "The black car parked in the sun became extremely hot during the afternoon. The metal surface a____bed all the solar heat and burned my hand.", "zh": "停在太陽下的黑色汽車在下午變得極度炎熱。金屬表面吸收了所有的太陽熱能，並燙傷了我的手。", "blank": "a____bed"}, {"num": 48, "word": "architecture", "en": "The modern city skyline is filled with impressive glass and steel skyscrapers. David admires the innovative a____e that makes the urban landscape look so futuristic.", "zh": "現代城市的天際線充滿了令人印象深刻的玻璃和鋼鐵摩天大樓。大衛欣賞這些讓城市景觀看起來如此具未來感的創新建築。", "blank": "a____e"}, {"num": 49, "word": "rally", "en": "The team held a r____y after falling behind by ten points. Several successful plays gave the players confidence to catch up.", "zh": "球隊落後十分後展開反攻。幾次成功的進攻讓球員有信心追上對手。", "blank": "r____y"}, {"num": 50, "word": "performers", "en": "The grand circus show featured acrobats, clowns, and skilled magicians. Director Zhao praised all the amazing p____rs for delivering such an entertaining night.", "zh": "盛大的馬戲團表演以雜技演員、小丑和熟練的魔術師為特色。趙主任讚美所有驚人的表演者帶來了一個如此具娛樂性的夜晚。", "blank": "p____rs"}, {"num": 51, "word": "noble", "en": "The greedy merchant wanted to marry his daughter into a high-status family. Mr. Lin actively searched for a wealthy n____e to become his son-in-law.", "zh": "貪婪的商人想把女兒嫁入地位崇高的家庭。林先生積極尋找一位富有的貴族來做他的女婿。", "blank": "n____e"}, {"num": 52, "word": "generated", "en": "The software company launched a huge marketing campaign on social media last week. The advertisements g____ted a lot of interest among teenagers across the country.", "zh": "軟體公司上週在社群媒體上發起了一場盛大的行銷活動。這些廣告在全國青少年中產生了很大的興趣。", "blank": "g____ted"}, {"num": 53, "word": "essentially", "en": "The machine is e________y a large computer designed for scientific research. Engineers added several special functions to handle complex calculations.", "zh": "這台機器基本上是一部為科學研究設計的大型電腦。工程師加入幾項特殊功能來處理複雜計算。", "blank": "e________y"}, {"num": 54, "word": "compelling", "en": "The mystery novel was so fascinating that I could not put it down. Sarah found the detective's thrilling story absolutely c____ling from the very first chapter.", "zh": "這本懸疑小說太迷人了，讓我愛不釋手。莎拉從第一章開始就發現這位偵探驚心動魄的故事絕對引人入勝。", "blank": "c____ling"}, {"num": 55, "word": "accessible", "en": "The complicated scientific report was written in very simple and clear language. Author Lin wanted to make the difficult knowledge highly a____e to the general public.", "zh": "這份複雜的科學報告是用非常簡單清晰的語言寫成的。林作者想讓一般大眾也能輕易理解這些困難的知識。", "blank": "a____e"}, {"num": 56, "word": "misled", "en": "The witness was m_____d by incorrect information during the investigation. Later, new evidence showed that the original story was inaccurate.", "zh": "這名證人在調查過程中受到錯誤資訊的誤導。後來的新證據顯示原本的說法並不正確。", "blank": "m_____d"}, {"num": 57, "word": "envisioned", "en": "The talented architect drew a sketch of the future museum. Director Yang clearly e____ned a grand glass building standing in the center of the park.", "zh": "這位才華洋溢的建築師畫了一張未來博物館的草圖。楊主任清楚地預想了一座宏偉的玻璃建築矗立在公園中央。", "blank": "e____ned"}, {"num": 58, "word": "inspiration", "en": "The young writer often visited the library for i________n. Reading biographies of famous authors helped Daniel develop ideas for his novel.", "zh": "這位年輕作家經常到圖書館尋找靈感。閱讀知名作家的傳記幫助 Daniel為小說發展想法。", "blank": "i________n"}, {"num": 59, "word": "accomplish", "en": "The young athlete set a new world record at the Olympic Games. Coach Yang is incredibly proud of what his student managed to a____h this year.", "zh": "這位年輕運動員在奧運會上創下了新的世界紀錄。楊教練對他的學生今年所能達成的成就感到無比驕傲。", "blank": "a____h"}, {"num": 60, "word": "imaginative", "en": "The science fiction author created a fascinating world filled with alien creatures. Readers completely loved Director Wang's highly i____e storytelling and vivid descriptions.", "zh": "這位科幻小說家創造了一個充滿外星生物的迷人世界。讀者完全愛上了王導演極具想像力的故事敘述和生動的描述。", "blank": "i____e"}, {"num": 61, "word": "recipes", "en": "The famous chef published a new cookbook filled with healthy vegetarian dishes. Chef Lin tested all the r____es multiple times before sharing them with the public.", "zh": "這位著名主廚出版了一本充滿健康素食菜餚的新食譜。林主廚在與大眾分享之前，將所有食譜測試了許多次。", "blank": "r____es"}, {"num": 62, "word": "encountered", "en": "The famous scientist faced many difficult challenges during her early research. Professor Lee e____red numerous unexpected obstacles while conducting the complex experiments.", "zh": "這位著名的科學家在早期的研究中面臨了許多困難的挑戰。李教授在進行複雜實驗時遭遇了無數意想不到的障礙。", "blank": "e____red"}, {"num": 63, "word": "workshops", "en": "The famous artist loves to share his painting techniques with the public. David attends these creative w____ps every weekend to learn how to paint better.", "zh": "這位著名的藝術家喜歡與大眾分享他的繪畫技巧。大衛每週末都參加這些創意工作坊，學習如何畫得更好。", "blank": "w____ps"}, {"num": 64, "word": "psychology", "en": "The experienced detective understands the criminal mind very well. Inspector Lee uses advanced p____y to predict what the serial killer will do next.", "zh": "這位經驗豐富的警探非常了解罪犯的心態。李督察利用進階心理學來預測連環殺手下一步會做什麼。", "blank": "p____y"}, {"num": 65, "word": "rigid", "en": "The old wooden chair broke easily because its structural design was completely inflexible. Carpenter Lin explained that the material was simply too r____d to bend.", "zh": "這把舊木椅很容易就斷了，因為它的結構設計完全缺乏彈性。林木匠解釋說，這個材質實在太堅硬而無法彎曲。", "blank": "r____d"}, {"num": 66, "word": "ultimately", "en": "The two massive tech companies fought a long legal battle over patent rights. The supreme judge u____y decided that the smaller firm was completely innocent.", "zh": "這兩家大型科技公司為了專利權打了一場漫長的法律戰。最高法官最終判定那家較小的公司完全無罪。", "blank": "u____y"}, {"num": 67, "word": "outfit", "en": "The young boy needed a formal suit for his sister's upcoming wedding. Mother Chen spent the entire afternoon shopping for the perfect o____t.", "zh": "這個小男孩需要一套正式的西裝來參加他姐姐即將舉行的婚禮。陳媽媽花了整個下午去買一套完美的服裝。", "blank": "o____t"}, {"num": 68, "word": "nutrient", "en": "The soil in this specific farm is lacking a very important chemical element. Farmer Zhao needs to add a special n____t to help the crops grow faster.", "zh": "這個特定農場的土壤缺乏一種非常重要的化學元素。趙農夫需要添加一種特殊的養分來幫助農作物長得更快。", "blank": "n____t"}, {"num": 69, "word": "stability", "en": "The country finally enjoyed peace after decades of terrible civil war. President Chen worked hard to maintain economic s____y for all his citizens.", "zh": "這個國家在經歷了數十年的可怕內戰後，終於享受到了和平。陳總統努力為他所有的公民維持經濟穩定。", "blank": "s____y"}, {"num": 70, "word": "sustain", "en": "The company hopes to s_____n its growth for many years. The management team is investing heavily in research and development.", "zh": "這家公司希望能維持多年的成長。管理團隊正大量投資於研究與開發。", "blank": "s_____n"}, {"num": 71, "word": "flexible", "en": "The modern software company allows its employees to choose their own working hours. Manager Lee believes that offering a f____e schedule increases overall productivity.", "zh": "這家現代軟體公司允許員工選擇自己的工作時間。李經理相信提供彈性的時間表能提高整體生產力。", "blank": "f____e"}, {"num": 72, "word": "surroundings", "en": "The luxury resort is beautifully located near a peaceful lake and lush green mountains. Mr. Lee specifically chose this hotel to enjoy the relaxing natural s____gs.", "zh": "這家豪華度假村美麗地坐落在一座平靜的湖泊和翠綠的群山附近。李先生特別選擇了這家飯店，以享受令人放鬆的自然環境。", "blank": "s____gs"}, {"num": 73, "word": "personnel", "en": "The hospital is currently facing a severe shortage of experienced nurses. Director Zhao needs to hire more medical p____l to handle the growing number of patients.", "zh": "這家醫院目前正面臨經驗豐富的護理師嚴重短缺的問題。趙主任需要聘僱更多醫療人員來應對不斷增加的病患。", "blank": "p____l"}, {"num": 74, "word": "throne", "en": "The ancient t____e was carefully protected inside the national museum. Historians believe several kings once used the beautifully decorated seat.", "zh": "這座古老的王位被小心地保存於國家博物館中。歷史學家相信曾有幾位國王使用過這張裝飾華麗的座椅。", "blank": "t____e"}, {"num": 75, "word": "endure", "en": "The ancient stone temple survived hundreds of severe earthquakes and storms. Architect Chen marvels at how the historic building could e____e such harsh conditions.", "zh": "這座古老的石頭寺廟撐過了數百次嚴重的地震和風暴。陳建築師驚嘆這座歷史建築竟能承受如此惡劣的條件。", "blank": "e____e"}, {"num": 76, "word": "endure", "en": "The old bridge can e____e extreme weather for many years. Engineers recently inspected it to make sure the structure remains safe.", "zh": "這座老橋可以承受多年的極端天氣。工程師最近檢查它，以確保結構仍然安全。", "blank": "e____e"}, {"num": 77, "word": "generations", "en": "The beautiful old temple has stood firmly in the village center for hundreds of years. The historical building has inspired multiple g____ns of local artists and writers.", "zh": "這座美麗的古廟在村莊中心屹立了數百年。這座歷史建築啟發了好幾代的當地藝術家和作家。", "blank": "g____ns"}, {"num": 78, "word": "beloved", "en": "The old golden retriever was a precious member of the family for fifteen years. Everyone cried when their b____ved pet passed away peacefully in the backyard.", "zh": "這隻老黃金獵犬十五年來一直是這個家庭珍貴的成員。當他們心愛的寵物在後院平靜地過世時，每個人都哭了。", "blank": "b____ved"}, {"num": 79, "word": "polished", "en": "The antique wooden table looked brand new after hours of careful restoration. Carpenter Wang proudly showed off the beautifully p____hed surface to the wealthy client.", "zh": "這張古董木桌在經過數小時的仔細修復後看起來煥然一新。王木匠驕傲地向這位富有的客戶展示了拋光得非常美麗的表面。", "blank": "p____hed"}, {"num": 80, "word": "gripped", "en": "The terrifying horror movie kept the entire audience on the edge of their seats. A strong sense of fear completely g____ped Amanda from the beginning to the end.", "zh": "這部可怕的恐怖片讓全場觀眾緊張到坐立難安。強烈的恐懼感從頭到尾完全攫住了阿曼達。", "blank": "g____ped"}, {"num": 81, "word": "aspect", "en": "The documentary examines an important a_____t of modern family life. The film focuses on how technology has changed communication between relatives.", "zh": "這部紀錄片探討現代家庭生活的一個重要面向。影片聚焦於科技如何改變親人之間的溝通。", "blank": "a_____t"}, {"num": 82, "word": "insights", "en": "The business conference featured many successful entrepreneurs from different countries. Alice gained plenty of practical i____ts on how to manage a startup company effectively.", "zh": "這場商業會議邀請了許多來自不同國家的成功企業家。愛麗絲獲得了許多關於如何有效管理新創公司的實用見解。", "blank": "i____ts"}, {"num": 83, "word": "slightly", "en": "The soup tasted a bit too bland for the famous food critic. Chef Huang added a s____y higher amount of salt to improve the overall flavor.", "zh": "這湯對這位著名的美食評論家來說味道有點太淡了。黃主廚加入稍微多一點的鹽來改善整體的風味。", "blank": "s____y"}, {"num": 84, "word": "participants", "en": "The scientific study requires at least fifty healthy volunteers to test the new drug. Doctor Huang carefully evaluates the medical history of all the potential p____ts.", "zh": "這項科學研究需要至少五十名健康的志工來測試新藥。黃醫師仔細評估了所有潛在參與者的病史。", "blank": "p____ts"}, {"num": 85, "word": "distinct", "en": "The twin brothers have completely different personalities and hobbies. Teacher Wu noticed their d____t characteristics during the first week of school.", "zh": "這對雙胞胎兄弟有著完全不同的個性和嗜好。吳老師在開學第一週就注意到了他們截然不同的特徵。", "blank": "d____t"}, {"num": 86, "word": "deadly", "en": "The disease was once considered d____y by doctors. Fortunately, modern medicine has made it possible to treat most patients successfully.", "zh": "這種疾病曾被醫生認為是致命的。幸運的是，現代醫學已經讓大多數患者能夠成功接受治療。", "blank": "d____y"}, {"num": 87, "word": "radar", "en": "Captain Chen could not locate the missing fishing boat on his screen. The ancient vessel had completely disappeared from the ship's r____r during the terrible storm.", "zh": "陳船長無法在螢幕上找到失蹤的漁船。在可怕的風暴中，這艘古老的船隻已經完全從船上的雷達上消失了。", "blank": "r____r"}, {"num": 88, "word": "purchase", "en": "The latest smartphone model comes with a free pair of wireless earphones. Amanda was completely satisfied with her wonderful online p____e last week.", "zh": "最新款的智慧型手機附贈一副免費的無線耳機。阿曼達對她上週美好的線上購買感到完全滿意。", "blank": "p____e"}, {"num": 89, "word": "statistic", "en": "The latest s________s reveal a significant increase in online shopping. Researchers believe changes in consumer habits explain the trend.", "zh": "最新統計數據顯示網路購物大幅增加。研究人員認為消費習慣的改變可以解釋這項趨勢。", "blank": "s________s"}, {"num": 90, "word": "mysterious", "en": "Kevin heard strange noises coming from the abandoned house next door. He decided to investigate the m____s sounds with his friends at midnight.", "zh": "凱文聽到隔壁廢棄的房子裡傳來奇怪的噪音。他決定在午夜和朋友們一起調查那些神祕的聲音。", "blank": "m____s"}, {"num": 91, "word": "peasants", "en": "The wealthy king held a grand festival for everyone in the kingdom. Even the poorest p____ts were invited to enjoy the royal banquet.", "zh": "富有的國王為王國裡的每個人舉辦了一場盛大的慶典。即使是最貧窮的農民也受邀享受這場皇家宴會。", "blank": "p____ts"}, {"num": 92, "word": "scam", "en": "Several criminals tried to s___m local residents through fake investment advertisements. The police warned people not to transfer money.", "zh": "幾名犯罪分子試圖透過虛假投資廣告詐騙當地居民。警方警告民眾不要轉帳。", "blank": "s___m"}, {"num": 93, "word": "competitors", "en": "Several c________rs entered the final round of the cooking contest. Each chef had only one hour to prepare a complete meal.", "zh": "幾名參賽者進入烹飪比賽的決賽。每位廚師只有一小時準備完整的一餐。", "blank": "c________rs"}, {"num": 94, "word": "motivation", "en": "The exhausted runner thought about his supportive family to keep going. David found his internal m____n exactly when he was about to give up.", "zh": "筋疲力盡的跑者想起了支持他的家人以繼續前進。大衛正要放棄時，找到了他內在的動機。", "blank": "m____n"}, {"num": 95, "word": "labor", "en": "The exhausted farmers work extremely hard in the hot fields all day long. Mr. Yang watches them l____r under the burning summer sun.", "zh": "筋疲力盡的農夫整天在炎熱的田野裡極度辛勤地工作。楊先生看著他們在炎熱的夏日陽光下勞動。", "blank": "l____r"}, {"num": 96, "word": "pastas", "en": "The supermarket offers many different shapes of dried noodles in the international aisle. Mother Chen prefers buying short p____as because they are easier for kids to eat.", "zh": "超市在國際走道上提供許多不同形狀的乾麵條。陳媽媽偏好購買短的義大利麵，因為它們比較容易讓小孩食用。", "blank": "p____as"}, {"num": 97, "word": "elaborately", "en": "The traditional opera costumes were covered in colorful silk and shiny beads. Designer Chen spent months handcrafting those incredibly e____y designed dresses.", "zh": "傳統的戲曲服裝上覆蓋著色彩繽紛的絲綢和閃亮的珠子。陳設計師花了幾個月的時間手工製作那些設計極其精緻的裙子。", "blank": "e____y"}, {"num": 98, "word": "physics", "en": "Einstein completely changed how we understand space and time in the modern era. His groundbreaking theories are fundamental to the study of advanced p____s today.", "zh": "愛因斯坦徹底改變了我們在現代對時間與空間的理解。他開創性的理論是今日進階物理學研究的基礎。", "blank": "p____s"}, {"num": 99, "word": "implications", "en": "The new tax policy will deeply affect many middle-class families. Economist Wu spent hours analyzing the serious financial i____ns of this controversial law.", "zh": "新的稅收政策將深刻影響許多中產階級家庭。吳經濟學家花了數小時分析這項具爭議性法律所帶來的嚴重財務影響。", "blank": "i____ns"}, {"num": 100, "word": "artistic", "en": "The newly renovated cafe has a very stylish and aesthetic interior design. Emily enjoys drinking coffee there because of the highly a____c atmosphere.", "zh": "新裝修的咖啡廳擁有非常時尚且具美感的室內設計。艾蜜莉喜歡在那裡喝咖啡，因為那裡有著高度的藝術氛圍。", "blank": "a____c"}, {"num": 101, "word": "calculations", "en": "The accountant spent the entire afternoon reviewing the financial report. Miss Lin found several mistakes in the math c____ns and had to correct them immediately.", "zh": "會計師花了整個下午審查財務報告。林小姐在數學計算中發現了幾個錯誤，並必須立刻更正它們。", "blank": "c____ns"}, {"num": 102, "word": "boosts", "en": "The local government lowered taxes to help struggling small businesses. Mayor Lee hopes this financial policy greatly b____ts the city's slow economy.", "zh": "當地政府降低了稅收以幫助陷入困境的小企業。李市長希望這項財務政策能大大促進該市緩慢的經濟。", "blank": "b____ts"}, {"num": 103, "word": "forges", "en": "The experienced blacksmith shapes hot metal into beautiful tools and weapons. Master Wu carefully f____es each iron blade using traditional techniques passed down from his father.", "zh": "經驗豐富的鐵匠將熱金屬塑造成美麗的工具和武器。吳師傅使用從父親那裡傳下來的傳統技術，仔細地鍛造每一把鐵刃。", "blank": "f____es"}, {"num": 104, "word": "abstracts", "en": "The academic journal requires all authors to submit a short summary of their research. Editor Zhang reads dozens of these written a____ts every week to select the best papers.", "zh": "該學術期刊要求所有作者提交一份他們研究的簡短摘要。張編輯每週閱讀數十份這類書面摘要，以挑選出最好的論文。", "blank": "a____ts"}, {"num": 105, "word": "universal", "en": "The need for clean water is considered u_______l. Governments around the world are working to improve access to safe drinking water.", "zh": "對乾淨水源的需求被視為全世界共同的需求。世界各地的政府都在努力改善安全飲用水的取得。", "blank": "u_______l"}, {"num": 106, "word": "essentials", "en": "The charity organization packed basic supplies for the earthquake victims in the mountains. Volunteer Lin made sure all daily e____ls were included in the relief boxes.", "zh": "慈善機構為山區的地震災民打包了基本物資。林志工確保所有日常必需品都包含在救援箱中。", "blank": "e____ls"}, {"num": 107, "word": "professionals", "en": "The medical conference was attended by hundreds of doctors and nurses from all over the world. These dedicated healthcare p____ls gathered to discuss the latest hospital treatments.", "zh": "數百名來自世界各地的醫生和護理師參加了這場醫學會議。這些盡責的醫療專業人員聚集在一起討論最新的醫院療法。", "blank": "p____ls"}, {"num": 108, "word": "demonstrated", "en": "The skilled software engineer presented the new application during the morning meeting. Kevin clearly d____ted how to use the special features to all the project managers.", "zh": "熟練的軟體工程師在早會上展示了新的應用程式。凱文清楚地向所有專案經理示範了如何使用這些特殊功能。", "blank": "d____ted"}, {"num": 109, "word": "highlighted", "en": "The enthusiastic tour guide pointed out the historical importance of the ancient temple. Miss Lin deliberately h____ted the unique architectural details to catch the tourists' attention.", "zh": "熱情的導遊指出了這座古廟的歷史重要性。林小姐刻意強調了獨特的建築細節以吸引遊客的注意。", "blank": "h____ted"}, {"num": 110, "word": "percent", "en": "The survey showed that seventy p_____t of students preferred digital textbooks. Many students said electronic books were easier to carry.", "zh": "調查顯示，百分之七十的學生比較喜歡電子課本。許多學生表示電子書更容易攜帶。", "blank": "p_____t"}, {"num": 111, "word": "strain", "en": "The massive financial debt caused a lot of stress for the young couple. Kevin felt an enormous mental s____n while trying to pay off the bank loan.", "zh": "龐大的財務債務給這對年輕夫婦帶來了很大的壓力。凱文在試圖償還銀行貸款時，感受到了巨大的精神負擔。", "blank": "s____n"}, {"num": 112, "word": "fascinating", "en": "The documentary about deep sea creatures captured the attention of many students. Teacher Liu found the underwater world to be extremely f____ing and full of surprises.", "zh": "關於深海生物的紀錄片吸引了許多學生的注意。劉老師發現水下世界極度迷人且充滿驚喜。", "blank": "f____ing"}, {"num": 113, "word": "conventional", "en": "Susan decided to bake a cake using a completely new and unique recipe. She was tired of the c____l flavors that everyone else usually made.", "zh": "蘇珊決定用一種全新且獨特的食譜來烤蛋糕。她厭倦了其他人通常製作的傳統口味。", "blank": "c____l"}, {"num": 114, "word": "strengthen", "en": "Sophia goes to the gym three times a week to lift heavy weights. She wants to s____n her core muscles to improve her overall physical health.", "zh": "蘇菲亞每週去健身房三次舉重。她想要強化她的核心肌群，以改善她整體的身體健康。", "blank": "s____n"}, {"num": 115, "word": "profile", "en": "The police created a p_____e of the suspect based on witness statements. Investigators used the information to narrow down their search.", "zh": "警方根據目擊者的證詞建立嫌疑犯的特徵檔案。調查人員利用這些資訊縮小搜尋範圍。", "blank": "p_____e"}, {"num": 116, "word": "adjusted", "en": "The photographer moved the lighting equipment slightly to the left side of the studio. David carefully a____ted the brightness so the model's face would look more natural.", "zh": "攝影師將照明設備稍微移到攝影棚的左側。大衛仔細調整了亮度，讓模特兒的臉看起來更自然。", "blank": "a____ted"}, {"num": 117, "word": "demand", "en": "Customers d_____d better service from the company last year. The manager responded by providing additional training for employees.", "zh": "顧客去年要求公司提供更好的服務。經理因此為員工提供額外訓練。", "blank": "d_____d"}, {"num": 118, "word": "greed", "en": "Arthur's g___d for money caused him to make several terrible decisions. He eventually lost the trust of his closest friends and business partners.", "zh": "Arthur 對金錢的貪婪使他做出幾個糟糕的決定。他最後失去了最親近朋友和商業夥伴的信任。", "blank": "g___d"}, {"num": 119, "word": "incredible", "en": "Daniel told us an i________e story about surviving alone in the wilderness. Everyone listened carefully because the experience sounded unbelievable.", "zh": "Daniel 告訴我們一個獨自在荒野中生存的不可思議故事。每個人都仔細聆聽，因為那段經歷聽起來令人難以置信。", "blank": "i________e"}, {"num": 120, "word": "physical", "en": "Emily experienced several p______l changes after following the training program. Her improved strength allowed her to carry heavy equipment more easily.", "zh": "Emily 遵循訓練計畫後經歷了幾項身體上的變化。體力提升讓她更容易搬運沉重的設備。", "blank": "p______l"}, {"num": 121, "word": "workout", "en": "After finishing his w_____t, Kevin drank plenty of water and rested for twenty minutes. The exercise helped him feel more energetic.", "zh": "Kevin 做完運動後喝了很多水，並休息了二十分鐘。運動幫助他感覺更有精神。", "blank": "w_____t"}, {"num": 122, "word": "suspicious", "en": "Kevin became s________s when the stranger asked for his bank password. He immediately ended the conversation and reported the incident.", "zh": "Kevin 對陌生人要求他的銀行密碼感到可疑。他立即結束對話並通報這起事件。", "blank": "s________s"}, {"num": 123, "word": "thoroughly", "en": "Before publishing the article, Mia t________y checked every source and quotation. She wanted to make sure that all the information was accurate.", "zh": "Mia 在發表文章前徹底檢查每個資料來源和引述。她希望確保所有資訊都是正確的。", "blank": "t________y"}, {"num": 124, "word": "convincing", "en": "Nina gave a c________g explanation for why she had arrived late. Her description of the train delay matched information from the station.", "zh": "Nina 對自己為何遲到提出令人信服的解釋。她描述的火車延誤情況與車站資訊一致。", "blank": "c________g"}, {"num": 125, "word": "disguise", "en": "Rachel used a d_____e to enter the building without being recognized. She dressed like a delivery worker and carried several empty boxes.", "zh": "Rachel 使用偽裝進入大樓而沒有被認出來。她穿得像送貨員，還拿著幾個空箱子。", "blank": "d_____e"}, {"num": 126, "word": "financial", "en": "Sarah received f_______l advice before investing her savings. The expert explained the possible risks and long-term returns.", "zh": "Sarah 在投資積蓄前接受了財務建議。專家解釋了可能的風險和長期報酬。", "blank": "f_______l"}, {"num": 127, "word": "context", "en": "Sarah explained the historical c_____t before discussing the famous speech. Her explanation helped the audience understand why those words were chosen.", "zh": "Sarah 在討論那篇著名演說前先解釋歷史背景。她的說明幫助聽眾理解為什麼選擇那些字詞。", "blank": "c_____t"}];
+const RANGES = [[1, 20], [21, 40], [41, 60], [61, 80], [81, 100], [101, 120], [121, 127]];
 </script>
 <script>
 (function(){
   const main = document.getElementById('main');
-  const units = [];
-  DATA.forEach(e => { if(!units.includes(e.unit)) units.push(e.unit); });
 
   document.getElementById('metaTotal').textContent = DATA.length;
-  document.getElementById('metaUnits').textContent = units.length;
   document.getElementById('progressTotal').textContent = DATA.length;
   document.getElementById('footTotal').textContent = DATA.length;
 
-  function blankHtml(en, blank, word){
-    const idx = en.indexOf(blank);
-    if(idx === -1) return {before: en, blankTxt: blank, after: ''};
-    return {
-      before: en.slice(0, idx),
-      blankTxt: blank,
-      after: en.slice(idx + blank.length)
-    };
+  function escapeHtml(s){
+    return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
   }
 
-  units.forEach(u => {
-    const uid = u.replace(/ /g, '-');
-    const items = DATA.filter(e => e.unit === u);
+  function blankHtml(en, blank){
+    const idx = en.indexOf(blank);
+    if(idx === -1) return {before: en, blankTxt: blank, after: ''};
+    return { before: en.slice(0, idx), blankTxt: blank, after: en.slice(idx + blank.length) };
+  }
+
+  RANGES.forEach(([a, b]) => {
+    const rid = `r${a}-${b}`;
+    const items = DATA.filter(e => e.num >= a && e.num <= b);
 
     const section = document.createElement('section');
-    section.className = 'unit-section';
-    section.id = uid;
+    section.className = 'range-section';
+    section.id = rid;
 
     const head = document.createElement('div');
-    head.className = 'unit-head';
-    head.innerHTML = `<span class="u-label">${u}</span><span class="u-count">${items.length} 題</span>`;
+    head.className = 'range-head';
+    head.innerHTML = `<span class="r-label">No. ${a}–${b}</span><span class="r-count">${items.length} 題</span>`;
     section.appendChild(head);
 
     const list = document.createElement('ul');
@@ -392,7 +243,7 @@ const DATA = [{"unit": "U2", "num": 1, "word": "inspiration", "en": "Emma found 
       li.className = 'qcard';
       li.dataset.num = e.num;
 
-      const parts = blankHtml(e.en, e.blank, e.word);
+      const parts = blankHtml(e.en, e.blank);
 
       li.innerHTML = `
         <span class="qnum">${e.num}</span>
@@ -413,28 +264,13 @@ const DATA = [{"unit": "U2", "num": 1, "word": "inspiration", "en": "Emma found 
     main.appendChild(section);
   });
 
-  function escapeHtml(s){
-    return String(s)
-      .replaceAll('&','&amp;')
-      .replaceAll('<','&lt;')
-      .replaceAll('>','&gt;');
-  }
-
   function updateProgress(){
     const total = document.querySelectorAll('.qcard').length;
     const revealed = document.querySelectorAll('.qcard.revealed').length;
     document.getElementById('progressN').textContent = revealed;
     document.getElementById('metaRevealed').textContent = revealed;
     const btn = document.getElementById('revealAllBtn');
-    if(revealed === total && total > 0){
-      btn.textContent = '隱藏全部答案';
-      btn.classList.remove('is-off');
-    } else if (revealed === 0){
-      btn.textContent = '顯示全部答案';
-      btn.classList.remove('is-off');
-    } else {
-      btn.textContent = '顯示全部答案';
-    }
+    btn.textContent = (revealed === total && total > 0) ? '隱藏全部答案' : '顯示全部答案';
   }
 
   window.toggleAll = function(){
@@ -444,14 +280,13 @@ const DATA = [{"unit": "U2", "num": 1, "word": "inspiration", "en": "Emma found 
     updateProgress();
   };
 
-  window.jumpTo = function(uid){
-    const el = document.getElementById(uid);
+  window.jumpTo = function(rid){
+    const el = document.getElementById(rid);
     if(el){ el.scrollIntoView({behavior:'smooth', block:'start'}); }
   };
 
-  // highlight active nav chip on scroll
   const chips = Array.from(document.querySelectorAll('.navchip'));
-  const sections = units.map(u => document.getElementById(u.replace(/ /g,'-')));
+  const sections = RANGES.map(([a,b]) => document.getElementById(`r${a}-${b}`));
   function onScroll(){
     let activeIdx = 0;
     const y = window.scrollY + 130;
