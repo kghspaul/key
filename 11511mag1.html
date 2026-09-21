@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>115-1-1 雜誌文意字彙練習(順序)詳解</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans TC', 'sans-serif'],
+                    },
+                    colors: {
+                        morandi: {
+                            bg: '#f0f3f4',      // 非常淺的灰綠底色
+                            card: '#ffffff',
+                            primary: '#6b8a8b', // 莫蘭迪藍綠色
+                            secondary: '#94a7a8',
+                            accent: '#d9e2e2',  // 淺灰綠點綴
+                            textMain: '#374151',
+                            textSub: '#6b7280',
+                            highlight: '#eef2f3'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+            background-color: #f0f3f4;
+        }
+        
+        /* 展開/隱藏解答的平滑動畫 */
+        .answer-transition {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transform: translateY(-10px);
+        }
+        
+        .answer-transition.show {
+            max-height: 500px;
+            opacity: 1;
+            transform: translateY(0);
+            margin-top: 1rem;
+        }
+
+        .sentence-text {
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body class="font-sans text-morandi-textMain antialiased pb-12">
+
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm shadow-sm border-b border-morandi-accent">
+        <div class="max-w-3xl mx-auto px-4 py-3.5 flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-bold text-morandi-primary tracking-wide">單字測驗</h1>
+                <p class="text-xs text-morandi-secondary mt-0.5">共 127 題 (U2-U11)</p>
+            </div>
+            <button id="toggleAllBtn" onclick="toggleAll()" class="bg-morandi-primary active:scale-95 transition-all text-white text-sm font-medium py-2 px-4 rounded-full shadow-sm">
+                顯示全部解答
+            </button>
+        </div>
+    </header>
+
+    <main class="max-w-3xl mx-auto px-4 mt-6">
+        <div class="mb-4 text-sm text-morandi-textSub flex justify-center items-center">
+            <span class="bg-morandi-highlight px-3 py-1 rounded-full text-morandi-primary font-medium">點擊卡片下方按鈕查看完整單字與翻譯</span>
+        </div>
+
+        <div id="cards-container" class="space-y-4">
+            <!-- 卡片將由 JavaScript 動態生成於此 -->
+        </div>
+    </main>
+
+    <script>
+        const vocabData = [
+            { id: 1, word: "inspiration", en: "Emma found i n while visiting the quiet village during her summer vacation. The beautiful scenery encouraged her to start painting again.", zh: "Emma 在暑假造訪寧靜村莊時找到了靈感。美麗的景色鼓勵她重新開始畫畫。" },
+            { id: 2, word: "deadly", en: "The poisonous snake can be d y if medical treatment is delayed. Local residents have been warned to avoid walking alone in the forest.", zh: "如果延誤治療,這種毒蛇可能會致命。當地居民已被警告避免獨自在森林中行走。" },
+            { id: 3, word: "physical", en: "Regular exercise improves p I health and helps people maintain strong muscles. Kevin goes swimming three times a week after finishing work.", zh: "規律運動能改善身體健康,並幫助人們維持強壯的肌肉。Kevin 每週下班後游泳三次。" },
+            { id: 4, word: "numerous", en: "The museum contains n s paintings from different periods of European history. Visitors can spend hours exploring the impressive collection.", zh: "這間博物館收藏了許多來自歐洲不同歷史時期的畫作。遊客可以花數小時探索這批令人印象深刻的收藏。" },
+            { id: 5, word: "disguise", en: "The detective wore a d e while observing the suspect near the train station. Nobody recognized the detective because of the unusual clothing.", zh: "偵探在火車站附近監視嫌疑犯時進行了偽裝。沒有人認出這名偵探,因為他的服裝很不尋常。" },
+            { id: 6, word: "throne", en: "The young prince finally sat on the t e after his father retired from the kingdom. Thousands of citizens gathered outside the palace to celebrate.", zh: "年輕王子在父親退位後終於坐上王位。數千名市民聚集在皇宮外慶祝" },
+            { id: 7, word: "intelligence", en: "The detective relied on i e rather than physical strength to solve the difficult case. Careful reasoning helped Marcus identify the hidden connection.", zh: "這名偵探依靠智慧而非體力來解決棘手的案件。仔細推理幫助 Marcus 找出隱藏的關聯。" },
+            { id: 8, word: "aspect", en: "One important a t of learning a language is regular practice. Students who use English every day usually become more confident speakers.", zh: "學習語言的一個重要面向是規律練習。每天使用英文的學生通常會變得更有自信。" },
+            { id: 9, word: "essentially", en: "The two proposals are e y the same despite their different names. Both plans require the government to invest more money in transportation.", zh: "儘管名稱不同,這兩項提案基本上是相同的。兩項計畫都要求政府投入更多資金在交通運輸上。" },
+            { id: 10, word: "context", en: "The meaning of the word can change depending on the ct. Reading the entire paragraph helps students understand the writer's intended meaning.", zh: "這個單字的意思可能會根據上下文改變。閱讀整個段落能幫助學生理解作者想表達的意思。" },
+            { id: 11, word: "endure", en: "The hikers had to e e several hours of heavy rain before reaching the shelter. Despite the difficult conditions, everyone remained calm.", zh: "登山客必須忍受數小時的大雨才能抵達避難所。儘管環境艱困,所有人仍保持冷靜。" },
+            { id: 12, word: "universal", en: "The desire for friendship seems u I among people of different cultures. Although customs vary, most people want meaningful relationships.", zh: "對友誼的渴望似乎存在於不同文化的人們之中。雖然習俗各不相同,大多數人都希望建立有意義的人際關係。" },
+            { id: 13, word: "predict", en: "Weather experts p t that a strong storm will reach the coast tomorrow morning. Local authorities have already prepared emergency shelters.", zh: "氣象專家預測強烈暴風雨將在明天早上抵達海岸。地方當局已經準備緊急避難所。" },
+            { id: 14, word: "backyard", en: "Ethan built a small vegetable garden in his b d last spring. His family now grows tomatoes, peppers, and several kinds of herbs there.", zh: "Ethan 去年春天在後院打造一座小菜園。他的家人現在在那裡種番茄、辣椒和幾種香草。" },
+            { id: 15, word: "workout", en: "Jessica designed a short w t for people with busy schedules. The routine includes stretching, squats, and several strength exercises.", zh: "Jessica 為生活忙碌的人設計了一套簡短的運動。這套運動包含伸展、深蹲和幾項肌力訓練。" },
+            { id: 16, word: "demand", en: "The growing population d ds more housing and better public transportation. City officials are considering several solutions to meet residents' needs.", zh: "人口成長需要更多住宅和更完善的大眾運輸。市政府官員正在考慮幾種解決方案,以滿足居民需求。" },
+            { id: 17, word: "sustain", en: "The small farm cannot s n such a large population without additional water supplies. Farmers are looking for more efficient irrigation methods.", zh: "沒有額外水源,這座小農場無法維持這麼多人口的需求。農民正在尋找更有效率的灌溉方式。" },
+            { id: 18, word: "rally", en: "Thousands of supporters attended the ry in the city center on Saturday. The event was organized to raise awareness about environmental protection.", zh: "星期六有數千名支持者參加市中心的集會。這場活動是為了提高大眾對環境保護的意識。" },
+            { id: 19, word: "incredible", en: "The view from the mountain was i e after the clouds disappeared. Sarah could see the ocean, villages, and distant islands from the summit.", zh: "雲層散去後,山上的景色令人難以置信。Sarah 從山頂可以看到海洋、村莊和遠方的島嶼。" },
+            { id: 20, word: "percent", en: "Only thirty pt of the original forest remains in this region. Environmental groups are asking the government to protect the remaining land.", zh: "這個地區只剩下原始森林的百分之三十。環保團體要求政府保護剩餘的土地。" },
+            { id: 21, word: "accelerate", en: "The new train system will a e travel between the two major cities. Officials expect the journey to become thirty minutes shorter.", zh: "新的火車系統將加快兩座主要城市之間的交通。官員預期旅程將縮短三十分鐘。" },
+            { id: 22, word: "pace", en: "Maria walked at a comfortable p e during the long hike. She wanted to save enough energy for the difficult climb later that afternoon.", zh: "Maria 在長途健行時以舒服的步調行走。她想保留足夠體力應付當天下午的艱難攀爬。" },
+            { id: 23, word: "statistic", en: "One surprising s c shows that many young adults now prefer public transportation. The survey also found convenience was their main reason.", zh: "一項令人驚訝的統計數據顯示,許多年輕人現在比較喜歡大眾運輸。調查也發現便利性是主要原因。" },
+            { id: 24, word: "competitor", en: "The young athlete trained every morning to become a stronger c r. Her coach believed regular practice would prepare her for the championship.", zh: "這名年輕運動員每天早晨訓練,以成為更強的競爭者。她的教練相信規律練習能讓她為錦標賽做好準備。" },
+            { id: 25, word: "scam", en: "The elderly man nearly lost his savings because of an online s_m. His daughter noticed the suspicious message and contacted the bank.", zh: "這名老人差點因為網路詐騙而失去積蓄。他的女兒注意到可疑訊息後聯絡銀行。" },
+            { id: 26, word: "elaborate", en: "The chef prepared an e e meal for the visiting guests. The dinner included several courses, handmade desserts, and carefully decorated dishes.", zh: "主廚為來訪客人準備了一頓精心製作的餐點。晚餐包含數道菜、手工甜點和精心裝飾的料理。" },
+            { id: 27, word: "convincing", en: "The lawyer presented ac g argument during the trial. Several pieces of evidence supported the explanation and changed the judge's view.", zh: "律師在審判中提出令人信服的論點。幾項證據支持這個說法,並改變法官的看法。" },
+            { id: 28, word: "scheme", en: "The government introduced a new s e to encourage people to use bicycles. Residents can receive financial support when purchasing approved electric bikes.", zh: "政府推出一項新計畫,鼓勵民眾使用自行車。居民購買核准的電動自行車時可以獲得經濟補助。" },
+            { id: 29, word: "commission", en: "The artist received a large c n for creating a painting for the new hotel. The hotel owner wanted a colorful artwork for the entrance hall.", zh: "這名藝術家收到一筆高額委託,為新飯店創作一幅畫。飯店老闆希望入口大廳有一件色彩繽紛的藝術作品。" },
+            { id: 30, word: "psychology", en: "Professor Chen studies p y to understand how people make decisions. Her research focuses on the relationship between emotions and consumer behavior.", zh: "Chen 教授研究心理學,以了解人們如何做決定。她的研究著重於情緒與消費者行為之間的關係。" },
+            { id: 31, word: "greed", en: "The novel explores how g d can destroy relationships between family members. The main character becomes increasingly selfish after gaining control of the family business.", zh: "這部小說探討貪婪如何摧毀家人之間的關係。主角掌控家族企業後變得越來越自私。" },
+            { id: 32, word: "investigate", en: "The police will i e the strange disappearance of the valuable painting. Several security cameras recorded unusual activity that night.", zh: "警方將調查那幅珍貴畫作的離奇失蹤。幾支監視器在當晚拍到異常活動。" },
+            { id: 33, word: "thoroughly", en: "The doctor examined the patient t y before recommending any treatment. The careful examination helped identify the real cause of the problem.", zh: "醫生在建議任何治療方式前徹底檢查了病人。仔細的檢查幫助找出問題真正的原因。" },
+            { id: 34, word: "suspicious", en: "The police noticed a s s vehicle parked outside the bank. The driver left quickly after seeing officers approach the area.", zh: "警方注意到一輛可疑的車停在銀行外。駕駛看到警察靠近後迅速離開。" },
+            { id: 35, word: "financial", en: "The company is facing serious f I problems after losing several major customers. Managers are trying to reduce expenses without firing employees.", zh: "這家公司失去幾個重要客戶後正面臨嚴重的財務問題。經理正試圖在不解雇員工的情況下降低支出。" },
+            { id: 36, word: "mislead", en: "The advertisement may m d customers by showing an unrealistically low price. The company later added extra fees that were not clearly explained.", zh: "這則廣告可能會透過顯示不切實際的低價來誤導消費者。這家公司後來增加了一些沒有清楚說明的額外費用。" },
+            { id: 37, word: "profile", en: "The magazine published a detailed p e of the successful entrepreneur. The article described her childhood, education, and rise to international fame.", zh: "這本雜誌刊登了一篇關於這位成功企業家的詳細人物專訪。文章描述她的童年、教育以及成名國際的過程。" },
+            { id: 38, word: "alert", en: "The security guard remained a t throughout the night shift. His careful attention helped him notice a broken window near the entrance.", zh: "保全在整個夜班期間都保持警覺。他的仔細注意讓他發現入口附近有一扇破窗。" },
+            { id: 39, word: "unidentified", en: "Officer Chang reported an u ied vehicle parked right outside the local bank. The police are currently trying to figure out who owns this mysterious car.", zh: "張警官報告有一輛身分不明的車輛停在當地銀行外。警方目前正試圖查明這輛神祕汽車的車主是誰。" },
+            { id: 40, word: "phenomenon", en: "The northern lights are a beautiful p n observed mainly in polar regions. Emily traveled all the way to Iceland just to witness this natural event.", zh: "北極光是主要在極地地區觀察到的美麗現象。艾蜜莉大老遠跑到冰島,只為了親眼目睹這個自然事件。" },
+            { id: 41, word: "radars", en: "The military base installed new r rs along the southern coastline yesterday. General Wang expects these advanced devices to detect approaching aircraft much more effectively.", zh: "軍事基地昨天在南部海岸線安裝了新的雷達。王將軍期望這些先進設備能更有效地偵測到靠近的飛機。" },
+            { id: 42, word: "sensors", en: "The smart home system uses highly sensitive s rs to monitor indoor temperatures. Mr. Lin relies on these small gadgets to keep his living room comfortable.", zh: "智慧家庭系統使用高靈敏度的感測器來監控室內溫度。林先生依賴這些小裝置來保持客廳的舒適。" },
+            { id: 43, word: "personnel", en: "All company p I are required to attend the safety training session tomorrow. Manager Huang wants every single employee to understand the new emergency evacuation procedures.", zh: "公司所有人員都必須參加明天的安全培訓課程。黃經理希望每一位員工都能了解新的緊急疏散程序。" },
+            { id: 44, word: "strengthened", en: "The city council s ned the old bridge before the upcoming typhoon season. Mayor Chen hopes these crucial repairs will prevent the structure from collapsing under heavy winds.", zh: "市議會在即將到來的颱風季之前加固了這座舊橋。陳市長希望這些關鍵的維修能防止建築物在強風中倒塌。" },
+            { id: 45, word: "mysterious", en: "A m s stranger left a locked wooden box on the front porch. Detective Lin spent hours trying to figure out who delivered the secret package.", zh: "一個神祕的陌生人在前廊留下了一個上鎖的木盒。林探長花了幾個小時試圖查明是誰送來了這個祕密包裹。" },
+            { id: 46, word: "communication", en: "Effective c n is the key to solving conflicts within any corporate team. Alice always encourages her colleagues to share their honest thoughts and feelings openly.", zh: "有效的溝通是解決任何企業團隊內部衝突的關鍵。愛麗絲總是鼓勵她的同事公開分享他們真實的想法和感受。" },
+            { id: 47, word: "conventional", en: "The farmer uses c I farming methods rather than expensive modern technologies. Uncle Lee prefers traditional techniques that have been passed down for many generations.", zh: "農夫使用傳統的耕作方法,而不是昂貴的現代科技。李叔叔偏好已經傳承了許多代的傳統技術。" },
+            { id: 48, word: "fascinating", en: "The museum exhibition features a f _ing collection of ancient Egyptian artifacts. Professor Chang spent the entire afternoon admiring the incredibly interesting historical items on display.", zh: "博物館的展覽以一系列迷人的古埃及文物為特色。張教授花了整個下午欣賞展出的極其有趣的歷史物品。" },
+            { id: 49, word: "generates", en: "The new solar panel system g tes enough electricity to power the entire building. Mr. Chen is very proud of this eco-friendly facility that produces abundant clean energy.", zh: "新的太陽能板系統產生足夠的電力來供應整棟大樓。陳先生非常自豪這個能產生豐富乾淨能源的環保設施。" },
+            { id: 50, word: "scent", en: "The sweet s t of fresh roses filled the beautifully decorated living room. Grandma Lin always enjoys breathing in the wonderful smell of her blooming garden.", zh: "新鮮玫瑰的甜美香氣充滿了裝飾美麗的客廳。林奶奶總是喜歡呼吸她盛開花園的美妙氣味。" },
+            { id: 51, word: "prompted", en: "The sudden heavy rain p ted the organizers to cancel the outdoor concert. Manager Wu had to make the quick decision to ensure the safety of all attendees.", zh: "突然的傾盆大雨促使主辦單位取消了戶外演唱會。吳經理必須做出快速的決定,以確保所有參加者的安全。" },
+            { id: 52, word: "nutrients", en: "Green leafy vegetables provide essential n ts for proper brain and body development. Doctor Huang advises all her patients to consume these healthy components every day.", zh: "綠葉蔬菜為大腦和身體的適當發展提供必需的營養素。黃醫師建議她所有的病患每天都要攝取這些健康的成分。" },
+            { id: 53, word: "harsh", en: "The explorers faced h h weather conditions during their long journey across Antarctica. Captain Smith warned everyone about the dangerously cold and unforgiving freezing winds.", zh: "探險家們在橫越南極洲的漫長旅程中面臨了惡劣的天氣條件。史密斯船長警告所有人要注意危險寒冷且無情的刺骨寒風。" },
+            { id: 54, word: "essential", en: "Water is an e I element for the survival of all living creatures. Professor Wang always emphasizes how absolutely necessary this simple liquid is for biology.", zh: "水是所有生物生存不可或缺的元素。王教授總是強調這種簡單的液體對生物學來說是多麼絕對必要。" },
+            { id: 55, word: "absorbs", en: "The dark sponge easily a bs large amounts of liquid from the kitchen counter. Mother Chen uses it to completely soak up the spilled milk in seconds.", zh: "深色海綿很容易從廚房流理台上吸收大量的液體。陳媽媽用它在幾秒鐘內完全吸乾灑出來的牛奶。" },
+            { id: 56, word: "otherwise", en: "You must submit the application form by Friday; o e, you will lose the opportunity. Manager Lee warned the students that failing to meet the deadline would result in rejection.", zh: "你必須在星期五前提交申請表: 否則,你將失去這個機會。李經理警告學生,未能趕上截止日期將導致被拒絕。" },
+            { id: 57, word: "exceeds", en: "The weight of this massive package clearly e ds the strict airline limit. Mr. Zhang will have to pay an extra fee because his luggage is too heavy.", zh: "這個巨大包裹的重量明顯超過了嚴格的航空公司限制。張先生將不得不支付額外費用,因為他的行李太重了。" },
+            { id: 58, word: "physics", en: "Many high school students find p_ s to be an incredibly difficult science subject. Teacher Wu spends extra time explaining the complex laws of motion and energy.", zh: "許多高中生覺得物理是一門極其困難的科學科目。吳老師花了額外的時間解釋運動和能量的複雜定律。" },
+            { id: 59, word: "behavior", en: "The sudden aggressive b r of the neighborhood dog frightened the little children. Mr. Chen promised to train his pet to act much more politely in public spaces.", zh: "鄰居狗突然的攻擊行為嚇壞了小孩子們。陳先生承諾會訓練他的寵物在公共場所表現得更有禮貌。" },
+            { id: 60, word: "recipe", en: "Grandmother passed down her secret chicken soup r e to the younger family members. Jessica uses these exact instructions whenever she wants to cook a warm, traditional meal.", zh: "祖母將她的祕密雞湯食譜傳給了年輕的家庭成員。潔西卡每當想煮一頓溫暖的傳統餐點時,都會使用這些精確的指示。" },
+            { id: 61, word: "pasta", en: "The Italian restaurant serves incredibly delicious pa with fresh tomato sauce. David always orders the spaghetti whenever he visits this charming little dining place.", zh: "這家義大利餐廳供應極其美味的義大利麵和新鮮番茄醬。大衛每次造訪這家迷人的小餐館時總是點義大利麵。" },
+            { id: 62, word: "variation", en: "The sudden v n in local temperature caused many people to catch a cold. Doctor Lee noticed that this weather change led to crowded hospital waiting rooms.", zh: "當地溫度的突然變化導致許多人感冒。李醫師注意到這種天氣變化導致醫院候診室擠滿了人。" },
+            { id: 63, word: "combination", en: "The unique c n of sweet and sour flavors makes this dish extremely popular. Chef Wang perfectly mixed the ingredients to create a highly enjoyable dining experience.", zh: "甜與酸的獨特組合使得這道菜極受歡迎。王主廚完美地混合了這些食材,創造出高度令人愉悅的用餐體驗。" },
+            { id: 64, word: "ultimately", en: "The hard-working student u y achieved his lifelong dream of becoming a doctor. Jason pushed through years of intense studying and finally graduated from the medical school.", zh: "這位努力的學生最終實現了他成為醫生的畢生夢想。傑森熬過了多年高強度的學習,終於從醫學院畢業。" },
+            { id: 65, word: "generation", en: "The younger g_ n often relies heavily on smartphones for daily social interactions. Grandfather Lin finds it difficult to understand how teenagers communicate entirely through tiny screens.", zh: "年輕一代通常嚴重依賴智慧型手機進行日常社交互動。林爺爺覺得很難理解青少年如何完全透過小螢幕來溝通。" },
+            { id: 66, word: "deserves", en: "After working continuously for fourteen hours, the exhausted nurse d es a long break. Supervisor Huang told her to go home immediately and get some well-earned rest.", zh: "連續工作了十四個小時後,筋疲力盡的護理師值得一個長假。黃主管告訴她立刻回家,獲得應得的休息。" },
+            { id: 67, word: "breakthrough", en: "Dr. Chen announced a major b h in cancer research yesterday. The dedicated medical team finally discovered a new treatment after years of hard work.", zh: "陳博士昨天宣布了癌症研究的一項重大突破。這個專注的醫療團隊經過多年的努力,終於發現了一種新的療法。" },
+            { id: 68, word: "laboratory", en: "The university recently built a highly advanced I y for chemical experiments. Professor Lin expects the new research facility to attract many top scientists to Taiwan.", zh: "該大學最近為化學實驗建立了一個高度先進的實驗室。林教授期望這個新的研究設施能吸引許多頂尖科學家來到台灣。" },
+            { id: 69, word: "workshop", en: "Manager Lee organized a practical w p to improve employees' communication skills. All the participants found the intensive training session extremely helpful for their daily tasks.", zh: "李經理舉辦了一場實用的工作坊來提升員工的溝通技巧。所有參與者都覺得這場密集的培訓課程對他們的日常工作極有幫助。" },
+            { id: 70, word: "calculation", en: "Engineer Wu made a precise c n before building the suspension bridge. He needed to ensure the mathematical result was perfectly accurate for safety reasons.", zh: "吳工程師在建造吊橋前進行了精確的計算。出於安全考量,他必須確保數學結果完全準確。" },
+            { id: 71, word: "envisions", en: "Mayor Chen boldly e ns a city fully powered by renewable energy. He imagines a green and sustainable future for all the local residents.", zh: "陳市長大膽地設想了一個完全由再生能源供電的城市。他為所有當地居民想像了一個綠色且永續的未來。" },
+            { id: 72, word: "striking", en: "There is a s king resemblance between the famous actor and his younger brother. Director Huang immediately noticed how remarkably similar they looked in the audition.", zh: "這位著名男演員和他的弟弟之間有著驚人的相似之處。黃導演在試鏡時立刻注意到他們長得極其相似。" },
+            { id: 73, word: "insight", en: "The experienced consultant provided valuable i t into the changing consumer market. Manager Zhao appreciated this deep understanding of the current economic trends.", zh: "這位經驗豐富的顧問對不斷變化的消費市場提供了寶貴的見解。趙經理很感激對當前經濟趨勢的深刻理解。" },
+            { id: 74, word: "formula", en: "The secret f a for this popular soda has been protected for over a century. Mr. Chang refuses to reveal the exact recipe that makes the drink so delicious.", zh: "這款受歡迎汽水的秘密配方已經被保護了一個多世紀。張先生拒絕透露讓這款飲料如此美味的確切配方。" },
+            { id: 75, word: "equation", en: "Finding the value of the unknown variable in this e n is quite challenging. Student Lin spent thirty minutes solving the difficult math problem.", zh: "在這個方程式中找出未知變數的值是相當具挑戰性的。林同學花了三十分鐘解決這個困難的數學問題。" },
+            { id: 76, word: "orbits", en: "The communications satellite continuously o ts the Earth at a very high speed. Engineer Chen monitors its circular path every single day to ensure stable signals.", zh: "通訊衛星持續以極高的速度環繞地球運行。陳工程師每天監控其圓形軌道以確保訊號穩定。" },
+            { id: 77, word: "abstract", en: "The contemporary art museum features many at paintings by local artists. Viewers like Mrs. Wang often find it difficult to understand these non-realistic artworks.", zh: "當代藝術博物館展出許多當地藝術家的抽象畫。像王太太這樣的觀眾通常覺得很難理解這些非寫實的藝術品。" },
+            { id: 78, word: "contribution", en: "The wealthy businessman made a significant cn to the local orphanage. Director Lin deeply appreciated this generous donation to help the poor children.", zh: "這位富有的商人對當地孤兒院做出了重大貢獻。林主任深深感激這筆幫助貧困兒童的慷慨捐款。" },
+            { id: 79, word: "forged", en: "The two rival tech companies f ged a strong partnership to develop new software. CEO Chen believed that building this alliance would greatly benefit both organizations.", zh: "兩家競爭的科技公司建立了強大的合作夥伴關係以開發新軟體。陳執行長相信建立這個聯盟將使雙方組織都大受裨益。" },
+            { id: 80, word: "grip", en: "The mountain climber maintained a tight gp on the wet and slippery rock. John knew that losing his firm hold could lead to a very dangerous fall.", zh: "登山者緊緊抓著濕滑的岩石。約翰知道失去穩固的抓地力可能會導致非常危險的墜落。" },
+            { id: 81, word: "adjustment", en: "The tailor made a slight a t to the waistline of the wedding dress. Mary requested this minor alteration to ensure the gown fit her perfectly.", zh: "裁縫對婚紗的腰線做了輕微的調整。瑪麗要求這項小幅修改,以確保禮服完美合身。" },
+            { id: 82, word: "adjusts", en: "The smart thermostat automatically a ts the room temperature based on the weather outside. Father Lin loves how the device regulates the cold air without manual control.", zh: "智慧恆溫器會根據室外天氣自動調整室內溫度。林爸爸很喜歡這個設備無需手動控制就能調節冷氣的方式。" },
+            { id: 83, word: "strains", en: "Reading small text in the dark severely s ns your sensitive eyes. Doctor Wu always warns his patients that doing so can damage their vision over time.", zh: "在黑暗中閱讀小文字會嚴重讓你不適的眼睛感到疲勞。吳醫師總是警告他的病人,這樣做久了會損害他們的視力。" },
+            { id: 84, word: "flexible", en: "The yoga instructor has a highly f e body due to years of daily practice. Miss Chen can easily bend and stretch her limbs into incredibly difficult poses.", zh: "由於多年的日常練習,這位瑜珈教練擁有高度柔軟的身體。陳小姐可以輕鬆地將她的四肢彎曲和伸展成極度困難的姿勢。" },
+            { id: 85, word: "loosened", en: "The tired businessman quickly I ned his tight tie after leaving the office. Mr. Wang felt much more comfortable once the pressure around his neck was gone.", zh: "疲倦的商人在離開辦公室後迅速鬆開了他緊繃的領帶。一旦脖子周圍的壓力消失,王先生覺得舒服多了。" },
+            { id: 86, word: "slightly", en: "The new smartphone model is sy thinner than the previous version. Customer Lin barely noticed the minor difference in thickness when holding both devices.", zh: "新款智慧型手機型號比先前的版本稍微薄一點。林顧客在拿著兩款設備時,幾乎沒有注意到厚度上細微的差異。" },
+            { id: 87, word: "demonstrates", en: "The science teacher constantly d es exciting chemical reactions in front of the classroom. Mr. Yang loves to show his curious students exactly how these experiments work.", zh: "自然老師經常在教室前面示範令人興奮的化學反應。楊老師喜歡向他充滿好奇心的學生展示這些實驗確切的運作方式。" },
+            { id: 88, word: "beloved", en: "The famous author dedicated his final novel to his b ved wife. Mr. Chang wanted to show how much he deeply cherished and adored her.", zh: "這位著名作家將他最後的一本小說獻給他深愛的妻子。張先生想表達他有多麼深深地珍視和愛慕她。" },
+            { id: 89, word: "highlights", en: "The evening news broadcast showed the amazing h ts of the championship baseball game. David enjoyed watching those most exciting and memorable moments over and over again.", zh: "晚間新聞廣播播出了冠軍棒球賽精彩的精華片段。大衛喜歡一遍又一遍地觀看那些最令人興奮和難忘的時刻。" },
+            { id: 90, word: "performer", en: "The street pr played a beautiful melody on his acoustic guitar. Many pedestrians stopped to listen to the talented musician play near the subway station.", zh: "街頭表演者用他的木吉他彈奏出美麗的旋律。許多行人停下來聆聽這位才華洋溢的音樂家在地鐵站附近的演奏。" },
+            { id: 91, word: "compelling", en: "The clever lawyer presented a highly cling argument to the jury. Attorney Chen provided such convincing evidence that everyone believed his client was innocent.", zh: "聰明的律師向陪審團提出了極具說服力的論點。陳律師提供了如此令人信服的證據,以至於每個人都相信他的委託人是無辜的。" },
+            { id: 92, word: "luxury", en: "The wealthy celebrity purchased a beautiful I y yacht for his summer vacation. Mr. Wang enjoys spending his money on expensive and high-end items.", zh: "這位富有的名人為他的暑假買了一艘美麗的豪華遊艇。王先生喜歡把錢花在昂貴且高檔的物品上。" },
+            { id: 93, word: "elaborately", en: "The grand ballroom was e _y decorated with crystal chandeliers and fresh roses. Manager Huang spent a huge budget making the venue look incredibly detailed and fancy.", zh: "宏偉的宴會廳裡精心裝飾著水晶吊燈和新鮮的玫瑰。黃經理花了龐大的預算讓場地看起來無比精緻華麗。" },
+            { id: 94, word: "surroundings", en: "The frightened stray cat carefully observed its unfamiliar s gs before stepping out of the alley. The poor animal needed to make sure the new environment was safe from danger.", zh: "受驚的流浪貓在走出巷子前,仔細觀察了牠不熟悉的周圍環境。這隻可憐的動物需要確保新環境安全無虞。" },
+            { id: 95, word: "imaginative", en: "The i e child built an entire castle using only cardboard boxes and tape. Mother Chen was amazed by her son's creative and original ideas.", zh: "這個充滿想像力的孩子只用厚紙箱和膠帶就建了一整座城堡。陳媽媽對兒子充滿創意和原創的想法感到驚訝。" },
+            { id: 96, word: "artistic", en: "The talented student displayed great a c skills during the annual painting competition. Teacher Lin praised her beautiful use of colors and creative expression.", zh: "這位才華洋溢的學生在年度繪畫比賽中展現了出色的藝術技巧。林老師稱讚她對色彩的美麗運用和創意表達。" },
+            { id: 97, word: "atmosphere", en: "The romantic restaurant provides a quiet and intimate a e for couples. Mr. Zhao loves taking his wife there because the mood is always incredibly relaxing.", zh: "這家浪漫的餐廳為情侶提供了一個安靜且私密的氛圍。趙先生喜歡帶他妻子去那裡,因為氣氛總是極度令人放鬆。" },
+            { id: 98, word: "gallery", en: "The famous photographer displayed his latest landscape pictures in the local downtown gy. Curator Huang invited art collectors to view the stunning exhibition yesterday evening.", zh: "這位著名的攝影師在當地市中心的畫廊展示了他最新的風景照片。黃館長昨天傍晚邀請了藝術收藏家來參觀這場令人驚嘆的展覽。" },
+            { id: 99, word: "architecture", en: "The ancient temple is a perfect example of traditional Chinese a e. Professor Chang always brings his students here to study the unique building design.", zh: "這座古廟是中國傳統建築的完美典範。張教授總是帶他的學生來這裡研究這獨特的建築設計。" },
+            { id: 100, word: "professional", en: "The company hired a p I photographer to take pictures for their new marketing campaign. Manager Wu wanted an experienced expert who could deliver high-quality images.", zh: "公司聘請了一位專業攝影師為他們的新行銷活動拍照。吳經理需要一位能提供高品質影像的經驗豐富專家。" },
+            { id: 101, word: "coincidence", en: "It was a pure c e that Manager Lin and his brother wore the exact same tie today. The two men had not planned their matching outfits beforehand.", zh: "林經理和他的兄弟今天戴了完全相同的領帶,這純粹是巧合。這兩個男人事先並沒有計畫要穿搭相配的服裝。" },
+            { id: 102, word: "invade", en: "The aggressive army decided to i e the neighboring country during the harsh winter. General Wang ordered his troops to cross the northern border at midnight.", zh: "具侵略性的軍隊決定在嚴冬期間入侵鄰國。王將軍命令他的部隊在午夜越過北部邊界。" },
+            { id: 103, word: "overthrow", en: "The angry citizens planned to o w the corrupt government after weeks of protests. Leader Chen organized a massive strike to bring down the current president.", zh: "憤怒的市民計畫在數週的抗議後推翻腐敗的政府。陳領袖組織了一場大規模罷工,以拉下現任總統。" },
+            { id: 104, word: "rigid", en: "The strict school maintains a very r d schedule for all its boarding students. Principal Wu does not allow any changes to the daily timetable.", zh: "這所嚴格的學校為所有住宿生維持著非常死板的時間表。吳校長不允許對每日作息表做任何更改。" },
+            { id: 105, word: "labor", en: "The heavy construction requires an incredible amount of physical _r from the workers. Foreman Zhang hired fifty strong men to lift the massive steel beams.", zh: "這項繁重的建築工程需要工人付出驚人的體力勞動。張工頭雇用了五十名強壯的男子來搬運巨大的鋼樑。" },
+            { id: 106, word: "peasant", en: "The humble p t grew wheat and vegetables on a small plot of land. Farmer Wang lived a simple agricultural life without any modern luxuries.", zh: "這位謙卑的農民在一小塊土地上種植小麥和蔬菜。王農夫過著沒有任何現代奢侈品的簡單農業生活。" },
+            { id: 107, word: "noble", en: "The generous n e donated half of his fortune to build a new hospital. Lord Chang believed that helping the poor was his highest duty.", zh: "這位慷慨的貴族捐出了他一半的財產來建造一家新醫院。張爵士認為幫助窮人是他最高的職責。" },
+            { id: 108, word: "encounter", en: "Hikers often e r dangerous wild animals in this remote mountain area. Guide Wu always carries bear spray to protect his tourist groups.", zh: "登山客經常在這個偏遠的山區遭遇危險的野生動物。吳導遊總是隨身攜帶防熊噴霧以保護他的旅遊團。" },
+            { id: 109, word: "feast", en: "The grand f t included roasted pork, fresh seafood, and sweet desserts. Chef Liu prepared this amazing banquet to celebrate the glorious victory.", zh: "這場盛大的宴會包括了烤豬肉、新鮮海鮮和甜點。劉主廚準備了這場令人驚嘆的盛宴來慶祝光榮的勝利。" },
+            { id: 110, word: "merge", en: "The two small tech companies decided to m e into one large corporation. CEO Wang believes this combination will significantly increase their market share.", zh: "兩家小型科技公司決定合併成一家大企業。王執行長相信這種結合將會顯著增加他們的市佔率。" },
+            { id: 111, word: "distinct", en: "The beautiful bird has a very d t red mark on its chest. Photographer Lin easily identified the rare species among the other flying creatures.", zh: "這隻美麗的鳥胸前有一個非常明顯的紅色印記。林攝影師很容易就能在其他飛行生物中辨認出這個稀有物種。" },
+            { id: 112, word: "endure", en: "The marathon runners must e e extreme physical exhaustion to finish the race. Coach Yang trains his athletes to push through the intense muscle pain.", zh: "馬拉松跑者必須忍受極度的體力透支才能完成比賽。楊教練訓練他的運動員熬過強烈的肌肉疼痛。" },
+            { id: 113, word: "reminder", en: "The loud r r on my phone woke me up for the morning meeting. Secretary Lin set this alarm to ensure I would never be late.", zh: "我手機上大聲的提醒鈴聲把我叫醒去參加早會。林秘書設定了這個鬧鐘以確保我絕不會遲到。" },
+            { id: 114, word: "presentation", en: "The nervous student delivered a perfect p n about global warming yesterday. Classmate Wu praised her clear slides and confident speaking style.", zh: "緊張的學生昨天發表了一場關於全球暖化的完美簡報。吳同學稱讚了她清晰的投影片和自信的演說風格。" },
+            { id: 115, word: "boost", en: "The new advertising campaign will definitely b t our monthly sales figures. Manager Huang believes the creative posters can attract far more teenage customers.", zh: "新的廣告活動肯定會提升我們每月的銷售數字。黃經理相信這些有創意的海報能吸引多得多的青少年顧客。" },
+            { id: 116, word: "accomplished", en: "The dedicated team perfectly a hed all their project goals ahead of schedule. Director Chen rewarded everyone with a large bonus for their impressive success.", zh: "這個盡責的團隊在進度前完美達成了他們所有的專案目標。陳總監用大筆獎金獎勵了每個人,以表彰他們令人印象深刻的成功。" },
+            { id: 117, word: "purchase", en: "The wealthy customer decided to p e the luxurious sports car immediately. Salesman Lin happily prepared the official documents for this expensive transaction.", zh: "這位富有的顧客決定立刻購買這輛豪華跑車。林業務員開心地為這筆昂貴的交易準備了正式文件。" },
+            { id: 118, word: "trigger", en: "The loud fireworks could easily t r an anxiety attack for the rescue dog. Owner Wang keeps the poor animal in a quiet room during the festival.", zh: "大聲的煙火很容易引發這隻救援犬的焦慮發作。王主人在節慶期間將這隻可憐的動物關在安靜的房間裡。" },
+            { id: 119, word: "psychology", en: "The fascinating field of p _y studies how the human mind works. Professor Chang explains complex mental processes to her university students.", zh: "迷人的心理學領域研究人類大腦的運作方式。張教授向她的大學生解釋複雜的心理過程。" },
+            { id: 120, word: "stability", en: "The thick metal base provides excellent s y for the tall floor lamp. Designer Wu ensured the heavy object would never fall over easily.", zh: "厚實的金屬底座為高大的落地燈提供了極佳的穩定性。吳設計師確保這個重物絕對不會輕易倒下。" },
+            { id: 121, word: "participant", en: "Every single p_t must sign a safety waiver before joining the extreme marathon. Organizer Lin strictly enforces this rule to protect the runners.", zh: "每一位參加者在加入這場極限馬拉松之前,都必須簽署一份安全免責聲明。林主辦人嚴格執行這項規定以保護跑者。" },
+            { id: 122, word: "implication", en: "The hidden i n in his speech suggested that massive layoffs were coming. Employee Zhang felt very anxious after hearing the manager's subtle warning.", zh: "他演講中隱含的暗示表明即將進行大規模裁員。張員工在聽到經理微妙的警告後感到非常焦慮。" },
+            { id: 123, word: "motivation", en: "The promised bonus served as a strong m n for the sales team. Manager Lee knew that extra money would encourage everyone to work harder.", zh: "承諾的獎金成為了業務團隊強大的動力。李經理知道額外的金錢會鼓勵每個人更努力工作。" },
+            { id: 124, word: "polished", en: "The professional speaker delivered a highly p_hed speech at the annual conference. Audience members were deeply impressed by her flawless and smooth delivery.", zh: "這位專業講者在年度會議上發表了一場極度精鍊的演講。觀眾對她完美無瑕且流暢的表達留下了深刻的印象。" },
+            { id: 125, word: "outfit", en: "The stylish o t perfectly matched the elegant atmosphere of the evening gala. Model Lin received numerous compliments on her beautiful dress and matching shoes.", zh: "這套時尚的服裝完美搭配了晚會優雅的氛圍。林模特兒的漂亮禮服和相配的鞋子收到了無數的讚美。" },
+            { id: 126, word: "reinforce", en: "The construction crew used thick steel bars to re the concrete walls. Engineer Yang wanted to ensure the tall building could survive massive earthquakes.", zh: "施工團隊使用了粗鋼筋來加固混凝土牆。楊工程師想要確保這棟高樓能撐過大地震。" },
+            { id: 127, word: "accessible", en: "The newly built subway station is completely a e to wheelchair users. Mayor Zhao installed several modern elevators to help disabled passengers travel easily.", zh: "新建的地鐵站對輪椅使用者來說是完全無障礙的。趙市長安裝了幾部現代化的電梯,以幫助身障乘客輕鬆出行。" }
+        ];
+
+        let isAllExpanded = false;
+
+        function renderCards() {
+            const container = document.getElementById('cards-container');
+            container.innerHTML = '';
+
+            vocabData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-xl p-5 shadow-sm border border-morandi-accent/60";
+                
+                card.innerHTML = `
+                    <!-- 題目區塊：題號與挖空句子 -->
+                    <div class="flex items-start gap-4">
+                        <span class="flex-shrink-0 flex items-center justify-center w-8 h-8 mt-0.5 rounded-full bg-morandi-highlight text-morandi-primary font-bold text-sm">
+                            ${item.id}
+                        </span>
+                        <p class="text-[1.05rem] text-morandi-textMain sentence-text font-medium">
+                            ${item.en}
+                        </p>
+                    </div>
+
+                    <!-- 隱藏的解答區塊 -->
+                    <div id="answer-${item.id}" class="answer-transition">
+                        <div class="mt-4 p-4 bg-morandi-highlight/50 rounded-lg border border-morandi-accent/40 text-center">
+                            <h2 class="text-3xl font-bold text-morandi-primary mb-2 tracking-wider">${item.word}</h2>
+                            <p class="text-[0.95rem] text-morandi-textSub leading-relaxed">
+                                ${item.zh}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 切換按鈕 -->
+                    <button 
+                        id="btn-${item.id}"
+                        onclick="toggleCard(${item.id})" 
+                        class="mt-4 w-full py-2.5 bg-morandi-highlight hover:bg-morandi-accent text-morandi-primary font-semibold rounded-lg transition-colors flex items-center justify-center gap-2">
+                        <span>顯示答案</span>
+                        <svg class="w-4 h-4 transition-transform duration-300" id="icon-${item.id}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function toggleCard(id) {
+            const answerDiv = document.getElementById(`answer-${id}`);
+            const btn = document.getElementById(`btn-${id}`);
+            const icon = document.getElementById(`icon-${id}`);
+            const isShowing = answerDiv.classList.contains('show');
+
+            if (isShowing) {
+                answerDiv.classList.remove('show');
+                btn.querySelector('span').innerText = '顯示答案';
+                btn.classList.remove('bg-morandi-primary', 'text-white');
+                btn.classList.add('bg-morandi-highlight', 'text-morandi-primary');
+                icon.classList.remove('rotate-180');
+            } else {
+                answerDiv.classList.add('show');
+                btn.querySelector('span').innerText = '隱藏答案';
+                btn.classList.remove('bg-morandi-highlight', 'text-morandi-primary');
+                btn.classList.add('bg-morandi-primary', 'text-white');
+                icon.classList.add('rotate-180');
+            }
+            
+            checkAllStatus();
+        }
+
+        function toggleAll() {
+            isAllExpanded = !isAllExpanded;
+            
+            vocabData.forEach(item => {
+                const answerDiv = document.getElementById(`answer-${item.id}`);
+                const btn = document.getElementById(`btn-${item.id}`);
+                const icon = document.getElementById(`icon-${item.id}`);
+                
+                if (isAllExpanded) {
+                    answerDiv.classList.add('show');
+                    btn.querySelector('span').innerText = '隱藏答案';
+                    btn.classList.remove('bg-morandi-highlight', 'text-morandi-primary');
+                    btn.classList.add('bg-morandi-primary', 'text-white');
+                    icon.classList.add('rotate-180');
+                } else {
+                    answerDiv.classList.remove('show');
+                    btn.querySelector('span').innerText = '顯示答案';
+                    btn.classList.remove('bg-morandi-primary', 'text-white');
+                    btn.classList.add('bg-morandi-highlight', 'text-morandi-primary');
+                    icon.classList.remove('rotate-180');
+                }
+            });
+
+            updateGlobalBtnUI();
+        }
+
+        function checkAllStatus() {
+            const allExpandedNow = vocabData.every(item => {
+                return document.getElementById(`answer-${item.id}`).classList.contains('show');
+            });
+            const allCollapsedNow = vocabData.every(item => {
+                return !document.getElementById(`answer-${item.id}`).classList.contains('show');
+            });
+
+            if (allExpandedNow) {
+                isAllExpanded = true;
+                updateGlobalBtnUI();
+            } else if (allCollapsedNow) {
+                isAllExpanded = false;
+                updateGlobalBtnUI();
+            }
+        }
+
+        function updateGlobalBtnUI() {
+            const globalBtn = document.getElementById('toggleAllBtn');
+            if (isAllExpanded) {
+                globalBtn.innerText = '隱藏全部解答';
+                globalBtn.classList.replace('bg-morandi-primary', 'bg-morandi-secondary');
+            } else {
+                globalBtn.innerText = '顯示全部解答';
+                globalBtn.classList.replace('bg-morandi-secondary', 'bg-morandi-primary');
+            }
+        }
+
+        window.onload = function() {
+            renderCards();
+        };
+    </script>
+</body>
+</html>
