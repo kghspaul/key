@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 2 The Marshmallow Challenge｜詳解</title>
+<style>
+  :root{
+    --bg:#f7f5f0;
+    --card:#ffffff;
+    --ink:#2b2620;
+    --ink-soft:#5c5548;
+    --accent:#c0392b;
+    --accent-soft:#f6e2df;
+    --correct:#1e7145;
+    --correct-bg:#e6f4ec;
+    --wrong:#a83232;
+    --wrong-bg:#fbeceb;
+    --clue:#8a5a00;
+    --clue-bg:#fdf1dd;
+    --tag-bg:#2b2620;
+    --line:#e4ddd0;
+    --serif: "Noto Serif TC", "Georgia", serif;
+    --sans: "Noto Sans TC", "Helvetica Neue", Arial, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-padding-top:64px;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.75;
+    padding-bottom:60px;
+  }
+  header.hero{
+    background:linear-gradient(135deg,#2b2620,#463c30);
+    color:#f7f2e9;
+    padding:36px 20px 28px;
+    text-align:center;
+  }
+  header.hero .tag{
+    display:inline-block;
+    background:var(--accent);
+    color:#fff;
+    font-size:12px;
+    letter-spacing:2px;
+    padding:4px 12px;
+    border-radius:20px;
+    margin-bottom:12px;
+  }
+  header.hero h1{
+    margin:0 0 6px;
+    font-family:var(--serif);
+    font-size:clamp(20px,4vw,30px);
+  }
+  header.hero p{
+    margin:0;
+    opacity:.8;
+    font-size:14px;
+  }
+  nav.subnav{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:rgba(247,245,240,.96);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+    display:flex;
+    overflow-x:auto;
+    padding:8px 10px;
+    gap:6px;
+  }
+  nav.subnav a{
+    flex:0 0 auto;
+    text-decoration:none;
+    color:var(--ink-soft);
+    font-size:13px;
+    padding:7px 12px;
+    border-radius:16px;
+    white-space:nowrap;
+    border:1px solid transparent;
+  }
+  nav.subnav a:hover{background:#fff;border-color:var(--line);color:var(--ink);}
+  main{max-width:880px;margin:0 auto;padding:0 16px;}
+  section.block{margin-top:42px;}
+  h2.section-title{
+    font-family:var(--serif);
+    font-size:22px;
+    border-left:6px solid var(--accent);
+    padding-left:12px;
+    margin-bottom:4px;
+  }
+  .pct{color:var(--ink-soft);font-size:13px;margin:0 0 18px 18px;}
+  .passage{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:18px 20px;
+    margin-bottom:18px;
+  }
+  .passage h4{margin:0 0 8px;font-size:13px;color:var(--ink-soft);letter-spacing:1px;}
+  .passage .en{font-family:var(--serif);font-size:15.5px;}
+  .passage .zh{
+    margin-top:12px;
+    padding-top:12px;
+    border-top:1px dashed var(--line);
+    color:var(--ink-soft);
+    font-size:14.5px;
+  }
+  .word-bank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin:10px 0 18px;
+  }
+  .word-bank span{
+    background:var(--accent-soft);
+    border:1px solid #e6c3bd;
+    color:var(--accent);
+    padding:4px 10px;
+    border-radius:8px;
+    font-size:13.5px;
+  }
+  .qcard{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:16px 18px 18px;
+    margin-bottom:16px;
+    scroll-margin-top:70px;
+  }
+  .qhead{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:8px;
+  }
+  .qnum{font-weight:700;font-size:15px;}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;}
+  .tag{
+    background:var(--tag-bg);
+    color:#fff;
+    font-size:11.5px;
+    padding:3px 9px;
+    border-radius:12px;
+    white-space:nowrap;
+  }
+  .stem{font-family:var(--serif);font-size:15px;margin-bottom:10px;}
+  .stem b{color:var(--accent);}
+  .zh-stem{color:var(--ink-soft);font-size:13.5px;margin:-6px 0 10px;}
+  table.opts{width:100%;border-collapse:collapse;margin-bottom:10px;font-size:14px;}
+  table.opts td{padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top;}
+  table.opts td.letter{width:26px;font-weight:700;}
+  tr.correct td{background:var(--correct-bg);}
+  tr.correct td.letter{color:var(--correct);}
+  tr.wrong td.letter{color:var(--wrong);}
+  .answer-line{
+    font-weight:700;
+    color:var(--correct);
+    margin-bottom:10px;
+    font-size:14.5px;
+  }
+  .expl{margin-top:6px;}
+  .expl h5{
+    margin:12px 0 4px;
+    font-size:13px;
+    letter-spacing:1px;
+    color:var(--ink-soft);
+  }
+  .expl h5.correct-h{color:var(--correct);}
+  .expl h5.wrong-h{color:var(--wrong);}
+  .expl h5.clue-h{color:var(--clue);}
+  .expl p{margin:2px 0 8px;font-size:14px;}
+  .wrong-item{
+    background:var(--wrong-bg);
+    border-left:3px solid var(--wrong);
+    padding:8px 10px;
+    border-radius:0 6px 6px 0;
+    margin-bottom:8px;
+    font-size:13.8px;
+  }
+  .wrong-item b{color:var(--wrong);}
+  .wrong-item .valid-when{
+    display:block;
+    margin-top:3px;
+    color:var(--ink-soft);
+    font-size:13px;
+  }
+  .clue-box{
+    background:var(--clue-bg);
+    border-left:3px solid var(--clue);
+    padding:8px 10px;
+    border-radius:0 6px 6px 0;
+    font-size:13.8px;
+  }
+  .correct-box{
+    background:var(--correct-bg);
+    border-left:3px solid var(--correct);
+    padding:8px 10px;
+    border-radius:0 6px 6px 0;
+    font-size:13.8px;
+  }
+  .mini-table{width:100%;font-size:13.8px;border-collapse:collapse;margin-top:4px;}
+  .mini-table td{padding:5px 6px;border-bottom:1px dashed var(--line);}
+  .mini-table td.k{width:70px;color:var(--ink-soft);white-space:nowrap;}
+  footer{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:12.5px;
+    margin-top:50px;
+    padding:0 20px;
+  }
+  @media (max-width:480px){
+    .qhead{flex-direction:column;align-items:flex-start;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="tag">英文 3 進階卷・第 2 回</div>
+  <h1>Lesson 2　The Marshmallow Challenge: A Lesson in Keeping It Simple</h1>
+  <p>逐題詳解｜中譯・解題線索・考點標籤・誤答逐一分析</p>
+</header>
+
+<nav class="subnav">
+  <a href="#sec1">I. 文意字彙</a>
+  <a href="#sec2">II. 綜合測驗</a>
+  <a href="#sec3">III. 文意選填</a>
+  <a href="#sec4">IV. 篇章結構</a>
+  <a href="#sec5">V. 翻譯</a>
+  <a href="#sec6">VI. 混合題</a>
+</nav>
+
+<main>
+
+<!-- ============ SECTION I ============ -->
+<section class="block" id="sec1">
+  <h2 class="section-title">I. 文意字彙與詞類變化</h2>
+  <p class="pct">配分 20% ｜ 依句意與詞類線索填入正確單字</p>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">1. route</span><div class="tags"><span class="tag">考點：名詞語意（同義替換）</span></div></div>
+    <div class="stem">Instead of taking the shortest way home, I chose a different r<u>&nbsp;&nbsp;&nbsp;</u>e with less traffic.</div>
+    <div class="zh-stem">我沒有選擇回家最短的路，而是選了一條交通量較少的不同路線。</div>
+    <div class="correct-box"><b>解析：</b>route（路線）為名詞，作動詞 chose 的受詞 "a different route"。句首 "Instead of taking the shortest way"（不走最短的路）與 route 語意呼應——way 與 route 同指「路線」。</div>
+    <div class="clue-box"><b>解題線索：</b>"a different ___ with less traffic" 中，with less traffic（交通量較少）修飾的必須是「一條路」，指向 route 而非抽象的「方法」。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">2. explore</span><div class="tags"><span class="tag">考點：不定詞需接原形動詞</span></div></div>
+    <div class="stem">Space technology enables us to e<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>e the universe beyond the Earth so that we can discover more about other planets.</div>
+    <div class="zh-stem">太空科技使我們能夠探索地球以外的宇宙，進而發現更多關於其他行星的事。</div>
+    <div class="correct-box"><b>解析：</b>enable sb. to V（使某人能夠做...）之後須接原形動詞，explore（探索）+ the universe（受詞），語意通順。</div>
+    <div class="clue-box"><b>解題線索：</b>"enables us to ___" 的 to 是不定詞記號，後面一定是原形動詞；後半句 "discover more about other planets"（發現更多行星資訊）呼應「探索」的語意。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">3. slight</span><div class="tags"><span class="tag">考點：形容詞語意＋前置修飾</span></div></div>
+    <div class="stem">The company didn't make much money last year. There was only a s<u>&nbsp;&nbsp;&nbsp;</u>t increase in sales.</div>
+    <div class="zh-stem">這家公司去年並沒有賺很多錢，銷售額只有些微的成長。</div>
+    <div class="correct-box"><b>解析：</b>slight（些微的，形容詞）修飾 increase（名詞），構成 a slight increase（些微的成長）。</div>
+    <div class="clue-box"><b>解題線索：</b>前句 "didn't make much money"（沒賺很多錢）已限定成長幅度很小，故空格須填表「程度小」的形容詞。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">4. promised</span><div class="tags"><span class="tag">考點：動詞固定搭配 promise to V＋過去式</span></div></div>
+    <div class="stem">At the wedding, Frank p<u>&nbsp;&nbsp;&nbsp;</u>ed to always be there for his wife and support her through thick and thin, no matter what happened in life.</div>
+    <div class="zh-stem">在婚禮上，Frank 承諾無論人生發生什麼事，都會永遠陪伴妻子、與她同甘共苦。</div>
+    <div class="correct-box"><b>解析：</b>promise to V（承諾要做...）為固定搭配；"At the wedding"（在婚禮當天，過去的時間點）提示須用過去式 promised。</div>
+    <div class="clue-box"><b>解題線索：</b>空格後方直接接 "to always be there"，to 前面的動詞必須能接不定詞受詞，promise to V 正是婚禮誓詞的典型句型。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">5. unique</span><div class="tags"><span class="tag">考點：形容詞語意</span></div></div>
+    <div class="stem">Peter's u<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>e way of thinking allows him to put forward ideas that are different from his friends'.</div>
+    <div class="zh-stem">Peter 獨特的思考方式讓他能夠提出與朋友們不同的想法。</div>
+    <div class="correct-box"><b>解析：</b>unique（獨特的）修飾 way of thinking（思考方式）。</div>
+    <div class="clue-box"><b>解題線索：</b>後半句 "different from his friends'"（與朋友們不同）正是 unique（獨一無二）的語意證據。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">6. materials</span><div class="tags"><span class="tag">考點：名詞語意＋複數形式</span></div></div>
+    <div class="stem">The author collected people's stories and used them as m<u>&nbsp;&nbsp;&nbsp;</u>ls for his books.</div>
+    <div class="zh-stem">這位作者蒐集人們的故事，並將它們作為他寫書的素材。</div>
+    <div class="correct-box"><b>解析：</b>materials（材料、素材）作 as 的受詞，"use A as B"（把A當作B使用）為固定句型。</div>
+    <div class="clue-box"><b>解題線索：</b>前面 them 指複數的 stories（故事們），對應的素材也應以複數 materials 呈現，語意上與可數的「多篇故事」相配。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">7. adjusted</span><div class="tags"><span class="tag">考點：動詞語意＋被動語態 needs to be p.p.</span></div></div>
+    <div class="stem">Amanda's watch needs to be a<u>&nbsp;&nbsp;&nbsp;</u>ted by one hour every time she flies from Taiwan to Japan.</div>
+    <div class="zh-stem">Amanda 每次從台灣飛到日本時，她的手錶都需要調整一小時。</div>
+    <div class="correct-box"><b>解析：</b>手錶是被「調整」的對象，need to be + p.p. 為被動句型，故填入過去分詞 adjusted。</div>
+    <div class="clue-box"><b>解題線索：</b>"needs to be ___ted" 中的 be 已表明後面須接過去分詞（被動語態）；"by one hour"（調整一小時）是 adjust 的典型搭配。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">8. reliable</span><div class="tags"><span class="tag">考點：詞類變化 rely (v.) → reliable (adj.)</span></div></div>
+    <div class="stem">The Internet is not always a <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> (rely) source of information because anyone can publish fake news and spread it online.</div>
+    <div class="zh-stem">網路並非總是可靠的資訊來源，因為任何人都可以發布假新聞並在網路上散播。</div>
+    <div class="correct-box"><b>解析：</b>空格在 a 和名詞 source 之間，須填形容詞修飾 source，動詞 rely（依賴）須轉為形容詞 reliable（可靠的）。</div>
+    <div class="clue-box"><b>解題線索：</b>a + ___ + N 的結構明確要求形容詞；後半句「假新聞散播」說明網路資訊「不可靠」，語意對應 reliable 的反面情境。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">9. stable</span><div class="tags"><span class="tag">考點：詞類變化 stability (n.) → stable (adj.)</span></div></div>
+    <div class="stem">Kate and Nick keep going out with each other in hopes of developing a <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> (stability) relationship.</div>
+    <div class="zh-stem">Kate 和 Nick 持續交往，希望能發展出一段穩定的關係。</div>
+    <div class="correct-box"><b>解析：</b>空格修飾名詞 relationship，須為形容詞，名詞 stability（穩定，n.）須轉為形容詞 stable（穩定的）。</div>
+    <div class="clue-box"><b>解題線索：</b>a + ___ + relationship 的結構要求形容詞；develop a stable relationship（發展穩定關係）為常見固定用法。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">10. architecture</span><div class="tags"><span class="tag">考點：詞類變化 architect (人) → architecture (事物)</span></div></div>
+    <div class="stem">Many visitors come to this historic site to admire its fine <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> (architect).</div>
+    <div class="zh-stem">許多遊客來到這個歷史遺址欣賞它精美的建築。</div>
+    <div class="correct-box"><b>解析：</b>admire 的受詞須為名詞，architect（建築師，指「人」）須轉為 architecture（建築、建築風格，指「事物」），fine architecture（精美的建築）語意通順。</div>
+    <div class="clue-box"><b>解題線索：</b>its fine ___ 中 fine 是形容詞，其後與 admire 的受詞都指向「可被欣賞的事物」，而非「人」，故排除 architect 本身。</div>
+  </div>
+</section>
+
+<!-- ============ SECTION II ============ -->
+<section class="block" id="sec2">
+  <h2 class="section-title">II. 綜合測驗</h2>
+  <p class="pct">配分 20%（第 11–20 題）</p>
+
+  <div class="passage">
+    <h4>原文</h4>
+    <p class="en">I'm here reporting live at the first-ever Marshmallow Challenge event in Boston. This event is organized by Canadian author Tom Wujec, who is attempting to raise the popularity of the challenge. Wujec's hope is that companies <b>11.</b>___ will use the Marshmallow Challenge as a team-building exercise.
+    <br><br>The rules of the challenge are simpler than <b>12.</b>___ of many other games. Each team gets a few sticks of spaghetti, one roll of tape, a meter of string, and a marshmallow. They must <b>13.</b>___ a free-standing structure with the spaghetti, tape, and string in just eighteen minutes. Also, the challenge is <b>14.</b>___ complete <b>14.</b>___ the team succeeds in placing the marshmallow on top of their structure. When the time is up, the team with the tallest structure holding the marshmallow is declared the winner.
+    <br><br>The Marshmallow Challenge <b>15.</b>___ a number of times in the past few years. However, <b>16.</b>___ previous challenges in which teams were formed according to age or sex, Wujec has divided up his teams based on profession this time. Competing today are five teams: lawyers, CEOs, architects and engineers, business <b>17.</b>___, and kindergarten students.
+    <br><br>The results are surprising. As expected, the architects and engineers won. However, incredibly, the kindergartners finished second, proving that age and experience are not the most important <b>18.</b>___ of teamwork. It seems that the secret of the children's success is their willingness to engage in <b>19.</b>___. Instead of spending a lot of time talking and planning at the beginning, they <b>20.</b>___ work straight away.
+    <br><br>This is Tom Dickson reporting live from Boston. Now, back to you in the studio.</p>
+    <div class="zh">
+      <b>中譯：</b>我正在波士頓現場報導有史以來第一場棉花糖挑戰賽。這項活動是由加拿大作家 Tom Wujec 所籌辦，他致力於提高這項挑戰的知名度。Wujec 希望世界各地的公司都能將棉花糖挑戰運用作為團隊建立活動。<br><br>
+      這項挑戰的規則比許多其他遊戲的規則簡單。每一隊會拿到幾根義大利麵條、一捲膠帶、一公尺長的線，以及一顆棉花糖。他們必須在僅僅十八分鐘內，用義大利麵、膠帶和線建造出一個能夠獨立站立的結構。此外，直到該隊成功將棉花糖放上結構頂端之前，這項挑戰都不算完成。時間一到，結構最高且棉花糖仍在上面的隊伍便獲勝。<br><br>
+      棉花糖挑戰在過去幾年中已被舉辦過許多次。然而，不同於先前依年齡或性別分組的挑戰，Wujec 這次是依職業來分組。今天參賽的五支隊伍分別是：律師、執行長、建築師與工程師、商學系畢業生，以及幼稚園學童。<br><br>
+      結果令人驚訝。正如預期，建築師與工程師隊獲勝。然而，令人意外的是，幼稚園學童隊竟拿下第二名，證明了年齡和經驗並非團隊合作中最重要的元素。看來孩子們成功的祕訣，在於他們願意不斷嘗試錯誤。他們不是一開始就花大量時間討論、規劃，而是直接動手開始做。<br><br>
+      以上是 Tom Dickson 在波士頓的現場報導，現在把畫面交還給攝影棚主播。
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">11.</span><div class="tags"><span class="tag">考點：慣用語意＋地方副詞片語修飾名詞</span></div></div>
+    <table class="opts">
+      <tr class="wrong"><td class="letter">A</td><td>beyond the reach（超出…範圍/能力所及，須搭配 of）</td></tr>
+      <tr class="correct"><td class="letter">B</td><td>around the world（世界各地）</td></tr>
+      <tr class="wrong"><td class="letter">C</td><td>around the corner（即將發生，用於時間）</td></tr>
+      <tr class="wrong"><td class="letter">D</td><td>out of this world（棒極了，讚美用語）</td></tr>
+    </table>
+    <div class="answer-line">正解：(B) around the world</div>
+    <div class="correct-box"><b>為什麼對：</b>around the world 修飾 companies，表示「全世界的公司」，語意通順：Wujec 希望全球各地的公司都能採用這項挑戰。</div>
+    <div class="wrong-item"><b>(A) beyond the reach</b>——語意是「超出能力/範圍所及」，且此片語須搭配 of（beyond the reach of sth），不能單獨修飾 companies。<span class="valid-when">何時對：例如 "The price is beyond the reach of most families."（這價格是大多數家庭負擔不起的。）</span></div>
+    <div class="wrong-item"><b>(C) around the corner</b>——字面「在轉角」，慣用義為「即將到來」，用於形容時間上快發生的事，不能表示地理上的「世界各地」。<span class="valid-when">何時對：例如 "Christmas is just around the corner."（聖誕節快到了。）</span></div>
+    <div class="wrong-item"><b>(D) out of this world</b>——意為「棒極了、超凡」，是誇讚形容詞，不能表示「遍及世界」的地理範圍。<span class="valid-when">何時對：例如形容食物或體驗，"The dessert tasted out of this world."（那甜點好吃到不可思議。）</span></div>
+    <div class="clue-box"><b>解題線索：</b>Wujec 的目標是 "raise the popularity of the challenge"（提高挑戰的知名度），暗示他希望挑戰能被全球推廣，故 companies 後應接表示「遍布全球」的片語。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">12.</span><div class="tags"><span class="tag">考點：指示代名詞單複數一致＋比較句代替用法</span></div></div>
+    <table class="opts">
+      <tr class="wrong"><td class="letter">A</td><td>this（單數，代替單數名詞）</td></tr>
+      <tr class="wrong"><td class="letter">B</td><td>these（複數，近指）</td></tr>
+      <tr class="wrong"><td class="letter">C</td><td>that（單數，代替單數名詞）</td></tr>
+      <tr class="correct"><td class="letter">D</td><td>those（複數，遠指，代替前述複數名詞）</td></tr>
+    </table>
+    <div class="answer-line">正解：(D) those</div>
+    <div class="correct-box"><b>為什麼對：</b>those 代替前面的複數名詞 the rules，避免重複，指 "the rules of many other games"；比較句中兩者為不同事物（本挑戰 vs. 其他遊戲），慣用遠指 those。</div>
+    <div class="wrong-item"><b>(A) this</b>——單數指示代名詞，無法代替複數名詞 the rules，數量不一致。<span class="valid-when">何時對：代替單數名詞時，如 "This book is more interesting than that one."</span></div>
+    <div class="wrong-item"><b>(B) these</b>——雖為複數，但屬「近指」，通常指眼前或剛提及、關係緊密的事物；此處是拿本挑戰規則與「其他遊戲」比較，屬遠指語境，故不用 these。<span class="valid-when">何時對：指代剛提及、且說話者視為「這些（在近處/剛講到）」的複數事物時。</span></div>
+    <div class="wrong-item"><b>(C) that</b>——單數指示代名詞，同樣無法代替複數的 the rules。<span class="valid-when">何時對：代替單數名詞時，如 "The climate here is milder than that of the north."</span></div>
+    <div class="clue-box"><b>解題線索：</b>主詞 The rules 為複數，比較對象也須用複數代名詞；比較句型 "the N of A...than those of B" 是固定考點。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">13.</span><div class="tags"><span class="tag">考點：動詞語意＋及物動詞受詞搭配</span></div></div>
+    <table class="opts">
+      <tr class="wrong"><td class="letter">A</td><td>employ（雇用；運用）</td></tr>
+      <tr class="wrong"><td class="letter">B</td><td>innovate（創新，通常不直接接「結構」當受詞）</td></tr>
+      <tr class="correct"><td class="letter">C</td><td>construct（建造）</td></tr>
+      <tr class="wrong"><td class="letter">D</td><td>confine（限制、侷限）</td></tr>
+    </table>
+    <div class="answer-line">正解：(C) construct</div>
+    <div class="correct-box"><b>為什麼對：</b>construct（建造）+ a free-standing structure（能獨立站立的結構）語意通順，且與後方 "with the spaghetti, tape, and string"（用材料）自然搭配，表示「用材料建造結構」。</div>
+    <div class="wrong-item"><b>(A) employ</b>——意為「雇用」或「運用（某方法/人）」，"employ a structure" 語意不通，不能「運用一個結構」。<span class="valid-when">何時對：如 "employ a strategy"（運用策略）或 "employ workers"（雇用員工）。</span></div>
+    <div class="wrong-item"><b>(B) innovate</b>——意為「創新」，通常不接具體的「結構」當受詞（多為不及物或接抽象概念）。<span class="valid-when">何時對：如 "innovate in the field of technology"（在科技領域創新）。</span></div>
+    <div class="wrong-item"><b>(D) confine</b>——意為「限制、侷限」，"confine a structure" 語意不合，不能「限制一個結構」。<span class="valid-when">何時對：如 "confine the discussion to one topic"（把討論限制在一個主題上）。</span></div>
+    <div class="clue-box"><b>解題線索：</b>受詞 "a free-standing structure" 加上 "with the spaghetti, tape, and string"（用義大利麵、膠帶、線）明確指出動作是「用材料蓋出東西」，指向 construct。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">14.</span><div class="tags"><span class="tag">考點：固定句型 not...until...</span></div></div>
+    <table class="opts">
+      <tr class="wrong"><td class="letter">A</td><td>as...as...（與...一樣）</td></tr>
+      <tr class="wrong"><td class="letter">B</td><td>not...but...（不是...而是...，對等對比兩件事）</td></tr>
+      <tr class="wrong"><td class="letter">C</td><td>so...that...（如此...以致於...，須接形容詞/副詞程度）</td></tr>
+      <tr class="correct"><td class="letter">D</td><td>not...until...（直到...才...）</td></tr>
+    </table>
+    <div class="answer-line">正解：(D) not; until</div>
+    <div class="correct-box"><b>為什麼對：</b>"the challenge is not complete until the team succeeds..." 意為「直到該隊成功將棉花糖放上結構頂端之前，挑戰都不算完成」，正是 not...until...（直到...才...）的典型句型。</div>
+    <div class="wrong-item"><b>(A) as; as</b>——「與...一樣」的比較句型，此句並非做比較，語意不合。<span class="valid-when">何時對：如 "The test was as difficult as I expected."</span></div>
+    <div class="wrong-item"><b>(B) not; but</b>——用於對等地否定一件事、肯定另一件事，句型應為 "not A but B"；此處代入變成 "the challenge is not complete but the team succeeds..." 語意不通，不是在對比兩件並列的事。<span class="valid-when">何時對：如 "It was not luck but hard work that led to his success."</span></div>
+    <div class="wrong-item"><b>(C) so; that</b>——須接形容詞/副詞表示「如此...以致於」的因果程度，此處 complete 前後結構不符合 so...that 的語法框架。<span class="valid-when">何時對：如 "He was so tired that he fell asleep immediately."</span></div>
+    <div class="clue-box"><b>解題線索：</b>句意「挑戰要等到隊伍成功放上棉花糖『才』算完成」——「直到...才」的中文語感直接對應 not...until 的固定句型。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">15.</span><div class="tags"><span class="tag">考點：現在完成式＋被動語態＋時間副詞標誌</span></div></div>
+    <table class="opts">
+      <tr class="wrong"><td class="letter">A</td><td>has held（現在完成式，主動）</td></tr>
+      <tr class="wrong"><td class="letter">B</td><td>had held（過去完成式，主動）</td></tr>
+      <tr class="correct"><td class="letter">C</td><td>has been held（現在完成式，被動）</td></tr>
+      <tr class="wrong"><td class="letter">D</td><td>has been holding（現在完成進行式，被動，語意不合）</td></tr>
+    </table>
+    <div class="answer-line">正解：(C) has been held</div>
+    <div class="correct-box"><b>為什麼對：</b>The Marshmallow Challenge（挑戰活動本身）是被「舉辦」的對象，須用被動語態；"in the past few years"（過去幾年來）是現在完成式的典型時間標誌，故用 has been held。</div>
+    <div class="wrong-item"><b>(A) has held</b>——主動語態，但挑戰不能主動「舉辦」自己（hold 的動作應由人/單位發出），語態錯誤。<span class="valid-when">何時對：主詞若換成「舉辦者」，如 "Wujec has held this event many times."</span></div>
+    <div class="wrong-item"><b>(B) had held</b>——過去完成式，且為主動語態；過去完成式須有「過去某時間點之前」的語境，本句只有 "in the past few years"（延續到現在），時態不符，語態也錯誤。<span class="valid-when">何時對：需有更早的過去時間點對照時，如 "By 2020, the event had been held five times."（需搭配被動更正確）。</span></div>
+    <div class="wrong-item"><b>(D) has been holding</b>——現在完成進行式被動語態在文法上少見且不自然；此句強調的是「累計舉辦次數」而非「動作正在持續進行」，不用進行式。<span class="valid-when">何時對：進行式較少用於被動＋完成式的組合，此選項在一般用法中幾乎不成立。</span></div>
+    <div class="clue-box"><b>解題線索：</b>"in the past few years"（過去幾年中，延續到現在）是現在完成式的訊號詞；主詞 The Marshmallow Challenge 是被舉辦的活動本身，須用被動 be + p.p.。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">16.</span><div class="tags"><span class="tag">考點：介系詞語意（表對比）＋呼應 However</span></div></div>
+    <table class="opts">
+      <tr class="wrong"><td class="letter">A</td><td>besides（除了...之外，還有；表附加）</td></tr>
+      <tr class="wrong"><td class="letter">B</td><td>regarding（關於；表主題）</td></tr>
+      <tr class="correct"><td class="letter">C</td><td>unlike（不同於；表對比）</td></tr>
+      <tr class="wrong"><td class="letter">D</td><td>during（在...期間；表時間）</td></tr>
+    </table>
+    <div class="answer-line">正解：(C) unlike</div>
+    <div class="correct-box"><b>為什麼對：</b>unlike + N 表示「不同於」，與句首 However（然而）的對比語氣呼應，且後半句「Wujec 這次依職業分組」與「previous challenges（先前依年齡或性別分組）」形成鮮明對比。</div>
+    <div class="wrong-item"><b>(A) besides</b>——意為「除了...還有」，表附加而非對比，與 However 的轉折語氣不符。<span class="valid-when">何時對：如 "Besides English, she also speaks French."（除了英文，她還會說法文。）</span></div>
+    <div class="wrong-item"><b>(B) regarding</b>——意為「關於」，用於引出主題，不表對比關係。<span class="valid-when">何時對：如 "Regarding the schedule, we need to make some changes."（關於行程，我們需要做些調整。）</span></div>
+    <div class="wrong-item"><b>(D) during</b>——表「在某段期間內」，previous challenges（先前的挑戰活動）並非一段時間，語意不合。<span class="valid-when">何時對：如 "during the previous challenges"這種說法在文法上可能成立，但語意上是指「在挑戰期間」而非「與挑戰做對比」，不符此句需求。</span></div>
+    <div class="clue-box"><b>解題線索：</b>句首 However 已預告對比關係；後文 "Wujec has divided up his teams based on profession this time" 與前面「依年齡或性別分組」形成對比，故選 unlike。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">17.</span><div class="tags"><span class="tag">考點：並列結構語意一致＋固定搭配 business graduates</span></div></div>
+    <table class="opts">
+      <tr class="wrong"><td class="letter">A</td><td>rankings（排名）</td></tr>
+      <tr class="wrong"><td class="letter">B</td><td>approaches（方法）</td></tr>
+      <tr class="wrong"><td class="letter">C</td><td>capabilities（能力）</td></tr>
+      <tr class="correct"><td class="letter">D</td><td>graduates（畢業生）</td></tr>
+    </table>
+    <div class="answer-line">正解：(D) graduates</div>
+    <div class="correct-box"><b>為什麼對：</b>business graduates（商學院畢業生）與前後並列項目 lawyers（律師）、CEOs（執行長）、architects and engineers（建築師與工程師）、kindergarten students（幼稚園學童）同屬「人的身分/職業」類別。</div>
+    <div class="wrong-item"><b>(A) rankings</b>——「排名」不是一種身分或職業，無法與 lawyers、CEOs 並列。<span class="valid-when">何時對：如 "business rankings"（商業排名）指某種排行榜。</span></div>
+    <div class="wrong-item"><b>(B) approaches</b>——「方法」同樣不是身分類別，語意不合。<span class="valid-when">何時對：如 "business approaches"（商業手法）。</span></div>
+    <div class="wrong-item"><b>(C) capabilities</b>——「能力」也不是可以組隊參賽的「人」，語意不合。<span class="valid-when">何時對：如 "business capabilities"（商業能力）。</span></div>
+    <div class="clue-box"><b>解題線索：</b>並列結構 "lawyers, CEOs, architects and engineers, business ___, and kindergarten students" 中每一項都是「人的身分」，故須選同類詞 graduates。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">18.</span><div class="tags"><span class="tag">考點：名詞語意（避免重複）＋固定搭配 element of N</span></div></div>
+    <table class="opts">
+      <tr class="wrong"><td class="letter">A</td><td>collaborations（合作，與 teamwork 語意重複）</td></tr>
+      <tr class="correct"><td class="letter">B</td><td>elements（要素）</td></tr>
+      <tr class="wrong"><td class="letter">C</td><td>structures（結構）</td></tr>
+      <tr class="wrong"><td class="letter">D</td><td>corporations（公司）</td></tr>
+    </table>
+    <div class="answer-line">正解：(B) elements</div>
+    <div class="correct-box"><b>為什麼對：</b>elements of teamwork（團隊合作的要素）語意通順，表示「年齡與經驗並非團隊合作中最重要的要素」。</div>
+    <div class="wrong-item"><b>(A) collaborations</b>——與句尾 teamwork 語意重複（"the most important collaborations of teamwork" 等同「合作的合作」），邏輯不通。<span class="valid-when">何時對：如單獨使用 "international collaborations"（國際合作）。</span></div>
+    <div class="wrong-item"><b>(C) structures</b>——「結構」通常指實體或組織架構，不用於形容團隊合作的抽象要素。<span class="valid-when">何時對：如 "organizational structures"（組織結構）。</span></div>
+    <div class="wrong-item"><b>(D) corporations</b>——「公司」與此處抽象概念（團隊合作的關鍵）完全不合。<span class="valid-when">何時對：如 "multinational corporations"（跨國公司）。</span></div>
+    <div class="clue-box"><b>解題線索：</b>"the most important ___ of teamwork" 需要一個能表達「構成要素」的抽象名詞，element of N 為常見固定搭配。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">19.</span><div class="tags"><span class="tag">考點：慣用語意＋下文具體說明呼應</span></div></div>
+    <table class="opts">
+      <tr class="correct"><td class="letter">A</td><td>trial and error（試誤法，反覆嘗試）</td></tr>
+      <tr class="wrong"><td class="letter">B</td><td>good and evil（善與惡）</td></tr>
+      <tr class="wrong"><td class="letter">C</td><td>right and wrong（對與錯）</td></tr>
+      <tr class="wrong"><td class="letter">D</td><td>success and failure（成功與失敗）</td></tr>
+    </table>
+    <div class="answer-line">正解：(A) trial and error</div>
+    <div class="correct-box"><b>為什麼對：</b>trial and error（試誤，反覆嘗試）呼應下一句「他們不是先花時間討論規劃，而是直接動手嘗試」，正是「邊做邊試、從錯誤中學習」的具體描述。</div>
+    <div class="wrong-item"><b>(B) good and evil</b>——「善與惡」屬道德層面的對立概念，與團隊合作、動手嘗試無關。<span class="valid-when">何時對：如討論倫理議題時，"the battle between good and evil"。</span></div>
+    <div class="wrong-item"><b>(C) right and wrong</b>——「對與錯」偏向道德/是非判斷，而非「反覆嘗試」的行動方式，與下文「直接動手做」的具體行為不呼應。<span class="valid-when">何時對：如 "teach children the difference between right and wrong"。</span></div>
+    <div class="wrong-item"><b>(D) success and failure</b>——雖然語意接近，但 "engage in success and failure" 不通順（不會「從事」成功與失敗），且無法表達「反覆嘗試」的動作過程。<span class="valid-when">何時對：如 "the story of his success and failure"（他成功與失敗的故事）。</span></div>
+    <div class="clue-box"><b>解題線索：</b>下一句 "Instead of spending a lot of time talking and planning at the beginning, they get down to work straight away."（不先討論規劃、而是直接開始做）具體說明了「反覆嘗試」的行為模式，正是 trial and error 的定義。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">20.</span><div class="tags"><span class="tag">考點：動詞片語固定搭配（接受詞 work）</span></div></div>
+    <table class="opts">
+      <tr class="wrong"><td class="letter">A</td><td>are in charge（負責，須搭配 of，且不接 work）</td></tr>
+      <tr class="wrong"><td class="letter">B</td><td>roll up their sleeves（捲起袖子，通常獨立使用不接受詞）</td></tr>
+      <tr class="correct"><td class="letter">C</td><td>get down to（認真開始做，可接 work/business）</td></tr>
+      <tr class="wrong"><td class="letter">D</td><td>figure out（弄清楚、想出，不接 work 當受詞）</td></tr>
+    </table>
+    <div class="answer-line">正解：(C) get down to</div>
+    <div class="correct-box"><b>為什麼對：</b>get down to work（認真開始工作/動手做）為固定搭配，語意通順：他們不先花時間討論規劃，而是直接開始做。</div>
+    <div class="wrong-item"><b>(A) are in charge</b>——be in charge（負責）須搭配介系詞 of（be in charge of sth），此處後面直接接 work，缺少 of，文法不合。<span class="valid-when">何時對：如 "She is in charge of the project."（她負責這個專案。）</span></div>
+    <div class="wrong-item"><b>(B) roll up their sleeves</b>——本身已隱含「準備動手做」之意，但此片語通常獨立使用、不再接受詞 work，"roll up their sleeves work" 文法不通順。<span class="valid-when">何時對：獨立成句使用，如 "They rolled up their sleeves and got to work."</span></div>
+    <div class="wrong-item"><b>(D) figure out</b>——意為「想出、弄清楚」，"figure out work" 語意不合（不是「想出工作」而是「開始工作」）。<span class="valid-when">何時對：如 "figure out how to solve the problem"（想出解決問題的方法）。</span></div>
+    <div class="clue-box"><b>解題線索：</b>"straight away"（馬上、立刻）與前面 "Instead of...talking and planning"（不是先討論規劃）形成對比，且空格後直接接受詞 work，須選能接 work 的片語動詞 get down to。</div>
+  </div>
+</section>
+
+<!-- ============ SECTION III ============ -->
+<section class="block" id="sec3">
+  <h2 class="section-title">III. 文意選填</h2>
+  <p class="pct">配分 20%（第 21–30 題）｜每個選項僅使用一次</p>
+
+  <div class="word-bank">
+    <span>(A) mentioned</span><span>(B) introduce</span><span>(C) figure out</span><span>(D) charge</span><span>(E) succeed</span>
+    <span>(F) feedback</span><span>(G) hosted</span><span>(H) activity</span><span>(I) collaborate</span><span>(J) focus on</span>
+  </div>
+
+  <div class="passage">
+    <h4>原文</h4>
+    <p class="en">Tom Wujec is a famous Canadian writer and speaker. He also holds design workshops for many professionals. In fact, he has <b>21.</b>___ over seventy of these events worldwide.
+    <br><br>In these workshops, Wujec often gets participants working together on a(n) <b>22.</b>___ known as the Marshmallow Challenge. Back in 2010, he gave a TED Talk to <b>23.</b>___ how this team-building exercise works. Through this task, people learn to <b>24.</b>___ effectively communicating with one another. During his talk, he also <b>25.</b>___ how people of different ages and backgrounds generally perform. In addition, he spoke about the different kinds of negative behavior that people should avoid when they <b>26.</b>___ with others. Finally, he shared some key findings and explained how teams can operate more efficiently.
+    <br><br>Over the last decade, Wujec's talk itself has proved very popular. It has received very positive <b>27.</b>___ and has been viewed nearly six million times! Despite lasting just six and a half minutes, it offers valuable insights into how groups can <b>28.</b>___. Those who are in <b>29.</b>___ can use these insights to get the most out of their team members. Wujec's talk can also help them <b>30.</b>___ how to build stronger and closer groups. Now that's certainly something worth talking about!</p>
+    <div class="zh">
+      <b>中譯：</b>Tom Wujec 是一位知名的加拿大作家兼演說家，他也為許多專業人士舉辦設計研討會。事實上，他已在世界各地主持過七十多場這類活動。<br><br>
+      在這些研討會中，Wujec 經常讓參與者一起進行一項被稱為棉花糖挑戰的活動。早在 2010 年，他發表了一場 TED 演講來介紹這項團隊建立活動是如何運作的。透過這項任務，人們學會專注於有效地與彼此溝通。演講中，他也提到不同年齡與背景的人通常表現如何。此外，他也談到人們與他人合作時應避免的各種負面行為。最後，他分享了一些關鍵發現，並說明團隊如何能運作得更有效率。<br><br>
+      過去十年來，Wujec 的演講本身也大受歡迎，獲得非常正面的回饋，觀看次數將近六百萬次！儘管全長僅六分半鐘，它卻提供了關於團隊如何成功的寶貴見解。負責帶領團隊的人可以運用這些見解，充分發揮團隊成員的潛力。Wujec 的演講也能幫助他們理解如何建立更強大、更緊密的團隊。這確實是值得一談的話題！
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">21. (G) hosted</span><div class="tags"><span class="tag">考點：動詞語意（hold events 同義詞）＋現在完成式</span></div></div>
+    <div class="correct-box"><b>為什麼對：</b>has + hosted（現在完成式，過去分詞），hosted events（主持活動）語意通順，呼應前句 "He also holds design workshops"。</div>
+    <div class="wrong-item"><b>易混淆選項 (A) mentioned</b>——同為過去分詞，文法上也能接在 has 後，但語意不合：不能「提及」七十場活動這個動作本身，此處要表達的是「主持/舉辦」而非「提到」。</div>
+    <div class="clue-box"><b>解題線索：</b>前句已提到 "these events"（呼應 workshops），"has ___ over seventy of these events" 須選表「舉辦/主持」語意的過去分詞。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">22. (H) activity</span><div class="tags"><span class="tag">考點：名詞語意＋冠詞 a(n) 後接名詞</span></div></div>
+    <div class="correct-box"><b>為什麼對：</b>a(n) + activity（活動），"known as the Marshmallow Challenge"（被稱為棉花糖挑戰）修飾的先行詞須是一個「活動/任務」類的名詞。</div>
+    <div class="clue-box"><b>解題線索：</b>working together on a(n) ___ 需要接一個可以「一起進行」的事物名詞，且後面 "known as..." 點明這是某項活動的名稱，指向 activity。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">23. (B) introduce</span><div class="tags"><span class="tag">考點：不定詞表目的＋動詞接疑問詞子句</span></div></div>
+    <div class="correct-box"><b>為什麼對：</b>to + introduce（不定詞片語表「目的」），introduce + how...works（介紹...如何運作），語意通順：發表演講來介紹這項活動的運作方式。</div>
+    <div class="wrong-item"><b>易混淆選項 (J) focus on</b>——語意上也能通（聚焦於此活動如何運作），但 focus on 已用於第 24 題的答案，且 "gave a talk to introduce sth" 是更自然貼切的固定用法。</div>
+    <div class="clue-box"><b>解題線索：</b>"gave a TED Talk to ___"（發表演講來...）是不定詞表目的的句型，受詞為 "how this exercise works"，符合「介紹/說明」的語意。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">24. (J) focus on</span><div class="tags"><span class="tag">考點：動詞片語＋動名詞受詞（focus on + V-ing）</span></div></div>
+    <div class="correct-box"><b>為什麼對：</b>learn to + focus on（不定詞後接原形動詞），focus on 之後又可接動名詞 effectively communicating（有效地溝通），文法與語意皆通。</div>
+    <div class="wrong-item"><b>易混淆選項 (I) collaborate</b>——語意上也與團隊合作相關，但 collaborate 是不及物動詞，通常接 with sb.，不能直接接動名詞片語 "effectively communicating" 當受詞，文法不合。</div>
+    <div class="clue-box"><b>解題線索：</b>空格後直接接動名詞片語 "effectively communicating with one another"，須選能接 V-ing 當受詞的動詞片語 focus on。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">25. (A) mentioned</span><div class="tags"><span class="tag">考點：動詞語意＋接名詞子句（how子句）作受詞</span></div></div>
+    <div class="correct-box"><b>為什麼對：</b>also + mentioned（過去式動詞，提到）+ how 子句作受詞，語意通順：演講中也提到不同年齡背景的人表現如何。</div>
+    <div class="clue-box"><b>解題線索：</b>"he also ___ how people of different ages and backgrounds generally perform" 須選一個能接 how 子句作受詞的及物動詞，"提到"是最自然的語意。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">26. (I) collaborate</span><div class="tags"><span class="tag">考點：不及物動詞固定搭配 collaborate with</span></div></div>
+    <div class="correct-box"><b>為什麼對：</b>when they + collaborate（原形動詞，主詞 they 為複數不加 s）+ with others，collaborate with sb.（與某人合作）為固定用法。</div>
+    <div class="clue-box"><b>解題線索：</b>"when they ___ with others" 須選一個不及物動詞＋with 的固定搭配，collaborate with 完全符合此結構。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">27. (F) feedback</span><div class="tags"><span class="tag">考點：名詞語意（不可數）＋固定搭配 receive feedback</span></div></div>
+    <div class="correct-box"><b>為什麼對：</b>positive + feedback（不可數名詞，回饋意見），received positive feedback（獲得正面回饋）為常見固定搭配，且不可數名詞前不加冠詞，與原句無冠詞相符。</div>
+    <div class="clue-box"><b>解題線索：</b>"received very positive ___" 須選一個能被 positive 修飾、且能「獲得」的抽象名詞，feedback 完全貼切。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">28. (E) succeed</span><div class="tags"><span class="tag">考點：情態助動詞 can ＋原形動詞</span></div></div>
+    <div class="correct-box"><b>為什麼對：</b>how groups can + succeed（原形動詞，成功），can 後須接原形動詞；語意上「團隊如何能夠成功」與全文團隊合作的主題呼應。</div>
+    <div class="wrong-item"><b>易混淆選項 (I) collaborate</b>——詞性也是原形動詞可放在 can 後，但 collaborate 已用於第 26 題；就語意而言，此處緊接 "valuable insights"（寶貴見解）帶出的正向結果，"如何成功" 比 "如何合作" 更貼切上下文。</div>
+    <div class="clue-box"><b>解題線索：</b>助動詞 can 後須接原形動詞；"insights into how groups can ___" 呼應下文「充分發揮團隊潛力」的正面結果語境。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">29. (D) charge</span><div class="tags"><span class="tag">考點：固定片語 be in charge (of)</span></div></div>
+    <div class="correct-box"><b>為什麼對：</b>are in + charge，be in charge（負責、主管）為固定片語，"Those who are in charge"（負責帶領團隊的人）語意通順。</div>
+    <div class="clue-box"><b>解題線索：</b>"Those who are in ___ can use these insights to get the most out of their team members" 描述「負責帶領團隊的人」，唯有 charge 能與 in 構成固定片語 be in charge。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">30. (C) figure out</span><div class="tags"><span class="tag">考點：help + O + 原形V句型＋固定搭配 figure out how to V</span></div></div>
+    <div class="correct-box"><b>為什麼對：</b>help them + figure out（原形動詞）+ how to V（受詞），help sb. + 原形動詞為固定句型，figure out how to V（想出如何做...）為常見固定搭配。</div>
+    <div class="clue-box"><b>解題線索：</b>"help them ___ how to build..." 中 help + O 後須接原形動詞（省略 to 的不定詞），且後接 "how to V" 結構指向 figure out。</div>
+  </div>
+</section>
+
+<!-- ============ SECTION IV ============ -->
+<section class="block" id="sec4">
+  <h2 class="section-title">IV. 篇章結構</h2>
+  <p class="pct">配分 8%（第 31–34 題）｜五個選項中僅選四個，有一個不使用</p>
+
+  <div class="passage">
+    <h4>選項</h4>
+    <p class="en">
+      (A) However, as two studies have shown, that is not always the case.<br>
+      (B) These studies of the game Concentration confirm that the performance levels of children and adults in the game are quite closely matched.<br>
+      (C) In other words, being able to anticipate your opponent's moves can greatly improve your chances of success.<br>
+      (D) In the end, the player who collects the most cards wins.<br>
+      (E) The researchers concluded that the adults achieved the best performance overall because they had an efficient strategy for discovering new cards.
+    </p>
+    <h4 style="margin-top:14px;">原文</h4>
+    <p class="en">Most of us are familiar with the memory game Concentration. In this game, a set of cards is laid out face down on a surface, and each player turns over two cards when it's their turn. If these cards match, the player can keep them; otherwise, the player must turn them back over. <b>31.</b>___ In order to win, of course, you must have a good memory and be able to remember the positions of the previously turned-over cards.
+    <br><br>Since the brains of adults are more developed than those of children, it's easy to assume that adult players must be much better at this game than younger ones. <b>32.</b>___
+    <br><br>Comparing 5- and 10-year-old players with adult players, researchers in the first study found that the adults performed a little better than the children, while the 5- and 10-year-old players performed equally well. This is interesting, since 10-year-olds are generally more cognitively developed than 5-year-olds. In addition, the 5-year-olds made fewer spatial errors than both the older children and the adults. <b>33.</b>___ The younger children, however, were best at remembering the locations of cards.
+    <br><br>In the second study, adults performed better than 6-year-old but not 8-year-old players. According to the researchers, the adults weren't much better than the children at this game because the adults used strategies that were effective in real-life situations but less so in a game setting.
+    <br><br><b>34.</b>___ Although the children did not necessarily beat the adults, they performed quite well in areas where memorization was involved.</p>
+    <div class="zh">
+      <b>中譯：</b>我們大多數人都熟悉記憶遊戲 Concentration（翻牌配對遊戲）。這個遊戲中，一疊牌會正面朝下攤在桌面上，每位玩家輪到自己時翻開兩張牌。如果兩張牌相配，玩家就可以留下它們；否則就必須把牌翻回去。<b>（31）最後，收集到最多牌的玩家獲勝。</b>當然，為了獲勝，你必須擁有良好的記憶力，並能記得先前翻過的牌的位置。<br><br>
+      由於成人的大腦發育比兒童更成熟，很容易讓人以為成人玩家一定比年紀較小的玩家更擅長這個遊戲。<b>（32）然而，正如兩項研究所顯示的，事實並非總是如此。</b><br><br>
+      在第一項研究中，研究者比較了 5 歲、10 歲兒童與成人玩家，發現成人表現略優於兒童，而 5 歲和 10 歲兒童的表現則相當。這點頗有意思，因為 10 歲兒童在認知發展上通常優於 5 歲兒童。此外，5 歲兒童犯的空間錯誤比年長兒童和成人都少。<b>（33）研究者總結，成人整體表現最佳，是因為他們擁有更有效率地找出新卡片的策略。</b>然而，年紀較小的孩子卻最擅長記住卡片的位置。<br><br>
+      在第二項研究中，成人的表現優於 6 歲兒童，但並未優於 8 歲兒童。研究者指出，成人在這個遊戲中並未比孩子表現好太多，是因為成人所使用的策略雖然在現實生活情境中有效，但在遊戲情境中效果較差。<br><br>
+      <b>（34）這些對 Concentration 遊戲的研究證實，兒童與成人在這個遊戲中的表現其實相當接近。</b>雖然孩子不一定能打敗成人，但在需要記憶力的部分，他們的表現相當不錯。
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">31. (D)</span><div class="tags"><span class="tag">考點：篇章連貫（規則說明→承接下句 "In order to win"）</span></div></div>
+    <div class="correct-box"><b>為什麼對：</b>前句說明配對成功可留牌、失敗要翻回去，D 句「收集最多牌者獲勝」承接說明遊戲的勝負條件，之後 "In order to win"（為了獲勝）直接呼應 D 句提到的 "wins"，語意連貫。</div>
+    <div class="wrong-item"><b>其餘選項為何不選：</b>A、B 提及 "two studies"，但此處尚未進入研究主題，過早出現；C「預測對手動向」與此處單純解釋遊戲規則（如何獲勝）無關；E 涉及研究結論，同樣過早出現，且此段落尚未提及任何研究。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">32. (A)</span><div class="tags"><span class="tag">考點：篇章連貫（However 轉折＋"two studies" 首次出現）</span></div></div>
+    <div class="correct-box"><b>為什麼對：</b>前句說「很容易以為成人表現一定比小孩好」，A 句以 However 轉折，並帶出 "as two studies have shown"（兩項研究顯示），直接引出下段 "researchers in the first study found..."，承先啟後。</div>
+    <div class="wrong-item"><b>其餘選項為何不選：</b>B 用 "These studies" 需要先前已提及 studies 才能用指示詞回指，但此處是首次提到研究，不能先用 These；C「換句話說」與前句「預期成人較強」無邏輯換句話說關係；D 已用於第 31 題，且與此處「研究對比」主題無關；E 是研究「結論」，此處研究才要開始介紹，過早出現結論。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">33. (E)</span><div class="tags"><span class="tag">考點：篇章連貫（段落研究發現的總結句＋呼應下句 however）</span></div></div>
+    <div class="correct-box"><b>為什麼對：</b>此段正描述第一項研究的各項發現（成人略優、5歲和10歲表現相當、5歲空間錯誤較少），E 句補充「研究者總結：成人整體表現最好，因為他們有更有效率的策略」，作為此段發現的收尾；下一句 "The younger children, however..." 用 however 轉折，正好呼應 E 句先講「成人表現最好」、再轉折談「年幼孩子最擅長記位置」。</div>
+    <div class="wrong-item"><b>其餘選項為何不選：</b>A、D 已分別用於第 32、31 題；B「兩者表現相當接近」屬於全文結論語氣，此處只是第一項研究中間的細節描述，尚不宜下總結；C「預測對手動向」與 Concentration（翻牌配對遊戲，非猜測對手意圖的遊戲）主題完全無關，全文皆不適用。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">34. (B)</span><div class="tags"><span class="tag">考點：篇章連貫（全文總結句＋呼應下句 "did not necessarily beat"）</span></div></div>
+    <div class="correct-box"><b>為什麼對：</b>此處是全文結論段，B 句以 "These studies" 回指前述兩項研究，指出「兒童與成人的表現其實相當接近」，正好呼應下一句 "Although the children did not necessarily beat the adults, they performed quite well..."（雖然孩子不一定贏過成人，但表現也很不錯），前後呼應，語氣為全文收尾。</div>
+    <div class="wrong-item"><b>其餘選項為何不選：</b>A、D、E 已分別用於第 32、31、33 題；C「預測對手動向」在 Concentration 翻牌記憶遊戲中從頭到尾都不適用（此遊戲沒有「猜測對手意圖」的概念），因此是全篇唯一未被使用的選項。</div>
+  </div>
+</section>
+
+<!-- ============ SECTION V ============ -->
+<section class="block" id="sec5">
+  <h2 class="section-title">V. 翻譯</h2>
+  <p class="pct">配分 20%（第 36、37 題為一題組）</p>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">35.（6%）</span><div class="tags"><span class="tag">考點：not...until... 句型</span></div></div>
+    <div class="zh-stem">Vivian 直到去年上大學才學會如何騎機車。</div>
+    <div class="correct-box"><b>參考答案：</b>Vivian didn't learn how to ride a scooter until she went to college last year.</div>
+    <div class="clue-box"><b>文法重點：</b>「直到...才...」對應 not...until... 句型（didn't learn... until she went...）；"last year" 修飾的是「去年上大學」這件事（went to college last year），而非「學會」的時間點，翻譯時位置須放對。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">36.（7%）</span><div class="tags"><span class="tag">考點：現在完成式被動＋不定詞表目的</span></div></div>
+    <div class="zh-stem">一所新的小學已經被設立，用來實驗教育的創新理念。</div>
+    <div class="correct-box"><b>參考答案：</b>A new elementary school has been set up to experiment with innovative ideas in education.</div>
+    <div class="clue-box"><b>文法重點：</b>「已經被設立」為現在完成式被動語態 has been set up；「用來實驗」為不定詞表目的 to experiment with（嘗試、實驗某事物為固定搭配 experiment with sth）。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">37.（7%，以指示代名詞造句）</span><div class="tags"><span class="tag">考點：指示代名詞 that 代替單數名詞＋比較句型</span></div></div>
+    <div class="zh-stem">它的學生人數比一所普通學校的學生少。</div>
+    <div class="correct-box"><b>參考答案：</b>The number of its students is smaller than that of the students in an average school.</div>
+    <div class="clue-box"><b>文法重點：</b>指示代名詞 that 代替單數名詞 "the number"（避免重複），構成比較句型 "the number of A is smaller than that of B"；主詞中心語為 number（單數），故動詞用 is，不受後面 of its students（複數）影響。</div>
+  </div>
+</section>
+
+<!-- ============ SECTION VI ============ -->
+<section class="block" id="sec6">
+  <h2 class="section-title">VI. 混合題</h2>
+  <p class="pct">配分 12%（第 38–40 題）</p>
+
+  <div class="passage">
+    <h4>原文</h4>
+    <p class="en">Months ago, posts showing how a person looks now and looked ten years ago popped up on social networking websites like Instagram, Twitter, and Facebook. The rules to participate couldn't have been easier: users simply had to make a comparison by posting two profile photos side by side, a decade-old one on the left and a recent one on the right. The main challenge of this exercise was having to face the effects of time on oneself. Users might have received feedback like "even more gorgeous" or "age-defying" from followers, at which some felt a sense of pride, while some knew these compliments were simply white lies. Even if they did not really look older than before, they felt older in their hearts.
+    <br><br>Some psychologists were concerned about these posts, claiming they might leave a person feeling hopeless and depressed. The seemingly positive comments could appear to be nothing but cold comfort. Some psychologists held a different view, though. Instead of refuting the effects of the ten-year challenge, they viewed it as an opportunity to show a person's maturity and self-growth. With a healthy mindset, one could strengthen one's sense of well-being and enjoy the wisdom that comes with aging.
+    <br><br>Indeed, if people taking on the challenge have learned to celebrate aging rather than deny it, old age can be seen as just as valuable, significant, and meaningful as youth, which is exactly what one movement advocates: "Be Bold, Claim Old." Perhaps the real challenge lies not in physical change but in psychological growth.</p>
+    <div class="zh">
+      <b>中譯：</b>幾個月前，展示一個人現在與十年前樣貌的貼文，開始在 Instagram、Twitter 和 Facebook 等社群網站上湧現。參加規則再簡單不過：使用者只需將兩張大頭照並排張貼，十年前的照片放左邊，近期的照片放右邊，做出對比即可。這項活動的主要挑戰在於必須面對時間在自己身上留下的痕跡。使用者可能會收到追蹤者「變得更迷人了」或「凍齡」之類的回饋，有些人因此感到驕傲，有些人則知道這些讚美只是善意的謊言。即使他們外表其實沒有真的變老，內心卻覺得自己老了。<br><br>
+      有些心理學家對這類貼文感到憂心，認為可能讓人感到絕望和沮喪。這些看似正面的留言，可能只是表面安慰。不過，也有些心理學家持不同看法。他們不去否定這項十年挑戰帶來的影響，反而將其視為展現一個人成熟與自我成長的機會。抱持健康的心態，人可以增強自身的幸福感，並享受隨著老化而來的智慧。<br><br>
+      事實上，如果參與這項挑戰的人已學會「慶祝」老化而非否認老化，那麼老年便能被視為和年輕一樣有價值、重要且有意義，這正是某個運動所提倡的：「勇敢擁抱年老」（Be Bold, Claim Old）。或許，真正的挑戰不在於外表的改變，而在於心理層面的成長。
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">38.（4%）</span><div class="tags"><span class="tag">考點：字彙定義配對</span></div></div>
+    <div class="zh-stem">題目：Which word in the second paragraph means "stating that something does not exist or is untrue"?（第二段中哪個字的意思是「表示某事不存在或並非真實」？）</div>
+    <div class="answer-line">答案：refuting</div>
+    <div class="correct-box"><b>解析：</b>refute（反駁、否定某事屬實）出現在第二段 "Instead of refuting the effects of the ten-year challenge..."，其意思正是「表示某事不存在或不是真的」，與題目給的英文定義完全吻合。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">39.（多選題，4%）</span><div class="tags"><span class="tag">考點：細節理解＋全文比對判斷是非</span></div></div>
+    <div class="answer-line">答案：(A)、(B)</div>
+    <table class="opts">
+      <tr class="correct"><td class="letter">A</td><td>The impact of the challenge depended on how individuals perceived aging.</td></tr>
+      <tr class="correct"><td class="letter">B</td><td>The phrase "Be Bold, Claim Old" promotes a positive perspective on aging.</td></tr>
+      <tr class="wrong"><td class="letter">C</td><td>The challenge was designed to prove that people always look better as they age.</td></tr>
+      <tr class="wrong"><td class="letter">D</td><td>The main purpose of the challenge was to promote medication for mental health.</td></tr>
+      <tr class="wrong"><td class="letter">E</td><td>Participants in the challenge were required to write an essay reflecting on their experience.</td></tr>
+      <tr class="wrong"><td class="letter">F</td><td>An overwhelming majority of psychologists agreed that the challenge was harmful to participants' mental health.</td></tr>
+    </table>
+    <div class="correct-box"><b>(A) 為什麼對：</b>文章提到 "some felt a sense of pride, while some knew these compliments were simply white lies"（有些人感到驕傲，有些人則認為讚美只是善意謊言），可見這項挑戰帶來的影響因人對老化的看法不同而有差異，符合敘述。</div>
+    <div class="correct-box"><b>(B) 為什麼對：</b>第三段提到 "old age can be seen as just as valuable, significant, and meaningful as youth, which is exactly what one movement advocates: 'Be Bold, Claim Old.'"，可見此標語正是提倡正向看待老化，符合敘述。</div>
+    <div class="wrong-item"><b>(C) 為什麼錯：</b>文章並未指出挑戰的設計目的是要證明「人越老越好看」，事實上文中提到有人覺得自己心裡變老了（"they felt older in their hearts"），並非「總是變得更好看」。</div>
+    <div class="wrong-item"><b>(D) 為什麼錯：</b>全文完全沒有提到藥物（medication）相關內容，此為無中生有的敘述。</div>
+    <div class="wrong-item"><b>(E) 為什麼錯：</b>文章沒有提到參與者需要寫文章反思經驗，規則只說明 "posting two profile photos side by side"（並排張貼兩張照片），沒有寫文章的要求。</div>
+    <div class="wrong-item"><b>(F) 為什麼錯：</b>文章說 "Some psychologists were concerned..."（有些心理學家擔憂），但接著又說 "Some psychologists held a different view"（另有些心理學家持不同看法），可見心理學家意見分歧，並非「絕大多數」都認為有害，敘述與原文不符。</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qhead"><span class="qnum">40.（每格 4%，共 2 格）</span><div class="tags"><span class="tag">考點：詞性轉換＋不定詞/介系詞後動詞形式</span></div></div>
+    <div class="zh-stem">請從文章中找出最適當的單詞填入空格，並視句型結構需要做適當的字形變化。</div>
+    <table class="mini-table">
+      <tr><td class="k">(1)</td><td>A social media trend encouraged users to <b>compare</b> their current appearance with how they looked a decade ago...</td></tr>
+      <tr><td class="k">(2)</td><td>...emphasizing the importance of <b>celebrating</b> aging instead of denying it.</td></tr>
+    </table>
+    <div class="expl">
+      <h5 class="correct-h">(1) compare</h5>
+      <p>encourage + O + to V（原形動詞），故空格須填原形動詞；原文用的是名詞 comparison（"make a comparison"），此處須還原為動詞原形 compare 以符合 "to ___" 不定詞的文法要求。</p>
+      <h5 class="correct-h">(2) celebrating</h5>
+      <p>"the importance of ___"，介系詞 of 後須接動名詞（V-ing）；原文動詞為 celebrate（"learned to celebrate aging"），此處須轉為動名詞 celebrating，並與後方對等的動名詞 denying（instead of denying it）形成對仗結構。</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  Lesson 2 The Marshmallow Challenge: A Lesson in Keeping It Simple｜詳解製作　僅供教學使用
+</footer>
+
+</body>
+</html>
