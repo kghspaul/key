@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 3 Prometheus 詳解</title>
+<style>
+  :root{
+    --bg:#f7f5f1;
+    --card:#ffffff;
+    --ink:#2b2b2b;
+    --sub:#6b6b6b;
+    --accent:#a5443b;
+    --accent-soft:#f1ded9;
+    --line:#e6e1d8;
+    --correct:#2f6e4e;
+    --correct-bg:#e9f4ee;
+    --wrong:#a5443b;
+    --wrong-bg:#faeeec;
+    --tag:#7a5c2e;
+    --tag-bg:#f4ead2;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.7;
+  }
+  header{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:var(--card);
+    border-bottom:1px solid var(--line);
+    padding:14px 20px;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:10px;
+  }
+  header h1{
+    font-size:1.05rem;
+    margin:0;
+    white-space:nowrap;
+    color:var(--accent);
+  }
+  nav{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-left:auto;
+  }
+  nav a{
+    font-size:0.8rem;
+    padding:5px 10px;
+    border-radius:14px;
+    background:var(--accent-soft);
+    color:var(--accent);
+    text-decoration:none;
+    white-space:nowrap;
+  }
+  nav a:hover{ background:var(--accent); color:#fff; }
+  main{
+    max-width:820px;
+    margin:0 auto;
+    padding:24px 16px 80px;
+  }
+  section.intro{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:18px 20px;
+    margin-bottom:24px;
+  }
+  section.intro h2{ margin-top:0; font-size:1.05rem; }
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:10px;
+  }
+  .wordbank span{
+    background:var(--tag-bg);
+    color:var(--tag);
+    padding:3px 10px;
+    border-radius:10px;
+    font-size:0.85rem;
+  }
+  .part-title{
+    font-size:1rem;
+    color:var(--accent);
+    margin:32px 0 14px;
+    border-left:4px solid var(--accent);
+    padding-left:10px;
+  }
+  .q{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:18px 20px;
+    margin-bottom:16px;
+    scroll-margin-top:70px;
+  }
+  .q-head{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:8px;
+    margin-bottom:8px;
+  }
+  .q-num{
+    font-weight:700;
+    color:var(--accent);
+    font-size:1rem;
+  }
+  .tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+  }
+  .tag{
+    font-size:0.75rem;
+    background:var(--tag-bg);
+    color:var(--tag);
+    padding:2px 9px;
+    border-radius:10px;
+  }
+  .sentence{
+    font-size:1rem;
+    margin:6px 0;
+  }
+  .sentence .blank{
+    display:inline-block;
+    min-width:70px;
+    border-bottom:2px solid var(--accent);
+    text-align:center;
+    font-weight:700;
+    color:var(--accent);
+  }
+  .zh{
+    color:var(--sub);
+    font-size:0.92rem;
+    margin:4px 0 12px;
+    padding-left:10px;
+    border-left:3px solid var(--line);
+  }
+  .block{
+    margin-top:10px;
+    padding:10px 12px;
+    border-radius:8px;
+  }
+  .block h4{
+    margin:0 0 6px;
+    font-size:0.85rem;
+  }
+  .answer-block{
+    background:var(--correct-bg);
+  }
+  .answer-block h4{ color:var(--correct); }
+  .clue-block{
+    background:#eef2f7;
+  }
+  .clue-block h4{ color:#33587a; }
+  .wrong-block{
+    background:var(--wrong-bg);
+  }
+  .wrong-block h4{ color:var(--wrong); }
+  .wrong-item{
+    margin:4px 0;
+    font-size:0.92rem;
+  }
+  .wrong-item b{ color:var(--wrong); }
+  .cond{
+    font-size:0.85rem;
+    color:var(--sub);
+    margin-left:4px;
+  }
+  footer{
+    text-align:center;
+    color:var(--sub);
+    font-size:0.8rem;
+    padding:30px 0;
+  }
+  @media (max-width:600px){
+    header{ padding:10px 12px; }
+    nav{ display:none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Lesson 3 · Prometheus 詳解</h1>
+  <nav>
+    <a href="#partA">Part A</a>
+    <a href="#partB">Part B</a>
+  </nav>
+</header>
+
+<main>
+
+<section class="intro">
+  <h2>本回內容說明</h2>
+  <p>本詳解涵蓋 Lesson 3「Prometheus」單字測驗全部 25 格。每題皆附：句子中譯、正確答案與解題線索、每個誤答為什麼錯（以及該字在什麼情況下才會是對的）、以及考點標籤。</p>
+  <div class="wordbank">
+    <span>conflict</span><span>upright</span><span>freeze</span><span>distribution</span>
+    <span>universal</span><span>slaughter</span><span>civilization</span><span>generous</span>
+    <span>humankind</span><span>benefit</span>
+  </div>
+</section>
+
+<h3 class="part-title" id="partA">Part A．單字選填（1–10）</h3>
+
+<!-- Q1 -->
+<div class="q" id="q1">
+  <div class="q-head">
+    <span class="q-num">1.</span>
+    <div class="tags"><span class="tag">考點：形容詞語意＋固定搭配</span></div>
+  </div>
+  <p class="sentence">Since a smile is a natural action by humans, mostly to express happiness, it has become a <span class="blank">universal</span> language that connects people around the world.</p>
+  <p class="zh">由於微笑是人類的自然行為，主要用來表達快樂，它已成為一種連結世界各地人們的普世語言。</p>
+  <div class="block answer-block">
+    <h4>✅ 正確答案：universal</h4>
+    <p>universal language（普世語言／舉世通用的語言）是固定搭配，指不分國界、人人都懂的語言。</p>
+  </div>
+  <div class="block clue-block">
+    <h4>🔍 解題線索</h4>
+    <p>句尾 <b>connects people around the world</b>（連結世界各地的人）明確點出「跨越全球、放諸四海皆準」的概念，對應 universal（普世的、通用的）。</p>
+  </div>
+  <div class="block wrong-block">
+    <h4>❌ 誤答逐一分析</h4>
+    <p class="wrong-item"><b>conflict</b>（衝突）：語意與「連結人們」相反。<span class="cond">在描述國家／團體因利益不合而起爭執時才會用，如 the two nations came into conflict。</span></p>
+    <p class="wrong-item"><b>slaughter</b>（屠殺）：與微笑、快樂的語境完全不搭。<span class="cond">只用於大規模殺戮的情境。</span></p>
+    <p class="wrong-item"><b>civilization</b>（文明）：指人類社會發展的整體，不能修飾「語言」使其成為通用語言之意。<span class="cond">用於描述社會發展程度，如 return to civilization。</span></p>
+    <p class="wrong-item"><b>humankind</b>（人類）：是名詞，指全體人類本身，不能放在 a ___ language 這個形容詞位置。<span class="cond">作主詞或受詞，指「人類」這個群體時才對，如 humankind is not alone。</span></p>
+  </div>
+</div>
+
+<!-- Q2 -->
+<div class="q" id="q2">
+  <div class="q-head">
+    <span class="q-num">2.</span>
+    <div class="tags"><span class="tag">考點：形容詞辨義</span><span class="tag">詞性：generous→generosity</span></div>
+  </div>
+  <p class="sentence">It was <span class="blank">generous</span> of the old couple to take me in on that stormy night. I would never forget their generosity.</p>
+  <p class="zh">那對老夫婦在暴風雨夜收留我，真是太慷慨了。我永遠不會忘記他們的慷慨。</p>
+  <div class="block answer-block">
+    <h4>✅ 正確答案：generous</h4>
+    <p>It is generous of sb to V：某人做某事是慷慨的，為固定句型（it is + 人格特質形容詞 + of sb + to V）。</p>
+  </div>
+  <div class="block clue-block">
+    <h4>🔍 解題線索</h4>
+    <p><b>take me in</b>（收留）是無私付出、幫助他人的行為，且句型 <b>It was ___ of the old couple to V</b> 專門用來評論「人的特質」，只有形容詞能填入，答案並被下一句的名詞形式 <b>generosity</b> 呼應驗證。</p>
+  </div>
+  <div class="block wrong-block">
+    <h4>❌ 誤答逐一分析</h4>
+    <p class="wrong-item"><b>generosity</b>（名詞，慷慨）：詞性不對，it is ___ of sb to V 這個句型固定要接形容詞而非名詞。<span class="cond">作主詞或受詞時才用名詞形式，如 I would never forget their generosity（本句第二句即是正確用法）。</span></p>
+    <p class="wrong-item"><b>upright</b>（正直的／直立的）：語意不合，收留人與「正直、挺直」無關。<span class="cond">用於描述姿勢（站直坐直）或道德正直，如 an upright man。</span></p>
+  </div>
+</div>
+
+<!-- Q3 -->
+<div class="q" id="q3">
+  <div class="q-head">
+    <span class="q-num">3.</span>
+    <div class="tags"><span class="tag">考點：名詞／動詞轉換</span><span class="tag">conflict with</span></div>
+  </div>
+  <p class="sentence">The two nations came into <span class="blank">conflict</span> over the island. A team from the UN was sent to the war zone to resolve the conflict but in vain, since one nation's interests <span class="blank">conflicted</span> with the other's.</p>
+  <p class="zh">兩國因該島而起衝突。聯合國派遣一個團隊前往戰區試圖化解衝突，但徒勞無功，因為一國的利益與另一國的利益互相衝突。</p>
+  <div class="block answer-block">
+    <h4>✅ 正確答案：conflict（名詞）／ conflicted（動詞過去式）</h4>
+    <p>come into conflict（產生衝突，名詞用法）；conflict with sth（與…衝突，不及物動詞，過去式加 -ed）。</p>
+  </div>
+  <div class="block clue-block">
+    <h4>🔍 解題線索</h4>
+    <p>第一格前有動詞片語 <b>came into ___</b>，此為固定搭配「come into + 抽象名詞」，故填名詞 conflict；第二格主詞是 <b>one nation's interests</b>（單數不可數概念）加 <b>with the other's</b>，符合「conflict with」不及物動詞句型，且全句為過去式敘述，故用 conflicted。</p>
+  </div>
+  <div class="block wrong-block">
+    <h4>❌ 誤答逐一分析</h4>
+    <p class="wrong-item"><b>conflicts</b>（第三人稱單數現在式）：時態不對，本句是過去式敘述（was sent, in vain）。<span class="cond">只有在描述現在式、恆常事實時才用，如 The plan conflicts with our goals.</span></p>
+    <p class="wrong-item"><b>conflicting</b>（現在分詞／動名詞）：文法上第二格前面沒有 be 動詞或介系詞可接分詞。<span class="cond">用作形容詞修飾名詞時才對，如 conflicting opinions（互相矛盾的意見）。</span></p>
+  </div>
+</div>
+
+<!-- Q4 -->
+<div class="q" id="q4">
+  <div class="q-head">
+    <span class="q-num">4.</span>
+    <div class="tags"><span class="tag">考點：詞性判斷</span><span class="tag">被動式 vs the+N+of</span></div>
+  </div>
+  <p class="sentence">The relief supplies were quickly <span class="blank">distributed</span> to the people in the disaster area. Several charities helped to coordinate the <span class="blank">distribution</span> of food and clothing.</p>
+  <p class="zh">救援物資迅速分發給災區民眾。幾個慈善機構協助協調食物與衣物的分發工作。</p>
+  <div class="block answer-block">
+    <h4>✅ 正確答案：distributed（過去分詞）／ distribution（名詞）</h4>
+    <p>be動詞 were + 過去分詞 distributed 構成被動語態；the distribution of + N 為「…的分配／分發」固定名詞片語。</p>
+  </div>
+  <div class="block clue-block">
+    <h4>🔍 解題線索</h4>
+    <p>第一格前面有 <b>were</b>（be動詞），後面接過去分詞才能構成被動語態「被分發」；第二格前面是冠詞 <b>the</b>、後面接介系詞 <b>of</b>，是「the + 名詞 + of」的典型名詞片語結構，故只能填名詞。</p>
+  </div>
+  <div class="block wrong-block">
+    <h4>❌ 誤答逐一分析</h4>
+    <p class="wrong-item"><b>distribute</b>（原形動詞）：不能直接接在 be 動詞 were 後面構成被動。<span class="cond">用於現在式主動語態，如 We distribute food weekly。</span></p>
+    <p class="wrong-item"><b>distributing</b>（動名詞／現在分詞）：were distributing 雖文法可通，但語意會變成主動進行式「正在分發」，與句意（物資被分發）及第二格 the ___ of 結構不合。<span class="cond">作主詞或 be 動詞後表進行式主動語態時才適用，如 They are distributing food now。</span></p>
+  </div>
+</div>
+
+<!-- Q5 -->
+<div class="q" id="q5">
+  <div class="q-head">
+    <span class="q-num">5.</span>
+    <div class="tags"><span class="tag">考點：及物／不及物動詞</span><span class="tag">benefit from</span></div>
+  </div>
+  <p class="sentence">The new laws will make imported goods more expensive and should thus <span class="blank">benefit</span> local producers. That is, local producers will benefit <span class="blank">from</span> the new laws.</p>
+  <p class="zh">新法將使進口商品更昂貴，因此應會使本地生產商受益。也就是說，本地生產商將從新法中受益。</p>
+  <div class="block answer-block">
+    <h4>✅ 正確答案：benefit（及物動詞）／ from（介系詞）</h4>
+    <p>benefit sb（使某人受益，及物）＝ sb benefit from sth（某人從某事物受益，不及物＋from）。兩句是同義改寫。</p>
+  </div>
+  <div class="block clue-block">
+    <h4>🔍 解題線索</h4>
+    <p>第一格前有助動詞 <b>should thus</b>，後面直接接受詞 <b>local producers</b>（無介系詞），符合及物動詞用法；第二格句子把「新法」放到句尾，主詞變成 producers，因此 benefit 需搭配介系詞 <b>from</b> 才能接「新法」這個原因。</p>
+  </div>
+  <div class="block wrong-block">
+    <h4>❌ 誤答逐一分析</h4>
+    <p class="wrong-item"><b>benefit to</b>：benefit 作動詞時不與 to 連用。<span class="cond">名詞用法才會接 to，如 be of benefit to sb（對某人有益處）。</span></p>
+    <p class="wrong-item"><b>benefited by</b>：benefit from 是固定搭配，不用 by。<span class="cond">by 通常用於被動語態表示執行者，此處非被動句型。</span></p>
+  </div>
+</div>
+
+<!-- Q6 -->
+<div class="q" id="q6">
+  <div class="q-head">
+    <span class="q-num">6.</span>
+    <div class="tags"><span class="tag">考點：被動式 vs the+N+of</span></div>
+  </div>
+  <p class="sentence">An estimated six million Jews were <span class="blank">slaughtered</span> by the Nazis during World War II. The war led to the <span class="blank">slaughter</span> of millions of innocent people.</p>
+  <p class="zh">估計約有六百萬猶太人在二戰期間被納粹屠殺。這場戰爭導致數百萬無辜民眾遭到屠殺。</p>
+  <div class="block answer-block">
+    <h4>✅ 正確答案：slaughtered（過去分詞）／ slaughter（名詞）</h4>
+    <p>be動詞 were + slaughtered 構成被動語態「被屠殺」；the slaughter of + N 為固定名詞片語「…的屠殺」。</p>
+  </div>
+  <div class="block clue-block">
+    <h4>🔍 解題線索</h4>
+    <p>第一格 <b>were ___ by the Nazis</b> 出現典型被動句「by + 執行者」的標記，故填過去分詞；第二格前有 <b>the</b>、後接 <b>of millions of...</b>，與第4題結構相同，判定為名詞。</p>
+  </div>
+  <div class="block wrong-block">
+    <h4>❌ 誤答逐一分析</h4>
+    <p class="wrong-item"><b>slaughtering</b>：若填入第一格會變成主動進行式，語意錯誤（猶太人不是屠殺的執行者）。<span class="cond">用於主詞是執行屠殺動作者時，如 The soldiers were slaughtering civilians。</span></p>
+    <p class="wrong-item"><b>slaughters</b>（第三人稱單數）：文法上不能接在 be 動詞後，也不符合 the + N + of 結構。<span class="cond">作現在式主動動詞的主詞為第三人稱單數時使用。</span></p>
+  </div>
+</div>
+
+<!-- Q7 -->
+<div class="q" id="q7">
+  <div class="q-head">
+    <span class="q-num">7.</span>
+    <div class="tags"><span class="tag">考點：動詞時態</span><span class="tag">過去式 vs 助動詞+原形</span></div>
+  </div>
+  <p class="sentence">The lake <span class="blank">froze</span> over when the temperature dropped to minus 5 degrees yesterday. You'll <span class="blank">freeze</span> to death if you go out in the snow without a coat and gloves.</p>
+  <p class="zh">昨天氣溫降到零下5度時，湖水結冰了。如果你不穿外套、不戴手套就出門到雪地裡，你會被凍死。</p>
+  <div class="block answer-block">
+    <h4>✅ 正確答案：froze（過去式）／ freeze（原形動詞）</h4>
+    <p>第一句描述昨天已發生的事，用過去式 froze；第二句 You'll（=You will）之後須接原形動詞 freeze。</p>
+  </div>
+  <div class="block clue-block">
+    <h4>🔍 解題線索</h4>
+    <p>第一格句尾的 <b>yesterday</b> 是過去時間副詞，明確要求過去式；第二格前方 <b>You'll</b> 是未來式助動詞 will 的縮寫，will 之後一律接動詞原形。</p>
+  </div>
+  <div class="block wrong-block">
+    <h4>❌ 誤答逐一分析</h4>
+    <p class="wrong-item"><b>freezes</b>：第三人稱單數現在式，與句中的過去時間副詞 yesterday 矛盾。<span class="cond">用於描述現在恆常事實，如 Water freezes at 0°C。</span></p>
+    <p class="wrong-item"><b>froze</b>（填入第二格）：will 後面不可接過去式，只能接原形動詞。<span class="cond">只用於敘述過去已發生的動作。</span></p>
+    <p class="wrong-item"><b>frozen</b>：為過去分詞，不能直接接在 will 後面（除非搭配 be，如 will be frozen）。<span class="cond">用於被動語態或作形容詞，如 frozen food（冷凍食品）。</span></p>
+  </div>
+</div>
+
+<!-- Q8 -->
+<div class="q" id="q8">
+  <div class="q-head">
+    <span class="q-num">8.</span>
+    <div class="tags"><span class="tag">考點：不可數名詞語意</span></div>
+  </div>
+  <p class="sentence">Laura is fascinated with science fiction about aliens. She doesn't believe <span class="blank">humankind</span> is the only intelligent life in the vast universe.</p>
+  <p class="zh">Laura 很著迷於關於外星人的科幻小說。她不相信人類是浩瀚宇宙中唯一有智慧的生命。</p>
+  <div class="block answer-block">
+    <h4>✅ 正確答案：humankind</h4>
+    <p>humankind（全人類）作不可數名詞，當作 that 子句（此處省略 that）的主詞，指「人類這個整體」。</p>
+  </div>
+  <div class="block clue-block">
+    <h4>🔍 解題線索</h4>
+    <p>空格後接 <b>is the only intelligent life</b>（是唯一有智慧的生命），可判斷空格須為單數、指「人類群體」的名詞主詞，並與後方 <b>the vast universe</b>（外星人、宇宙）的語境相呼應——對比「人類 vs 宇宙中其他生命」。</p>
+  </div>
+  <div class="block wrong-block">
+    <h4>❌ 誤答逐一分析</h4>
+    <p class="wrong-item"><b>civilization</b>（文明）：語意不合，本句討論的是「人類這個物種」是否為宇宙中唯一智慧生命，而非討論「文明社會」。<span class="cond">用於描述社會發展階段時才對，如 ancient civilization（古文明）。</span></p>
+    <p class="wrong-item"><b>universal</b>（普世的，形容詞）：詞性不對，此處需要名詞作主詞，universal 是形容詞不能單獨作主詞。<span class="cond">修飾名詞時才用，如 a universal truth。</span></p>
+  </div>
+</div>
+
+<!-- Q9 -->
+<div class="q" id="q9">
+  <div class="q-head">
+    <span class="q-num">9.</span>
+    <div class="tags"><span class="tag">考點：形容詞作主詞補語</span></div>
+  </div>
+  <p class="sentence">Soldiers are trained to stand and sit <span class="blank">upright</span> for long periods of time.</p>
+  <p class="zh">軍人被訓練能長時間站得挺直、坐得端正。</p>
+  <div class="block answer-block">
+    <h4>✅ 正確答案：upright</h4>
+    <p>stand/sit upright 是固定搭配，upright 在此作副詞性補語，修飾「站」「坐」的姿勢，表示「挺直地」。</p>
+  </div>
+  <div class="block clue-block">
+    <h4>🔍 解題線索</h4>
+    <p>空格前方是 <b>stand and sit</b> 兩個描述姿勢的動詞，只有 upright（挺直的）能描述身體姿態，且為此類句型的固定搭配用語。</p>
+  </div>
+  <div class="block wrong-block">
+    <h4>❌ 誤答逐一分析</h4>
+    <p class="wrong-item"><b>generous</b>（慷慨的）：語意與姿勢動作完全無關。<span class="cond">用於描述人願意分享、給予的特質時，如 a generous gift。</span></p>
+    <p class="wrong-item"><b>civilization</b>（文明，名詞）：詞性不對，此處需要形容詞／副詞性質的字修飾動詞姿勢。<span class="cond">作名詞使用，指社會整體發展。</span></p>
+  </div>
+</div>
+
+<!-- Q10 -->
+<div class="q" id="q10">
+  <div class="q-head">
+    <span class="q-num">10.</span>
+    <div class="tags"><span class="tag">考點：不可數名詞＋語意對比</span></div>
+  </div>
+  <p class="sentence">Living in the isolated mountains for a week, I was dying to go back to <span class="blank">civilization</span>.</p>
+  <p class="zh">在與世隔絕的山區住了一星期後，我很想回到文明世界。</p>
+  <div class="block answer-block">
+    <h4>✅ 正確答案：civilization</h4>
+    <p>civilization 在此指「文明社會／現代生活圈」，與 go back to 連用，表示「回到有現代設施、與人群連結的地方」。</p>
+  </div>
+  <div class="block clue-block">
+    <h4>🔍 解題線索</h4>
+    <p>句首分詞構句 <b>Living in the isolated mountains</b>（住在與世隔絕的山區），isolated（孤立的、隔絕的）與空格處形成語意對比：從「隔絕」渴望回到「文明」，藉此判斷答案。</p>
+  </div>
+  <div class="block wrong-block">
+    <h4>❌ 誤答逐一分析</h4>
+    <p class="wrong-item"><b>humankind</b>（人類）：雖語意接近「人群」，但 go back to humankind 不是英文中會用的固定說法，humankind 指物種整體而非「文明生活圈」。<span class="cond">作「全人類」這個抽象群體的主詞或受詞時才用，如 humankind's future。</span></p>
+    <p class="wrong-item"><b>universal</b>（普世的）：詞性為形容詞，不能直接放在 go back to 後面作受詞。<span class="cond">修飾名詞時才用，如 a universal problem。</span></p>
+  </div>
+</div>
+
+<h3 class="part-title" id="partB">Part B．Lesson 8 單字複習（11–25）</h3>
+
+<!-- Q11 -->
+<div class="q" id="q11">
+  <div class="q-head">
+    <span class="q-num">11.</span>
+    <div class="tags"><span class="tag">考點：形容詞語意</span></div>
+  </div>
+  <p class="sentence">He heard a <span class="blank">hollow</span> sound when he knocked on the wall. It was empty inside!</p>
+  <p class="zh">他敲牆時聽到空洞的聲音。裡面竟然是空心的！</p>
+  <div class="block answer-block">
+    <h4>✅ 正確答案：hollow</h4>
+    <p>hollow（中空的、空心的）用來形容物體內部是空的所發出的聲音。</p>
+  </div>
+  <div class="block clue-block">
+    <h4>🔍 解題線索</h4>
+    <p>下一句直接給出定義 <b>It was empty inside</b>（裡面是空的），與 hollow 的字義完全對應。</p>
+  </div>
+</div>
+
+<!-- Q12 -->
+<div class="q" id="q12">
+  <div class="q-head">
+    <span class="q-num">12.</span>
+    <div class="tags"><span class="tag">考點：不可數名詞</span></div>
+  </div>
+  <p class="sentence">In the stone age, people wore animal <span class="blank">fur</span> to keep themselves warm.</p>
+  <p class="zh">在石器時代，人們穿著動物毛皮來保暖。</p>
+  <div class="block answer-block">
+    <h4>✅ 正確答案：fur</h4>
+    <p>fur（毛皮）為不可數名詞，指動物身上的皮毛，常穿戴以保暖。</p>
+  </div>
+  <div class="block clue-block">
+    <h4>🔍 解題線索</h4>
+    <p><b>animal ___</b> 加上 <b>keep themselves warm</b>（保暖）明確指向「動物毛皮」這項禦寒衣物。</p>
+  </div>
+</div>
+
+<!-- Q13 -->
+<div class="q" id="q13">
+  <div class="q-head">
+    <span class="q-num">13.</span>
+    <div class="tags"><span class="tag">考點：片語改寫 make sb able to = enable sb to</span></div>
+  </div>
+  <p class="sentence">3-D printing technology makes people able to get real objects at a lower cost. → 3-D printing technology <span class="blank">enables</span> people to get real objects at a lower cost.</p>
+  <p class="zh">3D 列印技術使人們能夠以較低的成本取得實體物品。</p>
+  <div class="block answer-block">
+    <h4>✅ 正確答案：enables</h4>
+    <p>enable sb to V（使某人能夠做某事）＝ make sb able to V，為同義句型改寫，主詞是單數 technology，故用第三人稱單數 enables。</p>
+  </div>
+  <div class="block clue-block">
+    <h4>🔍 解題線索</h4>
+    <p>原句提供 <b>makes people able to</b> 的結構，改寫句同樣接 <b>people to get...</b>，符合 enable sb to V 的句型，且需與前句主詞時態一致（現在式單數）。</p>
+  </div>
+  <div class="block wrong-block">
+    <h4>❌ 誤答逐一分析</h4>
+    <p class="wrong-item"><b>enable</b>（不加s）：主詞 technology 為第三人稱單數，現在式動詞須加 -s。<span class="cond">主詞為複數或搭配助動詞時才用原形，如 These tools enable us to work faster。</span></p>
+  </div>
+</div>
+
+<!-- Q14 -->
+<div class="q" id="q14">
+  <div class="q-head">
+    <span class="q-num">14.</span>
+    <div class="tags"><span class="tag">考點：字首提示＋固定搭配 as a punishment</span></div>
+  </div>
+  <p class="sentence">The prince was <span class="blank">banished</span> from the kingdom as a <span class="blank">punishment</span> for his crime. He was never allowed to come back.</p>
+  <p class="zh">王子因其罪行被逐出王國作為懲罰。他再也不被允許回來。</p>
+  <div class="block answer-block">
+    <h4>✅ 正確答案：banished（過去分詞）／ punishment（名詞）</h4>
+    <p>be banished from + 地方（被驅逐出…）；as a punishment for + 罪行（作為…的懲罰）皆為固定搭配。</p>
+  </div>
+  <div class="block clue-block">
+    <h4>🔍 解題線索</h4>
+    <p>題目已給提示字首 <b>(b)</b> 與 <b>(p)</b>；句構 <b>was ___ from the kingdom</b> 是被動語態，須填過去分詞；<b>as a ___ for his crime</b> 中 a 之後須接單數名詞。</p>
+  </div>
+</div>
+
+<!-- Q15 -->
+<div class="q" id="q15">
+  <div class="q-head">
+    <span class="q-num">15.</span>
+    <div class="tags"><span class="tag">考點：現在分詞（持續進行）</span></div>
+  </div>
+  <p class="sentence">Many victims of war suffer from mental problems because the memories about the war keep <span class="blank">torturing</span> them.</p>
+  <p class="zh">許多戰爭受害者飽受精神問題所苦，因為關於戰爭的記憶不斷折磨著他們。</p>
+  <div class="block answer-block">
+    <h4>✅ 正確答案：torturing</h4>
+    <p>keep + Ving 表示「持續做某事」；torture 在此指精神上不斷地折磨、使痛苦。</p>
+  </div>
+  <div class="block clue-block">
+    <h4>🔍 解題線索</h4>
+    <p>句尾括號提示 <b>(to force someone to suffer a lot of pain)</b>（使某人承受極大痛苦），且前方動詞 <b>keep</b> 固定搭配動名詞形式。</p>
+  </div>
+  <div class="block wrong-block">
+    <h4>❌ 誤答逐一分析</h4>
+    <p class="wrong-item"><b>torture</b>（原形）：keep 之後須接 Ving，不可直接接原形動詞。<span class="cond">作為句子主要動詞或 to 不定詞時才用原形，如 to torture sb。</span></p>
+  </div>
+</div>
+
+<!-- Q16 -->
+<div class="q" id="q16">
+  <div class="q-head">
+    <span class="q-num">16.</span>
+    <div class="tags"><span class="tag">考點：形容詞 vs 名詞</span></div>
+  </div>
+  <p class="sentence">Joe has lived a <span class="blank">miserable</span> life ever since he came back from Iraq. He can't stop thinking of the <span class="blank">misery</span> that war causes and could hardly sleep well.</p>
+  <p class="zh">Joe 自從從伊拉克回來後便過著悲慘的生活。他無法停止去想戰爭帶來的苦難，幾乎無法好好入睡。</p>
+  <div class="block answer-block">
+    <h4>✅ 正確答案：miserable（形容詞）／ misery（名詞）</h4>
+    <p>miserable 修飾名詞 life（a miserable life，悲慘的生活）；misery 作 thinking of 的受詞（苦難）。</p>
+  </div>
+  <div class="block clue-block">
+    <h4>🔍 解題線索</h4>
+    <p>提示字首 <b>(m)</b>；第一格 <b>a ___ life</b> 中 a + 形容詞 + 名詞的結構要求形容詞；第二格 <b>the ___ that war causes</b> 中 the 之後須接名詞作受詞，並由 that 子句修飾。句尾定義 <b>very sad or unhappy due to mental or physical suffering</b> 進一步確認字義。</p>
+  </div>
+</div>
+
+<!-- Q17 -->
+<div class="q" id="q17">
+  <div class="q-head">
+    <span class="q-num">17.</span>
+    <div class="tags"><span class="tag">考點：形容詞 vs 名詞</span><span class="tag">be furious at</span></div>
+  </div>
+  <p class="sentence">Ben was <span class="blank">furious</span> at his youngest son. When he was informed that his son committed a car theft, he was speechless and shaking with <span class="blank">fury</span>.</p>
+  <p class="zh">Ben 對他最小的兒子非常憤怒。當他得知兒子犯了偷車罪時，他驚訝得說不出話，氣得發抖。</p>
+  <div class="block answer-block">
+    <h4>✅ 正確答案：furious（形容詞）／ fury（名詞）</h4>
+    <p>be furious at sb（對某人非常憤怒）；shaking with fury（氣得發抖，介系詞 with 後接名詞）。</p>
+  </div>
+  <div class="block clue-block">
+    <h4>🔍 解題線索</h4>
+    <p>提示字首 <b>(f)</b>；第一格 <b>was ___ at</b> 為 be動詞 + 形容詞 + at 的固定句型；第二格 <b>shaking with ___</b> 介系詞 with 後須接名詞。句尾補充定義 <b>in a rage</b>（狂怒）確認字義方向。</p>
+  </div>
+</div>
+
+<!-- Q18 -->
+<div class="q" id="q18">
+  <div class="q-head">
+    <span class="q-num">18.</span>
+    <div class="tags"><span class="tag">考點：同義句型轉換</span><span class="tag">beneficial for = of benefit to</span></div>
+  </div>
+  <p class="sentence">Eating fruit and vegetables is <span class="blank">beneficial</span> for healthy skin. Eating vegetables is of great <span class="blank">benefit</span> to our skin.</p>
+  <p class="zh">吃蔬果對健康的皮膚有益。吃蔬菜對我們的皮膚大有助益。</p>
+  <div class="block answer-block">
+    <h4>✅ 正確答案：beneficial（形容詞）／ benefit（名詞）</h4>
+    <p>be beneficial for sth（對…有益，形容詞用法）＝ be of (great) benefit to sth（對…大有助益，名詞用法），為固定同義句型互換。</p>
+  </div>
+  <div class="block clue-block">
+    <h4>🔍 解題線索</h4>
+    <p>提示字首 <b>(b)</b>；第一格 <b>is ___ for</b> 為 be動詞 + 形容詞 + for 結構；第二格 <b>of great ___ to</b> 中 great 是形容詞，只能修飾名詞，故確定填名詞 benefit。句尾補充定義 <b>helpful; of great help</b> 確認語意。</p>
+  </div>
+</div>
+
+<!-- Q19 -->
+<div class="q" id="q19">
+  <div class="q-head">
+    <span class="q-num">19.</span>
+    <div class="tags"><span class="tag">考點：介系詞＝under</span></div>
+  </div>
+  <p class="sentence"><span class="blank">Underneath</span> her cold look, Zoe is actually a kind and generous woman.</p>
+  <p class="zh">在她冷淡的外表之下，Zoe 其實是個善良又慷慨的女人。</p>
+  <div class="block answer-block">
+    <h4>✅ 正確答案：Underneath</h4>
+    <p>underneath（在…之下，表面之下）在此表示「外表底下、實際上」，與 under 同義。</p>
+  </div>
+  <div class="block clue-block">
+    <h4>🔍 解題線索</h4>
+    <p>句尾括號直接提示 <b>(= under)</b>；句意呈現「外表 vs 真實個性」的對比，用 underneath 點出「表象之下」的轉折。</p>
+  </div>
+</div>
+
+<!-- Q20 -->
+<div class="q" id="q20">
+  <div class="q-head">
+    <span class="q-num">20.</span>
+    <div class="tags"><span class="tag">考點：過去分詞作形容詞</span></div>
+  </div>
+  <p class="sentence">When foods are <span class="blank">frozen</span> for extended periods of time, freezer burn can begin to develop on the food's surface.</p>
+  <p class="zh">當食物被冷凍很長一段時間後，食物表面可能會開始出現凍傷。</p>
+  <div class="block answer-block">
+    <h4>✅ 正確答案：frozen</h4>
+    <p>are frozen 為被動語態（被冷凍），frozen 是 freeze 的過去分詞。</p>
+  </div>
+  <div class="block clue-block">
+    <h4>🔍 解題線索</h4>
+    <p>空格前方為 be 動詞 <b>are</b>，後面須接過去分詞構成被動語態「食物被冷凍」。</p>
+  </div>
+  <div class="block wrong-block">
+    <h4>❌ 誤答逐一分析</h4>
+    <p class="wrong-item"><b>freezing</b>：are freezing 會變成主動進行式「食物正在結凍」，語意上食物是被冷凍的對象而非自己結凍的動作者，較不符合此處語境。<span class="cond">用於描述天氣或水自然結凍的主動進行式，如 The lake is freezing。</span></p>
+  </div>
+</div>
+
+<!-- Q21 -->
+<div class="q" id="q21">
+  <div class="q-head">
+    <span class="q-num">21.</span>
+    <div class="tags"><span class="tag">考點：片語 run out (of sth)</span></div>
+  </div>
+  <p class="sentence">The terrorists warned that their patience was <span class="blank">running out</span> and that they would blow up the building if the government did not agree to their request.</p>
+  <p class="zh">恐怖份子警告說他們的耐心即將耗盡，如果政府不同意他們的要求，他們就會炸毀這棟建築。</p>
+  <div class="block answer-block">
+    <h4>✅ 正確答案：running out</h4>
+    <p>run out（of sth）：（某物）逐漸用盡、耗盡。此處主詞是 patience（耐心），故用 patience was running out（耐心正在耗盡）。</p>
+  </div>
+  <div class="block clue-block">
+    <h4>🔍 解題線索</h4>
+    <p>主詞 <b>their patience</b>（他們的耐心）加上 be動詞過去式 <b>was</b>，構成過去進行式，描述「耐心正逐漸消失」的過程，對應 run out 表「用盡」的語意。</p>
+  </div>
+</div>
+
+<!-- Q22 -->
+<div class="q" id="q22">
+  <div class="q-head">
+    <span class="q-num">22.</span>
+    <div class="tags"><span class="tag">考點：片語 fall victim to</span></div>
+  </div>
+  <p class="sentence">If you never change your password, you might <span class="blank">fall victim to</span> identity theft.</p>
+  <p class="zh">如果你從不更改密碼，你可能會成為身分盜竊的受害者。</p>
+  <div class="block answer-block">
+    <h4>✅ 正確答案：fall victim to</h4>
+    <p>fall victim to + N：成為…的受害者，為固定片語。</p>
+  </div>
+  <div class="block clue-block">
+    <h4>🔍 解題線索</h4>
+    <p>條件句 <b>If you never change your password</b>（若從不改密碼）暗示會遭遇網路安全風險，空格後接 <b>identity theft</b>（身分盜竊）這項「不好的事」，對應「成為…受害者」的片語。</p>
+  </div>
+</div>
+
+<!-- Q23 -->
+<div class="q" id="q23">
+  <div class="q-head">
+    <span class="q-num">23.</span>
+    <div class="tags"><span class="tag">考點：片語 feed on</span></div>
+  </div>
+  <p class="sentence">Herbivores are animals such as horses and sheep that <span class="blank">feed on</span> plants.</p>
+  <p class="zh">草食動物是像馬和羊這類以植物為食的動物。</p>
+  <div class="block answer-block">
+    <h4>✅ 正確答案：feed on</h4>
+    <p>feed on + N（動物）：以…為食，固定片語，常用於描述動物的食性。</p>
+  </div>
+  <div class="block clue-block">
+    <h4>🔍 解題線索</h4>
+    <p>句首 <b>Herbivores</b>（草食動物）即已點出主題是動物的飲食習性，關係代名詞 that 引導的子句需要一個描述「吃」的片語動詞，接受詞 plants。</p>
+  </div>
+</div>
+
+<!-- Q24 -->
+<div class="q" id="q24">
+  <div class="q-head">
+    <span class="q-num">24.</span>
+    <div class="tags"><span class="tag">考點：片語 make up for</span></div>
+  </div>
+  <p class="sentence">Tina slept the whole day so she tried to <span class="blank">make up for</span> lost time by studying extra hard in the evening.</p>
+  <p class="zh">Tina 睡了一整天，所以她試著在晚上更努力讀書來彌補失去的時間。</p>
+  <div class="block answer-block">
+    <h4>✅ 正確答案：make up for</h4>
+    <p>make up for + N：彌補、補償（損失或不足），固定片語。</p>
+  </div>
+  <div class="block clue-block">
+    <h4>🔍 解題線索</h4>
+    <p>前半句 <b>slept the whole day</b>（睡了一整天）造成「損失時間」，後半句 <b>by studying extra hard</b>（藉由更努力讀書）是彌補的手段，中間空格須連接「彌補 lost time」的語意。</p>
+  </div>
+</div>
+
+<!-- Q25 -->
+<div class="q" id="q25">
+  <div class="q-head">
+    <span class="q-num">25.</span>
+    <div class="tags"><span class="tag">考點：片語 set the stage for</span></div>
+  </div>
+  <p class="sentence">The meeting of the two leaders aims to <span class="blank">set the stage for</span> further peace talks between the two nations.</p>
+  <p class="zh">兩位領導人的會晤旨在為兩國間進一步的和平會談奠定基礎。</p>
+  <div class="block answer-block">
+    <h4>✅ 正確答案：set the stage for</h4>
+    <p>set the stage for + N：為…做好準備、奠定基礎，固定片語，常用於描述某事為後續事件鋪路。</p>
+  </div>
+  <div class="block clue-block">
+    <h4>🔍 解題線索</h4>
+    <p><b>aims to ___ further peace talks</b>：句意是這場會議的「目的」是為了促成之後更多的和平會談，符合「鋪路、奠定基礎」之意。</p>
+  </div>
+</div>
+
+</main>
+
+<footer>Lesson 3 Prometheus 詳解 · 共 25 格</footer>
+
+</body>
+</html>
