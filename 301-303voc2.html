@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>301-303文意字彙練習詳解(亂序)</title>
+  <style>
+    :root {
+      --primary: #4338ca;
+      --primary-soft: #eef2ff;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --chinese-text: #475569;
+      --border: #e2e8f0;
+      --shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans TC", sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.5;
+      padding-bottom: 60px;
+    }
+
+    header {
+      background-color: #fff;
+      padding: 16px 18px 12px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+    }
+
+    .title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.2px;
+    }
+
+    /* 頂部操作列 */
+    .controls {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .search-box {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      background-color: var(--bg);
+      outline: none;
+    }
+
+    .search-box:focus {
+      border-color: var(--primary);
+      background-color: #fff;
+    }
+
+    .toggle-all-btn {
+      padding: 8px 14px;
+      background-color: var(--primary-soft);
+      color: var(--primary);
+      border: 1px solid #c7d2fe;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    /* 快速跳轉快捷按鈕列 */
+    .jump-bar {
+      display: flex;
+      overflow-x: auto;
+      gap: 6px;
+      padding: 8px 16px;
+      background-color: #ffffff;
+      border-bottom: 1px solid var(--border);
+      scrollbar-width: none;
+    }
+    .jump-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .jump-btn {
+      flex: 0 0 auto;
+      padding: 4px 10px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      background-color: #f1f5f9;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .jump-btn:active {
+      background-color: var(--primary-soft);
+      color: var(--primary);
+    }
+
+    /* 卡片列表容器 */
+    .container {
+      padding: 14px 14px 0;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    /* 單字卡片結構 */
+    .item-card {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      scroll-margin-top: 130px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .index-badge {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      background-color: #f1f5f9;
+      padding: 2px 9px;
+      border-radius: 4px;
+    }
+
+    /* 答案膠囊開關 */
+    .ans-chip {
+      display: inline-flex;
+      align-items: center;
+      background-color: #f1f5f9;
+      color: transparent;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 1rem;
+      font-weight: 700;
+      user-select: none;
+      cursor: pointer;
+      border: 1px dashed #94a3b8;
+      transition: all 0.15s ease;
+      position: relative;
+    }
+
+    .ans-chip::after {
+      content: "點擊對答案";
+      color: #475569;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.8rem;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .ans-chip.revealed {
+      background-color: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+
+    .ans-chip.revealed::after {
+      display: none;
+    }
+
+    /* 英文與中文排版 */
+    .en-sentence {
+      font-size: 0.98rem;
+      color: var(--text-main);
+      font-weight: 500;
+      margin-bottom: 8px;
+      line-height: 1.45;
+    }
+
+    .blank-cue {
+      color: var(--primary);
+      font-weight: 700;
+      padding: 0 1px;
+    }
+
+    .zh-sentence {
+      font-size: 0.88rem;
+      color: var(--chinese-text);
+      line-height: 1.45;
+      border-top: 1px dashed #f1f5f9;
+      padding-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="title">301-303文意字彙練習詳解(亂序)</div>
+    <div class="controls">
+      <input type="text" id="search" class="search-box" placeholder="搜尋題號(如 05)、英文或中文..." oninput="handleSearch()" />
+      <button class="toggle-all-btn" onclick="toggleAllAnswers()">全部 顯示/隱藏</button>
+    </div>
+  </header>
+
+  <div class="jump-bar">
+    <a class="jump-btn" href="#q1">01 - 20</a>
+    <a class="jump-btn" href="#q21">21 - 40</a>
+    <a class="jump-btn" href="#q41">41 - 60</a>
+    <a class="jump-btn" href="#q61">61 - 80</a>
+    <a class="jump-btn" href="#q81">81 - 94</a>
+  </div>
+
+  <main class="container" id="listContainer">
+    <article class="item-card" id="q1"><div class="card-header"><span class="index-badge">01</span><div class="ans-chip" onclick="toggleAns(this)">employer</div></div><p class="en-sentence">David recently quit his highly stressful job at the large tech company. He is currently looking for a better <span class="blank-cue">e____r</span> who values work-life balance.</p><p class="zh-sentence">大衛最近辭去了在大型科技公司高壓的工作。他目前正在尋找一位更看重工作與生活平衡的雇主。</p></article>
+    <article class="item-card" id="q2"><div class="card-header"><span class="index-badge">02</span><div class="ans-chip" onclick="toggleAns(this)">ranks</div></div><p class="en-sentence">The university library contains millions of historical books and academic journals. Librarian Lee carefully <span class="blank-cue">r____ks</span> all the reading materials by their specific subjects.</p><p class="zh-sentence">大學圖書館藏有數百萬本歷史書籍和學術期刊。李圖書館員仔細地將所有閱讀材料依其特定主題進行分級排序。</p></article>
+    <article class="item-card" id="q3"><div class="card-header"><span class="index-badge">03</span><div class="ans-chip" onclick="toggleAns(this)">fury</div></div><p class="en-sentence">The unfair referee made a terrible call that cost the home team the championship. Coach Lee slammed his clipboard onto the floor in absolute <span class="blank-cue">f____y</span>.</p><p class="zh-sentence">不公平的裁判做出了一個糟糕的判決，讓主場球隊失去了冠軍。李教練在絕對的狂怒中將他的戰術板摔在地板上。</p></article>
+    <article class="item-card" id="q4"><div class="card-header"><span class="index-badge">04</span><div class="ans-chip" onclick="toggleAns(this)">furious</div></div><p class="en-sentence">The irresponsible driver crashed his sports car into a parked police vehicle. Officer Zhao was absolutely <span class="blank-cue">f____s</span> about this incredibly stupid and dangerous accident.</p><p class="zh-sentence">不負責任的駕駛將他的跑車撞上了一輛停著的警車。趙警官對這場極其愚蠢又危險的事故感到絕對憤怒。</p></article>
+    <article class="item-card" id="q5"><div class="card-header"><span class="index-badge">05</span><div class="ans-chip" onclick="toggleAns(this)">adjustments</div></div><p class="en-sentence">The company changed its official working hours to avoid the morning traffic. Employee Lin fully supported these minor schedule <span class="blank-cue">a____ts</span> for better convenience.</p><p class="zh-sentence">公司更改了官方的上班時間以避開早上的交通阻塞。林員工完全支持這些微小的日程調整，以獲得更好的便利性。</p></article>
+    <article class="item-card" id="q6"><div class="card-header"><span class="index-badge">06</span><div class="ans-chip" onclick="toggleAns(this)">germs</div></div><p class="en-sentence">The public restroom is cleaned thoroughly every hour to maintain perfect health hygiene. Janitor Lin uses strong chemical sprays to kill off all dangerous <span class="blank-cue">g____ms</span> on the surfaces.</p><p class="zh-sentence">公共廁所每小時都會被徹底清潔，以維持完美的健康衛生。林清潔工使用強效化學噴霧來殺死表面上所有危險的細菌。</p></article>
+    <article class="item-card" id="q7"><div class="card-header"><span class="index-badge">07</span><div class="ans-chip" onclick="toggleAns(this)">architecture</div></div><p class="en-sentence">Paris is globally famous for its stunning historical buildings and monuments. Student Wu flew there specifically to study classical European <span class="blank-cue">a____e</span>.</p><p class="zh-sentence">巴黎以其令人驚嘆的歷史建築和紀念碑而聞名全球。吳同學專程飛到那裡去學習古典歐洲建築。</p></article>
+    <article class="item-card" id="q8"><div class="card-header"><span class="index-badge">08</span><div class="ans-chip" onclick="toggleAns(this)">underneath</div></div><p class="en-sentence">The ancient pirates buried their stolen gold treasure deep below the sandy beach. Archaeologist Lin dug for weeks before finding the chest hidden <span class="blank-cue">u____h</span>.</p><p class="zh-sentence">古代海盜將他們偷來的黃金寶藏深埋在沙灘下方。林考古學家挖了幾個星期才找到隱藏在底下的箱子。</p></article>
+    <article class="item-card" id="q9"><div class="card-header"><span class="index-badge">09</span><div class="ans-chip" onclick="toggleAns(this)">upright</div></div><p class="en-sentence">The ancient ape slowly learned to walk on two legs across the plains. Anthropologist Wang explained how standing <span class="blank-cue">u____t</span> changed human evolution forever.</p><p class="zh-sentence">古代猿猴慢慢學會了用兩條腿在平原上行走。王人類學家解釋了直立站立如何永遠改變了人類的演化。</p></article>
+    <article class="item-card" id="q10"><div class="card-header"><span class="index-badge">10</span><div class="ans-chip" onclick="toggleAns(this)">routes</div></div><p class="en-sentence">The massive snowstorm completely blocked the main highway going into the mountains. Officer Lee directed all the trapped vehicles to take alternative <span class="blank-cue">r____es</span>.</p><p class="zh-sentence">巨大的暴風雪徹底堵死了進入山區的主要高速公路。李警官引導所有受困的車輛改走替代路線。</p></article>
+    <article class="item-card" id="q11"><div class="card-header"><span class="index-badge">11</span><div class="ans-chip" onclick="toggleAns(this)">sparkles</div></div><p class="en-sentence">The calm ocean waves beautifully reflected the golden rays of the early morning sun. Photographer Lee easily captured the brilliant <span class="blank-cue">s____es</span> of the water with his professional camera.</p><p class="zh-sentence">平靜的海浪美麗地反射著清晨太陽的金色光芒。李攝影師用他的專業相機輕鬆捕捉了水面上璀璨的閃耀光芒。</p></article>
+    <article class="item-card" id="q12"><div class="card-header"><span class="index-badge">12</span><div class="ans-chip" onclick="toggleAns(this)">elementary</div></div><p class="en-sentence">You must understand the basic rules before trying to solve complex physics problems. Professor Wang spent the first week reviewing these completely <span class="blank-cue">e____y</span> concepts.</p><p class="zh-sentence">在試圖解決複雜的物理問題之前，你必須先了解基本規則。王教授花了第一週複習這些完全基礎的概念。</p></article>
+    <article class="item-card" id="q13"><div class="card-header"><span class="index-badge">13</span><div class="ans-chip" onclick="toggleAns(this)">frail</div></div><p class="en-sentence">After fighting the severe illness for several months, the patient became incredibly weak. Doctor Wang deeply worried about the <span class="blank-cue">f____l</span> man's physical ability to survive the major surgery.</p><p class="zh-sentence">在與嚴重疾病對抗了幾個月後，病患變得極其虛弱。王醫師深切擔心這位虛弱男子的體力是否能熬過這場大手術。</p></article>
+    <article class="item-card" id="q14"><div class="card-header"><span class="index-badge">14</span><div class="ans-chip" onclick="toggleAns(this)">explored</div></div><p class="en-sentence">The curious little boy wandered away from his parents in the large forest. He bravely <span class="blank-cue">e____red</span> the dark woods until he finally found a beautiful hidden waterfall.</p><p class="zh-sentence">好奇的小男孩在廣闊的森林裡離開了他的父母。他勇敢地探索了黑暗的樹林，直到他最終找到了一個美麗隱蔽的瀑布。</p></article>
+    <article class="item-card" id="q15"><div class="card-header"><span class="index-badge">15</span><div class="ans-chip" onclick="toggleAns(this)">graduation</div></div><p class="en-sentence">Emily bought a beautiful formal dress for her upcoming university ceremony. Her parents are hosting a huge family dinner to celebrate her <span class="blank-cue">g____n</span>.</p><p class="zh-sentence">艾蜜莉為她即將到來的大學典禮買了一件美麗的正式洋裝。她的父母正在舉辦一場盛大的家庭聚餐來慶祝她的畢業。</p></article>
+    <article class="item-card" id="q16"><div class="card-header"><span class="index-badge">16</span><div class="ans-chip" onclick="toggleAns(this)">promises</div></div><p class="en-sentence">Mother Wu told her young son that she would buy him a new toy. She always keeps her <span class="blank-cue">p____es</span> because she wants him to trust her completely.</p><p class="zh-sentence">吳媽媽告訴她年幼的兒子會買一個新玩具給他。她總是信守她的承諾，因為她希望他能完全信任她。</p></article>
+    <article class="item-card" id="q17"><div class="card-header"><span class="index-badge">17</span><div class="ans-chip" onclick="toggleAns(this)">constructive</div></div><p class="en-sentence">Manager Wu refused to simply criticize his employees for their accidental mistakes. He always offered <span class="blank-cue">c____e</span> advice to help them perform much better next time.</p><p class="zh-sentence">吳經理拒絕只是為了員工意外的錯誤而批評他們。他總是提供有建設性的建議，幫助他們下次表現得更好。</p></article>
+    <article class="item-card" id="q18"><div class="card-header"><span class="index-badge">18</span><div class="ans-chip" onclick="toggleAns(this)">capable</div></div><p class="en-sentence">Our new factory machines can produce ten thousand plastic bottles per hour. Manager Lee is very proud of having such a highly <span class="blank-cue">c____e</span> production line.</p><p class="zh-sentence">我們的新工廠機器每小時能生產一萬個塑膠瓶。李經理為擁有如此高能力的生產線感到非常自豪。</p></article>
+    <article class="item-card" id="q19"><div class="card-header"><span class="index-badge">19</span><div class="ans-chip" onclick="toggleAns(this)">constructed</div></div><p class="en-sentence">The devastating typhoon completely destroyed the small wooden houses near the beach. The brave villagers immediately <span class="blank-cue">c____ted</span> temporary shelters using broken tree branches.</p><p class="zh-sentence">具毀滅性的颱風徹底摧毀了海灘附近的小木屋。勇敢的村民立刻使用斷裂的樹枝建造了臨時的避難所。</p></article>
+    <article class="item-card" id="q20"><div class="card-header"><span class="index-badge">20</span><div class="ans-chip" onclick="toggleAns(this)">conflict</div></div><p class="en-sentence">The stubborn manager and the lead engineer strongly disagreed on the project design. Director Zhao had to hold a special meeting to resolve their bitter <span class="blank-cue">c____t</span>.</p><p class="zh-sentence">固執的經理和首席工程師對專案設計有強烈的分歧。趙總監必須召開特別會議來解決他們激烈的衝突。</p></article>
+    <article class="item-card" id="q21"><div class="card-header"><span class="index-badge">21</span><div class="ans-chip" onclick="toggleAns(this)">misery</div></div><p class="en-sentence">The lonely old man lost all his life savings in a terrible fire. Neighbor Lee tried to comfort him in his time of profound <span class="blank-cue">m____y</span>.</p><p class="zh-sentence">孤獨的老人在一場可怕的大火中失去了畢生積蓄。李鄰居試圖在他深陷悲慘的時刻安慰他。</p></article>
+    <article class="item-card" id="q22"><div class="card-header"><span class="index-badge">22</span><div class="ans-chip" onclick="toggleAns(this)">drowsy</div></div><p class="en-sentence">Taking this very strong allergy medication might make you feel constantly tired and sleepy. Doctor Wu strictly warned the young patient not to drive while feeling <span class="blank-cue">d____y</span>.</p><p class="zh-sentence">服用這種非常強效的過敏藥物可能會讓你持續感到疲倦和想睡。吳醫師嚴格警告年輕病患在感到昏昏欲睡時不要開車。</p></article>
+    <article class="item-card" id="q23"><div class="card-header"><span class="index-badge">23</span><div class="ans-chip" onclick="toggleAns(this)">innovative</div></div><p class="en-sentence">Manager Lin always encourages her team to think outside the box. She firmly believes that highly <span class="blank-cue">i____e</span> ideas can solve any difficult business problem.</p><p class="zh-sentence">林經理總是鼓勵她的團隊跳脫框架思考。她堅信高度創新的想法能解決任何困難的商業問題。</p></article>
+    <article class="item-card" id="q24"><div class="card-header"><span class="index-badge">24</span><div class="ans-chip" onclick="toggleAns(this)">pale</div></div><p class="en-sentence">Amanda has been staying indoors for several weeks to prepare for the difficult final exams. Her tired face looked incredibly <span class="blank-cue">p____e</span> due to the total lack of natural sunlight.</p><p class="zh-sentence">阿曼達為了準備困難的期末考，已經待在室內好幾個星期了。由於完全缺乏自然陽光，她疲憊的臉龐看起來極其蒼白。</p></article>
+    <article class="item-card" id="q25"><div class="card-header"><span class="index-badge">25</span><div class="ans-chip" onclick="toggleAns(this)">fur</div></div><p class="en-sentence">The stray dog shivered terribly in the freezing rain all night long. Animal rescuer Wang brought a towel to dry its wet and dirty <span class="blank-cue">f____r</span>.</p><p class="zh-sentence">流浪狗在冰冷的雨中可怕地發抖了整晚。動物救援者王先生拿了一條毛巾來擦乾牠濕透且骯髒的毛皮。</p></article>
+    <article class="item-card" id="q26"><div class="card-header"><span class="index-badge">26</span><div class="ans-chip" onclick="toggleAns(this)">victim</div></div><p class="en-sentence">The cunning scammer stole thousands of dollars from unsuspecting elderly people. Grandma Lin unfortunately became the latest <span class="blank-cue">v____m</span> of this cruel financial fraud.</p><p class="zh-sentence">狡猾的詐騙份子從毫無防備的長者那裡偷走了數千美元。林奶奶不幸成為這場殘酷金融詐欺的最新受害者。</p></article>
+    <article class="item-card" id="q27"><div class="card-header"><span class="index-badge">27</span><div class="ans-chip" onclick="toggleAns(this)">frightened</div></div><p class="en-sentence">The sudden loud crash of thunder caused the poor little cat to jump high. The terrible midnight noise completely <span class="blank-cue">f____ned</span> Amanda's precious furry pet in the bedroom.</p><p class="zh-sentence">突然巨大的雷響讓這隻可憐的小貓跳得老高。可怕的午夜噪音徹底嚇壞了阿曼達在臥室裡珍貴的毛茸茸寵物。</p></article>
+    <article class="item-card" id="q28"><div class="card-header"><span class="index-badge">28</span><div class="ans-chip" onclick="toggleAns(this)">ill</div></div><p class="en-sentence">John stayed home from high school today because he had a very high fever. The severely <span class="blank-cue">i____l</span> student rested comfortably in bed all day to recover.</p><p class="zh-sentence">約翰今天向高中請假待在家裡，因為他發高燒。這位病得很重的學生整天舒服地在床上休息以求康復。</p></article>
+    <article class="item-card" id="q29"><div class="card-header"><span class="index-badge">29</span><div class="ans-chip" onclick="toggleAns(this)">terminal</div></div><p class="en-sentence">Passengers must arrive at the airport at least two hours before departure. Flight attendant Lin directed everyone to wait patiently at the international departure <span class="blank-cue">t____l</span>.</p><p class="zh-sentence">旅客必須在起飛前至少兩個小時抵達機場。林空服員引導大家在國際航廈耐心等候。</p></article>
+    <article class="item-card" id="q30"><div class="card-header"><span class="index-badge">30</span><div class="ans-chip" onclick="toggleAns(this)">hollow</div></div><p class="en-sentence">The hungry little boy bit into the chocolate bunny expecting a solid piece of candy. Kevin was quite disappointed to find that the sweet treat was completely <span class="blank-cue">h____w</span>.</p><p class="zh-sentence">飢餓的小男孩咬了一口巧克力兔子，原以為是一塊實心的糖果。凱文很失望地發現這項甜點完全是空心的。</p></article>
+    <article class="item-card" id="q31"><div class="card-header"><span class="index-badge">31</span><div class="ans-chip" onclick="toggleAns(this)">torture</div></div><p class="en-sentence">The marathon runner suffered from severe leg cramps during the final mile. Athlete Lin described the intense physical pain as absolute <span class="blank-cue">t____e</span>.</p><p class="zh-sentence">馬拉松跑者在最後一英里遭遇了嚴重的腿部抽筋。林運動員將這種強烈的身體疼痛描述為絕對的折磨。</p></article>
+    <article class="item-card" id="q32"><div class="card-header"><span class="index-badge">32</span><div class="ans-chip" onclick="toggleAns(this)">universal</div></div><p class="en-sentence">The international committee tried to establish basic human rights across the globe. Lawyer Chen argued that these fundamental protections should be absolutely <span class="blank-cue">u____l</span>.</p><p class="zh-sentence">國際委員會試圖在全球建立基本人權。陳律師主張這些基本的保護應該是絕對普遍的。</p></article>
+    <article class="item-card" id="q33"><div class="card-header"><span class="index-badge">33</span><div class="ans-chip" onclick="toggleAns(this)">slight</div></div><p class="en-sentence">The professional baker noticed a tiny difference in the cake's sweet flavor. Chef Huang realized he had made a <span class="blank-cue">s____t</span> error while measuring the sugar.</p><p class="zh-sentence">專業的烘焙師注意到了蛋糕甜味上一絲微小的差異。黃主廚意識到他在測量糖的時候犯了一個輕微的錯誤。</p></article>
+    <article class="item-card" id="q34"><div class="card-header"><span class="index-badge">34</span><div class="ans-chip" onclick="toggleAns(this)">illness</div></div><p class="en-sentence">Grandmother Chang has been coughing terribly for the past two entire weeks. The prolonged <span class="blank-cue">i____s</span> made her feel extremely weak and totally exhausted all day.</p><p class="zh-sentence">張奶奶在過去整整兩個星期裡一直咳得很厲害。持續的疾病讓她整天感到極度虛弱和徹底筋疲力盡。</p></article>
+    <article class="item-card" id="q35"><div class="card-header"><span class="index-badge">35</span><div class="ans-chip" onclick="toggleAns(this)">warmth</div></div><p class="en-sentence">Grandmother Chang smiled brightly when she saw her lovely family standing at the front door. Her welcoming tight hug filled the entire living room with genuine <span class="blank-cue">w____h</span>.</p><p class="zh-sentence">張奶奶看到她可愛的家人站在前門時，露出了燦爛的笑容。她熱情的緊緊擁抱讓整個客廳充滿了真誠的溫暖。</p></article>
+    <article class="item-card" id="q36"><div class="card-header"><span class="index-badge">36</span><div class="ans-chip" onclick="toggleAns(this)">structures</div></div><p class="en-sentence">The severe earthquake severely damaged several old buildings in the downtown area. Architect Chen was hired to inspect the physical <span class="blank-cue">s____es</span> of these historical temples.</p><p class="zh-sentence">強烈的地震嚴重損壞了市中心的幾棟老建築。陳建築師受雇來檢查這些歷史寺廟的實體結構。</p></article>
+    <article class="item-card" id="q37"><div class="card-header"><span class="index-badge">37</span><div class="ans-chip" onclick="toggleAns(this)">suffered</div></div><p class="en-sentence">The heavy typhoon completely destroyed almost all the crops in the southern region. Farmer Wang <span class="blank-cue">s____red</span> a huge financial loss due to the terrible weather conditions.</p><p class="zh-sentence">強烈颱風幾乎徹底摧毀了南部地區所有的農作物。王農夫因為可怕的天氣狀況而遭受了巨大的財務損失。</p></article>
+    <article class="item-card" id="q38"><div class="card-header"><span class="index-badge">38</span><div class="ans-chip" onclick="toggleAns(this)">contact</div></div><p class="en-sentence">The rescue team finally found the lost hikers deep in the dark freezing mountains. Officer Zhang immediately established radio <span class="blank-cue">c____t</span> with the rescue helicopter pilot.</p><p class="zh-sentence">救援隊終於在黑暗寒冷的深山裡找到了迷路的登山客。張警官立刻與救援直升機飛行員建立了無線電聯繫。</p></article>
+    <article class="item-card" id="q39"><div class="card-header"><span class="index-badge">39</span><div class="ans-chip" onclick="toggleAns(this)">graduates</div></div><p class="en-sentence">Many large technology companies actively hire talented young people every summer. Manager Chang prefers to interview recent university <span class="blank-cue">g____es</span> for the engineering positions.</p><p class="zh-sentence">許多大型科技公司每年夏天都會積極聘用有才華的年輕人。張經理偏好面試剛畢業的大學畢業生來擔任工程職位。</p></article>
+    <article class="item-card" id="q40"><div class="card-header"><span class="index-badge">40</span><div class="ans-chip" onclick="toggleAns(this)">universe</div></div><p class="en-sentence">Many scientists believe there are unknown alien species living in distant galaxies. Captain Lee hopes to explore the endless <span class="blank-cue">u____e</span> with his advanced spaceship.</p><p class="zh-sentence">許多科學家相信遙遠的星系中生活著未知的的外星物種。李船長希望用他先進的太空船探索無盡的宇宙。</p></article>
+    <article class="item-card" id="q41"><div class="card-header"><span class="index-badge">41</span><div class="ans-chip" onclick="toggleAns(this)">punished</div></div><p class="en-sentence">The corrupted politician accepted millions of dollars in illegal bribes. Judge Lee severely <span class="blank-cue">p____hed</span> him for breaking the nation's highest laws.</p><p class="zh-sentence">貪污的政客收受了數百萬美元的非法賄賂。李法官因為他違反了國家最高法律而嚴厲懲罰了他。</p></article>
+    <article class="item-card" id="q42"><div class="card-header"><span class="index-badge">42</span><div class="ans-chip" onclick="toggleAns(this)">exploration</div></div><p class="en-sentence">The greedy mining company heavily funded the search for new gold deposits. Director Wang believed this expensive geological <span class="blank-cue">e____n</span> would eventually yield massive profits.</p><p class="zh-sentence">貪婪的採礦公司投入巨資尋找新的金礦床。王主任相信這項昂貴的地質探勘最終會產生巨大的利潤。</p></article>
+    <article class="item-card" id="q43"><div class="card-header"><span class="index-badge">43</span><div class="ans-chip" onclick="toggleAns(this)">slaughter</div></div><p class="en-sentence">The greedy hunters killed hundreds of elephants just to steal their valuable ivory. Animal rights activist Chen protested against this cruel and senseless <span class="blank-cue">s____r</span>.</p><p class="zh-sentence">貪婪的獵人殺死了數百隻大象，只為了偷取牠們珍貴的象牙。動物權利活動家陳先生抗議這場殘酷且無意義的屠宰。</p></article>
+    <article class="item-card" id="q44"><div class="card-header"><span class="index-badge">44</span><div class="ans-chip" onclick="toggleAns(this)">feedback</div></div><p class="en-sentence">The software developer asked the users to test the new mobile application. Programmer Wang eagerly waited for their honest <span class="blank-cue">f____k</span> to fix any remaining bugs.</p><p class="zh-sentence">軟體開發人員要求使用者測試新的行動應用程式。王程式設計師熱切地等待他們誠實的回饋，以修復任何剩餘的錯誤。</p></article>
+    <article class="item-card" id="q45"><div class="card-header"><span class="index-badge">45</span><div class="ans-chip" onclick="toggleAns(this)">tremendously</div></div><p class="en-sentence">The amateur basketball team practiced heavily every single day during the summer vacation. Coach Yang proudly observed that their passing and shooting skills had improved <span class="blank-cue">t____y</span>.</p><p class="zh-sentence">這支業餘籃球隊在暑假期間每天都進行密集的練習。楊教練驕傲地觀察到他們的傳球和投籃技巧有了極大的進步。</p></article>
+    <article class="item-card" id="q46"><div class="card-header"><span class="index-badge">46</span><div class="ans-chip" onclick="toggleAns(this)">laughter</div></div><p class="en-sentence">The talented comedian told a hilarious joke about his daily life with his cat. The crowded theater suddenly erupted into loud and uncontrollable <span class="blank-cue">l____r</span> after his punchline.</p><p class="zh-sentence">這位才華洋溢的喜劇演員講了一個關於他與貓咪日常生活的搞笑笑話。在他講完笑點後，擁擠的劇院突然爆發出響亮且無法控制的笑聲。</p></article>
+    <article class="item-card" id="q47"><div class="card-header"><span class="index-badge">47</span><div class="ans-chip" onclick="toggleAns(this)">banishment</div></div><p class="en-sentence">The disgraced knight was stripped of all his noble titles and lands. Lord Wang ordered his immediate <span class="blank-cue">b____t</span> to the distant and dangerous northern mountains.</p><p class="zh-sentence">這位失寵的騎士被剝奪了所有的貴族頭銜和土地。王爵士下令立即將他驅逐到遙遠且危險的北部山區。</p></article>
+    <article class="item-card" id="q48"><div class="card-header"><span class="index-badge">48</span><div class="ans-chip" onclick="toggleAns(this)">generous</div></div><p class="en-sentence">The successful businessman always shares his massive wealth with the poor community. Everyone praises Mr. Lin for being incredibly kind and truly <span class="blank-cue">g____s</span>.</p><p class="zh-sentence">這位成功的商人總是與貧困社區分享他龐大的財富。每個人都稱讚林先生非常善良且真正慷慨。</p></article>
+    <article class="item-card" id="q49"><div class="card-header"><span class="index-badge">49</span><div class="ans-chip" onclick="toggleAns(this)">relies</div></div><p class="en-sentence">The blind man navigates the busy city streets with his trained guide dog. He entirely <span class="blank-cue">r____ies</span> on the clever animal to keep him perfectly safe.</p><p class="zh-sentence">這位盲人帶著他受過訓練的導盲犬在繁忙的城市街道中穿梭。他完全依賴這隻聰明的動物來保持他的絕對安全。</p></article>
+    <article class="item-card" id="q50"><div class="card-header"><span class="index-badge">50</span><div class="ans-chip" onclick="toggleAns(this)">adjusted</div></div><p class="en-sentence">The international student found it difficult to adapt to the cold winter weather. Jason eventually <span class="blank-cue">a____ted</span> to the freezing temperatures by wearing thicker wool coats.</p><p class="zh-sentence">這位國際學生發現很難適應寒冷的冬天。傑森最終透過穿上更厚的羊毛大衣，適應了極度寒冷的氣溫。</p></article>
+    <article class="item-card" id="q51"><div class="card-header"><span class="index-badge">51</span><div class="ans-chip" onclick="toggleAns(this)">innovation</div></div><p class="en-sentence">The brilliant scientist received a prestigious award for her latest discovery. Everyone praised her remarkable <span class="blank-cue">i____n</span> in the field of renewable energy.</p><p class="zh-sentence">這位傑出的科學家因為她最新的發現而獲得了享有盛譽的獎項。每個人都讚揚她在再生能源領域非凡的創新。</p></article>
+    <article class="item-card" id="q52"><div class="card-header"><span class="index-badge">52</span><div class="ans-chip" onclick="toggleAns(this)">construction</div></div><p class="en-sentence">The wealthy businessman invested heavily in building a luxurious five-star hotel. Mr. Zhao closely monitored the rapid <span class="blank-cue">c____n</span> of the impressive tall building.</p><p class="zh-sentence">這位富有的商人投入鉅資建造了一家豪華的五星級飯店。趙先生密切監控這棟令人印象深刻的高樓的快速施工。</p></article>
+    <article class="item-card" id="q53"><div class="card-header"><span class="index-badge">53</span><div class="ans-chip" onclick="toggleAns(this)">mentioned</div></div><p class="en-sentence">The famous author wrote a lengthy acknowledgement at the end of his book. He specifically <span class="blank-cue">m____ned</span> his beloved wife for her endless support.</p><p class="zh-sentence">這位著名的作者在他的書末寫了一篇很長的致謝詞。他特別提到了他心愛的妻子，感謝她無盡的支持。</p></article>
+    <article class="item-card" id="q54"><div class="card-header"><span class="index-badge">54</span><div class="ans-chip" onclick="toggleAns(this)">refused</div></div><p class="en-sentence">The famous actor was offered a massive amount of money to star in the new action movie. However, David firmly <span class="blank-cue">r____sed</span> the leading role because he thought the script was terrible.</p><p class="zh-sentence">這位著名的演員獲邀以巨額片酬主演新的動作片。然而，大衛堅決拒絕了這個主角，因為他覺得劇本糟透了。</p></article>
+    <article class="item-card" id="q55"><div class="card-header"><span class="index-badge">55</span><div class="ans-chip" onclick="toggleAns(this)">stable</div></div><p class="en-sentence">The famous horse rider gently calmed down the nervous animal before the race. She kept the magnificent creature perfectly <span class="blank-cue">s____e</span> in the quiet wooden barn.</p><p class="zh-sentence">這位著名的騎馬者在賽前溫柔地安撫了這匹緊張的動物。她讓這隻宏偉的生物在安靜的木穀倉裡保持完美的穩定。</p></article>
+    <article class="item-card" id="q56"><div class="card-header"><span class="index-badge">56</span><div class="ans-chip" onclick="toggleAns(this)">tremendous</div></div><p class="en-sentence">The famous actor felt a lot of intense pressure before the live stage performance. David experienced a <span class="blank-cue">t____s</span> relief when the audience stood up and cheered enthusiastically.</p><p class="zh-sentence">這位著名演員在現場舞台表演前感受到了許多強烈的壓力。當觀眾站起來熱烈歡呼時，大衛感受到了一種極大的如釋重負。</p></article>
+    <article class="item-card" id="q57"><div class="card-header"><span class="index-badge">57</span><div class="ans-chip" onclick="toggleAns(this)">hesitated</div></div><p class="en-sentence">The highly brave firefighter did not pause for a single second when he saw the violently burning house. Captain Chen never <span class="blank-cue">h____ted</span> to risk his own precious life to save trapped innocent citizens.</p><p class="zh-sentence">這位極度勇敢的消防員在看到猛烈燃燒的房子時，一秒鐘也沒有停頓。陳隊長從不猶豫冒著自己寶貴的生命危險去拯救受困的無辜市民。</p></article>
+    <article class="item-card" id="q58"><div class="card-header"><span class="index-badge">58</span><div class="ans-chip" onclick="toggleAns(this)">hesitation</div></div><p class="en-sentence">The incredibly nervous performer paused silently for a long moment before singing the very first note. Her brief <span class="blank-cue">h____n</span> perfectly showed how much heavy pressure she felt on the grand stage.</p><p class="zh-sentence">這位極度緊張的表演者在唱出第一個音符前，安靜地停頓了很長一段時間。她短暫的猶豫完美顯示了她在這個盛大的舞台上感受到了多麼沉重的壓力。</p></article>
+    <article class="item-card" id="q59"><div class="card-header"><span class="index-badge">59</span><div class="ans-chip" onclick="toggleAns(this)">collaborated</div></div><p class="en-sentence">The independent musicians wanted to create a highly unique pop song together. Singer Zhao eagerly <span class="blank-cue">c____ted</span> with a popular DJ to produce the hit single.</p><p class="zh-sentence">這些獨立音樂人想要共同創作一首極具獨特性的流行歌曲。趙歌手熱切地與一位受歡迎的 DJ 合作製作了這首熱門單曲。</p></article>
+    <article class="item-card" id="q60"><div class="card-header"><span class="index-badge">60</span><div class="ans-chip" onclick="toggleAns(this)">hugged</div></div><p class="en-sentence">The two best friends had not seen each other for over ten long years. Sarah tightly <span class="blank-cue">h____ged</span> Emily the very moment they finally met at the busy coffee shop.</p><p class="zh-sentence">這兩個最好的朋友已經超過十年沒見面了。當她們終於在繁忙的咖啡廳見面時，莎拉緊緊地擁抱了艾蜜莉。</p></article>
+    <article class="item-card" id="q61"><div class="card-header"><span class="index-badge">61</span><div class="ans-chip" onclick="toggleAns(this)">beneficial</div></div><p class="en-sentence">The two competing companies signed a major trade agreement last Friday. CEO Wang believes this cooperative partnership will be mutually <span class="blank-cue">b____l</span>.</p><p class="zh-sentence">這兩家競爭公司上週五簽署了一項重大貿易協定。王執行長相信這種合作夥伴關係將會是互利的。</p></article>
+    <article class="item-card" id="q62"><div class="card-header"><span class="index-badge">62</span><div class="ans-chip" onclick="toggleAns(this)">distribution</div></div><p class="en-sentence">The wealthy nation possesses abundant natural resources and massive agricultural fields. However, Economist Lee criticized the highly unequal <span class="blank-cue">d____n</span> of wealth among its citizens.</p><p class="zh-sentence">這個富有的國家擁有豐富的自然資源和廣大的農田。然而，李經濟學家批評了其公民之間高度不平等的財富分配。</p></article>
+    <article class="item-card" id="q63"><div class="card-header"><span class="index-badge">63</span><div class="ans-chip" onclick="toggleAns(this)">corporate</div></div><p class="en-sentence">The successful company decided to completely redesign its official website and logo. Director Huang hoped the new <span class="blank-cue">c____e</span> identity would attract many younger customers.</p><p class="zh-sentence">這家成功的公司決定徹底重新設計其官方網站和標誌。黃總監希望新的企業形象能吸引許多更年輕的顧客。</p></article>
+    <article class="item-card" id="q64"><div class="card-header"><span class="index-badge">64</span><div class="ans-chip" onclick="toggleAns(this)">employees</div></div><p class="en-sentence">The software company rewards hard work with a massive year-end bonus. Outstanding <span class="blank-cue">e____es</span> often receive extra paid vacation days as well.</p><p class="zh-sentence">這家軟體公司以巨額的年終獎金來獎勵辛勤的工作。表現優異的員工通常還會獲得額外的有薪假。</p></article>
+    <article class="item-card" id="q65"><div class="card-header"><span class="index-badge">65</span><div class="ans-chip" onclick="toggleAns(this)">unique</div></div><p class="en-sentence">This traditional Taiwanese restaurant serves a very special spicy tofu dish. Tourist Smith absolutely loved the profoundly <span class="blank-cue">u____e</span> flavor of the secret sauce.</p><p class="zh-sentence">這家傳統台灣餐廳提供了一道非常特別的麻辣豆腐。史密斯遊客絕對愛上了那祕製醬料極其獨特的風味。</p></article>
+    <article class="item-card" id="q66"><div class="card-header"><span class="index-badge">66</span><div class="ans-chip" onclick="toggleAns(this)">innovated</div></div><p class="en-sentence">The traditional restaurant was losing money for several consecutive months. Owner Lee finally <span class="blank-cue">i____ted</span> by adding creative vegetarian options to the old menu.</p><p class="zh-sentence">這家傳統餐廳已經連續好幾個月虧損。李老闆最後透過在舊菜單中加入有創意的素食選項來進行創新。</p></article>
+    <article class="item-card" id="q67"><div class="card-header"><span class="index-badge">67</span><div class="ans-chip" onclick="toggleAns(this)">miserable</div></div><p class="en-sentence">The poor stray cat was trapped in the freezing rain without any shelter. Amanda felt terrible seeing the little animal looking so cold and <span class="blank-cue">m____e</span>.</p><p class="zh-sentence">這隻可憐的流浪貓被困在冰冷的雨中，沒有任何遮蔽處。阿曼達看到小動物看起來如此寒冷和痛苦，感到非常難過。</p></article>
+    <article class="item-card" id="q68"><div class="card-header"><span class="index-badge">68</span><div class="ans-chip" onclick="toggleAns(this)">enables</div></div><p class="en-sentence">The advanced software translates foreign languages perfectly in real time. This amazing tool <span class="blank-cue">e____es</span> Manager Lee to communicate with global clients smoothly.</p><p class="zh-sentence">這款先進的軟體能完美地即時翻譯外語。這個驚人的工具使李經理能夠與全球客戶順暢溝通。</p></article>
+    <article class="item-card" id="q69"><div class="card-header"><span class="index-badge">69</span><div class="ans-chip" onclick="toggleAns(this)">capabilities</div></div><p class="en-sentence">This advanced software program can translate fifty different languages instantly. Director Wu was truly amazed by its incredible language processing <span class="blank-cue">c____ies</span>.</p><p class="zh-sentence">這款先進的軟體程式能瞬間翻譯五十種不同的語言。吳主任對其令人難以置信的語言處理能力感到非常驚訝。</p></article>
+    <article class="item-card" id="q70"><div class="card-header"><span class="index-badge">70</span><div class="ans-chip" onclick="toggleAns(this)">ranking</div></div><p class="en-sentence">The competitive video game displays the scores of all online players globally. Kevin practices every night to improve his official worldwide <span class="blank-cue">r____g</span>.</p><p class="zh-sentence">這款競爭激烈的電玩遊戲會顯示全球所有線上玩家的分數。凱文每晚練習以提升他官方的世界排名。</p></article>
+    <article class="item-card" id="q71"><div class="card-header"><span class="index-badge">71</span><div class="ans-chip" onclick="toggleAns(this)">elements</div></div><p class="en-sentence">The mysterious chemical substance contains several highly radioactive parts. Scientist Huang carefully isolated the dangerous <span class="blank-cue">e____ts</span> in the secure laboratory.</p><p class="zh-sentence">這種神祕的化學物質含有幾個高度放射性的部分。黃科學家在安全的實驗室裡仔細地分離了這些危險的元素。</p></article>
+    <article class="item-card" id="q72"><div class="card-header"><span class="index-badge">72</span><div class="ans-chip" onclick="toggleAns(this)">reliable</div></div><p class="en-sentence">The old Japanese car has never broken down during our long family road trips. Father Lin always praises his vehicle for being so incredibly <span class="blank-cue">r____e</span>.</p><p class="zh-sentence">這輛舊的日本車在我們漫長的家庭公路旅行中從未拋錨過。林爸爸總是稱讚他的車子是如此地極度可靠。</p></article>
+    <article class="item-card" id="q73"><div class="card-header"><span class="index-badge">73</span><div class="ans-chip" onclick="toggleAns(this)">banished</div></div><p class="en-sentence">The wild wolf pack aggressively rejected their weakened old leader. The young alpha permanently <span class="blank-cue">b____hed</span> him into the freezing wilderness.</p><p class="zh-sentence">野生的狼群充滿攻擊性地拒絕了牠們虛弱的老首領。年輕的阿爾法狼將他永久放逐到冰冷的荒野中。</p></article>
+    <article class="item-card" id="q74"><div class="card-header"><span class="index-badge">74</span><div class="ans-chip" onclick="toggleAns(this)">fright</div></div><p class="en-sentence">The wild bear suddenly appeared right in front of the young camper's small tent. Kevin froze in pure <span class="blank-cue">f____t</span> and could not move a single muscle for a minute.</p><p class="zh-sentence">野生熊突然出現在年輕露營者的小帳篷正前方。凱文在純粹的驚嚇中僵住了，整整一分鐘無法動彈。</p></article>
+    <article class="item-card" id="q75"><div class="card-header"><span class="index-badge">75</span><div class="ans-chip" onclick="toggleAns(this)">employment</div></div><p class="en-sentence">Jason graduated from the university during a severe global economic crisis. He struggled for several months before finally securing full-time <span class="blank-cue">e____t</span> at a local bank.</p><p class="zh-sentence">傑森在全球嚴重經濟危機期間從大學畢業。他苦苦掙扎了好幾個月，最後終於在當地一家銀行獲得了全職的就業。</p></article>
+    <article class="item-card" id="q76"><div class="card-header"><span class="index-badge">76</span><div class="ans-chip" onclick="toggleAns(this)">corporation</div></div><p class="en-sentence">Several small startup companies were quickly bought out by the giant tech firm. The massive <span class="blank-cue">c____n</span> now totally dominates the entire software industry in Taiwan.</p><p class="zh-sentence">幾家小型新創公司很快就被這家科技巨頭買下。這家龐大的企業現在完全主導了台灣整個軟體產業。</p></article>
+    <article class="item-card" id="q77"><div class="card-header"><span class="index-badge">77</span><div class="ans-chip" onclick="toggleAns(this)">punishment</div></div><p class="en-sentence">The cruel dictator sent all his political enemies to remote labor camps. Historian Wu described this harsh <span class="blank-cue">p____t</span> as a terrible violation of human rights.</p><p class="zh-sentence">殘酷的獨裁者將他所有的政敵送到偏遠的勞改營。吳歷史學家將這種嚴厲的懲罰描述為對人權的可怕侵犯。</p></article>
+    <article class="item-card" id="q78"><div class="card-header"><span class="index-badge">78</span><div class="ans-chip" onclick="toggleAns(this)">freeze</div></div><p class="en-sentence">The exhausted hiker got lost in the snowy mountains without a heavy jacket. Captain Lee worried that the poor man would <span class="blank-cue">f____e</span> to death overnight.</p><p class="zh-sentence">筋疲力盡的登山客在沒有厚外套的情況下在雪山裡迷路了。李隊長擔心這個可憐的男人會在夜裡凍死。</p></article>
+    <article class="item-card" id="q79"><div class="card-header"><span class="index-badge">79</span><div class="ans-chip" onclick="toggleAns(this)">benefits</div></div><p class="en-sentence">The new public library offers thousands of free books and quiet study areas. Mayor Chen believes that this wonderful facility greatly <span class="blank-cue">b____ts</span> the whole community.</p><p class="zh-sentence">新的公共圖書館提供了數千本免費書籍和安靜的學習區。陳市長相信這個美好的設施極大地使整個社區受益。</p></article>
+    <article class="item-card" id="q80"><div class="card-header"><span class="index-badge">80</span><div class="ans-chip" onclick="toggleAns(this)">slightly</div></div><p class="en-sentence">The new electric car model is actually a bit more expensive than the older one. Customer Yang hesitated because the price had increased <span class="blank-cue">s____y</span> this year.</p><p class="zh-sentence">新的電動車款式實際上比舊款稍微貴了一點。楊顧客猶豫了，因為今年的價格稍微上漲了。</p></article>
+    <article class="item-card" id="q81"><div class="card-header"><span class="index-badge">81</span><div class="ans-chip" onclick="toggleAns(this)">employed</div></div><p class="en-sentence">The local factory expanded its production line significantly last year. Director Chen <span class="blank-cue">e____yed</span> fifty additional workers to handle the rapidly increasing orders.</p><p class="zh-sentence">當地工廠去年大幅擴張了生產線。陳主任增聘了五十名工人來處理快速增加的訂單。</p></article>
+    <article class="item-card" id="q82"><div class="card-header"><span class="index-badge">82</span><div class="ans-chip" onclick="toggleAns(this)">architect</div></div><p class="en-sentence">The local government wants to build a new public library near the park. They hired a famous Italian <span class="blank-cue">a____t</span> to create a beautiful and functional space.</p><p class="zh-sentence">當地政府想在公園附近建造一座新的公共圖書館。他們聘請了一位著名的義大利建築師來創造一個美麗且實用的空間。</p></article>
+    <article class="item-card" id="q83"><div class="card-header"><span class="index-badge">83</span><div class="ans-chip" onclick="toggleAns(this)">stability</div></div><p class="en-sentence">The three-legged wooden stool easily tipped over when the heavy man sat down. Carpenter Lin realized the flawed design severely lacked structural <span class="blank-cue">s____y</span>.</p><p class="zh-sentence">當這位有份量的男子坐下時，這張三條腿的木凳很容易就翻倒了。林木匠意識到這個有瑕疵的設計嚴重缺乏結構上的穩定性。</p></article>
+    <article class="item-card" id="q84"><div class="card-header"><span class="index-badge">84</span><div class="ans-chip" onclick="toggleAns(this)">civilization</div></div><p class="en-sentence">The discovery of agriculture allowed nomadic tribes to settle in one place. Professor Wang explained how this fundamental change led to the birth of human <span class="blank-cue">c____n</span>.</p><p class="zh-sentence">農業的發現讓游牧部落得以在一個地方定居。王教授解釋了這項根本性的改變是如何導致人類文明的誕生。</p></article>
+    <article class="item-card" id="q85"><div class="card-header"><span class="index-badge">85</span><div class="ans-chip" onclick="toggleAns(this)">distributed</div></div><p class="en-sentence">The charity group prepared thousands of hot meals for the homeless people. Volunteer Wu successfully <span class="blank-cue">d____ted</span> the warm food at the central park tonight.</p><p class="zh-sentence">慈善團體為無家可歸的人們準備了數千份熱食。吳志工今晚成功地在中央公園分發了這些溫暖的食物。</p></article>
+    <article class="item-card" id="q86"><div class="card-header"><span class="index-badge">86</span><div class="ans-chip" onclick="toggleAns(this)">generosity</div></div><p class="en-sentence">The charity organization received hundreds of large donations during the holiday season. Volunteer Huang was moved to tears by the public's heartwarming <span class="blank-cue">g____y</span>.</p><p class="zh-sentence">慈善機構在節慶期間收到了數百筆大額捐款。黃志工被大眾令人感到溫暖的慷慨感動得流下眼淚。</p></article>
+    <article class="item-card" id="q87"><div class="card-header"><span class="index-badge">87</span><div class="ans-chip" onclick="toggleAns(this)">stretch</div></div><p class="en-sentence">The lazy orange cat woke up slowly from a long afternoon nap on the soft sofa. The fluffy animal did a very long <span class="blank-cue">s____h</span> before slowly walking to its food bowl.</p><p class="zh-sentence">慵懶的橘貓在柔軟的沙發上睡了漫長的午覺後慢慢醒來。這隻毛茸茸的動物做了一個很長的伸展，然後才慢慢走到牠的食物碗前。</p></article>
+    <article class="item-card" id="q88"><div class="card-header"><span class="index-badge">88</span><div class="ans-chip" onclick="toggleAns(this)">theft</div></div><p class="en-sentence">The security cameras clearly recorded the masked man breaking into the jewelry store. Officer Zhao quickly arrested the criminal for the massive midnight <span class="blank-cue">t____t</span>.</p><p class="zh-sentence">監視器清楚錄下了蒙面男子闖入珠寶店的過程。趙警官迅速逮捕了這名犯下重大午夜竊案的罪犯。</p></article>
+    <article class="item-card" id="q89"><div class="card-header"><span class="index-badge">89</span><div class="ans-chip" onclick="toggleAns(this)">collaboration</div></div><p class="en-sentence">Writing a successful movie script requires excellent teamwork and communication. Director Lee relies heavily on the close <span class="blank-cue">c____n</span> of his talented writers.</p><p class="zh-sentence">撰寫一部成功的電影劇本需要出色的團隊合作和溝通。李導演非常依賴他才華洋溢的作家們之間緊密的合作。</p></article>
+    <article class="item-card" id="q90"><div class="card-header"><span class="index-badge">90</span><div class="ans-chip" onclick="toggleAns(this)">prompt</div></div><p class="en-sentence">The enthusiastic customer service representative solved the urgent technical problem immediately. Client Lin deeply appreciated such a <span class="blank-cue">p____t</span> and highly helpful response from the large company.</p><p class="zh-sentence">熱情的客服代表立刻解決了緊急的技術問題。林客戶深深感激這家大公司如此迅速且極具幫助的回應。</p></article>
+    <article class="item-card" id="q91"><div class="card-header"><span class="index-badge">91</span><div class="ans-chip" onclick="toggleAns(this)">materials</div></div><p class="en-sentence">The enthusiastic fashion designer bought large amounts of high-quality silk. Miss Chang needed these expensive <span class="blank-cue">m____ls</span> to create her stunning evening dresses.</p><p class="zh-sentence">熱情的時尚設計師購買了大量高品質的絲綢。張小姐需要這些昂貴的材料來製作她令人驚豔的晚禮服。</p></article>
+    <article class="item-card" id="q92"><div class="card-header"><span class="index-badge">92</span><div class="ans-chip" onclick="toggleAns(this)">humankind</div></div><p class="en-sentence">Environmental pollution threatens the survival of all living creatures on Earth. Professor Lin warns that the future of <span class="blank-cue">h____d</span> depends on going green.</p><p class="zh-sentence">環境污染威脅著地球上所有生物的生存。林教授警告，人類的未來取決於走向環保。</p></article>
+    <article class="item-card" id="q93"><div class="card-header"><span class="index-badge">93</span><div class="ans-chip" onclick="toggleAns(this)">confined</div></div><p class="en-sentence">The severe leg injury forced the famous marathon athlete to simply stay in bed. Doctor Huang strictly <span class="blank-cue">c____ned</span> David to the hospital room for a whole entire month.</p><p class="zh-sentence">嚴重的腿部受傷迫使這位著名的馬拉松運動員只能待在床上。黃醫師嚴格地將大衛限制在病房裡整整一個月。</p></article>
+    <article class="item-card" id="q94"><div class="card-header"><span class="index-badge">94</span><div class="ans-chip" onclick="toggleAns(this)">refusal</div></div><p class="en-sentence">The severely corrupted politician firmly denied taking any illegal bribes from the large construction company. His strict <span class="blank-cue">r____l</span> to answer any direct questions made the local journalists even more suspicious.</p><p class="zh-sentence">嚴重貪污的政客堅決否認收受大型建築公司的任何非法賄賂。他嚴格拒絕回答任何直接問題，這讓當地記者更加懷疑。</p></article>
+  </main>
+
+  <script>
+    // 點擊卡片右上角切換答案顯示/遮蔽
+    function toggleAns(el) {
+      el.classList.toggle('revealed');
+    }
+
+    // 全部顯示 / 隱藏切換
+    let allRevealed = false;
+    function toggleAllAnswers() {
+      const chips = document.querySelectorAll('.ans-chip');
+      allRevealed = !allRevealed;
+      chips.forEach(chip => {
+        if (allRevealed) {
+          chip.classList.add('revealed');
+        } else {
+          chip.classList.remove('revealed');
+        }
+      });
+    }
+
+    // 關鍵字即時搜尋 (可搜題號如 "05"、英文單字或中文)
+    function handleSearch() {
+      const term = document.getElementById('search').value.toLowerCase().trim();
+      const cards = document.querySelectorAll('.item-card');
+
+      cards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        card.style.display = text.includes(term) ? 'block' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>
