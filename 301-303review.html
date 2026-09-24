@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>301-303 英文複習卷詳解 - 中英對照互動學習系統</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts & FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .zh-text {
+      transition: all 0.3s ease;
+    }
+    .hide-zh .zh-trans {
+      display: none !important;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+  <!-- 頂部浮動導覽列 -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur shadow-sm border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-sky-500 text-white flex items-center justify-center font-bold text-lg shadow-md">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <div>
+          <h1 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">301-303 英文複習卷詳解</h1>
+          <p class="text-xs text-slate-500 flex items-center gap-1.5 font-medium">
+            <span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span> 智慧中英雙語對照版
+          </p>
+        </div>
+      </div>
+
+      <!-- 控制工具列 -->
+      <div class="flex items-center flex-wrap gap-2.5">
+        <!-- 搜尋列 -->
+        <div class="relative">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+          <input type="text" id="searchInput" placeholder="搜尋題號或關鍵字..." class="pl-8 pr-3 py-1.5 text-xs sm:text-sm bg-slate-100 hover:bg-slate-50 focus:bg-white border border-transparent focus:border-indigo-400 rounded-lg outline-none transition w-36 sm:w-52" />
+        </div>
+
+        <!-- 模式切換 -->
+        <div class="inline-flex p-1 bg-slate-100 rounded-lg border border-slate-200 text-xs font-semibold">
+          <button id="btnStudy" onclick="switchMode('study')" class="px-2.5 py-1 rounded-md transition text-white bg-indigo-600 shadow-sm flex items-center gap-1">
+            <i class="fa-regular fa-eye"></i><span class="hidden sm:inline">詳解對照</span>
+          </button>
+          <button id="btnQuiz" onclick="switchMode('quiz')" class="px-2.5 py-1 rounded-md transition text-slate-600 hover:text-slate-900 flex items-center gap-1">
+            <i class="fa-solid fa-pen-clip"></i><span class="hidden sm:inline">自我測驗</span>
+          </button>
+        </div>
+
+        <!-- 中文翻譯開關 -->
+        <button id="toggleZhBtn" onclick="toggleTranslation()" class="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 shadow-sm transition flex items-center gap-1.5">
+          <i class="fa-solid fa-language text-indigo-600"></i>
+          <span id="toggleZhText">隱藏中譯</span>
+        </button>
+
+        <!-- 一鍵收合/展開 -->
+        <button onclick="toggleAllCards()" class="p-2 text-xs font-medium text-slate-500 hover:text-indigo-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition" title="收合/展開所有題目">
+          <i id="collapseIcon" class="fa-solid fa-arrows-up-to-line"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- 測驗進度列（測驗模式時顯示） -->
+    <div id="quizStatusBar" class="hidden bg-indigo-50 border-t border-indigo-100 px-4 py-2">
+      <div class="max-w-7xl mx-auto flex items-center justify-between text-xs text-indigo-900 font-medium">
+        <span>測驗作答進度：<b id="answeredCount">0</b> / <span id="totalQuestionsCount">0</span> 題</span>
+        <span>當前答對率：<b id="accuracyScore">0%</b></span>
+        <button onclick="resetQuiz()" class="text-indigo-600 hover:text-indigo-800 underline">重新測驗</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主要內容區 -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-8">
+    
+    <!-- 導引標籤頁 -->
+    <nav class="flex items-center space-x-2 overflow-x-auto pb-2 border-b border-slate-200 custom-scroll text-sm font-semibold">
+      <a href="#sec-1" class="whitespace-nowrap px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100">一、句型選擇 (20)</a>
+      <a href="#sec-2" class="whitespace-nowrap px-3 py-1.5 rounded-lg bg-white text-slate-600 border border-slate-200 hover:bg-slate-100">二、其他文法 (20)</a>
+      <a href="#sec-3" class="whitespace-nowrap px-3 py-1.5 rounded-lg bg-white text-slate-600 border border-slate-200 hover:bg-slate-100">三、整句翻譯 (20)</a>
+      <a href="#sec-4" class="whitespace-nowrap px-3 py-1.5 rounded-lg bg-white text-slate-600 border border-slate-200 hover:bg-slate-100">四、綜合測驗 (10篇)</a>
+      <a href="#sec-5" class="whitespace-nowrap px-3 py-1.5 rounded-lg bg-white text-slate-600 border border-slate-200 hover:bg-slate-100">五、文意選填 (2篇)</a>
+      <a href="#sec-6" class="whitespace-nowrap px-3 py-1.5 rounded-lg bg-white text-slate-600 border border-slate-200 hover:bg-slate-100">六、混合題</a>
+      <a href="#sec-7" class="whitespace-nowrap px-3 py-1.5 rounded-lg bg-white text-slate-600 border border-slate-200 hover:bg-slate-100">七、篇章結構</a>
+    </nav>
+
+    <!-- 第一大題 -->
+    <section id="sec-1" class="scroll-mt-20 space-y-4">
+      <div class="flex items-center justify-between border-l-4 border-indigo-600 pl-3">
+        <div>
+          <h2 class="text-xl font-bold text-slate-900">一、文法選擇（課本句型）</h2>
+          <p class="text-xs text-slate-500 font-medium zh-trans">共 20 小題・焦點：It appears/seemed that, not...until, find it + adj., those/that 代名詞, By the time 完成式</p>
+        </div>
+        <span class="text-xs px-2.5 py-1 bg-indigo-100 text-indigo-700 rounded-full font-semibold">20 題</span>
+      </div>
+      <div id="container-sec-1" class="grid grid-cols-1 gap-4"></div>
+    </section>
+
+    <!-- 第二大題 -->
+    <section id="sec-2" class="scroll-mt-20 space-y-4">
+      <div class="flex items-center justify-between border-l-4 border-sky-500 pl-3">
+        <div>
+          <h2 class="text-xl font-bold text-slate-900">二、文法選擇（其他考點）</h2>
+          <p class="text-xs text-slate-500 font-medium zh-trans">共 20 小題・焦點：不定詞主補語、感官動詞、非限定關係代名詞、分詞構句、wh-間接問句</p>
+        </div>
+        <span class="text-xs px-2.5 py-1 bg-sky-100 text-sky-700 rounded-full font-semibold">20 題</span>
+      </div>
+      <div id="container-sec-2" class="grid grid-cols-1 gap-4"></div>
+    </section>
+
+    <!-- 第三大題 -->
+    <section id="sec-3" class="scroll-mt-20 space-y-4">
+      <div class="flex items-center justify-between border-l-4 border-emerald-600 pl-3">
+        <div>
+          <h2 class="text-xl font-bold text-slate-900">三、整句式翻譯</h2>
+          <p class="text-xs text-slate-500 font-medium zh-trans">共 20 小題・提供中文提示與完整標準英文譯句對照</p>
+        </div>
+        <span class="text-xs px-2.5 py-1 bg-emerald-100 text-emerald-700 rounded-full font-semibold">20 題</span>
+      </div>
+      <div id="container-sec-3" class="grid grid-cols-1 gap-4"></div>
+    </section>
+
+    <!-- 第四大題 -->
+    <section id="sec-4" class="scroll-mt-20 space-y-4">
+      <div class="flex items-center justify-between border-l-4 border-amber-500 pl-3">
+        <div>
+          <h2 class="text-xl font-bold text-slate-900">四、綜合測驗（克漏字篇章）</h2>
+          <p class="text-xs text-slate-500 font-medium zh-trans">共 10 篇文章・提供左右/上下中英逐段對照，並附 50 小題題目詳解</p>
+        </div>
+        <span class="text-xs px-2.5 py-1 bg-amber-100 text-amber-700 rounded-full font-semibold">10 篇 / 50 小題</span>
+      </div>
+      <div id="container-sec-4" class="space-y-6"></div>
+    </section>
+
+    <!-- 第五大題 -->
+    <section id="sec-5" class="scroll-mt-20 space-y-4">
+      <div class="flex items-center justify-between border-l-4 border-purple-600 pl-3">
+        <div>
+          <h2 class="text-xl font-bold text-slate-900">五、文意選填</h2>
+          <p class="text-xs text-slate-500 font-medium zh-trans">共 2 篇文章・阿波羅神話與團隊挑戰・提供詞彙代號對應與文章中英翻譯</p>
+        </div>
+        <span class="text-xs px-2.5 py-1 bg-purple-100 text-purple-700 rounded-full font-semibold">2 篇 / 20 格</span>
+      </div>
+      <div id="container-sec-5" class="space-y-6"></div>
+    </section>
+
+    <!-- 第六大題 -->
+    <section id="sec-6" class="scroll-mt-20 space-y-4">
+      <div class="flex items-center justify-between border-l-4 border-rose-600 pl-3">
+        <div>
+          <h2 class="text-xl font-bold text-slate-900">六、混合題（素養題）</h2>
+          <p class="text-xs text-slate-500 font-medium zh-trans">史丹佛棉花糖實驗長文探究・含摘要填空、事實判斷與片語檢索</p>
+        </div>
+        <span class="text-xs px-2.5 py-1 bg-rose-100 text-rose-700 rounded-full font-semibold">3 大小題</span>
+      </div>
+      <div id="container-sec-6"></div>
+    </section>
+
+    <!-- 第七大題 -->
+    <section id="sec-7" class="scroll-mt-20 space-y-4">
+      <div class="flex items-center justify-between border-l-4 border-teal-600 pl-3">
+        <div>
+          <h2 class="text-xl font-bold text-slate-900">七、篇章結構</h2>
+          <p class="text-xs text-slate-500 font-medium zh-trans">科學家與藝術家的解題策略探討・全文中英對照與段落行文邏輯剖析</p>
+        </div>
+        <span class="text-xs px-2.5 py-1 bg-teal-100 text-teal-700 rounded-full font-semibold">4 處選填</span>
+      </div>
+      <div id="container-sec-7"></div>
+    </section>
+
+  </main>
+
+  <footer class="bg-white border-t border-slate-200 mt-12 py-6 text-center text-xs text-slate-500">
+    <p>© 英文復習講義 301-303 單元整合系統・響應式中英雙語學習介面</p>
+  </footer>
+
+  <!-- 題目數據與核心互動 JavaScript -->
+  <script>
+    // 題庫資料結構
+    const DATA = {
+      sec1: [
+        {
+          id: "1-1",
+          num: 1,
+          en: "Jack is walking toward Mary with a bunch of roses in his hand. It ______ that he is going to propose to Mary.",
+          zh: "傑克手裡拿著一束玫瑰朝瑪麗走去。看來他打算向瑪麗求婚。",
+          opts: ["(A) appears", "(B) finds", "(C) likes", "(D) looks"],
+          ans: "A",
+          diff: "中",
+          exp: "本題測驗 It appears that + S + V... 的句型，表「似乎、看起來……」。a bunch of flowers 表示「一束花」。"
+        },
+        {
+          id: "1-2",
+          num: 2,
+          en: "In American offices, most staff find ______ normal to address their bosses by their first names.",
+          zh: "在美國的辦公室裡，多數員工覺得直呼老闆的名字是很平常的。",
+          opts: ["(A) this", "(B) that", "(C) which", "(D) it"],
+          ans: "D",
+          diff: "中",
+          exp: "本題測驗 S + find/consider/feel/think... + it + adj. + to + VR 的虛受詞句型。address 稱呼。"
+        },
+        {
+          id: "1-3",
+          num: 3,
+          en: "Nancy is a sociable girl. She ______ it a great experience to interact with other people.",
+          zh: "南希是個善於交際的女孩。她覺得與他人互動是一次很棒的經歷。",
+          opts: ["(A) describes", "(B) feels", "(C) regards", "(D) views"],
+          ans: "B",
+          diff: "中",
+          exp: "本題測驗 S + find/consider/feel/think... + it + N + to + VR 的句型。sociable 善於社交的。"
+        },
+        {
+          id: "1-4",
+          num: 4,
+          en: "I highly recommend this novel; you will ______ it inspiring to read.",
+          zh: "我強烈推薦這本小說；你會發現閱讀它很發人深省。",
+          opts: ["(A) find", "(B) like", "(C) keep", "(D) have"],
+          ans: "A",
+          diff: "中",
+          exp: "本題測驗 S + find/consider/feel/think... + it + adj. + to + VR 句型。recommend 推薦；inspiring 激勵人心的。"
+        },
+        {
+          id: "1-5",
+          num: 5,
+          en: "The teacher frowned when I spoke. It seemed ______ he was not satisfied with my answer.",
+          zh: "當我說話時，老師皺了眉頭。看來他對我的回答並不滿意。",
+          opts: ["(A) that", "(B) what", "(C) which", "(D) how"],
+          ans: "A",
+          diff: "中",
+          exp: "本題測驗 It seemed that S + V-ed 的句型，表「似乎……」。be satisfied with 對……滿意。"
+        },
+        {
+          id: "1-6",
+          num: 6,
+          en: "The girl was grounded. She ______ home ______ she got her dad's permission.",
+          zh: "女孩被禁足了。直到獲得爸爸的允許，她才能出門。",
+          opts: ["(A) couldn't leave; until", "(B) could leave; until", "(C) had left; without", "(D) had not left; if"],
+          ans: "A",
+          diff: "中",
+          exp: "「直到」得到爸爸允許，女孩「才」可以離家，所以選擇 not...until... 的句型，再搭配過去式時態。"
+        },
+        {
+          id: "1-7",
+          num: 7,
+          en: "Since Andy has to make an important presentation tomorrow, he ______ to bed until he ______ very well.",
+          zh: "因為安迪明天有一個重要的簡報，他直到徹底準備好才會去睡覺。",
+          opts: ["(A) will; has prepared", "(B) does not; will prepare", "(C) never; will prepare", "(D) will not; has prepared"],
+          ans: "D",
+          diff: "中",
+          exp: "「直到」準備好報告 Andy「才」會去睡覺。主要子句用未來式 will not，until 連接的副詞子句用現在完成式或現在式代替未來式。"
+        },
+        {
+          id: "1-8",
+          num: 8,
+          en: "The books in my room are well-arranged on the bookshelf, whereas ______ in my brother's room are scattered all around.",
+          zh: "我房間裡的書在書架上擺放得很整齊，然而我哥哥房間裡的書卻散落得到處都是。",
+          opts: ["(A) ones", "(B) these", "(C) those", "(D) that"],
+          ans: "C",
+          diff: "中",
+          exp: "those 為指示代名詞，用以代替前面已提過且帶有後位修飾的複數名詞 The books。"
+        },
+        {
+          id: "1-9",
+          num: 9,
+          en: "The students love not only their teacher's funny jokes ______ her creative teaching style.",
+          zh: "學生們不僅喜歡老師幽默的笑話，也喜歡她富有創意的教學風格。",
+          opts: ["(A) and", "(B) but", "(C) so", "(D) or"],
+          ans: "B",
+          diff: "中",
+          exp: "空格前後皆為學生喜愛老師的原因，選對等連接詞 not only...but (also)...，表示「不僅……而且……」。"
+        },
+        {
+          id: "1-10",
+          num: 10,
+          en: "By the time the police officer arrives at the crime scene, the robbers ______.",
+          zh: "等警官到達犯罪現場時，搶匪將早就已經逃之夭夭了。",
+          opts: ["(A) will have run away", "(B) have run away", "(C) had run away", "(D) were running away"],
+          ans: "A",
+          diff: "中",
+          exp: "By the time + S + 現在式動詞..., S + will have + p.p. 表「到了未來的某個時候，……將已經完成」。"
+        },
+        {
+          id: "1-11",
+          num: 11,
+          en: "By the time Jerry and Julie get married next year, they ______ each other for ten years.",
+          zh: "到明年傑瑞和茱莉結婚時，他們就將已經認識十年了。",
+          opts: ["(A) have known", "(B) had known", "(C) will have known", "(D) will know"],
+          ans: "C",
+          diff: "中",
+          exp: "By the time Jerry and Julie get married next year (未來時間點)，主句須用未來完成式 will have known。"
+        },
+        {
+          id: "1-12",
+          num: 12,
+          en: "Not only my classmates but also my teacher ______ to go to school on Mondays.",
+          zh: "不僅是我的同學，連我的老師也討厭在星期一去上學。",
+          opts: ["(A) hate", "(B) hating", "(C) hates", "(D) have hated"],
+          ans: "C",
+          diff: "中",
+          exp: "not only...but also... 連接兩個主詞時，動詞須與就近的主詞（後者）單複數一致，此處與 my teacher 一致，故選第三人稱單數 hates。"
+        },
+        {
+          id: "1-13",
+          num: 13,
+          en: "By the time we rushed into the theater, the movie ______ half an hour before.",
+          zh: "當我們衝進電影院時，電影在半個小時前就已經開演了。",
+          opts: ["(A) has already begun", "(B) had already begun", "(C) already begins", "(D) was already beginning"],
+          ans: "B",
+          diff: "中",
+          exp: "By the time + S + V-ed (過去時間點)..., S + had + p.p. 表示在過去某時前已經發生的動作，用過去完成式。"
+        },
+        {
+          id: "1-14",
+          num: 14,
+          en: "______ happy with her new boyfriend.",
+          zh: "瑪麗和她的新男友在一起似乎很開心。",
+          opts: ["(A) It seems that Mary is", "(B) Mary seems like", "(C) Mary seems to", "(D) It seems Mary"],
+          ans: "A",
+          diff: "難",
+          exp: "本題測驗句型：It seems that S + V...，或可改寫為 Mary seems (to be) happy...，故選 (A)。"
+        },
+        {
+          id: "1-15",
+          num: 15,
+          en: "The students found ______ finish a sixty-page report in a week.",
+          zh: "學生們發現要在一個星期內完成一份六十頁的報告是很困難的。",
+          opts: ["(A) hard it to", "(B) it was hard that", "(C) it hard to", "(D) that it hard to"],
+          ans: "C",
+          diff: "難",
+          exp: "S + find + it (虛受詞) + hard (受詞補語) + to finish... (真受詞)。"
+        },
+        {
+          id: "1-16",
+          num: 16,
+          en: "Most people consider ______ necessary to learn English, but Mary thinks otherwise.",
+          zh: "大多數人認為學英語是必要的，但瑪麗卻不以為然。",
+          opts: ["(A) they are", "(B) that is", "(C) it", "(D) it as"],
+          ans: "C",
+          diff: "難",
+          exp: "consider + it (虛受詞) + necessary (形容詞補語) + to learn English (真受詞)。"
+        },
+        {
+          id: "1-17",
+          num: 17,
+          en: "Teenagers often place greater value on the opinions of their peers than on ______ of their parents, seeking acceptance from their social circle.",
+          zh: "青少年往往更看重同儕的意見，而非父母的意見，以此在社交圈中尋求認同。",
+          opts: ["(A) that", "(B) those", "(C) which", "(D) more"],
+          ans: "B",
+          diff: "難",
+          exp: "those 為指示代名詞，用來代替前面已出現過的複數名詞 the opinions。"
+        },
+        {
+          id: "1-18",
+          num: 18,
+          en: "While their product is made of single-use plastic, ______ designed by our company is composed of eco-friendly materials.",
+          zh: "他們的產品是由一次性塑料製成的，而我們公司設計的產品則是由環保材料組成的。",
+          opts: ["(A) but products", "(B) and it is", "(C) those", "(D) that"],
+          ans: "D",
+          diff: "難",
+          exp: "that 為指示代名詞，用來指代前面出現過的單數名詞 product。"
+        },
+        {
+          id: "1-19",
+          num: 19,
+          en: "Betty was mad at her boyfriend not only because he was late again ______ he had totally forgotten about their date.",
+          zh: "貝蒂對男友很生氣，不僅因為他又遲到了，還因為他徹底忘了他們的約會。",
+          opts: ["(A) but also", "(B) but also because", "(C) and", "(D) and because"],
+          ans: "B",
+          diff: "難",
+          exp: "not only...but also... 連接兩個結構對等的子句，前方為 because-clause，後方亦須使用 but also because..."
+        },
+        {
+          id: "1-20",
+          num: 20,
+          en: "By the time it started raining, the wildfire in the forest ______.",
+          zh: "在開始下雨之前，森林裡的大火就已經被撲滅了。",
+          opts: ["(A) had already put out", "(B) had already been put out", "(C) has already been put out", "(D) has already put out"],
+          ans: "B",
+          diff: "難",
+          exp: "By the time + S + V-ed..., S + had been + p.p.。森林火災是被撲滅的，故需使用過去完成式的被動語態 had already been put out。"
+        }
+      ],
+      sec2: [
+        {
+          id: "2-1",
+          num: 1,
+          en: "The purpose of the new policy is ______ urban housing prices under control.",
+          zh: "這項新政策的目的是要將都市房價控制在穩定範圍內。",
+          opts: ["(A) being kept", "(B) kept", "(C) keep", "(D) to keep"],
+          ans: "D",
+          diff: "中",
+          exp: "be + to + VR 為不定詞片語作為主詞補語，表達目的或規劃。"
+        },
+        {
+          id: "2-2",
+          num: 2,
+          en: "I heard someone ______ a shower; it must have been my sister.",
+          zh: "我聽見有人正在淋浴；那肯定是我妹妹。",
+          opts: ["(A) taking", "(B) to take", "(C) taken", "(D) in taking"],
+          ans: "A",
+          diff: "中",
+          exp: "感官動詞用法：hear + sb. + V-ing，強調聽見某動作正在進行。"
+        },
+        {
+          id: "2-3",
+          num: 3,
+          en: "Agatha Christie is a well-known English writer ______ detective novels have been widely read and admired.",
+          zh: "阿嘉莎·克莉絲蒂是英國著名作家，她的偵探小說被廣泛閱讀與讚賞。",
+          opts: ["(A) who", "(B) whose", "(C) that", "(D) what"],
+          ans: "B",
+          diff: "中",
+          exp: "關係代名詞所有格 whose 修飾後方的名詞 detective novels，表「其偵探小說」。"
+        },
+        {
+          id: "2-4",
+          num: 4,
+          en: "The boy sat on the ground, not knowing ______ next.",
+          zh: "男孩坐在地上，不知道接下來該做什麼。",
+          opts: ["(A) where was he", "(B) what he is", "(C) what to do", "(D) how to do"],
+          ans: "C",
+          diff: "中",
+          exp: "名詞片語結構：疑問詞 + to + VR。do 為及物動詞，需受詞 what，故選 what to do（不知做何事）。"
+        },
+        {
+          id: "2-5",
+          num: 5,
+          en: "Eagerly waiting for the next show, all the children wondered ______ was inside the magician's box.",
+          zh: "急切地等待下一場表演的孩子們，都想知道魔術師的盒子裡面裝的是什麼。",
+          opts: ["(A) what", "(B) that", "(C) whether", "(D) how"],
+          ans: "A",
+          diff: "中",
+          exp: "wh- 名詞子句作為 wondered 的受詞，what 在該名詞子句中身兼主詞與代名詞。"
+        },
+        {
+          id: "2-6",
+          num: 6,
+          en: "I can't imagine ______ if you refuse his invitation to the party.",
+          zh: "如果你拒絕他參加派對的邀請，我無法想像瑞克會有多失望。",
+          opts: ["(A) how disappointed Rick is", "(B) how was Rick disappointed", "(C) how disappointed Rick will be", "(D) how did Rick feel disappointed"],
+          ans: "C",
+          diff: "中",
+          exp: "間接問句需使用陳述句語序「how + adj. + S + V」。依據條件副詞子句 if you refuse (現在式表未來)，主要子句的名詞子句時態應搭配未來的 will be。"
+        },
+        {
+          id: "2-7",
+          num: 7,
+          en: "You should be aware of the side effects ______ by the medicine before taking it.",
+          zh: "在服藥之前，你應當注意這種藥品所引起的副作用。",
+          opts: ["(A) caused", "(B) causing", "(C) to cause", "(D) are caused"],
+          ans: "A",
+          diff: "中",
+          exp: "過去分詞片語後位修飾名詞 side effects，原句為 which/that are caused by..."
+        },
+        {
+          id: "2-8",
+          num: 8,
+          en: "The police officer walked around the room, ______ to find something related to the robbery.",
+          zh: "警員在房間裡走動，試圖找出與搶案有關的蛛絲馬跡。",
+          opts: ["(A) trying", "(B) tried", "(C) and trying", "(D) was trying"],
+          ans: "A",
+          diff: "中",
+          exp: "分詞構句表伴隨動作。主詞與 try 之間為主動關係，省略連接詞 and 後將動詞改為現在分詞 trying。"
+        },
+        {
+          id: "2-9",
+          num: 9,
+          en: "The moment the hikers saw the elderly man ______ in the animal trap, they ran over to rescue him.",
+          zh: "登山客一看到那位老翁被困在捕獸夾裡，便立刻跑過去救援。",
+          opts: ["(A) catch", "(B) to catch", "(C) catching", "(D) caught"],
+          ans: "D",
+          diff: "難",
+          exp: "感官動詞 see + O + p.p.。受詞 elderly man 與 catch 是被動關係（被夾住、困住），故選過去分詞 caught。"
+        },
+        {
+          id: "2-10",
+          num: 10,
+          en: "Miss Lin flew into a rage as she found several students ______ to her about why they hadn't finished their homework.",
+          zh: "林老師勃然大怒，因為她發現好幾個學生在她面前為沒寫作業的事說謊。",
+          opts: ["(A) lies", "(B) lied", "(C) lying", "(D) to lie"],
+          ans: "C",
+          diff: "難",
+          exp: "find + O + V-ing。受詞 several students 與 lie（說謊）之間為主動進行關係，故用現在分詞 lying。"
+        },
+        {
+          id: "2-11",
+          num: 11,
+          en: "Jack is an only child; therefore, he is longing for someone ______.",
+          zh: "傑克是個獨生子；因此，他非常渴望能有一個一起玩耍的玩伴。",
+          opts: ["(A) with whom play", "(B) that he can play", "(C) who to play", "(D) to play with"],
+          ans: "D",
+          diff: "難",
+          exp: "to play with 為不定詞作形容詞片語修飾 someone，介系詞 with 不可省略（play with someone）。"
+        },
+        {
+          id: "2-12",
+          num: 12,
+          en: "After ______ from college two years ago, Samuel still doesn't have a stable job and remains a mama's boy.",
+          zh: "兩年前大學畢業後，山繆爾仍然沒有一份穩定的工作，依舊是個媽寶。",
+          opts: ["(A) he graduating", "(B) graduating", "(C) being graduating", "(D) graduates"],
+          ans: "B",
+          diff: "難",
+          exp: "介系詞/連接詞 After 後省略主詞 Samuel，動詞改為動名詞/分詞 graduating。"
+        },
+        {
+          id: "2-13",
+          num: 13,
+          en: "Eric and Sally have made a list of their favorite honeymoon destinations. One is Italy, another is Canada, and ______ is Hawaii.",
+          zh: "艾瑞克和莎莉列了一份他們最喜歡的度蜜月地點清單。一個是義大利，另一個是加拿大，還有一個是夏威夷。",
+          opts: ["(A) other one", "(B) still another", "(C) others", "(D) other"],
+          ans: "B",
+          diff: "難",
+          exp: "非限定範圍三者以上的列舉句型：One..., another..., still another..."
+        },
+        {
+          id: "2-14",
+          num: 14,
+          en: "The Louvre Pyramid, ______ was designed by Chinese-born architect I. M. Pei, is a glass-and-steel structure standing at the entrance to the Louvre Museum.",
+          zh: "羅浮宮金字塔是由華裔建築師貝聿銘設計的，是一座矗立在羅浮宮入口處的玻璃鋼骨結構建築。",
+          opts: ["(A) , that", "(B) where", "(C) , which", "(D) what"],
+          ans: "C",
+          diff: "難",
+          exp: "專有名詞 The Louvre Pyramid 是獨一無二的事物，須使用非限定關係代名詞逗號加 which 引導補充說明，不可使用 that。"
+        },
+        {
+          id: "2-15",
+          num: 15,
+          en: "______, the disabled child finished the triathlon through sheer determination.",
+          zh: "令人驚奇的是，這位身障孩子憑藉著純粹的毅力完成了鐵人三項賽事。",
+          opts: ["(A) It is amazingly that", "(B) Amazing,", "(C) Amazingly,", "(D) To be amazing,"],
+          ans: "C",
+          diff: "難",
+          exp: "副詞 Amazingly 放於句首修飾整個句子，表示「令人驚異的是……」。"
+        },
+        {
+          id: "2-16",
+          num: 16,
+          en: "Many children chose to enjoy their cake right away, ______ little Maggie decided to take her piece of cake home to share it with her younger brother.",
+          zh: "許多孩子選擇立刻吃掉他們的蛋糕，然而小麥琪卻決定把她的那塊帶回家跟弟弟分享。",
+          opts: ["(A) however", "(B) whereas", "(C) on the other hand", "(D) although"],
+          ans: "B",
+          diff: "難",
+          exp: "whereas 為從屬對比連接詞，連接兩個帶有相反對比意思的完整子句，意為「然而、反之」。"
+        },
+        {
+          id: "2-17",
+          num: 17,
+          en: "Our art teacher is showing us some animal models made ______ clay so we can gain a better understanding of what we'll do next.",
+          zh: "美術老師正在向我們展示一些用黏土做成的動物模型，以便我們能更好地了解接下來要做的步驟。",
+          opts: ["(A) inside", "(B) out of", "(C) up for", "(D) underneath"],
+          ans: "B",
+          diff: "難",
+          exp: "be made out of... 表示「由……材料製成」。"
+        },
+        {
+          id: "2-18",
+          num: 18,
+          en: "The little girl doesn't need any new toys; what she really wants is ______ her parents' attention.",
+          zh: "這個小女孩並不需要任何新玩具；她真正想要的只不過是父母的關注而已。",
+          opts: ["(A) everything but", "(B) anything but", "(C) nothing but", "(D) but for"],
+          ans: "C",
+          diff: "難",
+          exp: "nothing but 意為「僅僅、只不過是」；anything but 意為「絕不是」；everything but「除了……全都要」；but for「若非」。"
+        },
+        {
+          id: "2-19",
+          num: 19,
+          en: "______ at the election result, the loser's supporters gathered in the square and didn't leave until midnight.",
+          zh: "對選舉結果感到失望，敗選者的支持者聚集在廣場上，直到午夜才離開。",
+          opts: ["(A) Disappointing", "(B) To disappoint", "(C) To be disappointed", "(D) Disappointed"],
+          ans: "D",
+          diff: "難",
+          exp: "分詞構句省略 Being，人對某事「感到失望」應使用過去分詞 Disappointed。"
+        },
+        {
+          id: "2-20",
+          num: 20,
+          en: "At first, the two men couldn't get along, but they ______ understand each other better by sharing their ideas.",
+          zh: "起初，這兩個人處得不好，但透過分享彼此的想法，他們漸漸更加理解對方了。",
+          opts: ["(A) appealed to", "(B) came to", "(C) refused to", "(D) supposed to"],
+          ans: "B",
+          diff: "難",
+          exp: "come to + VR 表示「逐漸變得……、開始體會到……」。"
+        }
+      ],
+      sec3: [
+        { num: 1, zh: "老闆拒絕了 Jessica 對那個新職位的申請，真是令人驚訝。(It....)", en: "It is surprising that the boss turned down Jessica's application for the new position.", note: "It 當虛主詞，that 子句為真主詞；turn down 拒絕。" },
+        { num: 2, zh: "在她的演說中，市長感謝警員們的服務與奉獻。", en: "During her speech, the mayor thanked the police officers for their service and dedication.", note: "thank sb. for sth. 因……感謝某人；dedication 奉獻。" },
+        { num: 3, zh: "雖然 Annie 考試不及格，但她的父母親沒有罵她反而給她一個擁抱以讓她開心點。", en: "Although Annie had failed the exam, her parents didn't scold her but gave her a hug to cheer her up instead.", note: "cheer sb. up 使某人打起精神；not...but...instead 沒有……反而……。" },
+        { num: 4, zh: "老師發了一個訊息給我並要求我把它傳給班上其他的人。", en: "The teacher sent me a message and asked me to pass it on to the rest of the class.", note: "pass sth. on to sb. 將某物傳遞給某人；the rest of... 剩餘的……。" },
+        { num: 5, zh: "當我正要去沖澡的時候，電話響了。", en: "The phone rang when I was about to take a shower.", note: "be about to + VR 正要/即將做某事。" },
+        { num: 6, zh: "我沒有浪費時間打掃房子，而是雇了一位專業的房屋清潔工來做這項工作。", en: "Instead of wasting my time cleaning my house, I hired a professional housecleaner to do the job.", note: "instead of + V-ing 沒有……而是；waste time + V-ing 浪費時間做……。" },
+        { num: 7, zh: "這位演講者教他的聽眾如何同時有效率地完成幾項任務。", en: "The speaker taught his audience how to get several tasks done efficiently and at the same time.", note: "how to get + O + p.p. 使……被完成；at the same time 同時。" },
+        { num: 8, zh: "直到基金會成立，難民 (refugee) 才有避難所。", en: "The refugees did not have a shelter until the foundation was set up.", note: "not...until... 直到……才……；be set up 被建立、成立。" },
+        { num: 9, zh: "等到 Ross 抵達機場時，Rachel 的班機已經起飛了。", en: "By the time Ross arrived at the airport, Rachel's flight had taken off.", note: "By the time + S + 過去式動詞, S + had + p.p.；take off 起飛。" },
+        { num: 10, zh: "每天運動不僅幫助 John 減重，而且讓他感到更快樂。", en: "Exercising every day not only helps John lose weight but also makes him feel happier.", note: "動名詞當主詞視為單數；not only...but also... 連接兩個動詞片語。" },
+        { num: 11, zh: "因為企鵝是很棒的游泳者，牠們通常是以各種海鮮為食。(Since....)", en: "Since penguins are great swimmers, they usually feed on all kinds of seafood.", note: "feed on 以……為食；since 引導原因副詞子句。" },
+        { num: 12, zh: "Jenny 似乎在說謊，因為她不敢直視我的眼睛。(It seemed....)", en: "It seemed that Jenny was lying since she didn't dare look me in the eye.", note: "It seemed that... 似乎……；look sb. in the eye 直視某人雙眼。" },
+        { num: 13, zh: "Josh 認為報導假新聞是不道德的 (immoral)，因此他辭去了新聞記者的工作。(...thought it....)", en: "Josh thought it immoral to report fake news, so he quit his job as a journalist.", note: "thought + it (虛受詞) + immoral + to report fake news (真受詞)。" },
+        { num: 14, zh: "如果每個人減少塑膠製品的使用，我們就能夠對環境有所影響。", en: "If everyone reduces their use of plastic products, we can make a difference to the environment.", note: "make a difference to 對……產生積極影響/造成改變。" },
+        { num: 15, zh: "直到我自己開始賺錢，我才知道存一毛錢有多麼困難。", en: "I did not know how difficult it was to save a penny until I started making money on my own.", note: "not...until 句型；how difficult it was... 間接問句。" },
+        { num: 16, zh: "為了拯救海龜，我們必須做的就是減少我們塑膠的使用，藉由盡可能多次重複使用它們。(by...possible.)", en: "In order to save sea turtles, what we must do is to reduce our use of plastics by reusing them as much as possible.", note: "what 引導名詞子句當主詞；by + V-ing 藉由；as much as possible 盡可能多。" },
+        { num: 17, zh: "在富裕家庭長大的子女不一定比在貧困家庭長大的孩子更快樂。", en: "The children brought up in rich families are not necessarily happier than those growing up in poor families.", note: "those 作為指示代名詞指代 the children；brought up 被撫養長大。" },
+        { num: 18, zh: "Max 不只買了一個鑽石戒指而且還在一家高級餐廳預訂了一桌兩人位。", en: "Max not only bought a diamond ring but also booked a table for two at a fancy restaurant.", note: "not only...but also 對等連接過去式動詞 bought 與 booked/reserved。" },
+        { num: 19, zh: "等到我爸爸明年退休時，他將已經替他的公司工作超過三十年了。", en: "By the time my father retires next year, he will have worked for his company for over thirty years.", note: "By the time + S + 現在式 (表未來), S + will have + p.p. (未來完成式)。" },
+        { num: 20, zh: "年幼的孩子會容易成為這種疾病的受害者。因此，他們的照顧者必須保持警覺。", en: "Young children can easily fall victim to the disease. As a result, their caretakers must stay alert.", note: "fall victim to 成爲……的受害者；stay alert 保持警覺。" }
+      ],
+      sec4: [
+        {
+          num: 1,
+          titleEn: "Passage 1: Ronald McDonald's Hospital Visit",
+          titleZh: "第 1 篇：麥當勞叔叔的醫院探訪",
+          enParas: [
+            "Dear McDonald's, I am writing to thank you for your 'Ronald Day' program and for Jeff, the 'Ronald' who visited us. My son Billy recently passed away after a long struggle with cancer. Billy was only five years old and found _(1)_ very hard to spend all his time in a hospital bed. That's why the visit from 'Ronald McDonald' (Jeff) meant so much. Jeff brought smiles and joy to a sad place.",
+            "First, he entertained Billy with magic tricks. Next, he asked _(2)_ Billy wanted anything else before he left. Billy asked Jeff to hold him, and I saw that it made Jeff sad to _(3)_ Billy. He explained that it was _(4)_ the rules for him to touch the children in the hospital.",
+            "After they had played together for a while, Billy again asked to be hugged. This time Jeff did so, even though he thought he would be fired because of it. Billy died less than two days later, but he was happy at the end of his life thanks to that _(5)_. Please don't punish Jeff for making my little boy happy. Sincerely, Lisa Jones"
+          ],
+          zhParas: [
+            "親愛的麥當勞：我寫這封信是為了感謝你們的「麥當勞叔叔日」計畫，以及前來探望我們的麥當勞叔叔扮演者傑夫。我的兒子比利在與癌症長期抗爭後於最近去世了。比利只有五歲，他覺得一直躺在病床上非常難熬。這就是為什麼麥當勞叔叔（傑夫）的到訪意義如此重大。傑夫給這個悲傷的地方帶來了微笑與歡樂。",
+            "首先，他用魔術逗比利開心。接著，在離開前他詢問比利是否還想要別的。比利請求傑夫抱抱他，我看出了傑夫因為必須拒絕比利而感到難過。他解釋說，醫院規定禁止他觸摸院內的孩子。",
+            "在他們一起玩了一會兒之後，比利再次請求擁抱。這一次傑夫擁抱了他，即便他認為自己可能會因此被解雇。比利在不到兩天後就離世了，但多虧了那個擁抱，他在生命的最後一刻是快樂的。請不要因為讓我的小男孩快樂而懲罰傑夫。麗莎·瓊斯 敬上"
+          ],
+          questions: [
+            { qNum: "1", opts: ["(A) that", "(B) this", "(C) what", "(D) it"], ans: "D", exp: "it 當虛受詞，代替真受詞 to spend all his time in a hospital bed。" },
+            { qNum: "2", opts: ["(A) if", "(B) when", "(C) what", "(D) how"], ans: "A", exp: "if 引導名詞子句當 asked 的受詞，表示「是否」。" },
+            { qNum: "3", opts: ["(A) cheer; up", "(B) turn; down", "(C) see; off", "(D) pick; up"], ans: "B", exp: "turn down 拒絕；cheer up 使振奮；see off 送行；pick up 接送。" },
+            { qNum: "4", opts: ["(A) off", "(B) for", "(C) on", "(D) against"], ans: "D", exp: "be against the rules 為固定片語，表示「違反規定」。" },
+            { qNum: "5", opts: ["(A) hit", "(B) hug", "(C) log", "(D) bug"], ans: "B", exp: "由上下文得知傑夫破例給予的「擁抱」（hug）讓比利在臨終前感受到溫暖。" }
+          ]
+        },
+        {
+          num: 2,
+          titleEn: "Passage 2: The Power of Teamwork and Team-Building",
+          titleZh: "第 2 篇：團隊合作與團隊建設的力量",
+          enParas: [
+            "In the business world, teamwork is everything. The most successful companies are _(1)_ whose employees work well together. Therefore, many ways of creating strong teams _(2)_. One of the best ways is to have team-building exercises and activities. These are often challenges that require cooperation under pressure, and they offer several advantages.",
+            "One advantage is _(3)_ team members become more familiar with one another. When they get along well, coworkers can _(4)_ their sleeves and get to work without worrying about personal conflicts. _(5)_, the whole team can be more productive. Team building has the added benefit of revealing different individuals' _(6)_. This shows team members who they can _(7)_ on when they need help with different tasks. Furthermore, _(8)_ the right people addressing a problem, other team members can move on to other problems, which will increase productivity all around.",
+            "Still _(9)_ advantage of team-building exercises is that they give people a chance to compete with one another. Healthy competition motivates workers and boosts team spirit. Finally, individuals do _(10)_ learn to truly communicate _(10)_ they are forced to work towards a common goal. It's only with great communication that teams in the business world can truly succeed."
+          ],
+          zhParas: [
+            "在商業世界中，團隊合作就是一切。最成功的企業往往是那些員工能夠緊密配合協作的企業。因此，許多建立高效團隊的方法已經被發展出來。最好的方法之一就是進行團隊建設活動。這些活動往往是需要在壓力下合作的挑戰，它們帶來諸多好處。",
+            "其中一個好處是團隊成員之間能夠更加熟悉。當彼此相處融洽時，同事們就能捲起袖子全心投入工作，而不用擔心人際衝突。如此一來，整個團隊就能更有生產力。團隊建設還帶來了展現個人能力的額外效益，讓成員知道在不同任務需要求助時可以依靠誰。此外，由合適的人處理問題，其他成員就能轉向其他事項，從而全面提高生產力。",
+            "團隊建設活動的另一個好處是給予人們互相競爭的機會。良性競爭能激勵員工並提升團隊士氣。最後，唯有當被要求朝著共同目標努力時，成員們才真正學會如何溝通。只有透過良好的溝通，商業世界的團隊才能真正取得成功。"
+          ],
+          questions: [
+            { qNum: "1", opts: ["(A) those", "(B) ones", "(C) that", "(D) the one"], ans: "A", exp: "代名詞 those 代替前方複數名詞 companies。" },
+            { qNum: "2", opts: ["(A) develop", "(B) have developed", "(C) have been developed", "(D) is developed"], ans: "C", exp: "主詞 many ways 與 develop 之間為被動關係，故選現在完成被動式 have been developed。" },
+            { qNum: "3", opts: ["(A) what", "(B) that", "(C) whether", "(D) how"], ans: "B", exp: "that 引導名詞子句作主詞補語，句子語意與結構完整。" },
+            { qNum: "4", opts: ["(A) roll up", "(B) give up", "(C) think up", "(D) dress up"], ans: "A", exp: "roll up one's sleeves 挽起袖子（準備大幹一場）。" },
+            { qNum: "5", opts: ["(A) On the other hand", "(B) After all", "(C) For instance", "(D) In this way"], ans: "D", exp: "In this way 如此一來，承接前一句的順理成章結果。" },
+            { qNum: "6", opts: ["(A) promises", "(B) capabilities", "(C) elements", "(D) structures"], ans: "B", exp: "capabilities 能力、才幹；與後文「知道需要求助時可以依靠誰」呼應。" },
+            { qNum: "7", opts: ["(A) innovate", "(B) construct", "(C) rely", "(D) rank"], ans: "C", exp: "rely on 依賴、倚靠。" },
+            { qNum: "8", opts: ["(A) with", "(B) for", "(C) upon", "(D) by"], ans: "A", exp: "with + O + OC (V-ing) 表伴隨狀況，「隨著合適的人去處理問題……」。" },
+            { qNum: "9", opts: ["(A) one", "(B) other", "(C) another", "(D) the other"], ans: "C", exp: "前面已經提過數個 advantage，此處介紹另一個，用 Still another + 單數名詞。" },
+            { qNum: "10", opts: ["(A) not; but", "(B) both; and", "(C) so; that", "(D) not; until"], ans: "D", exp: "not...until... 直到……才……。成員直到被迫朝共同目標努力時，才學會溝通。" }
+          ]
+        },
+        {
+          num: 3,
+          titleEn: "Passage 3: The Myth of King Tantalus",
+          titleZh: "第 3 篇：坦塔洛斯國王的神話",
+          enParas: [
+            "Long ago, there was a king known as Tantalus. Being half-god, he was _(1)_ frequently seen talking to gods but was sometimes even allowed to dine with them. On these occasions, he often got drunk and was _(2)_ control his behavior. The naughty king would even steal the gods' food and feed it to his people, _(3)_ them immortal too.",
+            "Despite all this, Tantalus was quite popular among the gods. Zeus, Hera, Demeter, and the others even agreed to dine with him at an earthly feast. _(4)_, Tantalus wanted to serve his godly guests a special dish and thought for many days about what this might be. By the time the feast _(5)_, he had decided to sacrifice his firstborn son, Pelops. He therefore had his cooks kill the young man and make a stew _(6)_ his flesh!",
+            "When the gods learned of this, however, they were _(7)_. Instead of thanking Tantalus for his sacrifice, Zeus _(8)_ him by binding him in a pool of water under a fruit tree. Whenever he grew hungry, the wind would blow the fruit just out of his reach. And every time he bent down to drink, the pool sank lower _(9)_ his lips could never reach it. Tantalus would therefore experience _(10)_ hunger and thirst for the rest of time. No wonder his name means 'he who must bear much.'"
+          ],
+          zhParas: [
+            "很久以前，有位名為坦塔洛斯的國王。作為半神，他不僅常被看見與神明交談，有時甚至被允許與眾神共進晚餐。在這些場合中，他經常喝得酩酊大醉，無法控制自己的言行。這個淘氣的國王甚至會偷取眾神的仙饌分給他的子民，讓他們也長生不老。",
+            "儘管如此，坦塔洛斯在神明中還是頗受歡迎。宙斯、希拉、狄蜜特等人甚至同意降臨凡間與他共赴宴席。出於傲慢與虛榮，坦塔洛斯想為神聖貴賓獻上一道特別的菜餚，苦思冥想了多天。等到盛宴到來時，他決定犧牲他的長子佩洛普斯。他讓廚師殺了這個年輕人，並用他的肉煮了一鍋濃湯！",
+            "然而，當眾神得知此事時無不大發雷霆。宙斯非但沒有感謝坦塔洛斯的獻祭，反而將他綁在果樹下的水池中作為懲罰。每當他飢餓時，微風就會將果實吹到他觸碰不到的地方；每次他俯身想喝水，水面就會下沉，以致於他的雙唇永遠碰不到水。坦塔洛斯從此承受著永無止境的飢渴。難怪他的名字意思是「必須承受極大苦難之人」。"
+          ],
+          questions: [
+            { qNum: "1", opts: ["(A) so", "(B) not only", "(C) both", "(D) not"], ans: "B", exp: "not only...but (also)... 句型，also 被省略。" },
+            { qNum: "2", opts: ["(A) able to", "(B) capable of", "(C) disabled for", "(D) unable to"], ans: "D", exp: "由喝醉可知是「無法」控制行為，搭配 was + unable to + VR。" },
+            { qNum: "3", opts: ["(A) making", "(B) made", "(C) to make", "(D) and making"], ans: "A", exp: "分詞構句表結果，主動讓他們獲得永生，用現在分詞 making。" },
+            { qNum: "4", opts: ["(A) To proud and vain", "(B) Be proud and vain", "(C) Proud and vain", "(D) To be proud and vain"], ans: "C", exp: "形容詞片語放句首的分詞構句（省略 Being）。" },
+            { qNum: "5", opts: ["(A) has arrived", "(B) arrived", "(C) arrives", "(D) had arrived"], ans: "B", exp: "By the time + S + 過去式, S + had + p.p.。" },
+            { qNum: "6", opts: ["(A) out of", "(B) inside", "(C) away from", "(D) through"], ans: "A", exp: "make...out of... 用……材料製作出……。" },
+            { qNum: "7", opts: ["(A) precious", "(B) generous", "(C) numerous", "(D) furious"], ans: "D", exp: "furious 極為憤怒的。" },
+            { qNum: "8", opts: ["(A) punished", "(B) employed", "(C) contacted", "(D) mentioned"], ans: "A", exp: "punished 處罰。" },
+            { qNum: "9", opts: ["(A) in case", "(B) even though", "(C) so that", "(D) now that"], ans: "C", exp: "so that 表「以致於、以便」。" },
+            { qNum: "10", opts: ["(A) but also", "(B) nothing but", "(C) as well as", "(D) anything but"], ans: "B", exp: "nothing but 意為「只有、僅有」。" }
+          ]
+        },
+        {
+          num: 4,
+          titleEn: "Passage 4: Summer Camp Team Conflict and Collaboration",
+          titleZh: "第 4 篇：夏令營實驗——從群體衝突到通力合作",
+          enParas: [
+            "How can people work together when they don't like each other? One study that has been done on teams may answer that question. The experiment was at a three-week summer camp with two groups of eleven-year-old boys. At first, neither group knew _(1)_ existed. The researchers, who pretended to be _(2)_ the camp, created team spirit within the two groups. The groups were encouraged to come up with names for themselves, and have fun together.",
+            "Later, when the researchers finally _(3)_ the other group, they made many negative comments about it. The campers began to view the boys on their team as being better than _(4)_ on the other. The researchers also encouraged competition through a sports tournament. In this way, they _(5)_ the two groups very unfriendly toward each other.",
+            "Then, _(6)_ one week left, researchers tried two ways to reduce the conflict. First, they put the groups together for fun activities. But _(7)_ watching movies and eating together, the two groups did not improve relations. The situation did not improve _(8)_ the researchers created problems that affected both groups, like turning off the water supply. When the boys had to _(9)_ solutions to these problems, the tensions between the two groups were slowly reduced. By the end of the camp, _(10)_ had created friendships between the groups. It seems that working together in itself helps people to get along better."
+          ],
+          zhParas: [
+            "當人們互相不喜歡時，該如何一起工作？一項關於團隊的研究可能給出答案。這項實驗在一個為期三週的夏令營中進行，對象是兩組十一歲的男孩。起初，兩組都不知道另一組的存在。假裝負責夏令營的研究人員在兩個小組內部建立起團隊精神，鼓勵他們為自己命名並一起玩樂。",
+            "後來，當研究人員終於向他們提及另一組時，發表了許多負面評價。營員們開始認為自己隊裡的男孩比另一隊的男孩優秀。研究人員還透過體育錦標賽鼓動競爭。如此一來，他們使這兩個小組對彼此極為敵視。",
+            "接著，在只剩下一週時，研究人員嘗試了兩種緩解衝突的方法。首先，他們安排兩組一起參加娛樂活動。但儘管一起看電影和吃飯，兩組的關係並未改善。直到研究人員製造了波及兩隊的共同問題（例如關掉供水），情況才有所轉變。當男孩們必須共同找出解決方法時，兩組間的緊張局勢才逐漸緩解。夏令營結束時，合作在兩組之間建立了友誼。這表明，合作本身就能幫助人們更好地相處。"
+          ],
+          questions: [
+            { qNum: "1", opts: ["(A) another", "(B) others", "(C) the other", "(D) the others"], ans: "C", exp: "兩組中的「另一組」用 the other。" },
+            { qNum: "2", opts: ["(A) in charge of", "(B) in terms of", "(C) in search of", "(D) in need of"], ans: "A", exp: "in charge of 掌管、負責。" },
+            { qNum: "3", opts: ["(A) constructed", "(B) promised", "(C) mentioned", "(D) collaborated"], ans: "C", exp: "mentioned 提到、說起。" },
+            { qNum: "4", opts: ["(A) that", "(B) ones", "(C) those", "(D) these"], ans: "C", exp: "those 代替複數名詞 the boys。" },
+            { qNum: "5", opts: ["(A) made", "(B) caused", "(C) took", "(D) let"], ans: "A", exp: "make + O + adj. 使……變得……。" },
+            { qNum: "6", opts: ["(A) despite", "(B) as", "(C) for", "(D) with"], ans: "D", exp: "with + O + OC 表附帶狀態，「伴隨剩下一週」。" },
+            { qNum: "7", opts: ["(A) instead of", "(B) as a result of", "(C) besides", "(D) despite"], ans: "D", exp: "despite 為介系詞，表「儘管、雖然」。" },
+            { qNum: "8", opts: ["(A) no matter what", "(B) until", "(C) in case", "(D) but"], ans: "B", exp: "not...until... 直到……才改善。" },
+            { qNum: "9", opts: ["(A) figure out", "(B) turn down", "(C) fill in", "(D) pass on"], ans: "A", exp: "figure out 解決、想出辦法。" },
+            { qNum: "10", opts: ["(A) construction", "(B) collaboration", "(C) graduation", "(D) innovation"], ans: "B", exp: "collaboration 合作。" }
+          ]
+        },
+        {
+          num: 5,
+          titleEn: "Passage 5: Rubens's Masterpiece 'Prometheus Bound'",
+          titleZh: "第 5 篇：魯本斯的名畫《被縛的普羅米修斯》",
+          enParas: [
+            "Among the Philadelphia Museum of Art's finest paintings is the 17th-century masterpiece Prometheus Bound. This famous representation of Prometheus, the Titan who sacrificed himself for the _(1)_ of humankind, is the work of two Flemish artists. One of these was the great baroque painter Peter Paul Rubens. _(2)_ was a local artist employed in Rubens's workshop called Frans Snyders.",
+            "The painting itself shows Prometheus chained to a rock _(3)_ a large tree. A giant eagle is tearing at his chest with its powerful beak and preparing to _(4)_ his liver. _(5)_, the eagle's claws are digging into Prometheus's stomach and face, and the Titan is clearly in great pain.",
+            "_(6)_ work on the portrait started in 1611, Snyders was already widely recognized as one of the finest living painters of animals and was thus responsible for the eagle in the painting. The rest of the painting was completed by Rubens himself, and he was reportedly very attached to it. _(7)_, he kept it safely stored away for several years. By the time he finally _(8)_ to part with it, 1618 had already arrived. This was the year _(9)_ an English art collector finally persuaded Rubens to trade the painting for other works of art. He did so _(10)_ offering a valuable collection of statues in return. Prometheus Bound then remained in England for many years before it eventually ended up in Philadelphia."
+          ],
+          zhParas: [
+            "費城藝術博物館最傑出的藏畫之一是十七世紀的傑作《被縛的普羅米修斯》。這幅展現為人類利益而犧牲自我的泰坦神普羅米修斯的著名畫作，是由兩位弗拉芒藝術家共同創作的。其中一位是巴洛克畫派大師彼得·保羅·魯本斯，另一位則是受雇於魯本斯工作室的當地畫家弗朗斯·斯奈德斯。",
+            "畫作描繪了普羅米修斯被鎖在一棵大樹下的岩石上。一隻巨大的老鷹正用強而有力的喙撕扯他的胸膛，準備啄食他的肝臟。尖銳而兇猛的鷹爪深深刺入普羅米修斯的腹部和臉部，泰坦神顯然承受著極大的痛苦。",
+            "當這幅畫的創作於 1611 年展開時，斯奈德斯已是公認當代最頂尖的動物畫家之一，因此負責畫中的巨鷹。其餘部分由魯本斯親自完成，據說他對這幅畫非常珍愛。因此，他將它妥善保存了數年之久。等到他終於同意割愛時，已是 1618 年了。就在這一年，一位英國藝術收藏家終於說服魯本斯用這幅畫交換其他藝術品。收藏家透過提供一套珍貴的雕像作為回報完成了這筆交易。《被縛的普羅米修斯》隨後在英國保存了多年，最終落腳費城。"
+          ],
+          questions: [
+            { qNum: "1", opts: ["(A) victim", "(B) privacy", "(C) contact", "(D) benefit"], ans: "D", exp: "for the benefit of... 為了……的利益。" },
+            { qNum: "2", opts: ["(A) Another", "(B) The other", "(C) Other", "(D) The others"], ans: "B", exp: "兩位藝術家中的另一位用 The other。" },
+            { qNum: "3", opts: ["(A) above", "(B) through", "(C) underneath", "(D) among"], ans: "C", exp: "underneath 在……下方。" },
+            { qNum: "4", opts: ["(A) catch on", "(B) turn on", "(C) feed on", "(D) count on"], ans: "C", exp: "feed on 以……為食、啄食。" },
+            { qNum: "5", opts: ["(A) Sharp and savage", "(B) Be sharp and savage", "(C) To be sharp and savage", "(D) By sharp and savage"], ans: "A", exp: "形容詞片語置於句首的分詞修飾結構。" },
+            { qNum: "6", opts: ["(A) No matter when", "(B) Even though", "(C) As long as", "(D) By the time"], ans: "D", exp: "By the time 到了……時候。" },
+            { qNum: "7", opts: ["(A) As a result", "(B) In addition", "(C) On the contrary", "(D) All of a sudden"], ans: "A", exp: "As a result 結果、因此。" },
+            { qNum: "8", opts: ["(A) had agreed", "(B) agreed", "(C) has agreed", "(D) was agreed"], ans: "B", exp: "主要子句為過去完成式，By the time 子句用過去簡單式 agreed。" },
+            { qNum: "9", opts: ["(A) when", "(B) where", "(C) which", "(D) this"], ans: "A", exp: "關係副詞 when 指代先行詞 the year。" },
+            { qNum: "10", opts: ["(A) for", "(B) to", "(C) in", "(D) by"], ans: "D", exp: "by + V-ing 藉由……方式。" }
+          ]
+        },
+        {
+          num: 6,
+          titleEn: "Passage 6: Rescue of a Trapped Whale",
+          titleZh: "第 6 篇：搶救受困巨鯨",
+          enParas: [
+            "Off the coast of San Francisco, a whale was in trouble. _(1)_ on its yearly winter journey south, it had become caught in the ropes of some crab traps. The ropes and heavy traps were wrapped around its body. Rescuers from a local sea animal center checked _(2)_ they could unwind the ropes but found they were too tight. Therefore, they decided to cut the ropes _(3)_. This meant that divers would have to go into the water under and around the animal, which was very dangerous.",
+            "The whale would surely _(4)_ it terrifying to be trapped and have strange people surrounding it. Who knew how it would react? One swing of its _(5)_ tail could kill a diver. However, the divers' _(6)_ did not stop them from helping. The first diver in the water wondered whether their help could _(7)_. About twelve ropes were cutting into the whale's skin, and it _(8)_ that the animal might never escape.",
+            "However, the divers worked hard and eventually managed to free the whale. _(9)_, something amazing happened. The whale swam toward each diver and gently brushed against them. Whales can't talk, of course, but it seems they still have a way to _(10)_ their thanks to people who have helped them. After thanking its rescuers, the whale headed safely out to sea."
+          ],
+          zhParas: [
+            "在舊金山外海，一隻鯨魚陷入了困境。在牠每年向南的冬季遷徙旅途中，牠被一些捕蟹籠的繩索纏住了。粗重的繩索和鐵籠緊緊纏繞著牠的身體。當地海洋動物中心的救援人員前來檢查是否能解開繩索，卻發現纏得太緊了。因此，他們決定改為割斷繩索。這意味著潛水員必須潛入巨鯨身下及周圍的水域，極其危險。",
+            "鯨魚身陷囹圄且被陌生人圍繞，肯定覺得非常可怕。誰知道牠會作何反應？牠那龐大的尾巴輕輕一揮就可能讓潛水員喪命。然而，潛水員心中的恐懼並未阻止他們的救援行動。第一位下水的潛水員還在想著他們的救援是否能有所作為。大約有十二根繩索深深嵌進鯨魚的皮膚，看起來這隻巨獸可能永遠無法脫困了。",
+            "然而，潛水員們竭盡全力，最終成功解救了巨鯨。接著，令人驚嘆的一幕發生了。巨鯨游向每一位潛水員，輕輕地撫蹭著他們。鯨魚雖然不會說話，但看來牠們仍有辦法向幫助過牠們的人傳達謝意。向救命恩人致謝後，巨鯨安全地游向大海深處。"
+          ],
+          questions: [
+            { qNum: "1", opts: ["(A) When it travels", "(B) Traveling", "(C) Traveled", "(D) To travel"], ans: "B", exp: "分詞構句，主動進行向南旅程，用現在分詞 Traveling。" },
+            { qNum: "2", opts: ["(A) if", "(B) when", "(C) what", "(D) where"], ans: "A", exp: "if 引導名詞子句當 checked 的受詞，表示「是否」。" },
+            { qNum: "3", opts: ["(A) then", "(B) though", "(C) instead", "(D) indeed"], ans: "C", exp: "instead 取而代之地（不解開改用切斷）。" },
+            { qNum: "4", opts: ["(A) have", "(B) make", "(C) find", "(D) view"], ans: "C", exp: "find + it + adj. + to VR 覺得……。" },
+            { qNum: "5", opts: ["(A) terminal", "(B) tremendous", "(C) cooperate", "(D) drowsy"], ans: "B", exp: "tremendous 巨大的、龐大的。" },
+            { qNum: "6", opts: ["(A) fright", "(B) warmth", "(C) sparkle", "(D) illness"], ans: "A", exp: "fright 恐懼、驚慌。" },
+            { qNum: "7", opts: ["(A) deliver a speech", "(B) take a look", "(C) make a difference", "(D) get a moment"], ans: "C", exp: "make a difference 發揮作用、有所作為。" },
+            { qNum: "8", opts: ["(A) kept", "(B) found", "(C) prompted", "(D) seemed"], ans: "D", exp: "it seemed that... 看起來似乎……。" },
+            { qNum: "9", opts: ["(A) Once", "(B) Besides", "(C) Hence", "(D) Then"], ans: "D", exp: "Then 接著、然後。" },
+            { qNum: "10", opts: ["(A) pass on", "(B) turn down", "(C) call for", "(D) feed on"], ans: "A", exp: "pass on 傳遞（謝意）。" }
+          ]
+        },
+        {
+          num: 7,
+          titleEn: "Passage 7: Seven Ingredients for an Effective Team",
+          titleZh: "第 7 篇：高效團隊的七大成功要素",
+          enParas: [
+            "What ingredients make an effective team? According to recent research, there are actually seven important _(1)_ that lead to team success. A team likely _(2)_ succeed _(2)_ they have all seven elements in place. The first is team identity: a feeling of togetherness, a clear understanding of roles, and loyalty. The second is motivation. Motivated teams have lots of energy and a desire to _(3)_ their sleeves and get to work. If you have some tiring work to do, like solving a problem using _(4)_, staying motivated is important.",
+            "The third quality is emotional awareness, which means noticing and respecting your teammates' feelings. This depends on the fourth, communication: sharing your feelings and ideas, and understanding _(5)_ of your teammates. Number five, stress tolerance, is how well your team can handle pressure. Can you stay _(6)_ your goals when faced with problems? Conflict resolution is still _(7)_ important quality a great team needs, because disagreements and arguments will happen in every team. However, if you can keep your arguing _(8)_-if you can make sure that its goal is self-improvement-your team will grow stronger.",
+            "_(9)_, the seventh factor is a positive mood. _(10)_, if a team member has a problem, others offer encouragement rather than criticism. Does your team have these seven ingredients of success?"
+          ],
+          zhParas: [
+            "什麼樣的要素能造就一個高效團隊？根據最新的研究，促成團隊成功其實有七大關鍵要素。唯有當這七大要素齊備時，團隊才有可能取得成功。第一是團隊認同感：休戚與共的凝聚力、明確的角色職責與忠誠度。第二是動機。充滿動力的團隊精力充沛，並渴望捲起袖子全心投入。如果你有像透過反覆試錯來解決難題這類繁重的工作要做，保持動力尤為重要。",
+            "第三個特質是情緒覺察，這代表能注意到並尊重隊友的感受。這仰賴第四個特質——溝通：分享你的感受與想法，並理解隊友的想法。第五是抗壓耐受度，也就是團隊承受壓力的能力。在面對困難時，你們能專注於目標嗎？衝突化解是優秀團隊所需的另一個重要品質，因為任何團隊都會發生分歧與爭執。然而，如果你們能讓爭辯保持建設性——確保其目標是為了自我精進——團隊就會變得更加強大。",
+            "最後，第七個因素是積極正向的氛圍。舉例來說，當團隊成員遇到問題時，其他人會給予鼓勵而非指責。你的團隊具備這七項成功的秘訣了嗎？"
+          ],
+          questions: [
+            { qNum: "1", opts: ["(A) promises", "(B) routes", "(C) elements", "(D) feedbacks"], ans: "C", exp: "elements 要素。" },
+            { qNum: "2", opts: ["(A) cannot; because", "(B) will not; until", "(C) will; so that", "(D) whether; or not"], ans: "B", exp: "not...until... 直到具備七大要素才會成功。" },
+            { qNum: "3", opts: ["(A) roll up", "(B) sign in", "(C) write down", "(D) tear off"], ans: "A", exp: "roll up one's sleeves 捲起袖子幹活。" },
+            { qNum: "4", opts: ["(A) pros and cons", "(B) ups and downs", "(C) trial and error", "(D) trick or treat"], ans: "C", exp: "trial and error 反覆試驗、試錯法。" },
+            { qNum: "5", opts: ["(A) this", "(B) that", "(C) these", "(D) those"], ans: "D", exp: "those 代替複數名詞 feelings and ideas。" },
+            { qNum: "6", opts: ["(A) cleared out", "(B) focused on", "(C) amazed at", "(D) attached to"], ans: "B", exp: "stay focused on 保持專注於……。" },
+            { qNum: "7", opts: ["(A) other", "(B) the other", "(C) another", "(D) others"], ans: "C", exp: "still another + 單數名詞，表示「還有另一個……」。" },
+            { qNum: "8", opts: ["(A) innovative", "(B) constructive", "(C) suggestive", "(D) attentive"], ans: "B", exp: "constructive 富有建設性的。" },
+            { qNum: "9", opts: ["(A) Absolutely", "(B) Ideally", "(C) Finally", "(D) Luckily"], ans: "C", exp: "Finally 最後，介紹第七個要素。" },
+            { qNum: "10", opts: ["(A) For example", "(B) In fact", "(C) By contrast", "(D) In short"], ans: "A", exp: "For example 舉例來說。" }
+          ]
+        },
+        {
+          num: 8,
+          titleEn: "Passage 8: Shelley and Prometheus Unbound",
+          titleZh: "第 8 篇：雪萊與《解放了的普羅米修斯》",
+          enParas: [
+            "Percy Bysshe Shelley was one of the great English Romantic poets. _(1)_, his poems are still widely read today. Born in 1792, Shelley was also a wonderful writer of lyric poetry, a form of poetry _(2)_ is usually written in the first person and expresses very personal feelings. His famous work Prometheus Unbound, for instance, is a fine example of what's known _(3)_ a lyrical drama, a play written in lyrical verse.",
+            "Prometheus Unbound was first published and _(4)_ in England in 1820. It tells the story of Prometheus, a Titan who stole fire from heaven and gave it to humans to help _(5)_ their physical shortcomings. Although the Greek god Jupiter (Zeus) was greatly angered by this, rather than kill Prometheus for his crime, he decided to chain him to a rock forever _(6)_ his suffering might never end. Despite all he had to endure, _(7)_, Shelley's Prometheus never regretted his sacrifice and even refused to be set free in exchange for helping Jupiter.",
+            "Eventually, many of his friends who had pleaded with him to ask for mercy _(8)_ patience with him, too. _(9)_ Hercules (Heracles) freed Prometheus from his rock, 3,000 years had gone by! Finally, Prometheus's pain and _(10)_ came to an end. As the curtain falls on Shelley's masterpiece, humankind's champion stands unbound."
+          ],
+          zhParas: [
+            "珀西·比希·雪萊是英國偉大的浪漫主義詩人之一。富於想像力且情感豐沛，他的詩作至今仍被廣泛傳誦。雪萊出生於 1792 年，也是一位傑出的抒情詩作家。抒情詩通常以第一人稱寫作，表達極為私人的情感。例如他的著名作品《解放了的普羅米修斯》，就是所謂抒情詩劇（以抒情詩句寫成的戲劇）的典範。",
+            "《解放了的普羅米修斯》於 1820 年在英國首次出版發行。它講述了泰坦神普羅米修斯的故事：他從天上盜取火種送給人類，以彌補人類生理上的不足。希臘主神宙斯對此震怒不已，但他沒有因其罪行處死普羅米修斯，而是決定將他永遠鎖在岩石上，以便讓他的痛苦永無止境。然而，儘管歷經磨難，雪萊筆下的普羅米修斯從不後悔自己的奉獻，甚至拒絕以協助宙斯為條件換取自由。",
+            "最後，許多曾苦苦哀求他向宙斯求饒的朋友也對他失去了耐心。等到海克力斯將普羅米修斯從岩石上解救下來時，三千年已經過去了！終於，普羅米修斯的苦痛與悲慘落下了帷幕。在雪萊這部傑作謝幕之際，這位人類的捍衛者終於重獲自由。"
+          ],
+          questions: [
+            { qNum: "1", opts: ["(A) Be imaginative and emotional", "(B) Imaginative and emotional", "(C) To be imaginative and emotional", "(D) With imaginative and emotional"], ans: "B", exp: "形容詞片語置於句首的分詞修飾結構，省略 Being。" },
+            { qNum: "2", opts: ["(A) it", "(B) who", "(C) what", "(D) that"], ans: "D", exp: "先行詞 a form of poetry 為事物，主格關係代名詞用 that。" },
+            { qNum: "3", opts: ["(A) in", "(B) to", "(C) as", "(D) for"], ans: "C", exp: "be known as 被稱作、以……聞名。" },
+            { qNum: "4", opts: ["(A) distributed", "(B) employed", "(C) constructed", "(D) announced"], ans: "A", exp: "distributed 發行、分發。" },
+            { qNum: "5", opts: ["(A) stand up for", "(B) make up for", "(C) take responsibility for", "(D) set the stage for"], ans: "B", exp: "make up for 彌補、補償。" },
+            { qNum: "6", opts: ["(A) as if", "(B) now that", "(C) even if", "(D) so that"], ans: "D", exp: "so that 為了、以便使……。" },
+            { qNum: "7", opts: ["(A) additionally", "(B) similarly", "(C) actually", "(D) however"], ans: "D", exp: "however 然而，語氣轉折。" },
+            { qNum: "8", opts: ["(A) got rid of", "(B) took advantage of", "(C) ran out of", "(D) made fun of"], ans: "C", exp: "run out of 用盡、失去（耐心）。" },
+            { qNum: "9", opts: ["(A) By the time", "(B) As soon as", "(C) Not until", "(D) Even though"], ans: "A", exp: "By the time 到了……的時候。" },
+            { qNum: "10", opts: ["(A) benefit", "(B) warmth", "(C) misery", "(D) journey"], ans: "C", exp: "misery 苦難、悲慘。" }
+          ]
+        },
+        {
+          num: 9,
+          titleEn: "Passage 9: The Evolution of Ronald McDonald",
+          titleZh: "第 9 篇：麥當勞叔叔的演變與爭議",
+          enParas: [
+            "Research suggests that over 95% of American schoolchildren recognize Ronald McDonald. It appears _(1)_ he is so popular in the United States that even Santa Claus has met with some serious competition! Ronald first appeared in 1963, played by the actor Willard Scott in a series of McDonald's TV ads that was aired all over America. Ronald's popularity in the ads _(2)_ McDonald's to choose him as their official mascot.",
+            "Three years later, a circus clown named Coco _(3)_ some planning and gave Ronald a new look. Suddenly, he had the red nose and white clown makeup he would later become so famous for. _(4)_, he began wearing a new bright red and yellow costume.",
+            "By the middle of 2019, viewers _(5)_ the role of the TV Ronald played by ten different actors. In addition, hundreds of people have _(6)_ as the well-known clown in real life since 1963. The fast-food giant has found _(7)_ very effective _(7)_ this figure to promote their products as well as charity-related events. The company thus _(8)_ about 300 full-time Ronald clowns worldwide. Although it's not _(9)_ the law for McDonald's to promote their products using a clown, some organizations concerned about childhood obesity rates have requested the company not to do so. It doesn't seem, however, as if McDonald's _(10)_ retire red-nosed Ronald anytime soon. According to their CEO, he is here to stay."
+          ],
+          zhParas: [
+            "研究顯示，超過 95% 的美國學童都認得麥當勞叔叔。在美國，他似乎受歡迎到連聖誕老人都面臨著強勁的競爭！麥當勞叔叔於 1963 年首次亮相，由演員威拉德·斯科特在一系列於全美播出的麥當勞電視廣告中飾演。他在廣告中的超高人氣促使麥當勞選擇他作為官方吉祥物。",
+            "三年後，一位名叫可可的馬戲團小丑做了一些規劃，賦予了麥當勞叔叔嶄新的面貌。突然之間，他擁有了後來聞名於世的紅鼻子和白色小丑妝容。而且，他也開始穿上鮮艷的紅黃相間連身服。",
+            "截至 2019 年中，觀眾已經見過由十位不同演員所飾演的電視版麥當勞叔叔。此外，自 1963 年以來，現實中有數百人曾打扮成這位知名小丑。這家速食巨頭發現利用這個人物來宣傳產品以及慈善活動非常有效。因此該公司在全球聘用了約三百名全職麥當勞小丑。儘管麥當勞用小丑宣傳產品並不違法，但一些擔憂兒童肥胖率的機構已要求該公司停止這麼做。然而，麥當勞似乎並沒有打算在近期讓紅鼻子的麥當勞叔叔退休。正如其執行長所言，他將長久陪伴大家。"
+          ],
+          questions: [
+            { qNum: "1", opts: ["(A) when", "(B) what", "(C) that", "(D) which"], ans: "C", exp: "It appears that + S + V... 似乎……。" },
+            { qNum: "2", opts: ["(A) made", "(B) prompted", "(C) prevented", "(D) combined"], ans: "B", exp: "prompted 促使、激勵。" },
+            { qNum: "3", opts: ["(A) did", "(B) went", "(C) dealt", "(D) worked"], ans: "A", exp: "do some planning 進行了一些規劃。" },
+            { qNum: "4", opts: ["(A) Instead", "(B) Recently", "(C) Also", "(D) However"], ans: "C", exp: "Also 此外、而且。" },
+            { qNum: "5", opts: ["(A) see", "(B) had seen", "(C) have seen", "(D) will see"], ans: "B", exp: "By + 過去時間點（By the middle of 2019），搭配過去完成式 had seen。" },
+            { qNum: "6", opts: ["(A) looked up", "(B) made up", "(C) dressed up", "(D) cheered up"], ans: "C", exp: "dress up as... 裝扮成……。" },
+            { qNum: "7", opts: ["(A) it; to use", "(B) that; using", "(C) which; to use", "(D) this; using"], ans: "A", exp: "find + it (虛受詞) + adj. + to use (真受詞)。" },
+            { qNum: "8", opts: ["(A) confines", "(B) employs", "(C) refuses", "(D) frightens"], ans: "B", exp: "employs 雇用。" },
+            { qNum: "9", opts: ["(A) behind", "(B) between", "(C) among", "(D) against"], ans: "D", exp: "against the law 違法。" },
+            { qNum: "10", opts: ["(A) is due to", "(B) is looking for", "(C) is used to", "(D) is about to"], ans: "D", exp: "be about to + VR 正要、即將。" }
+          ]
+        },
+        {
+          num: 10,
+          titleEn: "Passage 10: Compassion in the Supermarket",
+          titleZh: "第 10 篇：超市裡的同理與善舉",
+          enParas: [
+            "It was 32°C outside. Three police officers stepped inside a supermarket to buy some cold drinks. Immediately, a store _(1)_ approached them. He said he had been just about _(2)_ the police when they walked in. A woman had been caught _(3)_ food, and he wanted the officers to arrest her. They went to see the woman, who was crying in fear. It didn't appear _(4)_ she was a criminal. The officers looked in her bag and saw the items _(5)_ inside. They were all food items. 'I'm so hungry,' she told them.",
+            "The officers knew, of course, that it is _(6)_ the law to steal, even if it's only food. However, they found _(7)_ terrible to even think of arresting someone so unfortunate. Still, they could not allow her to just steal from the store, _(8)_. Right away, one officer said, 'We will buy her food.' Without any discussion or _(9)_, the officers gave the store employee enough money for the food. Seeing the woman's hunger and need had reminded them that, _(10)_, everyone needs some help sometimes. The woman cried with relief and repeated, 'Thank you, thank you.' They say a police officer's job is to protect and serve the people. Those three officers went far beyond the duties of their job that day."
+          ],
+          zhParas: [
+            "室外氣溫高達 32°C。三名警員走進一家超市想買些冷飲。立刻有一名店員走向他們。他說正當他們走進來時，他正準備打電話報警。一名女子因偷竊食物被當場抓獲，他希望警員將她逮捕。警員們走去看那位因恐懼而哭泣的女子。她看起來似乎不是罪犯。警員查看了她的提袋，看見藏在裡面的物品。那全是食物。「我實在太餓了，」她對警員說道。",
+            "警員們當然知道偷竊是違法的，即使只是食物。然而，一想到要逮捕如此不幸的人，他們就覺得難受。然而，他們也不能放任她就這樣從店裡偷東西。當下，一名警員說：「我們來幫她買下這些食物。」沒有任何爭論或猶豫，警員們拿出了足夠的錢給店員買下了食物。看到女子的飢餓與無助提醒了他們：畢竟，每個人有時都需要一些幫助。女子如釋重負地哭著，不斷說著：「謝謝你們，謝謝你們。」人們常說警察的職責是保護和服務人民。那三名警員那天所做的一切，早已遠遠超越了他們的職責範圍。"
+          ],
+          questions: [
+            { qNum: "1", opts: ["(A) employee", "(B) criminal", "(C) passenger", "(D) performer"], ans: "A", exp: "employee 員工、店員。" },
+            { qNum: "2", opts: ["(A) call", "(B) called", "(C) to call", "(D) calling"], ans: "C", exp: "be about to + VR 正準備做某事。" },
+            { qNum: "3", opts: ["(A) stole", "(B) to steal", "(C) stolen", "(D) stealing"], ans: "D", exp: "be caught V-ing 被當場逮到正在做某事。" },
+            { qNum: "4", opts: ["(A) to be", "(B) that", "(C) as", "(D) if"], ans: "B", exp: "It didn't appear that... 看起來似乎並非……。" },
+            { qNum: "5", opts: ["(A) hide", "(B) hidden", "(C) to hide", "(D) be hidden"], ans: "B", exp: "過去分詞片語 hidden inside 後位修飾 items。" },
+            { qNum: "6", opts: ["(A) break", "(B) against", "(C) for", "(D) off"], ans: "B", exp: "against the law 違反法律。" },
+            { qNum: "7", opts: ["(A) this", "(B) that", "(C) it", "(D) as"], ans: "C", exp: "it 作為虛受詞，代替後面的 to think of..." },
+            { qNum: "8", opts: ["(A) either", "(B) instead", "(C) indeed", "(D) then"], ans: "A", exp: "否定句末的「也」用 either。" },
+            { qNum: "9", opts: ["(A) contact", "(B) employment", "(C) refusal", "(D) hesitation"], ans: "D", exp: "hesitation 猶豫。" },
+            { qNum: "10", opts: ["(A) at last", "(B) after all", "(C) in addition", "(D) for example"], ans: "B", exp: "after all 畢竟。" }
+          ]
+        }
+      ],
+      sec5: [
+        {
+          num: 1,
+          titleEn: "The Birth of Apollo and Artemis",
+          titleZh: "第 1 篇：阿波羅與阿耳忒彌斯的誕生神話",
+          options: [
+            { key: "A", word: "punished", zh: "處罰" },
+            { key: "B", word: "at a time", zh: "在……時候" },
+            { key: "C", word: "as a result", zh: "因此" },
+            { key: "D", word: "tortured", zh: "折磨/虐待" },
+            { key: "E", word: "humankind", zh: "人類" },
+            { key: "F", word: "slaughter", zh: "屠殺/殺害" },
+            { key: "G", word: "enabled", zh: "使……能夠" },
+            { key: "H", word: "about", zh: "有關於" },
+            { key: "I", word: "underneath", zh: "在……之下" },
+            { key: "J", word: "on", zh: "在……之上" }
+          ],
+          enParas: [
+            "One of the most well-known gods in Greek mythology is Apollo. Apollo was one of the twelve gods and goddesses who lived on Mount Olympus, far above [① humankind]. He was the son of Zeus and the goddess Leto and the twin brother of the goddess Artemis.",
+            "Leto became pregnant [② at a time] when Zeus already had another wife, namely the goddess Hera. Hera was angry [③ about] Zeus having children with another goddess. Therefore, she [④ punished] Leto by cursing her. Because of this curse, Leto was unable to bear her children anywhere [⑤ on] earth where the sun could shine.",
+            "However, fearful that the children would be born anyway, Hera ordered a monster called Python to find Leto and [⑥ slaughter] her. To escape the monster and avoid being [⑦ tortured], Leto swam to an island called Delos. There, she found a shaded area [⑧ underneath] a tree where the sun could not shine. This act [⑨ enabled] her to give birth to Artemis and Apollo. [⑩ As a result], the island of Delos was viewed as the holy land of Artemis and Apollo. Not long after, Apollo was given his bow, which would become known far and wide as the Golden Bow of Apollo."
+          ],
+          zhParas: [
+            "希臘神話中最著名的神明之一是阿波羅。阿波羅是居住在奧林匹斯山上的十二位主神之一，高高凌駕於 [① 人類] 之上。他是宙斯與女神勒托之子，也是女神阿耳忒彌斯的雙胞胎哥哥。",
+            "勒托懷孕 [② 正值] 宙斯已有另一位妻子希拉女神之際。希拉對於宙斯與另一位女神生孩子感到非常憤怒 [③ 關於]。因此，她透過詛咒勒托來 [④ 懲罰] 她。由於這個詛咒，勒托無法在 [⑤ 地球上] 任何陽光普照的地方生下孩子。",
+            "然而，因擔心孩子仍會降生，希拉命令一隻名為皮同的巨蟒怪物去找到勒托並 [⑥ 殺害] 她。為了逃離怪物並避免遭受 [⑦ 折磨]，勒托游到了一座名為提洛島的島嶼。在那裡，她在陽光照射不到的一棵大樹 [⑧ 樹蔭下] 找到了一處遮蔽地。這舉動 [⑨ 使她得以] 生下了阿耳忒彌斯與阿波羅。[⑩ 因此]，提洛島被尊為阿耳忒彌斯和阿波羅的聖地。不久之後，阿波羅獲得了他的神弓，也就是名震遐邇的阿波羅金弓。"
+          ],
+          ansMap: "① E | ② B | ③ H | ④ A | ⑤ J | ⑥ F | ⑦ D | ⑧ I | ⑨ G | ⑩ C"
+        },
+        {
+          num: 2,
+          titleEn: "Overcoming Challenges through Collaboration",
+          titleZh: "第 2 篇：藉由團隊協作戰勝艱難挑戰",
+          options: [
+            { key: "A", word: "adjust", zh: "調整" },
+            { key: "B", word: "overcome", zh: "克服" },
+            { key: "C", word: "reliable", zh: "可靠的" },
+            { key: "D", word: "foundation", zh: "基礎" },
+            { key: "E", word: "constructive", zh: "建設性的" },
+            { key: "F", word: "exploring", zh: "探索" },
+            { key: "G", word: "collaboration", zh: "合作" },
+            { key: "H", word: "variety", zh: "多樣性" },
+            { key: "I", word: "feedback", zh: "回饋意見" },
+            { key: "J", word: "unique", zh: "獨特的" }
+          ],
+          enParas: [
+            "Facing a tough challenge can feel like climbing a mountain. But with the right team beside you and smart strategies to guide you, the summit becomes much easier to reach. Let's explore how working together can help you [① overcome] any obstacle.",
+            "The first step is understanding the problem. Like examining all the pieces of a puzzle, discussing the different parts of a challenge helps everyone see the full picture. This shared understanding lays the [② foundation] for developing effective solutions.",
+            "Next comes [③ collaboration]. Each team member brings [④ unique] ideas and experiences, and when you combine them, you often discover solutions no one would have thought of alone. This is also where [⑤ constructive] criticism plays a key role. Providing helpful [⑥ feedback] focused on improving ideas—not just pointing out flaws—helps the whole team grow.",
+            "With everyone working together, your team can begin [⑦ exploring] different ways to solve the problem. Brainstorming a [⑧ variety] of approaches and looking at the issue from different angles can lead to truly creative solutions. Don't be afraid to think outside the box and try something new!",
+            "As you put your plan into action, you may find that things don't always go exactly as expected. Being flexible and willing to [⑨ adjust] your strategy along the way is a sign of a strong and capable team.",
+            "For all of this to work smoothly, [⑩ reliable] and open communication is important. Sharing your thoughts clearly, listening actively, and asking questions when needed ensure everyone stays on the same page. This kind of communication builds both trust and efficiency. With teamwork, there's no limit to what you can achieve."
+          ],
+          zhParas: [
+            "面對艱鉅的挑戰就像攀登高山。但只要有合適的團隊在旁陪伴，並有聰明的策略指引，登頂就變得容易得多。讓我們一起探討團結合作如何幫助你 [① 克服] 任何障礙。",
+            "第一步是理解問題。如同檢視拼圖的所有碎片，討論挑戰的各個環節有助於大家綜觀全局。這種共同的認知為擬定有效解決方案奠定了 [② 基礎]。",
+            "接下來是 [③ 合作]。每位成員帶來 [④ 獨特] 的想法與經驗，當你把它們融會貫通時，往往能發現單打獨鬥永遠想不到的解方。這也是 [⑤ 建設性] 批評發揮關鍵作用之處。提供專注於優化構想、而不單是挑剔缺失的有益 [⑥ 回饋]，能助推整個團隊成長。",
+            "在大家的通力合作下，團隊可以著手 [⑦ 探索] 不同的解決途徑。腦力激盪出 [⑧ 各式各樣] 的方法並從不同角度切入問題，能孕育出真正具備創意的解方。切莫害怕跳脫框架思考、嘗試新事物！",
+            "當把計畫付諸行動時，你可能會發現事情未必完全按預期進展。保持彈性並樂於在過程中隨時 [⑨ 調整] 策略，是強大且能幹團隊的象徵。",
+            "為了讓這一切運作順暢，[⑩ 可靠] 且開放的溝通至關重要。清晰分享想法、積極聆聽並在需要時提出疑問，能確保所有人達成共識。這種溝通能同時建立信任與效率。有了團隊協作，你的成就將不可限量。"
+          ],
+          ansMap: "① B | ② D | ③ G | ④ J | ⑤ E | ⑥ I | ⑦ F | ⑧ H | ⑨ A | ⑩ C"
+        }
+      ],
+      sec6: {
+        titleEn: "The Stanford Marshmallow Experiment and Delayed Gratification",
+        titleZh: "史丹佛棉花糖實驗與延遲滿足",
+        enParas: [
+          "The Stanford marshmallow experiment was a research project conducted to study whether children had developed the ability to accept delayed gratification or would choose instant gratification instead. The experiment started with a marshmallow on a plate and a child. The child was told that he or she could eat the marshmallow right away or wait for fifteen minutes. If the kid waited patiently for fifteen minutes, he or she could have two marshmallows. The results indicated that the children who waited longer tended to have a better education and a higher income, and to be more successful in their later lives. That was because they possessed the ability to accept delayed gratification.",
+          "However, the results were met with some doubts. Another group of researchers redid the marshmallow test and tracked the lives of the tested children. They found out that other factors might have come into play in explaining the capacity for delayed gratification. One of them was the income of the children's parents. This study suggested that it was a child's social and economic background that influenced whether he or she chose to wait or to get the marshmallow immediately. In other words, what lies behind kids' long-term success might not be the capacity for delayed gratification but their family background.",
+          "This debate highlights the complexity of human behavior and factors for success. Children from resource-scarce environments may rationally choose immediate rewards based on past experiences where promised future benefits never materialized. Meanwhile, privileged children might find waiting easier, having learned that patience is consistently rewarded in their lives."
+        ],
+        zhParas: [
+          "史丹佛棉花糖實驗是一項旨在研究兒童是否已發展出接受延遲滿足的能力、抑或會選擇即時滿足的科研計畫。實驗從盤子裡的一顆棉花糖和一個孩子開始。孩子被告知可以立即吃掉棉花糖，或者等待十五分鐘。如果孩子耐心地等待十五分鐘，就能得到兩顆棉花糖。研究結果顯示，等待時間較長的孩子長大後往往擁有更好的教育背景、更高的收入，並在日後的生活中更成功。這是因為他們具備接受延遲滿足的能力。",
+          "然而，這些結果面臨了一些質疑。另一組研究人員重新進行了這項測試，並追蹤受試兒童的生活。他們發現其他因素在解釋延遲享樂能力時可能也發揮了作用。其中之一就是孩子父母的收入。這項研究指出，正是孩子的社會經濟背景影響了他們是選擇等待還是立刻吃掉棉花糖。換句話說，孩子長期成功背後的真正因素可能不是延遲享樂的能力，而是他們的家庭背景。",
+          "這場爭論突顯了人類行為與成功因素的複雜性。來自資源匱乏環境的孩子，可能基於過去承諾的未來利益從未實現的經驗，理性地選擇眼前當下的獎勵。與此同時，家境優渥的孩子可能覺得等待更容易，因為他們從小就知道耐心等待在他們的生活中總能得到回報。"
+        ],
+        subQuestions: [
+          {
+            num: "(1)",
+            titleZh: "摘要填空（每格限填一個單詞，視語法需要做適當變化）：",
+            qEn: "The text discusses the Stanford marshmallow experiment, which studied children's ability to [ ① ] gratification and this ability's link to future success. However, later research questioned these findings, and suggested that social and economic background may also influence long-term success, thus showing that the relationship between human behavior and factors for success is a(n) [ ② ] process.",
+            ans: "① delay   ② complex",
+            exp: "① 由原文字句 ability to accept delayed gratification 可知此處填不定詞 to 後的原形動詞 delay。② 最後一段提出 This debate highlights the complexity...，此處修飾名詞 process，將名詞 complexity 轉為形容詞 complex。"
+          },
+          {
+            num: "(2)",
+            titleZh: "多重選擇題（選出關於『原始史丹佛棉花糖實驗』正確的敘述）：",
+            opts: [
+              "(A) It included adult participants in addition to child participants.（除兒童外，實驗也包含成人）",
+              "(B) The main focus of the study was children's ability to follow instructions.（主要研究孩子聽從指令的能力）",
+              "(C) It suggested that self-control at a young age could predict future achievements.（指出年幼時的自制力能預測未來成就）",
+              "(D) It observed whether children could resist the temptation to eat the marshmallow immediately.（觀察孩子能否抗拒立即吃糖的誘惑）",
+              "(E) It concluded that family background had a huge influence on children's future success.（得出家庭背景有巨大影響的結論——此為後續研究）",
+              "(F) Each child was given one marshmallow and could choose to eat it instantly or wait.（每個孩子獲得一顆棉花糖，可選擇立刻吃或等待）"
+            ],
+            ans: "C, D, F",
+            exp: "(A) 僅針對兒童；(B) 重點在自制力與延遲滿足而非聽從指示；(E) 為後續重做實驗的其他研究學者提出的觀點，非原始實驗結論。故正確者為 (C)(D)(F)。"
+          },
+          {
+            num: "(3)",
+            titleZh: "片語檢索題：",
+            qEn: "Which phrase in the passage means 'to begin to have a use or an effect in a particular situation'?",
+            ans: "(have) come into play",
+            exp: "come into play 為固定片語，意為「開始發揮作用、產生影響」。"
+          }
+        ]
+      },
+      sec7: {
+        titleEn: "Problem-Solving Strategies: Science vs. Art",
+        titleZh: "第七大題：篇章結構——科學與藝術的解題策略",
+        options: [
+          { key: "A", en: "This is quite different from the world of the natural sciences, which expects all scientists to follow similar procedures.", zh: "這與自然科學界大不相同，後者期望所有科學家遵循相似的標準程序。" },
+          { key: "B", en: "Those who pursue art, on the other hand, might also benefit from more scientific approaches to their artworks.", zh: "另一方面，從事藝術創作的人也可能從將更科學的方法運用於作品中而獲益。" },
+          { key: "C", en: "Similarly, scientists can each have their own style of testing that they think works best for figuring out a problem.", zh: "同樣地，科學家們也可以各自擁有他們認為最適合解決問題的測試風格。" },
+          { key: "D", en: "Scientists will then note down all the data and all the possibilities of each experiment, before writing out their conclusions in a report.", zh: "科學家隨後會記錄下所有數據以及每次實驗的所有可能性，然後在報告中寫出結論。" },
+          { key: "E", en: "A writer or an artist, on the other hand, may find a different approach more suitable for meeting his or her own challenges.", zh: "另一方面，作家或藝術家可能會發現另一種更適合應對自身挑戰的方法。" }
+        ],
+        paragraphs: [
+          {
+            en: "Have you ever thought about how people with different interests approach problem-solving? Scientists and scholars have long been interested in the many different ways that people approach problems or challenges. People of different ages and with different professions often have very different strategies when it comes to finding solutions to problems. Scientists, for example, often create a hypothesis when they encounter a scientific problem. Then, they test this hypothesis in different conditions by setting up experiments. [ ① (D) Scientists will then note down all the data and all the possibilities of each experiment, before writing out their conclusions in a report. ] This approach means that the scientist often observes a whole range of possibilities before determining the right answer to a question.",
+            zh: "你是否曾想過不同志趣的人是如何解決問題的？長期以來，科學家和學者一直對人們處理問題或挑戰的諸多不同方式深感興趣。不同年齡層和不同職業的人在尋找問題解方時，往往有著迥然不同的策略。舉例來說，科學家遇到科學問題時通常會先建立假設。然後，他們透過設計實驗在不同條件下檢驗這項假設。[ ① (D) 科學家隨後會記錄下所有數據以及每次實驗的所有可能性，然後在報告中寫出結論。] 這種方法意味著科學家在確定問題的正確答案之前，通常會觀察所有的可能性。"
+          },
+          {
+            en: "[ ② (E) A writer or an artist, on the other hand, may find a different approach more suitable for meeting his or her own challenges. ] There is no single accepted method for becoming a good artist or writer, but this process almost always involves trial and error. Experience and practice are very important for painters, for example, because they need to practice different skills and methods over and over again in order to gain better control over their brush. Painters may also put more effort into developing their own style, which will help them stand out from other artists. [ ③ (A) This is quite different from the world of the natural sciences, which expects all scientists to follow similar procedures. ]",
+            zh: "[ ② (E) 另一方面，作家或藝術家可能會發現另一種更適合應對自身挑戰的方法。] 成為優秀的藝術家或作家並沒有單一公認的捷徑，但這個過程幾乎總少不了反覆的摸索試錯。舉例來說，經驗和實踐對畫家至關重要，因為他們需要一遍又一遍地練習不同的技巧與技法，以期更好地駕馭畫筆。畫家們也可能付出更多努力去發展出自己的獨特風格，以助於他們在同行中脫穎而出。[ ③ (A) 這與自然科學界大不相同，後者期望所有科學家遵循相似的標準程序。]"
+          },
+          {
+            en: "Although the worlds of science and art are quite different, there are still many things that people in each of these areas can learn from each other. For example, scientists who have trouble answering a scientific question using their usual methods may be able to find a solution by using more creative or less well-known methods. By standing out from other scientists, they might just be able to ask even better questions for their research. [ ④ (B) Those who pursue art, on the other hand, might also benefit from more scientific approaches to their artworks. ] These could include using controlled experiments and scientific techniques to achieve new and exciting results. Whichever method you enjoy using to solve problems, it is always good to keep an open and curious mind. Sooner or later, you will face a problem that really challenges you and forces you to leave your comfort zone!",
+            zh: "儘管科學與藝術領域大異其趣，這兩個領域的人仍有許多可以互相借鏡的地方。舉例來說，遇到用常規方法難以解答科學難題的科學家，或許能透過更具創意或冷門少見的方法找到答案。透過在同行中獨樹一幟，他們或許能在研究中提出更具啟發性的提問。[ ④ (B) 另一方面，從事藝術創作的人也可能從將更科學的方法運用於作品中而獲益。] 這些做法可能包括利用對照實驗和科學技術來達成令人振奮的嶄新成果。無論你習慣運用何種方式解決問題，始終保持開放和好奇的心胸總是大有裨益的。遲早有一天，你會面對一個真正挑戰你、迫使你跨出舒適圈的難題！"
+          }
+        ],
+        ans: "① D  |  ② E  |  ③ A  |  ④ B",
+        exp: "① 接續前文 setting up experiments，D 選項敘述記錄數據與寫出結論，且後文的 This approach 指的就是該實驗流程。② 此處以 on the other hand 轉折比較科學家與作家/藝術家在解決問題方法上的相異。③ 此處的 This 指代前文畫家各自探索個人風格的現象，與自然科學界要求依循既定嚴謹程序形成鮮明對比。④ 前段提及科學家向藝術借鏡創意，後段以 on the other hand 引出藝術創作者亦能從科學方法（controlled experiments）中獲益。"
+      }
+    };
+
+    let currentMode = 'study'; // 'study' or 'quiz'
+    let isZhHidden = false;
+    let userAnswers = {};
+
+    // 初始化渲染
+    function init() {
+      renderSec1();
+      renderSec2();
+      renderSec3();
+      renderSec4();
+      renderSec5();
+      renderSec6();
+      renderSec7();
+      updateQuizProgress();
+    }
+
+    // 渲染第一大題
+    function renderSec1() {
+      const container = document.getElementById("container-sec-1");
+      container.innerHTML = DATA.sec1.map(q => createChoiceCard(q, "sec1")).join("");
+    }
+
+    // 渲染第二大題
+    function renderSec2() {
+      const container = document.getElementById("container-sec-2");
+      container.innerHTML = DATA.sec2.map(q => createChoiceCard(q, "sec2")).join("");
+    }
+
+    // 渲染選擇題卡片
+    function createChoiceCard(q, sectionKey) {
+      return `
+        <div class="q-card bg-white rounded-xl p-4 sm:p-5 border border-slate-200 shadow-sm transition hover:border-indigo-300" data-qid="${q.id}">
+          <div class="flex items-start justify-between gap-3 mb-2.5">
+            <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-indigo-50 text-indigo-700 font-bold text-sm">
+              ${q.num}
+            </span>
+            <span class="text-xs px-2 py-0.5 rounded font-medium ${q.diff === '難' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-600'}">
+              難度：${q.diff}
+            </span>
+          </div>
+
+          <!-- 英文題目 -->
+          <p class="text-base text-slate-800 font-medium leading-relaxed mb-1.5">${q.en}</p>
+          <!-- 中文翻譯 -->
+          <p class="zh-trans text-sm text-slate-500 font-normal leading-relaxed mb-3 pb-2 border-b border-dashed border-slate-100">${q.zh}</p>
+
+          <!-- 選項按鈕區 -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+            ${q.opts.map(opt => {
+              const optChar = opt.charAt(1);
+              return `
+                <button onclick="handleSelectChoice('${q.id}', '${optChar}', '${q.ans}', this)" 
+                  class="opt-btn text-left px-3 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 transition flex items-center justify-between group"
+                  data-opt="${optChar}">
+                  <span class="text-slate-700">${opt}</span>
+                  <i class="opt-icon fa-regular fa-circle text-slate-300 text-xs"></i>
+                </button>
+              `;
+            }).join("")}
+          </div>
+
+          <!-- 解析區塊 -->
+          <div class="exp-box mt-3 p-3 bg-slate-50 rounded-lg text-xs leading-relaxed border border-slate-100 ${currentMode === 'quiz' ? 'hidden' : ''}">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="font-bold text-emerald-700 px-1.5 py-0.5 bg-emerald-50 rounded border border-emerald-200">標準答案：(${q.ans})</span>
+            </div>
+            <p class="text-slate-600 font-normal"><b class="text-slate-700">【解析】</b>${q.exp}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    // 渲染翻譯題
+    function renderSec3() {
+      const container = document.getElementById("container-sec-3");
+      container.innerHTML = DATA.sec3.map(item => `
+        <div class="bg-white rounded-xl p-4 sm:p-5 border border-slate-200 shadow-sm transition hover:border-emerald-300">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="w-6 h-6 rounded-md bg-emerald-50 text-emerald-700 font-bold text-xs flex items-center justify-center">${item.num}</span>
+            <span class="text-xs text-slate-400 font-medium">中翻英句型</span>
+          </div>
+          <p class="text-base text-slate-900 font-semibold mb-2">${item.zh}</p>
+          
+          <div class="p-3 bg-emerald-50/50 rounded-lg border border-emerald-100 text-sm mb-2">
+            <p class="text-emerald-950 font-medium tracking-wide"><i class="fa-solid fa-check text-emerald-600 mr-1.5"></i>${item.en}</p>
+          </div>
+          <p class="text-xs text-slate-500"><b class="text-slate-700">【考點拆解】</b>${item.note}</p>
+        </div>
+      `).join("");
+    }
+
+    // 渲染第四大題（綜合測驗克漏字）
+    function renderSec4() {
+      const container = document.getElementById("container-sec-4");
+      container.innerHTML = DATA.sec4.map(passage => `
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-100 px-5 py-3.5 flex items-center justify-between">
+            <h3 class="font-bold text-slate-900 text-base flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+              ${passage.titleEn}
+            </h3>
+            <span class="text-xs font-semibold text-amber-800 zh-trans">${passage.titleZh}</span>
+          </div>
+
+          <div class="p-5 grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- 英文文章 -->
+            <div class="space-y-3 text-slate-800 text-sm leading-relaxed border-b lg:border-b-0 lg:border-r border-slate-100 lg:pr-6">
+              <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 block mb-1">English Passage</span>
+              ${passage.enParas.map(p => `<p class="indent-4">${p}</p>`).join("")}
+            </div>
+
+            <!-- 中文逐段對照 -->
+            <div class="zh-trans space-y-3 text-slate-600 text-sm leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-100">
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-500 block mb-1">中文對照翻譯</span>
+              ${passage.zhParas.map(p => `<p class="indent-4">${p}</p>`).join("")}
+            </div>
+          </div>
+
+          <!-- 子題目與選項解析 -->
+          <div class="bg-slate-50/70 border-t border-slate-100 p-5">
+            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">克漏字選項與解析</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
+              ${passage.questions.map(q => `
+                <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-2xs">
+                  <div class="flex items-center justify-between mb-1.5">
+                    <span class="font-bold text-xs text-indigo-600">第 (${q.qNum}) 題</span>
+                    <span class="font-bold text-xs text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-100">答: ${q.ans}</span>
+                  </div>
+                  <div class="text-xs text-slate-600 space-y-1 mb-2">
+                    ${q.opts.map(o => `<div>${o}</div>`).join("")}
+                  </div>
+                  <div class="text-[11px] text-slate-500 leading-tight border-t border-slate-100 pt-1.5">
+                    ${q.exp}
+                  </div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    // 渲染第五大題（文意選填）
+    function renderSec5() {
+      const container = document.getElementById("container-sec-5");
+      container.innerHTML = DATA.sec5.map(sec => `
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden p-5 sm:p-6 space-y-5">
+          <div class="border-b border-slate-100 pb-3 flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h3 class="text-lg font-bold text-slate-900">${sec.titleEn}</h3>
+              <p class="text-xs text-slate-500 font-medium zh-trans">${sec.titleZh}</p>
+            </div>
+            <span class="text-xs font-semibold px-2.5 py-1 bg-purple-50 text-purple-700 rounded-full border border-purple-200">10 處選填</span>
+          </div>
+
+          <!-- 詞彙選項表 -->
+          <div class="bg-purple-50/50 p-4 rounded-xl border border-purple-100">
+            <span class="text-xs font-bold text-purple-900 block mb-2">選填詞庫 (Vocabulary Options)：</span>
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs">
+              ${sec.options.map(o => `
+                <div class="bg-white p-2 rounded border border-purple-100 flex items-center justify-between shadow-2xs">
+                  <span class="font-bold text-purple-700">(${o.key})${o.word}</span>
+                  <span class="text-slate-500 zh-trans">${o.zh}</span>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+
+          <!-- 雙欄中英逐段 -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 text-sm leading-relaxed">
+            <div class="space-y-3 text-slate-800">
+              <span class="text-xs font-bold text-indigo-600 uppercase">英文文章 (填入代號)：</span>
+              ${sec.enParas.map(p => `<p class="indent-4">${p}</p>`).join("")}
+            </div>
+            <div class="zh-trans space-y-3 text-slate-600 bg-slate-50 p-4 rounded-xl border border-slate-100">
+              <span class="text-xs font-bold text-slate-500 uppercase">中文逐段翻譯對照：</span>
+              ${sec.zhParas.map(p => `<p class="indent-4">${p}</p>`).join("")}
+            </div>
+          </div>
+
+          <!-- 答案欄 -->
+          <div class="p-3 bg-slate-900 text-white rounded-xl text-xs flex flex-wrap items-center justify-between gap-2">
+            <span class="font-bold text-purple-300"><i class="fa-solid fa-key mr-1.5"></i>本篇標準答案：</span>
+            <span class="font-mono tracking-wider">${sec.ansMap}</span>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    // 渲染第六大題（混合題）
+    function renderSec6() {
+      const container = document.getElementById("container-sec-6");
+      const d = DATA.sec6;
+      container.innerHTML = `
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden p-5 sm:p-6 space-y-6">
+          <div class="border-b border-slate-100 pb-3">
+            <h3 class="text-lg font-bold text-slate-900">${d.titleEn}</h3>
+            <p class="text-xs text-slate-500 font-medium zh-trans">${d.titleZh}</p>
+          </div>
+
+          <!-- 雙語長文 -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 text-sm leading-relaxed">
+            <div class="space-y-3 text-slate-800">
+              <span class="text-xs font-bold text-rose-600 uppercase">Reading Passage:</span>
+              ${d.enParas.map(p => `<p class="indent-4">${p}</p>`).join("")}
+            </div>
+            <div class="zh-trans space-y-3 text-slate-600 bg-slate-50 p-4 rounded-xl border border-slate-100">
+              <span class="text-xs font-bold text-slate-500 uppercase">全文中文翻譯：</span>
+              ${d.zhParas.map(p => `<p class="indent-4">${p}</p>`).join("")}
+            </div>
+          </div>
+
+          <!-- 題目區 -->
+          <div class="space-y-4 pt-4 border-t border-slate-100">
+            ${d.subQuestions.map(sq => `
+              <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 text-sm space-y-2">
+                <span class="font-bold text-slate-900">${sq.num} ${sq.titleZh}</span>${sq.qEn ? `<p class="text-slate-700 text-xs italic">${sq.qEn}</p>` : ''}
+                ${sq.opts ? `<div class="grid grid-cols-1 gap-1 text-xs text-slate-600 my-2">${sq.opts.map(o => `<div>${o}</div>`).join("")}</div>` : ''}
+                <div class="p-2.5 bg-white rounded-lg border border-slate-200 text-xs">
+                  <span class="font-bold text-rose-600">參考答案：</span> <span class="font-semibold text-slate-900">${sq.ans}</span>
+                  <p class="text-slate-500 mt-1"><b>【說明】</b>${sq.exp}</p>
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    // 渲染第七大題（篇章結構）
+    function renderSec7() {
+      const container = document.getElementById("container-sec-7");
+      const d = DATA.sec7;
+      container.innerHTML = `
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden p-5 sm:p-6 space-y-6">
+          <div class="border-b border-slate-100 pb-3">
+            <h3 class="text-lg font-bold text-slate-900">${d.titleEn}</h3>
+            <p class="text-xs text-slate-500 font-medium zh-trans">${d.titleZh}</p>
+          </div>
+
+          <!-- 選項清單 -->
+          <div class="bg-teal-50/50 p-4 rounded-xl border border-teal-100 space-y-2">
+            <span class="text-xs font-bold text-teal-900 block mb-1">篇章選填段落選項 (Options)：</span>
+            ${d.options.map(o => `
+              <div class="bg-white p-2.5 rounded-lg border border-teal-100 text-xs shadow-2xs">
+                <p class="font-bold text-teal-800">(${o.key})${o.en}</p>
+                <p class="text-slate-500 zh-trans mt-0.5">${o.zh}</p>
+              </div>
+            `).join("")}
+          </div>
+
+          <!-- 文章段落 -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 text-sm leading-relaxed">
+            <div class="space-y-4 text-slate-800">
+              <span class="text-xs font-bold text-teal-700 uppercase">英文全文填空還原：</span>
+              ${d.paragraphs.map(p => `<p class="indent-4">${p.en}</p>`).join("")}
+            </div>
+            <div class="zh-trans space-y-4 text-slate-600 bg-slate-50 p-4 rounded-xl border border-slate-100">
+              <span class="text-xs font-bold text-slate-500 uppercase">完整中譯對照：</span>
+              ${d.paragraphs.map(p => `<p class="indent-4">${p.zh}</p>`).join("")}
+            </div>
+          </div>
+
+          <!-- 答案與解析 -->
+          <div class="p-4 bg-slate-900 text-white rounded-xl text-xs space-y-2">
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-teal-300">標準答案：</span>
+              <span class="font-mono text-sm tracking-wider">${d.ans}</span>
+            </div>
+            <p class="text-slate-300 leading-relaxed font-normal">${d.exp}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    // 選擇題互動邏輯
+    function handleSelectChoice(qid, chosenOpt, correctAns, btnElem) {
+      userAnswers[qid] = chosenOpt;
+      const card = btnElem.closest('.q-card');
+      const allBtns = card.querySelectorAll('.opt-btn');
+      
+      allBtns.forEach(btn => {
+        btn.classList.remove('bg-emerald-100', 'border-emerald-500', 'text-emerald-900', 'bg-rose-100', 'border-rose-500', 'text-rose-900');
+        const icon = btn.querySelector('.opt-icon');
+        icon.className = 'opt-icon fa-regular fa-circle text-slate-300 text-xs';
+      });
+
+      const icon = btnElem.querySelector('.opt-icon');
+      if (chosenOpt === correctAns) {
+        btnElem.classList.add('bg-emerald-50', 'border-emerald-500', 'text-emerald-900');
+        icon.className = 'opt-icon fa-solid fa-circle-check text-emerald-600 text-xs';
+      } else {
+        btnElem.classList.add('bg-rose-50', 'border-rose-500', 'text-rose-900');
+        icon.className = 'opt-icon fa-solid fa-circle-xmark text-rose-500 text-xs';
+
+        // 標出正確選項
+        allBtns.forEach(btn => {
+          if (btn.getAttribute('data-opt') === correctAns) {
+            btn.classList.add('bg-emerald-50', 'border-emerald-300');
+            btn.querySelector('.opt-icon').className = 'opt-icon fa-solid fa-circle-check text-emerald-600 text-xs';
+          }
+        });
+      }
+
+      // 若在測驗模式下，點選後立刻顯示該題詳解
+      const expBox = card.querySelector('.exp-box');
+      if (expBox) expBox.classList.remove('hidden');
+
+      updateQuizProgress();
+    }
+
+    // 切換模式：詳解模式 / 測驗模式
+    function switchMode(mode) {
+      currentMode = mode;
+      const btnStudy = document.getElementById("btnStudy");
+      const btnQuiz = document.getElementById("btnQuiz");
+      const statusBar = document.getElementById("quizStatusBar");
+
+      if (mode === 'study') {
+        btnStudy.className = "px-2.5 py-1 rounded-md transition text-white bg-indigo-600 shadow-sm flex items-center gap-1";
+        btnQuiz.className = "px-2.5 py-1 rounded-md transition text-slate-600 hover:text-slate-900 flex items-center gap-1";
+        statusBar.classList.add("hidden");
+        document.querySelectorAll('.exp-box').forEach(b => b.classList.remove('hidden'));
+      } else {
+        btnQuiz.className = "px-2.5 py-1 rounded-md transition text-white bg-indigo-600 shadow-sm flex items-center gap-1";
+        btnStudy.className = "px-2.5 py-1 rounded-md transition text-slate-600 hover:text-slate-900 flex items-center gap-1";
+        statusBar.classList.remove("hidden");
+        // 隱藏未答題目的解析
+        document.querySelectorAll('.q-card').forEach(card => {
+          const qid = card.getAttribute('data-qid');
+          if (!userAnswers[qid]) {
+            card.querySelector('.exp-box')?.classList.add('hidden');
+          }
+        });
+      }
+    }
+
+    // 重新測驗
+    function resetQuiz() {
+      userAnswers = {};
+      document.querySelectorAll('.opt-btn').forEach(btn => {
+        btn.classList.remove('bg-emerald-50', 'border-emerald-500', 'text-emerald-900', 'bg-rose-50', 'border-rose-500', 'text-rose-900', 'border-emerald-300');
+        btn.querySelector('.opt-icon').className = 'opt-icon fa-regular fa-circle text-slate-300 text-xs';
+      });
+      document.querySelectorAll('.exp-box').forEach(b => b.classList.add('hidden'));
+      updateQuizProgress();
+    }
+
+    // 更新進度與正確率
+    function updateQuizProgress() {
+      const total = DATA.sec1.length + DATA.sec2.length;
+      document.getElementById('totalQuestionsCount').innerText = total;
+      
+      const answeredKeys = Object.keys(userAnswers);
+      const answeredCount = answeredKeys.length;
+      document.getElementById('answeredCount').innerText = answeredCount;
+
+      let correctCount = 0;
+      answeredKeys.forEach(qid => {
+        const targetQ = [...DATA.sec1, ...DATA.sec2].find(q => q.id === qid);
+        if (targetQ && userAnswers[qid] === targetQ.ans) {
+          correctCount++;
+        }
+      });
+
+      const accuracy = answeredCount > 0 ? Math.round((correctCount / answeredCount) * 100) : 0;
+      document.getElementById('accuracyScore').innerText = `${accuracy}%`;
+    }
+
+    // 開關中文字幕/翻譯
+    function toggleTranslation() {
+      isZhHidden = !isZhHidden;
+      document.body.classList.toggle('hide-zh', isZhHidden);
+      document.getElementById('toggleZhText').innerText = isZhHidden ? "顯示中譯" : "隱藏中譯";
+    }
+
+    // 全局搜尋過濾題目
+    document.getElementById("searchInput").addEventListener("input", function(e) {
+      const query = e.target.value.toLowerCase().trim();
+      document.querySelectorAll('.q-card').forEach(card => {
+        const text = card.innerText.toLowerCase();
+        card.style.display = text.includes(query) ? "block" : "none";
+      });
+    });
+
+    // 一鍵展開/收合
+    let isAllCollapsed = false;
+    function toggleAllCards() {
+      isAllCollapsed = !isAllCollapsed;
+      document.querySelectorAll('.exp-box').forEach(el => {
+        if (isAllCollapsed) {
+          el.classList.add('hidden');
+        } else if (currentMode === 'study') {
+          el.classList.remove('hidden');
+        }
+      });
+      document.getElementById("collapseIcon").className = isAllCollapsed ? "fa-solid fa-arrows-down-to-line" : "fa-solid fa-arrows-up-to-line";
+    }
+
+    // 啟動應用
+    window.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>
