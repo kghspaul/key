@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>英文3 Lesson 3 Prometheus 第3回 詳解</title>
+<style>
+:root{--bg:#faf8f4;--fg:#222;--card:#fff;--line:#e4ded3;--acc:#9a3b2e;--ok:#1f7a4d;--no:#b3261e;--mut:#6b6558;--hl:#fff1c9}
+@media(prefers-color-scheme:dark){:root{--bg:#161512;--fg:#e8e4da;--card:#201f1b;--line:#3a372f;--acc:#e08a78;--ok:#6fcf9a;--no:#f08a82;--mut:#a39d8f;--hl:#4a3f1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+.top{max-width:900px;margin:auto;padding:28px 18px 10px}
+.top h1{margin:0 0 4px;font-size:1.6rem;color:var(--acc)}
+.top p{margin:2px 0;color:var(--mut);font-size:.92rem}
+nav{position:sticky;top:0;z-index:9;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto;padding:8px 12px}
+nav a,nav button{flex:none;padding:5px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--fg);text-decoration:none;font:inherit;font-size:.88rem;cursor:pointer}
+nav a:hover,nav button:hover{border-color:var(--acc);color:var(--acc)}
+main{max-width:900px;margin:auto;padding:0 16px 70px}
+h2{margin:36px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--acc);font-size:1.3rem}
+h3{margin:0 0 8px;font-size:1.05rem;color:var(--acc)}
+.pas,.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.para{margin-bottom:14px}
+.s{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--line)}
+.en{font-family:Georgia,"Times New Roman",serif;font-size:1.02rem}
+.zh{color:var(--mut);font-size:.93rem}
+.note{color:var(--mut);font-size:.85rem;margin:6px 0 0}
+.bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 4px;border-radius:3px;font-weight:600}
+.bl sup{color:var(--acc);margin-right:3px;font-size:.7em}
+.bank{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.92rem;margin-bottom:8px}
+details.q>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+details.q>summary::-webkit-details-marker{display:none}
+.n{background:var(--acc);color:#fff;border-radius:6px;padding:0 10px;font-weight:700;font-size:1.05rem}
+.tag{font-size:.78rem;border:1px solid var(--acc);color:var(--acc);border-radius:99px;padding:0 9px;line-height:1.6}
+.tag.pos{border-color:var(--ok);color:var(--ok)}
+.ans{margin-left:auto;font-weight:700;color:var(--ok)}
+.qb{margin-top:10px}
+.stem{margin-bottom:8px;padding:8px 10px;background:var(--bg);border-radius:6px}
+.clue{margin:8px 0;padding:8px 12px;border-left:4px solid var(--acc);background:var(--bg);border-radius:0 6px 6px 0}
+.clue h4,.qb h4{margin:0 0 2px;font-size:.92rem;color:var(--acc)}
+ul.op{list-style:none;margin:6px 0 0;padding:0}
+ul.op li{padding:7px 10px;margin:5px 0;border-radius:6px;border:1px solid var(--line);font-size:.95rem}
+ul.op li.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 9%,transparent)}
+ul.op li.no{border-color:color-mix(in srgb,var(--no) 45%,transparent)}
+ul.op i{font-style:normal;font-weight:700;font-size:.82rem}
+li.ok i{color:var(--ok)}li.no i{color:var(--no)}
+small{color:var(--mut)}
+footer{max-width:900px;margin:auto;padding:0 16px 40px;color:var(--mut);font-size:.82rem}
+</style>
+</head>
+<body>
+<div class="top">
+<h1>英文3　Lesson 3　Prometheus: The Champion of Humankind　第3回 詳解</h1>
+<p>每題含：考點標籤 → 題幹逐句中英對照 → 解題線索 → 正解與全部誤答分析（含「這個字何時才會是對的」）</p>
+<p>圖例：<span class="bl">黃底</span> ＝ 正確答案填入處　｜　<span class="tag">考點</span>　<span class="tag pos">詞性需求</span></p>
+</div>
+<nav id="nav"></nav>
+<main id="app"></main>
+<footer>限定用途教學教材。本詳解為教學輔助，題目版權屬原出版單位。</footer>
+
+<script>
+const L="ABCD";
+const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[(\d*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const SENT={};
+function passage(title,paras,note,lines){
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[(\d+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  return '<section class="pas"><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
+}
+function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
+const P=(l,t)=>'<p style="margin:6px 0"><b>'+l+'</b>'+t+'</p>';
+const clue=t=>'<div class="clue"><h4>解題線索</h4>'+t+'</div>';
+function ops(list,ans,lab){lab=lab||'ABCDEF';return '<ul class="op">'+list.map((o,i)=>{const k=ans.indexOf(lab[i])>=0;return '<li class="'+(k?'ok':'no')+'"><b>'+(lab==='ABCDEF'&&list.length<=4?'('+L[i]+') ':lab==='ABCDEF'?'('+'ABCDEF'[i]+') ':'')+o[0]+'</b>'+(o[1]?' <small>'+o[1]+'</small>':'')+' <i>'+(k?'✔ 正解':'✘ 誤答')+'</i><br>'+o[2]+'</li>';}).join('')+'</ul>';}
+function card(n,tags,ans,body){
+  return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
+}
+
+/* ================= Part I ================= */
+const P1=[
+[1,"generous",["考點：形容詞語意＋人格評價句型 It is adj of 人","詞性需求：形容詞"],
+"It was very [[1|generous]] of Ms. Lin to loan her sister such a large amount of money to help her out.",
+"林女士借給妹妹這麼大一筆錢幫她度過難關，真是非常慷慨。",
+"very 是程度副詞，只能修飾形容詞／副詞，所以空格是形容詞；「It was + adj + of + 人 + to V」是評價人格的專用句型；「借一大筆錢幫忙」就是慷慨的具體行為。首字母 g、尾字母 s 與 generous 吻合。",
+"generosity（n. 慷慨）：要放在 show／with／her 等之後，如 She showed great generosity.；本句 very 後不能接名詞。generously（adv.）：修飾動詞，如 She gave generously."],
+[2,"conflict",["考點：名詞語意＋固定搭配 in conflict with","詞性需求：名詞（in 之後）"],
+"This inland country has been in [[2|conflict]] with its neighboring country over the control of the water supply.",
+"這個內陸國家一直與鄰國為了水資源的控制權而處於衝突之中。",
+"「has been in ___ with」：in 是介系詞，後面只能接名詞；in conflict with ＝ 與…衝突。over the control of the water supply 交代了爭執的原因（爭奪水源）。",
+"動詞 conflict（/kənˈflɪkt/）不加 in，用法是 conflict with：Their schedules conflict with each other.；形容詞 conflicting（相衝突的）放名詞前：conflicting opinions."],
+[3,"banished",["考點：被動語態＋動詞語意（放逐）","詞性需求：過去分詞"],
+"In the past, prisoners in England were often [[3|banished]] to remote islands.",
+"過去，英國的囚犯常被放逐到偏遠的島嶼。",
+"「were often ___ to remote islands」：were ＋ 空格 → 被動，需過去分詞；字尾 -hed 提示 banish 加 -ed。prisoners 是被放逐的人，後接 to＋地點，語意為「被流放到」。",
+"banish 也可說 banish A from B（把 A 逐出 B），如 He was banished from the country.；若主詞是做放逐動作的人（The king banished him.）才用主動。"],
+[4,"slaughter",["考點：名詞語意（大屠殺）＋ The N of N","詞性需求：名詞（The 之後）"],
+"The [[4|slaughter]] of millions of Jews during World War II is a terrible stain on human history.",
+"二戰期間數百萬猶太人遭到屠殺，是人類歷史上的可怕汙點。",
+"空格在 The 與 of 之間、後面動詞是 is → 這是句子主詞，需名詞；「the slaughter of 大量的人」指大規模屠殺。",
+"slaughter 當動詞時要有受詞：Soldiers slaughtered millions.；也可指宰殺牲畜：slaughter cattle。若句子寫成 The soldiers ___ millions of Jews 才用動詞（過去式 slaughtered）。"],
+[5,"tortured",["考點：被動語態＋情緒性動詞（被…折磨）","詞性需求：過去分詞"],
+"Jerry was [[5|tortured]] by the thought that he should have told his wife the truth instead of lying to her.",
+"Jerry 被「當初該對妻子說實話而不是欺騙她」的想法折磨著。",
+"「was ___ by the thought」：was ＋ p.p. ＋ by → 被動；he should have told…（早該說實話）表示悔恨，這種想法讓人痛苦，所以用 torture 的被動表「被折磨」。",
+"torture（n. 酷刑）：Prisoners suffered torture.；tortured 若用在 tortured prisoners 才是真的遭受肉體酷刑；本句是心理上的煎熬（比喻用法）。"],
+[6,"hollow",["考點：形容詞語意（中空的）","詞性需求：形容詞（修飾 bones）"],
+"Many birds have [[6|hollow]] bones, which is one of the main reasons that they can fly such long distances.",
+"許多鳥類的骨頭是中空的，這是牠們能飛這麼遠距離的主要原因之一。",
+"have ＋ 空格 ＋ bones：空格在名詞前，需形容詞；which 後說這是「能飛長途」的原因 → 骨頭輕 → 中空。",
+"solid（實心的）才與 hollow 相反：solid bones 會使鳥太重；hollow 也可比喻「空洞的」，如 hollow promises（空頭承諾）。"],
+[7,"theft",["考點：名詞語意（竊盜案）＋複合名詞 jewelry theft","詞性需求：名詞（The jewelry 之後作主詞）"],
+"The jewelry [[7|theft]] took place in the middle of the night when no one was around. Therefore, the police had a hard time finding any witnesses.",
+"這起珠寶竊案發生在深夜無人之際，因此警方很難找到任何目擊者。",
+"空格後接 took place（發生），主詞必須是「事件」→ 名詞 theft（竊案）；jewelry 當前置名詞修飾它。",
+"thief（n. 竊賊，指人）：The jewelry thief was arrested.（人才會被逮捕，不會 take place）；steal（v.）：Someone stole the jewelry."],
+[8,"beneficial",["考點：詞類變化 benefit → beneficial","詞性需求：形容詞（be 動詞之後）"],
+"Doing yoga on a regular basis is believed to be [[8|beneficial]] (benefit) not only to our physical health but also to our mental and emotional well-being.",
+"規律地做瑜伽被認為不僅對我們的身體健康有益，也對心理與情緒的福祉有益。",
+"to be 之後要補語 → 形容詞；beneficial to ＋ 名詞（對…有益），後面的 not only to…but also to… 兩個 to 正好對應。",
+"benefit 當動詞時沒有 be：Yoga benefits our health.；beneficially（adv.）修飾動詞或形容詞，如 beneficially used。"],
+[9,"universal",["考點：詞類變化 universe → universal","詞性需求：形容詞（a 與名詞之間）"],
+"Exchanging information about the latest online games seems to be a [[9|universal]] (universe) interest of teenage boys.",
+"交流最新線上遊戲的資訊，似乎是青少年男孩普遍共有的興趣。",
+"a ＋ 空格 ＋ interest：夾在冠詞與名詞間，需形容詞；universal ＝ 普遍的、全體共通的，與 of teenage boys（整個群體）呼應。",
+"universe（n. 宇宙）：the origin of the universe；universally（adv. 普遍地）：universally loved。"],
+[10,"distributed",["考點：被動語態＋詞類變化 distribution → distribute","詞性需求：過去分詞"],
+"In the refugee camp, all the food and other resources are [[10|distributed]] (distribution) by the local government.",
+"在難民營裡，所有食物與其他資源都由當地政府分配。",
+"are ＋ 空格 ＋ by the local government → 被動語態；資源是「被分配」，故用 distribute 的過去分詞。",
+"distribution（n. 分配）：the distribution of food；distributor（n. 經銷商）；主動時：The government distributes the food."]
+];
+let h1='<h2 id="p1">I. 文意字彙與詞類變化（20%）</h2><div class="pas"><b>字彙庫</b><div class="bank"><span>generous 慷慨的</span><span>conflict 衝突</span><span>banish 放逐</span><span>slaughter 屠殺</span><span>torture 折磨</span><span>hollow 中空的</span><span>theft 竊盜</span><span>beneficial 有益的</span><span>universal 普遍的</span><span>distribute 分配</span></div><p class="note">本大題為單字填空（無選項），詳解改為：句子中英對照 → 線索 → 為什麼是這個字 → 易混淆字形／詞性「何時才對」。</p></div>';
+P1.forEach(q=>{h1+=card(q[0],q[2],q[1],'<div class="stem"><div class="en">'+fx(q[3])+'</div><div class="zh">'+q[4]+'</div></div>'+clue(q[5])+'<h4>易混淆字形／詞性：何時才對</h4><p style="margin:2px 0">'+q[6]+'</p>');});
+
+/* ================= Part II ================= */
+const T2=[
+[["My name is Prometheus.","我的名字是普羅米修斯（Prometheus）。"],
+["The story of how I became attached to this rock started when I created human beings and asked my brother Epimetheus to [[11|decide on]] a special gift to give them.","我被綁在這塊岩石上的故事，始於我創造了人類，並請我的兄弟厄庇米修斯為他們挑選一份特別的禮物。"],
+["Unfortunately, having just given gifts to all the animals, Epimetheus had nothing more to give.","不幸的是，厄庇米修斯剛把禮物都給了所有動物，已經沒有東西可以再給了。"],
+["Therefore, I gifted humans with [[12|not only]] fire [[12|but also]] the ability to stand up straight.","因此，我賜給人類的不僅是火，還有直立站著的能力。"],
+["I hoped that these could [[13|make up for]] their disadvantaged state.","我希望這些禮物能彌補他們處於劣勢的狀態。"]],
+[["This made Zeus angry.","這讓宙斯很生氣。"],
+["He did not believe that any creature should be able to stand upright like him and the other gods.","他不認為任何生物應該能像他和其他神一樣直立。"],
+["[[14|Frustrated]], he demanded that humans sacrifice their meat to him.","感到受挫的他，要求人類把他們的肉獻祭給他。"],
+["Knowing how important meat was to humans, I devised a plan to trick Zeus.","我知道肉對人類有多重要，便想出一個計畫來騙宙斯。"],
+["He accepted my sacrifice of what he thought was an offering of meat but was actually just bones covered in fat.","他接受了我的獻祭，那是他以為是肉的供品，其實只是包著油脂的骨頭。"]],
+[["My trick made Zeus even angrier, and no one could lessen his [[15|fury]].","我的詭計讓宙斯更加憤怒，沒有人能減輕他的怒火。"],
+["He responded by taking fire away from humans.","他的回應是把火從人類手中奪走。"],
+["I, however, wasn’t frightened off by Zeus’s revenge*, but instead I defied* him again by stealing some fire from the sun and giving it back to humans.","然而我並未被宙斯的報復嚇退，反而再次違抗他，從太陽偷了一些火還給人類。"]],
+[["Finally, Zeus had had enough.","最後，宙斯忍無可忍了。"],
+["[[16|To explain]] myself, I told him that everything I had done was out of love for humans, but he considered me a thief.","為了替自己辯解，我告訴他我所做的一切都出於對人類的愛，但他仍視我為竊賊。"],
+["As [[17|punishment]], he chained me to this rock.","作為懲罰，他把我鎖在這塊岩石上。"],
+["Every day, an eagle comes to [[18|feed on]] my liver.","每天，一隻老鷹會來啄食我的肝臟。"],
+["However, by the time evening comes, my liver [[19|will have grown]] back.","然而到了傍晚，我的肝臟已經長回來了。"],
+["Thus, I am to suffer repeatedly until the end of time.","因此，我注定要一再受苦，直到時間的盡頭。"],
+["Nevertheless, to me, my suffering is worth it for the gifts I have been able to give [[20|humankind]].","儘管如此，對我而言，為了我能夠賜給人類的禮物，這些苦難都值得。"],
+["If I had the choice to do it all again, I wouldn’t do anything differently.","如果能重新選擇一次，我什麼都不會改變。"]]
+];
+const Q2=[
+[11,["考點：片語動詞語意（及物）＋上下文推理","詞性需求：及物動詞片語（原形，後接受詞）"],"B",
+"asked my brother to ___ <u>a special gift</u>：ask sb to V 之後，空格後面直接接受詞 a special gift → 需要及物片語動詞。下一句 Epimetheus had nothing more to give（沒有禮物可給了）反推：原本的請求是「<b>挑選</b>一份禮物」。",
+[["act like","表現得像","後接 a special gift 變成「表現得像一份禮物」，語意不通。何時才對：Don’t act like a child.（後接人或身分）"],
+["decide on","選定","decide on ＝ choose，及物片語，受詞正是 a special gift；「請弟弟選一份禮物」且之後他發現沒東西可給，前後連貫。"],
+["base on","以…為基礎","主動式需 base A on B；常用被動 be based on。「以禮物為基礎」語意不通。何時才對：The film is based on a true story."],
+["begin with","以…開始","「從一份禮物開始」與後面 to give them（禮物是要給他們的）目的不合，也不呼應 nothing more to give。何時才對：Let’s begin with the first lesson."]]],
+[12,["考點：成對連接詞 not only…but also","詞性需求：兩個空格同題號＝成對連接詞"],"D",
+"同一題號出現<b>兩個空格</b> → 先想成對連接詞；fire 與 the ability to stand up straight 是兩個並列名詞片語；而下一句 <u>these</u> could…（複數）說明兩樣禮物<b>都</b>給了。",
+[["not; but","不是…而是…","not fire but the ability 意思是「只給能力、沒給火」，與 these（兩樣）矛盾。何時才對：I gave humans not fire but the ability.（刻意否定前者）"],
+["either; or","不是…就是…","表示二選一，不會再用複數 these 指兩樣東西。何時才對：You can have either fire or the ability, not both."],
+["neither; nor","既不…也不…","neither…nor 本身帶否定，句意成了「兩樣都沒給」，與肯定動詞 gifted 矛盾。何時才對：Humans received neither fire nor the ability.（描述兩樣都沒得到）"],
+["not only; but also","不僅…而且…","兩樣都給，並列名詞片語，與 these 呼應。"]]],
+[13,["考點：片語動詞語意（彌補）","詞性需求：原形動詞片語（could 之後）"],"C",
+"I <u>hoped</u> that these could ___ their <u>disadvantaged state</u>：hoped 表示正面期待；these（火與直立能力）是「禮物」，要拿來對付「劣勢」→ 彌補。",
+[["run out of","用完","「禮物用完劣勢」不通。何時才對：They ran out of food."],
+["fall victim to","淪為…的受害者","變成「禮物使人類淪為劣勢的受害者」，與 hoped 的正面期待相反。何時才對：Many people fall victim to online scams."],
+["make up for","彌補","make up for ＝ compensate for，禮物彌補了人類的劣勢。"],
+["set the stage for","為…鋪路","變成「為劣勢鋪路」＝促成劣勢，語意相反。何時才對：The treaty set the stage for peace.（後接將發生的事）"]]],
+[14,["考點：分詞構句（情緒動詞用 p.p.）","詞性需求：過去分詞（修飾主詞 he）"],"B",
+"逗號後 <u>he demanded</u>…… 已是完整子句，空格在逗號前＝分詞構句；主詞 he（Zeus）是「<b>感到</b>挫折的人」→ 被動意義用 p.p.。前兩句 This made Zeus angry / He did not believe… 交代了他受挫的原因。",
+[["Frustrate","原形","句中已有 demanded 一個定動詞，空格再放動詞原形缺連接詞；祈使句語意也不合。何時才對：Frustrate them! 之類的命令句。"],
+["Frustrated","感到挫折的","(Being) frustrated，he＝感到挫折的人，p.p. 表被動／感受。"],
+["Frustrates","三單現在式","又多一個定動詞，且與全文過去式不合。何時才對：Zeus frustrates humans.（完整句，現在式）"],
+["Frustrating","令人挫折的","V-ing 表主動：主詞是「造成」挫折者。何時才對：Frustrating the gods, the humans… 主詞是造成他人挫折的一方。"]]],
+[15,["考點：名詞語意（情緒名詞）＋前後文同義呼應","詞性需求：名詞（his 之後，lessen 的受詞）"],"B",
+"My trick made Zeus even <u>angrier</u>, and no one could lessen his ___：angrier → <b>fury</b>（憤怒），同義呼應；lessen 後面接可減輕的「情緒／程度」。",
+[["fright","驚嚇","Zeus 是生氣而非害怕。何時才對：The child screamed in fright."],
+["fury","憤怒","與 angrier 呼應，lessen his fury（平息怒火）。"],
+["promise","承諾","promise 不是能被 lessen 的東西，且與情緒無關。何時才對：keep / break a promise."],
+["laughter","笑聲","與 angrier 矛盾。何時才對：He burst into laughter."]]],
+[16,["考點：不定詞表目的（句首副詞用法）","詞性需求：to V"],"B",
+"空格後 <u>myself</u> 是反身代名詞作受詞，逗號後 <u>I told him</u> 是完整子句 → 空格是修飾語，不能放定動詞。「為了替自己辯解」＝ to explain myself（explain oneself ＝ 為自己辯解）。",
+[["Explain","原形","句中已有 told 定動詞，缺連接詞。何時才對：Explain yourself!（命令句）"],
+["To explain","為了解釋","不定詞表目的，to explain myself，主詞 I 與動作一致。"],
+["Explains","三單現在式","又多一個定動詞，時態亦不合。何時才對：He explains the rule.（完整句）"],
+["Explained","p.p.","explained 表被動，主詞 I 不是「被解釋」的對象，且 myself 須作主動受詞。何時才對：Explained in detail, the plan was easy to follow.（主詞是被解釋的事物）"]]],
+[17,["考點：名詞語意＋固定搭配 as punishment","詞性需求：抽象名詞（as 之後，無冠詞）"],"A",
+"前一句 he <u>considered me a thief</u>（視我為竊賊），後句 he chained me → 因果：罪→<b>懲罰</b>。As ＋ 不可數抽象名詞（無冠詞）＝「作為…」。",
+[["punishment","懲罰","as punishment（作為懲罰），銜接 thief → chained。"],
+["benefit","好處","chained 不是好處；且可數的 benefit 需冠詞。何時才對：As a benefit of the job, he gets free lunch."],
+["victim","受害者","he 是施罰者不是受害者，受害者是 me。何時才對：As his victim, I was chained to the rock."],
+["civilization","文明","與鎖上岩石無關。何時才對：As civilization develops, people live longer."]]],
+[18,["考點：片語動詞語意 feed on","詞性需求：原形動詞片語（come to 之後）"],"C",
+"an eagle <u>comes to ___ my liver</u> + 下一句 my liver <u>grows back</u> → 肝臟被啃食才會長回來；老鷹吃內臟＝ feed on（以…為食）。",
+[["pass on","傳遞／轉告","傳給肝臟？語意不通。何時才對：Please pass on the message."],
+["get down to","開始認真處理","後接 business 之類：get down to work。何時才對：Let’s get down to business."],
+["feed on","以…為食","老鷹以肝臟為食，與 grow back 呼應。"],
+["end up with","最後得到","變成「老鷹最後得到肝臟」，沒有進食之意。何時才對：He ended up with nothing."]]],
+[19,["考點：時態（by the time + 現在式 → 未來完成式）","詞性需求：助動詞＋p.p.（will have p.p.）"],"D",
+"<u>by the time evening comes</u>：by the time 子句用<b>現在式</b>代替未來，主要子句要用<b>未來完成式</b>（will have p.p.），表示「到傍晚為止，已經長回來」。前句 Every day…comes 是現在習慣，也提供現在時間背景。",
+[["grew","過去式","與現在式 comes 時態衝突。何時才對：Last night, my liver grew back."],
+["had grown","過去完成式","需有過去的基準點：By the time evening came, my liver had grown back."],
+["growing","現在分詞","不能單獨當述語動詞。何時才對：My liver is growing back.（需加 is）"],
+["will have grown","未來完成式","by the time ＋ 現在式 → will have p.p.，並與 back 搭配。"]]],
+[20,["考點：名詞語意（give 的間接受詞＝接受者）","詞性需求：名詞（表人群）"],"A",
+"the gifts I have been able to give ___：give 缺少「給誰」→ 需要表人群的名詞；全文的受益者是 humans；題目標題 Champion of Humankind 也是同一字。",
+[["humankind","人類","接受禮物的對象，與標題呼應。"],
+["misery","苦難","give misery 文法可行，但 gifts 給的是好東西，且與「值得」矛盾。何時才對：The war gave misery to millions.（接受者要再補 to）"],
+["distribution","分配","give distribution 不通。何時才對：the distribution of food（分配這個行為）"],
+["generosity","慷慨","give 的間接受詞應是人，不是品德。何時才對：He is known for his generosity."]]]
+];
+let h2='<h2 id="p2">II. 綜合測驗（20%）</h2>'+passage('全文逐句中英對照（答案已填入）',T2,'註：revenge 報復　defy 違抗。');
+Q2.forEach(q=>{h2+=card(q[0],q[1],q[2],stem(q[0])+clue(q[3])+ops(q[4],q[2]));});
+
+/* ================= Part III ================= */
+const WB={A:["froze","凍僵","過去式不及物動詞","The lake froze overnight."],B:["ran out of","用完","過去式及物片語動詞","We ran out of milk."],C:["enable","使能夠","原形及物動詞（enable O to V）","The app enables users to save time."],D:["slave","奴隸","可數名詞","He was sold as a slave."],E:["universe","宇宙","名詞","The universe is expanding."],F:["turned down","拒絕","過去式及物片語動詞","She turned down the job offer."],G:["miserable","悲慘的","形容詞","I felt miserable in the rain."],H:["benefit","造福；好處","原形動詞／名詞","Exercise benefits your health."],I:["prepare","準備","原形動詞","Mom is preparing dinner."],J:["furious","暴怒的","形容詞","He was furious at the delay."]};
+function w3(n,tags,ans,slot,clueT,cu){
+  const li=Object.keys(WB).map(k=>{const w=WB[k];let txt;
+    if(k==ans)txt='✔ 本格唯一符合「'+slot+'」且語意通順者。';
+    else txt=cu&&cu[k]?cu[k]:w[1]+'（'+w[2]+'）：本格需要「'+slot+'」，此字詞性／形式或語意不符。何時才對：'+w[3];
+    return '<li class="'+(k==ans?'ok':'no')+'"><b>('+k+') '+w[0]+'</b> <small>'+w[1]+'</small> <i>'+(k==ans?'✔ 正解':'✘ 誤答')+'</i><br>'+txt+'</li>';}).join('');
+  return card(n,tags,'('+ans+') '+WB[ans][0],stem(n)+clue(clueT)+'<ul class="op">'+li+'</ul>');
+}
+const T3=[
+[["According to an old Nigerian legend, the sky god Obassi Osaw was very powerful.","根據一則古老的奈及利亞傳說，天神歐巴西·歐薩威力非常強大。"],
+["He created humans and everything else in the [[21|universe]].","他創造了人類以及宇宙中的其他一切。"],
+["He did not, however, allow mankind to have fire.","然而，他不允許人類擁有火。"],
+["People on earth thus suffered a lot.","因此地上的人們吃了許多苦。"],
+["They couldn’t cook and often [[22|froze]] during the winter months.","他們無法煮食，冬季還常被凍僵。"]],
+[["Eventually, a boy was sent up to heaven on behalf of mankind to ask the sky god for fire.","後來，一個男孩代表人類被派上天界，向天神討火。"],
+["In short, Obassi Osaw [[23|turned down]] the boy’s request and sent him home empty-handed, which disappointed earth’s people very much.","簡言之，歐巴西·歐薩拒絕了男孩的請求，讓他空手而回，這令地上的人們非常失望。"],
+["They hated to continue to live a(n) [[24|miserable]] life without fire.","他們討厭繼續過著沒有火的悲慘生活。"],
+["The boy was sad, too.","男孩也很難過。"],
+["As a result, he decided to do something bold to [[25|benefit]] all mankind.","因此，他決定做一件大膽的事來造福全人類。"],
+["He planned to steal fire from heaven and thus [[26|enable]] humans to have warm food even when it was cold.","他計畫從天上偷火，讓人類即使在寒冷時也能吃到熱食。"]],
+[["Returning to Obassi Osaw’s heavenly palace, the boy helped [[27|prepare]] a feast for the gods.","回到歐巴西·歐薩的天宮後，男孩幫忙準備眾神的宴席。"],
+["When the sky god saw how useful he was, he allowed the boy to stay and work as a(n) [[28|slave]].","天神看到他多麼有用，便允許他留下來當奴僕。"],
+["One day, Obassi Osaw [[29|ran out of]] light and sent the boy to light a lamp for him.","有一天，歐巴西·歐薩的光用完了，便派男孩去為他點一盞燈。"],
+["On the way back, the boy hid the brand he’d used to light the lamp underneath some leaves.","回程路上，男孩把點燈用的火把藏在一些葉子底下。"],
+["Even though the sky god would be [[30|furious]] if he found out, the boy decided to take a chance.","即使天神發現會大發雷霆，男孩仍決定冒險一試。"],
+["That night, he sneaked out of the palace and brought fire down to earth.","那天晚上，他偷偷溜出宮殿，把火帶到人間。"]]
+];
+let h3='<h2 id="p3">III. 文意選填（20%）</h2><div class="pas"><b>選項庫</b><div class="bank">'+Object.keys(WB).map(k=>'<span>('+k+') '+WB[k][0]+' '+WB[k][1]+'</span>').join('')+'</div><p class="note">每格 10 個選項全部逐一說明；「何時才對」附一個該字正確使用的例句。</p></div>'+passage('全文逐句中英對照（答案已填入）',T3,'註：brand ＝ 燃燒中的木柴／火把。');
+h3+=w3(21,["考點：名詞語意＋固定搭配 everything in the universe","詞性需求：單數名詞（the 之後）"],"E","名詞，作 in the 的受詞","in <u>the</u> ___ 且在句尾 → 名詞；created humans and everything else in the universe（創造人類與宇宙萬物）是常見搭配，天神創世的語境吻合。",{D:"slave 同為名詞，但「在奴隸之中創造萬物」語意不通。何時才對：He worked as a slave."});
+h3+=w3(22,["考點：動詞語意（不及物）＋前後文因果","詞性需求：過去式不及物動詞"],"A","過去式不及物動詞，後面無受詞","couldn’t cook（沒火不能煮食）and often ___ during the winter months：and 並列的是過去情境，後面 during…只是時間，沒有受詞；沒有火的冬天 → 凍僵。",{B:"ran out of 時態雖合，但是及物片語，後面必須有受詞（run out of what?），而 during 前沒有受詞。何時才對：They often ran out of firewood during the winter.",F:"turned down 也需要受詞，且「拒絕」與缺火無關。何時才對：She turned down the job offer."});
+h3+=w3(23,["考點：片語動詞語意 turn down","詞性需求：過去式及物片語動詞"],"F","過去式及物片語動詞，受詞是 the boy’s request","受詞 <u>the boy’s request</u>、and 後 sent him home empty-handed、which disappointed… → 請求被<b>拒絕</b>。",{A:"froze 不及物，不能接 the boy’s request。何時才對：The river froze in January.",B:"ran out of the request 語意不通（request 不是會用完的東西）。何時才對：We ran out of milk."});
+h3+=w3(24,["考點：形容詞語意（處境）","詞性需求：形容詞（a(n) 與 life 之間）"],"G","形容詞，修飾 life","a(n) ___ life：夾在冠詞與名詞間 → 形容詞；前文 People suffered a lot、hated to continue… → 悲慘的生活。",{J:"furious 詞性對，但 a furious life 語意不通（furious 形容人的情緒，不形容生活）；furious 要留給第 30 格。何時才對：She was furious at the delay."});
+h3+=w3(25,["考點：動詞語意（造福）","詞性需求：原形動詞（to 之後）"],"H","原形及物動詞，受詞 all mankind","do something bold <u>to ___ all mankind</u>：to ＋ 原形，受詞是 all mankind，目的是為全人類好 → benefit。",{C:"enable 詞性對，但需 enable O to V，本句 all mankind 後沒有 to V（第 26 格才符合）。何時才對：The tool enables all mankind to live better.",I:"prepare all mankind 語意不通（準備全人類？）；prepare sb for sth 才對。何時才對：Prepare all mankind for winter."});
+h3+=w3(26,["考點：句型 enable O to V","詞性需求：原形及物動詞（與 to steal 並列）"],"C","原形及物動詞，後接 O + to V","and thus ___ <u>humans to have</u> warm food：空格後有「受詞 + to V」→ enable O to V；與 to steal 並列，steal 後接 thus 表結果。",{H:"benefit 不用 benefit O to V 句型。何時才對：He did it to benefit humans.",I:"prepare O to V 文法可行（prepare students to face challenges），但意思是「使…做好準備」，不是「使能夠吃到熱食」；且 prepare 在第 27 格與 a feast 搭配更準。何時才對：prepare humans to survive the cold."});
+h3+=w3(27,["考點：動詞語意＋搭配 prepare a feast","詞性需求：原形動詞（help 之後）"],"I","原形及物動詞，受詞 a feast","the boy <u>helped ___ a feast</u>：help ＋ 原形 ＋ 受詞；a feast（宴席）搭配 prepare。",{C:"enable 後需 O + to V，a feast 後沒有 to V。何時才對：enable the gods to rest.",H:"benefit a feast 語意不通；benefit 的受詞是人或組織。何時才對：The feast benefits the gods."});
+h3+=w3(28,["考點：名詞語意（身分）","詞性需求：可數單數名詞（as 之後）"],"D","可數單數名詞，表身分","work as a(n) ___：as 後接身分名詞；男孩被留下來服侍天神 → 奴僕。",{E:"universe 為名詞，但「work as a universe」不通，且已用於第 21 格。何時才對：the origin of the universe."});
+h3+=w3(29,["考點：片語動詞語意 run out of","詞性需求：過去式及物片語動詞（與 sent 並列）"],"B","過去式及物片語動詞，受詞 light","Obassi Osaw ___ light <u>and sent</u> the boy to light a lamp：與 sent 並列過去式；光用完了才需要男孩去點燈 → ran out of。",{A:"froze 不及物，後面不能直接接 light。何時才對：The lake froze.",F:"turned down light（調暗光）文法可行，但 light 前沒有 the，且調暗了還要別人去「點燈」自相矛盾。何時才對：He turned down the light before bed."});
+h3+=w3(30,["考點：形容詞語意（情緒）","詞性需求：形容詞（would be 之後）"],"J","形容詞，作 would be 的補語","the sky god would be ___ <u>if he found out</u>：被發現偷火 → 憤怒。",{G:"miserable 詞性對，但被發現後的反應是發怒而非悲慘；且已用於第 24 格。何時才對：He would be miserable if he lost his job."});
+
+/* ================= Part IV ================= */
+const T4=[
+[["*Prometheus Bound* is a famous play that is considered by most scholars to be the work of the ancient Greek playwright, Aeschylus.","《被縛的普羅米修斯》是一部著名的戲劇，大多數學者認為它是古希臘劇作家艾斯奇勒斯的作品。"],
+["Often referred to as the father of tragedy, Aeschylus is thought to have written around 80 plays, but only seven survive.","艾斯奇勒斯常被稱為悲劇之父，據信寫過約八十部劇作，但只有七部留存。"],
+["One of these is *Prometheus Bound*.","《被縛的普羅米修斯》就是其中之一。"]],
+[["Based on the story of the Titan punished by Zeus for giving fire to humans, the play contains just seven characters.","這部劇改編自泰坦因把火給人類而被宙斯懲罰的故事，只有七個角色。"],
+["It starts with Prometheus being tied to a cliff in the rocky Caucasus Mountains by the gods of power, violence and metalwork.","劇情一開始，普羅米修斯被權力、暴力與冶金之神綁在高加索山脈的岩石懸崖上。"],
+["Unable to free himself, Prometheus is then visited by three other important figures.","無法自行脫困的他，接著有另外三位重要人物來探視。"],
+["The first is Oceanus, god of the sea.","第一位是海神俄刻阿諾斯。"],
+["He feels sorry for Prometheus and tries to convince him to apologize and beg Zeus for mercy.","他同情普羅米修斯，試圖說服他道歉並向宙斯求饒。"],
+["The tied-down Titan, however, doesn’t regret sharing fire with mankind, since many aspects of human civilization—including cooking, metalwork, building and medicine—depend on fire.","然而被綁住的泰坦並不後悔與人類分享火，因為人類文明的許多面向（包括烹飪、冶金、建築與醫藥）都仰賴火。"]],
+[["Prometheus is next visited by Io, a beautiful woman whom Zeus desired and turned into a cow in order to hide her from his jealous wife, the goddess Hera.","接著來訪的是伊俄，一位宙斯垂涎的美麗女子，他為了不讓善妒的妻子天后赫拉發現，把她變成一頭母牛。"],
+["The latter, however, found out about the maiden cow, and sent a fly to sting her and chase her around the world.","然而後者（赫拉）發現了這頭少女牛，派了一隻牛虻叮她，追得她跑遍世界。"],
+["Having the gift of foresight*, Prometheus predicts Io will end up in Egypt and that, thirteen generations later, a descendant* of hers will set him free.","擁有預知天賦的普羅米修斯預言伊俄最終會到埃及，而十三代之後，她的一位後代將解放他。"],
+["Finally, the messenger god Hermes arrives and demands that Prometheus reveal who will try to overthrow* Zeus.","最後，信使之神赫密士抵達，要求普羅米修斯說出誰將企圖推翻宙斯。"],
+["Stubborn as ever, Prometheus refuses and is struck by one of angry Zeus’ lightning bolts.","一如既往的固執，普羅米修斯拒絕了，結果被暴怒宙斯的一道閃電擊中。"]]
+];
+let h4='<h2 id="p4">IV. 閱讀測驗（9%）</h2>'+passage('全文逐句中英對照',T4,'註：foresight 預知　descendant 後代　overthrow 推翻。');
+h4+=card(31,["考點：主旨題（Main idea）","解題層次：看全文結構而非單句"],"C",
+ '<div class="stem"><div class="en">What is the passage mainly about?</div><div class="zh">這篇文章主要在談什麼？</div></div>'+
+ clue('第一句 <u>Prometheus Bound is a famous play</u> 直接點出主題；第二、三段依序用 <u>The first is… / is next visited by… / Finally…</u> 簡介劇情與角色 → 全文是對<b>單一劇作</b>的簡短介紹。')+
+ ops([["A detailed description of all the works of Aeschylus","艾斯奇勒斯所有作品的詳細描述","all 與 detailed 過度：全文只提「寫過約 80 部、只剩 7 部」，只介紹其中一部。何時才對：文章逐一列出七部倖存劇作並說明內容。"],
+ ["An analysis of the reasons why Prometheus was kept captive","分析普羅米修斯被囚的原因","只在第二段開頭用一句 punished by Zeus for giving fire 帶過，沒有分析。何時才對：文章專門探討宙斯的動機與罪名。"],
+ ["A brief introduction to the Greek play Prometheus Bound","簡介希臘劇《被縛的普羅米修斯》","作者背景＋七個角色＋依序登場情節，是簡介。"],
+ ["A comparison between Greek tragedies and comedies","希臘悲劇與喜劇的比較","全文沒有 comedy 一字，tragedy 只出現在 father of tragedy 的頭銜裡。何時才對：文中出現 comedies 並與悲劇對照。"]],"C"));
+h4+=card(32,["考點：細節題（NOT mentioned）","解題技巧：逐項在文中找出處，找不到者即答案"],"B",
+ '<div class="stem"><div class="en">Which of the following is NOT mentioned as visiting Prometheus while he was chained?</div><div class="zh">下列何者「沒有」被提到曾在普羅米修斯被鎖住時來探訪他？</div></div>'+
+ clue('第二段 <u>is then visited by three other important figures</u> 預告三位訪客，依序為 <u>The first is Oceanus</u>、<u>is next visited by Io</u>、<u>Finally… Hermes arrives</u>；宙斯只以 angry Zeus’ lightning bolts 的形式出現，未曾來訪。')+
+ ops([["Hermes","赫密士","Finally, the messenger god Hermes arrives → 有來訪，不是答案。"],
+ ["Zeus","宙斯","只是以閃電攻擊普羅米修斯，並未到場拜訪；故為答案。何時才對：文中寫 Zeus visits Prometheus。"],
+ ["Io","伊俄","is next visited by Io → 有來訪。"],
+ ["Oceanus","俄刻阿諾斯","The first is Oceanus → 有來訪。"]],"B"));
+h4+=card(33,["考點：細節題（NOT true）","解題技巧：選項逐句對照原文，改寫處最容易藏陷阱"],"A",
+ '<div class="stem"><div class="en">Which of the following is NOT true about the story of Prometheus Bound?</div><div class="zh">下列關於《被縛的普羅米修斯》故事的敘述何者「不」正確？</div></div>'+
+ clue('原文 <u>a descendant of hers will set him free</u>：釋放者是<b>伊俄的後代</b>，Egypt 只是伊俄最後到達的地方（<u>end up in Egypt</u>），並沒有說釋放者是埃及人 → (A) 把「後代」偷換成「埃及人」。')+
+ ops([["Prometheus will be released by an Egyptian many years later.","普羅米修斯多年後將被一位埃及人釋放","原文只說伊俄的後代會救他，沒說是埃及人；國籍無從得知。何時才對：文中寫 an Egyptian / a native of Egypt will free him。"],
+ ["There are only seven characters in the story.","故事裡只有七個角色","原文 the play contains just seven characters → 正確。"],
+ ["Prometheus was chained for stealing fire for humans.","普羅米修斯因為替人類盜火而被鎖住","原文 punished by Zeus for giving fire to humans → 正確（stealing ≒ giving fire）。"],
+ ["Hermes wants to know who will remove Zeus from power.","赫密士想知道誰將讓宙斯下台","原文 who will try to overthrow Zeus；overthrow ＝ remove from power → 正確。"]],"A"));
+
+/* ================= Part V ================= */
+const T5=[
+[["The question of the origin of the universe has long fascinated people in many cultures.","宇宙起源的問題長久以來讓許多文化中的人們著迷。"],
+["In ancient times, people did not have sufficient scientific knowledge to explain such natural phenomena as thunder, lightning, or fog.","在古代，人們沒有足夠的科學知識來解釋雷、閃電或霧這類自然現象。"],
+["Thus, they created stories and myths about gods and goddesses in order to make sense of the unexplainable.","因此他們創造了關於諸神的故事與神話，來理解無法解釋的事物。"],
+["Like human beings, the gods follow the orders of their leaders.","如同人類，諸神也遵從領袖的命令。"],
+["In Greek mythology, the powerful Zeus is the king of all the gods, and Odin is the equivalent* of Zeus in Norse mythology.","在希臘神話中，強大的宙斯是眾神之王；而在北歐神話中，奧丁就是相當於宙斯的角色。"]],
+[["To some extent, Zeus and Odin share much in common.","某種程度上，宙斯與奧丁有許多共通點。"],
+["To begin with, both Zeus and Odin possess great powers and are in control of many things.","首先，宙斯與奧丁都擁有強大的力量，並掌控許多事物。"],
+["For example, they can wield lightning at will.","例如，他們能隨心所欲地揮動閃電。"],
+["Their ability to use it is seen as a symbol of their power and authority.","他們使用閃電的能力被視為權力與權威的象徵。"],
+["Secondly, both possess human traits.","其次，兩者都具有人類的特質。"],
+["For example, they are both said to have had many lovers and many children.","例如，據說兩人都有許多情人與許多子女。"],
+["Zeus is typically portrayed as a womanizer who falls in love with one woman after another.","宙斯通常被描繪成一個愛上一個又一個女人的好色之徒。"],
+["Odin, on the other hand, is self-sacrificing.","另一方面，奧丁則是自我犧牲的。"],
+["He plucked* his own eye out in his pursuit of knowledge and wisdom.","他為了追求知識與智慧，親手拔出自己的一隻眼睛。"]],
+[["It does not matter whether these myths are true or not.","這些神話是否為真並不重要。"],
+["For people in ancient times, the purpose of myths was to help them understand common phenomena, but now they stimulate the imaginations of modern people.","對古人而言，神話的目的是幫助他們理解常見現象，但如今神話激發的是現代人的想像力。"]]
+];
+let h5='<h2 id="p5">V. 混合題（11%）</h2>'+passage('全文逐句中英對照',T5,'註：equivalent 對等物；pluck 拔掉。<br>題本附註大意：神話可能是古人為解釋自然現象而創造；希臘神話領袖為宙斯，北歐為奧丁；兩者都能控制閃電、都有許多愛人，且都有如人類的性格特質；神話真假不重要，過去用來解釋現象，今日則給人想像空間。');
+h5+=card(34,["考點：詞類變化（動詞→名詞／V-ing）＋文章找字","詞性需求：(1) 名詞（their 之後）(2) V-ing（與 commanding 並列）"],"(1) explanation(s)　(2) possessing",
+ '<div class="stem"><div class="en">Ancient civilizations created myths about gods as their <span class="bl"><sup>1</sup>explanation(s)</span> for natural events they could not understand, with figures like Zeus and Odin representing supreme power. Despite their differences, both gods share traits such as commanding great forces and <span class="bl"><sup>2</sup>possessing</span> human traits, reflecting the cultural values of their respective societies.</div><div class="zh">古代文明創造關於神的神話，作為他們對無法理解的自然事件的解釋，並以宙斯與奧丁這類角色代表至高的力量。儘管有差異，兩位神的共同特質是掌控強大力量以及擁有人類特質，反映出各自社會的文化價值。</div></div>'+
+ clue('<b>(1)</b> <u>as their ___ for natural events</u>：their 後要名詞；原文 <u>did not have sufficient scientific knowledge to <b>explain</b> such natural phenomena</u> → 動詞 explain 變名詞 explanation；myths 是複數，每則神話各是一個解釋，故 explanations 亦可（答案標示 explanation(s)）。<br><b>(2)</b> <u>such as commanding great forces and ___ human traits</u>：and 連接 commanding（V-ing）→ 要並列 V-ing；原文 <u>both possess human traits</u> → possess 加 -ing。')+
+ '<ul class="op"><li class="no"><b>(1) 誤答：explain</b> <i>✘</i><br>動詞原形，their 後需要名詞。何時才對：Ancient people tried to explain thunder.</li><li class="no"><b>(1) 誤答：explained／explanatory</b> <i>✘</i><br>explained 是 p.p.，explanatory 是形容詞（解釋性的）；後面接 for 的是名詞。何時才對：an explanatory note（形容詞放名詞前）。</li><li class="no"><b>(2) 誤答：possess／possesses</b> <i>✘</i><br>原形或三單，與 commanding 並列時詞性不一致（破壞平行結構）。何時才對：Both gods possess great powers.（作句子的動詞）</li><li class="no"><b>(2) 誤答：to possess／possessed</b> <i>✘</i><br>to V 或過去式都不能與 V-ing 並列。何時才對：They want to possess power.（want 後接 to V）</li><li class="no"><b>(2) 誤答：control／controlling</b> <i>✘</i><br>題目要求「從文章找單詞」，且 control 已隱含在 commanding 的語意中，重複；原文與此句對應的是 possess。</li></ul>');
+h5+=card(35,["考點：同義改寫＋字義釋義題","解題技巧：找「定義」在文中被換句話說的位置"],"wield",
+ '<div class="stem"><div class="en">Which word in the above passage means “to use something as a weapon or tool”?</div><div class="zh">上面文章中哪個單字的意思是「把某物當作武器或工具來使用」？</div></div>'+
+ clue('<u>they can <b>wield</b> lightning at will. Their ability to <b>use</b> it is seen as a symbol…</u>：下一句 use it 是 wield lightning 的改寫；閃電是神的武器。')+
+ ops([["wield","揮動、使用（武器／權力）","✔ 與定義「use something as a weapon or tool」完全對應；wield lightning at will。"],
+ ["possess","擁有","只是「擁有」，不一定使用。何時才對：定義為 to own or have something。"],
+ ["pluck","拔","拔下、摘下。何時才對：定義為 to pull out or off。"],
+ ["portray","描繪","描述或刻畫。何時才對：定義為 to describe or show in a particular way。"],
+ ["stimulate","激發","引起活動／想像。何時才對：定義為 to make something become active。"]],"1","12345"));
+h5+=card(36,["考點：比較異同（both / on the other hand）","解題技巧：先標出「兩者都有」與「只有一方」的關鍵詞"],"A C E",
+ '<div class="stem"><div class="en">What are the similarities between Zeus and Odin? Fill in the similarities with the correct letters.</div><div class="zh">宙斯與奧丁有哪些相似處？請填入正確的選項代號。</div></div>'+
+ clue('關鍵詞 <u>both</u>（兩者皆有）：both possess great powers、can wield lightning、both said to have had many lovers and children；<u>on the other hand</u>（對比→只有一方）：Odin 才自我犧牲。另 <u>Odin is the equivalent of Zeus</u> ＝ 奧丁也是眾神之首。')+
+ ops([["The leader of all gods.","眾神的領袖","✔ 共通：Zeus is the king of all the gods；Odin is the equivalent of Zeus（對等角色）。"],
+ ["In Greek mythology.","在希臘神話中","✘ 只有宙斯；Odin 屬於 Norse mythology。何時才對：若題目問的是宙斯單獨的特徵。"],
+ ["Being related to lightning.","與閃電有關","✔ 共通：they can wield lightning at will。"],
+ ["Giving up one of his eyes to gain knowledge.","為求知識放棄一隻眼睛","✘ 只有奧丁：He plucked his own eye out。何時才對：若題目問的是奧丁單獨的特徵。"],
+ ["Having many lovers and many children.","有許多情人與子女","✔ 共通：they are both said to have had many lovers and many children。"],
+ ["Being self-sacrificing.","自我犧牲","✘ 只有奧丁：Odin, on the other hand, is self-sacrificing（對比宙斯是 womanizer）。何時才對：若題目問的是奧丁單獨的特徵。"]],"ACE"));
+
+/* ================= Part VI ================= */
+const TR=[
+[37,["考點：成對連接詞 not only…but also＋慣用語 fall victim to","詞性需求：兩個對等的動詞片語（過去式）"],"During the pandemic, many people not only fell victim to the disease but also lost their jobs.","疫情（pandemic）期間，許多人不只受疾病所害而且失去工作。",
+ "<u>不只…而且…</u> → not only…but also…；兩邊要詞性、時態對等：not only <b>fell</b> victim to the disease but also <b>lost</b> their jobs（皆為過去式動詞片語）。<u>受…所害</u> → fall victim to ＋ 名詞（to 是介系詞）。",
+ "× fell victim of / × fell a victim to；× not only fell victim to the disease but also their jobs were lost（but also 後結構不對等）；people 是複數，each 的工作用 their jobs。許多人 → many people（複數動詞，過去式不分單複）。"],
+[38,["考點：by the time＋時態（過去式／過去完成式）","詞性需求：副詞子句過去式＋主句過去完成式"],"By the time Peter arrived in the town, all the restaurants had closed.","Peter 到達鎮上時，所有餐廳已經打烊了。（By the time….）",
+ "題目指定 <u>By the time</u> → 副詞子句用<b>過去式</b>（arrived），主要子句用<b>過去完成式</b>（had closed），表示「到他抵達時，已經先完成打烊」。<u>到達鎮上</u> → arrive in ＋ 較大的地點（town）。",
+ "× arrive to the town（arrive 後接 in／at）；× By the time Peter arrives…（現在式只用於未來情境）；× all of restaurants（應為 all the restaurants 或 all of the restaurants）；打烊 → close（not shut up）。"],
+[39,["考點：分詞構句＋成對連接詞 not only…but also","詞性需求：對等形容詞（tired／very hungry）"],"Not only tired but also very hungry, he bought some sushi for dinner in a convenience store.","不只累而且非常餓，他在一家便利商店買了些壽司當晚餐。（38 至 39 為一題組，he 即 Peter。）",
+ "原句 He was not only tired but also very hungry, so he bought… → 省略連接詞與 be 動詞，變成分詞構句 (Being) not only tired but also very hungry, he bought…；not only／but also 連接兩個形容詞（tired／very hungry），詞性對等，因此<b>不倒裝</b>。<u>壽司</u> sushi 為不可數，用 some sushi；<u>當晚餐</u> → for dinner（無冠詞）。",
+ "× Not only he was tired…（not only 開頭連接子句時要倒裝 Not only was he tired, but…）；× tiring（人感到累用 tired）；× some sushis；× for the dinner。"]
+];
+let h6='<h2 id="p6">VI. 翻譯（20%，38 至 39 為題組）</h2>';
+TR.forEach(t=>{h6+=card(t[0],t[1],'見下方參考譯文','<div class="stem"><div class="zh" style="color:inherit">'+t[3]+'</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+t[2]+'</div></div>'+clue(t[4])+'<h4>常見錯誤：何時才對／錯在哪</h4><p style="margin:2px 0">'+t[5]+'</p>');});
+
+/* ================= Mount ================= */
+document.getElementById('app').innerHTML=h1+h2+h3+h4+h5+h6;
+const secs=[['p1','I 字彙'],['p2','II 綜合'],['p3','III 選填'],['p4','IV 閱讀'],['p5','V 混合'],['p6','VI 翻譯']];
+document.getElementById('nav').innerHTML=secs.map(s=>'<a href="#'+s[0]+'">'+s[1]+'</a>').join('')+'<button id="tg">全部收合</button>';
+let open=true;
+document.getElementById('tg').onclick=function(){open=!open;document.querySelectorAll('details.q').forEach(d=>d.open=open);this.textContent=open?'全部收合':'全部展開';};
+</script>
+</body>
+</html>
