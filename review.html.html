@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>跨考卷錯題與單字總複習中心</title>
+<style>
+/* 完全沿用你考卷詳解的溫暖配色與深色模式 */
+:root{--bg:#faf8f4;--fg:#222;--card:#fff;--line:#e4ded3;--acc:#9a3b2e;--ok:#1f7a4d;--no:#b3261e;--mut:#6b6558;--hl:#fff1c9}
+@media(prefers-color-scheme:dark){:root{--bg:#161512;--fg:#e8e4da;--card:#201f1b;--line:#3a372f;--acc:#e08a78;--ok:#6fcf9a;--no:#f08a82;--mut:#a39d8f;--hl:#4a3f1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+.top{max-width:900px;margin:auto;padding:28px 18px 10px}
+.top h1{margin:0 0 4px;font-size:1.6rem;color:var(--acc)}
+.top p{margin:2px 0;color:var(--mut);font-size:.92rem}
+nav{position:sticky;top:0;z-index:9;background:var(--bg);border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px 12px}
+nav button,nav select,nav input,nav a{padding:5px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--fg);font:inherit;font-size:.86rem;cursor:pointer;text-decoration:none}
+nav button:hover,nav a:hover{border-color:var(--acc);color:var(--acc)}
+nav button.active{background:var(--acc);color:#fff;border-color:var(--acc);font-weight:600}
+main{max-width:900px;margin:auto;padding:16px 16px 70px}
+
+/* 完整保留考卷原本的題目樣式 */
+.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0;position:relative}
+.s{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--line)}
+.en{font-family:Georgia,"Times New Roman",serif;font-size:1.02rem}
+.zh{color:var(--mut);font-size:.93rem}
+.bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 4px;border-radius:3px;font-weight:600}
+.bl sup{color:var(--acc);margin-right:3px;font-size:.7em}
+details.q>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+details.q>summary::-webkit-details-marker{display:none}
+.n{background:var(--acc);color:#fff;border-radius:6px;padding:0 10px;font-weight:700;font-size:1.05rem}
+.tag{font-size:.78rem;border:1px solid var(--acc);color:var(--acc);border-radius:99px;padding:0 9px;line-height:1.6}
+.tag.pos{border-color:var(--ok);color:var(--ok)}
+.ans{margin-left:auto;font-weight:700;color:var(--ok)}
+.qb{margin-top:10px}
+.stem{margin-bottom:8px;padding:8px 10px;background:var(--bg);border-radius:6px}
+.clue{margin:8px 0;padding:8px 12px;border-left:4px solid var(--acc);background:var(--bg);border-radius:0 6px 6px 0}
+.clue h4,.qb h4{margin:0 0 2px;font-size:.92rem;color:var(--acc)}
+ul.op{list-style:none;margin:6px 0 0;padding:0}
+ul.op li{padding:7px 10px;margin:5px 0;border-radius:6px;border:1px solid var(--line);font-size:.95rem}
+ul.op li.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 9%,transparent)}
+ul.op li.no{border-color:color-mix(in srgb,var(--no) 45%,transparent)}
+ul.op i{font-style:normal;font-weight:700;font-size:.82rem}
+li.ok i{color:var(--ok)}li.no i{color:var(--no)}
+small{color:var(--mut)}
+
+/* 複習中心專屬功能樣式 */
+.exam-source{font-size:.8rem;background:var(--hl);color:var(--acc);padding:2px 10px;border-radius:99px;font-weight:700}
+.user-note{margin-top:10px;padding:8px 12px;background:var(--hl);border-left:4px solid var(--acc);border-radius:4px;font-size:.9rem}
+.del-btn{border:1px solid var(--line);background:var(--bg);color:var(--no);border-radius:99px;padding:2px 10px;font-size:.78rem;cursor:pointer;margin-left:6px}
+.del-btn:hover{background:var(--no);color:#fff}
+
+/* 題目自我重測模式（自動把黃底答案 .bl 挖空、遮蔽正解與解析） */
+body.quiz-mode .bl{color:transparent !important;background:var(--line) !important;user-select:none;min-width:60px;display:inline-block;text-align:center;cursor:pointer}
+body.quiz-mode .bl sup{color:var(--acc) !important}
+body.quiz-mode .bl.revealed{color:inherit !important;background:var(--hl) !important}
+body.quiz-mode .ans{filter:blur(6px);cursor:pointer}
+body.quiz-mode .ans.revealed{filter:none}
+body.quiz-mode .clue, body.quiz-mode ul.op, body.quiz-mode .qb h4, body.quiz-mode .qb p{display:none}
+body.quiz-mode details.q.show-exp .clue, body.quiz-mode details.q.show-exp ul.op, body.quiz-mode details.q.show-exp .qb h4, body.quiz-mode details.q.show-exp .qb p{display:block}
+.reveal-exp-btn{display:none;margin-top:8px;padding:5px 14px;border-radius:99px;border:1px solid var(--acc);background:var(--card);color:var(--acc);cursor:pointer;font-size:.85rem}
+body.quiz-mode .reveal-exp-btn{display:inline-block}
+
+/* 單字閃卡網格 */
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-top:14px}
+.v-card{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--acc);border-radius:10px;padding:16px;position:relative;transition:.15s}
+.v-word{font-size:1.25rem;font-weight:700;color:var(--acc);margin:8px 0;display:flex;align-items:center;gap:8px}
+.speak-btn{border:1px solid var(--line);background:var(--bg);border-radius:99px;padding:2px 8px;font-size:.8rem;cursor:pointer}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <h1>📚 跨考卷錯題與單字總複習中心</h1>
+  <p>彙整你在各回詳解標記過的重點題目與反白單字，支援「挖空重測」與「匯出 Anki / CSV」</p>
+</div>
+
+<nav>
+  <button id="tab-q" class="active" onclick="switchTab('questions')">📝 標記題目 (<span id="q-count">0</span>)</button>
+  <button id="tab-v" onclick="switchTab('vocab')">🔤 單字與片語卡 (<span id="v-count">0</span>)</button>
+  <select id="exam-filter" onchange="render()"><option value="ALL">所有考卷</option></select>
+  <button id="quiz-btn" onclick="toggleQuizMode()">🎯 自我重測模式（挖空答案）</button>
+
+  <div style="margin-left:auto;display:flex;flex-wrap:wrap;gap:6px;align-items:center">
+    <input type="text" id="sid-input" placeholder="👤 學號/暱稱" style="width:115px">
+    <button onclick="pullCloud()">🔄 雲端同步</button>
+    <button onclick="exportAnkiVocab()" style="border-color:var(--ok);color:var(--ok)">📥 單字 Anki (.tsv)</button>
+    <button onclick="exportAnkiQuestions()" style="border-color:var(--ok);color:var(--ok)">📥 錯題 Anki (.tsv)</button>
+    <button onclick="exportCSV()">📊 匯出 CSV</button>
+  </div>
+</nav>
+
+<main>
+  <div id="q-list"></div>
+  <div id="v-list" class="vocab-grid" style="display:none"></div>
+</main>
+
+<script>
+// 👇 請替換成與 bookmark.js 相同的 Google Apps Script 網址
+const GAS_URL = "https://script.google.com/macros/s/請替換成你的網址/exec";
+const STORAGE_KEY = "kghs_exam_bookmarks_v1";
+const STUDENT_KEY = "kghs_student_id";
+
+let currentTab = "questions";
+let vocabCloze = false;
+
+function getData() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { questions: [], vocab: [] }; }
+  catch { return { questions: [], vocab: [] }; }
+}
+function saveData(data) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  render();
+}
+
+document.getElementById("sid-input").value = localStorage.getItem(STUDENT_KEY) || "";
+document.getElementById("sid-input").addEventListener("change", e => {
+  localStorage.setItem(STUDENT_KEY, e.target.value.trim());
+  pullCloud();
+});
+
+async function pullCloud() {
+  const sid = document.getElementById("sid-input").value.trim();
+  if (!sid) return alert("請先輸入學號或暱稱！");
+  if (!GAS_URL.startsWith("https://script.google.com")) return alert("尚未設定 Google 試算表網址，目前顯示本機資料。");
+  try {
+    const res = await fetch(`${GAS_URL}?studentId=${encodeURIComponent(sid)}`);
+    const json = await res.json();
+    if (json.status === "ok") {
+      saveData({ questions: json.questions || [], vocab: json.vocab || [] });
+      alert("✅ 雲端標記同步完成！");
+    }
+  } catch (e) {
+    alert("⚠️ 無法連線雲端，目前顯示本機紀錄");
+  }
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.getElementById("tab-q").classList.toggle("active", tab === "questions");
+  document.getElementById("tab-v").classList.toggle("active", tab === "vocab");
+  document.getElementById("q-list").style.display = tab === "questions" ? "block" : "none";
+  document.getElementById("v-list").style.display = tab === "vocab" ? "grid" : "none";
+  document.getElementById("quiz-btn").textContent = tab === "questions"
+    ? (document.body.classList.contains("quiz-mode") ? "👁️ 顯示全部詳解" : "🎯 自我重測模式（挖空答案）")
+    : (vocabCloze ? "👁️ 顯示全部單字" : "🎴 單字挖空背誦模式");
+}
+
+function toggleQuizMode() {
+  if (currentTab === "questions") {
+    document.body.classList.toggle("quiz-mode");
+    const isQuiz = document.body.classList.contains("quiz-mode");
+    document.getElementById("quiz-btn").classList.toggle("active", isQuiz);
+    document.getElementById("quiz-btn").textContent = isQuiz ? "👁️ 顯示全部詳解" : "🎯 自我重測模式（挖空答案）";
+  } else {
+    vocabCloze = !vocabCloze;
+    document.getElementById("quiz-btn").classList.toggle("active", vocabCloze);
+    document.getElementById("quiz-btn").textContent = vocabCloze ? "👁️ 顯示全部單字" : "🎴 單字挖空背誦模式";
+    render();
+  }
+}
+
+function removeItem(type, id, e) {
+  e.stopPropagation();
+  const data = getData();
+  data[type] = data[type].filter(x => x.id !== id);
+  saveData(data);
+  const sid = document.getElementById("sid-input").value.trim();
+  if (sid && GAS_URL.startsWith("https://script.google.com")) {
+    fetch(GAS_URL, {
+      method: "POST", mode: "no-cors",
+      body: JSON.stringify({ action: "delete", studentId: sid, itemType: type === "questions" ? "question" : "vocab", item: { id } })
+    });
+  }
+}
+
+function speak(word, e) {
+  e.stopPropagation();
+  const u = new SpeechSynthesisUtterance(word);
+  u.lang = "en-US";
+  speechSynthesis.speak(u);
+}
+
+function render() {
+  const data = getData();
+  const filterEl = document.getElementById("exam-filter");
+  const currFilter = filterEl.value;
+  const exams = [...new Set([...data.questions.map(q => q.examTitle), ...data.vocab.map(v => v.examTitle)])];
+
+  filterEl.innerHTML = `<option value="ALL">所有考卷 (${exams.length})</option>` +
+    exams.map(ex => `<option value="${ex}">${ex}</option>`).join("");
+  if (exams.includes(currFilter)) filterEl.value = currFilter;
+
+  const activeFilter = filterEl.value;
+  const qs = data.questions.filter(q => activeFilter === "ALL" || q.examTitle === activeFilter);
+  const vs = data.vocab.filter(v => activeFilter === "ALL" || v.examTitle === activeFilter);
+
+  document.getElementById("q-count").textContent = qs.length;
+  document.getElementById("v-count").textContent = vs.length;
+
+  // 1. 渲染標記題目（完美還原 <details class="q">）
+  const qList = document.getElementById("q-list");
+  qList.innerHTML = qs.length ? "" : `<p style="color:var(--mut);text-align:center;padding:40px 0">目前還沒有標記任何題目喔！在考卷詳解頁點擊「☆ 標記此題」即可加入。</p>`;
+  qs.forEach(q => {
+    const det = document.createElement("details");
+    det.className = "q";
+    det.open = true;
+    det.innerHTML = q.htmlContent;
+
+    const summary = det.querySelector("summary");
+    if (summary) {
+      const srcBadge = document.createElement("span");
+      srcBadge.className = "exam-source";
+      srcBadge.textContent = q.examTitle;
+      summary.insertBefore(srcBadge, summary.firstChild);
+
+      const delBtn = document.createElement("button");
+      delBtn.className = "del-btn";
+      delBtn.textContent = "✕ 移除";
+      delBtn.onclick = (e) => removeItem("questions", q.id, e);
+      summary.appendChild(delBtn);
+    }
+
+    const qb = det.querySelector(".qb");
+    if (qb) {
+      if (q.note) {
+        const noteDiv = document.createElement("div");
+        noteDiv.className = "user-note";
+        noteDiv.innerHTML = `<b>📝 我的筆記：</b>${q.note}`;
+        qb.insertBefore(noteDiv, qb.firstChild);
+      }
+      const revealBtn = document.createElement("button");
+      revealBtn.className = "reveal-exp-btn";
+      revealBtn.textContent = "👁️ 點擊對答案與看詳解";
+      revealBtn.onclick = () => {
+        det.classList.toggle("show-exp");
+        det.querySelectorAll(".bl, .ans").forEach(el => el.classList.add("revealed"));
+      };
+      const stemEl = qb.querySelector(".stem");
+      if (stemEl) stemEl.after(revealBtn);
+    }
+
+    // 支援點擊單一挖空處揭曉答案
+    det.querySelectorAll(".bl, .ans").forEach(el => {
+      el.addEventListener("click", (e) => {
+        if (document.body.classList.contains("quiz-mode")) {
+          e.stopPropagation();
+          el.classList.toggle("revealed");
+        }
+      });
+    });
+
+    qList.appendChild(det);
+  });
+
+  // 2. 渲染單字與片語閃卡
+  const vList = document.getElementById("v-list");
+  vList.innerHTML = vs.length ? "" : `<p style="color:var(--mut);grid-column:1/-1;text-align:center;padding:40px 0">目前還沒有收藏單字喔！在考卷詳解反白任何英文字即可收藏。</p>`;
+  vs.forEach(v => {
+    const card = document.createElement("div");
+    card.className = "v-card";
+    const safeRegex = new RegExp(`(${v.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, "gi");
+    const highlightedSent = v.contextSentence.replace(safeRegex, `<span class="bl">$1</span>`);
+    const maskedSent = v.contextSentence.replace(safeRegex, `<span class="bl" style="color:transparent!important;background:var(--line)!important">______</span>`);
+
+    card.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span class="exam-source">${v.examTitle}</span>
+        <button class="del-btn" onclick="removeItem('vocab', '${v.id}', event)">✕ 移除</button>
+      </div>
+      <div class="v-word">
+        <span class="v-word-text">${vocabCloze ? "❓ 點擊卡片翻開" : v.word}</span>
+        <button class="speak-btn" onclick="speak('${v.word.replace(/'/g, "\\'")}', event)">🔊 發音</button>
+      </div>
+      <div class="stem"><div class="en">${vocabCloze ? maskedSent : highlightedSent}</div></div>
+      ${v.note ? `<div class="user-note" style="display:${vocabCloze ? 'none' : 'block'}">${v.note}</div>` : ""}
+    `;
+    card.onclick = () => {
+      if (!vocabCloze) return;
+      const wordEl = card.querySelector(".v-word-text");
+      const enEl = card.querySelector(".en");
+      const noteEl = card.querySelector(".user-note");
+      const isHidden = wordEl.textContent.includes("❓");
+      wordEl.textContent = isHidden ? v.word : "❓ 點擊卡片翻開";
+      enEl.innerHTML = isHidden ? highlightedSent : maskedSent;
+      if (noteEl) noteEl.style.display = isHidden ? "block" : "none";
+    };
+    vList.appendChild(card);
+  });
+}
+
+// === 匯出功能區 (針對你的 .stem / .bl / .clue 結構最佳化) ===
+function downloadBlob(filename, text, mime) {
+  const blob = new Blob(["\uFEFF" + text], { type: mime });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+}
+
+// 1. 匯出單字 Anki (.tsv)
+function exportAnkiVocab() {
+  const { vocab } = getData();
+  if (!vocab.length) return alert("尚無收藏的單字可匯出！");
+  const lines = vocab.map(v => {
+    const safeRegex = new RegExp(`(${v.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, "gi");
+    const sentHtml = v.contextSentence.replace(safeRegex, `<b><u>$1</u></b>`).replace(/[\t\r\n]+/g, " ");
+    const front = `<div style="font-size:22px;font-weight:bold;color:#9a3b2e">${v.word}</div><br><div style="font-family:Georgia,serif">${sentHtml}</div>`;
+    const back = `<div>${(v.note || "").replace(/[\t\r\n]+/g, "<br>")}</div><hr><small style="color:#6b6558">出處：${v.examTitle}</small>`;
+    const tag = v.examTitle.replace(/\s+/g, "_");
+    return `${front}\t${back}\t${tag}`;
+  });
+  downloadBlob("Anki_單字片語卡.tsv", lines.join("\n"), "text/tab-separated-values;charset=utf-8");
+}
+
+// 2. 匯出錯題 Anki (.tsv) — 自動將 .bl 黃底答案挖空放正面，詳解與正解放背面！
+function exportAnkiQuestions() {
+  const { questions } = getData();
+  if (!questions.length) return alert("尚無標記的題目可匯出！");
+  const lines = questions.map(q => {
+    const temp = document.createElement("div");
+    temp.innerHTML = q.htmlContent;
+
+    const ansText = temp.querySelector(".ans")?.innerText || "";
+    const tagsHtml = [...temp.querySelectorAll(".tag")].map(t => t.outerHTML).join(" ");
+
+    // 取出題幹 (.stem)，並把裡面的 <span class="bl"> 挖空成 [ ___ ] 作為卡片正面
+    const stemClone = temp.querySelector(".stem")?.cloneNode(true);
+    if (stemClone) {
+      stemClone.querySelectorAll(".bl").forEach(bl => {
+        bl.innerHTML = " <b>[ ______ ]</b> ";
+      });
+    }
+    const frontHtml = `<div><small>[${q.examTitle} ${q.qNum}]</small><br>${stemClone ? stemClone.innerHTML : temp.innerText}</div>`.replace(/[\t\r\n]+/g, " ");
+
+    // 卡片背面：完整未挖空的題幹 + 答案 + 考點標籤 + 解題線索 (.clue) + 選項解析 (ul.op) + 個人筆記
+    const fullStem = temp.querySelector(".stem")?.innerHTML || "";
+    const clueHtml = temp.querySelector(".clue")?.innerHTML || "";
+    const opsHtml = temp.querySelector("ul.op")?.outerHTML || "";
+    const backHtml = `<div style="color:#1f7a4d;font-weight:bold;font-size:18px">${ansText}</div><div>${tagsHtml}</div><hr>${fullStem}<br>${clueHtml}${opsHtml}${q.note ? `<hr><b>📝 筆記：</b>${q.note}` : ""}`.replace(/[\t\r\n]+/g, " ");
+
+    const tag = q.examTitle.replace(/\s+/g, "_");
+    return `${frontHtml}\t${backHtml}\t${tag}`;
+  });
+  downloadBlob("Anki_錯題重測卡.tsv", lines.join("\n"), "text/tab-separated-values;charset=utf-8");
+}
+
+// 3. 匯出 Excel (.csv)
+function exportCSV() {
+  const { vocab, questions } = getData();
+  const esc = s => `"${String(s || "").replace(/"/g, '""').replace(/[\r\n]+/g, " ")}"`;
+  const rows = [["類型", "考卷名稱", "題號或單字", "英文原句或題幹", "中文翻譯或正解", "解題線索或個人筆記"]];
+
+  vocab.forEach(v => rows.push(["單字/片語", v.examTitle, v.word, v.contextSentence, "", v.note]));
+  questions.forEach(q => {
+    const temp = document.createElement("div");
+    temp.innerHTML = q.htmlContent;
+    const enStem = temp.querySelector(".stem .en")?.innerText || "";
+    const zhStem = temp.querySelector(".stem .zh")?.innerText || "";
+    const ans = temp.querySelector(".ans")?.innerText || "";
+    const clue = temp.querySelector(".clue")?.innerText.replace(/^解題線索\s*/, "") || "";
+    rows.push(["標記題目", q.examTitle, q.qNum, enStem, `${ans} | ${zhStem}`, `${q.note ? "[筆記] " + q.note + " | " : ""}${clue}`]);
+  });
+
+  downloadBlob("考卷標記彙整表.csv", rows.map(r => r.map(esc).join(",")).join("\n"), "text/csv;charset=utf-8");
+}
+
+render();
+</script>
+</body>
+</html>
