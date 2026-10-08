@@ -2,301 +2,783 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>雜誌文意字彙練習．亂序詳解</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    color-scheme: light;
-    --paper:#EEEAE0;
-    --paper-deep:#E6E1D3;
-    --card:#FBF9F3;
-    --rule:#D8D2C0;
-    --ink:#24262A;
-    --ink-soft:#63665F;
-    --ink-faint:#94978D;
-    --margin:#3A5A7A;
-    --red:#A6321D;
-    --red-soft:#C65A3E;
-    --green:#3A5A40;
-    --focus:#1D4E89;
-  }
-  *{box-sizing:border-box;}
-  html{scroll-padding-top: calc(128px + env(safe-area-inset-top,0px));}
-  body{
-    margin:0;
-    background:var(--paper);
-    background-image:
-      radial-gradient(circle at 0 0, rgba(0,0,0,0.02), transparent 40%),
-      radial-gradient(circle at 100% 100%, rgba(0,0,0,0.02), transparent 40%);
-    color:var(--ink);
-    font-family:'Source Serif 4','Noto Serif TC',serif;
-    padding-top:env(safe-area-inset-top,0px);
-    padding-bottom:calc(40px + env(safe-area-inset-bottom,0px));
-    -webkit-text-size-adjust:100%;
-  }
-  :focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
-
-  header.hero{ max-width:640px; margin:0 auto; padding:30px 20px 18px; }
-  .kicker{
-    font-family:'JetBrains Mono',monospace;
-    font-size:12px; letter-spacing:.04em; color:var(--margin);
-    display:flex; align-items:center; gap:8px;
-  }
-  .kicker::before{ content:""; width:7px;height:7px;border-radius:50%; background:var(--margin); display:inline-block; }
-  h1{
-    font-family:'Noto Serif TC',serif; font-weight:700; font-size:26px;
-    line-height:1.35; margin:10px 0 6px; letter-spacing:.01em;
-  }
-  h1 em{
-    font-style:normal; color:var(--margin);
-    text-decoration:underline; text-decoration-color:#8FA9BC;
-    text-decoration-thickness:2px; text-underline-offset:3px;
-  }
-  .hero-sub{ color:var(--ink-soft); font-size:14.5px; line-height:1.6; max-width:52ch; }
-  .hero-meta{
-    margin-top:16px; display:flex; gap:18px;
-    font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--ink-faint);
-  }
-  .hero-meta b{ color:var(--ink); font-weight:700; }
-
-  .toolbar{
-    position:sticky; top:0; z-index:20;
-    background:rgba(238,234,224,.94);
-    backdrop-filter:saturate(140%) blur(6px);
-    border-bottom:1px solid var(--rule);
-    padding-top:env(safe-area-inset-top,0px);
-  }
-  .nav{
-    max-width:640px; margin:0 auto; display:flex; gap:8px;
-    overflow-x:auto; padding:10px 20px; scrollbar-width:none;
-  }
-  .nav::-webkit-scrollbar{display:none;}
-  .navchip{
-    flex:0 0 auto;
-    font-family:'JetBrains Mono',monospace; font-size:12.5px;
-    color:var(--ink-soft); background:transparent;
-    border:1px solid var(--rule); border-radius:999px;
-    padding:6px 12px; cursor:pointer; white-space:nowrap;
-    transition:background .15s, color .15s, border-color .15s;
-  }
-  .navchip.active{ background:var(--ink); border-color:var(--ink); color:#F3EFE4; }
-
-  .controls{
-    max-width:640px; margin:0 auto; padding:0 20px 12px;
-    display:flex; align-items:center; justify-content:space-between; gap:12px;
-  }
-  .progress{ font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--ink-faint); }
-  .progress b{ color:var(--red); font-weight:700; }
-  .reveal-toggle{
-    font-family:'JetBrains Mono',monospace; font-size:12px;
-    color:var(--card); background:var(--red); border:1px solid var(--red);
-    border-radius:999px; padding:7px 14px; cursor:pointer; letter-spacing:.02em;
-  }
-
-  main{ max-width:640px; margin:0 auto; padding:8px 16px 0; }
-
-  .range-section{ margin-top:26px; scroll-margin-top:110px; }
-  .range-head{
-    display:flex; align-items:baseline; gap:10px;
-    padding:0 4px 8px; border-bottom:2px solid var(--ink);
-  }
-  .range-head .r-label{ font-family:'JetBrains Mono',monospace; font-weight:700; font-size:15px; color:var(--margin); }
-  .range-head .r-count{ font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--ink-faint); }
-
-  .qlist{ list-style:none; margin:0; padding:0; }
-
-  .qcard{
-    position:relative; background:var(--card);
-    border-bottom:1px solid var(--rule);
-    padding:16px 14px 16px 46px;
-    cursor:pointer; -webkit-tap-highlight-color:transparent;
-  }
-  .qcard::before{
-    content:""; position:absolute; left:30px; top:0; bottom:0; width:1px;
-    background:var(--margin); opacity:.55;
-  }
-  .qnum{
-    position:absolute; left:6px; top:16px; width:20px;
-    font-family:'JetBrains Mono',monospace; font-size:11px;
-    color:var(--ink-faint); text-align:right;
-  }
-  .q-en{ font-size:16px; line-height:1.75; color:var(--ink); }
-  .blank{
-    font-family:'JetBrains Mono',monospace; font-weight:700; font-size:15px;
-    letter-spacing:.01em; color:var(--ink-faint);
-    border-bottom:1.5px dashed var(--ink-faint); padding:0 1px;
-  }
-  .answer-ink{
-    display:none;
-    font-family:Arial, Helvetica, 'Segoe UI', sans-serif;
-    font-weight:700; font-size:15.5px; letter-spacing:.01em;
-    color:var(--red); margin-left:2px; white-space:nowrap;
-  }
-  .qcard.revealed .blank{
-    color:var(--ink-faint); text-decoration:line-through;
-    text-decoration-color:var(--ink-faint); opacity:.55; border-bottom-style:solid;
-  }
-  .qcard.revealed .answer-ink{ display:inline; }
-
-  .q-zh{ margin-top:8px; font-family:'Noto Serif TC',serif; font-size:13.5px; line-height:1.85; color:var(--ink-soft); }
-
-  .q-foot{
-    margin-top:9px; display:flex; align-items:center; gap:8px;
-    font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-faint);
-  }
-  .tap-hint{ display:inline-flex; align-items:center; gap:5px; }
-  .qcard.revealed .tap-hint::before{ content:"✓ "; color:var(--green); }
-  .qcard:not(.revealed) .tap-hint::before{ content:"點按查看答案"; }
-  .qcard.revealed .tap-hint::before{ content:"答案：" attr(data-word); }
-
-  footer{
-    max-width:640px; margin:34px auto 0; padding:18px 20px 0;
-    border-top:1px solid var(--rule);
-    font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-faint); text-align:center;
-  }
-
-  @media (min-width:640px){
-    .qcard{ padding-left:52px; }
-    .qcard::before{ left:36px; }
-    .qnum{ left:8px; }
-  }
+:root{--bg:#faf8f4;--fg:#222;--card:#fff;--line:#e4ded3;--acc:#9a3b2e;--ok:#1f7a4d;--no:#b3261e;--mut:#6b6558;--hl:#fff1c9}
+@media(prefers-color-scheme:dark){:root{--bg:#161512;--fg:#e8e4da;--card:#201f1b;--line:#3a372f;--acc:#e08a78;--ok:#6fcf9a;--no:#f08a82;--mut:#a39d8f;--hl:#4a3f1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+.top{max-width:900px;margin:auto;padding:28px 18px 10px}
+.top h1{margin:0 0 4px;font-size:1.6rem;color:var(--acc)}
+.top p{margin:2px 0;color:var(--mut);font-size:.92rem}
+nav{position:sticky;top:0;z-index:9;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto;padding:8px 12px}
+nav a,nav button{flex:none;padding:5px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--fg);text-decoration:none;font:inherit;font-size:.88rem;cursor:pointer}
+nav a:hover,nav button:hover{border-color:var(--acc);color:var(--acc)}
+main{max-width:900px;margin:auto;padding:0 16px 70px}
+h2{margin:36px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--acc);font-size:1.3rem}
+h3{margin:0 0 8px;font-size:1.05rem;color:var(--acc)}
+.pas,.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.para{margin-bottom:14px}
+.s{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--line)}
+.en{font-family:Georgia,"Times New Roman",serif;font-size:1.02rem}
+.zh{color:var(--mut);font-size:.93rem}
+.note{color:var(--mut);font-size:.85rem;margin:6px 0 0}
+.bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 4px;border-radius:3px;font-weight:600}
+.bl sup{color:var(--acc);margin-right:3px;font-size:.7em}
+.bank{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.92rem;margin-bottom:8px}
+details.q>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+details.q>summary::-webkit-details-marker{display:none}
+.n{background:var(--acc);color:#fff;border-radius:6px;padding:0 10px;font-weight:700;font-size:1.05rem}
+.tag{font-size:.78rem;border:1px solid var(--acc);color:var(--acc);border-radius:99px;padding:0 9px;line-height:1.6}
+.tag.pos{border-color:var(--ok);color:var(--ok)}
+.ans{margin-left:auto;font-weight:700;color:var(--ok)}
+.qb{margin-top:10px}
+.stem{margin-bottom:8px;padding:8px 10px;background:var(--bg);border-radius:6px}
+.clue{margin:8px 0;padding:8px 12px;border-left:4px solid var(--acc);background:var(--bg);border-radius:0 6px 6px 0}
+.clue h4,.qb h4{margin:0 0 2px;font-size:.92rem;color:var(--acc)}
+ul.op{list-style:none;margin:6px 0 0;padding:0}
+ul.op li{padding:7px 10px;margin:5px 0;border-radius:6px;border:1px solid var(--line);font-size:.95rem}
+ul.op li.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 9%,transparent)}
+ul.op li.no{border-color:color-mix(in srgb,var(--no) 45%,transparent)}
+ul.op i{font-style:normal;font-weight:700;font-size:.82rem}
+li.ok i{color:var(--ok)}li.no i{color:var(--no)}
+small{color:var(--mut)}
+footer{max-width:900px;margin:auto;padding:0 16px 40px;color:var(--mut);font-size:.82rem}
 </style>
 </head>
 <body>
-
-<header class="hero">
-  <div class="kicker">詳解 · 亂序版 · 對答案模式</div>
-  <h1>雜誌文意字彙練習<br><em>亂序詳解</em></h1>
-  <p class="hero-sub">此份題目已重新洗牌、不按課本單元排序。先自行作答，再點每一題查看正確答案與中文翻譯；可用上方按鈕跳到題號區間，或一次顯示全部答案。</p>
-  <div class="hero-meta">
-    <span><b id="metaTotal">0</b> 題</span>
-    <span><b id="metaRevealed">0</b> 已顯示</span>
-  </div>
-</header>
-
-<div class="toolbar">
-  <nav class="nav" id="navBar">
-<button class="navchip" data-range="1-20" onclick="jumpTo('r1-20')">1–20</button>
-<button class="navchip" data-range="21-40" onclick="jumpTo('r21-40')">21–40</button>
-<button class="navchip" data-range="41-60" onclick="jumpTo('r41-60')">41–60</button>
-<button class="navchip" data-range="61-80" onclick="jumpTo('r61-80')">61–80</button>
-<button class="navchip" data-range="81-100" onclick="jumpTo('r81-100')">81–100</button>
-<button class="navchip" data-range="101-120" onclick="jumpTo('r101-120')">101–120</button>
-<button class="navchip" data-range="121-127" onclick="jumpTo('r121-127')">121–127</button>
-
-  </nav>
-  <div class="controls">
-    <div class="progress"><b id="progressN">0</b> / <span id="progressTotal">0</span> 已查看</div>
-    <button class="reveal-toggle" id="revealAllBtn" onclick="toggleAll()">顯示全部答案</button>
-  </div>
+<div class="top">
+  <h1>雜誌文意字彙練習．亂序詳解</h1>
+  <p>每題含：考點標籤 → 題幹逐句中英對照 → 解題線索 → 正解與易混淆字形／詞性剖析（含「何時才對」例句）</p>
+  <p>圖例：<span class="bl">黃底</span> ＝ 正確答案填入處 ｜ <span class="tag">考點</span> <span class="tag pos">詞性需求</span></p>
 </div>
-
-<main id="main"></main>
-
-<footer>
-  雜誌文意字彙練習．亂序詳解 — 共 <span id="footTotal">0</span> 題，全部整理自原始講義
-</footer>
+<nav id="nav"></nav>
+<main id="app"></main>
+<footer>限定用途教學教材。本詳解為教學輔助，題目版權屬原出版單位。</footer>
 
 <script>
-const DATA = [{"num": 1, "word": "psychology", "en": "Understanding p________y can help teachers respond to students more effectively. Different students may react differently to the same classroom situation.", "zh": "了解心理學能幫助老師更有效地回應學生。不同學生可能會對相同的課堂情境產生不同反應。", "blank": "p________y"}, {"num": 2, "word": "intelligence", "en": "Artificial i________e is changing how companies analyze information. The technology can process enormous amounts of data within a short period.", "zh": "人工智慧正在改變公司分析資訊的方式。這項科技能在短時間內處理大量資料。", "blank": "i________e"}, {"num": 3, "word": "numerous", "en": "N______s students joined the environmental campaign last Saturday. Their participation helped the school collect hundreds of used plastic bottles.", "zh": "上週六有許多學生參加環保活動。他們的參與幫助學校收集了數百個使用過的塑膠瓶。", "blank": "N______s"}, {"num": 4, "word": "striking", "en": "The sunset painted the evening sky with bright red and orange colors. Photographer Liu captured this incredibly s____king view with his expensive camera.", "zh": "夕陽將傍晚的天空染成了鮮豔的紅色和橘色。劉攝影師用他昂貴的相機捕捉了這個極度引人注目的景色。", "blank": "s____king"}, {"num": 5, "word": "communications", "en": "The massive earthquake completely destroyed the town's internet and phone lines. Engineer Wang worked day and night to restore c____ns for the trapped residents.", "zh": "大地震徹底摧毀了該鎮的網路和電話線。王工程師日以繼夜地工作，為受困居民恢復通訊。", "blank": "c____ns"}, {"num": 6, "word": "triggered", "en": "The factory installed highly sensitive smoke detectors in every single hallway. A small puff of smoke accidentally t____red the loud emergency alarms.", "zh": "工廠在每一條走廊都安裝了高靈敏度的煙霧探測器。一小陣煙霧意外地觸發了大聲的緊急警報。", "blank": "t____red"}, {"num": 7, "word": "scheme", "en": "The company developed a s_____e to reduce unnecessary packaging. Managers hope the plan will lower costs and reduce environmental waste.", "zh": "公司制定一項計畫來減少不必要的包裝。經理希望這項計畫能降低成本並減少環境浪費。", "blank": "s_____e"}, {"num": 8, "word": "formulas", "en": "The chemistry students struggled to memorize the complex chemical equations. Teacher Wang wrote all the important f____as on the blackboard to help them review.", "zh": "化學系學生努力記住複雜的化學方程式。王老師把所有重要的公式寫在黑板上以幫助他們複習。", "blank": "f____as"}, {"num": 9, "word": "atmospheres", "en": "The astronomer studies the thick gases surrounding different planets in our solar system. Dr. Wu discovered that these alien a____res are often toxic to human beings.", "zh": "天文學家研究環繞在我們太陽系不同行星周圍的濃厚氣體。吳博士發現這些外星大氣對人類通常是有毒的。", "blank": "a____res"}, {"num": 10, "word": "galleries", "en": "Paris is globally renowned for its world-class art museums and exhibition spaces. Tourist Lin spent an entire week exploring various famous g____ies across the beautiful city.", "zh": "巴黎以其世界級的藝術博物館和展覽空間而聞名全球。林遊客花了整整一個星期的時間探索這座美麗城市中各種著名的畫廊。", "blank": "g____ies"}, {"num": 11, "word": "behaviors", "en": "The psychologist spent years observing how young monkeys interact with their mothers. Dr. Wang recorded various interesting social b____rs among the primates in the jungle.", "zh": "心理學家花了多年時間觀察小猴子如何與母親互動。王博士記錄了叢林中靈長類動物之間各種有趣的社會行為。", "blank": "b____rs"}, {"num": 12, "word": "orbit", "en": "The rocket successfully carried the telescope into outer space yesterday morning. Captain Lee confirmed that the device had entered its designated o____t around the moon.", "zh": "火箭昨天早上成功將望遠鏡帶入外太空。李船長確認該設備已經進入其指定的繞月軌道。", "blank": "o____t"}, {"num": 13, "word": "breakthroughs", "en": "Professor Wang and his team experienced countless failures in the past decade. However, their recent technological b____hs completely changed the smartphone industry.", "zh": "王教授和他的團隊在過去十年中經歷了無數次的失敗。然而，他們最近的科技突破徹底改變了智慧型手機產業。", "blank": "b____hs"}, {"num": 14, "word": "reminder", "en": "The painful scar on his arm always brings back terrible memories. John views the permanent mark as a daily r____r of the tragic car accident.", "zh": "他手臂上痛苦的疤痕總是喚起可怕的回憶。約翰將這個永久的印記視為那場悲慘車禍的日常提醒。", "blank": "r____r"}, {"num": 15, "word": "contributions", "en": "The mayor thanked all the dedicated volunteers during the annual community dinner. Mr. Huang recognized their valuable c____ns to cleaning up the neighborhood parks.", "zh": "市長在年度社區晚宴上感謝了所有盡責的志工。黃先生表彰了他們在清理社區公園方面所做的寶貴貢獻。", "blank": "c____ns"}, {"num": 16, "word": "accelerated", "en": "The car a________ted rapidly after the traffic light turned green. Within seconds, the driver had reached the speed limit.", "zh": "交通號誌轉綠後，汽車迅速加速。幾秒內，駕駛就已經達到速限。", "blank": "a________ted"}, {"num": 17, "word": "combinations", "en": "The safety lock requires three numbers to be turned in the exact order. Kevin tried multiple c____ns before finally managing to open the heavy metal safe.", "zh": "安全鎖需要按精確順序轉動三個數字。凱文嘗試了多種組合，最後終於成功打開了沉重的金屬保險箱。", "blank": "c____ns"}, {"num": 18, "word": "exceeded", "en": "The successful fundraising campaign went far beyond everyone's initial expectations. Director Lin was thrilled that the total donations e____ded the original goal by one million dollars.", "zh": "成功的募款活動遠遠超出了每個人的初步預期。林主任對於總捐款數額超過原定目標一百萬元感到非常興奮。", "blank": "e____ded"}, {"num": 19, "word": "reinforces", "en": "The teacher gives students a weekly quiz to review the previous lessons. Mr. Chang uses these short tests to r____es important mathematical concepts.", "zh": "老師每週給學生小測驗以複習之前的課程。張老師利用這些簡短的考試來強化重要的數學概念。", "blank": "r____es"}, {"num": 20, "word": "pace", "en": "The teacher encouraged the students to work at their own p___e. Taking short breaks helped several students remain focused longer.", "zh": "老師鼓勵學生按照自己的步調學習。短暫休息幫助幾名學生維持更長時間的專注。", "blank": "p___e"}, {"num": 21, "word": "presentation", "en": "The marketing manager prepared multiple visual charts for the important client meeting. Director Zhao expects this professional p____n to win the huge contract.", "zh": "行銷經理為重要的客戶會議準備了多張視覺圖表。趙總監期望這場專業的簡報能贏得這份巨額合約。", "blank": "p____n"}, {"num": 22, "word": "variations", "en": "The composer wrote several different versions of the main theme song. Pianist Chou played all the beautiful v____ns during his impressive solo concert.", "zh": "作曲家寫了幾種不同版本的主題曲。鋼琴家周在他令人印象深刻的獨奏會上演奏了所有美麗的變奏。", "blank": "v____ns"}, {"num": 23, "word": "sensor", "en": "Dr. Wu placed a small device near the entrance of the laboratory. The motion s____r immediately triggered the alarm when someone walked past the door.", "zh": "吳博士在實驗室入口附近放置了一個小裝置。當有人走過門口時，動作感測器立刻觸發了警報。", "blank": "s____r"}, {"num": 24, "word": "adjustments", "en": "The mechanic checked the engine and noticed a few loose parts. Mr. Zhao made several quick a____ts to make the car run smoothly again.", "zh": "技師檢查了引擎，並注意到幾個鬆動的零件。趙先生做了幾次快速調整，讓汽車再次平順運行。", "blank": "a____ts"}, {"num": 25, "word": "unidentified", "en": "Professor Lee found a strange fossil during his long expedition in Africa. The species remains u____ied because it does not match any known biological records.", "zh": "李教授在漫長的非洲考察中發現了一塊奇怪的化石。該物種仍然未經確認，因為牠與任何已知的生物紀錄都不吻合。", "blank": "u____ied"}, {"num": 26, "word": "predict", "en": "Nobody could p____t how quickly the new technology would become popular. Within two years, millions of people had started using the application.", "zh": "沒有人能預測這項新科技會多快普及。兩年內，就有數百萬人開始使用這個應用程式。", "blank": "p____t"}, {"num": 27, "word": "loosens", "en": "A good massage helps to relax tight muscles after an intense workout. Coach Zhang recommends stretching because it effectively l____ns the tension in your body.", "zh": "良好的按摩有助於在激烈的運動後放鬆緊繃的肌肉。張教練建議拉伸，因為它能有效地鬆開你身體的緊繃感。", "blank": "l____ns"}, {"num": 28, "word": "overthrow", "en": "The evil king ruled the peaceful kingdom with extreme cruelty for many decades. A group of brave knights finally managed to o____w his terrible reign.", "zh": "邪惡的國王以極端的殘酷統治了這個和平的王國數十年。一群勇敢的騎士最終成功推翻了他可怕的統治。", "blank": "o____w"}, {"num": 29, "word": "invaded", "en": "The destructive bugs quickly destroyed all the crops in the local farm. It was a complete disaster when those insects i____ded Farmer Chen's precious tomato fields.", "zh": "具破壞性的蟲子迅速摧毀了當地農場裡所有的農作物。當那些昆蟲入侵陳農夫珍貴的番茄田時，這完全是一場災難。", "blank": "i____ded"}, {"num": 30, "word": "commission", "en": "The real estate agent earns a c________n whenever a property is successfully sold. The payment is usually calculated as a percentage of the sale price.", "zh": "房仲每成功售出一間房屋就會獲得一筆佣金。這筆款項通常按照售價的一定百分比計算。", "blank": "c________n"}, {"num": 31, "word": "harsher", "en": "The judge decided to give the criminal a much stricter punishment this time. Lawyer Chen argued that the h____er penalty was truly necessary for public safety.", "zh": "法官決定這次給予罪犯嚴格得多的懲罰。陳律師主張為了公眾安全，更嚴厲的刑罰確實是必要的。", "blank": "h____er"}, {"num": 32, "word": "equations", "en": "The physics test covered various topics about motion and gravity. Professor Wu required the class to use specific e____ns to calculate the final answers.", "zh": "物理考試涵蓋了關於運動和引力的各種主題。吳教授要求全班使用特定的方程式來計算最終答案。", "blank": "e____ns"}, {"num": 33, "word": "coincidence", "en": "Amanda met her elementary school teacher at a coffee shop in Paris. Emily could not believe such an amazing c____e happened during their vacation.", "zh": "阿曼達在巴黎的咖啡廳遇見了她的小學老師。艾蜜莉無法相信在他們的假期中會發生如此驚人的巧合。", "blank": "c____e"}, {"num": 34, "word": "deserved", "en": "The brave firefighter rescued three little puppies from the burning apartment building. Mayor Chen announced that the local hero truly d____ved the city's highest honor.", "zh": "勇敢的消防員從燃燒的公寓大樓裡救出了三隻小狗。陳市長宣布這位當地英雄確實配得上這座城市的最高榮譽。", "blank": "d____ved"}, {"num": 35, "word": "backyard", "en": "The children spent the afternoon playing basketball in the b______d. Their parents watched from the kitchen while preparing dinner.", "zh": "孩子們整個下午都在後院打籃球。他們的父母一邊準備晚餐，一邊從廚房觀看。", "blank": "b______d"}, {"num": 36, "word": "prompt", "en": "The customer service team always tries to resolve complaints as quickly as possible. Director Yang appreciates their p____t responses to every client's urgent issues.", "zh": "客服團隊總是試圖盡快解決客訴。楊主任很欣賞他們對每位客戶緊急問題的迅速回應。", "blank": "p____t"}, {"num": 37, "word": "elaborate", "en": "The architect presented an e_______e design for the new cultural center. The detailed plan included a theater, library, and outdoor garden.", "zh": "建築師為新的文化中心提出精心設計的方案。詳細計畫包含劇院、圖書館和戶外花園。", "blank": "e_______e"}, {"num": 38, "word": "laboratories", "en": "Tech companies invest heavily in developing new products every year. Mr. Zhang regularly visits different secret l____ies to check on the progress of these inventions.", "zh": "科技公司每年在開發新產品上投入巨資。張先生定期視察不同的秘密實驗室，以檢查這些發明的進度。", "blank": "l____ies"}, {"num": 39, "word": "phenomenon", "en": "Scientists have been studying the sudden drop in local ocean temperatures. David believes this rare p____n is caused by recent changes in the global climate.", "zh": "科學家們一直在研究當地海洋溫度的突然下降。大衛認為這種罕見的現象是由最近全球氣候變化所引起的。", "blank": "p____n"}, {"num": 40, "word": "alert", "en": "The sudden alarm a_____d everyone in the building. Employees quickly left their offices after hearing the emergency signal.", "zh": "突然響起的警報使大樓裡的每個人都提高警覺。員工聽到緊急訊號後迅速離開辦公室。", "blank": "a_____d"}, {"num": 41, "word": "otherwise", "en": "John needs to study harder for the upcoming final examination. He will o____e fail the difficult math test prepared by Teacher Huang.", "zh": "約翰需要為即將到來的期末考更用功讀書。否則他將無法通過黃老師準備的困難數學考試。", "blank": "o____e"}, {"num": 42, "word": "scents", "en": "The perfume store offers many different fragrances for customers to choose from. Amanda spent hours testing various floral s____ts before making her final purchase.", "zh": "香水店提供許多不同的香氣供顧客選擇。阿曼達花了幾個小時測試各種花香，然後才做出最後的購買決定。", "blank": "s____ts"}, {"num": 43, "word": "luxuries", "en": "The travelers enjoyed fine dining, spa treatments, and private beach access. Mrs. Lin appreciated all the wonderful l____ies provided by the five-star resort.", "zh": "旅客們享受了精緻的餐飲、水療護理和私人海灘通道。林太太很感激這家五星級度假村提供的所有美好奢華享受。", "blank": "l____ies"}, {"num": 44, "word": "merge", "en": "The narrow country road connects with the busy modern highway up ahead. Driver Chen needs to carefully m____e into the fast-moving traffic.", "zh": "狹窄的鄉間小路與前方繁忙的現代高速公路相連。陳駕駛需要小心地匯入快速移動的車流中。", "blank": "m____e"}, {"num": 45, "word": "investigate", "en": "Journalists i________ted the company's financial records for several months. Their report revealed several questionable transactions.", "zh": "記者調查這家公司的財務紀錄好幾個月。他們的報導揭露了幾筆可疑交易。", "blank": "i________ted"}, {"num": 46, "word": "feasts", "en": "The hungry travelers attended many grand banquets during their European tour. They truly enjoyed the delicious holiday f____ts hosted by the generous villagers.", "zh": "飢餓的旅客在他們的歐洲之旅中參加了許多盛大的宴席。他們真的很享受由慷慨村民所主辦的美味節日盛宴。", "blank": "f____ts"}, {"num": 47, "word": "absorbed", "en": "The black car parked in the sun became extremely hot during the afternoon. The metal surface a____bed all the solar heat and burned my hand.", "zh": "停在太陽下的黑色汽車在下午變得極度炎熱。金屬表面吸收了所有的太陽熱能，並燙傷了我的手。", "blank": "a____bed"}, {"num": 48, "word": "architecture", "en": "The modern city skyline is filled with impressive glass and steel skyscrapers. David admires the innovative a____e that makes the urban landscape look so futuristic.", "zh": "現代城市的天際線充滿了令人印象深刻的玻璃和鋼鐵摩天大樓。大衛欣賞這些讓城市景觀看起來如此具未來感的創新建築。", "blank": "a____e"}, {"num": 49, "word": "rally", "en": "The team held a r____y after falling behind by ten points. Several successful plays gave the players confidence to catch up.", "zh": "球隊落後十分後展開反攻。幾次成功的進攻讓球員有信心追上對手。", "blank": "r____y"}, {"num": 50, "word": "performers", "en": "The grand circus show featured acrobats, clowns, and skilled magicians. Director Zhao praised all the amazing p____rs for delivering such an entertaining night.", "zh": "盛大的馬戲團表演以雜技演員、小丑和熟練的魔術師為特色。趙主任讚美所有驚人的表演者帶來了一個如此具娛樂性的夜晚。", "blank": "p____rs"}, {"num": 51, "word": "noble", "en": "The greedy merchant wanted to marry his daughter into a high-status family. Mr. Lin actively searched for a wealthy n____e to become his son-in-law.", "zh": "貪婪的商人想把女兒嫁入地位崇高的家庭。林先生積極尋找一位富有的貴族來做他的女婿。", "blank": "n____e"}, {"num": 52, "word": "generated", "en": "The software company launched a huge marketing campaign on social media last week. The advertisements g____ted a lot of interest among teenagers across the country.", "zh": "軟體公司上週在社群媒體上發起了一場盛大的行銷活動。這些廣告在全國青少年中產生了很大的興趣。", "blank": "g____ted"}, {"num": 53, "word": "essentially", "en": "The machine is e________y a large computer designed for scientific research. Engineers added several special functions to handle complex calculations.", "zh": "這台機器基本上是一部為科學研究設計的大型電腦。工程師加入幾項特殊功能來處理複雜計算。", "blank": "e________y"}, {"num": 54, "word": "compelling", "en": "The mystery novel was so fascinating that I could not put it down. Sarah found the detective's thrilling story absolutely c____ling from the very first chapter.", "zh": "這本懸疑小說太迷人了，讓我愛不釋手。莎拉從第一章開始就發現這位偵探驚心動魄的故事絕對引人入勝。", "blank": "c____ling"}, {"num": 55, "word": "accessible", "en": "The complicated scientific report was written in very simple and clear language. Author Lin wanted to make the difficult knowledge highly a____e to the general public.", "zh": "這份複雜的科學報告是用非常簡單清晰的語言寫成的。林作者想讓一般大眾也能輕易理解這些困難的知識。", "blank": "a____e"}, {"num": 56, "word": "misled", "en": "The witness was m_____d by incorrect information during the investigation. Later, new evidence showed that the original story was inaccurate.", "zh": "這名證人在調查過程中受到錯誤資訊的誤導。後來的新證據顯示原本的說法並不正確。", "blank": "m_____d"}, {"num": 57, "word": "envisioned", "en": "The talented architect drew a sketch of the future museum. Director Yang clearly e____ned a grand glass building standing in the center of the park.", "zh": "這位才華洋溢的建築師畫了一張未來博物館的草圖。楊主任清楚地預想了一座宏偉的玻璃建築矗立在公園中央。", "blank": "e____ned"}, {"num": 58, "word": "inspiration", "en": "The young writer often visited the library for i________n. Reading biographies of famous authors helped Daniel develop ideas for his novel.", "zh": "這位年輕作家經常到圖書館尋找靈感。閱讀知名作家的傳記幫助 Daniel為小說發展想法。", "blank": "i________n"}, {"num": 59, "word": "accomplish", "en": "The young athlete set a new world record at the Olympic Games. Coach Yang is incredibly proud of what his student managed to a____h this year.", "zh": "這位年輕運動員在奧運會上創下了新的世界紀錄。楊教練對他的學生今年所能達成的成就感到無比驕傲。", "blank": "a____h"}, {"num": 60, "word": "imaginative", "en": "The science fiction author created a fascinating world filled with alien creatures. Readers completely loved Director Wang's highly i____e storytelling and vivid descriptions.", "zh": "這位科幻小說家創造了一個充滿外星生物的迷人世界。讀者完全愛上了王導演極具想像力的故事敘述和生動的描述。", "blank": "i____e"}, {"num": 61, "word": "recipes", "en": "The famous chef published a new cookbook filled with healthy vegetarian dishes. Chef Lin tested all the r____es multiple times before sharing them with the public.", "zh": "這位著名主廚出版了一本充滿健康素食菜餚的新食譜。林主廚在與大眾分享之前，將所有食譜測試了許多次。", "blank": "r____es"}, {"num": 62, "word": "encountered", "en": "The famous scientist faced many difficult challenges during her early research. Professor Lee e____red numerous unexpected obstacles while conducting the complex experiments.", "zh": "這位著名的科學家在早期的研究中面臨了許多困難的挑戰。李教授在進行複雜實驗時遭遇了無數意想不到的障礙。", "blank": "e____red"}, {"num": 63, "word": "workshops", "en": "The famous artist loves to share his painting techniques with the public. David attends these creative w____ps every weekend to learn how to paint better.", "zh": "這位著名的藝術家喜歡與大眾分享他的繪畫技巧。大衛每週末都參加這些創意工作坊，學習如何畫得更好。", "blank": "w____ps"}, {"num": 64, "word": "psychology", "en": "The experienced detective understands the criminal mind very well. Inspector Lee uses advanced p____y to predict what the serial killer will do next.", "zh": "這位經驗豐富的警探非常了解罪犯的心態。李督察利用進階心理學來預測連環殺手下一步會做什麼。", "blank": "p____y"}, {"num": 65, "word": "rigid", "en": "The old wooden chair broke easily because its structural design was completely inflexible. Carpenter Lin explained that the material was simply too r____d to bend.", "zh": "這把舊木椅很容易就斷了，因為它的結構設計完全缺乏彈性。林木匠解釋說，這個材質實在太堅硬而無法彎曲。", "blank": "r____d"}, {"num": 66, "word": "ultimately", "en": "The two massive tech companies fought a long legal battle over patent rights. The supreme judge u____y decided that the smaller firm was completely innocent.", "zh": "這兩家大型科技公司為了專利權打了一場漫長的法律戰。最高法官最終判定那家較小的公司完全無罪。", "blank": "u____y"}, {"num": 67, "word": "outfit", "en": "The young boy needed a formal suit for his sister's upcoming wedding. Mother Chen spent the entire afternoon shopping for the perfect o____t.", "zh": "這個小男孩需要一套正式的西裝來參加他姐姐即將舉行的婚禮。陳媽媽花了整個下午去買一套完美的服裝。", "blank": "o____t"}, {"num": 68, "word": "nutrient", "en": "The soil in this specific farm is lacking a very important chemical element. Farmer Zhao needs to add a special n____t to help the crops grow faster.", "zh": "這個特定農場的土壤缺乏一種非常重要的化學元素。趙農夫需要添加一種特殊的養分來幫助農作物長得更快。", "blank": "n____t"}, {"num": 69, "word": "stability", "en": "The country finally enjoyed peace after decades of terrible civil war. President Chen worked hard to maintain economic s____y for all his citizens.", "zh": "這個國家在經歷了數十年的可怕內戰後，終於享受到了和平。陳總統努力為他所有的公民維持經濟穩定。", "blank": "s____y"}, {"num": 70, "word": "sustain", "en": "The company hopes to s_____n its growth for many years. The management team is investing heavily in research and development.", "zh": "這家公司希望能維持多年的成長。管理團隊正大量投資於研究與開發。", "blank": "s_____n"}, {"num": 71, "word": "flexible", "en": "The modern software company allows its employees to choose their own working hours. Manager Lee believes that offering a f____e schedule increases overall productivity.", "zh": "這家現代軟體公司允許員工選擇自己的工作時間。李經理相信提供彈性的時間表能提高整體生產力。", "blank": "f____e"}, {"num": 72, "word": "surroundings", "en": "The luxury resort is beautifully located near a peaceful lake and lush green mountains. Mr. Lee specifically chose this hotel to enjoy the relaxing natural s____gs.", "zh": "這家豪華度假村美麗地坐落在一座平靜的湖泊和翠綠的群山附近。李先生特別選擇了這家飯店，以享受令人放鬆的自然環境。", "blank": "s____gs"}, {"num": 73, "word": "personnel", "en": "The hospital is currently facing a severe shortage of experienced nurses. Director Zhao needs to hire more medical p____l to handle the growing number of patients.", "zh": "這家醫院目前正面臨經驗豐富的護理師嚴重短缺的問題。趙主任需要聘僱更多醫療人員來應對不斷增加的病患。", "blank": "p____l"}, {"num": 74, "word": "throne", "en": "The ancient t____e was carefully protected inside the national museum. Historians believe several kings once used the beautifully decorated seat.", "zh": "這座古老的王位被小心地保存於國家博物館中。歷史學家相信曾有幾位國王使用過這張裝飾華麗的座椅。", "blank": "t____e"}, {"num": 75, "word": "endure", "en": "The ancient stone temple survived hundreds of severe earthquakes and storms. Architect Chen marvels at how the historic building could e____e such harsh conditions.", "zh": "這座古老的石頭寺廟撐過了數百次嚴重的地震和風暴。陳建築師驚嘆這座歷史建築竟能承受如此惡劣的條件。", "blank": "e____e"}, {"num": 76, "word": "endure", "en": "The old bridge can e____e extreme weather for many years. Engineers recently inspected it to make sure the structure remains safe.", "zh": "這座老橋可以承受多年的極端天氣。工程師最近檢查它，以確保結構仍然安全。", "blank": "e____e"}, {"num": 77, "word": "generations", "en": "The beautiful old temple has stood firmly in the village center for hundreds of years. The historical building has inspired multiple g____ns of local artists and writers.", "zh": "這座美麗的古廟在村莊中心屹立了數百年。這座歷史建築啟發了好幾代的當地藝術家和作家。", "blank": "g____ns"}, {"num": 78, "word": "beloved", "en": "The old golden retriever was a precious member of the family for fifteen years. Everyone cried when their b____ved pet passed away peacefully in the backyard.", "zh": "這隻老黃金獵犬十五年來一直是這個家庭珍貴的成員。當他們心愛的寵物在後院平靜地過世時，每個人都哭了。", "blank": "b____ved"}, {"num": 79, "word": "polished", "en": "The antique wooden table looked brand new after hours of careful restoration. Carpenter Wang proudly showed off the beautifully p____hed surface to the wealthy client.", "zh": "這張古董木桌在經過數小時的仔細修復後看起來煥然一新。王木匠驕傲地向這位富有的客戶展示了拋光得非常美麗的表面。", "blank": "p____hed"}, {"num": 80, "word": "gripped", "en": "The terrifying horror movie kept the entire audience on the edge of their seats. A strong sense of fear completely g____ped Amanda from the beginning to the end.", "zh": "這部可怕的恐怖片讓全場觀眾緊張到坐立難安。強烈的恐懼感從頭到尾完全攫住了阿曼達。", "blank": "g____ped"}, {"num": 81, "word": "aspect", "en": "The documentary examines an important a_____t of modern family life. The film focuses on how technology has changed communication between relatives.", "zh": "這部紀錄片探討現代家庭生活的一個重要面向。影片聚焦於科技如何改變親人之間的溝通。", "blank": "a_____t"}, {"num": 82, "word": "insights", "en": "The business conference featured many successful entrepreneurs from different countries. Alice gained plenty of practical i____ts on how to manage a startup company effectively.", "zh": "這場商業會議邀請了許多來自不同國家的成功企業家。愛麗絲獲得了許多關於如何有效管理新創公司的實用見解。", "blank": "i____ts"}, {"num": 83, "word": "slightly", "en": "The soup tasted a bit too bland for the famous food critic. Chef Huang added a s____y higher amount of salt to improve the overall flavor.", "zh": "這湯對這位著名的美食評論家來說味道有點太淡了。黃主廚加入稍微多一點的鹽來改善整體的風味。", "blank": "s____y"}, {"num": 84, "word": "participants", "en": "The scientific study requires at least fifty healthy volunteers to test the new drug. Doctor Huang carefully evaluates the medical history of all the potential p____ts.", "zh": "這項科學研究需要至少五十名健康的志工來測試新藥。黃醫師仔細評估了所有潛在參與者的病史。", "blank": "p____ts"}, {"num": 85, "word": "distinct", "en": "The twin brothers have completely different personalities and hobbies. Teacher Wu noticed their d____t characteristics during the first week of school.", "zh": "這對雙胞胎兄弟有著完全不同的個性和嗜好。吳老師在開學第一週就注意到了他們截然不同的特徵。", "blank": "d____t"}, {"num": 86, "word": "deadly", "en": "The disease was once considered d____y by doctors. Fortunately, modern medicine has made it possible to treat most patients successfully.", "zh": "這種疾病曾被醫生認為是致命的。幸運的是，現代醫學已經讓大多數患者能夠成功接受治療。", "blank": "d____y"}, {"num": 87, "word": "radar", "en": "Captain Chen could not locate the missing fishing boat on his screen. The ancient vessel had completely disappeared from the ship's r____r during the terrible storm.", "zh": "陳船長無法在螢幕上找到失蹤的漁船。在可怕的風暴中，這艘古老的船隻已經完全從船上的雷達上消失了。", "blank": "r____r"}, {"num": 88, "word": "purchase", "en": "The latest smartphone model comes with a free pair of wireless earphones. Amanda was completely satisfied with her wonderful online p____e last week.", "zh": "最新款的智慧型手機附贈一副免費的無線耳機。阿曼達對她上週美好的線上購買感到完全滿意。", "blank": "p____e"}, {"num": 89, "word": "statistic", "en": "The latest s________s reveal a significant increase in online shopping. Researchers believe changes in consumer habits explain the trend.", "zh": "最新統計數據顯示網路購物大幅增加。研究人員認為消費習慣的改變可以解釋這項趨勢。", "blank": "s________s"}, {"num": 90, "word": "mysterious", "en": "Kevin heard strange noises coming from the abandoned house next door. He decided to investigate the m____s sounds with his friends at midnight.", "zh": "凱文聽到隔壁廢棄的房子裡傳來奇怪的噪音。他決定在午夜和朋友們一起調查那些神祕的聲音。", "blank": "m____s"}, {"num": 91, "word": "peasants", "en": "The wealthy king held a grand festival for everyone in the kingdom. Even the poorest p____ts were invited to enjoy the royal banquet.", "zh": "富有的國王為王國裡的每個人舉辦了一場盛大的慶典。即使是最貧窮的農民也受邀享受這場皇家宴會。", "blank": "p____ts"}, {"num": 92, "word": "scam", "en": "Several criminals tried to s___m local residents through fake investment advertisements. The police warned people not to transfer money.", "zh": "幾名犯罪分子試圖透過虛假投資廣告詐騙當地居民。警方警告民眾不要轉帳。", "blank": "s___m"}, {"num": 93, "word": "competitors", "en": "Several c________rs entered the final round of the cooking contest. Each chef had only one hour to prepare a complete meal.", "zh": "幾名參賽者進入烹飪比賽的決賽。每位廚師只有一小時準備完整的一餐。", "blank": "c________rs"}, {"num": 94, "word": "motivation", "en": "The exhausted runner thought about his supportive family to keep going. David found his internal m____n exactly when he was about to give up.", "zh": "筋疲力盡的跑者想起了支持他的家人以繼續前進。大衛正要放棄時，找到了他內在的動機。", "blank": "m____n"}, {"num": 95, "word": "labor", "en": "The exhausted farmers work extremely hard in the hot fields all day long. Mr. Yang watches them l____r under the burning summer sun.", "zh": "筋疲力盡的農夫整天在炎熱的田野裡極度辛勤地工作。楊先生看著他們在炎熱的夏日陽光下勞動。", "blank": "l____r"}, {"num": 96, "word": "pastas", "en": "The supermarket offers many different shapes of dried noodles in the international aisle. Mother Chen prefers buying short p____as because they are easier for kids to eat.", "zh": "超市在國際走道上提供許多不同形狀的乾麵條。陳媽媽偏好購買短的義大利麵，因為它們比較容易讓小孩食用。", "blank": "p____as"}, {"num": 97, "word": "elaborately", "en": "The traditional opera costumes were covered in colorful silk and shiny beads. Designer Chen spent months handcrafting those incredibly e____y designed dresses.", "zh": "傳統的戲曲服裝上覆蓋著色彩繽紛的絲綢和閃亮的珠子。陳設計師花了幾個月的時間手工製作那些設計極其精緻的裙子。", "blank": "e____y"}, {"num": 98, "word": "physics", "en": "Einstein completely changed how we understand space and time in the modern era. His groundbreaking theories are fundamental to the study of advanced p____s today.", "zh": "愛因斯坦徹底改變了我們在現代對時間與空間的理解。他開創性的理論是今日進階物理學研究的基礎。", "blank": "p____s"}, {"num": 99, "word": "implications", "en": "The new tax policy will deeply affect many middle-class families. Economist Wu spent hours analyzing the serious financial i____ns of this controversial law.", "zh": "新的稅收政策將深刻影響許多中產階級家庭。吳經濟學家花了數小時分析這項具爭議性法律所帶來的嚴重財務影響。", "blank": "i____ns"}, {"num": 100, "word": "artistic", "en": "The newly renovated cafe has a very stylish and aesthetic interior design. Emily enjoys drinking coffee there because of the highly a____c atmosphere.", "zh": "新裝修的咖啡廳擁有非常時尚且具美感的室內設計。艾蜜莉喜歡在那裡喝咖啡，因為那裡有著高度的藝術氛圍。", "blank": "a____c"}, {"num": 101, "word": "calculations", "en": "The accountant spent the entire afternoon reviewing the financial report. Miss Lin found several mistakes in the math c____ns and had to correct them immediately.", "zh": "會計師花了整個下午審查財務報告。林小姐在數學計算中發現了幾個錯誤，並必須立刻更正它們。", "blank": "c____ns"}, {"num": 102, "word": "boosts", "en": "The local government lowered taxes to help struggling small businesses. Mayor Lee hopes this financial policy greatly b____ts the city's slow economy.", "zh": "當地政府降低了稅收以幫助陷入困境的小企業。李市長希望這項財務政策能大大促進該市緩慢的經濟。", "blank": "b____ts"}, {"num": 103, "word": "forges", "en": "The experienced blacksmith shapes hot metal into beautiful tools and weapons. Master Wu carefully f____es each iron blade using traditional techniques passed down from his father.", "zh": "經驗豐富的鐵匠將熱金屬塑造成美麗的工具和武器。吳師傅使用從父親那裡傳下來的傳統技術，仔細地鍛造每一把鐵刃。", "blank": "f____es"}, {"num": 104, "word": "abstracts", "en": "The academic journal requires all authors to submit a short summary of their research. Editor Zhang reads dozens of these written a____ts every week to select the best papers.", "zh": "該學術期刊要求所有作者提交一份他們研究的簡短摘要。張編輯每週閱讀數十份這類書面摘要，以挑選出最好的論文。", "blank": "a____ts"}, {"num": 105, "word": "universal", "en": "The need for clean water is considered u_______l. Governments around the world are working to improve access to safe drinking water.", "zh": "對乾淨水源的需求被視為全世界共同的需求。世界各地的政府都在努力改善安全飲用水的取得。", "blank": "u_______l"}, {"num": 106, "word": "essentials", "en": "The charity organization packed basic supplies for the earthquake victims in the mountains. Volunteer Lin made sure all daily e____ls were included in the relief boxes.", "zh": "慈善機構為山區的地震災民打包了基本物資。林志工確保所有日常必需品都包含在救援箱中。", "blank": "e____ls"}, {"num": 107, "word": "professionals", "en": "The medical conference was attended by hundreds of doctors and nurses from all over the world. These dedicated healthcare p____ls gathered to discuss the latest hospital treatments.", "zh": "數百名來自世界各地的醫生和護理師參加了這場醫學會議。這些盡責的醫療專業人員聚集在一起討論最新的醫院療法。", "blank": "p____ls"}, {"num": 108, "word": "demonstrated", "en": "The skilled software engineer presented the new application during the morning meeting. Kevin clearly d____ted how to use the special features to all the project managers.", "zh": "熟練的軟體工程師在早會上展示了新的應用程式。凱文清楚地向所有專案經理示範了如何使用這些特殊功能。", "blank": "d____ted"}, {"num": 109, "word": "highlighted", "en": "The enthusiastic tour guide pointed out the historical importance of the ancient temple. Miss Lin deliberately h____ted the unique architectural details to catch the tourists' attention.", "zh": "熱情的導遊指出了這座古廟的歷史重要性。林小姐刻意強調了獨特的建築細節以吸引遊客的注意。", "blank": "h____ted"}, {"num": 110, "word": "percent", "en": "The survey showed that seventy p_____t of students preferred digital textbooks. Many students said electronic books were easier to carry.", "zh": "調查顯示，百分之七十的學生比較喜歡電子課本。許多學生表示電子書更容易攜帶。", "blank": "p_____t"}, {"num": 111, "word": "strain", "en": "The massive financial debt caused a lot of stress for the young couple. Kevin felt an enormous mental s____n while trying to pay off the bank loan.", "zh": "龐大的財務債務給這對年輕夫婦帶來了很大的壓力。凱文在試圖償還銀行貸款時，感受到了巨大的精神負擔。", "blank": "s____n"}, {"num": 112, "word": "fascinating", "en": "The documentary about deep sea creatures captured the attention of many students. Teacher Liu found the underwater world to be extremely f____ing and full of surprises.", "zh": "關於深海生物的紀錄片吸引了許多學生的注意。劉老師發現水下世界極度迷人且充滿驚喜。", "blank": "f____ing"}, {"num": 113, "word": "conventional", "en": "Susan decided to bake a cake using a completely new and unique recipe. She was tired of the c____l flavors that everyone else usually made.", "zh": "蘇珊決定用一種全新且獨特的食譜來烤蛋糕。她厭倦了其他人通常製作的傳統口味。", "blank": "c____l"}, {"num": 114, "word": "strengthen", "en": "Sophia goes to the gym three times a week to lift heavy weights. She wants to s____n her core muscles to improve her overall physical health.", "zh": "蘇菲亞每週去健身房三次舉重。她想要強化她的核心肌群，以改善她整體的身體健康。", "blank": "s____n"}, {"num": 115, "word": "profile", "en": "The police created a p_____e of the suspect based on witness statements. Investigators used the information to narrow down their search.", "zh": "警方根據目擊者的證詞建立嫌疑犯的特徵檔案。調查人員利用這些資訊縮小搜尋範圍。", "blank": "p_____e"}, {"num": 116, "word": "adjusted", "en": "The photographer moved the lighting equipment slightly to the left side of the studio. David carefully a____ted the brightness so the model's face would look more natural.", "zh": "攝影師將照明設備稍微移到攝影棚的左側。大衛仔細調整了亮度，讓模特兒的臉看起來更自然。", "blank": "a____ted"}, {"num": 117, "word": "demand", "en": "Customers d_____d better service from the company last year. The manager responded by providing additional training for employees.", "zh": "顧客去年要求公司提供更好的服務。經理因此為員工提供額外訓練。", "blank": "d_____d"}, {"num": 118, "word": "greed", "en": "Arthur's g___d for money caused him to make several terrible decisions. He eventually lost the trust of his closest friends and business partners.", "zh": "Arthur 對金錢的貪婪使他做出幾個糟糕的決定。他最後失去了最親近朋友和商業夥伴的信任。", "blank": "g___d"}, {"num": 119, "word": "incredible", "en": "Daniel told us an i________e story about surviving alone in the wilderness. Everyone listened carefully because the experience sounded unbelievable.", "zh": "Daniel 告訴我們一個獨自在荒野中生存的不可思議故事。每個人都仔細聆聽，因為那段經歷聽起來令人難以置信。", "blank": "i________e"}, {"num": 120, "word": "physical", "en": "Emily experienced several p______l changes after following the training program. Her improved strength allowed her to carry heavy equipment more easily.", "zh": "Emily 遵循訓練計畫後經歷了幾項身體上的變化。體力提升讓她更容易搬運沉重的設備。", "blank": "p______l"}, {"num": 121, "word": "workout", "en": "After finishing his w_____t, Kevin drank plenty of water and rested for twenty minutes. The exercise helped him feel more energetic.", "zh": "Kevin 做完運動後喝了很多水，並休息了二十分鐘。運動幫助他感覺更有精神。", "blank": "w_____t"}, {"num": 122, "word": "suspicious", "en": "Kevin became s________s when the stranger asked for his bank password. He immediately ended the conversation and reported the incident.", "zh": "Kevin 對陌生人要求他的銀行密碼感到可疑。他立即結束對話並通報這起事件。", "blank": "s________s"}, {"num": 123, "word": "thoroughly", "en": "Before publishing the article, Mia t________y checked every source and quotation. She wanted to make sure that all the information was accurate.", "zh": "Mia 在發表文章前徹底檢查每個資料來源和引述。她希望確保所有資訊都是正確的。", "blank": "t________y"}, {"num": 124, "word": "convincing", "en": "Nina gave a c________g explanation for why she had arrived late. Her description of the train delay matched information from the station.", "zh": "Nina 對自己為何遲到提出令人信服的解釋。她描述的火車延誤情況與車站資訊一致。", "blank": "c________g"}, {"num": 125, "word": "disguise", "en": "Rachel used a d_____e to enter the building without being recognized. She dressed like a delivery worker and carried several empty boxes.", "zh": "Rachel 使用偽裝進入大樓而沒有被認出來。她穿得像送貨員，還拿著幾個空箱子。", "blank": "d_____e"}, {"num": 126, "word": "financial", "en": "Sarah received f_______l advice before investing her savings. The expert explained the possible risks and long-term returns.", "zh": "Sarah 在投資積蓄前接受了財務建議。專家解釋了可能的風險和長期報酬。", "blank": "f_______l"}, {"num": 127, "word": "context", "en": "Sarah explained the historical c_____t before discussing the famous speech. Her explanation helped the audience understand why those words were chosen.", "zh": "Sarah 在討論那篇著名演說前先解釋歷史背景。她的說明幫助聽眾理解為什麼選擇那些字詞。", "blank": "c_____t"}];
-const RANGES = [[1, 20], [21, 40], [41, 60], [61, 80], [81, 100], [101, 120], [121, 127]];
+const L="ABCD";
+const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[(\d*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const SENT={};
+function passage(title,paras,note){
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[(\d+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  return '<section class="pas"><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
+}
+function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
+const clue=t=>'<div class="clue"><h4>解題線索</h4>'+t+'</div>';
+function card(n,tags,ans,body){
+  return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
+}
+
+/* === 單字卡資料庫 (亂序 127 題完整收錄) === */
+const VOC_DATA = [
+  // 1 - 20
+  { n: 1, sec: "s1", tags: ["考點：psychology 心理學", "詞性需求：不可數名詞"], ans: "psychology",
+    en: "Understanding [[1|psychology]] can help teachers respond to students more effectively. Different students may react differently to the same classroom situation.",
+    zh: "了解心理學能幫助老師更有效地回應學生。不同學生可能會對相同的課堂情境產生不同反應。",
+    clue: "動名詞 Understanding 後接名詞作受詞；下文提及探究不同學生心智與行為反應之科學領域，依首尾提示 p________y 判定為 psychology。",
+    confuse: "psychologist (n. 心理學家)、psychological (adj. 心理學的)。指學科知識填不可數名詞 psychology。何時才對：She specializes in child psychology." },
+  { n: 2, sec: "s1", tags: ["考點：intelligence 智慧、智力", "詞性需求：不可數名詞"], ans: "intelligence",
+    en: "Artificial [[2|intelligence]] is changing how companies analyze information. The technology can process enormous amounts of data within a short period.",
+    zh: "人工智慧正在改變公司分析資訊的方式。這項科技能在短時間內處理大量資料。",
+    clue: "形容詞 Artificial 後接名詞作主詞；片語 Artificial intelligence (AI) 表人工智慧，依首尾提示 i________e 判定為 intelligence。",
+    confuse: "intelligent (adj. 有才智的)。與 Artificial 搭配組成專有名詞填 intelligence。何時才對：Dolphins possess high intelligence." },
+  { n: 3, sec: "s1", tags: ["考點：numerous 許多的", "詞性需求：形容詞"], ans: "numerous",
+    en: "[[3|Numerous]] students joined the environmental campaign last Saturday. Their participation helped the school collect hundreds of used plastic bottles.",
+    zh: "上週六有許多學生參加環保活動。他們的參與幫助學校收集了數百個使用過的塑膠瓶。",
+    clue: "修飾複數名詞 students 作主詞；下文提及收集了數百個寶特瓶，依首尾提示 N______s 判定為 numerous。",
+    confuse: "numerical (adj. 數字的)、number (n. 數字)。修飾可數複數名詞表數量眾多用 numerous。何時才對：There are numerous advantages to regular exercise." },
+  { n: 4, sec: "s1", tags: ["考點：striking 引人注目的、驚人的", "詞性需求：形容詞"], ans: "striking",
+    en: "The sunset painted the evening sky with bright red and orange colors. Photographer Liu captured this incredibly [[4|striking]] view with his expensive camera.",
+    zh: "夕陽將傍晚的天空染成了鮮豔的紅色和橘色。劉攝影師用他昂貴的相機捕捉了這個極度引人注目的景色。",
+    clue: "副詞 incredibly 修飾後方形容詞；修飾名詞 view，描述鮮豔晚霞色彩強烈震撼之美景，依首尾提示 s____king 判定為 striking。",
+    confuse: "strike (v. 打擊/罷工)。形容景色令人過目難忘用 striking。何時才對：She bears a striking resemblance to her mother." },
+  { n: 5, sec: "s1", tags: ["考點：communications 通訊設施、通訊網路", "詞性需求：名詞 (複數)"], ans: "communications",
+    en: "The massive earthquake completely destroyed the town's internet and phone lines. Engineer Wang worked day and night to restore [[5|communications]] for the trapped residents.",
+    zh: "大地震徹底摧毀了該鎮的網路和電話線。王工程師日以繼夜地工作，為受困居民恢復通訊。",
+    clue: "restore 後接受詞名詞；上文指摧毀了網路與電話線路，修復整套通訊系統設備，依首尾提示 c____ns 判定為 communications。",
+    confuse: "communication (不可數名詞，指人際交流溝通)。指網路、電話等電信設施時恆用複數形 communications。何時才對：Satellite communications were disrupted by the solar storm." },
+  { n: 6, sec: "s1", tags: ["考點：trigger 觸發、引發", "詞性需求：動詞過去式 (V-ed)"], ans: "triggered",
+    en: "The factory installed highly sensitive smoke detectors in every single hallway. A small puff of smoke accidentally [[6|triggered]] the loud emergency alarms.",
+    zh: "工廠在每一條走廊都安裝了高靈敏度的煙霧探測器。一小陣煙霧意外地觸發了大聲的緊急警報。",
+    clue: "主詞 A small puff of smoke 與副詞 accidentally 後接及物動詞；後有受詞 emergency alarms，煙霧使警報器響起，時態為過去式，依首尾提示 t____red 判定為 triggered。",
+    confuse: "trigger 也可作名詞 (槍枝板機)。此處作及物述詞動詞過去式。何時才對：Loud noises can trigger panic attacks." },
+  { n: 7, sec: "s1", tags: ["考點：scheme 計畫、方案", "詞性需求：可數名詞 (單數)"], ans: "scheme",
+    en: "The company developed a [[7|scheme]] to reduce unnecessary packaging. Managers hope the plan will lower costs and reduce environmental waste.",
+    zh: "公司制定一項計畫來減少不必要的包裝。經理希望這項計畫能降低成本並減少環境浪費。",
+    clue: "developed a 後接單數名詞；下文對應 the plan，指公司推行減碳減廢之具體方案，依首尾提示 s_____e 判定為 scheme。",
+    confuse: "scheme 在英式英文中常指官方或企業正式方案計畫。何時才對：The government launched a training scheme for unemployed youths." },
+  { n: 8, sec: "s1", tags: ["考點：formula 公式、方程式", "詞性需求：可數名詞 (複數)"], ans: "formulas",
+    en: "The chemistry students struggled to memorize the complex chemical equations. Teacher Wang wrote all the important [[8|formulas]] on the blackboard to help them review.",
+    zh: "化學系學生努力記住複雜的化學方程式。王老師把所有重要的公式寫在黑板上以幫助他們複習。",
+    clue: "all the important 後接複數名詞；化學課上協助學生複習化學反應方程式的公式，依首尾提示 f____as 判定為 formulas。",
+    confuse: "formula 複數可為 formulas 或 formulae。指科學公式時使用複數。何時才對：Students must memorize several mathematical formulas for the test." },
+  { n: 9, sec: "s1", tags: ["考點：atmosphere 大氣層、氣體環境", "詞性需求：可數名詞 (複數)"], ans: "atmospheres",
+    en: "The astronomer studies the thick gases surrounding different planets in our solar system. Dr. Wu discovered that these alien [[9|atmospheres]] are often toxic to human beings.",
+    zh: "天文學家研究環繞在我們太陽系不同行星周圍的濃厚氣體。吳博士發現這些外星大氣對人類通常是有毒的。",
+    clue: "指示代名詞 these 與形容詞 alien 後接複數名詞作主詞；動詞為 are，指不同行星周圍的各種大氣層氣體，依首尾提示 a____res 判定為 atmospheres。",
+    confuse: "atmosphere 作「氣氛」時常單數；天文學指各天體的大氣層時可用複數 atmospheres。何時才對：Planets with dense atmospheres trap more heat." },
+  { n: 10, sec: "s1", tags: ["考點：gallery 藝廊、美術館", "詞性需求：可數名詞 (複數)"], ans: "galleries",
+    en: "Paris is globally renowned for its world-class art museums and exhibition spaces. Tourist Lin spent an entire week exploring various famous [[10|galleries]] across the beautiful city.",
+    zh: "巴黎以其世界級的藝術博物館和展覽空間而聞名全球。林遊客花了整整一個星期的時間探索這座美麗城市中各種著名的畫廊。",
+    clue: "various famous 後接複數名詞；遊客在巴黎巡訪的多座藝術畫廊與展廳，依首尾提示 g____ies 判定為 galleries。",
+    confuse: "gallery 複數去 y 加 ies。指陳列展示藝術品場所用 galleries。何時才對：The art district is packed with independent galleries." },
+  { n: 11, sec: "s1", tags: ["考點：behavior 行為模式、行徑", "詞性需求：可數名詞 (複數)"], ans: "behaviors",
+    en: "The psychologist spent years observing how young monkeys interact with their mothers. Dr. Wang recorded various interesting social [[11|behaviors]] among the primates in the jungle.",
+    zh: "心理學家花了多年時間觀察小猴子如何與母親互動。王博士記錄了叢林中靈長類動物之間各種有趣的社會行為。",
+    clue: "various interesting social 後接複數名詞；動物學家記錄靈長類母子互動的各類社交行為表現，依首尾提示 b____rs 判定為 behaviors。",
+    confuse: "behavior 泛指行為時不可數；心理學或動物學指多種具體行為模式時可用複數 behaviors。何時才對：Scientists studied the mating behaviors of seabirds." },
+  { n: 12, sec: "s1", tags: ["考點：orbit 天體軌道", "詞性需求：可數名詞 (單數)"], ans: "orbit",
+    en: "The rocket successfully carried the telescope into outer space yesterday morning. Captain Lee confirmed that the device had entered its designated [[12|orbit]] around the moon.",
+    zh: "火箭昨天早上成功將望遠鏡帶入外太空。李船長確認該設備已經進入其指定的繞月軌道。",
+    clue: "all 所有格 its 與形容詞 designated 後接名詞；太空望遠鏡進入繞月運行之天體軌道，依首尾提示 o____t 判定為 orbit。",
+    confuse: "orbit 亦可當動詞 (orbit the Earth)。在 designated 後作名詞。何時才對：The space station is in low Earth orbit." },
+  { n: 13, sec: "s1", tags: ["考點：breakthrough 重大突破", "詞性需求：可數名詞 (複數)"], ans: "breakthroughs",
+    en: "Professor Wang and his team experienced countless failures in the past decade. However, their recent technological [[13|breakthroughs]] completely changed the smartphone industry.",
+    zh: "王教授和他的團隊在過去十年中經歷了無數次的失敗。然而，他們最近的科技突破徹底改變了智慧型手機產業。",
+    clue: "形容詞 technological 後接名詞複數作主詞；十年失敗後迎來撼動產業之多項重大技術突破，依首尾提示 b____hs 判定為 breakthroughs。",
+    confuse: "breakthrough 為複合名詞。複數加 -s。何時才對：Recent medical breakthroughs have cured rare diseases." },
+  { n: 14, sec: "s1", tags: ["考點：reminder 提示、提醒物", "詞性需求：可數名詞 (單數)"], ans: "reminder",
+    en: "The painful scar on his arm always brings back terrible memories. John views the permanent mark as a daily [[14|reminder]] of the tragic car accident.",
+    zh: "他手臂上痛苦的疤痕總是喚起可怕的回憶。約翰將這個永久的印記視為那場悲慘車禍的日常提醒。",
+    clue: "不定冠詞 a 與形容詞 daily 後接名詞；傷疤作為車禍慘劇的日常警惕提示，依首尾提示 r____r 判定為 reminder。",
+    confuse: "remind (v. 提醒)。指起提醒作用的事物填名詞 reminder。何時才對：The email serves as a reminder for tomorrow's meeting." },
+  { n: 15, sec: "s1", tags: ["考點：contribution 貢獻", "詞性需求：可數名詞 (複數)"], ans: "contributions",
+    en: "The mayor thanked all the dedicated volunteers during the annual community dinner. Mr. Huang recognized their valuable [[15|contributions]] to cleaning up the neighborhood parks.",
+    zh: "市長在年度社區晚宴上感謝了所有盡責的志工。黃先生表彰了他們在清理社區公園方面所做的寶貴貢獻。",
+    clue: "recognized their valuable 後接複數名詞；片語 contributions to + V-ing，志工對清理社區公園所付出的奉獻，依首尾提示 c____ns 判定為 contributions。",
+    confuse: "contribute (v. 貢獻)。在形容詞 valuable 後填名詞複數。何時才對：She made significant contributions to the charity." },
+  { n: 16, sec: "s1", tags: ["考點：accelerate 加速", "詞性需求：動詞過去式 (V-ed)"], ans: "accelerated",
+    en: "The car [[16|accelerated]] rapidly after the traffic light turned green. Within seconds, the driver had reached the speed limit.",
+    zh: "交通號誌轉綠後，汽車迅速加速。幾秒內，駕駛就已經達到速限。",
+    clue: "主詞 The car 與副詞 rapidly 之間填及物/不及物動詞；綠燈亮起後猛踩油門提速，時態為過去式，依首尾提示 a________ted 判定為 accelerated。",
+    confuse: "acceleration (n. 加速度)。敘述車輛動作需用過去式動詞 accelerated。何時才對：The train accelerated out of the station." },
+  { n: 17, sec: "s1", tags: ["考點：combination 密碼組合、排列", "詞性需求：可數名詞 (複數)"], ans: "combinations",
+    en: "The safety lock requires three numbers to be turned in the exact order. Kevin tried multiple [[17|combinations]] before finally managing to open the heavy metal safe.",
+    zh: "安全鎖需要按精確順序轉動三個數字。凱文嘗試了多種組合，最後終於成功打開了沉重的金屬保險箱。",
+    clue: "multiple 後接複數名詞；旋轉三位數密碼鎖嘗試各種排列組合，依首尾提示 c____ns 判定為 combinations。",
+    confuse: "combine (v. 結合)。指密碼鎖排列時名詞為 combination。何時才對：The safe combination consists of six digits." },
+  { n: 18, sec: "s1", tags: ["考點：exceed 超出、超越", "詞性需求：動詞過去式 (V-ed)"], ans: "exceeded",
+    en: "The successful fundraising campaign went far beyond everyone's initial expectations. Director Lin was thrilled that the total donations [[18|exceeded]] the original goal by one million dollars.",
+    zh: "成功的募款活動遠遠超出了每個人的初步預期。林主任對於總捐款數額超過原定目標一百萬元感到非常興奮。",
+    clue: "that 子句主詞 the total donations 後接動詞；受詞為 the original goal，募款金額超越原定目標，時態為過去式，依首尾提示 e____ded 判定為 exceeded。",
+    confuse: "excessive (adj. 過度的)。此處作及物述詞動詞過去式。何時才對：Sales exceeded all expectations this quarter." },
+  { n: 19, sec: "s1", tags: ["考點：reinforce 強化、加深鞏固", "詞性需求：原形動詞 (VR)"], ans: "reinforce",
+    en: "The teacher gives students a weekly quiz to review the previous lessons. Mr. Chang uses these short tests to [[19|reinforce]] important mathematical concepts.",
+    zh: "老師每週給學生小測驗以複習之前的課程。張老師利用這些簡短的考試來強化重要的數學概念。",
+    clue: "不定詞 to 後接原形動詞；透過週考複習以鞏固並強化數學概念，依首尾提示 r____e (原文 blank 印為 r____es，動詞不定詞應填原形) 判定為 reinforce。",
+    confuse: "reinforcement (n. 增強物)。to 後接動詞原形 reinforce。何時才對：Practice helps reinforce the skills you have learned." },
+  { n: 20, sec: "s1", tags: ["考點：pace 步伐、節奏步調", "詞性需求：可數名詞 (單數)"], ans: "pace",
+    en: "The teacher encouraged the students to work at their own [[20|pace]]. Taking short breaks helped several students remain focused longer.",
+    zh: "老師鼓勵學生按照自己的步調學習。短暫休息幫助幾名學生維持更長時間的專注。",
+    clue: "片語 at one's own pace（照自己的節奏/步調）；自主學習掌握進度，依首尾提示 p___e 判定為 pace。",
+    confuse: "pace 亦可作踱步 (pace back and forth)。固定片語 at one's own pace。何時才對：Runners should keep an even pace." },
+
+  // 21 - 40
+  { n: 21, sec: "s2", tags: ["考點：presentation 簡報、業務提案", "詞性需求：可數名詞 (單數)"], ans: "presentation",
+    en: "The marketing manager prepared multiple visual charts for the important client meeting. Director Zhao expects this professional [[21|presentation]] to win the huge contract.",
+    zh: "行銷經理為重要的客戶會議準備了多張視覺圖表。趙總監期望這場專業的簡報能贏得這份巨額合約。",
+    clue: "指示代名詞 this 與形容詞 professional 後接名詞；為爭取合約在客戶會議上進行之圖表簡報演說，依首尾提示 p____n 判定為 presentation。",
+    confuse: "present (v. 呈現 / n. 禮物)。名詞簡報填 presentation。何時才對：She gave a brilliant presentation on climate change." },
+  { n: 22, sec: "s2", tags: ["考點：variation 變奏曲、變體變化", "詞性需求：可數名詞 (複數)"], ans: "variations",
+    en: "The composer wrote several different versions of the main theme song. Pianist Chou played all the beautiful [[22|variations]] during his impressive solo concert.",
+    zh: "作曲家寫了幾種不同版本的主題曲。鋼琴家周在他令人印象深刻的獨奏會上演奏了所有美麗的變奏。",
+    clue: "all the beautiful 後接複數名詞；音樂會上鋼琴家彈奏主題曲衍生的各個改編曲版本，依首尾提示 v____ns 判定為 variations。",
+    confuse: "variety (n. 多樣性)。音樂曲式「變奏曲」名詞為 variation。何時才對：Mozart wrote variations on a French folk song." },
+  { n: 23, sec: "s2", tags: ["考點：sensor 感應器、感測裝置", "詞性需求：可數名詞 (單數)"], ans: "sensor",
+    en: "Dr. Wu placed a small device near the entrance of the laboratory. The motion [[23|sensor]] immediately triggered the alarm when someone walked past the door.",
+    zh: "吳博士在實驗室入口附近放置了一個小裝置。當有人走過門口時，動作感測器立刻觸發了警報。",
+    clue: "修飾語 The motion 後接單數名詞作主詞；有人走過即觸發警報之動態感測元件，依首尾提示 s____r 判定為 sensor。",
+    confuse: "sense (n. 感官 / v. 感覺到)。感測器硬體為 sensor。何時才對：Smoke sensors detect fire danger early." },
+  { n: 24, sec: "s2", tags: ["考點：adjustment 調整、微調", "詞性需求：可數名詞 (複數)"], ans: "adjustments",
+    en: "The mechanic checked the engine and noticed a few loose parts. Mr. Zhao made several quick [[24|adjustments]] to make the car run smoothly again.",
+    zh: "技師檢查了引擎，並注意到幾個鬆動的零件。趙先生做了幾次快速調整，讓汽車再次平順運行。",
+    clue: "several quick 後接複數名詞；片語 make adjustments to...（對……進行調整），修復鬆動零件，依首尾提示 a____ts 判定為 adjustments。",
+    confuse: "adjust (v. 調整)。動詞 make 後接名詞複數。何時才對：We made minor adjustments to the flight schedule." },
+  { n: 25, sec: "s2", tags: ["考點：unidentified 未確認的、身分不明的", "詞性需求：形容詞 (主詞補語)"], ans: "unidentified",
+    en: "Professor Lee found a strange fossil during his long expedition in Africa. The species remains [[25|unidentified]] because it does not match any known biological records.",
+    zh: "李教授在漫長的非洲考察中發現了一塊奇怪的化石。該物種仍然未經確認，因為牠與任何已知的生物紀錄都不吻合。",
+    clue: "連綴動詞 remains 後接形容詞作補語；非洲新出土化石無法比對已知生物紀錄，仍屬未辨明物種，依首尾提示 u____ied 判定為 unidentified。",
+    confuse: "identify (v. 確認辨識)。remains 後接形容詞補語。何時才對：The body remained unidentified for three weeks." },
+  { n: 26, sec: "s2", tags: ["考點：predict 預測、預告", "詞性需求：原形動詞 (VR)"], ans: "predict",
+    en: "Nobody could [[26|predict]] how quickly the new technology would become popular. Within two years, millions of people had started using the application.",
+    zh: "沒有人能預測這項新科技會多快普及。兩年內，就有數百萬人開始使用這個應用程式。",
+    clue: "情態助動詞 could 後接原形動詞；後接 how 引導之間接問句，事前無法預估新應用程式之竄紅速度，依首尾提示 p____t 判定為 predict。",
+    confuse: "prediction (n. 預測)。助動詞 could 後接原形動詞。何時才對：It is hard to predict the outcome of the election." },
+  { n: 27, sec: "s2", tags: ["考點：loosen 緩解、鬆開", "詞性需求：動詞第三人稱單數 (V-s)"], ans: "loosens",
+    en: "A good massage helps to relax tight muscles after an intense workout. Coach Zhang recommends stretching because it effectively [[27|loosens]] the tension in your body.",
+    zh: "良好的按摩有助於在激烈的運動後放鬆緊繃的肌肉。張教練建議拉伸，因為它能有效地鬆開你身體的緊繃感。",
+    clue: "代名詞主詞 it (stretching) 為單數第三人稱，副詞 effectively 後接動詞；受詞為 the tension，拉筋解除身體肌肉緊繃，現在式加 -s，依首尾提示 l____ns 判定為 loosens。",
+    confuse: "loose (adj. 鬆弛的)。動詞為 loosen，第三人稱單數加 -s。何時才對：Exercise loosens stiff joints." },
+  { n: 28, sec: "s2", tags: ["考點：overthrow 推翻殘暴統治", "詞性需求：原形動詞 (VR)"], ans: "overthrow",
+    en: "The evil king ruled the peaceful kingdom with extreme cruelty for many decades. A group of brave knights finally managed to [[28|overthrow]] his terrible reign.",
+    zh: "邪惡的國王以極端的殘酷統治了這個和平的王國數十年。一群勇敢的騎士最終成功推翻了他可怕的統治。",
+    clue: "managed to 後接原形動詞；受詞為 his terrible reign，騎士奮起推翻暴君統治，依首尾提示 o____w 判定為 overthrow。",
+    confuse: "overthrown (過去分詞)。不定詞 to 後接動詞原形 overthrow。何時才對：The plot to overthrow the government failed." },
+  { n: 29, sec: "s2", tags: ["考點：invade 大舉入侵、侵襲", "詞性需求：動詞過去式 (V-ed)"], ans: "invaded",
+    en: "The destructive bugs quickly destroyed all the crops in the local farm. It was a complete disaster when those insects [[29|invaded]] Farmer Chen's precious tomato fields.",
+    zh: "具破壞性的蟲子迅速摧毀了當地農場裡所有的農作物。當那些昆蟲入侵陳農夫珍貴的番茄田時，這完全是一場災難。",
+    clue: "when 子句主詞 those insects 後接動詞；害蟲大舉侵襲農地毀壞作物，時態為過去式，依首尾提示 i____ded 判定為 invaded。",
+    confuse: "invasion (n. 侵略)。此處為及物述詞動詞過去式。何時才對：Locusts invaded the wheat fields." },
+  { n: 30, sec: "s2", tags: ["考點：commission 佣金、銷售抽成", "詞性需求：可數名詞 (單數)"], ans: "commission",
+    en: "The real estate agent earns a [[30|commission]] whenever a property is successfully sold. The payment is usually calculated as a percentage of the sale price.",
+    zh: "房仲每成功售出一間房屋就會獲得一筆佣金。這筆款項通常按照售價的一定百分比計算。",
+    clue: "earns a 後接單數名詞；下文指出按房屋售價百分比計發的業務酬金，依首尾提示 c________n 判定為 commission。",
+    confuse: "commission 亦可指委託創作或委員會。房產仲介抽成稱作 sales commission。何時才對：Agents receive a 5% commission on sales." },
+  { n: 31, sec: "s2", tags: ["考點：harsh 嚴厲的、嚴酷的", "詞性需求：形容詞比較級 (-er)"], ans: "harsher",
+    en: "The judge decided to give the criminal a much stricter punishment this time. Lawyer Chen argued that the [[31|harsher]] penalty was truly necessary for public safety.",
+    zh: "法官決定這次給予罪犯嚴格得多的懲罰。陳律師主張為了公眾安全，更嚴厲的刑罰確實是必要的。",
+    clue: "定冠詞 the 與名詞 penalty 之間填形容詞；呼應上文 a much stricter punishment，比較級形容詞，依首尾提示 h____er 判定為 harsher。",
+    confuse: "harsh (原級)。前文已有 stricter 比較對照，此處加 -er。何時才對：The judge imposed a harsher sentence on the repeat offender." },
+  { n: 32, sec: "s2", tags: ["考點：equation 數學等式、方程式", "詞性需求：可數名詞 (複數)"], ans: "equations",
+    en: "The physics test covered various topics about motion and gravity. Professor Wu required the class to use specific [[32|equations]] to calculate the final answers.",
+    zh: "物理考試涵蓋了關於運動和引力的各種主題。吳教授要求全班使用特定的方程式來計算最終答案。",
+    clue: "use specific 後接複數名詞；物理測驗用來計算運動與重力題目的公式方程式，依首尾提示 e____ns 判定為 equations。",
+    confuse: "equation 為可數名詞。接在 specific 之後且指多道方程式用複數。何時才對：The board was covered with algebraic equations." },
+  { n: 33, sec: "s2", tags: ["考點：coincidence 巧合事件", "詞性需求：可數名詞 (單數)"], ans: "coincidence",
+    en: "Amanda met her elementary school teacher at a coffee shop in Paris. Emily could not believe such an amazing [[33|coincidence]] happened during their vacation.",
+    zh: "阿曼達在巴黎的咖啡廳遇見了她的小學老師。艾蜜莉無法相信在他們的假期中會發生如此驚人的巧合。",
+    clue: "such an amazing 後接單數名詞作主詞；在異國巴黎巧遇故鄉小學老師，依首尾提示 c____e 判定為 coincidence。",
+    confuse: "coincidental (adj. 巧合的)。在 an amazing 後填名詞 coincidence。何時才對：It was pure coincidence that we were on the same flight." },
+  { n: 34, sec: "s2", tags: ["考點：deserve 值得、應得", "詞性需求：動詞過去式 (V-ed)"], ans: "deserved",
+    en: "The brave firefighter rescued three little puppies from the burning apartment building. Mayor Chen announced that the local hero truly [[34|deserved]] the city's highest honor.",
+    zh: "勇敢的消防員從燃燒的公寓大樓裡救出了三隻小狗。陳市長宣布這位當地英雄確實配得上這座城市的最高榮譽。",
+    clue: "that 子句主詞 the local hero 與副詞 truly 後接動詞；受詞為 the city's highest honor，奮勇救犬配享殊榮，時態為過去式，依首尾提示 d____ved 判定為 deserved。",
+    confuse: "deserve 為狀態動詞，通常不用進行式。過去式填 deserved。何時才對：The team deserved to win the final match." },
+  { n: 35, sec: "s2", tags: ["考點：backyard 後院", "詞性需求：可數名詞 (單數)"], ans: "backyard",
+    en: "The children spent the afternoon playing basketball in the [[35|backyard]]. Their parents watched from the kitchen while preparing dinner.",
+    zh: "孩子們整個下午都在後院打籃球。他們的父母一邊準備晚餐，一邊從廚房觀看。",
+    clue: "介系詞 in the 後接名詞；孩子在住宅後院打籃球，父母從廚房照看，依首尾提示 b______d 判定為 backyard。",
+    confuse: "backyard 通常寫為單一單字。指住家後院。何時才對：We had a barbecue party in the backyard." },
+  { n: 36, sec: "s2", tags: ["考點：prompt 迅速敏捷的", "詞性需求：形容詞"], ans: "prompt",
+    en: "The customer service team always tries to resolve complaints as quickly as possible. Director Yang appreciates their [[36|prompt]] responses to every client's urgent issues.",
+    zh: "客服團隊總是試圖盡快解決客訴。楊主任很欣賞他們對每位客戶緊急問題的迅速回應。",
+    clue: "所有格 their 後接形容詞修飾複數名詞 responses；呼應上文 as quickly as possible，迅速的回覆，依首尾提示 p____t 判定為 prompt。",
+    confuse: "promptly (adv. 迅速地)、prompt (v. 促使)。修飾名詞 responses 填形容詞 prompt。何時才對：Thank you for your prompt reply to my email." },
+  { n: 37, sec: "s2", tags: ["考點：elaborate 精心周密的、詳盡的", "詞性需求：形容詞"], ans: "elaborate",
+    en: "The architect presented an [[37|elaborate]] design for the new cultural center. The detailed plan included a theater, library, and outdoor garden.",
+    zh: "建築師為新的文化中心提出精心設計的方案。詳細計畫包含劇院、圖書館和戶外花園。",
+    clue: "不定冠詞 an 與名詞 design 之間填形容詞；下文對應 detailed plan，包含劇院花園等周全構想，依首尾提示 e_______e 判定為 elaborate。",
+    confuse: "elaborate (v. 詳加闡述)。修飾名詞 design 填形容詞。何時才對：They made elaborate preparations for the festival." },
+  { n: 38, sec: "s2", tags: ["考點：laboratory 實驗室、研發基地", "詞性需求：可數名詞 (複數)"], ans: "laboratories",
+    en: "Tech companies invest heavily in developing new products every year. Mr. Zhang regularly visits different secret [[38|laboratories]] to check on the progress of these inventions.",
+    zh: "科技公司每年在開發新產品上投入巨資。張先生定期視察不同的秘密實驗室，以檢查這些發明的進度。",
+    clue: "different secret 後接複數名詞；科技公司開發新品的秘密研發重鎮，依首尾提示 l____ies 判定為 laboratories。",
+    confuse: "laboratory 複數去 y 加 ies。何時才對：The company operates research laboratories worldwide." },
+  { n: 39, sec: "s2", tags: ["考點：phenomenon 自然現象、奇觀", "詞性需求：可數名詞 (單數)"], ans: "phenomenon",
+    en: "Scientists have been studying the sudden drop in local ocean temperatures. David believes this rare [[39|phenomenon]] is caused by recent changes in the global climate.",
+    zh: "科學家們一直在研究當地海洋溫度的突然下降。大衛認為這種罕見的現象是由最近全球氣候變化所引起的。",
+    clue: "指示代名詞 this 與形容詞 rare 後接單數名詞作主詞；海水溫度驟降的罕見氣候現象，依首尾提示 p____n 判定為 phenomenon。",
+    confuse: "phenomena (複數形)。前方有 this rare 限定，填單數形 phenomenon。何時才對：El Niño is a complex meteorological phenomenon." },
+  { n: 40, sec: "s2", tags: ["考點：alert 使警覺、向……示警", "詞性需求：動詞過去式 (V-ed)"], ans: "alerted",
+    en: "The sudden alarm [[40|alerted]] everyone in the building. Employees quickly left their offices after hearing the emergency signal.",
+    zh: "突然響起的警報使大樓裡的每個人都提高警覺。員工聽到緊急訊號後迅速離開辦公室。",
+    clue: "主詞 The sudden alarm 後接及物動詞；受詞為 everyone，警報響起警告大樓全員疏散，時態為過去式，依首尾提示 a_____d 判定為 alerted。",
+    confuse: "alert 作及物動詞指 alert sb. to sth.（向某人示警）。何時才對：The dog barked and alerted the family to the fire." },
+
+  // 41 - 60
+  { n: 41, sec: "s3", tags: ["考點：otherwise 否則", "詞性需求：副詞/連接詞"], ans: "otherwise",
+    en: "John needs to study harder for the upcoming final examination. He will [[41|otherwise]] fail the difficult math test prepared by Teacher Huang.",
+    zh: "約翰需要為即將到來的期末考更用功讀書。否則他將無法通過黃老師準備的困難數學考試。",
+    clue: "插入助動詞 will 與動詞 fail 之間表假設相反條件；若不用功讀書「否則」將會被當，依首尾提示 o____e 判定為 otherwise。",
+    confuse: "otherwise 常放在句首或插入句中表否則。何時才對：We must leave now, otherwise we will be late." },
+  { n: 42, sec: "s3", tags: ["考點：scent 香氣、芬芳氣味", "詞性需求：可數名詞 (複數)"], ans: "scents",
+    en: "The perfume store offers many different fragrances for customers to choose from. Amanda spent hours testing various floral [[42|scents]] before making her final purchase.",
+    zh: "香水店提供許多不同的香氣供顧客選擇。阿曼達花了幾個小時測試各種花香，然後才做出最後的購買決定。",
+    clue: "various floral 後接複數名詞；香水店中多款花卉芳香氣息，依首尾提示 s____ts 判定為 scents。",
+    confuse: "smell (通稱氣味)。指香水或花草芳香使用 scent，複數加 -s。何時才對：The candle gave off lovely lavender scents." },
+  { n: 43, sec: "s3", tags: ["考點：luxury 奢華享受", "詞性需求：可數名詞 (複數)"], ans: "luxuries",
+    en: "The travelers enjoyed fine dining, spa treatments, and private beach access. Mrs. Lin appreciated all the wonderful [[43|luxuries]] provided by the five-star resort.",
+    zh: "旅客們享受了精緻的餐飲、水療護理和私人海灘通道。林太太很感激這家五星級度假村提供的所有美好奢華享受。",
+    clue: "all the wonderful 後接複數名詞；五星級度假村提供的美食、水療等各項高級享受，依首尾提示 l____ies 判定為 luxuries。",
+    confuse: "luxury 作物質奢華時不可數；指具體的奢華享受項目時複數為 luxuries。何時才對：A car was once considered a luxury." },
+  { n: 44, sec: "s3", tags: ["考點：merge 匯入、合併車流", "詞性需求：原形動詞 (VR)"], ans: "merge",
+    en: "The narrow country road connects with the busy modern highway up ahead. Driver Chen needs to carefully [[44|merge]] into the fast-moving traffic.",
+    zh: "狹窄的鄉間小路與前方繁忙的現代高速公路相連。陳駕駛需要小心地匯入快速移動的車流中。",
+    clue: "needs to carefully 後接原形動詞；搭配介系詞 into，車輛由小路匯入高速公路主線車流，依首尾提示 m____e 判定為 merge。",
+    confuse: "merger (n. 企業合併)。車輛切換車道匯流使用動詞 merge into。何時才對：Merge into the left lane when it is safe." },
+  { n: 45, sec: "s3", tags: ["考點：investigate 調查審查", "詞性需求：動詞過去式 (V-ed)"], ans: "investigated",
+    en: "Journalists [[45|investigated]] the company's financial records for several months. Their report revealed several questionable transactions.",
+    zh: "記者調查這家公司的財務紀錄好幾個月。他們的報導揭露了幾筆可疑交易。",
+    clue: "主詞 Journalists 後接及物述語動詞；受詞為 financial records，記者深入查核假帳，時態為過去式，依首尾提示 i________ted 判定為 investigated。",
+    confuse: "investigation (n. 調查)。此處作及物述詞動詞過去式。何時才對：Police investigated the cause of the fire." },
+  { n: 46, sec: "s3", tags: ["考點：feast 盛宴、款待大餐", "詞性需求：可數名詞 (複數)"], ans: "feasts",
+    en: "The hungry travelers attended many grand banquets during their European tour. They truly enjoyed the delicious holiday [[46|feasts]] hosted by the generous villagers.",
+    zh: "飢餓的旅客在他們的歐洲之旅中參加了許多盛大的宴席。他們真的很享受由慷慨村民所主辦的美味節日盛宴。",
+    clue: "the delicious holiday 後接複數名詞；下文對應 grand banquets，村民盛情款待的節慶大餐，依首尾提示 f____ts 判定為 feasts。",
+    confuse: "feast 可作動詞 (feast on)。此處在形容詞後作名詞複數。何時才對：They prepared lavish feasts for the wedding." },
+  { n: 47, sec: "s3", tags: ["考點：absorb 吸收熱能", "詞性需求：動詞過去式 (V-ed)"], ans: "absorbed",
+    en: "The black car parked in the sun became extremely hot during the afternoon. The metal surface [[47|absorbed]] all the solar heat and burned my hand.",
+    zh: "停在太陽下的黑色汽車在下午變得極度炎熱。金屬表面吸收了所有的太陽熱能，並燙傷了我的手。",
+    clue: "主詞 The metal surface 後接動詞；受詞為 all the solar heat，深色鈑金吸熱發燙，時態為過去式，依首尾提示 a____bed 判定為 absorbed。",
+    confuse: "absorbent (adj. 具吸水/吸熱力的)。此處作及物述詞動詞過去式。何時才對：Black surfaces absorb more sunlight than white ones." },
+  { n: 48, sec: "s3", tags: ["考點：architecture 建築風格、市容景觀", "詞性需求：不可數名詞"], ans: "architecture",
+    en: "The modern city skyline is filled with impressive glass and steel skyscrapers. David admires the innovative [[48|architecture]] that makes the urban landscape look so futuristic.",
+    zh: "現代城市的天際線充滿了令人印象深刻的玻璃和鋼鐵摩天大樓。大衛欣賞這些讓城市景觀看起來如此具未來感的創新建築。",
+    clue: "the innovative 後接不可數名詞；後接 that 子句修飾，指鋼骨玻璃摩天大樓構成之現代前衛建築風格，依首尾提示 a____e 判定為 architecture。",
+    confuse: "architect (n. 建築師)。指整體建築藝術或風格填 architecture。何時才對：The city is known for its historic architecture." },
+  { n: 49, sec: "s3", tags: ["考點：rally 反攻、重振旗鼓", "詞性需求：可數名詞 (單數)"], ans: "rally",
+    en: "The team held a [[49|rally]] after falling behind by ten points. Several successful plays gave the players confidence to catch up.",
+    zh: "球隊落後十分後展開反攻。幾次成功的進攻讓球員有信心追上對手。",
+    clue: "held a 後接名詞；球隊落後十分時重新振作發動逆轉反撲，依首尾提示 r____y 判定為 rally。",
+    confuse: "rally 也可指群眾抗議集會。體育賽事中指劣勢下的反撲逆襲。何時才對：The stock market staged a late rally today." },
+  { n: 50, sec: "s3", tags: ["考點：performer 表演者、特技雜耍藝人", "詞性需求：可數名詞 (複數指人)"], ans: "performers",
+    en: "The grand circus show featured acrobats, clowns, and skilled magicians. Director Zhao praised all the amazing [[50|performers]] for delivering such an entertaining night.",
+    zh: "盛大的馬戲團表演以雜技演員、小丑和熟練的魔術師為特色。趙主任讚美所有驚人的表演者帶來了一個如此具娛樂性的夜晚。",
+    clue: "all the amazing 後接名詞複數指人；上文包括雜技、小丑與魔術師等馬戲團全體演出人員，依首尾提示 p____rs 判定為 performers。",
+    confuse: "performance (n. 演出節目)。指演出的表演者們用 performers。何時才對：Street performers gathered in the lively square." },
+  { n: 51, sec: "s3", tags: ["考點：noble 貴族出身者", "詞性需求：可數名詞 (單數指人)"], ans: "noble",
+    en: "The greedy merchant wanted to marry his daughter into a high-status family. Mr. Lin actively searched for a wealthy [[51|noble]] to become his son-in-law.",
+    zh: "貪婪的商人想把女兒嫁入地位崇高的家庭。林先生積極尋找一位富有的貴族來做他的女婿。",
+    clue: "a wealthy 後接單數名詞指人；富商想攀附顯貴、挑選有爵位地位的貴族作女婿，依首尾提示 n____e 判定為 noble。",
+    confuse: "nobleman (同義詞)。noble 可直接作名詞表貴族成員。何時才對：The king granted titles to several powerful nobles." },
+  { n: 52, sec: "s3", tags: ["考點：generate 引發、引起關注", "詞性需求：動詞過去式 (V-ed)"], ans: "generated",
+    en: "The software company launched a huge marketing campaign on social media last week. The advertisements [[52|generated]] a lot of interest among teenagers across the country.",
+    zh: "軟體公司上週在社群媒體上發起了一場盛大的行銷活動。這些廣告在全國青少年中產生了很大的興趣。",
+    clue: "主詞 The advertisements 後接及物動詞；受詞為 a lot of interest，行銷社群廣告引發強烈迴響，時態為過去式，依首尾提示 g____ted 判定為 generated。",
+    confuse: "generation (n. 世代)。此處作及物述詞動詞過去式。何時才對：The news generated widespread controversy." },
+  { n: 53, sec: "s3", tags: ["考點：essentially 本質上、根本上", "詞性需求：副詞"], ans: "essentially",
+    en: "The machine is [[53|essentially]] a large computer designed for scientific research. Engineers added several special functions to handle complex calculations.",
+    zh: "這台機器基本上是一部為科學研究設計的大型電腦。工程師加入幾項特殊功能來處理複雜計算。",
+    clue: "插入 be 動詞 is 與名詞補語 a large computer 之間；闡述該設備的核心本質與基本功能，依首尾提示 e________y 判定為 essentially。",
+    confuse: "essential (adj. 基本的)。修飾全句判斷或結構填副詞。何時才對：The two proposals are essentially the same." },
+  { n: 54, sec: "s3", tags: ["考點：compelling 引人入勝的、令人欲罷不能的", "詞性需求：形容詞 (主詞補語)"], ans: "compelling",
+    en: "The mystery novel was so fascinating that I could not put it down. Sarah found the detective's thrilling story absolutely [[54|compelling]] from the very first chapter.",
+    zh: "這本懸疑小說太迷人了，讓我愛不釋手。莎拉從第一章開始就發現這位偵探驚心動魄的故事絕對引人入勝。",
+    clue: "found + 受詞 + absolutely (副詞) 後接形容詞補語；小說情節扣人心弦令人愛不釋手，依首尾提示 c____ling 判定為 compelling。",
+    confuse: "compelled (adj. 感到被迫的)。描述故事極具吸引力填 compelling。何時才對：The film presents a compelling case for prison reform." },
+  { n: 55, sec: "s3", tags: ["考點：accessible 易理解的、普及淺顯的", "詞性需求：形容詞 (受詞補語)"], ans: "accessible",
+    en: "The complicated scientific report was written in very simple and clear language. Author Lin wanted to make the difficult knowledge highly [[55|accessible]] to the general public.",
+    zh: "這份複雜的科學報告是用非常簡單清晰的語言寫成的。林作者想讓一般大眾也能輕易理解這些困難的知識。",
+    clue: "make + 受詞 + highly (副詞) 後接形容詞補語；搭配 to the general public，深入淺出讓普羅大眾皆能輕易讀懂，依首尾提示 a____e 判定為 accessible。",
+    confuse: "access (n. 門徑 / v. 進入)。accessible to sb. 指對某人而言平易近人或易取得。何時才對：Good teachers make difficult ideas accessible to all students." },
+  { n: 56, sec: "s3", tags: ["考點：mislead 誤導", "詞性需求：動詞過去分詞 (被動式)"], ans: "misled",
+    en: "The witness was [[56|misled]] by incorrect information during the investigation. Later, new evidence showed that the original story was inaccurate.",
+    zh: "這名證人在調查過程中受到錯誤資訊的誤導。後來的新證據顯示原本的說法並不正確。",
+    clue: "be 動詞 was 後接過去分詞構成被動態；被錯誤資訊所蒙蔽誤導，mislead 不規則變化過去分詞為 misled，依首尾提示 m_____d 判定為 misled。",
+    confuse: "misled 是不規則變化，非 mislead-ed。何時才對：Voters were deliberately misled by false campaign ads." },
+  { n: 57, sec: "s3", tags: ["考點：envision 設想、想像", "詞性需求：動詞過去式 (V-ed)"], ans: "envisioned",
+    en: "The talented architect drew a sketch of the future museum. Director Yang clearly [[57|envisioned]] a grand glass building standing in the center of the park.",
+    zh: "這位才華洋溢的建築師畫了一張未來博物館的草圖。楊主任清楚地預想了一座宏偉的玻璃建築矗立在公園中央。",
+    clue: "主詞 Director Yang 與副詞 clearly 後接動詞；受詞為 a grand glass building...，腦海中構想未來的宏偉建築，時態為過去式，依首尾提示 e____ned 判定為 envisioned。",
+    confuse: "vision (n. 願景)。動詞過去式加 -ed。何時才對：They envisioned a prosperous future for the town." },
+  { n: 58, sec: "s3", tags: ["考點：inspiration 靈感", "詞性需求：不可數名詞"], ans: "inspiration",
+    en: "The young writer often visited the library for [[58|inspiration]]. Reading biographies of famous authors helped Daniel develop ideas for his novel.",
+    zh: "這位年輕作家經常到圖書館尋找靈感。閱讀知名作家的傳記幫助 Daniel 為小說發展想法。",
+    clue: "介系詞 for 後接名詞；閱讀名家傳記啟發寫作構想，片語 look/visit for inspiration，依首尾提示 i________n 判定為 inspiration。",
+    confuse: "inspire (v. 啟發)。作介系詞受詞填名詞 inspiration。何時才對：Nature has always been a source of inspiration for poets." },
+  { n: 59, sec: "s3", tags: ["考點：accomplish 達成、成就", "詞性需求：原形動詞 (VR)"], ans: "accomplish",
+    en: "The young athlete set a new world record at the Olympic Games. Coach Yang is incredibly proud of what his student managed to [[59|accomplish]] this year.",
+    zh: "這位年輕運動員在奧運會上創下了新的世界紀錄。楊教練對他的學生今年所能達成的成就感到無比驕傲。",
+    clue: "managed to 後接原形動詞；在奧運破世界紀錄創下非凡功績，依首尾提示 a____h 判定為 accomplish。",
+    confuse: "accomplishment (n. 成就)。不定詞 to 後接動詞原形。何時才對：She managed to accomplish a great deal in a short time." },
+  { n: 60, sec: "s3", tags: ["考點：imaginative 富有想像力的", "詞性需求：形容詞"], ans: "imaginative",
+    en: "The science fiction author created a fascinating world filled with alien creatures. Readers completely loved Director Wang's highly [[60|imaginative]] storytelling and vivid descriptions.",
+    zh: "這位科幻小說家創造了一個充滿外星生物的迷人世界。讀者完全愛上了王導演極具想像力的故事敘述和生動的描述。",
+    clue: "副詞 highly 修飾後方形容詞；修飾名詞 storytelling，科幻作家建構出奇幻異星世界之想像力，依首尾提示 i____e 判定為 imaginative。",
+    confuse: "imaginary (adj. 虛構不真實的)。形容作者腦力豐富、極富巧思時用 imaginative。何時才對：Children usually have very imaginative minds." },
+
+  // 61 - 80
+  { n: 61, sec: "s4", tags: ["考點：recipe 烹飪食譜", "詞性需求：可數名詞 (複數)"], ans: "recipes",
+    en: "The famous chef published a new cookbook filled with healthy vegetarian dishes. Chef Lin tested all the [[61|recipes]] multiple times before sharing them with the public.",
+    zh: "這位著名主廚出版了一本充滿健康素食菜餚的新食譜。林主廚在與大眾分享之前，將所有食譜測試了許多次。",
+    clue: "all the 後接複數名詞；出版素食料理書反覆驗證的多道做菜配方，依首尾提示 r____es 判定為 recipes。",
+    confuse: "receipt (n. 收據)。烹調菜單指南用 recipe，複數加 -s。何時才對：The book is full of easy-to-follow recipes." },
+  { n: 62, sec: "s4", tags: ["考點：encounter 遭遇難題、碰上", "詞性需求：動詞過去式 (V-ed)"], ans: "encountered",
+    en: "The famous scientist faced many difficult challenges during her early research. Professor Lee [[62|encountered]] numerous unexpected obstacles while conducting the complex experiments.",
+    zh: "這位著名的科學家在早期的研究中面臨了許多困難的挑戰。李教授在進行複雜實驗時遭遇了無數意想不到的障礙。",
+    clue: "主詞 Professor Lee 後接動詞；受詞為 numerous unexpected obstacles，做實驗遇到阻礙，時態為過去式，依首尾提示 e____red 判定為 encountered。",
+    confuse: "encounter 過去式規則加 -ed。何時才對：The expedition encountered terrible blizzards." },
+  { n: 63, sec: "s4", tags: ["考點：workshop 研習工作坊", "詞性需求：可數名詞 (複數)"], ans: "workshops",
+    en: "The famous artist loves to share his painting techniques with the public. David attends these creative [[63|workshops]] every weekend to learn how to paint better.",
+    zh: "這位著名的藝術家喜歡與大眾分享他的繪畫技巧。大衛每週末都參加這些創意工作坊，學習如何畫得更好。",
+    clue: "these creative 後接複數名詞；大衛週末定期參加學畫畫的實作研討課程，依首尾提示 w____ps 判定為 workshops。",
+    confuse: "seminar (講座偏向演講討論)；workshop 強調親自動手實作。何時才對：She conducts acting workshops for aspiring actors." },
+  { n: 64, sec: "s4", tags: ["考點：psychology 心理學", "詞性需求：不可數名詞"], ans: "psychology",
+    en: "The experienced detective understands the criminal mind very well. Inspector Lee uses advanced [[64|psychology]] to predict what the serial killer will do next.",
+    zh: "這位經驗豐富的警探非常了解罪犯的心態。李督察利用進階心理學來預測連環殺手下一步會做什麼。",
+    clue: "uses advanced 後接名詞作受詞；刑警用來分析連續殺人犯行兇動機與心態之專業科學，依首尾提示 p____y 判定為 psychology。",
+    confuse: "psychological (adj. 心理學的)。作動詞受詞填名詞 psychology。何時才對：Criminal psychology helps solve cold cases." },
+  { n: 65, sec: "s4", tags: ["考點：rigid 堅硬死板的、缺乏彈性的", "詞性需求：形容詞 (主詞補語)"], ans: "rigid",
+    en: "The old wooden chair broke easily because its structural design was completely inflexible. Carpenter Lin explained that the material was simply too [[65|rigid]] to bend.",
+    zh: "這把舊木椅很容易就斷了，因為它的結構設計完全缺乏彈性。林木匠解釋說，這個材質實在太堅硬而無法彎曲。",
+    clue: "too + 形容詞 + to bend 句型；木材過於僵硬脆裂無法受力彎曲，呼應上文 completely inflexible，依首尾提示 r____d 判定為 rigid。",
+    confuse: "rigidity (n. 剛性硬度)。too 後接形容詞原級。何時才對：Steel becomes brittle and rigid at extremely low temperatures." },
+  { n: 66, sec: "s4", tags: ["考點：ultimately 最終地、最後裁決", "詞性需求：副詞"], ans: "ultimately",
+    en: "The two massive tech companies fought a long legal battle over patent rights. The supreme judge [[66|ultimately]] decided that the smaller firm was completely innocent.",
+    zh: "這兩家大型科技公司為了專利權打了一場漫長的法律戰。最高法官最終判定那家較小的公司完全無罪。",
+    clue: "修飾動詞 decided；經長年專利訴訟纏訟後法官做出終審判決，依首尾提示 u____y 判定為副詞 ultimately。",
+    confuse: "ultimate (adj. 終極的)。修飾述詞動詞填副詞。何時才對：The project was delayed but ultimately succeeded." },
+  { n: 67, sec: "s4", tags: ["考點：outfit 一整套服裝配搭", "詞性需求：可數名詞 (單數)"], ans: "outfit",
+    en: "The young boy needed a formal suit for his sister's upcoming wedding. Mother Chen spent the entire afternoon shopping for the perfect [[67|outfit]].",
+    zh: "這個小男孩需要一套正式的西裝來參加他姐姐即將舉行的婚禮。陳媽媽花了整個下午去買一套完美的服裝。",
+    clue: "shopping for the perfect 後接單數名詞；為出席婚禮採購的成套正式西裝穿搭，依首尾提示 o____t 判定為 outfit。",
+    confuse: "suit 專指西裝一套；outfit 可泛指任何風格完整的全套衣著。何時才對：She wore an elegant black outfit to the party." },
+  { n: 68, sec: "s4", tags: ["考點：nutrient 養分、營養成分", "詞性需求：可數名詞 (單數)"], ans: "nutrient",
+    en: "The soil in this specific farm is lacking a very important chemical element. Farmer Zhao needs to add a special [[68|nutrient]] to help the crops grow faster.",
+    zh: "這個特定農場的土壤缺乏一種非常重要的化學元素。趙農夫需要添加一種特殊的養分來幫助農作物長得更快。",
+    clue: "add a special 後接單數名詞；農田土壤需施加之微量化學肥料養分，依首尾提示 n____t 判定為 nutrient。",
+    confuse: "nutrients (複數)。前方有 a special 限定，填單數形式 nutrient。何時才對：Potassium is an essential plant nutrient." },
+  { n: 69, sec: "s4", tags: ["考點：stability 穩定、平穩", "詞性需求：不可數名詞"], ans: "stability",
+    en: "The country finally enjoyed peace after decades of terrible civil war. President Chen worked hard to maintain economic [[69|stability]] for all his citizens.",
+    zh: "這個國家在經歷了數十年的可怕內戰後，終於享受到了和平。陳總統努力為他所有的公民維持經濟穩定。",
+    clue: "maintain 後接受詞名詞，由 economic 修飾；戰後重建維持國家經濟秩序平穩，依首尾提示 s____y 判定為 stability。",
+    confuse: "stable (adj. 穩定的)。在形容詞 economic 後需填名詞 stability。何時才對：Political stability attracts foreign investments." },
+  { n: 70, sec: "s4", tags: ["考點：sustain 維持、持續支撐", "詞性需求：原形動詞 (VR)"], ans: "sustain",
+    en: "The company hopes to [[70|sustain]] its growth for many years. The management team is investing heavily in research and development.",
+    zh: "這家公司希望能維持多年的成長。管理團隊正大量投資於研究與開發。",
+    clue: "hopes to 後接原形動詞；受詞為 its growth，大量投資研發以長年維持企業營收成長態勢，依首尾提示 s_____n 判定為 sustain。",
+    confuse: "sustainable (adj. 可持續的)。不定詞 to 後接動詞原形 sustain。何時才對：Can the economy sustain this high rate of expansion?" },
+  { n: 71, sec: "s4", tags: ["考點：flexible 彈性的、靈活的", "詞性需求：形容詞"], ans: "flexible",
+    en: "The modern software company allows its employees to choose their own working hours. Manager Lee believes that offering a [[71|flexible]] schedule increases overall productivity.",
+    zh: "這家現代軟體公司允許員工選擇自己的工作時間。李經理相信提供彈性的時間表能提高整體生產力。",
+    clue: "不定冠詞 a 與名詞 schedule 之間填形容詞；員工可自由選擇上下班工時，彈性工時制度，依首尾提示 f____e 判定為 flexible。",
+    confuse: "flexibility (n. 靈活性)。修飾名詞 schedule 填形容詞 flexible。何時才對：We offer flexible working arrangements." },
+  { n: 72, sec: "s4", tags: ["考點：surroundings 周遭自然環境", "詞性需求：名詞 (恆用複數)"], ans: "surroundings",
+    en: "The luxury resort is beautifully located near a peaceful lake and lush green mountains. Mr. Lee specifically chose this hotel to enjoy the relaxing natural [[72|surroundings]].",
+    zh: "這家豪華度假村美麗地坐落在一座平靜的湖泊和翠綠的群山附近。李先生特別選擇了這家飯店，以享受令人放鬆的自然環境。",
+    clue: "the relaxing natural 後接名詞；湖光山色度假村所環抱的自然周圍景觀，依首尾提示 s____gs 判定為 surroundings。",
+    confuse: "surrounding (adj. 周邊的)。指周圍環境名詞恆為複數 surroundings。何時才對：Animals adapt quickly to new surroundings." },
+  { n: 73, sec: "s4", tags: ["考點：personnel 全體人員、職員", "詞性需求：集合名詞"], ans: "personnel",
+    en: "The hospital is currently facing a severe shortage of experienced nurses. Director Zhao needs to hire more medical [[73|personnel]] to handle the growing number of patients.",
+    zh: "這家醫院目前正面臨經驗豐富的護理師嚴重短缺的問題。趙主任需要聘僱更多醫療人員來應對不斷增加的病患。",
+    clue: "hire more medical 後接集合名詞；護理師荒需聘僱更多醫療專業人手，依首尾提示 p____l 判定為 personnel。",
+    confuse: "personal (adj. 個人的)。醫療從業人員統稱 medical personnel。何時才對：The agency employs over 2,000 personnel." },
+  { n: 74, sec: "s4", tags: ["考點：throne 王座、寶座", "詞性需求：可數名詞 (單數)"], ans: "throne",
+    en: "The ancient [[74|throne]] was carefully protected inside the national museum. Historians believe several kings once used the beautifully decorated seat.",
+    zh: "這座古老的王位被小心地保存於國家博物館中。歷史學家相信曾有幾位國王使用過這張裝飾華麗的座椅。",
+    clue: "The ancient 後接單數名詞作主詞；後文對應 decorated seat used by several kings，國王坐過的寶座，依首尾提示 t____e 判定為 throne。",
+    confuse: "throne (王座) 注意拼法。此處作受保護陳列於博物館之文物主詞。何時才對：The gilded throne stood at the end of the hall." },
+  { n: 75, sec: "s4", tags: ["考點：endure 經受住、耐受", "詞性需求：原形動詞 (VR)"], ans: "endure",
+    en: "The ancient stone temple survived hundreds of severe earthquakes and storms. Architect Chen marvels at how the historic building could [[75|endure]] such harsh conditions.",
+    zh: "這座古老的石頭寺廟撐過了數百次嚴重的地震和風暴。陳建築師驚嘆這座歷史建築竟能承受如此惡劣的條件。",
+    clue: "could 後接原形動詞；受詞為 such harsh conditions，千年石廟歷經地震暴風侵襲仍屹立不搖，依首尾提示 e____e 判定為 endure。",
+    confuse: "endurable (adj. 承受得住的)。助動詞 could 後接動詞原形。何時才對：The ancient ruins have endured centuries of weathering." },
+  { n: 76, sec: "s4", tags: ["考點：endure 承受極端氣候考驗", "詞性需求：原形動詞 (VR)"], ans: "endure",
+    en: "The old bridge can [[76|endure]] extreme weather for many years. Engineers recently inspected it to make sure the structure remains safe.",
+    zh: "這座老橋可以承受多年的極端天氣。工程師最近檢查它，以確保結構仍然安全。",
+    clue: "情態助動詞 can 後接原形動詞；受詞為 extreme weather，老橋結構經受長年嚴酷氣象考驗，依首尾提示 e____e 判定為 endure。",
+    confuse: "endurance (n. 忍耐耐力)。助動詞 can 後接動詞原形。何時才對：Quality materials endure heavy wear and tear." },
+  { n: 77, sec: "s4", tags: ["考點：generation 一代又一代的世人", "詞性需求：可數名詞 (複數)"], ans: "generations",
+    en: "The beautiful old temple has stood firmly in the village center for hundreds of years. The historical building has inspired multiple [[77|generations]] of local artists and writers.",
+    zh: "這座美麗的古廟在村莊中心屹立了數百年。這座歷史建築啟發了好幾代的當地藝術家和作家。",
+    clue: "multiple 後接複數名詞；數百年來啟迪了好幾代後輩文人雅士，片語 multiple generations of...，依首尾提示 g____ns 判定為 generations。",
+    confuse: "generate (v. 產生)。指歷史世代傳承時用複數 generations。何時才對：The story was handed down through generations." },
+  { n: 78, sec: "s4", tags: ["考點：beloved 心愛的、深愛的", "詞性需求：形容詞"], ans: "beloved",
+    en: "The old golden retriever was a precious member of the family for fifteen years. Everyone cried when their [[78|beloved]] pet passed away peacefully in the backyard.",
+    zh: "這隻老黃金獵犬十五年來一直是這個家庭珍貴的成員。當他們心愛的寵物在後院平靜地過世時，每個人都哭了。",
+    clue: "所有格 their 後接形容詞修飾名詞 pet；飼養十五年備受家人疼愛的愛犬過世，依首尾提示 b____ved 判定為 beloved。",
+    confuse: "loved (被愛的)。修飾珍貴愛寵用形容詞 beloved。何時才對：The old teacher was beloved by all his students." },
+  { n: 79, sec: "s4", tags: ["考點：polished 拋光擦亮的", "詞性需求：形容詞"], ans: "polished",
+    en: "The antique wooden table looked brand new after hours of careful restoration. Carpenter Wang proudly showed off the beautifully [[79|polished]] surface to the wealthy client.",
+    zh: "這張古董木桌在經過數小時的仔細修復後看起來煥然一新。王木匠驕傲地向這位富有的客戶展示了拋光得非常美麗的表面。",
+    clue: "副詞 beautifully 修飾後方形容詞；修飾名詞 surface，古董桌經師傅精心打磨拋光鋥亮，依首尾提示 p____hed 判定為 polished。",
+    confuse: "polish (v. 磨光擦亮 / n. 亮光劑)。分詞轉形容詞 polished。何時才對：He wiped the polished marble floor clean." },
+  { n: 80, sec: "s4", tags: ["考點：grip 緊緊攫住情緒", "詞性需求：動詞過去式 (雙寫 p 加 -ped)"], ans: "gripped",
+    en: "The terrifying horror movie kept the entire audience on the edge of their seats. A strong sense of fear completely [[80|gripped]] Amanda from the beginning to the end.",
+    zh: "這部可怕的恐怖片讓全場觀眾緊張到坐立難安。強烈的恐懼感從頭到尾完全攫住了阿曼達。",
+    clue: "主詞 A strong sense of fear 與副詞 completely 後接及物動詞；後有受詞 Amanda，恐懼之情完全籠罩攫住人心，短母音單音節雙寫 p 加 ed，依首尾提示 g____ped 判定為 gripped。",
+    confuse: "grip 亦可作名詞握力。形容強烈情緒攫獲人心用動詞過去式 gripped。何時才對：Panic gripped the crowd when smoke appeared." },
+
+  // 81 - 100
+  { n: 81, sec: "s5", tags: ["考點：aspect 層面、特點", "詞性需求：可數名詞 (單數)"], ans: "aspect",
+    en: "The documentary examines an important [[81|aspect]] of modern family life. The film focuses on how technology has changed communication between relatives.",
+    zh: "這部紀錄片探討現代家庭生活的一個重要面向。影片聚焦於科技如何改變親人之間的溝通。",
+    clue: "an important 後接單數名詞作受詞；探討科技對家庭人際關係影響的關鍵面向，依首尾提示 a_____t 判定為 aspect。",
+    confuse: "respect (可作方面，in this respect)。與 of 連用探討事物某一面貌時填 aspect。何時才對：Every aspect of the case was thoroughly checked." },
+  { n: 82, sec: "s5", tags: ["考點：insight 深刻見解、洞見", "詞性需求：可數名詞 (複數)"], ans: "insights",
+    en: "The business conference featured many successful entrepreneurs from different countries. Alice gained plenty of practical [[82|insights]] on how to manage a startup company effectively.",
+    zh: "這場商業會議邀請了許多來自不同國家的成功企業家。愛麗絲獲得了許多關於如何有效管理新創公司的實用見解。",
+    clue: "plenty of practical 後接複數名詞；從創業家分享中汲取經營新創企業的寶貴洞見，依首尾提示 i____ts 判定為 insights。",
+    confuse: "insightful (adj. 富有洞見的)。plenty of 後接名詞複數 insights。何時才對：The book offers fresh insights into modern history." },
+  { n: 83, sec: "s5", tags: ["考點：slightly 稍微地、略微", "詞性需求：副詞"], ans: "slightly",
+    en: "The soup tasted a bit too bland for the famous food critic. Chef Huang added a [[83|slightly]] higher amount of salt to improve the overall flavor.",
+    zh: "這湯對這位著名的美食評論家來說味道有點太淡了。黃主廚加入稍微多一點的鹽來改善整體的風味。",
+    clue: "修飾比較級形容詞 higher；稍微提高鹽分調味，依首尾提示 s____y 判定為副詞 slightly。",
+    confuse: "slight (adj. 輕微的)。修飾比較級形容詞需用副詞 slightly。何時才對：The patient is feeling slightly better this morning." },
+  { n: 84, sec: "s5", tags: ["考點：participant 受試志工、參與人員", "詞性需求：可數名詞 (複數指人)"], ans: "participants",
+    en: "The scientific study requires at least fifty healthy volunteers to test the new drug. Doctor Huang carefully evaluates the medical history of all the potential [[84|participants]].",
+    zh: "這項科學研究需要至少五十名健康的志工來測試新藥。黃醫師仔細評估了所有潛在參與者的病史。",
+    clue: "all the potential 後接複數名詞指人；醫學新藥臨床試驗篩選的健康受試志願者們，依首尾提示 p____ts 判定為 participants。",
+    confuse: "participation (n. 參與)。指人使用名詞複數 participants。何時才對：Participants in the marathon received commemorative medals." },
+  { n: 85, sec: "s5", tags: ["考點：distinct 截然不同的、殊異的", "詞性需求：形容詞"], ans: "distinct",
+    en: "The twin brothers have completely different personalities and hobbies. Teacher Wu noticed their [[85|distinct]] characteristics during the first week of school.",
+    zh: "這對雙胞胎兄弟有著完全不同的個性和嗜好。吳老師在開學第一週就注意到了他們截然不同的特徵。",
+    clue: "所有格 their 後接形容詞修飾名詞 characteristics；呼應上文 completely different，性格愛好涇渭分明，依首尾提示 d____t 判定為 distinct。",
+    confuse: "distinctive (adj. 具特色的)。強調兩者各自獨立、截然有別用 distinct。何時才對：The two concepts are quite distinct from each other." },
+  { n: 86, sec: "s5", tags: ["考點：deadly 致命的", "詞性需求：形容詞 (主詞補語)"], ans: "deadly",
+    en: "The disease was once considered [[86|deadly]] by doctors. Fortunately, modern medicine has made it possible to treat most patients successfully.",
+    zh: "這種疾病曾被醫生認為是致命的。幸運的是，現代醫學已經讓大多數患者能夠成功接受治療。",
+    clue: "considered 後接形容詞作補語；過去醫學未昌時曾被視為致死性絕症，依首尾提示 d____y 判定為 deadly。",
+    confuse: "dead (死的)。deadly 指能引致死亡的 (causing death)。何時才對：They were bitten by a deadly spider." },
+  { n: 87, sec: "s5", tags: ["考點：radar 雷達螢幕", "詞性需求：可數名詞 (單數)"], ans: "radar",
+    en: "Captain Chen could not locate the missing fishing boat on his screen. The ancient vessel had completely disappeared from the ship's [[87|radar]] during the terrible storm.",
+    zh: "陳船長無法在螢幕上找到失蹤的漁船。在可怕的風暴中，這艘古老的船隻已經完全從船上的雷達上消失了。",
+    clue: "the ship's 所有格後接名詞；暴風雨中船隻訊號消失在螢幕雷達探測器上，依首尾提示 r____r 判定為 radar。",
+    confuse: "片語 disappear from the radar 也常用於比喻消聲匿跡。何時才對：The approaching storm was tracked by weather radar." },
+  { n: 88, sec: "s5", tags: ["考點：purchase 購買行為、購得之物", "詞性需求：可數名詞 (單數)"], ans: "purchase",
+    en: "The latest smartphone model comes with a free pair of wireless earphones. Amanda was completely satisfied with her wonderful online [[88|purchase]] last week.",
+    zh: "最新款的智慧型手機附贈一副免費的無線耳機。阿曼達對她上週美好的線上購買感到完全滿意。",
+    clue: "所有格 her 與形容詞 online 後接名詞；網購手機附贈耳機之消費交易，依首尾提示 p____e 判定為 purchase。",
+    confuse: "purchase 也可作動詞。此處在形容詞 online 後作名詞。何時才對：Keep the receipt as proof of purchase." },
+  { n: 89, sec: "s5", tags: ["考點：statistic 統計數據資料", "詞性需求：可數名詞 (複數)"], ans: "statistics",
+    en: "The latest [[89|statistics]] reveal a significant increase in online shopping. Researchers believe changes in consumer habits explain the trend.",
+    zh: "最新統計數據顯示網路購物大幅增加。研究人員認為消費習慣的改變可以解釋這項趨勢。",
+    clue: "The latest 後接複數名詞作主詞；動詞為 reveal（原形複數），網購消費趨勢的統計數據報告，依首尾提示 s________s 判定為 statistics。",
+    confuse: "statistic (單數數值)。動詞為 reveal 原形，主詞需填複數形 statistics。何時才對：Official statistics show that employment is rising." },
+  { n: 90, sec: "s5", tags: ["考點：mysterious 神秘詭異的", "詞性需求：形容詞"], ans: "mysterious",
+    en: "Kevin heard strange noises coming from the abandoned house next door. He decided to investigate the [[90|mysterious]] sounds with his friends at midnight.",
+    zh: "凱文聽到隔壁廢棄的房子裡傳來奇怪的噪音。他決定在午夜和朋友們一起調查那些神祕的聲音。",
+    clue: "定冠詞 the 與名詞 sounds 之間填形容詞；廢棄空屋半夜傳出不可名狀的奇異聲響，依首尾提示 m____s 判定為 mysterious。",
+    confuse: "mystery (n. 謎團)。修飾名詞 sounds 填形容詞 mysterious。何時才對：A mysterious light appeared in the dark sky." },
+  { n: 91, sec: "s5", tags: ["考點：peasant 貧農小民", "詞性需求：可數名詞 (複數指人)"], ans: "peasants",
+    en: "The wealthy king held a grand festival for everyone in the kingdom. Even the poorest [[91|peasants]] were invited to enjoy the royal banquet.",
+    zh: "富有的國王為王國裡的每個人舉辦了一場盛大的慶典。即使是最貧窮的農民也受邀享受這場皇家宴會。",
+    clue: "the poorest 後接複數名詞指人作主詞；國王宴席全民同歡，最底層的貧苦平民百姓亦受邀，依首尾提示 p____ts 判定為 peasants。",
+    confuse: "peasant 複數加 -s。歷史小說中專指基層農民。何時才對：Thousands of peasants revolted against the cruel lord." },
+  { n: 92, sec: "s5", tags: ["考點：scam 詐騙", "詞性需求：原形動詞 (VR)"], ans: "scam",
+    en: "Several criminals tried to [[92|scam]] local residents through fake investment advertisements. The police warned people not to transfer money.",
+    zh: "幾名犯罪分子試圖透過虛假投資廣告詐騙當地居民。警方警告民眾不要轉帳。",
+    clue: "tried to 後接原形動詞；受詞為 local residents，犯罪份子藉假投資廣告誘騙匯款，依首尾提示 s___m 判定為 scam。",
+    confuse: "scam 亦常作名詞 (investment scam)。此處不定詞 to 後接動詞原形。何時才對：Con artists tried to scam tourists out of their money." },
+  { n: 93, sec: "s5", tags: ["考點：competitor 參賽競爭者", "詞性需求：可數名詞 (複數指人)"], ans: "competitors",
+    en: "Several [[93|competitors]] entered the final round of the cooking contest. Each chef had only one hour to prepare a complete meal.",
+    zh: "幾名參賽者進入烹飪比賽的決賽。每位廚師只有一小時準備完整的一餐。",
+    clue: "Several 後接複數名詞作主詞；下文對應 Each chef，晉級廚藝大賽決賽的各路好手，依首尾提示 c________rs 判定為 competitors。",
+    confuse: "competition (n. 賽事)。指參賽競爭人選填名詞複數 competitors。何時才對：Over 200 competitors took part in the road race." },
+  { n: 94, sec: "s5", tags: ["考點：motivation 內在動力、驅使動機", "詞性需求：不可數名詞"], ans: "motivation",
+    en: "The exhausted runner thought about his supportive family to keep going. David found his internal [[94|motivation]] exactly when he was about to give up.",
+    zh: "筋疲力盡的跑者想起了支持他的家人以繼續前進。大衛正要放棄時，找到了他內在的動機。",
+    clue: "found his internal 後接名詞作受詞；馬拉松瀕臨放棄之際靠親情召喚找回奮戰動力，依首尾提示 m____n 判定為 motivation。",
+    confuse: "motive (n. 行為/犯罪動機)。指激勵奮發之心理驅動力用 motivation。何時才對：Praise from the teacher gave him strong motivation." },
+  { n: 95, sec: "s5", tags: ["考點：labor 辛勞苦幹、勞作", "詞性需求：原形動詞 (VR)"], ans: "labor",
+    en: "The exhausted farmers work extremely hard in the hot fields all day long. Mr. Yang watches them [[95|labor]] under the burning summer sun.",
+    zh: "筋疲力盡的農夫整天在炎熱的田野裡極度辛勤地工作。楊先生看著他們在炎熱的夏日陽光下勞動。",
+    clue: "感官動詞 watches + 受詞 (them) 後接原形動詞受詞補語；烈日當空下在農地揮汗勞作，依首尾提示 l____r 判定為 labor。",
+    confuse: "labor 亦常作名詞 (manual labor)。此處在感官動詞後作原形動詞補語。何時才對：Miners labor underground in hazardous conditions." },
+  { n: 96, sec: "s5", tags: ["考點：pasta 義大利麵食", "詞性需求：可數名詞 (複數種類)"], ans: "pastas",
+    en: "The supermarket offers many different shapes of dried noodles in the international aisle. Mother Chen prefers buying short [[96|pastas]] because they are easier for kids to eat.",
+    zh: "超市在國際走道上提供許多不同形狀的乾麵條。陳媽媽偏好購買短的義大利麵，因為它們比較容易讓小孩食用。",
+    clue: "short 後接名詞複數；下文代名詞用 they，指通心麵、貝殼麵等各類短型義大利麵，依首尾提示 p____as 判定為 pastas。",
+    confuse: "pasta 泛稱麵食不可數；指多種不同造型之義大利麵種類時可用複數 pastas。何時才對：The Italian shop sells dried pastas in various shapes." },
+  { n: 97, sec: "s5", tags: ["考點：elaborately 精美考究地、精巧細緻地", "詞性需求：副詞"], ans: "elaborately",
+    en: "The traditional opera costumes were covered in colorful silk and shiny beads. Designer Chen spent months handcrafting those incredibly [[97|elaborately]] designed dresses.",
+    zh: "傳統的戲曲服裝上覆蓋著色彩繽紛的絲綢和閃亮的珠子。陳設計師花了幾個月的時間手工製作那些設計極其精緻的裙子。",
+    clue: "副詞 incredibly 後接副詞修飾過去分詞 designed；手工縫製絲綢亮珠極其精細之戲服，依首尾提示 e____y 判定為 elaborately。",
+    confuse: "elaborate (adj. 精巧的)。修飾分詞形容詞 designed 需加 -ly。何時才對：The palace ceilings were elaborately painted." },
+  { n: 98, sec: "s5", tags: ["考點：physics 物理學", "詞性需求：不可數學科名詞"], ans: "physics",
+    en: "Einstein completely changed how we understand space and time in the modern era. His groundbreaking theories are fundamental to the study of advanced [[98|physics]] today.",
+    zh: "愛因斯坦徹底改變了我們在現代對時間與空間的理解。他開創性的理論是今日進階物理學研究的基礎。",
+    clue: "advanced 後接學科名詞；愛因斯坦相對論所引領之當代高階物理科學，依首尾提示 p____s 判定為 physics。",
+    confuse: "physical (adj. 身體/物理的)。學科名稱固定為不可數名詞 physics。何時才對：Theoretical physics explores the origin of the universe." },
+  { n: 99, sec: "s5", tags: ["考點：implication 實質影響、深遠意涵", "詞性需求：可數名詞 (複數)"], ans: "implications",
+    en: "The new tax policy will deeply affect many middle-class families. Economist Wu spent hours analyzing the serious financial [[99|implications]] of this controversial law.",
+    zh: "新的稅收政策將深刻影響許多中產階級家庭。吳經濟學家花了數小時分析這項具爭議性法律所帶來的嚴重財務影響。",
+    clue: "the serious financial 後接複數名詞；爭議性新稅法對中產階級生計產生的連鎖財務衝擊後果，依首尾提示 i____ns 判定為 implications。",
+    confuse: "imply (v. 暗示)。政策帶來的實質影響後果名詞常用複數 implications。何時才對：We must consider the ethical implications of genetic engineering." },
+  { n: 100, sec: "s5", tags: ["考點：artistic 具藝術美感的、有文藝氣息的", "詞性需求：形容詞"], ans: "artistic",
+    en: "The newly renovated cafe has a very stylish and aesthetic interior design. Emily enjoys drinking coffee there because of the highly [[100|artistic]] atmosphere.",
+    zh: "新裝修的咖啡廳擁有非常時尚且具美感的室內設計。艾蜜莉喜歡在那裡喝咖啡，因為那裡有著高度的藝術氛圍。",
+    clue: "副詞 highly 修飾後方形容詞；修飾名詞 atmosphere，咖啡館充滿設計品味與文青美感之情調，依首尾提示 a____c 判定為 artistic。",
+    confuse: "artist (n. 藝術家)。修飾名詞 atmosphere 填形容詞 artistic。何時才對：The gallery has a unique artistic vibe." },
+
+  // 101 - 120
+  { n: 101, sec: "s6", tags: ["考點：calculation 計算過程、數值核算", "詞性需求：可數名詞 (複數)"], ans: "calculations",
+    en: "The accountant spent the entire afternoon reviewing the financial report. Miss Lin found several mistakes in the math [[101|calculations]] and had to correct them immediately.",
+    zh: "會計師花了整個下午審查財務報告。林小姐在數學計算中發現了幾個錯誤，並必須立刻更正它們。",
+    clue: "the math 後接複數名詞；下文代名詞用 them，會計審帳發現的算術加減錯誤，依首尾提示 c____ns 判定為 calculations。",
+    confuse: "calculate (v. 計算)。指核算出的各筆數值錯誤用名詞複數 calculations。何時才對：Double-check your calculations before submitting." },
+  { n: 102, sec: "s6", tags: ["考點：boost 提振、促進增長", "詞性需求：動詞第三人稱單數 (V-s)"], ans: "boosts",
+    en: "The local government lowered taxes to help struggling small businesses. Mayor Lee hopes this financial policy greatly [[102|boosts]] the city's slow economy.",
+    zh: "當地政府降低了稅收以幫助陷入困境的小企業。李市長希望這項財務政策能大大促進該市緩慢的經濟。",
+    clue: "that 子句主詞 this financial policy 為單數，副詞 greatly 後接動詞；降稅提振活絡低迷經濟，現在式加 -s，依首尾提示 b____ts 判定為 boosts。",
+    confuse: "boost 也可作名詞 (give a boost to)。此處作及物述詞動詞單數。何時才對：Tourism boosts the local economy during summer." },
+  { n: 103, sec: "s6", tags: ["考點：forge 打造、鍛造刀刃", "詞性需求：動詞第三人稱單數 (V-s)"], ans: "forges",
+    en: "The experienced blacksmith shapes hot metal into beautiful tools and weapons. Master Wu carefully [[103|forges]] each iron blade using traditional techniques passed down from his father.",
+    zh: "經驗豐富的鐵匠將熱金屬塑造成美麗的工具和武器。吳師傅使用從父親那裡傳下來的傳統技術，仔細地鍛造每一把鐵刃。",
+    clue: "主詞 Master Wu 為單數第三人稱，副詞 carefully 後接動詞；受詞為 each iron blade，老鐵匠手工打鐵鑄刀，現在式加 -s，依首尾提示 f____es 判定為 forges。",
+    confuse: "forge 引申為締造關係 (forge an alliance)。本義為鐵匠鍛造。何時才對：The blacksmith forges horseshoes in his workshop." },
+  { n: 104, sec: "s6", tags: ["考點：abstract 論文摘要", "詞性需求：可數名詞 (複數)"], ans: "abstracts",
+    en: "The academic journal requires all authors to submit a short summary of their research. Editor Zhang reads dozens of these written [[104|abstracts]] every week to select the best papers.",
+    zh: "該學術期刊要求所有作者提交一份他們研究的簡短摘要。張編輯每週閱讀數十份這類書面摘要，以挑選出最好的論文。",
+    clue: "these written 後接複數名詞；上文對應 short summary of their research，期刊審查挑選論文時閱讀之簡短摘要，依首尾提示 a____ts 判定為 abstracts。",
+    confuse: "abstract 作形容詞為「抽象的」；名詞表學術論文摘要，複數加 -s。何時才對：Read the abstracts before choosing which papers to download." },
+  { n: 105, sec: "s6", tags: ["考點：universal 舉世皆然的、普遍通用的", "詞性需求：形容詞 (主詞補語)"], ans: "universal",
+    en: "The need for clean water is considered [[105|universal]]. Governments around the world are working to improve access to safe drinking water.",
+    zh: "對乾淨水源的需求被視為全世界共同的需求。世界各地的政府都在努力改善安全飲用水的取得。",
+    clue: "is considered 後接形容詞補語；乾淨飲水乃全人類生存不可剝奪之普遍共同權益，依首尾提示 u_______l 判定為 universal。",
+    confuse: "universe (n. 宇宙)。被動句後作形容詞主詞補語填 universal。何時才對：Human rights are universal and inalienable." },
+  { n: 106, sec: "s6", tags: ["考點：essential 生活必需品", "詞性需求：可數名詞 (複數)"], ans: "essentials",
+    en: "The charity organization packed basic supplies for the earthquake victims in the mountains. Volunteer Lin made sure all daily [[106|essentials]] were included in the relief boxes.",
+    zh: "慈善機構為山區的地震災民打包了基本物資。林志工確保所有日常必需品都包含在救援箱中。",
+    clue: "all daily 後接複數名詞作主詞；動詞為 were included，震災急難救助箱打包之生活日用物資，依首尾提示 e____ls 判定為 essentials。",
+    confuse: "essential (adj. 不可或缺的)。作名詞複數 essentials 指基本日用品。何時才對：Pack only the bare essentials for the hiking trip." },
+  { n: 107, sec: "s6", tags: ["考點：professional 專業從業人員", "詞性需求：可數名詞 (複數指人)"], ans: "professionals",
+    en: "The medical conference was attended by hundreds of doctors and nurses from all over the world. These dedicated healthcare [[107|professionals]] gathered to discuss the latest hospital treatments.",
+    zh: "數百名來自世界各地的醫生和護理師參加了這場醫學會議。這些盡責的醫療專業人員聚集在一起討論最新的醫院療法。",
+    clue: "These dedicated healthcare 後接複數名詞指人作主詞；醫師護理師齊聚醫學研討會，指醫療專業人員，依首尾提示 p____ls 判定為 professionals。",
+    confuse: "professional 亦常作形容詞。名詞指具專業證照或技術之人士，複數加 -s。何時才對：The course is designed for IT professionals." },
+  { n: 108, sec: "s6", tags: ["考點：demonstrate 示範、實機演練操作", "詞性需求：動詞過去式 (V-ed)"], ans: "demonstrated",
+    en: "The skilled software engineer presented the new application during the morning meeting. Kevin clearly [[108|demonstrated]] how to use the special features to all the project managers.",
+    zh: "熟練的軟體工程師在早會上展示了新的應用程式。凱文清楚地向所有專案經理示範了如何使用這些特殊功能。",
+    clue: "主詞 Kevin 與副詞 clearly 後接動詞；受詞為 how to use the special features，工程師現場實機操作展示功能，時態為過去式，依首尾提示 d____ted 判定為 demonstrated。",
+    confuse: "demonstration (n. 示範)。此處為及物述詞動詞過去式。何時才對：The instructor demonstrated the correct CPR technique." },
+  { n: 109, sec: "s6", tags: ["考點：highlight 特別強調、凸顯", "詞性需求：動詞過去式 (V-ed)"], ans: "highlighted",
+    en: "The enthusiastic tour guide pointed out the historical importance of the ancient temple. Miss Lin deliberately [[109|highlighted]] the unique architectural details to catch the tourists' attention.",
+    zh: "熱情的導遊指出了這座古廟的歷史重要性。林小姐刻意強調了獨特的建築細節以吸引遊客的注意。",
+    clue: "主詞 Miss Lin 與副詞 deliberately 後接及物動詞；受詞為 unique architectural details，導遊加重語氣凸顯建築細節，時態為過去式，依首尾提示 h____ted 判定為 highlighted。",
+    confuse: "highlight 也可作名詞 (精彩畫面)。此處作及物述詞動詞過去式。何時才對：The report highlighted the need for immediate action." },
+  { n: 110, sec: "s6", tags: ["考點：percent 百分比", "詞性需求：名詞/代名詞"], ans: "percent",
+    en: "The survey showed that seventy [[110|percent]] of students preferred digital textbooks. Many students said electronic books were easier to carry.",
+    zh: "調查顯示，百分之七十的學生比較喜歡電子課本。許多學生表示電子書更容易攜帶。",
+    clue: "數詞 seventy 後接字詞；表示民調中 70% 的學生比例，依首尾提示 p_____t 判定為 percent。",
+    confuse: "percentage (前面常加冠詞，如 a high percentage of)。接在明確數字後用 percent。何時才對：Eighty percent of participants agreed." },
+  { n: 111, sec: "s6", tags: ["考點：strain 精神壓力、心力交瘁", "詞性需求：不可數名詞"], ans: "strain",
+    en: "The massive financial debt caused a lot of stress for the young couple. Kevin felt an enormous mental [[111|strain]] while trying to pay off the bank loan.",
+    zh: "龐大的財務債務給這對年輕夫婦帶來了很大的壓力。凱文在試圖償還銀行貸款時，感受到了巨大的精神負擔。",
+    clue: "felt an enormous mental 後接名詞作受詞；償還龐大負債帶來的心力負擔與壓力，依首尾提示 s____n 判定為 strain。",
+    confuse: "stress 與 strain 常並稱。mental strain 指精神負荷過重。何時才對：Working long hours put a severe strain on his health." },
+  { n: 112, sec: "s6", tags: ["考點：fascinating 令人著迷的、引人入勝的", "詞性需求：形容詞 (受詞補語)"], ans: "fascinating",
+    en: "The documentary about deep sea creatures captured the attention of many students. Teacher Liu found the underwater world to be extremely [[112|fascinating]] and full of surprises.",
+    zh: "關於深海生物的紀錄片吸引了許多學生的注意。劉老師發現水下世界極度迷人且充滿驚喜。",
+    clue: "found + 受詞 + to be extremely 後接形容詞補語；與 full of surprises 並列，描述深海世界奧妙無窮，依首尾提示 f____ing 判定為 fascinating。",
+    confuse: "fascinated (adj. 感到著迷的)。形容外界事物吸引人用 fascinating。何時才對：The history of ancient Egypt is fascinating." },
+  { n: 113, sec: "s6", tags: ["考點：conventional 常規的、傳統大路貨的", "詞性需求：形容詞"], ans: "conventional",
+    en: "Susan decided to bake a cake using a completely new and unique recipe. She was tired of the [[113|conventional]] flavors that everyone else usually made.",
+    zh: "蘇珊決定用一種全新且獨特的食譜來烤蛋糕。她厭倦了其他人通常製作的傳統口味。",
+    clue: "the 與名詞 flavors 之間填形容詞；對比 new and unique，指千篇一律常見的大眾傳統風味，依首尾提示 c____l 判定為 conventional。",
+    confuse: "convention (n. 慣例)。修飾名詞 flavors 填形容詞 conventional。何時才對：He preferred conventional medicine to herbal remedies." },
+  { n: 114, sec: "s6", tags: ["考點：strengthen 強化、鍛鍊增強", "詞性需求：原形動詞 (VR)"], ans: "strengthen",
+    en: "Sophia goes to the gym three times a week to lift heavy weights. She wants to [[114|strengthen]] her core muscles to improve her overall physical health.",
+    zh: "蘇菲亞每週去健身房三次舉重。她想要強化她的核心肌群，以改善她整體的身體健康。",
+    clue: "wants to 後接原形動詞；受詞為 her core muscles，舉重鍛鍊核心肌力，依首尾提示 s____n 判定為 strengthen。",
+    confuse: "strength (n. 力量)。不定詞 to 後接動詞原形 strengthen。何時才對：Swimming helps strengthen back muscles." },
+  { n: 115, sec: "s6", tags: ["考點：profile 側寫人物特徵檔案", "詞性需求：可數名詞 (單數)"], ans: "profile",
+    en: "The police created a [[115|profile]] of the suspect based on witness statements. Investigators used the information to narrow down their search.",
+    zh: "警方根據目擊者的證詞建立嫌疑犯的特徵檔案。調查人員利用這些資訊縮小搜尋範圍。",
+    clue: "created a 後接名詞；警方依目擊口供拼湊犯罪嫌疑人的特徵檔案 (criminal profile)，依首尾提示 p_____e 判定為 profile。",
+    confuse: "keep a low profile（保持低調）。警方辦案之側寫檔案為 suspect profile。何時才對：Detectives compiled a detailed profile of the suspect." },
+  { n: 116, sec: "s6", tags: ["考點：adjust 微調、調整器材", "詞性需求：動詞過去式 (V-ed)"], ans: "adjusted",
+    en: "The photographer moved the lighting equipment slightly to the left side of the studio. David carefully [[116|adjusted]] the brightness so the model's face would look more natural.",
+    zh: "攝影師將照明設備稍微移到攝影棚的左側。大衛仔細調整了亮度，讓模特兒的臉看起來更自然。",
+    clue: "主詞 David 與副詞 carefully 後接動詞；受詞為 the brightness，攝影師調校棚燈亮度，時態為過去式，依首尾提示 a____ted 判定為 adjusted。",
+    confuse: "adjustment (n. 調整)。此處作及物述詞動詞過去式。何時才對：She adjusted her glasses before reading the letter." },
+  { n: 117, sec: "s6", tags: ["考點：demand 要求、強力索求", "詞性需求：動詞過去式 (V-ed)"], ans: "demanded",
+    en: "Customers [[117|demanded]] better service from the company last year. The manager responded by providing additional training for employees.",
+    zh: "顧客去年要求公司提供更好的服務。經理因此為員工提供額外訓練。",
+    clue: "主詞 Customers 後接動詞；受詞為 better service，時間副詞為 last year，顧客強烈要求提升服務品質，時態為過去式，依首尾提示 d_____d 判定為 demanded。",
+    confuse: "demand 原文印 d_____d，依 last year 需填過去式 demanded。何時才對：The angry passengers demanded a full refund." },
+  { n: 118, sec: "s6", tags: ["考點：greed 貪婪、貪念", "詞性需求：不可數名詞"], ans: "greed",
+    en: "Arthur's [[118|greed]] for money caused him to make several terrible decisions. He eventually lost the trust of his closest friends and business partners.",
+    zh: "Arthur 對金錢的貪婪使他做出幾個糟糕的決定。他最後失去了最親近朋友和商業夥伴的信任。",
+    clue: "所有格 Arthur's 後接名詞作主詞；片語 greed for money（對金錢的貪婪），害其決策偏差失去親友信任，依首尾提示 g___d 判定為 greed。",
+    confuse: "greedy (adj. 貪婪的)。所有格後填名詞 greed。何時才對：Driven by pure greed, the man betrayed his partner." },
+  { n: 119, sec: "s6", tags: ["考點：incredible 難以置信的、驚奇不可思議的", "詞性需求：形容詞"], ans: "incredible",
+    en: "Daniel told us an [[119|incredible]] story about surviving alone in the wilderness. Everyone listened carefully because the experience sounded unbelievable.",
+    zh: "Daniel 告訴我們一個獨自在荒野中生存的不可思議故事。每個人都仔細聆聽，因為那段經歷聽起來令人難以置信。",
+    clue: "不定冠詞 an 與名詞 story 之間填形容詞；下文呼應 sounded unbelievable，荒野奇蹟生還歷險故事，依首尾提示 i________e 判定為 incredible。",
+    confuse: "credible (adj. 可信的，為反義字)。修飾故事不可思議填 incredible。何時才對：The rescue team performed an incredible feat." },
+  { n: 120, sec: "s6", tags: ["考點：physical 生理上的、身體的", "詞性需求：形容詞"], ans: "physical",
+    en: "Emily experienced several [[120|physical]] changes after following the training program. Her improved strength allowed her to carry heavy equipment more easily.",
+    zh: "Emily 遵循訓練計畫後經歷了幾項身體上的變化。體力提升讓她更容易搬運沉重的設備。",
+    clue: "several 後接形容詞修飾複數名詞 changes；訓練體能後體力增強之身體生理變化，依首尾提示 p______l 判定為 physical。",
+    confuse: "mental (心理的)。對比精神，肌力增加屬於 physical changes。何時才對：The athlete reached peak physical condition." },
+
+  // 121 - 127
+  { n: 121, sec: "s7", tags: ["考點：workout 健身鍛鍊、運動訓練", "詞性需求：可數名詞 (單數)"], ans: "workout",
+    en: "After finishing his [[121|workout]], Kevin drank plenty of water and rested for twenty minutes. The exercise helped him feel more energetic.",
+    zh: "Kevin 做完運動後喝了很多水，並休息了二十分鐘。運動幫助他感覺更有精神。",
+    clue: "all 所有格 his 後接名詞；做完訓練後喝水休息，下文呼應 The exercise，依首尾提示 w_____t 判定為 workout。",
+    confuse: "work out (動詞片語)。做名詞用時合寫為 workout。何時才對：I felt refreshed after a morning workout at the gym." },
+  { n: 122, sec: "s7", tags: ["考點：suspicious 起了疑心的、起疑的", "詞性需求：形容詞 (連綴補語)"], ans: "suspicious",
+    en: "Kevin became [[122|suspicious]] when the stranger asked for his bank password. He immediately ended the conversation and reported the incident.",
+    zh: "Kevin 對陌生人要求他的銀行密碼感到可疑。他立即結束對話並通報這起事件。",
+    clue: "連綴動詞 became 後接形容詞補語；陌生人索取銀行密碼令其警覺起疑，依首尾提示 s________s 判定為 suspicious。",
+    confuse: "suspicion (n. 懷疑)。became 後接形容詞補語。何時才對：The security guards grew suspicious of the man's odd behavior." },
+  { n: 123, sec: "s7", tags: ["考點：thoroughly 徹底地、鉅細靡遺地", "詞性需求：副詞"], ans: "thoroughly",
+    en: "Before publishing the article, Mia [[123|thoroughly]] checked every source and quotation. She wanted to make sure that all the information was accurate.",
+    zh: "Mia 在發表文章前徹底檢查每個資料來源和引述。她希望確保所有資訊都是正確的。",
+    clue: "修飾動詞 checked；發表前逐一嚴格查證引言與出處之完整性，依首尾提示 t________y 判定為副詞 thoroughly。",
+    confuse: "thorough (adj. 詳盡徹底的)。修飾動詞 check 須用副詞字尾 -ly。何時才對：The detective thoroughly investigated every clue." },
+  { n: 124, sec: "s7", tags: ["考點：convincing 具說服力的、令人信服的", "詞性需求：形容詞"], ans: "convincing",
+    en: "Nina gave a [[124|convincing]] explanation for why she had arrived late. Her description of the train delay matched information from the station.",
+    zh: "Nina 對自己為何遲到提出令人信服的解釋。她描述的火車延誤情況與車站資訊一致。",
+    clue: "不定冠詞 a 與名詞 explanation 之間填形容詞；提出的火車誤點理由與車站官方通報相符，足令人信服，依首尾提示 c________g 判定為 convincing。",
+    confuse: "convinced (adj. 感到確信的)。形容說詞具說服力填 convincing。何時才對：His argument was not entirely convincing." },
+  { n: 125, sec: "s7", tags: ["考點：disguise 偽裝手段、喬裝", "詞性需求：可數名詞 (單數)"], ans: "disguise",
+    en: "Rachel used a [[125|disguise]] to enter the building without being recognized. She dressed like a delivery worker and carried several empty boxes.",
+    zh: "Rachel 使用偽裝進入大樓而沒有被認出來。她穿得像送貨員，還拿著幾個空箱子。",
+    clue: "used a 後接名詞；打扮成送貨員拿著空箱混入大樓不被識破之喬裝打扮，依首尾提示 d_____e 判定為 disguise。",
+    confuse: "disguise 也可當動詞用。此處在不定冠詞 a 後作名詞。何時才對：He wore dark glasses as a disguise." },
+  { n: 126, sec: "s7", tags: ["考點：financial 財務上的、理財的", "詞性需求：形容詞"], ans: "financial",
+    en: "Sarah received [[126|financial]] advice before investing her savings. The expert explained the possible risks and long-term returns.",
+    zh: "Sarah 在投資積蓄前接受了財務建議。專家解釋了可能的風險和長期報酬。",
+    clue: "修飾不可數名詞 advice；投資儲蓄前尋求專家分析風險與報酬之理財諮詢，依首尾提示 f_______l 判定為 financial。",
+    confuse: "finance (n. 財務/金融)。修飾名詞 advice 填形容詞 financial。何時才對：You should seek independent financial advice before borrowing." },
+  { n: 127, sec: "s7", tags: ["考點：context 背景、來龍去脈", "詞性需求：可數/不可數名詞"], ans: "context",
+    en: "Sarah explained the historical [[127|context]] before discussing the famous speech. Her explanation helped the audience understand why those words were chosen.",
+    zh: "Sarah 在討論那篇著名演說前先解釋歷史背景。她的說明幫助聽眾理解為什麼選擇那些字詞。",
+    clue: "the historical 後接名詞作受詞；剖析名家演說措辭前先交代其當下之歷史時空脈絡背景，依首尾提示 c_____t 判定為 context。",
+    confuse: "content (內容)。指演說產生的時空背景環境用 historical context。何時才對：To fully understand the poem, one must consider its cultural context." }
+];
+
+/* === 渲染各大題至 DOM === */
+let s1HTML = '<section id="s1"><h2>第一部分 (題號 01 - 20)</h2>';
+let s2HTML = '<section id="s2"><h2>第二部分 (題號 21 - 40)</h2>';
+let s3HTML = '<section id="s3"><h2>第三部分 (題號 41 - 60)</h2>';
+let s4HTML = '<section id="s4"><h2>第四部分 (題號 61 - 80)</h2>';
+let s5HTML = '<section id="s5"><h2>第五部分 (題號 81 - 100)</h2>';
+let s6HTML = '<section id="s6"><h2>第六部分 (題號 101 - 120)</h2>';
+let s7HTML = '<section id="s7"><h2>第七部分 (題號 121 - 127)</h2>';
+
+VOC_DATA.forEach(item => {
+  const qBody = '<div class="stem">'
+              + '<div class="en">' + fx(item.en) + '</div>'
+              + '<div class="zh">' + item.zh + '</div>'
+              + '</div>'
+              + clue(item.clue)
+              + '<h4>易混淆字形／詞性：何時才對</h4>'
+              + '<p style="margin:2px 0">' + item.confuse + '</p>';
+  const cardHTML = card(item.n, item.tags, item.ans, qBody);
+  if (item.sec === "s1") s1HTML += cardHTML;
+  else if (item.sec === "s2") s2HTML += cardHTML;
+  else if (item.sec === "s3") s3HTML += cardHTML;
+  else if (item.sec === "s4") s4HTML += cardHTML;
+  else if (item.sec === "s5") s5HTML += cardHTML;
+  else if (item.sec === "s6") s6HTML += cardHTML;
+  else if (item.sec === "s7") s7HTML += cardHTML;
+});
+
+s1HTML += '</section>';
+s2HTML += '</section>';
+s3HTML += '</section>';
+s4HTML += '</section>';
+s5HTML += '</section>';
+s6HTML += '</section>';
+s7HTML += '</section>';
+
+document.getElementById('app').innerHTML = s1HTML + s2HTML + s3HTML + s4HTML + s5HTML + s6HTML + s7HTML;
+
+// 頂部導覽列按鈕與一鍵切換全部開合
+const navSections = [
+  ['s1', '1–20'],
+  ['s2', '21–40'],
+  ['s3', '41–60'],
+  ['s4', '61–80'],
+  ['s5', '81–100'],
+  ['s6', '101–120'],
+  ['s7', '121–127']
+];
+document.getElementById('nav').innerHTML = navSections.map(s => '<a href="#' + s[0] + '">' + s[1] + '</a>').join('') + '<button id="tg">全部收合</button>';
+
+let isAllOpen = true;
+document.getElementById('tg').onclick = function() {
+  isAllOpen = !isAllOpen;
+  document.querySelectorAll('details.q').forEach(d => d.open = isAllOpen);
+  this.textContent = isAllOpen ? '全部收合' : '全部展開';
+};
 </script>
-<script>
-(function(){
-  const main = document.getElementById('main');
-
-  document.getElementById('metaTotal').textContent = DATA.length;
-  document.getElementById('progressTotal').textContent = DATA.length;
-  document.getElementById('footTotal').textContent = DATA.length;
-
-  function escapeHtml(s){
-    return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
-  }
-
-  function blankHtml(en, blank){
-    const idx = en.indexOf(blank);
-    if(idx === -1) return {before: en, blankTxt: blank, after: ''};
-    return { before: en.slice(0, idx), blankTxt: blank, after: en.slice(idx + blank.length) };
-  }
-
-  RANGES.forEach(([a, b]) => {
-    const rid = `r${a}-${b}`;
-    const items = DATA.filter(e => e.num >= a && e.num <= b);
-
-    const section = document.createElement('section');
-    section.className = 'range-section';
-    section.id = rid;
-
-    const head = document.createElement('div');
-    head.className = 'range-head';
-    head.innerHTML = `<span class="r-label">No. ${a}–${b}</span><span class="r-count">${items.length} 題</span>`;
-    section.appendChild(head);
-
-    const list = document.createElement('ul');
-    list.className = 'qlist';
-
-    items.forEach(e => {
-      const li = document.createElement('li');
-      li.className = 'qcard';
-      li.dataset.num = e.num;
-
-      const parts = blankHtml(e.en, e.blank);
-
-      li.innerHTML = `
-        <span class="qnum">${e.num}</span>
-        <div class="q-en">${escapeHtml(parts.before)}<span class="blank">${escapeHtml(parts.blankTxt)}</span><span class="answer-ink">${escapeHtml(e.word)}</span>${escapeHtml(parts.after)}</div>
-        <div class="q-zh">${escapeHtml(e.zh)}</div>
-        <div class="q-foot"><span class="tap-hint" data-word="${escapeHtml(e.word)}"></span></div>
-      `;
-
-      li.addEventListener('click', () => {
-        li.classList.toggle('revealed');
-        updateProgress();
-      });
-
-      list.appendChild(li);
-    });
-
-    section.appendChild(list);
-    main.appendChild(section);
-  });
-
-  function updateProgress(){
-    const total = document.querySelectorAll('.qcard').length;
-    const revealed = document.querySelectorAll('.qcard.revealed').length;
-    document.getElementById('progressN').textContent = revealed;
-    document.getElementById('metaRevealed').textContent = revealed;
-    const btn = document.getElementById('revealAllBtn');
-    btn.textContent = (revealed === total && total > 0) ? '隱藏全部答案' : '顯示全部答案';
-  }
-
-  window.toggleAll = function(){
-    const cards = document.querySelectorAll('.qcard');
-    const allRevealed = document.querySelectorAll('.qcard.revealed').length === cards.length;
-    cards.forEach(c => c.classList.toggle('revealed', !allRevealed));
-    updateProgress();
-  };
-
-  window.jumpTo = function(rid){
-    const el = document.getElementById(rid);
-    if(el){ el.scrollIntoView({behavior:'smooth', block:'start'}); }
-  };
-
-  const chips = Array.from(document.querySelectorAll('.navchip'));
-  const sections = RANGES.map(([a,b]) => document.getElementById(`r${a}-${b}`));
-  function onScroll(){
-    let activeIdx = 0;
-    const y = window.scrollY + 130;
-    sections.forEach((s, i) => { if(s && s.offsetTop <= y) activeIdx = i; });
-    chips.forEach((c, i) => c.classList.toggle('active', i === activeIdx));
-  }
-  document.addEventListener('scroll', onScroll, {passive:true});
-  onScroll();
-  updateProgress();
-})();
-</script>
+<script src="bookmark.js"></script>
 </body>
 </html>
