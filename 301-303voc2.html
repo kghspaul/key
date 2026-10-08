@@ -1,361 +1,983 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>301-303文意字彙練習詳解(亂序)</title>
-  <style>
-    :root {
-      --primary: #4338ca;
-      --primary-soft: #eef2ff;
-      --bg: #f8fafc;
-      --card-bg: #ffffff;
-      --text-main: #1e293b;
-      --text-muted: #64748b;
-      --chinese-text: #475569;
-      --border: #e2e8f0;
-      --shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans TC", sans-serif;
-      background-color: var(--bg);
-      color: var(--text-main);
-      line-height: 1.5;
-      padding-bottom: 60px;
-    }
-
-    header {
-      background-color: #fff;
-      padding: 16px 18px 12px;
-      border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.03);
-    }
-
-    .title {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--text-main);
-      letter-spacing: -0.2px;
-    }
-
-    /* 頂部操作列 */
-    .controls {
-      display: flex;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .search-box {
-      flex: 1;
-      padding: 8px 12px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.9rem;
-      background-color: var(--bg);
-      outline: none;
-    }
-
-    .search-box:focus {
-      border-color: var(--primary);
-      background-color: #fff;
-    }
-
-    .toggle-all-btn {
-      padding: 8px 14px;
-      background-color: var(--primary-soft);
-      color: var(--primary);
-      border: 1px solid #c7d2fe;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      white-space: nowrap;
-      cursor: pointer;
-    }
-
-    /* 快速跳轉快捷按鈕列 */
-    .jump-bar {
-      display: flex;
-      overflow-x: auto;
-      gap: 6px;
-      padding: 8px 16px;
-      background-color: #ffffff;
-      border-bottom: 1px solid var(--border);
-      scrollbar-width: none;
-    }
-    .jump-bar::-webkit-scrollbar {
-      display: none;
-    }
-
-    .jump-btn {
-      flex: 0 0 auto;
-      padding: 4px 10px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      background-color: #f1f5f9;
-      color: var(--text-muted);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      cursor: pointer;
-      text-decoration: none;
-    }
-
-    .jump-btn:active {
-      background-color: var(--primary-soft);
-      color: var(--primary);
-    }
-
-    /* 卡片列表容器 */
-    .container {
-      padding: 14px 14px 0;
-      max-width: 680px;
-      margin: 0 auto;
-    }
-
-    /* 單字卡片結構 */
-    .item-card {
-      background-color: var(--card-bg);
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 12px;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-      scroll-margin-top: 130px;
-    }
-
-    .card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
-
-    .index-badge {
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      background-color: #f1f5f9;
-      padding: 2px 9px;
-      border-radius: 4px;
-    }
-
-    /* 答案膠囊開關 */
-    .ans-chip {
-      display: inline-flex;
-      align-items: center;
-      background-color: #f1f5f9;
-      color: transparent;
-      padding: 4px 14px;
-      border-radius: 20px;
-      font-size: 1rem;
-      font-weight: 700;
-      user-select: none;
-      cursor: pointer;
-      border: 1px dashed #94a3b8;
-      transition: all 0.15s ease;
-      position: relative;
-    }
-
-    .ans-chip::after {
-      content: "點擊對答案";
-      color: #475569;
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 0.8rem;
-      font-weight: 500;
-      white-space: nowrap;
-    }
-
-    .ans-chip.revealed {
-      background-color: #ecfdf5;
-      color: #065f46;
-      border: 1px solid #a7f3d0;
-    }
-
-    .ans-chip.revealed::after {
-      display: none;
-    }
-
-    /* 英文與中文排版 */
-    .en-sentence {
-      font-size: 0.98rem;
-      color: var(--text-main);
-      font-weight: 500;
-      margin-bottom: 8px;
-      line-height: 1.45;
-    }
-
-    .blank-cue {
-      color: var(--primary);
-      font-weight: 700;
-      padding: 0 1px;
-    }
-
-    .zh-sentence {
-      font-size: 0.88rem;
-      color: var(--chinese-text);
-      line-height: 1.45;
-      border-top: 1px dashed #f1f5f9;
-      padding-top: 8px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>301-303文意字彙練習詳解(亂序)</title>
+<style>
+:root{--bg:#faf8f4;--fg:#222;--card:#fff;--line:#e4ded3;--acc:#9a3b2e;--ok:#1f7a4d;--no:#b3261e;--mut:#6b6558;--hl:#fff1c9}
+@media(prefers-color-scheme:dark){:root{--bg:#161512;--fg:#e8e4da;--card:#201f1b;--line:#3a372f;--acc:#e08a78;--ok:#6fcf9a;--no:#f08a82;--mut:#a39d8f;--hl:#4a3f1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+.top{max-width:900px;margin:auto;padding:28px 18px 10px}
+.top h1{margin:0 0 4px;font-size:1.6rem;color:var(--acc)}
+.top p{margin:2px 0;color:var(--mut);font-size:.92rem}
+nav{position:sticky;top:0;z-index:9;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto;padding:8px 12px}
+nav a,nav button{flex:none;padding:5px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--fg);text-decoration:none;font:inherit;font-size:.88rem;cursor:pointer}
+nav a:hover,nav button:hover{border-color:var(--acc);color:var(--acc)}
+main{max-width:900px;margin:auto;padding:0 16px 70px}
+h2{margin:36px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--acc);font-size:1.3rem}
+h3{margin:0 0 8px;font-size:1.05rem;color:var(--acc)}
+.pas,.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.para{margin-bottom:14px}
+.s{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--line)}
+.en{font-family:Georgia,"Times New Roman",serif;font-size:1.02rem}
+.zh{color:var(--mut);font-size:.93rem}
+.note{color:var(--mut);font-size:.85rem;margin:6px 0 0}
+.bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 4px;border-radius:3px;font-weight:600}
+.bl sup{color:var(--acc);margin-right:3px;font-size:.7em}
+.bank{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.92rem;margin-bottom:8px}
+details.q>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+details.q>summary::-webkit-details-marker{display:none}
+.n{background:var(--acc);color:#fff;border-radius:6px;padding:0 10px;font-weight:700;font-size:1.05rem}
+.tag{font-size:.78rem;border:1px solid var(--acc);color:var(--acc);border-radius:99px;padding:0 9px;line-height:1.6}
+.tag.pos{border-color:var(--ok);color:var(--ok)}
+.ans{margin-left:auto;font-weight:700;color:var(--ok)}
+.qb{margin-top:10px}
+.stem{margin-bottom:8px;padding:8px 10px;background:var(--bg);border-radius:6px}
+.clue{margin:8px 0;padding:8px 12px;border-left:4px solid var(--acc);background:var(--bg);border-radius:0 6px 6px 0}
+.clue h4,.qb h4{margin:0 0 2px;font-size:.92rem;color:var(--acc)}
+ul.op{list-style:none;margin:6px 0 0;padding:0}
+ul.op li{padding:7px 10px;margin:5px 0;border-radius:6px;border:1px solid var(--line);font-size:.95rem}
+ul.op li.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 9%,transparent)}
+ul.op li.no{border-color:color-mix(in srgb,var(--no) 45%,transparent)}
+ul.op i{font-style:normal;font-weight:700;font-size:.82rem}
+li.ok i{color:var(--ok)}li.no i{color:var(--no)}
+small{color:var(--mut)}
+footer{max-width:900px;margin:auto;padding:0 16px 40px;color:var(--mut);font-size:.82rem}
+</style>
 </head>
 <body>
+<div class="top">
+  <h1>301-303文意字彙練習詳解(亂序)</h1>
+  <p>每題含：考點標籤 → 題幹逐句中英對照 → 解題線索 → 正解與易混淆詞性/形式分析（含「何時才對」例句）</p>
+  <p>圖例：<span class="bl">黃底</span> ＝ 正確答案填入處 ｜ <span class="tag">考點</span> <span class="tag pos">詞性需求</span></p>
+</div>
+<nav id="nav"></nav>
+<main id="app"></main>
+<footer>限定用途教學教材。本詳解為教學輔助，題目版權屬原出版單位。</footer>
 
-  <header>
-    <div class="title">301-303文意字彙練習詳解(亂序)</div>
-    <div class="controls">
-      <input type="text" id="search" class="search-box" placeholder="搜尋題號(如 05)、英文或中文..." oninput="handleSearch()" />
-      <button class="toggle-all-btn" onclick="toggleAllAnswers()">全部 顯示/隱藏</button>
-    </div>
-  </header>
+<script>
+const L="ABCD";
+const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[(\d*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const SENT={};
+function passage(title,paras,note){
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[(\d+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  return '<section class="pas"><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
+}
+function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
+const clue=t=>'<div class="clue"><h4>解題線索</h4>'+t+'</div>';
+function ops(list,ans,lab){lab=lab||'ABCDEF';return '<ul class="op">'+list.map((o,i)=>{const k=ans.indexOf(lab[i])>=0;return '<li class="'+(k?'ok':'no')+'"><b>'+(lab==='ABCDEF'&&list.length<=4?'('+L[i]+') ':lab==='ABCDEF'?'('+'ABCDEF'[i]+') ':'')+o[0]+'</b>'+(o[1]?' <small>'+o[1]+'</small>':'')+' <i>'+(k?'✔ 正解':'✘ 誤答')+'</i><br>'+o[2]+'</li>';}).join('')+'</ul>';}
+function card(n,tags,ans,body){
+  return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
+}
 
-  <div class="jump-bar">
-    <a class="jump-btn" href="#q1">01 - 20</a>
-    <a class="jump-btn" href="#q21">21 - 40</a>
-    <a class="jump-btn" href="#q41">41 - 60</a>
-    <a class="jump-btn" href="#q61">61 - 80</a>
-    <a class="jump-btn" href="#q81">81 - 94</a>
-  </div>
+/* === 單字卡資料庫 (亂序 94 題) === */
+const VOC_DATA = [
+  {
+    n: 1, section: "s1",
+    tags: ["考點：employer 雇主", "詞性需求：可數名詞 (單數)"],
+    ans: "employer",
+    en: "David recently quit his highly stressful job at the large tech company. He is currently looking for a better [[1|employer]] who values work-life balance.",
+    zh: "大衛最近辭去了在大型科技公司高壓的工作。他目前正在尋找一位更看重工作與生活平衡的雇主。",
+    clue: "冠詞 a 與比較級形容詞 better 後需接單數名詞；關係代名詞子句修飾 who values work-life balance，指求職者尋覓的資方/雇主，依首尾字母 e____r 判定為 employer。",
+    confuse: "employee (n. 員工)、employment (n. 就業)。句意為辭職後找尋重視平衡的老闆/雇主，用 employer。何時才對：The company is the largest employer in the city."
+  },
+  {
+    n: 2, section: "s1",
+    tags: ["考點：rank 分級、將……歸類", "詞性需求：動詞第三人稱單數 (V-s)"],
+    ans: "ranks",
+    en: "The university library contains millions of historical books and academic journals. Librarian Lee carefully [[2|ranks]] all the reading materials by their specific subjects.",
+    zh: "大學圖書館藏有數百萬本歷史書籍和學術期刊。李圖書館員仔細地將所有閱讀材料依其特定主題進行分級排序。",
+    clue: "主詞 Librarian Lee 為單數第三人稱，副詞 carefully 後接一般動詞現在式加 -s；依特定學科為藏書分級歸類，依首尾字母 r____ks 判定為 ranks。",
+    confuse: "rank (v. 原形 / n. 階級)。主詞為單數第三人稱且描述日常工作，動詞須加 -s。何時才對：The agency ranks universities worldwide."
+  },
+  {
+    n: 3, section: "s1",
+    tags: ["考點：fury 狂怒、狂暴情緒", "詞性需求：不可數名詞"],
+    ans: "fury",
+    en: "The unfair referee made a terrible call that cost the home team the championship. Coach Lee slammed his clipboard onto the floor in absolute [[3|fury]].",
+    zh: "不公平的裁判做出了一個糟糕的判決，讓主場球隊失去了冠軍。李教練在絕對的狂怒中將他的戰術板摔在地板上。",
+    clue: "介系詞 in 與形容詞 absolute 後接抽象名詞；摔戰術板表達裁判誤判引發的暴怒，片語 in absolute fury，依首尾字母 f____y 判定為 fury。",
+    confuse: "furious (adj. 狂怒的)。介系詞 in 之後須填名詞形式。何時才對：She shouted in a fury."
+  },
+  {
+    n: 4, section: "s1",
+    tags: ["考點：furious 極其憤怒的", "詞性需求：形容詞 (主詞補語)"],
+    ans: "furious",
+    en: "The irresponsible driver crashed his sports car into a parked police vehicle. Officer Zhao was absolutely [[4|furious]] about this incredibly stupid and dangerous accident.",
+    zh: "不負責任的駕駛將他的跑車撞上了一輛停著的警車。趙警官對這場極其愚蠢又危險的事故感到絕對憤怒。",
+    clue: "be 動詞 was 與副詞 absolutely 後接形容詞作為主詞補語；搭配介系詞 about，表對愚蠢車禍感到極度狂怒，依首尾字母 f____s 判定為 furious。",
+    confuse: "fury (n. 暴怒)。be 動詞後作主詞補語需用形容詞。何時才對：My parents were furious when I failed the test."
+  },
+  {
+    n: 5, section: "s1",
+    tags: ["考點：adjustment 調整", "詞性需求：可數名詞 (複數)"],
+    ans: "adjustments",
+    en: "The company changed its official working hours to avoid the morning traffic. Employee Lin fully supported these minor schedule [[5|adjustments]] for better convenience.",
+    zh: "公司更改了官方的上班時間以避開早上的交通阻塞。林員工完全支持這些微小的日程調整，以獲得更好的便利性。",
+    clue: "指示代名詞 these 與形容詞 minor 後接複數名詞；指微調上班日程安排，依首尾字母 a____ts 判定為 adjustments。",
+    confuse: "adjust (v. 調整)、adjustable (adj. 可調節的)。在 these minor 後須用名詞複數。何時才對：We made a few minor adjustments to the plan."
+  },
+  {
+    n: 6, section: "s1",
+    tags: ["考點：germ 細菌、病菌", "詞性需求：可數名詞 (複數)"],
+    ans: "germs",
+    en: "The public restroom is cleaned thoroughly every hour to maintain perfect health hygiene. Janitor Lin uses strong chemical sprays to kill off all dangerous [[6|germs]] on the surfaces.",
+    zh: "公共廁所每小時都會被徹底清潔，以維持完美的健康衛生。林清潔工使用強效化學噴霧來殺死表面上所有危險的細菌。",
+    clue: "kill off 後接受詞名詞，由 all dangerous 修飾，需填複數名詞；噴灑藥劑消滅公廁細菌，依首尾字母 g____ms 判定為 germs。",
+    confuse: "germ (n. 單數)。前方有 all 修飾，應以複數型態呈現。何時才對：Disinfectant kills 99% of germs."
+  },
+  {
+    n: 7, section: "s1",
+    tags: ["考點：architecture 建築風格、建築學", "詞性需求：不可數名詞"],
+    ans: "architecture",
+    en: "Paris is globally famous for its stunning historical buildings and monuments. Student Wu flew there specifically to study classical European [[7|architecture]].",
+    zh: "巴黎以其令人驚嘆的歷史建築和紀念碑而聞名全球。吳同學專程飛到那裡去學習古典歐洲建築。",
+    clue: "動詞 study 後接受詞名詞，由 classical European 修飾；指前往巴黎研習的古典建築學科/風格，依首尾字母 a____e 判定為 architecture。",
+    confuse: "architect (n. 建築師)。指研習專業領域或歷史風格時用不可數名詞 architecture。何時才對：I have always admired Gothic architecture."
+  },
+  {
+    n: 8, section: "s1",
+    tags: ["考點：underneath 在……底下", "詞性需求：副詞/介系詞"],
+    ans: "underneath",
+    en: "The ancient pirates buried their stolen gold treasure deep below the sandy beach. Archaeologist Lin dug for weeks before finding the chest hidden [[8|underneath]].",
+    zh: "古代海盜將他們偷來的黃金寶藏深埋在沙灘下方。林考古學家挖了幾個星期才找到隱藏在底下的箱子。",
+    clue: "過去分詞 hidden 後接方位修飾副詞；指埋藏在沙灘地表下方，依首尾字母 u____h 判定為 underneath。",
+    confuse: "underneath 亦可作介系詞後接名詞 (underneath the beach)。此處單獨置於句尾作副詞。何時才對：There is a drawer underneath."
+  },
+  {
+    n: 9, section: "s1",
+    tags: ["考點：upright 挺直地、直立地", "詞性需求：副詞 (修飾動詞)"],
+    ans: "upright",
+    en: "The ancient ape slowly learned to walk on two legs across the plains. Anthropologist Wang explained how standing [[9|upright]] changed human evolution forever.",
+    zh: "古代猿猴慢慢學會了用兩條腿在平原上行走。王人類學家解釋了直立站立如何永遠改變了人類的演化。",
+    clue: "動名詞 standing 後接副詞修飾站姿；指人類演化史上「直立站立」，依首尾字母 u____t 判定為 upright。",
+    confuse: "upright 也可作形容詞 (an upright posture)。此處修飾動詞 standing 作副詞使用。何時才對：Keep the box upright."
+  },
+  {
+    n: 10, section: "s1",
+    tags: ["考點：route 路線、通道", "詞性需求：可數名詞 (複數)"],
+    ans: "routes",
+    en: "The massive snowstorm completely blocked the main highway going into the mountains. Officer Lee directed all the trapped vehicles to take alternative [[10|routes]].",
+    zh: "巨大的暴風雪徹底堵死了進入山區的主要高速公路。李警官引導所有受困的車輛改走替代路線。",
+    clue: "take 後接受詞名詞，由 alternative（替代的）修飾；公路中斷引導車輛改走其他替代路徑，依首尾字母 r____es 判定為 routes。",
+    confuse: "routine (n. 常規慣例)。公路疏導改道的交通路線使用 routes。何時才對：Crowds lined the parade route."
+  },
+  {
+    n: 11, section: "s1",
+    tags: ["考點：sparkle 閃耀光芒", "詞性需求：可數名詞 (複數)"],
+    ans: "sparkles",
+    en: "The calm ocean waves beautifully reflected the golden rays of the early morning sun. Photographer Lee easily captured the brilliant [[11|sparkles]] of the water with his professional camera.",
+    zh: "平靜的海浪美麗地反射著清晨太陽的金色光芒。李攝影師用他的專業相機輕鬆捕捉了水面上璀璨的閃耀光芒。",
+    clue: "captured 後接受詞名詞，由 the brilliant 修飾；指波光粼粼折射出的無數閃爍點光，依首尾字母 s____es 判定為 sparkles。",
+    confuse: "sparkle 亦可作動詞。此處接在 the brilliant 後作名詞複數。何時才對：The diamond has lost its sparkle."
+  },
+  {
+    n: 12, section: "s1",
+    tags: ["考點：elementary 基礎的、初級的", "詞性需求：形容詞"],
+    ans: "elementary",
+    en: "You must understand the basic rules before trying to solve complex physics problems. Professor Wang spent the first week reviewing these completely [[12|elementary]] concepts.",
+    zh: "在試圖解決複雜的物理問題之前，你必須先了解基本規則。王教授花了第一週複習這些完全基礎的概念。",
+    clue: "修飾名詞 concepts；副詞 completely 修飾形容詞，與上句 basic rules 呼應，依首尾字母 e____y 判定為 elementary。",
+    confuse: "element (n. 元素)。修飾名詞表基本初階時用形容詞 elementary。何時才對：He teaches elementary mathematics."
+  },
+  {
+    n: 13, section: "s1",
+    tags: ["考點：frail 虛弱的、體弱的", "詞性需求：形容詞"],
+    ans: "frail",
+    en: "After fighting the severe illness for several months, the patient became incredibly weak. Doctor Wang deeply worried about the [[13|frail]] man's physical ability to survive the major surgery.",
+    zh: "在與嚴重疾病對抗了幾個月後，病患變得極其虛弱。王醫師深切擔心這位虛弱男子的體力是否能熬過這場大手術。",
+    clue: "修飾名詞 man's；前文描述 incredibly weak，指久病後衰弱的體格，依首尾字母 f____l 判定為 frail。",
+    confuse: "frailty (n. 虛弱脆弱)。修飾名詞須用形容詞 frail。何時才對：She looked small and frail after the operation."
+  },
+  {
+    n: 14, section: "s1",
+    tags: ["考點：explore 探索、勘查", "詞性需求：動詞過去式 (V-ed)"],
+    ans: "explored",
+    en: "The curious little boy wandered away from his parents in the large forest. He bravely [[14|explored]] the dark woods until he finally found a beautiful hidden waterfall.",
+    zh: "好奇的小男孩在廣闊的森林裡離開了他的父母。他勇敢地探索了黑暗的樹林，直到他最終找到了一個美麗隱蔽的瀑布。",
+    clue: "主詞 He 與副詞 bravely 後接述語動詞；下文 wandered 與 found 均為過去式，小男孩深入樹林探尋，依首尾字母 e____red 判定為 explored。",
+    confuse: "exploration (n. 探勘)。敘述過去動作需用動詞過去式 explored。何時才對：They set out to explore the uncharted territory."
+  },
+  {
+    n: 15, section: "s1",
+    tags: ["考點：graduation 畢業 (名詞)", "詞性需求：不可數名詞"],
+    ans: "graduation",
+    en: "Emily bought a beautiful formal dress for her upcoming university ceremony. Her parents are hosting a huge family dinner to celebrate her [[15|graduation]].",
+    zh: "艾蜜莉為她即將到來的大學典禮買了一件美麗的正式洋裝。她的父母正在舉辦一場盛大的家庭聚餐來慶祝她的畢業。",
+    clue: "所有格 her 後接名詞作 celebrate 的受詞；上文提及 university ceremony（畢業典禮），依首尾字母 g____n 判定為 graduation。",
+    confuse: "graduate (v. 畢業 / n. 畢業生)。作抽象事件受詞填名詞 graduation。何時才對：After graduation, she moved to London."
+  },
+  {
+    n: 16, section: "s1",
+    tags: ["考點：promise 諾言、承諾", "詞性需求：可數名詞 (複數)"],
+    ans: "promises",
+    en: "Mother Wu told her young son that she would buy him a new toy. She always keeps her [[16|promises]] because she wants him to trust her completely.",
+    zh: "吳媽媽告訴她年幼的兒子會買一個新玩具給他。她總是信守她的承諾，因為她希望他能完全信任她。",
+    clue: "動詞 keeps 後接受詞；片語 keep one's promises（信守承諾），依首尾字母 p____es 判定為 promises。",
+    confuse: "promising (adj. 有前途的)。此處作動詞 keep 的名詞受詞。何時才對：Don't make promises you can't keep."
+  },
+  {
+    n: 17, section: "s1",
+    tags: ["考點：constructive 建設性的、有助益的", "詞性需求：形容詞"],
+    ans: "constructive",
+    en: "Manager Wu refused to simply criticize his employees for their accidental mistakes. He always offered [[17|constructive]] advice to help them perform much better next time.",
+    zh: "吳經理拒絕只是為了員工意外的錯誤而批評他們。他總是提供有建設性的建議，幫助他們下次表現得更好。",
+    clue: "修飾名詞 advice；對比單純批評，經理提供能實質改善績效的具體建議，依首尾字母 c____e 判定為 constructive。",
+    confuse: "construction (n. 建築施工)。修飾 advice 需用形容詞 constructive。何時才對：She welcomed constructive criticism."
+  },
+  {
+    n: 18, section: "s1",
+    tags: ["考點：capable 有能力的、性能卓越的", "詞性需求：形容詞"],
+    ans: "capable",
+    en: "Our new factory machines can produce ten thousand plastic bottles per hour. Manager Lee is very proud of having such a highly [[18|capable]] production line.",
+    zh: "我們的新工廠機器每小時能生產一萬個塑膠瓶。李經理為擁有如此高能力的生產線感到非常自豪。",
+    clue: "副詞 highly 修飾後方形容詞；修飾名詞 production line，每小時產出一萬個瓶子展現強大運能，依首尾字母 c____e 判定為 capable。",
+    confuse: "capability (n. 性能能力)。修飾名詞需用形容詞形式。何時才對：She is a capable and experienced lawyer."
+  },
+  {
+    n: 19, section: "s1",
+    tags: ["考點：construct 搭建、建造", "詞性需求：動詞過去式 (V-ed)"],
+    ans: "constructed",
+    en: "The devastating typhoon completely destroyed the small wooden houses near the beach. The brave villagers immediately [[19|constructed]] temporary shelters using broken tree branches.",
+    zh: "具毀滅性的颱風徹底摧毀了海灘附近的小木屋。勇敢的村民立刻使用斷裂的樹枝建造了臨時的避難所。",
+    clue: "主詞 The brave villagers 與副詞 immediately 後接及物動詞；後有受詞 temporary shelters，全文時態為過去式 (destroyed)，依首尾字母 c____ted 判定為 constructed。",
+    confuse: "construction (n. 建設)。此處需及物動詞過去式。何時才對：The bridge was constructed in 1995."
+  },
+  {
+    n: 20, section: "s1",
+    tags: ["考點：conflict 衝突、分歧爭議", "詞性需求：可數/不可數名詞"],
+    ans: "conflict",
+    en: "The stubborn manager and the lead engineer strongly disagreed on the project design. Director Zhao had to hold a special meeting to resolve their bitter [[20|conflict]].",
+    zh: "固執的經理和首席工程師對專案設計有強烈的分歧。趙總監必須召開特別會議來解決他們激烈的衝突。",
+    clue: "動詞 resolve 後接受詞名詞，由形容詞 bitter 修飾；上文提到 strongly disagreed，依首尾字母 c____t 判定為 conflict。",
+    confuse: "conflict 亦可當動詞用。此處接在形容詞 bitter 後作為名詞受詞。何時才對：The committee met to resolve the ongoing conflict."
+  },
 
-  <main class="container" id="listContainer">
-    <article class="item-card" id="q1"><div class="card-header"><span class="index-badge">01</span><div class="ans-chip" onclick="toggleAns(this)">employer</div></div><p class="en-sentence">David recently quit his highly stressful job at the large tech company. He is currently looking for a better <span class="blank-cue">e____r</span> who values work-life balance.</p><p class="zh-sentence">大衛最近辭去了在大型科技公司高壓的工作。他目前正在尋找一位更看重工作與生活平衡的雇主。</p></article>
-    <article class="item-card" id="q2"><div class="card-header"><span class="index-badge">02</span><div class="ans-chip" onclick="toggleAns(this)">ranks</div></div><p class="en-sentence">The university library contains millions of historical books and academic journals. Librarian Lee carefully <span class="blank-cue">r____ks</span> all the reading materials by their specific subjects.</p><p class="zh-sentence">大學圖書館藏有數百萬本歷史書籍和學術期刊。李圖書館員仔細地將所有閱讀材料依其特定主題進行分級排序。</p></article>
-    <article class="item-card" id="q3"><div class="card-header"><span class="index-badge">03</span><div class="ans-chip" onclick="toggleAns(this)">fury</div></div><p class="en-sentence">The unfair referee made a terrible call that cost the home team the championship. Coach Lee slammed his clipboard onto the floor in absolute <span class="blank-cue">f____y</span>.</p><p class="zh-sentence">不公平的裁判做出了一個糟糕的判決，讓主場球隊失去了冠軍。李教練在絕對的狂怒中將他的戰術板摔在地板上。</p></article>
-    <article class="item-card" id="q4"><div class="card-header"><span class="index-badge">04</span><div class="ans-chip" onclick="toggleAns(this)">furious</div></div><p class="en-sentence">The irresponsible driver crashed his sports car into a parked police vehicle. Officer Zhao was absolutely <span class="blank-cue">f____s</span> about this incredibly stupid and dangerous accident.</p><p class="zh-sentence">不負責任的駕駛將他的跑車撞上了一輛停著的警車。趙警官對這場極其愚蠢又危險的事故感到絕對憤怒。</p></article>
-    <article class="item-card" id="q5"><div class="card-header"><span class="index-badge">05</span><div class="ans-chip" onclick="toggleAns(this)">adjustments</div></div><p class="en-sentence">The company changed its official working hours to avoid the morning traffic. Employee Lin fully supported these minor schedule <span class="blank-cue">a____ts</span> for better convenience.</p><p class="zh-sentence">公司更改了官方的上班時間以避開早上的交通阻塞。林員工完全支持這些微小的日程調整，以獲得更好的便利性。</p></article>
-    <article class="item-card" id="q6"><div class="card-header"><span class="index-badge">06</span><div class="ans-chip" onclick="toggleAns(this)">germs</div></div><p class="en-sentence">The public restroom is cleaned thoroughly every hour to maintain perfect health hygiene. Janitor Lin uses strong chemical sprays to kill off all dangerous <span class="blank-cue">g____ms</span> on the surfaces.</p><p class="zh-sentence">公共廁所每小時都會被徹底清潔，以維持完美的健康衛生。林清潔工使用強效化學噴霧來殺死表面上所有危險的細菌。</p></article>
-    <article class="item-card" id="q7"><div class="card-header"><span class="index-badge">07</span><div class="ans-chip" onclick="toggleAns(this)">architecture</div></div><p class="en-sentence">Paris is globally famous for its stunning historical buildings and monuments. Student Wu flew there specifically to study classical European <span class="blank-cue">a____e</span>.</p><p class="zh-sentence">巴黎以其令人驚嘆的歷史建築和紀念碑而聞名全球。吳同學專程飛到那裡去學習古典歐洲建築。</p></article>
-    <article class="item-card" id="q8"><div class="card-header"><span class="index-badge">08</span><div class="ans-chip" onclick="toggleAns(this)">underneath</div></div><p class="en-sentence">The ancient pirates buried their stolen gold treasure deep below the sandy beach. Archaeologist Lin dug for weeks before finding the chest hidden <span class="blank-cue">u____h</span>.</p><p class="zh-sentence">古代海盜將他們偷來的黃金寶藏深埋在沙灘下方。林考古學家挖了幾個星期才找到隱藏在底下的箱子。</p></article>
-    <article class="item-card" id="q9"><div class="card-header"><span class="index-badge">09</span><div class="ans-chip" onclick="toggleAns(this)">upright</div></div><p class="en-sentence">The ancient ape slowly learned to walk on two legs across the plains. Anthropologist Wang explained how standing <span class="blank-cue">u____t</span> changed human evolution forever.</p><p class="zh-sentence">古代猿猴慢慢學會了用兩條腿在平原上行走。王人類學家解釋了直立站立如何永遠改變了人類的演化。</p></article>
-    <article class="item-card" id="q10"><div class="card-header"><span class="index-badge">10</span><div class="ans-chip" onclick="toggleAns(this)">routes</div></div><p class="en-sentence">The massive snowstorm completely blocked the main highway going into the mountains. Officer Lee directed all the trapped vehicles to take alternative <span class="blank-cue">r____es</span>.</p><p class="zh-sentence">巨大的暴風雪徹底堵死了進入山區的主要高速公路。李警官引導所有受困的車輛改走替代路線。</p></article>
-    <article class="item-card" id="q11"><div class="card-header"><span class="index-badge">11</span><div class="ans-chip" onclick="toggleAns(this)">sparkles</div></div><p class="en-sentence">The calm ocean waves beautifully reflected the golden rays of the early morning sun. Photographer Lee easily captured the brilliant <span class="blank-cue">s____es</span> of the water with his professional camera.</p><p class="zh-sentence">平靜的海浪美麗地反射著清晨太陽的金色光芒。李攝影師用他的專業相機輕鬆捕捉了水面上璀璨的閃耀光芒。</p></article>
-    <article class="item-card" id="q12"><div class="card-header"><span class="index-badge">12</span><div class="ans-chip" onclick="toggleAns(this)">elementary</div></div><p class="en-sentence">You must understand the basic rules before trying to solve complex physics problems. Professor Wang spent the first week reviewing these completely <span class="blank-cue">e____y</span> concepts.</p><p class="zh-sentence">在試圖解決複雜的物理問題之前，你必須先了解基本規則。王教授花了第一週複習這些完全基礎的概念。</p></article>
-    <article class="item-card" id="q13"><div class="card-header"><span class="index-badge">13</span><div class="ans-chip" onclick="toggleAns(this)">frail</div></div><p class="en-sentence">After fighting the severe illness for several months, the patient became incredibly weak. Doctor Wang deeply worried about the <span class="blank-cue">f____l</span> man's physical ability to survive the major surgery.</p><p class="zh-sentence">在與嚴重疾病對抗了幾個月後，病患變得極其虛弱。王醫師深切擔心這位虛弱男子的體力是否能熬過這場大手術。</p></article>
-    <article class="item-card" id="q14"><div class="card-header"><span class="index-badge">14</span><div class="ans-chip" onclick="toggleAns(this)">explored</div></div><p class="en-sentence">The curious little boy wandered away from his parents in the large forest. He bravely <span class="blank-cue">e____red</span> the dark woods until he finally found a beautiful hidden waterfall.</p><p class="zh-sentence">好奇的小男孩在廣闊的森林裡離開了他的父母。他勇敢地探索了黑暗的樹林，直到他最終找到了一個美麗隱蔽的瀑布。</p></article>
-    <article class="item-card" id="q15"><div class="card-header"><span class="index-badge">15</span><div class="ans-chip" onclick="toggleAns(this)">graduation</div></div><p class="en-sentence">Emily bought a beautiful formal dress for her upcoming university ceremony. Her parents are hosting a huge family dinner to celebrate her <span class="blank-cue">g____n</span>.</p><p class="zh-sentence">艾蜜莉為她即將到來的大學典禮買了一件美麗的正式洋裝。她的父母正在舉辦一場盛大的家庭聚餐來慶祝她的畢業。</p></article>
-    <article class="item-card" id="q16"><div class="card-header"><span class="index-badge">16</span><div class="ans-chip" onclick="toggleAns(this)">promises</div></div><p class="en-sentence">Mother Wu told her young son that she would buy him a new toy. She always keeps her <span class="blank-cue">p____es</span> because she wants him to trust her completely.</p><p class="zh-sentence">吳媽媽告訴她年幼的兒子會買一個新玩具給他。她總是信守她的承諾，因為她希望他能完全信任她。</p></article>
-    <article class="item-card" id="q17"><div class="card-header"><span class="index-badge">17</span><div class="ans-chip" onclick="toggleAns(this)">constructive</div></div><p class="en-sentence">Manager Wu refused to simply criticize his employees for their accidental mistakes. He always offered <span class="blank-cue">c____e</span> advice to help them perform much better next time.</p><p class="zh-sentence">吳經理拒絕只是為了員工意外的錯誤而批評他們。他總是提供有建設性的建議，幫助他們下次表現得更好。</p></article>
-    <article class="item-card" id="q18"><div class="card-header"><span class="index-badge">18</span><div class="ans-chip" onclick="toggleAns(this)">capable</div></div><p class="en-sentence">Our new factory machines can produce ten thousand plastic bottles per hour. Manager Lee is very proud of having such a highly <span class="blank-cue">c____e</span> production line.</p><p class="zh-sentence">我們的新工廠機器每小時能生產一萬個塑膠瓶。李經理為擁有如此高能力的生產線感到非常自豪。</p></article>
-    <article class="item-card" id="q19"><div class="card-header"><span class="index-badge">19</span><div class="ans-chip" onclick="toggleAns(this)">constructed</div></div><p class="en-sentence">The devastating typhoon completely destroyed the small wooden houses near the beach. The brave villagers immediately <span class="blank-cue">c____ted</span> temporary shelters using broken tree branches.</p><p class="zh-sentence">具毀滅性的颱風徹底摧毀了海灘附近的小木屋。勇敢的村民立刻使用斷裂的樹枝建造了臨時的避難所。</p></article>
-    <article class="item-card" id="q20"><div class="card-header"><span class="index-badge">20</span><div class="ans-chip" onclick="toggleAns(this)">conflict</div></div><p class="en-sentence">The stubborn manager and the lead engineer strongly disagreed on the project design. Director Zhao had to hold a special meeting to resolve their bitter <span class="blank-cue">c____t</span>.</p><p class="zh-sentence">固執的經理和首席工程師對專案設計有強烈的分歧。趙總監必須召開特別會議來解決他們激烈的衝突。</p></article>
-    <article class="item-card" id="q21"><div class="card-header"><span class="index-badge">21</span><div class="ans-chip" onclick="toggleAns(this)">misery</div></div><p class="en-sentence">The lonely old man lost all his life savings in a terrible fire. Neighbor Lee tried to comfort him in his time of profound <span class="blank-cue">m____y</span>.</p><p class="zh-sentence">孤獨的老人在一場可怕的大火中失去了畢生積蓄。李鄰居試圖在他深陷悲慘的時刻安慰他。</p></article>
-    <article class="item-card" id="q22"><div class="card-header"><span class="index-badge">22</span><div class="ans-chip" onclick="toggleAns(this)">drowsy</div></div><p class="en-sentence">Taking this very strong allergy medication might make you feel constantly tired and sleepy. Doctor Wu strictly warned the young patient not to drive while feeling <span class="blank-cue">d____y</span>.</p><p class="zh-sentence">服用這種非常強效的過敏藥物可能會讓你持續感到疲倦和想睡。吳醫師嚴格警告年輕病患在感到昏昏欲睡時不要開車。</p></article>
-    <article class="item-card" id="q23"><div class="card-header"><span class="index-badge">23</span><div class="ans-chip" onclick="toggleAns(this)">innovative</div></div><p class="en-sentence">Manager Lin always encourages her team to think outside the box. She firmly believes that highly <span class="blank-cue">i____e</span> ideas can solve any difficult business problem.</p><p class="zh-sentence">林經理總是鼓勵她的團隊跳脫框架思考。她堅信高度創新的想法能解決任何困難的商業問題。</p></article>
-    <article class="item-card" id="q24"><div class="card-header"><span class="index-badge">24</span><div class="ans-chip" onclick="toggleAns(this)">pale</div></div><p class="en-sentence">Amanda has been staying indoors for several weeks to prepare for the difficult final exams. Her tired face looked incredibly <span class="blank-cue">p____e</span> due to the total lack of natural sunlight.</p><p class="zh-sentence">阿曼達為了準備困難的期末考，已經待在室內好幾個星期了。由於完全缺乏自然陽光，她疲憊的臉龐看起來極其蒼白。</p></article>
-    <article class="item-card" id="q25"><div class="card-header"><span class="index-badge">25</span><div class="ans-chip" onclick="toggleAns(this)">fur</div></div><p class="en-sentence">The stray dog shivered terribly in the freezing rain all night long. Animal rescuer Wang brought a towel to dry its wet and dirty <span class="blank-cue">f____r</span>.</p><p class="zh-sentence">流浪狗在冰冷的雨中可怕地發抖了整晚。動物救援者王先生拿了一條毛巾來擦乾牠濕透且骯髒的毛皮。</p></article>
-    <article class="item-card" id="q26"><div class="card-header"><span class="index-badge">26</span><div class="ans-chip" onclick="toggleAns(this)">victim</div></div><p class="en-sentence">The cunning scammer stole thousands of dollars from unsuspecting elderly people. Grandma Lin unfortunately became the latest <span class="blank-cue">v____m</span> of this cruel financial fraud.</p><p class="zh-sentence">狡猾的詐騙份子從毫無防備的長者那裡偷走了數千美元。林奶奶不幸成為這場殘酷金融詐欺的最新受害者。</p></article>
-    <article class="item-card" id="q27"><div class="card-header"><span class="index-badge">27</span><div class="ans-chip" onclick="toggleAns(this)">frightened</div></div><p class="en-sentence">The sudden loud crash of thunder caused the poor little cat to jump high. The terrible midnight noise completely <span class="blank-cue">f____ned</span> Amanda's precious furry pet in the bedroom.</p><p class="zh-sentence">突然巨大的雷響讓這隻可憐的小貓跳得老高。可怕的午夜噪音徹底嚇壞了阿曼達在臥室裡珍貴的毛茸茸寵物。</p></article>
-    <article class="item-card" id="q28"><div class="card-header"><span class="index-badge">28</span><div class="ans-chip" onclick="toggleAns(this)">ill</div></div><p class="en-sentence">John stayed home from high school today because he had a very high fever. The severely <span class="blank-cue">i____l</span> student rested comfortably in bed all day to recover.</p><p class="zh-sentence">約翰今天向高中請假待在家裡，因為他發高燒。這位病得很重的學生整天舒服地在床上休息以求康復。</p></article>
-    <article class="item-card" id="q29"><div class="card-header"><span class="index-badge">29</span><div class="ans-chip" onclick="toggleAns(this)">terminal</div></div><p class="en-sentence">Passengers must arrive at the airport at least two hours before departure. Flight attendant Lin directed everyone to wait patiently at the international departure <span class="blank-cue">t____l</span>.</p><p class="zh-sentence">旅客必須在起飛前至少兩個小時抵達機場。林空服員引導大家在國際航廈耐心等候。</p></article>
-    <article class="item-card" id="q30"><div class="card-header"><span class="index-badge">30</span><div class="ans-chip" onclick="toggleAns(this)">hollow</div></div><p class="en-sentence">The hungry little boy bit into the chocolate bunny expecting a solid piece of candy. Kevin was quite disappointed to find that the sweet treat was completely <span class="blank-cue">h____w</span>.</p><p class="zh-sentence">飢餓的小男孩咬了一口巧克力兔子，原以為是一塊實心的糖果。凱文很失望地發現這項甜點完全是空心的。</p></article>
-    <article class="item-card" id="q31"><div class="card-header"><span class="index-badge">31</span><div class="ans-chip" onclick="toggleAns(this)">torture</div></div><p class="en-sentence">The marathon runner suffered from severe leg cramps during the final mile. Athlete Lin described the intense physical pain as absolute <span class="blank-cue">t____e</span>.</p><p class="zh-sentence">馬拉松跑者在最後一英里遭遇了嚴重的腿部抽筋。林運動員將這種強烈的身體疼痛描述為絕對的折磨。</p></article>
-    <article class="item-card" id="q32"><div class="card-header"><span class="index-badge">32</span><div class="ans-chip" onclick="toggleAns(this)">universal</div></div><p class="en-sentence">The international committee tried to establish basic human rights across the globe. Lawyer Chen argued that these fundamental protections should be absolutely <span class="blank-cue">u____l</span>.</p><p class="zh-sentence">國際委員會試圖在全球建立基本人權。陳律師主張這些基本的保護應該是絕對普遍的。</p></article>
-    <article class="item-card" id="q33"><div class="card-header"><span class="index-badge">33</span><div class="ans-chip" onclick="toggleAns(this)">slight</div></div><p class="en-sentence">The professional baker noticed a tiny difference in the cake's sweet flavor. Chef Huang realized he had made a <span class="blank-cue">s____t</span> error while measuring the sugar.</p><p class="zh-sentence">專業的烘焙師注意到了蛋糕甜味上一絲微小的差異。黃主廚意識到他在測量糖的時候犯了一個輕微的錯誤。</p></article>
-    <article class="item-card" id="q34"><div class="card-header"><span class="index-badge">34</span><div class="ans-chip" onclick="toggleAns(this)">illness</div></div><p class="en-sentence">Grandmother Chang has been coughing terribly for the past two entire weeks. The prolonged <span class="blank-cue">i____s</span> made her feel extremely weak and totally exhausted all day.</p><p class="zh-sentence">張奶奶在過去整整兩個星期裡一直咳得很厲害。持續的疾病讓她整天感到極度虛弱和徹底筋疲力盡。</p></article>
-    <article class="item-card" id="q35"><div class="card-header"><span class="index-badge">35</span><div class="ans-chip" onclick="toggleAns(this)">warmth</div></div><p class="en-sentence">Grandmother Chang smiled brightly when she saw her lovely family standing at the front door. Her welcoming tight hug filled the entire living room with genuine <span class="blank-cue">w____h</span>.</p><p class="zh-sentence">張奶奶看到她可愛的家人站在前門時，露出了燦爛的笑容。她熱情的緊緊擁抱讓整個客廳充滿了真誠的溫暖。</p></article>
-    <article class="item-card" id="q36"><div class="card-header"><span class="index-badge">36</span><div class="ans-chip" onclick="toggleAns(this)">structures</div></div><p class="en-sentence">The severe earthquake severely damaged several old buildings in the downtown area. Architect Chen was hired to inspect the physical <span class="blank-cue">s____es</span> of these historical temples.</p><p class="zh-sentence">強烈的地震嚴重損壞了市中心的幾棟老建築。陳建築師受雇來檢查這些歷史寺廟的實體結構。</p></article>
-    <article class="item-card" id="q37"><div class="card-header"><span class="index-badge">37</span><div class="ans-chip" onclick="toggleAns(this)">suffered</div></div><p class="en-sentence">The heavy typhoon completely destroyed almost all the crops in the southern region. Farmer Wang <span class="blank-cue">s____red</span> a huge financial loss due to the terrible weather conditions.</p><p class="zh-sentence">強烈颱風幾乎徹底摧毀了南部地區所有的農作物。王農夫因為可怕的天氣狀況而遭受了巨大的財務損失。</p></article>
-    <article class="item-card" id="q38"><div class="card-header"><span class="index-badge">38</span><div class="ans-chip" onclick="toggleAns(this)">contact</div></div><p class="en-sentence">The rescue team finally found the lost hikers deep in the dark freezing mountains. Officer Zhang immediately established radio <span class="blank-cue">c____t</span> with the rescue helicopter pilot.</p><p class="zh-sentence">救援隊終於在黑暗寒冷的深山裡找到了迷路的登山客。張警官立刻與救援直升機飛行員建立了無線電聯繫。</p></article>
-    <article class="item-card" id="q39"><div class="card-header"><span class="index-badge">39</span><div class="ans-chip" onclick="toggleAns(this)">graduates</div></div><p class="en-sentence">Many large technology companies actively hire talented young people every summer. Manager Chang prefers to interview recent university <span class="blank-cue">g____es</span> for the engineering positions.</p><p class="zh-sentence">許多大型科技公司每年夏天都會積極聘用有才華的年輕人。張經理偏好面試剛畢業的大學畢業生來擔任工程職位。</p></article>
-    <article class="item-card" id="q40"><div class="card-header"><span class="index-badge">40</span><div class="ans-chip" onclick="toggleAns(this)">universe</div></div><p class="en-sentence">Many scientists believe there are unknown alien species living in distant galaxies. Captain Lee hopes to explore the endless <span class="blank-cue">u____e</span> with his advanced spaceship.</p><p class="zh-sentence">許多科學家相信遙遠的星系中生活著未知的的外星物種。李船長希望用他先進的太空船探索無盡的宇宙。</p></article>
-    <article class="item-card" id="q41"><div class="card-header"><span class="index-badge">41</span><div class="ans-chip" onclick="toggleAns(this)">punished</div></div><p class="en-sentence">The corrupted politician accepted millions of dollars in illegal bribes. Judge Lee severely <span class="blank-cue">p____hed</span> him for breaking the nation's highest laws.</p><p class="zh-sentence">貪污的政客收受了數百萬美元的非法賄賂。李法官因為他違反了國家最高法律而嚴厲懲罰了他。</p></article>
-    <article class="item-card" id="q42"><div class="card-header"><span class="index-badge">42</span><div class="ans-chip" onclick="toggleAns(this)">exploration</div></div><p class="en-sentence">The greedy mining company heavily funded the search for new gold deposits. Director Wang believed this expensive geological <span class="blank-cue">e____n</span> would eventually yield massive profits.</p><p class="zh-sentence">貪婪的採礦公司投入巨資尋找新的金礦床。王主任相信這項昂貴的地質探勘最終會產生巨大的利潤。</p></article>
-    <article class="item-card" id="q43"><div class="card-header"><span class="index-badge">43</span><div class="ans-chip" onclick="toggleAns(this)">slaughter</div></div><p class="en-sentence">The greedy hunters killed hundreds of elephants just to steal their valuable ivory. Animal rights activist Chen protested against this cruel and senseless <span class="blank-cue">s____r</span>.</p><p class="zh-sentence">貪婪的獵人殺死了數百隻大象，只為了偷取牠們珍貴的象牙。動物權利活動家陳先生抗議這場殘酷且無意義的屠宰。</p></article>
-    <article class="item-card" id="q44"><div class="card-header"><span class="index-badge">44</span><div class="ans-chip" onclick="toggleAns(this)">feedback</div></div><p class="en-sentence">The software developer asked the users to test the new mobile application. Programmer Wang eagerly waited for their honest <span class="blank-cue">f____k</span> to fix any remaining bugs.</p><p class="zh-sentence">軟體開發人員要求使用者測試新的行動應用程式。王程式設計師熱切地等待他們誠實的回饋，以修復任何剩餘的錯誤。</p></article>
-    <article class="item-card" id="q45"><div class="card-header"><span class="index-badge">45</span><div class="ans-chip" onclick="toggleAns(this)">tremendously</div></div><p class="en-sentence">The amateur basketball team practiced heavily every single day during the summer vacation. Coach Yang proudly observed that their passing and shooting skills had improved <span class="blank-cue">t____y</span>.</p><p class="zh-sentence">這支業餘籃球隊在暑假期間每天都進行密集的練習。楊教練驕傲地觀察到他們的傳球和投籃技巧有了極大的進步。</p></article>
-    <article class="item-card" id="q46"><div class="card-header"><span class="index-badge">46</span><div class="ans-chip" onclick="toggleAns(this)">laughter</div></div><p class="en-sentence">The talented comedian told a hilarious joke about his daily life with his cat. The crowded theater suddenly erupted into loud and uncontrollable <span class="blank-cue">l____r</span> after his punchline.</p><p class="zh-sentence">這位才華洋溢的喜劇演員講了一個關於他與貓咪日常生活的搞笑笑話。在他講完笑點後，擁擠的劇院突然爆發出響亮且無法控制的笑聲。</p></article>
-    <article class="item-card" id="q47"><div class="card-header"><span class="index-badge">47</span><div class="ans-chip" onclick="toggleAns(this)">banishment</div></div><p class="en-sentence">The disgraced knight was stripped of all his noble titles and lands. Lord Wang ordered his immediate <span class="blank-cue">b____t</span> to the distant and dangerous northern mountains.</p><p class="zh-sentence">這位失寵的騎士被剝奪了所有的貴族頭銜和土地。王爵士下令立即將他驅逐到遙遠且危險的北部山區。</p></article>
-    <article class="item-card" id="q48"><div class="card-header"><span class="index-badge">48</span><div class="ans-chip" onclick="toggleAns(this)">generous</div></div><p class="en-sentence">The successful businessman always shares his massive wealth with the poor community. Everyone praises Mr. Lin for being incredibly kind and truly <span class="blank-cue">g____s</span>.</p><p class="zh-sentence">這位成功的商人總是與貧困社區分享他龐大的財富。每個人都稱讚林先生非常善良且真正慷慨。</p></article>
-    <article class="item-card" id="q49"><div class="card-header"><span class="index-badge">49</span><div class="ans-chip" onclick="toggleAns(this)">relies</div></div><p class="en-sentence">The blind man navigates the busy city streets with his trained guide dog. He entirely <span class="blank-cue">r____ies</span> on the clever animal to keep him perfectly safe.</p><p class="zh-sentence">這位盲人帶著他受過訓練的導盲犬在繁忙的城市街道中穿梭。他完全依賴這隻聰明的動物來保持他的絕對安全。</p></article>
-    <article class="item-card" id="q50"><div class="card-header"><span class="index-badge">50</span><div class="ans-chip" onclick="toggleAns(this)">adjusted</div></div><p class="en-sentence">The international student found it difficult to adapt to the cold winter weather. Jason eventually <span class="blank-cue">a____ted</span> to the freezing temperatures by wearing thicker wool coats.</p><p class="zh-sentence">這位國際學生發現很難適應寒冷的冬天。傑森最終透過穿上更厚的羊毛大衣，適應了極度寒冷的氣溫。</p></article>
-    <article class="item-card" id="q51"><div class="card-header"><span class="index-badge">51</span><div class="ans-chip" onclick="toggleAns(this)">innovation</div></div><p class="en-sentence">The brilliant scientist received a prestigious award for her latest discovery. Everyone praised her remarkable <span class="blank-cue">i____n</span> in the field of renewable energy.</p><p class="zh-sentence">這位傑出的科學家因為她最新的發現而獲得了享有盛譽的獎項。每個人都讚揚她在再生能源領域非凡的創新。</p></article>
-    <article class="item-card" id="q52"><div class="card-header"><span class="index-badge">52</span><div class="ans-chip" onclick="toggleAns(this)">construction</div></div><p class="en-sentence">The wealthy businessman invested heavily in building a luxurious five-star hotel. Mr. Zhao closely monitored the rapid <span class="blank-cue">c____n</span> of the impressive tall building.</p><p class="zh-sentence">這位富有的商人投入鉅資建造了一家豪華的五星級飯店。趙先生密切監控這棟令人印象深刻的高樓的快速施工。</p></article>
-    <article class="item-card" id="q53"><div class="card-header"><span class="index-badge">53</span><div class="ans-chip" onclick="toggleAns(this)">mentioned</div></div><p class="en-sentence">The famous author wrote a lengthy acknowledgement at the end of his book. He specifically <span class="blank-cue">m____ned</span> his beloved wife for her endless support.</p><p class="zh-sentence">這位著名的作者在他的書末寫了一篇很長的致謝詞。他特別提到了他心愛的妻子，感謝她無盡的支持。</p></article>
-    <article class="item-card" id="q54"><div class="card-header"><span class="index-badge">54</span><div class="ans-chip" onclick="toggleAns(this)">refused</div></div><p class="en-sentence">The famous actor was offered a massive amount of money to star in the new action movie. However, David firmly <span class="blank-cue">r____sed</span> the leading role because he thought the script was terrible.</p><p class="zh-sentence">這位著名的演員獲邀以巨額片酬主演新的動作片。然而，大衛堅決拒絕了這個主角，因為他覺得劇本糟透了。</p></article>
-    <article class="item-card" id="q55"><div class="card-header"><span class="index-badge">55</span><div class="ans-chip" onclick="toggleAns(this)">stable</div></div><p class="en-sentence">The famous horse rider gently calmed down the nervous animal before the race. She kept the magnificent creature perfectly <span class="blank-cue">s____e</span> in the quiet wooden barn.</p><p class="zh-sentence">這位著名的騎馬者在賽前溫柔地安撫了這匹緊張的動物。她讓這隻宏偉的生物在安靜的木穀倉裡保持完美的穩定。</p></article>
-    <article class="item-card" id="q56"><div class="card-header"><span class="index-badge">56</span><div class="ans-chip" onclick="toggleAns(this)">tremendous</div></div><p class="en-sentence">The famous actor felt a lot of intense pressure before the live stage performance. David experienced a <span class="blank-cue">t____s</span> relief when the audience stood up and cheered enthusiastically.</p><p class="zh-sentence">這位著名演員在現場舞台表演前感受到了許多強烈的壓力。當觀眾站起來熱烈歡呼時，大衛感受到了一種極大的如釋重負。</p></article>
-    <article class="item-card" id="q57"><div class="card-header"><span class="index-badge">57</span><div class="ans-chip" onclick="toggleAns(this)">hesitated</div></div><p class="en-sentence">The highly brave firefighter did not pause for a single second when he saw the violently burning house. Captain Chen never <span class="blank-cue">h____ted</span> to risk his own precious life to save trapped innocent citizens.</p><p class="zh-sentence">這位極度勇敢的消防員在看到猛烈燃燒的房子時，一秒鐘也沒有停頓。陳隊長從不猶豫冒著自己寶貴的生命危險去拯救受困的無辜市民。</p></article>
-    <article class="item-card" id="q58"><div class="card-header"><span class="index-badge">58</span><div class="ans-chip" onclick="toggleAns(this)">hesitation</div></div><p class="en-sentence">The incredibly nervous performer paused silently for a long moment before singing the very first note. Her brief <span class="blank-cue">h____n</span> perfectly showed how much heavy pressure she felt on the grand stage.</p><p class="zh-sentence">這位極度緊張的表演者在唱出第一個音符前，安靜地停頓了很長一段時間。她短暫的猶豫完美顯示了她在這個盛大的舞台上感受到了多麼沉重的壓力。</p></article>
-    <article class="item-card" id="q59"><div class="card-header"><span class="index-badge">59</span><div class="ans-chip" onclick="toggleAns(this)">collaborated</div></div><p class="en-sentence">The independent musicians wanted to create a highly unique pop song together. Singer Zhao eagerly <span class="blank-cue">c____ted</span> with a popular DJ to produce the hit single.</p><p class="zh-sentence">這些獨立音樂人想要共同創作一首極具獨特性的流行歌曲。趙歌手熱切地與一位受歡迎的 DJ 合作製作了這首熱門單曲。</p></article>
-    <article class="item-card" id="q60"><div class="card-header"><span class="index-badge">60</span><div class="ans-chip" onclick="toggleAns(this)">hugged</div></div><p class="en-sentence">The two best friends had not seen each other for over ten long years. Sarah tightly <span class="blank-cue">h____ged</span> Emily the very moment they finally met at the busy coffee shop.</p><p class="zh-sentence">這兩個最好的朋友已經超過十年沒見面了。當她們終於在繁忙的咖啡廳見面時，莎拉緊緊地擁抱了艾蜜莉。</p></article>
-    <article class="item-card" id="q61"><div class="card-header"><span class="index-badge">61</span><div class="ans-chip" onclick="toggleAns(this)">beneficial</div></div><p class="en-sentence">The two competing companies signed a major trade agreement last Friday. CEO Wang believes this cooperative partnership will be mutually <span class="blank-cue">b____l</span>.</p><p class="zh-sentence">這兩家競爭公司上週五簽署了一項重大貿易協定。王執行長相信這種合作夥伴關係將會是互利的。</p></article>
-    <article class="item-card" id="q62"><div class="card-header"><span class="index-badge">62</span><div class="ans-chip" onclick="toggleAns(this)">distribution</div></div><p class="en-sentence">The wealthy nation possesses abundant natural resources and massive agricultural fields. However, Economist Lee criticized the highly unequal <span class="blank-cue">d____n</span> of wealth among its citizens.</p><p class="zh-sentence">這個富有的國家擁有豐富的自然資源和廣大的農田。然而，李經濟學家批評了其公民之間高度不平等的財富分配。</p></article>
-    <article class="item-card" id="q63"><div class="card-header"><span class="index-badge">63</span><div class="ans-chip" onclick="toggleAns(this)">corporate</div></div><p class="en-sentence">The successful company decided to completely redesign its official website and logo. Director Huang hoped the new <span class="blank-cue">c____e</span> identity would attract many younger customers.</p><p class="zh-sentence">這家成功的公司決定徹底重新設計其官方網站和標誌。黃總監希望新的企業形象能吸引許多更年輕的顧客。</p></article>
-    <article class="item-card" id="q64"><div class="card-header"><span class="index-badge">64</span><div class="ans-chip" onclick="toggleAns(this)">employees</div></div><p class="en-sentence">The software company rewards hard work with a massive year-end bonus. Outstanding <span class="blank-cue">e____es</span> often receive extra paid vacation days as well.</p><p class="zh-sentence">這家軟體公司以巨額的年終獎金來獎勵辛勤的工作。表現優異的員工通常還會獲得額外的有薪假。</p></article>
-    <article class="item-card" id="q65"><div class="card-header"><span class="index-badge">65</span><div class="ans-chip" onclick="toggleAns(this)">unique</div></div><p class="en-sentence">This traditional Taiwanese restaurant serves a very special spicy tofu dish. Tourist Smith absolutely loved the profoundly <span class="blank-cue">u____e</span> flavor of the secret sauce.</p><p class="zh-sentence">這家傳統台灣餐廳提供了一道非常特別的麻辣豆腐。史密斯遊客絕對愛上了那祕製醬料極其獨特的風味。</p></article>
-    <article class="item-card" id="q66"><div class="card-header"><span class="index-badge">66</span><div class="ans-chip" onclick="toggleAns(this)">innovated</div></div><p class="en-sentence">The traditional restaurant was losing money for several consecutive months. Owner Lee finally <span class="blank-cue">i____ted</span> by adding creative vegetarian options to the old menu.</p><p class="zh-sentence">這家傳統餐廳已經連續好幾個月虧損。李老闆最後透過在舊菜單中加入有創意的素食選項來進行創新。</p></article>
-    <article class="item-card" id="q67"><div class="card-header"><span class="index-badge">67</span><div class="ans-chip" onclick="toggleAns(this)">miserable</div></div><p class="en-sentence">The poor stray cat was trapped in the freezing rain without any shelter. Amanda felt terrible seeing the little animal looking so cold and <span class="blank-cue">m____e</span>.</p><p class="zh-sentence">這隻可憐的流浪貓被困在冰冷的雨中，沒有任何遮蔽處。阿曼達看到小動物看起來如此寒冷和痛苦，感到非常難過。</p></article>
-    <article class="item-card" id="q68"><div class="card-header"><span class="index-badge">68</span><div class="ans-chip" onclick="toggleAns(this)">enables</div></div><p class="en-sentence">The advanced software translates foreign languages perfectly in real time. This amazing tool <span class="blank-cue">e____es</span> Manager Lee to communicate with global clients smoothly.</p><p class="zh-sentence">這款先進的軟體能完美地即時翻譯外語。這個驚人的工具使李經理能夠與全球客戶順暢溝通。</p></article>
-    <article class="item-card" id="q69"><div class="card-header"><span class="index-badge">69</span><div class="ans-chip" onclick="toggleAns(this)">capabilities</div></div><p class="en-sentence">This advanced software program can translate fifty different languages instantly. Director Wu was truly amazed by its incredible language processing <span class="blank-cue">c____ies</span>.</p><p class="zh-sentence">這款先進的軟體程式能瞬間翻譯五十種不同的語言。吳主任對其令人難以置信的語言處理能力感到非常驚訝。</p></article>
-    <article class="item-card" id="q70"><div class="card-header"><span class="index-badge">70</span><div class="ans-chip" onclick="toggleAns(this)">ranking</div></div><p class="en-sentence">The competitive video game displays the scores of all online players globally. Kevin practices every night to improve his official worldwide <span class="blank-cue">r____g</span>.</p><p class="zh-sentence">這款競爭激烈的電玩遊戲會顯示全球所有線上玩家的分數。凱文每晚練習以提升他官方的世界排名。</p></article>
-    <article class="item-card" id="q71"><div class="card-header"><span class="index-badge">71</span><div class="ans-chip" onclick="toggleAns(this)">elements</div></div><p class="en-sentence">The mysterious chemical substance contains several highly radioactive parts. Scientist Huang carefully isolated the dangerous <span class="blank-cue">e____ts</span> in the secure laboratory.</p><p class="zh-sentence">這種神祕的化學物質含有幾個高度放射性的部分。黃科學家在安全的實驗室裡仔細地分離了這些危險的元素。</p></article>
-    <article class="item-card" id="q72"><div class="card-header"><span class="index-badge">72</span><div class="ans-chip" onclick="toggleAns(this)">reliable</div></div><p class="en-sentence">The old Japanese car has never broken down during our long family road trips. Father Lin always praises his vehicle for being so incredibly <span class="blank-cue">r____e</span>.</p><p class="zh-sentence">這輛舊的日本車在我們漫長的家庭公路旅行中從未拋錨過。林爸爸總是稱讚他的車子是如此地極度可靠。</p></article>
-    <article class="item-card" id="q73"><div class="card-header"><span class="index-badge">73</span><div class="ans-chip" onclick="toggleAns(this)">banished</div></div><p class="en-sentence">The wild wolf pack aggressively rejected their weakened old leader. The young alpha permanently <span class="blank-cue">b____hed</span> him into the freezing wilderness.</p><p class="zh-sentence">野生的狼群充滿攻擊性地拒絕了牠們虛弱的老首領。年輕的阿爾法狼將他永久放逐到冰冷的荒野中。</p></article>
-    <article class="item-card" id="q74"><div class="card-header"><span class="index-badge">74</span><div class="ans-chip" onclick="toggleAns(this)">fright</div></div><p class="en-sentence">The wild bear suddenly appeared right in front of the young camper's small tent. Kevin froze in pure <span class="blank-cue">f____t</span> and could not move a single muscle for a minute.</p><p class="zh-sentence">野生熊突然出現在年輕露營者的小帳篷正前方。凱文在純粹的驚嚇中僵住了，整整一分鐘無法動彈。</p></article>
-    <article class="item-card" id="q75"><div class="card-header"><span class="index-badge">75</span><div class="ans-chip" onclick="toggleAns(this)">employment</div></div><p class="en-sentence">Jason graduated from the university during a severe global economic crisis. He struggled for several months before finally securing full-time <span class="blank-cue">e____t</span> at a local bank.</p><p class="zh-sentence">傑森在全球嚴重經濟危機期間從大學畢業。他苦苦掙扎了好幾個月，最後終於在當地一家銀行獲得了全職的就業。</p></article>
-    <article class="item-card" id="q76"><div class="card-header"><span class="index-badge">76</span><div class="ans-chip" onclick="toggleAns(this)">corporation</div></div><p class="en-sentence">Several small startup companies were quickly bought out by the giant tech firm. The massive <span class="blank-cue">c____n</span> now totally dominates the entire software industry in Taiwan.</p><p class="zh-sentence">幾家小型新創公司很快就被這家科技巨頭買下。這家龐大的企業現在完全主導了台灣整個軟體產業。</p></article>
-    <article class="item-card" id="q77"><div class="card-header"><span class="index-badge">77</span><div class="ans-chip" onclick="toggleAns(this)">punishment</div></div><p class="en-sentence">The cruel dictator sent all his political enemies to remote labor camps. Historian Wu described this harsh <span class="blank-cue">p____t</span> as a terrible violation of human rights.</p><p class="zh-sentence">殘酷的獨裁者將他所有的政敵送到偏遠的勞改營。吳歷史學家將這種嚴厲的懲罰描述為對人權的可怕侵犯。</p></article>
-    <article class="item-card" id="q78"><div class="card-header"><span class="index-badge">78</span><div class="ans-chip" onclick="toggleAns(this)">freeze</div></div><p class="en-sentence">The exhausted hiker got lost in the snowy mountains without a heavy jacket. Captain Lee worried that the poor man would <span class="blank-cue">f____e</span> to death overnight.</p><p class="zh-sentence">筋疲力盡的登山客在沒有厚外套的情況下在雪山裡迷路了。李隊長擔心這個可憐的男人會在夜裡凍死。</p></article>
-    <article class="item-card" id="q79"><div class="card-header"><span class="index-badge">79</span><div class="ans-chip" onclick="toggleAns(this)">benefits</div></div><p class="en-sentence">The new public library offers thousands of free books and quiet study areas. Mayor Chen believes that this wonderful facility greatly <span class="blank-cue">b____ts</span> the whole community.</p><p class="zh-sentence">新的公共圖書館提供了數千本免費書籍和安靜的學習區。陳市長相信這個美好的設施極大地使整個社區受益。</p></article>
-    <article class="item-card" id="q80"><div class="card-header"><span class="index-badge">80</span><div class="ans-chip" onclick="toggleAns(this)">slightly</div></div><p class="en-sentence">The new electric car model is actually a bit more expensive than the older one. Customer Yang hesitated because the price had increased <span class="blank-cue">s____y</span> this year.</p><p class="zh-sentence">新的電動車款式實際上比舊款稍微貴了一點。楊顧客猶豫了，因為今年的價格稍微上漲了。</p></article>
-    <article class="item-card" id="q81"><div class="card-header"><span class="index-badge">81</span><div class="ans-chip" onclick="toggleAns(this)">employed</div></div><p class="en-sentence">The local factory expanded its production line significantly last year. Director Chen <span class="blank-cue">e____yed</span> fifty additional workers to handle the rapidly increasing orders.</p><p class="zh-sentence">當地工廠去年大幅擴張了生產線。陳主任增聘了五十名工人來處理快速增加的訂單。</p></article>
-    <article class="item-card" id="q82"><div class="card-header"><span class="index-badge">82</span><div class="ans-chip" onclick="toggleAns(this)">architect</div></div><p class="en-sentence">The local government wants to build a new public library near the park. They hired a famous Italian <span class="blank-cue">a____t</span> to create a beautiful and functional space.</p><p class="zh-sentence">當地政府想在公園附近建造一座新的公共圖書館。他們聘請了一位著名的義大利建築師來創造一個美麗且實用的空間。</p></article>
-    <article class="item-card" id="q83"><div class="card-header"><span class="index-badge">83</span><div class="ans-chip" onclick="toggleAns(this)">stability</div></div><p class="en-sentence">The three-legged wooden stool easily tipped over when the heavy man sat down. Carpenter Lin realized the flawed design severely lacked structural <span class="blank-cue">s____y</span>.</p><p class="zh-sentence">當這位有份量的男子坐下時，這張三條腿的木凳很容易就翻倒了。林木匠意識到這個有瑕疵的設計嚴重缺乏結構上的穩定性。</p></article>
-    <article class="item-card" id="q84"><div class="card-header"><span class="index-badge">84</span><div class="ans-chip" onclick="toggleAns(this)">civilization</div></div><p class="en-sentence">The discovery of agriculture allowed nomadic tribes to settle in one place. Professor Wang explained how this fundamental change led to the birth of human <span class="blank-cue">c____n</span>.</p><p class="zh-sentence">農業的發現讓游牧部落得以在一個地方定居。王教授解釋了這項根本性的改變是如何導致人類文明的誕生。</p></article>
-    <article class="item-card" id="q85"><div class="card-header"><span class="index-badge">85</span><div class="ans-chip" onclick="toggleAns(this)">distributed</div></div><p class="en-sentence">The charity group prepared thousands of hot meals for the homeless people. Volunteer Wu successfully <span class="blank-cue">d____ted</span> the warm food at the central park tonight.</p><p class="zh-sentence">慈善團體為無家可歸的人們準備了數千份熱食。吳志工今晚成功地在中央公園分發了這些溫暖的食物。</p></article>
-    <article class="item-card" id="q86"><div class="card-header"><span class="index-badge">86</span><div class="ans-chip" onclick="toggleAns(this)">generosity</div></div><p class="en-sentence">The charity organization received hundreds of large donations during the holiday season. Volunteer Huang was moved to tears by the public's heartwarming <span class="blank-cue">g____y</span>.</p><p class="zh-sentence">慈善機構在節慶期間收到了數百筆大額捐款。黃志工被大眾令人感到溫暖的慷慨感動得流下眼淚。</p></article>
-    <article class="item-card" id="q87"><div class="card-header"><span class="index-badge">87</span><div class="ans-chip" onclick="toggleAns(this)">stretch</div></div><p class="en-sentence">The lazy orange cat woke up slowly from a long afternoon nap on the soft sofa. The fluffy animal did a very long <span class="blank-cue">s____h</span> before slowly walking to its food bowl.</p><p class="zh-sentence">慵懶的橘貓在柔軟的沙發上睡了漫長的午覺後慢慢醒來。這隻毛茸茸的動物做了一個很長的伸展，然後才慢慢走到牠的食物碗前。</p></article>
-    <article class="item-card" id="q88"><div class="card-header"><span class="index-badge">88</span><div class="ans-chip" onclick="toggleAns(this)">theft</div></div><p class="en-sentence">The security cameras clearly recorded the masked man breaking into the jewelry store. Officer Zhao quickly arrested the criminal for the massive midnight <span class="blank-cue">t____t</span>.</p><p class="zh-sentence">監視器清楚錄下了蒙面男子闖入珠寶店的過程。趙警官迅速逮捕了這名犯下重大午夜竊案的罪犯。</p></article>
-    <article class="item-card" id="q89"><div class="card-header"><span class="index-badge">89</span><div class="ans-chip" onclick="toggleAns(this)">collaboration</div></div><p class="en-sentence">Writing a successful movie script requires excellent teamwork and communication. Director Lee relies heavily on the close <span class="blank-cue">c____n</span> of his talented writers.</p><p class="zh-sentence">撰寫一部成功的電影劇本需要出色的團隊合作和溝通。李導演非常依賴他才華洋溢的作家們之間緊密的合作。</p></article>
-    <article class="item-card" id="q90"><div class="card-header"><span class="index-badge">90</span><div class="ans-chip" onclick="toggleAns(this)">prompt</div></div><p class="en-sentence">The enthusiastic customer service representative solved the urgent technical problem immediately. Client Lin deeply appreciated such a <span class="blank-cue">p____t</span> and highly helpful response from the large company.</p><p class="zh-sentence">熱情的客服代表立刻解決了緊急的技術問題。林客戶深深感激這家大公司如此迅速且極具幫助的回應。</p></article>
-    <article class="item-card" id="q91"><div class="card-header"><span class="index-badge">91</span><div class="ans-chip" onclick="toggleAns(this)">materials</div></div><p class="en-sentence">The enthusiastic fashion designer bought large amounts of high-quality silk. Miss Chang needed these expensive <span class="blank-cue">m____ls</span> to create her stunning evening dresses.</p><p class="zh-sentence">熱情的時尚設計師購買了大量高品質的絲綢。張小姐需要這些昂貴的材料來製作她令人驚豔的晚禮服。</p></article>
-    <article class="item-card" id="q92"><div class="card-header"><span class="index-badge">92</span><div class="ans-chip" onclick="toggleAns(this)">humankind</div></div><p class="en-sentence">Environmental pollution threatens the survival of all living creatures on Earth. Professor Lin warns that the future of <span class="blank-cue">h____d</span> depends on going green.</p><p class="zh-sentence">環境污染威脅著地球上所有生物的生存。林教授警告，人類的未來取決於走向環保。</p></article>
-    <article class="item-card" id="q93"><div class="card-header"><span class="index-badge">93</span><div class="ans-chip" onclick="toggleAns(this)">confined</div></div><p class="en-sentence">The severe leg injury forced the famous marathon athlete to simply stay in bed. Doctor Huang strictly <span class="blank-cue">c____ned</span> David to the hospital room for a whole entire month.</p><p class="zh-sentence">嚴重的腿部受傷迫使這位著名的馬拉松運動員只能待在床上。黃醫師嚴格地將大衛限制在病房裡整整一個月。</p></article>
-    <article class="item-card" id="q94"><div class="card-header"><span class="index-badge">94</span><div class="ans-chip" onclick="toggleAns(this)">refusal</div></div><p class="en-sentence">The severely corrupted politician firmly denied taking any illegal bribes from the large construction company. His strict <span class="blank-cue">r____l</span> to answer any direct questions made the local journalists even more suspicious.</p><p class="zh-sentence">嚴重貪污的政客堅決否認收受大型建築公司的任何非法賄賂。他嚴格拒絕回答任何直接問題，這讓當地記者更加懷疑。</p></article>
-  </main>
+  // 21 - 40
+  {
+    n: 21, section: "s2",
+    tags: ["考點：misery 悲痛、悲慘境遇", "詞性需求：不可數名詞"],
+    ans: "misery",
+    en: "The lonely old man lost all his life savings in a terrible fire. Neighbor Lee tried to comfort him in his time of profound [[21|misery]].",
+    zh: "孤獨的老人在一場可怕的大火中失去了畢生積蓄。李鄰居試圖在他深陷悲慘的時刻安慰他。",
+    clue: "介系詞 of 與形容詞 profound（深沉的）後接抽象名詞；遭遇大火喪失所有積蓄的極度不幸，依首尾字母 m____y 判定為 misery。",
+    confuse: "miserable (adj. 痛苦的)。在形容詞 profound 後須填名詞形式。何時才對：The refugees endured years of misery."
+  },
+  {
+    n: 22, section: "s2",
+    tags: ["考點：drowsy 昏昏欲睡的", "詞性需求：形容詞 (連綴補語)"],
+    ans: "drowsy",
+    en: "Taking this very strong allergy medication might make you feel constantly tired and sleepy. Doctor Wu strictly warned the young patient not to drive while feeling [[22|drowsy]].",
+    zh: "服用這種非常強效的過敏藥物可能會讓你持續感到疲倦和想睡。吳醫師嚴格警告年輕病患在感到昏昏欲睡時不要開車。",
+    clue: "連綴動詞 feeling 後接形容詞補語；服用過敏藥物帶來的嗜睡狀態，依首尾字母 d____y 判定為 drowsy。",
+    confuse: "drowsiness (n. 嗜睡感)。feeling 後接形容詞作主詞補語。何時才對：The warm fire made me feel drowsy."
+  },
+  {
+    n: 23, section: "s2",
+    tags: ["考點：innovative 創新的、新穎的", "詞性需求：形容詞"],
+    ans: "innovative",
+    en: "Manager Lin always encourages her team to think outside the box. She firmly believes that highly [[23|innovative]] ideas can solve any difficult business problem.",
+    zh: "林經理總是鼓勵她的團隊跳脫框架思考。她堅信高度創新的想法能解決任何困難的商業問題。",
+    clue: "副詞 highly 修飾後方形容詞；修飾名詞 ideas，與 think outside the box（打破框架）呼應，依首尾字母 i____e 判定為 innovative。",
+    confuse: "innovate (v. 創新)、innovation (n. 創新)。修飾名詞 ideas 須填形容詞。何時才對：The company is famous for its innovative products."
+  },
+  {
+    n: 24, section: "s2",
+    tags: ["考點：pale 蒼白的", "詞性需求：形容詞 (連綴補語)"],
+    ans: "pale",
+    en: "Amanda has been staying indoors for several weeks to prepare for the difficult final exams. Her tired face looked incredibly [[24|pale]] due to the total lack of natural sunlight.",
+    zh: "阿曼達為了準備困難的期末考，已經待在室內好幾個星期了。由於完全缺乏自然陽光，她疲憊的臉龐看起來極其蒼白。",
+    clue: "連綴動詞 looked 與副詞 incredibly 後接形容詞補語；室內久待缺乏日照導致臉色無血色，依首尾字母 p____e 判定為 pale。",
+    confuse: "pale 指臉色慘白；與 pale in comparison（相形見絀）片語通用。何時才對：You look pale; are you feeling all right?"
+  },
+  {
+    n: 25, section: "s2",
+    tags: ["考點：fur 動物毛皮", "詞性需求：不可數名詞"],
+    ans: "fur",
+    en: "The stray dog shivered terribly in the freezing rain all night long. Animal rescuer Wang brought a towel to dry its wet and dirty [[25|fur]].",
+    zh: "流浪狗在冰冷的雨中可怕地發抖了整晚。動物救援者王先生拿了一條毛巾來擦乾牠濕透且骯髒的毛皮。",
+    clue: "所有格 its 與形容詞 wet and dirty 後接名詞；指流浪狗身上浸濕的動物毛皮，依首尾字母 f____r 判定為 fur。",
+    confuse: "furry (adj. 覆毛的)。所有格與形容詞後接名詞受詞。何時才對：The rabbit has soft white fur."
+  },
+  {
+    n: 26, section: "s2",
+    tags: ["考點：victim 受害者", "詞性需求：可數名詞 (單數)"],
+    ans: "victim",
+    en: "The cunning scammer stole thousands of dollars from unsuspecting elderly people. Grandma Lin unfortunately became the latest [[26|victim]] of this cruel financial fraud.",
+    zh: "狡猾的詐騙份子從毫無防備的長者那裡偷走了數千美元。林奶奶不幸成為這場殘酷金融詐欺的最新受害者。",
+    clue: "最高級 the latest 後接名詞；詐騙案件中蒙受金錢損失的當事人，依首尾字母 v____m 判定為 victim。",
+    confuse: "victimless (adj. 無受害者的)。指犯罪被害人使用名詞 victim。何時才對：She was the victim of a road accident."
+  },
+  {
+    n: 27, section: "s2",
+    tags: ["考點：frighten 嚇壞、使害怕", "詞性需求：動詞過去式 (V-ed)"],
+    ans: "frightened",
+    en: "The sudden loud crash of thunder caused the poor little cat to jump high. The terrible midnight noise completely [[27|frightened]] Amanda's precious furry pet in the bedroom.",
+    zh: "突然巨大的雷響讓這隻可憐的小貓跳得老高。可怕的午夜噪音徹底嚇壞了阿曼達在臥室裡珍貴的毛茸茸寵物。",
+    clue: "主詞 The terrible midnight noise 與副詞 completely 後接及物動詞；後有受詞 pet，雷聲驚嚇寵物，依首尾字母 f____ned 判定為 frightened。",
+    confuse: "frightening (adj. 令人害怕的)、frightened (adj. 感到害怕的)。此處作及物述詞動詞過去式。何時才對：The loud noise frightened the children."
+  },
+  {
+    n: 28, section: "s2",
+    tags: ["考點：ill 生病的、患病的", "詞性需求：形容詞 (前置修飾)"],
+    ans: "ill",
+    en: "John stayed home from high school today because he had a very high fever. The severely [[28|ill]] student rested comfortably in bed all day to recover.",
+    zh: "約翰今天向高中請假待在家裡，因為他發高燒。這位病得很重的學生整天舒服地在床上休息以求康復。",
+    clue: "副詞 severely 修飾後方形容詞；修飾名詞 student，發高燒臥床生病，依首尾字母 i____l 判定為 ill。",
+    confuse: "illness (n. 疾病)。修飾名詞需用形容詞形式 ill。何時才對：He was too ill to attend the meeting."
+  },
+  {
+    n: 29, section: "s2",
+    tags: ["考點：terminal 機場航廈", "詞性需求：可數名詞 (單數)"],
+    ans: "terminal",
+    en: "Passengers must arrive at the airport at least two hours before departure. Flight attendant Lin directed everyone to wait patiently at the international departure [[29|terminal]].",
+    zh: "旅客必須在起飛前至少兩個小時抵達機場。林空服員引導大家在國際航廈耐心等候。",
+    clue: "修飾名詞詞組 the international departure 後接名詞；機場讓旅客候機的航站建築，依首尾字母 t____l 判定為 terminal。",
+    confuse: "terminal 亦可作形容詞指「絕症末期的」。機場航站專有名詞為 airport/departure terminal。何時才對：Our flight leaves from Terminal 2."
+  },
+  {
+    n: 30, section: "s2",
+    tags: ["考點：hollow 中空的、空心的", "詞性需求：形容詞 (主詞補語)"],
+    ans: "hollow",
+    en: "The hungry little boy bit into the chocolate bunny expecting a solid piece of candy. Kevin was quite disappointed to find that the sweet treat was completely [[30|hollow]].",
+    zh: "飢餓的小男孩咬了一口巧克力兔子，原以為是一塊實心的糖果。凱文很失望地發現這項甜點完全是空心的。",
+    clue: "be 動詞 was 與副詞 completely 後接形容詞補語；對比上文 solid（實心的），表示巧克力內部為空心，依首尾字母 h____w 判定為 hollow。",
+    confuse: "hollow 亦可作動詞挖空。形容物品內部無填充時用形容詞 hollow。何時才對：The bamboo stem is hollow inside."
+  },
+  {
+    n: 31, section: "s2",
+    tags: ["考點：torture 折磨、酷刑", "詞性需求：不可數名詞"],
+    ans: "torture",
+    en: "The marathon runner suffered from severe leg cramps during the final mile. Athlete Lin described the intense physical pain as absolute [[31|torture]].",
+    zh: "馬拉松跑者在最後一英里遭遇了嚴重的腿部抽筋。林運動員將這種強烈的身體疼痛描述為絕對的折磨。",
+    clue: "介系詞 as 與形容詞 absolute 後接名詞；跑者腿部抽筋所經歷的難熬劇痛，依首尾字母 t____e 判定為 torture。",
+    confuse: "torture 也可當動詞用。接在 absolute 後作為名詞受詞。何時才對：Waiting for the results was pure torture."
+  },
+  {
+    n: 32, section: "s2",
+    tags: ["考點：universal 全球普及的、通用的", "詞性需求：形容詞 (主詞補語)"],
+    ans: "universal",
+    en: "The international committee tried to establish basic human rights across the globe. Lawyer Chen argued that these fundamental protections should be absolutely [[32|universal]].",
+    zh: "國際委員會試圖在全球建立基本人權。陳律師主張這些基本的保護應該是絕對普遍的。",
+    clue: "should be 後接形容詞作為主詞補語，由副詞 absolutely 修飾；人權保障涵蓋全人類各處，依首尾字母 u____l 判定為 universal。",
+    confuse: "universe (n. 宇宙)。修飾普世通用概念用形容詞 universal。何時才對：Music is often called a universal language."
+  },
+  {
+    n: 33, section: "s2",
+    tags: ["考點：slight 輕微的、些微的", "詞性需求：形容詞"],
+    ans: "slight",
+    en: "The professional baker noticed a tiny difference in the cake's sweet flavor. Chef Huang realized he had made a [[33|slight]] error while measuring the sugar.",
+    zh: "專業的烘焙師注意到了蛋糕甜味上一絲微小的差異。黃主廚意識到他在測量糖的時候犯了一個輕微的錯誤。",
+    clue: "不定冠詞 a 與名詞 error 之間需填形容詞；對應前文 tiny difference，指微不足道的量測失誤，依首尾字母 s____t 判定為 slight。",
+    confuse: "slightly (adv. 稍微)。修飾名詞 error 須用形容詞 slight。何時才對：I noticed a slight change in his attitude."
+  },
+  {
+    n: 34, section: "s2",
+    tags: ["考點：illness 疾病、患病", "詞性需求：可數/不可數名詞"],
+    ans: "illness",
+    en: "Grandmother Chang has been coughing terribly for the past two entire weeks. The prolonged [[34|illness]] made her feel extremely weak and totally exhausted all day.",
+    zh: "張奶奶在過去整整兩個星期裡一直咳得很厲害。持續的疾病讓她整天感到極度虛弱和徹底筋疲力盡。",
+    clue: "形容詞 prolonged（長期的）後接名詞作主詞；咳嗽兩週導致身體衰弱的病況，依首尾字母 i____s 判定為 illness。",
+    confuse: "ill (adj. 生病的)。作名詞主詞核心詞時用 illness。何時才對：He died after a long illness."
+  },
+  {
+    n: 35, section: "s2",
+    tags: ["考點：warmth 溫暖、溫情", "詞性需求：不可數名詞"],
+    ans: "warmth",
+    en: "Grandmother Chang smiled brightly when she saw her lovely family standing at the front door. Her welcoming tight hug filled the entire living room with genuine [[35|warmth]].",
+    zh: "張奶奶看到她可愛的家人站在前門時，露出了燦爛的笑容。她熱情的緊緊擁抱讓整個客廳充滿了真誠的溫暖。",
+    clue: "介系詞 with 與形容詞 genuine（真摯的）後接抽象名詞；家人相聚緊抱散發出的親情溫馨，依首尾字母 w____h 判定為 warmth。",
+    confuse: "warm (adj. 溫暖的)。在形容詞 genuine 後需用名詞形式 warmth。何時才對：The fire gave off very little warmth."
+  },
+  {
+    n: 36, section: "s2",
+    tags: ["考點：structure 結構物、構造", "詞性需求：可數名詞 (複數)"],
+    ans: "structures",
+    en: "The severe earthquake severely damaged several old buildings in the downtown area. Architect Chen was hired to inspect the physical [[36|structures]] of these historical temples.",
+    zh: "強烈的地震嚴重損壞了市中心的幾棟老建築。陳建築師受雇來檢查這些歷史寺廟的實體結構。",
+    clue: "the physical 後接名詞複數；指建築師檢視數座歷史寺廟建築的樑柱實體結構，依首尾字母 s____es 判定為 structures。",
+    confuse: "structural (adj. 結構上的)。接在 the physical 後填名詞複數 structures。何時才對：The structure of the building was damaged by the blast."
+  },
+  {
+    n: 37, section: "s2",
+    tags: ["考點：suffer 遭受、蒙受", "詞性需求：動詞過去式 (V-ed)"],
+    ans: "suffered",
+    en: "The heavy typhoon completely destroyed almost all the crops in the southern region. Farmer Wang [[37|suffered]] a huge financial loss due to the terrible weather conditions.",
+    zh: "強烈颱風幾乎徹底摧毀了南部地區所有的農作物。王農夫因為可怕的天氣狀況而遭受了巨大的財務損失。",
+    clue: "主詞 Farmer Wang 後接及物述語動詞；片語 suffer a loss（蒙受損失），時態為過去式，依首尾字母 s____red 判定為 suffered。",
+    confuse: "suffering (n. 苦難)。此處作為述詞動詞過去式。何時才對：The company suffered heavy losses during the recession."
+  },
+  {
+    n: 38, section: "s2",
+    tags: ["考點：contact 聯繫、通聯", "詞性需求：不可數名詞"],
+    ans: "contact",
+    en: "The rescue team finally found the lost hikers deep in the dark freezing mountains. Officer Zhang immediately established radio [[38|contact]] with the rescue helicopter pilot.",
+    zh: "救援隊終於在黑暗寒冷的深山裡找到了迷路的登山客。張警官立刻與救援直升機飛行員建立了無線電聯繫。",
+    clue: "established 後接受詞名詞；片語 establish radio contact with...（與……建立無線電聯繫），依首尾字母 c____t 判定為 contact。",
+    confuse: "contact 亦可作及物動詞 (contact sb.)。此處與 radio 組成名詞詞組作受詞。何時才對：We have been out of contact for months."
+  },
+  {
+    n: 39, section: "s2",
+    tags: ["考點：graduate 大學畢業生", "詞性需求：可數名詞 (複數)"],
+    ans: "graduates",
+    en: "Many large technology companies actively hire talented young people every summer. Manager Chang prefers to interview recent university [[39|graduates]] for the engineering positions.",
+    zh: "許多大型科技公司每年夏天都會積極聘用有才華的年輕人。張經理偏好面試剛畢業的大學畢業生來擔任工程職位。",
+    clue: "interview 後接受詞名詞，由 recent university 修飾；指即將進入職場應徵工程師的應屆畢業生們，依首尾字母 g____es 判定為 graduates。",
+    confuse: "graduation (n. 畢業)。指從學校畢業的人時使用可數名詞 graduate。何時才對：High school graduates gathered for the reunion."
+  },
+  {
+    n: 40, section: "s2",
+    tags: ["考點：universe 宇宙", "詞性需求：名詞 (特指唯一)"],
+    ans: "universe",
+    en: "Many scientists believe there are unknown alien species living in distant galaxies. Captain Lee hopes to explore the endless [[40|universe]] with his advanced spaceship.",
+    zh: "許多科學家相信遙遠的星系中生活著未知的的外星物種。李船長希望用他先進的太空船探索無盡的宇宙。",
+    clue: "explore 後接受詞名詞，由 the endless 修飾；指太空船深入探索的無邊宇宙星系，依首尾字母 u____e 判定為 universe。",
+    confuse: "universal (adj. 普遍的)。此處作受詞名詞 the universe。何時才對：The origin of the universe remains a mystery."
+  },
 
-  <script>
-    // 點擊卡片右上角切換答案顯示/遮蔽
-    function toggleAns(el) {
-      el.classList.toggle('revealed');
-    }
+  // 41 - 60
+  {
+    n: 41, section: "s3",
+    tags: ["考點：punish 處罰、懲處", "詞性需求：動詞過去式 (V-ed)"],
+    ans: "punished",
+    en: "The corrupted politician accepted millions of dollars in illegal bribes. Judge Lee severely [[41|punished]] him for breaking the nation's highest laws.",
+    zh: "貪污的政客收受了數百萬美元的非法賄賂。李法官因為他違反了國家最高法律而嚴厲懲罰了他。",
+    clue: "主詞 Judge Lee 與副詞 severely 後接及物動詞；受詞為 him，片語 punish sb. for sth.，時態為過去式，依首尾字母 p____hed 判定為 punished。",
+    confuse: "punishment (n. 懲罰)。此處為述詞動詞過去式。何時才對：The boy was punished for cheating."
+  },
+  {
+    n: 42, section: "s3",
+    tags: ["考點：exploration 探勘、探險", "詞性需求：不可數名詞"],
+    ans: "exploration",
+    en: "The greedy mining company heavily funded the search for new gold deposits. Director Wang believed this expensive geological [[42|exploration]] would eventually yield massive profits.",
+    zh: "貪婪的採礦公司投入巨資尋找新的金礦床。王主任相信這項昂貴的地質探勘最終會產生巨大的利潤。",
+    clue: "指示代名詞 this 與形容詞 geological（地質的）後接名詞；指尋找新金礦的探勘任務，依首尾字母 e____n 判定為 exploration。",
+    confuse: "explore (v. 探索)。在 this expensive geological 後須用名詞形式。何時才對：Oil exploration in the Arctic is very costly."
+  },
+  {
+    n: 43, section: "s3",
+    tags: ["考點：slaughter 殘殺、屠戮", "詞性需求：名詞 (單數/不可數)"],
+    ans: "slaughter",
+    en: "The greedy hunters killed hundreds of elephants just to steal their valuable ivory. Animal rights activist Chen protested against this cruel and senseless [[43|slaughter]].",
+    zh: "貪婪的獵人殺死了數百隻大象，只為了偷取牠們珍貴的象牙。動物權利活動家陳先生抗議這場殘酷且無意義的屠宰。",
+    clue: "protested against 後接受詞名詞，由 this cruel and senseless 修飾；獵人為取象牙大規模獵殺大象的暴行，依首尾字母 s____r 判定為 slaughter。",
+    confuse: "slaughter 亦可當及物動詞。此處作介系詞 against 的受詞名詞。何時才對：The slaughter of innocent civilians must stop."
+  },
+  {
+    n: 44, section: "s3",
+    tags: ["考點：feedback 回饋評語", "詞性需求：不可數名詞"],
+    ans: "feedback",
+    en: "The software developer asked the users to test the new mobile application. Programmer Wang eagerly waited for their honest [[44|feedback]] to fix any remaining bugs.",
+    zh: "軟體開發人員要求使用者測試新的行動應用程式。王程式設計師熱切地等待他們誠實的回饋，以修復任何剩餘的錯誤。",
+    clue: "waited for 後接受詞名詞，由 their honest 修飾；使用者測試後回報的真實評語建議，依首尾字母 f____k 判定為 feedback。",
+    confuse: "feedback 為不可數名詞，不可加 -s。何時才對：We are grateful for customer feedback."
+  },
+  {
+    n: 45, section: "s3",
+    tags: ["考點：tremendously 極大地、顯著地", "詞性需求：副詞"],
+    ans: "tremendously",
+    en: "The amateur basketball team practiced heavily every single day during the summer vacation. Coach Yang proudly observed that their passing and shooting skills had improved [[45|tremendously]].",
+    zh: "這支業餘籃球隊在暑假期間每天都進行密集的練習。楊教練驕傲地觀察到他們的傳球和投籃技巧有了極大的進步。",
+    clue: "修飾動詞 had improved；形容球技進步幅度極為巨大，依首尾字母 t____y 判定為副詞 tremendously。",
+    confuse: "tremendous (adj. 巨大的)。修飾動詞 improve 須加字尾 -ly。何時才對：The medicine helped tremendously."
+  },
+  {
+    n: 46, section: "s3",
+    tags: ["考點：laughter 笑聲", "詞性需求：不可數名詞"],
+    ans: "laughter",
+    en: "The talented comedian told a hilarious joke about his daily life with his cat. The crowded theater suddenly erupted into loud and uncontrollable [[46|laughter]] after his punchline.",
+    zh: "這位才華洋溢的喜劇演員講了一個關於他與貓咪日常生活的搞笑笑話。在他講完笑點後，擁擠的劇院突然爆發出響亮且無法控制的笑聲。",
+    clue: "介系詞 into 與形容詞 loud and uncontrollable 後接名詞；片語 erupt into laughter（爆發出陣陣笑聲），依首尾字母 l____r 判定為 laughter。",
+    confuse: "laugh (v. 笑 / n. 單次笑聲)。指眾人哄堂大笑的喧鬧笑聲時用不可數名詞 laughter。何時才對：Her speech was greeted with laughter."
+  },
+  {
+    n: 47, section: "s3",
+    tags: ["考點：banishment 驅逐、放逐", "詞性需求：名詞 (單數/不可數)"],
+    ans: "banishment",
+    en: "The disgraced knight was stripped of all his noble titles and lands. Lord Wang ordered his immediate [[47|banishment]] to the distant and dangerous northern mountains.",
+    zh: "這位失寵的騎士被剝奪了所有的貴族頭銜和土地。王爵士下令立即將他驅逐到遙遠且危險的北部山區。",
+    clue: "ordered 後接受詞名詞，由 his immediate 修飾；騎士被剝奪領地逐出國境流放，依首尾字母 b____t 判定為 banishment。",
+    confuse: "banish (v. 放逐)。在所有格 his 與形容詞 immediate 後需填名詞 banishment。何時才對：The sentence was banishment for life."
+  },
+  {
+    n: 48, section: "s3",
+    tags: ["考點：generous 慷慨的、大方的", "詞性需求：形容詞 (主詞補語)"],
+    ans: "generous",
+    en: "The successful businessman always shares his massive wealth with the poor community. Everyone praises Mr. Lin for being incredibly kind and truly [[48|generous]].",
+    zh: "這位成功的商人總是與貧困社區分享他龐大的財富。每個人都稱讚林先生非常善良且真正慷慨。",
+    clue: "being 後接形容詞作為補語，由副詞 truly 修飾；與 kind 並列，指商人樂善好施熱心分享財富，依首尾字母 g____s 判定為 generous。",
+    confuse: "generosity (n. 慷慨)。在 being 之後與 kind 平行作形容詞補語。何時才對：Thank you for your generous gift."
+  },
+  {
+    n: 49, section: "s3",
+    tags: ["考點：rely 依靠、依賴", "詞性需求：動詞第三人稱單數 (V-s)"],
+    ans: "relies",
+    en: "The blind man navigates the busy city streets with his trained guide dog. He entirely [[49|relies]] on the clever animal to keep him perfectly safe.",
+    zh: "這位盲人帶著他受過訓練的導盲犬在繁忙的城市街道中穿梭。他完全依賴這隻聰明的動物來保持他的絕對安全。",
+    clue: "主詞 He 與副詞 entirely 後接動詞；片語 rely on（依賴），主詞為單數第三人稱，去 y 加 ies，依首尾字母 r____ies 判定為 relies。",
+    confuse: "reliable (adj. 可靠的)。此處作及物述語動詞現在式單數。何時才對：She relies heavily on her parents."
+  },
+  {
+    n: 50, section: "s3",
+    tags: ["考點：adjust 適應、調整習慣", "詞性需求：動詞過去式 (V-ed)"],
+    ans: "adjusted",
+    en: "The international student found it difficult to adapt to the cold winter weather. Jason eventually [[50|adjusted]] to the freezing temperatures by wearing thicker wool coats.",
+    zh: "這位國際學生發現很難適應寒冷的冬天。傑森最終透過穿上更厚的羊毛大衣，適應了極度寒冷的氣溫。",
+    clue: "主詞 Jason 與副詞 eventually 後接動詞過去式；片語 adjust to（適應某環境），對應上句 adapt to，依首尾字母 a____ted 判定為 adjusted。",
+    confuse: "adjustment (n. 調整)。此處作主要子句述詞動詞過去式。何時才對：It took her a while to adjust to college life."
+  },
+  {
+    n: 51, section: "s3",
+    tags: ["考點：innovation 創新、革新", "詞性需求：名詞 (可數/不可數)"],
+    ans: "innovation",
+    en: "The brilliant scientist received a prestigious award for her latest discovery. Everyone praised her remarkable [[51|innovation]] in the field of renewable energy.",
+    zh: "這位傑出的科學家因為她最新的發現而獲得了享有盛譽的獎項。每個人都讚揚她在再生能源領域非凡的創新。",
+    clue: "praised 後接受詞名詞，由 her remarkable 修飾；在綠能領域帶來的重大發明與新突破，依首尾字母 i____n 判定為 innovation。",
+    confuse: "innovative (adj. 創新的)。在形容詞 remarkable 後需填名詞 innovation。何時才對：The latest innovation in mobile technology is impressive."
+  },
+  {
+    n: 52, section: "s3",
+    tags: ["考點：construction 建造、施工", "詞性需求：不可數名詞"],
+    ans: "construction",
+    en: "The wealthy businessman invested heavily in building a luxurious five-star hotel. Mr. Zhao closely monitored the rapid [[52|construction]] of the impressive tall building.",
+    zh: "這位富有的商人投入鉅資建造了一家豪華的五星級飯店。趙先生密切監控這棟令人印象深刻的高樓的快速施工。",
+    clue: "monitored 後接受詞名詞，由 the rapid 修飾；指飯店大樓興建施工過程，依首尾字母 c____n 判定為 construction。",
+    confuse: "construct (v. 建造)。在形容詞 rapid 後須填名詞形式。何時才對：The site is currently under construction."
+  },
+  {
+    n: 53, section: "s3",
+    tags: ["考點：mention 提到、特別提及", "詞性需求：動詞過去式 (V-ed)"],
+    ans: "mentioned",
+    en: "The famous author wrote a lengthy acknowledgement at the end of his book. He specifically [[53|mentioned]] his beloved wife for her endless support.",
+    zh: "這位著名的作者在他的書末寫了一篇很長的致謝詞。他特別提到了他心愛的妻子，感謝她無盡的支持。",
+    clue: "主詞 He 與副詞 specifically 後接及物動詞；後有受詞 his beloved wife，作者在謝詞中提及感謝，時態為過去式，依首尾字母 m____ned 判定為 mentioned。",
+    confuse: "mention 是及物動詞直接接受詞。此處需過去式動詞 mentioned。何時才對：She mentioned that she might leave early."
+  },
+  {
+    n: 54, section: "s3",
+    tags: ["考點：refuse 拒絕", "詞性需求：動詞過去式 (V-ed)"],
+    ans: "refused",
+    en: "The famous actor was offered a massive amount of money to star in the new action movie. However, David firmly [[54|refused]] the leading role because he thought the script was terrible.",
+    zh: "這位著名的演員獲邀以巨額片酬主演新的動作片。然而，大衛堅決拒絕了這個主角，因為他覺得劇本糟透了。",
+    clue: "主詞 David 與副詞 firmly 後接及物動詞；後有受詞 the leading role，因劇本太爛而婉拒演出，時態為過去式，依首尾字母 r____sed 判定為 refused。",
+    confuse: "refusal (n. 拒絕)。此處作句子述詞動詞過去式。何時才對：He firmly refused the job offer."
+  },
+  {
+    n: 55, section: "s3",
+    tags: ["考點：stable 平穩的、安定的", "詞性需求：形容詞 (受詞補語)"],
+    ans: "stable",
+    en: "The famous horse rider gently calmed down the nervous animal before the race. She kept the magnificent creature perfectly [[55|stable]] in the quiet wooden barn.",
+    zh: "這位著名的騎馬者在賽前溫柔地安撫了這匹緊張的動物。她讓這隻宏偉的生物在安靜的木穀倉裡保持完美的穩定。",
+    clue: "kept + 受詞 + perfectly (副詞) 後接形容詞作為受詞補語；安撫賽馬維持平靜穩定的狀態，依首尾字母 s____e 判定為 stable。",
+    confuse: "stability (n. 穩定性)。keep + O 後接形容詞作補語。何時才對：The patient's condition is now stable."
+  },
+  {
+    n: 56, section: "s3",
+    tags: ["考點：tremendous 巨大的、極大的", "詞性需求：形容詞"],
+    ans: "tremendous",
+    en: "The famous actor felt a lot of intense pressure before the live stage performance. David experienced a [[56|tremendous]] relief when the audience stood up and cheered enthusiastically.",
+    zh: "這位著名演員在現場舞台表演前感受到了許多強烈的壓力。當觀眾站起來熱烈歡呼時，大衛感受到了一種極大的如釋重負。",
+    clue: "不定冠詞 a 與名詞 relief 之間需填形容詞；壓力釋放後的巨大寬慰感，依首尾字母 t____s 判定為 tremendous。",
+    confuse: "tremendously (adv. 極大地)。修飾名詞 relief 需用形容詞形式。何時才對：The concert was a tremendous success."
+  },
+  {
+    n: 57, section: "s3",
+    tags: ["考點：hesitate 猶豫、遲疑", "詞性需求：動詞過去式 (V-ed)"],
+    ans: "hesitated",
+    en: "The highly brave firefighter did not pause for a single second when he saw the violently burning house. Captain Chen never [[57|hesitated]] to risk his own precious life to save trapped innocent citizens.",
+    zh: "這位極度勇敢的消防員在看到猛烈燃燒的房子時，一秒鐘也沒有停頓。陳隊長從不猶豫冒著自己寶貴的生命危險去拯救受困的無辜市民。",
+    clue: "主詞 Captain Chen 與副詞 never 後接動詞；片語 never hesitate to VR（從不猶豫做……），時態為過去式，依首尾字母 h____ted 判定為 hesitated。",
+    confuse: "hesitation (n. 猶豫)。never 後接述詞動詞過去式。何時才對：She hesitated before answering the question."
+  },
+  {
+    n: 58, section: "s3",
+    tags: ["考點：hesitation 猶豫 (名詞)", "詞性需求：可數/不可數名詞"],
+    ans: "hesitation",
+    en: "The incredibly nervous performer paused silently for a long moment before singing the very first note. Her brief [[58|hesitation]] perfectly showed how much heavy pressure she felt on the grand stage.",
+    zh: "這位極度緊張的表演者在唱出第一個音符前，安靜地停頓了很長一段時間。她短暫的猶豫完美顯示了她在這個盛大的舞台上感受到了多麼沉重的壓力。",
+    clue: "所有格 Her 與形容詞 brief 後接名詞作主詞；開唱前的片刻猶豫遲疑，依首尾字母 h____n 判定為 hesitation。",
+    confuse: "hesitate (v. 猶豫)。在形容詞 brief 後需填名詞形式。何時才對：He accepted the job without a moment's hesitation."
+  },
+  {
+    n: 59, section: "s3",
+    tags: ["考點：collaborate 合作、協同創作", "詞性需求：動詞過去式 (V-ed)"],
+    ans: "collaborated",
+    en: "The independent musicians wanted to create a highly unique pop song together. Singer Zhao eagerly [[59|collaborated]] with a popular DJ to produce the hit single.",
+    zh: "這些獨立音樂人想要共同創作一首極具獨特性的流行歌曲。趙歌手熱切地與一位受歡迎的 DJ 合作製作了這首熱門單曲。",
+    clue: "主詞 Singer Zhao 與副詞 eagerly 後接動詞；片語 collaborate with sb. to VR（與某人合作做某事），時態為過去式，依首尾字母 c____ted 判定為 collaborated。",
+    confuse: "collaboration (n. 合作)。此處作述詞動詞過去式。何時才對：The two scientists collaborated on the research."
+  },
+  {
+    n: 60, section: "s3",
+    tags: ["考點：hug 擁抱", "詞性需求：動詞過去式 (重字尾雙寫 -ged)"],
+    ans: "hugged",
+    en: "The two best friends had not seen each other for over ten long years. Sarah tightly [[60|hugged]] Emily the very moment they finally met at the busy coffee shop.",
+    zh: "這兩個最好的朋友已經超過十年沒見面了。當她們終於在繁忙的咖啡廳見面時，莎拉緊緊地擁抱了艾蜜莉。",
+    clue: "主詞 Sarah 與副詞 tightly 後接及物動詞；後有受詞 Emily，十年重聚緊緊擁抱，hug 為短母音單音節動詞，過去式雙寫 g 加 ed，依首尾字母 h____ged 判定為 hugged。",
+    confuse: "hug 也可當名詞 (give a hug)。此處作及物述詞動詞過去式。何時才對：They hugged and cried with relief."
+  },
 
-    // 全部顯示 / 隱藏切換
-    let allRevealed = false;
-    function toggleAllAnswers() {
-      const chips = document.querySelectorAll('.ans-chip');
-      allRevealed = !allRevealed;
-      chips.forEach(chip => {
-        if (allRevealed) {
-          chip.classList.add('revealed');
-        } else {
-          chip.classList.remove('revealed');
-        }
-      });
-    }
+  // 61 - 80
+  {
+    n: 61, section: "s4",
+    tags: ["考點：beneficial 有益的、互利的", "詞性需求：形容詞 (主詞補語)"],
+    ans: "beneficial",
+    en: "The two competing companies signed a major trade agreement last Friday. CEO Wang believes this cooperative partnership will be mutually [[61|beneficial]].",
+    zh: "這兩家競爭公司上週五簽署了一項重大貿易協定。王執行長相信這種合作夥伴關係將會是互利的。",
+    clue: "be 動詞與副詞 mutually（互相地）後接形容詞作為主詞補語；簽署貿易協定達到雙贏互惠，依首尾字母 b____l 判定為 beneficial。",
+    confuse: "benefit (v. 獲益 / n. 好處)。be mutually beneficial（互利的）為商務常見搭配。何時才對：Good posture is beneficial to your health."
+  },
+  {
+    n: 62, section: "s4",
+    tags: ["考點：distribution 分配", "詞性需求：不可數名詞"],
+    ans: "distribution",
+    en: "The wealthy nation possesses abundant natural resources and massive agricultural fields. However, Economist Lee criticized the highly unequal [[62|distribution]] of wealth among its citizens.",
+    zh: "這個富有的國家擁有豐富的自然資源和廣大的農田。然而，李經濟學家批評了其公民之間高度不平等的財富分配。",
+    clue: "criticized 後接受詞名詞，由 the highly unequal 修飾；片語 distribution of wealth 指財富所得分配，依首尾字母 d____n 判定為 distribution。",
+    confuse: "distribute (v. 分發)。在形容詞 unequal 後需填名詞形式。何時才對：The map shows the distribution of global population."
+  },
+  {
+    n: 63, section: "s4",
+    tags: ["考點：corporate 企業的、公司的", "詞性需求：形容詞"],
+    ans: "corporate",
+    en: "The successful company decided to completely redesign its official website and logo. Director Huang hoped the new [[63|corporate]] identity would attract many younger customers.",
+    zh: "這家成功的公司決定徹底重新設計其官方網站和標誌。黃總監希望新的企業形象能吸引許多更年輕的顧客。",
+    clue: "冠詞 the 與形容詞 new 後修飾名詞 identity；片語 corporate identity 指企業識別形象，依首尾字母 c____e 判定為 corporate。",
+    confuse: "corporation (n. 企業公司)。修飾 identity 時需用形容詞 corporate。何時才對：He works in the corporate headquarters."
+  },
+  {
+    n: 64, section: "s4",
+    tags: ["考點：employee 員工、雇員", "詞性需求：可數名詞 (複數)"],
+    ans: "employees",
+    en: "The software company rewards hard work with a massive year-end bonus. Outstanding [[64|employees]] often receive extra paid vacation days as well.",
+    zh: "這家軟體公司以巨額的年終獎金來獎勵辛勤的工作。表現優異的員工通常還會獲得額外的有薪假。",
+    clue: "形容詞 Outstanding 後接名詞複數作主詞；動詞 receive 為複數原形，指獲得年終與休假獎勵的優秀員工們，依首尾字母 e____es 判定為 employees。",
+    confuse: "employer (n. 雇主)。指受雇員工且為複數主詞時用 employees。何時才對：The company has over 500 employees."
+  },
+  {
+    n: 65, section: "s4",
+    tags: ["考點：unique 獨特的、獨一無二的", "詞性需求：形容詞"],
+    ans: "unique",
+    en: "This traditional Taiwanese restaurant serves a very special spicy tofu dish. Tourist Smith absolutely loved the profoundly [[65|unique]] flavor of the secret sauce.",
+    zh: "這家傳統台灣餐廳提供了一道非常特別的麻辣豆腐。史密斯遊客絕對愛上了那祕製醬料極其獨特的風味。",
+    clue: "副詞 profoundly 修飾後方形容詞；修飾名詞 flavor，強調祕製醬料獨特無比的美味，依首尾字母 u____e 判定為 unique。",
+    confuse: "uniqueness (n. 獨特性)。修飾名詞 flavor 需用形容詞 unique。何時才對：Every snowflake has a unique pattern."
+  },
+  {
+    n: 66, section: "s4",
+    tags: ["考點：innovate 創新、進行革新", "詞性需求：動詞過去式 (V-ed)"],
+    ans: "innovated",
+    en: "The traditional restaurant was losing money for several consecutive months. Owner Lee finally [[66|innovated]] by adding creative vegetarian options to the old menu.",
+    zh: "這家傳統餐廳已經連續好幾個月虧損。李老闆最後透過在舊菜單中加入有創意的素食選項來進行創新。",
+    clue: "主詞 Owner Lee 與副詞 finally 後接動詞；搭配 by adding...，指店家引進新素食菜單以改革求生，時態為過去式，依首尾字母 i____ted 判定為 innovated。",
+    confuse: "innovation (n. 創新)。此處為述詞不及物動詞過去式。何時才對：The firm innovated continuously to remain competitive."
+  },
+  {
+    n: 67, section: "s4",
+    tags: ["考點：miserable 悲慘的、可憐痛苦的", "詞性需求：形容詞 (連綴補語)"],
+    ans: "miserable",
+    en: "The poor stray cat was trapped in the freezing rain without any shelter. Amanda felt terrible seeing the little animal looking so cold and [[67|miserable]].",
+    zh: "這隻可憐的流浪貓被困在冰冷的雨中，沒有任何遮蔽處。阿曼達看到小動物看起來如此寒冷和痛苦，感到非常難過。",
+    clue: "連綴動詞 looking 後接形容詞作為受詞補語；與 cold 並列，描述小貓受困寒雨中的淒慘模樣，依首尾字母 m____e 判定為 miserable。",
+    confuse: "misery (n. 悲慘)。looking 後接形容詞補語。何時才對：What a miserable, rainy afternoon."
+  },
+  {
+    n: 68, section: "s4",
+    tags: ["考點：enable 使能夠", "詞性需求：動詞第三人稱單數 (V-s)"],
+    ans: "enables",
+    en: "The advanced software translates foreign languages perfectly in real time. This amazing tool [[68|enables]] Manager Lee to communicate with global clients smoothly.",
+    zh: "這款先進的軟體能完美地即時翻譯外語。這個驚人的工具使李經理能夠與全球客戶順暢溝通。",
+    clue: "主詞 This amazing tool 為單數第三人稱；句型 enable sb. to VR，時態為現在式，動詞加 -s，依首尾字母 e____es 判定為 enables。",
+    confuse: "enable (v. 原形)。主詞為單數第三人稱，動詞須加 -s。何時才對：The pass enables you to travel anywhere."
+  },
+  {
+    n: 69, section: "s4",
+    tags: ["考點：capability 性能、處理能力", "詞性需求：可數名詞 (複數)"],
+    ans: "capabilities",
+    en: "This advanced software program can translate fifty different languages instantly. Director Wu was truly amazed by its incredible language processing [[69|capabilities]].",
+    zh: "這款先進的軟體程式能瞬間翻譯五十種不同的語言。吳主任對其令人難以置信的語言處理能力感到非常驚訝。",
+    clue: "所有格 its 與形容詞 incredible 後接名詞；修飾名詞 processing，指多語言翻譯軟體的卓越功能實力，依首尾字母 c____ies 判定為 capabilities。",
+    confuse: "capable (adj. 有能力的)。在形容詞修飾語後需填名詞複數。何時才對：The supercomputer has immense processing capabilities."
+  },
+  {
+    n: 70, section: "s4",
+    tags: ["考點：ranking 世界排名榜、名次", "詞性需求：可數/不可數名詞"],
+    ans: "ranking",
+    en: "The competitive video game displays the scores of all online players globally. Kevin practices every night to improve his official worldwide [[70|ranking]].",
+    zh: "這款競爭激烈的電玩遊戲會顯示全球所有線上玩家的分數。凱文每晚練習以提升他官方的世界排名。",
+    clue: "所有格 his 與形容詞 worldwide 後接名詞；電競遊戲全球積分天梯名次，依首尾字母 r____g 判定為 ranking。",
+    confuse: "rank (v. 評定 / n. 軍階)。指官方排位名次使用 ranking。何時才對：He climbed to second place in the world ranking."
+  },
+  {
+    n: 71, section: "s4",
+    tags: ["考點：element 化學元素、要素", "詞性需求：可數名詞 (複數)"],
+    ans: "elements",
+    en: "The mysterious chemical substance contains several highly radioactive parts. Scientist Huang carefully isolated the dangerous [[71|elements]] in the secure laboratory.",
+    zh: "這種神祕的化學物質含有幾個高度放射性的部分。黃科學家在安全的實驗室裡仔細地分離了這些危險的元素。",
+    clue: "isolated 後接受詞名詞，由 the dangerous 修飾；指化學實驗中分離出的放射性元素物質，依首尾字母 e____ts 判定為 elements。",
+    confuse: "elementary (adj. 初級的)。指構成物質的化學元素時用名詞複數 elements。何時才對：Water is made of the elements hydrogen and oxygen."
+  },
+  {
+    n: 72, section: "s4",
+    tags: ["考點：reliable 可靠的、性能穩定的", "詞性需求：形容詞 (主詞補語)"],
+    ans: "reliable",
+    en: "The old Japanese car has never broken down during our long family road trips. Father Lin always praises his vehicle for being so incredibly [[72|reliable]].",
+    zh: "這輛舊的日本車在我們漫長的家庭公路旅行中從未拋錨過。林爸爸總是稱讚他的車子是如此地極度可靠。",
+    clue: "being 後接形容詞作為受詞補語，由副詞 incredibly 修飾；老車從不拋錨展現極佳妥善率與可靠度，依首尾字母 r____e 判定為 reliable。",
+    confuse: "rely (v. 依賴)。being 後需用形容詞形式。何時才對：We need a reliable babysitter for the weekend."
+  },
+  {
+    n: 73, section: "s4",
+    tags: ["考點：banish 驅逐、逐出狼群", "詞性需求：動詞過去式 (V-ed)"],
+    ans: "banished",
+    en: "The wild wolf pack aggressively rejected their weakened old leader. The young alpha permanently [[73|banished]] him into the freezing wilderness.",
+    zh: "野生的狼群充滿攻擊性地拒絕了牠們虛弱的老首領。年輕的阿爾法狼將他永久放逐到冰冷的荒野中。",
+    clue: "主詞 The young alpha 與副詞 permanently 後接及物動詞；後有受詞 him，搭配 into the wilderness，時態為過去式，依首尾字母 b____hed 判定為 banished。",
+    confuse: "banishment (n. 放逐)。此處為述詞動詞過去式。何時才對：The traitor was banished from the realm forever."
+  },
+  {
+    n: 74, section: "s4",
+    tags: ["考點：fright 驚恐、恐懼", "詞性需求：不可數名詞"],
+    ans: "fright",
+    en: "The wild bear suddenly appeared right in front of the young camper's small tent. Kevin froze in pure [[74|fright]] and could not move a single muscle for a minute.",
+    zh: "野生熊突然出現在年輕露營者的小帳篷正前方。凱文在純粹的驚嚇中僵住了，整整一分鐘無法動彈。",
+    clue: "介系詞 in 與形容詞 pure 後接抽象名詞；片語 in pure fright（在極度驚駭中），因巨熊現身全身僵硬，依首尾字母 f____t 判定為 fright。",
+    confuse: "frighten (v. 使害怕)、frightened (adj. 受驚的)。在介系詞與形容詞後需填名詞 fright。何時才對：The scream gave me a fright."
+  },
+  {
+    n: 75, section: "s4",
+    tags: ["考點：employment 就業、正式工作", "詞性需求：不可數名詞"],
+    ans: "employment",
+    en: "Jason graduated from the university during a severe global economic crisis. He struggled for several months before finally securing full-time [[75|employment]] at a local bank.",
+    zh: "傑森在全球嚴重經濟危機期間從大學畢業。他苦苦掙扎了好幾個月，最後終於在當地一家銀行獲得了全職的就業。",
+    clue: "securing 後接受詞名詞，由 full-time 修飾；指求職數月後獲得全職正職工作，片語 full-time employment，依首尾字母 e____t 判定為 employment。",
+    confuse: "employer (n. 雇主)、employee (n. 員工)。指找到就業機會使用 employment。何時才對：Finding employment during a recession is difficult."
+  },
+  {
+    n: 76, section: "s4",
+    tags: ["考點：corporation 跨國大企業、法人集團", "詞性需求：可數名詞 (單數)"],
+    ans: "corporation",
+    en: "Several small startup companies were quickly bought out by the giant tech firm. The massive [[76|corporation]] now totally dominates the entire software industry in Taiwan.",
+    zh: "幾家小型新創公司很快就被這家科技巨頭買下。這家龐大的企業現在完全主導了台灣整個軟體產業。",
+    clue: "定冠詞 The 與形容詞 massive 後接單數名詞作主詞；收購多家新創的大型科技企業集團，依首尾字母 c____n 判定為 corporation。",
+    confuse: "corporate (adj. 企業的)。此處作句子主詞核心詞，需填名詞 corporation。何時才對：She is an executive at a multinational corporation."
+  },
+  {
+    n: 77, section: "s4",
+    tags: ["考點：punishment 懲罰、處置", "詞性需求：可數/不可數名詞"],
+    ans: "punishment",
+    en: "The cruel dictator sent all his political enemies to remote labor camps. Historian Wu described this harsh [[77|punishment]] as a terrible violation of human rights.",
+    zh: "殘酷的獨裁者將他所有的政敵送到偏遠的勞改營。吳歷史學家將這種嚴厲的懲罰描述為對人權的可怕侵犯。",
+    clue: "described 後接受詞名詞，由 this harsh 修飾；指獨裁者送勞改營的殘酷懲處手段，依首尾字母 p____t 判定為 punishment。",
+    confuse: "punish (v. 懲罰)。在指示代名詞 this 與形容詞 harsh 後需填名詞 punishment。何時才對：Capital punishment remains controversial."
+  },
+  {
+    n: 78, section: "s4",
+    tags: ["考點：freeze 凍死、凍僵", "詞性需求：原形動詞 (VR)"],
+    ans: "freeze",
+    en: "The exhausted hiker got lost in the snowy mountains without a heavy jacket. Captain Lee worried that the poor man would [[78|freeze]] to death overnight.",
+    zh: "筋疲力盡的登山客在沒有厚外套的情況下在雪山裡迷路了。李隊長擔心這個可憐的男人會在夜裡凍死。",
+    clue: "助動詞 would 後接原形動詞；固定片語 freeze to death（凍死），雪山失溫危及性命，依首尾字母 f____e 判定為 freeze。",
+    confuse: "frozen (adj. 結凍的)、freezing (adj. 極冷的)。助動詞 would 後須接動詞原形 freeze。何時才對：Water will freeze at zero degrees Celsius."
+  },
+  {
+    n: 79, section: "s4",
+    tags: ["考點：benefit 使……獲益、有益於", "詞性需求：動詞第三人稱單數 (V-s)"],
+    ans: "benefits",
+    en: "The new public library offers thousands of free books and quiet study areas. Mayor Chen believes that this wonderful facility greatly [[79|benefits]] the whole community.",
+    zh: "新的公共圖書館提供了數千本免費書籍和安靜的學習區。陳市長相信這個美好的設施極大地使整個社區受益。",
+    clue: "that 子句主詞 this wonderful facility 為單數，副詞 greatly 後接及物動詞；後有受詞 the whole community，現在式動詞加 -s，依首尾字母 b____ts 判定為 benefits。",
+    confuse: "beneficial (adj. 有益的)。此處作及物述詞動詞現在式單數。何時才對：Regular reading greatly benefits children's minds."
+  },
+  {
+    n: 80, section: "s4",
+    tags: ["考點：slightly 稍微、略微地", "詞性需求：副詞"],
+    ans: "slightly",
+    en: "The new electric car model is actually a bit more expensive than the older one. Customer Yang hesitated because the price had increased [[80|slightly]] this year.",
+    zh: "新的電動車款式實際上比舊款稍微貴了一點。楊顧客猶豫了，因為今年的價格稍微上漲了。",
+    clue: "修飾動詞 had increased；呼應上句 a bit more expensive，指車價略微上揚，依首尾字母 s____y 判定為副詞 slightly。",
+    confuse: "slight (adj. 輕微的)。修飾動詞 increase 須用副詞形式。何時才對：Profits rose slightly last month."
+  },
 
-    // 關鍵字即時搜尋 (可搜題號如 "05"、英文單字或中文)
-    function handleSearch() {
-      const term = document.getElementById('search').value.toLowerCase().trim();
-      const cards = document.querySelectorAll('.item-card');
+  // 81 - 94
+  {
+    n: 81, section: "s5",
+    tags: ["考點：employ 雇用、聘請", "詞性需求：動詞過去式 (V-ed)"],
+    ans: "employed",
+    en: "The local factory expanded its production line significantly last year. Director Chen [[81|employed]] fifty additional workers to handle the rapidly increasing orders.",
+    zh: "當地工廠去年大幅擴張了生產線。陳主任增聘了五十名工人來處理快速增加的訂單。",
+    clue: "主詞 Director Chen 後接及物述語動詞；後有受詞 fifty additional workers，工廠擴張擴大徵才，時態為過去式，依首尾字母 e____yed 判定為 employed。",
+    confuse: "employment (n. 就業)、employer (n. 雇主)。此處作及物述詞動詞過去式。何時才對：The firm employed hundreds of local builders."
+  },
+  {
+    n: 82, section: "s5",
+    tags: ["考點：architect 建築師", "詞性需求：可數名詞 (單數指人)"],
+    ans: "architect",
+    en: "The local government wants to build a new public library near the park. They hired a famous Italian [[82|architect]] to create a beautiful and functional space.",
+    zh: "當地政府想在公園附近建造一座新的公共圖書館。他們聘請了一位著名的義大利建築師來創造一個美麗且實用的空間。",
+    clue: "hired 後接受詞名詞，由 a famous Italian 修飾；聘請來設計圖書館建築空間的專業設計者，依首尾字母 a____t 判定為 architect。",
+    confuse: "architecture (n. 建築學/風格)。指執行設計建造的專業人士用 architect。何時才對：She is an architect who designs skyscrapers."
+  },
+  {
+    n: 83, section: "s5",
+    tags: ["考點：stability 穩定性、穩固度", "詞性需求：不可數名詞"],
+    ans: "stability",
+    en: "The three-legged wooden stool easily tipped over when the heavy man sat down. Carpenter Lin realized the flawed design severely lacked structural [[83|stability]].",
+    zh: "當這位有份量的男子坐下時，這張三條腿的木凳很容易就翻倒了。林木匠意識到這個有瑕疵的設計嚴重缺乏結構上的穩定性。",
+    clue: "lacked 後接受詞名詞，由形容詞 structural 修飾；木凳翻倒顯示缺乏結構穩固度，依首尾字母 s____y 判定為 stability。",
+    confuse: "stable (adj. 穩固的)。在形容詞 structural 後需填名詞形式。何時才對：The country needs political and economic stability."
+  },
+  {
+    n: 84, section: "s5",
+    tags: ["考點：civilization 文明、人類文明社會", "詞性需求：不可數名詞"],
+    ans: "civilization",
+    en: "The discovery of agriculture allowed nomadic tribes to settle in one place. Professor Wang explained how this fundamental change led to the birth of human [[84|civilization]].",
+    zh: "農業的發現讓游牧部落得以在一個地方定居。王教授解釋了這項根本性的改變是如何導致人類文明的誕生。",
+    clue: "片語 the birth of human 後接名詞；農業定居催生了人類文明的起源，依首尾字母 c____n 判定為 civilization。",
+    confuse: "civilize (v. 使文明教化)、civil (adj. 公民的)。指人類社會文明使用名詞 civilization。何時才對：The Maya civilization flourished in Central America."
+  },
+  {
+    n: 85, section: "s5",
+    tags: ["考點：distribute 發放、分發", "詞性需求：動詞過去式 (V-ed)"],
+    ans: "distributed",
+    en: "The charity group prepared thousands of hot meals for the homeless people. Volunteer Wu successfully [[85|distributed]] the warm food at the central park tonight.",
+    zh: "慈善團體為無家可歸的人們準備了數千份熱食。吳志工今晚成功地在中央公園分發了這些溫暖的食物。",
+    clue: "主詞 Volunteer Wu 與副詞 successfully 後接及物動詞；後有受詞 the warm food，慈善團體分送物資便當，時態為過去式，依首尾字母 d____ted 判定為 distributed。",
+    confuse: "distribution (n. 發放分送)。此處作及物述詞動詞過去式。何時才對：Volunteers distributed clean water to the residents."
+  },
+  {
+    n: 86, section: "s5",
+    tags: ["考點：generosity 慷慨大方、善心施予", "詞性需求：不可數名詞"],
+    ans: "generosity",
+    en: "The charity organization received hundreds of large donations during the holiday season. Volunteer Huang was moved to tears by the public's heartwarming [[86|generosity]].",
+    zh: "慈善機構在節慶期間收到了數百筆大額捐款。黃志工被大眾令人感到溫暖的慷慨感動得流下眼淚。",
+    clue: "介系詞 by 與所有格 the public's 後接抽象名詞，由 heartwarming 修飾；大眾熱心踴躍捐款的慈悲心，依首尾字母 g____y 判定為 generosity。",
+    confuse: "generous (adj. 慷慨的)。在名詞所有格與形容詞後需填名詞形式。何時才對：I am overwhelmed by your generosity."
+  },
+  {
+    n: 87, section: "s5",
+    tags: ["考點：stretch 伸展、伸懶腰", "詞性需求：可數名詞 (單數)"],
+    ans: "stretch",
+    en: "The lazy orange cat woke up slowly from a long afternoon nap on the soft sofa. The fluffy animal did a very long [[87|stretch]] before slowly walking to its food bowl.",
+    zh: "慵懶的橘貓在柔軟的沙發上睡了漫長的午覺後慢慢醒來。這隻毛茸茸的動物做了一個很長的伸展，然後才慢慢走到牠的食物碗前。",
+    clue: "動詞 did 後接受詞名詞，由 a very long 修飾；貓咪睡醒伸直身體的大伸懶腰動作，片語 do a stretch，依首尾字母 s____h 判定為 stretch。",
+    confuse: "stretch 亦可當動詞用。此處接在 a very long 後作單數名詞。何時才對：Stop and do a few gentle stretches."
+  },
+  {
+    n: 88, section: "s5",
+    tags: ["考點：theft 竊盜案、竊盜罪", "詞性需求：可數/不可數名詞"],
+    ans: "theft",
+    en: "The security cameras clearly recorded the masked man breaking into the jewelry store. Officer Zhao quickly arrested the criminal for the massive midnight [[88|theft]].",
+    zh: "監視器清楚錄下了蒙面男子闖入珠寶店的過程。趙警官迅速逮捕了這名犯下重大午夜竊案的罪犯。",
+    clue: "介系詞 for 後接受詞名詞，由 the massive midnight 修飾；蒙面男子闖入珠寶店盜竊的犯罪行為，依首尾字母 t____t 判定為 theft。",
+    confuse: "thief (n. 竊賊，指人)。指偷竊案件/犯罪行為本身使用 theft。何時才對：He was charged with car theft."
+  },
+  {
+    n: 89, section: "s5",
+    tags: ["考點：collaboration 協作、協同合作", "詞性需求：不可數名詞"],
+    ans: "collaboration",
+    en: "Writing a successful movie script requires excellent teamwork and communication. Director Lee relies heavily on the close [[89|collaboration]] of his talented writers.",
+    zh: "撰寫一部成功的電影劇本需要出色的團隊合作和溝通。李導演非常依賴他才華洋溢的作家們之間緊密的合作。",
+    clue: "relies on 後接受詞名詞，由 the close 修飾；上文強調 teamwork and communication，編劇群之間的緊密協作，依首尾字母 c____n 判定為 collaboration。",
+    confuse: "collaborate (v. 合作)。在 the close 後需填名詞形式。何時才對：The book was written in collaboration with an editor."
+  },
+  {
+    n: 90, section: "s5",
+    tags: ["考點：prompt 迅速的、即時的", "詞性需求：形容詞"],
+    ans: "prompt",
+    en: "The enthusiastic customer service representative solved the urgent technical problem immediately. Client Lin deeply appreciated such a [[90|prompt]] and highly helpful response from the large company.",
+    zh: "熱情的客服代表立刻解決了緊急的技術問題。林客戶深深感激這家大公司如此迅速且極具幫助的回應。",
+    clue: "不定冠詞 a 與名詞 response 之間需填形容詞；對應上文 immediately，指客服即刻給予的快速答覆，依首尾字母 p____t 判定為 prompt。",
+    confuse: "prompt 亦可作動詞表「促使」。此處作形容詞修飾 response，表示即時迅速。何時才對：Thank you for your prompt reply."
+  },
+  {
+    n: 91, section: "s5",
+    tags: ["考點：material 原料、衣料材質", "詞性需求：可數名詞 (複數)"],
+    ans: "materials",
+    en: "The enthusiastic fashion designer bought large amounts of high-quality silk. Miss Chang needed these expensive [[91|materials]] to create her stunning evening dresses.",
+    zh: "熱情的時尚設計師購買了大量高品質的絲綢。張小姐需要這些昂貴的材料來製作她令人驚豔的晚禮服。",
+    clue: "指示代名詞 these 與形容詞 expensive 後接複數名詞；指製作晚禮服購置的高級絲綢布料原料，依首尾字母 m____ls 判定為 materials。",
+    confuse: "material 也可作不可數名詞或形容詞。此處有 these 修飾，以複數形式 materials 指各類材料。何時才對：Raw materials are needed for production."
+  },
+  {
+    n: 92, section: "s5",
+    tags: ["考點：humankind 全人類", "詞性需求：不可數集合名詞"],
+    ans: "humankind",
+    en: "Environmental pollution threatens the survival of all living creatures on Earth. Professor Lin warns that the future of [[92|humankind]] depends on going green.",
+    zh: "環境污染威脅著地球上所有生物的生存。林教授警告，人類的未來取決於走向環保。",
+    clue: "介系詞 of 後接名詞；環境污染危及地球物種，關乎全體人類的命運，依首尾字母 h____d 判定為 humankind。",
+    confuse: "human (n. 人類個體 / adj. 人類的)。指全體人類群體使用集合名詞 humankind。何時才對：The history of humankind is full of discoveries."
+  },
+  {
+    n: 93, section: "s5",
+    tags: ["考點：confine 限制、使局限於", "詞性需求：動詞過去式 (V-ed)"],
+    ans: "confined",
+    en: "The severe leg injury forced the famous marathon athlete to simply stay in bed. Doctor Huang strictly [[93|confined]] David to the hospital room for a whole entire month.",
+    zh: "嚴重的腿部受傷迫使這位著名的馬拉松運動員只能待在床上。黃醫師嚴格地將大衛限制在病房裡整整一個月。",
+    clue: "主詞 Doctor Huang 與副詞 strictly 後接及物述語動詞；片語 confine sb. to a place（將某人限制於某處），時態為過去式，依首尾字母 c____ned 判定為 confined。",
+    confuse: "confinement (n. 監禁局限)。此處為及物述詞動詞過去式。何時才對：The illness confined her to a wheelchair."
+  },
+  {
+    n: 94, section: "s5",
+    tags: ["考點：refusal 拒絕 (名詞)", "詞性需求：可數/不可數名詞"],
+    ans: "refusal",
+    en: "The severely corrupted politician firmly denied taking any illegal bribes from the large construction company. His strict [[94|refusal]] to answer any direct questions made the local journalists even more suspicious.",
+    zh: "嚴重貪污的政客堅決否認收受大型建築公司的任何非法賄賂。他嚴格拒絕回答任何直接問題，這讓當地記者更加懷疑。",
+    clue: "所有格 His 與形容詞 strict 後接名詞作主詞；片語 refusal to VR（拒絕做……），政客拒絕答覆記者的提問，依首尾字母 r____l 判定為 refusal。",
+    confuse: "refuse (v. 拒絕)。在形容詞 strict 後需填名詞形式 refusal。何時才對：Her flat refusal shocked everyone."
+  }
+];
 
-      cards.forEach(card => {
-        const text = card.textContent.toLowerCase();
-        card.style.display = text.includes(term) ? 'block' : 'none';
-      });
-    }
-  </script>
+/* === 渲染主程式 === */
+let s1HTML = '<section id="s1"><h2>01 - 20 題</h2>';
+let s2HTML = '<section id="s2"><h2>21 - 40 題</h2>';
+let s3HTML = '<section id="s3"><h2>41 - 60 題</h2>';
+let s4HTML = '<section id="s4"><h2>61 - 80 題</h2>';
+let s5HTML = '<section id="s5"><h2>81 - 94 題</h2>';
+
+VOC_DATA.forEach(item => {
+  const qBody = '<div class="stem">'
+              + '<div class="en">' + fx(item.en) + '</div>'
+              + '<div class="zh">' + item.zh + '</div>'
+              + '</div>'
+              + clue(item.clue)
+              + '<h4>易混淆字形／詞性：何時才對</h4>'
+              + '<p style="margin:2px 0">' + item.confuse + '</p>';
+  const cardHTML = card(item.n, item.tags, item.ans, qBody);
+  if (item.section === "s1") s1HTML += cardHTML;
+  else if (item.section === "s2") s2HTML += cardHTML;
+  else if (item.section === "s3") s3HTML += cardHTML;
+  else if (item.section === "s4") s4HTML += cardHTML;
+  else if (item.section === "s5") s5HTML += cardHTML;
+});
+
+s1HTML += '</section>';
+s2HTML += '</section>';
+s3HTML += '</section>';
+s4HTML += '</section>';
+s5HTML += '</section>';
+
+document.getElementById('app').innerHTML = s1HTML + s2HTML + s3HTML + s4HTML + s5HTML;
+
+// 頂部導覽列與全部展開/收合切換按鈕
+const navSections = [
+  ['s1', '01 - 20'],
+  ['s2', '21 - 40'],
+  ['s3', '41 - 60'],
+  ['s4', '61 - 80'],
+  ['s5', '81 - 94']
+];
+document.getElementById('nav').innerHTML = navSections.map(s => '<a href="#' + s[0] + '">' + s[1] + '</a>').join('') + '<button id="tg">全部收合</button>';
+
+let isAllOpen = true;
+document.getElementById('tg').onclick = function() {
+  isAllOpen = !isAllOpen;
+  document.querySelectorAll('details.q').forEach(d => d.open = isAllOpen);
+  this.textContent = isAllOpen ? '全部收合' : '全部展開';
+};
+</script>
+<script src="bookmark.js"></script>
 </body>
 </html>
