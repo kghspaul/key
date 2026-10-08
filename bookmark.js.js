@@ -1,7 +1,7 @@
 // === bookmark.js (專為 kghspaul 考卷詳解 HTML 量身打造) ===
 const CONFIG = {
   // 👇 請替換成你部署的 Google Apps Script 網頁應用程式網址
-  GAS_URL: "https://script.google.com/macros/s/請替換成你的網址/exec",
+  GAS_URL: "https://script.google.com/macros/s/AKfycbz4d11mhhpKrOul0U05G5J0MyrAODB9byZeOzfSeyd005XPf6m1jMSrAeuqgULevn5q/exec",
   REVIEW_PAGE_URL: "review.html"
 };
 
