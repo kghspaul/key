@@ -1,4 +1,4 @@
-// === bookmark.js (萬用相容版：同時支援 L1 Tailwind、L2 qcard、L3 details.q 與新考卷) ===
+// === bookmark.js (萬用增強版：自動從克漏字/文意選填文章擷取題幹句子) ===
 const CONFIG = {
   // 👇 請替換成你部署的 Google Apps Script 網址
   GAS_URL: "https://script.google.com/macros/s/請替換成你的網址/exec",
@@ -56,7 +56,6 @@ const CONFIG = {
     }
   }
 
-  // 1. 注入萬用樣式（含 CSS 變數 Fallback 預設值，確保任何版型都清晰可見）
   const style = document.createElement("style");
   style.textContent = `
     :root {
@@ -78,7 +77,6 @@ const CONFIG = {
   `;
   document.head.appendChild(style);
 
-  // 2. 自動尋找導覽列掛載（支援 L3 #nav、L2 nav.subnav、L1 header 控制列）
   const navTarget =
     document.getElementById("nav") ||
     document.querySelector("nav.subnav") ||
@@ -113,24 +111,53 @@ const CONFIG = {
     toastTimer = setTimeout(() => { toast.style.opacity = "0"; }, 2400);
   }
 
-  // 3. 智慧掃描所有題目容器（同時支援 L3 details.q、L2 .qcard、L1 article 與第3大題卡片）
+  // 🔍 關鍵新功能：若題目卡片本身沒有題幹（如 L1/L2 的克漏字、文意選填、篇章結構），自動從該大題的文章擷取對應句子！
+  function extractContextFromSection(box, qNum) {
+    // 檢查卡片內是否已經有完整題幹 (.stem, .zh-stem, .border-l-4, 或 L1 閱測的題目文字)
+    if (box.querySelector(".stem, .zh-stem, .border-l-4")) return "";
+
+    const sec = box.closest("section");
+    if (!sec) return "";
+
+    // 尋找該大題內的英文文章區塊
+    const passageContainers = sec.querySelectorAll(".passage .en, .font-mono");
+    for (const p of passageContainers) {
+      const fullText = p.innerText.replace(/\s+/g, " ").trim();
+      // 檢查是否包含該題號 (例如 "11.___", "11", "[21. C]")
+      const numRegex = new RegExp(`(\\[${qNum}\\.\\s*[A-Z]\\]|\\b${qNum}\\.___\vert{}\\b${qNum}\\b)`);
+      if (numRegex.test(fullText)) {
+        // 將文章切分成句子，找出題號所在的那一句（並包含前一句提供上下文）
+        const sentences = fullText.match(/[^.!?]+[.!?]+/g) || [fullText];
+        const idx = sentences.findIndex(s => numRegex.test(s));
+        if (idx !== -1) {
+          const prevSent = idx > 0 ? sentences[idx - 1].trim() + " " : "";
+          const currSent = sentences[idx].trim();
+          // 將 [21. C] 或 11.___ 統一替換成明顯的挖空標記
+          const masked = (prevSent + currSent)
+            .replace(new RegExp(`\\[${qNum}\\.\\s*[A-Z]\\]`, "g"), `<strong style="color:#9a3b2e;text-decoration:underline;"> ___${qNum}___ </strong>`)
+            .replace(new RegExp(`\\b${qNum}\\.___`, "g"), `<strong style="color:#9a3b2e;text-decoration:underline;"> ___${qNum}___ </strong>`)
+            .replace(new RegExp(`\\b${qNum}\\b`, "g"), `<strong style="color:#9a3b2e;text-decoration:underline;"> ___${qNum}___ </strong>`);
+          return `<div class="stem auto-extracted-stem" style="background:#f8fafc;padding:10px 14px;border-left:4px solid #9a3b2e;border-radius:6px;margin:10px 0;font-family:Georgia,serif;font-size:15px;color:#1e293b;"><b>【文章原句】</b>${masked}</div>`;
+        }
+      }
+    }
+    return "";
+  }
+
   function getQuestionElements() {
     const list = [];
-    // (A) L3 格式: details.q
     document.querySelectorAll("details.q").forEach(el => {
       const qNum = el.querySelector("summary .n")?.innerText.trim() || el.id.replace("q", "");
       const header = el.querySelector("summary");
       const insertBeforeEl = header?.querySelector(".ans");
       list.push({ box: el, header, insertBeforeEl, qNum });
     });
-    // (B) L2 格式: .qcard
     document.querySelectorAll(".qcard").forEach(el => {
       const rawNum = el.querySelector(".qnum")?.innerText.trim() || "";
       const qNum = rawNum.match(/^\d+/)?.[0] || rawNum;
       const header = el.querySelector(".qhead") || el;
       list.push({ box: el, header, insertBeforeEl: null, qNum });
     });
-    // (C) L1 格式: article 與 #sec-3 內的單題卡片
     document.querySelectorAll("article, #sec-3 .grid > div.bg-white.p-4").forEach(el => {
       const firstRow = el.firstElementChild;
       const numBadge = firstRow?.querySelector("span.font-extrabold, span.font-black");
@@ -172,6 +199,14 @@ const CONFIG = {
           const clone = box.cloneNode(true);
           clone.querySelector(".bm-star-btn")?.remove();
 
+          // 若為 L1/L2 克漏字或文意選填，自動補上從文章擷取的原句題幹！
+          const extraStemHtml = extractContextFromSection(box, cleanNum);
+          if (extraStemHtml) {
+            const firstChild = clone.firstElementChild;
+            if (firstChild) firstChild.insertAdjacentHTML("afterend", extraStemHtml);
+            else clone.insertAdjacentHTML("afterbegin", extraStemHtml);
+          }
+
           const note = prompt(`【標記第 ${cleanNum} 題】\n可輸入這題的個人筆記（直接按確定可略過）：`, "");
           if (note === null) return;
 
@@ -212,7 +247,7 @@ const CONFIG = {
     });
   }
 
-  // 4. 反白文字：跨版型自動擷取「英文原句 + 中文翻譯」
+  // 反白文字收藏單字
   const popup = document.createElement("div");
   popup.className = "bm-popup";
   popup.textContent = "➕ 收藏單字 / 片語";
@@ -238,27 +273,22 @@ const CONFIG = {
         selWord = text;
         const anchorEl = sel.anchorNode?.parentElement;
 
-        // 支援 L3 (.s, .stem)、L2 (.qcard, .passage)、L1 (article, p)
         const sBlock = anchorEl?.closest(".s, .stem");
         const qCardL2 = anchorEl?.closest(".qcard");
         const articleL1 = anchorEl?.closest("article");
 
         if (sBlock && sBlock.querySelector(".en")) {
-          // L3 格式
           selEnSentence = (sBlock.querySelector(".en")?.innerText || "").replace(/^參考譯文：\s*/, "").trim();
           selZhSentence = (sBlock.querySelector(".zh")?.innerText || "").trim();
         } else if (qCardL2 && qCardL2.querySelector(".stem")) {
-          // L2 單題格式
           selEnSentence = qCardL2.querySelector(".stem")?.innerText.trim() || text;
           selZhSentence = qCardL2.querySelector(".zh-stem")?.innerText.trim() || "";
         } else if (articleL1 && articleL1.querySelector(".border-l-4")) {
-          // L1 單題格式
           const box = articleL1.querySelector(".border-l-4");
           const pTags = box.querySelectorAll("p");
           selEnSentence = pTags[0]?.innerText.trim() || box.innerText.trim();
           selZhSentence = (pTags[1]?.innerText || "").replace(/^【中譯】/, "").trim();
         } else {
-          // 文章段落或其他區塊：自動從該段落切出包含該單字的那一句英文
           const para = anchorEl?.closest("p, li, td, div");
           selEnSentence = extractSingleSentence(para?.innerText || text, selWord);
           selZhSentence = "";
