@@ -1,7 +1,7 @@
 // === bookmark.js (303 大卷標準格式專用定案版) ===
 const CONFIG = {
   // 👇 請替換成你部署的 Google Apps Script 網址
-  GAS_URL: "https://script.google.com/macros/s/請替換成你的網址/exec",
+  GAS_URL: "https://script.google.com/macros/s/AKfycbz4d11mhhpKrOul0U05G5J0MyrAODB9byZeOzfSeyd005XPf6m1jMSrAeuqgULevn5q/exec",
   REVIEW_PAGE_URL: "review.html"
 };
 
