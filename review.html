@@ -20,7 +20,6 @@ nav.top-nav button,nav.top-nav select,nav.top-nav input{padding:5px 12px;border:
 nav.top-nav button.active{background:var(--acc);color:#fff;border-color:var(--acc);font-weight:600}
 main{max-width:960px;margin:auto;padding:16px 16px 70px}
 
-/* 相容 L3 與 L2 考卷樣式 */
 .q,.qcard{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin:16px 0;position:relative}
 .bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 4px;border-radius:3px;font-weight:600}
 details.q>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
@@ -42,43 +41,94 @@ table.opts td{padding:6px 8px;border-bottom:1px solid var(--line)}
 .del-btn{border:1px solid var(--line);background:var(--bg);color:var(--no);border-radius:99px;padding:2px 10px;font-size:.78rem;cursor:pointer;float:right}
 .del-btn:hover{background:var(--no);color:#fff}
 
-/* 跨版型自我重測模式（同時遮罩 L1、L2、L3 的答案與詳解） */
+/* =========================================================
+   🎯 跨版型智慧「自我重測模式」：保留題幹與選項，只遮答案與詳解！
+   ========================================================= */
+/* 1. 遮住直接顯示的正解文字 */
 body.quiz-mode .bl,
 body.quiz-mode .ans,
 body.quiz-mode .answer-line,
+body.quiz-mode .badge-tag.bg-emerald-100,
 body.quiz-mode .text-emerald-600,
-body.quiz-mode .text-indigo-600.underline,
-body.quiz-mode .qnum {
-  filter: blur(7px);
+body.quiz-mode .qnum-ans-part {
+  filter: blur(8px);
   user-select: none;
   cursor: pointer;
-  transition: .2s;
 }
+/* 2. 隱藏詳解線索與誤答分析區塊（但保留題幹與選項！） */
 body.quiz-mode .clue,
-body.quiz-mode ul.op,
+body.quiz-mode .clue-box,
 body.quiz-mode .correct-box,
 body.quiz-mode .wrong-item,
-body.quiz-mode .clue-box,
-body.quiz-mode table {
+body.quiz-mode .expl,
+body.quiz-mode .bg-amber-50\/70,
+body.quiz-mode .bg-rose-50 {
   display: none !important;
 }
+/* 3. L2 選項表格 (table.opts)：保留表格，但去除紅綠底色與中文括號提示 */
+body.quiz-mode table.opts tr.correct td,
+body.quiz-mode table.opts tr.wrong td {
+  background: transparent !important;
+  color: var(--fg) !important;
+}
+body.quiz-mode .opt-zh-hint {
+  display: none !important;
+}
+/* 4. L1 選項表格：保留第 1 欄 (A)(B)(C)(D) 選項，隱藏第 2、3 欄 (正誤判斷與解析) 與綠底 */
+body.quiz-mode article table tr {
+  background: transparent !important;
+}
+body.quiz-mode article table td:first-child {
+  color: var(--fg) !important;
+}
+body.quiz-mode article table th:nth-child(n+2),
+body.quiz-mode article table td:nth-child(n+2) {
+  display: none !important;
+}
+/* 5. L3 選項清單 (ul.op)：保留選項粗體字，隱藏後方中文與對錯解析 */
+body.quiz-mode ul.op li {
+  background: transparent !important;
+  border-color: var(--line) !important;
+}
+body.quiz-mode ul.op li small,
+body.quiz-mode ul.op li i,
+body.quiz-mode ul.op li .l3-exp-text {
+  display: none !important;
+}
+
+/* 點擊「揭曉此題」後，完整還原所有顏色與詳解 */
 body.quiz-mode .revealed-card .bl,
 body.quiz-mode .revealed-card .ans,
 body.quiz-mode .revealed-card .answer-line,
+body.quiz-mode .revealed-card .badge-tag.bg-emerald-100,
 body.quiz-mode .revealed-card .text-emerald-600,
-body.quiz-mode .revealed-card .text-indigo-600.underline,
-body.quiz-mode .revealed-card .qnum {
+body.quiz-mode .revealed-card .qnum-ans-part {
   filter: none !important;
 }
 body.quiz-mode .revealed-card .clue,
-body.quiz-mode .revealed-card ul.op,
+body.quiz-mode .revealed-card .clue-box,
 body.quiz-mode .revealed-card .correct-box,
 body.quiz-mode .revealed-card .wrong-item,
-body.quiz-mode .revealed-card .clue-box,
-body.quiz-mode .revealed-card table {
+body.quiz-mode .revealed-card .expl,
+body.quiz-mode .revealed-card .bg-amber-50\/70,
+body.quiz-mode .revealed-card .bg-rose-50 {
   display: block !important;
 }
-.reveal-exp-btn{display:none;margin-top:8px;padding:5px 14px;border-radius:99px;border:1px solid var(--acc);background:var(--card);color:var(--acc);cursor:pointer;font-size:.85rem;font-weight:600}
+body.quiz-mode .revealed-card .opt-zh-hint,
+body.quiz-mode .revealed-card ul.op li small,
+body.quiz-mode .revealed-card ul.op li i,
+body.quiz-mode .revealed-card ul.op li .l3-exp-text {
+  display: inline !important;
+}
+body.quiz-mode .revealed-card article table th:nth-child(n+2),
+body.quiz-mode .revealed-card article table td:nth-child(n+2) {
+  display: table-cell !important;
+}
+body.quiz-mode .revealed-card table.opts tr.correct td {
+  background: var(--correct-bg) !important;
+}
+
+.reveal-exp-btn{display:none;margin-top:10px;padding:6px 16px;border-radius:99px;border:1px solid var(--acc);background:var(--card);color:var(--acc);cursor:pointer;font-size:.86rem;font-weight:700}
 body.quiz-mode .reveal-exp-btn{display:inline-block}
 
 .vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-top:14px}
@@ -98,7 +148,7 @@ body.quiz-mode .reveal-exp-btn{display:inline-block}
   <button id="tab-q" class="active" onclick="switchTab('questions')">📝 標記題目 (<span id="q-count">0</span>)</button>
   <button id="tab-v" onclick="switchTab('vocab')">🔤 單字與片語卡 (<span id="v-count">0</span>)</button>
   <select id="exam-filter" onchange="render()"><option value="ALL">所有考卷</option></select>
-  <button id="quiz-btn" onclick="toggleQuizMode()">🎯 自我重測模式（遮住答案與解析）</button>
+  <button id="quiz-btn" onclick="toggleQuizMode()">🎯 自我重測模式（保留題目與選項、遮住答案）</button>
 
   <div style="margin-left:auto;display:flex;flex-wrap:wrap;gap:6px;align-items:center">
     <input type="text" id="sid-input" placeholder="👤 學號/暱稱" style="width:115px">
@@ -167,7 +217,7 @@ function toggleQuizMode() {
     document.body.classList.toggle("quiz-mode");
     const isQuiz = document.body.classList.contains("quiz-mode");
     document.getElementById("quiz-btn").classList.toggle("active", isQuiz);
-    document.getElementById("quiz-btn").textContent = isQuiz ? "👁️ 顯示全部詳解" : "🎯 自我重測模式（遮住答案與解析）";
+    document.getElementById("quiz-btn").textContent = isQuiz ? "👁️ 顯示全部詳解" : "🎯 自我重測模式（保留題目與選項、遮住答案）";
   } else {
     vocabCloze = !vocabCloze;
     document.getElementById("quiz-btn").classList.toggle("active", vocabCloze);
@@ -195,6 +245,34 @@ function speak(word, e) {
   const u = new SpeechSynthesisUtterance(word);
   u.lang = "en-US";
   speechSynthesis.speak(u);
+}
+
+// 細緻處理卡片內部結構，讓重測模式只遮住答案與解析、不遮住題號與選項英文
+function prepareCardForQuiz(wrapper) {
+  // 1. L2 的 .qnum 若包含答案 (如 "1. route" 或 "21. (G) hosted")，只把後面的答案包起來模糊，保留題號
+  wrapper.querySelectorAll(".qnum").forEach(el => {
+    el.innerHTML = el.innerHTML.replace(/^(\d+\.)\s*(.+)$/, `$1 <span class="qnum-ans-part">$2</span>`);
+  });
+
+  // 2. L2 的選項表格 (table.opts) 裡若有全形括號中文提示，如 "around the world（世界各地）"，將括號包起來以便重測時隱藏
+  wrapper.querySelectorAll("table.opts td:not(.letter)").forEach(td => {
+    td.innerHTML = td.innerHTML.replace(/（[^）]+）/g, `<span class="opt-zh-hint">$&</span>`);
+  });
+
+  // 3. L3 的選項清單 (ul.op li)，將 <br> 之後的解析文字包進 .l3-exp-text 以便重測時隱藏，只留 (A) 英文選項
+  wrapper.querySelectorAll("ul.op li").forEach(li => {
+    const parts = li.innerHTML.split(/<br\s*\/?>/i);
+    if (parts.length > 1) {
+      li.innerHTML = parts[0] + `<span class="l3-exp-text"><br>` + parts.slice(1).join("<br>") + `</span>`;
+    }
+  });
+
+  // 4. L1 的解題關鍵線索段落，在重測模式時隱藏
+  wrapper.querySelectorAll("article p").forEach(p => {
+    if (p.innerText.includes("🎯") || p.innerText.includes("❌")) {
+      p.classList.add("clue");
+    }
+  });
 }
 
 function render() {
@@ -230,6 +308,8 @@ function render() {
     `;
     const innerDet = wrapper.querySelector("details");
     if (innerDet) innerDet.open = true;
+
+    prepareCardForQuiz(wrapper);
     qList.appendChild(wrapper);
   });
 
