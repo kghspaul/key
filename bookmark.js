@@ -1,4 +1,4 @@
-// === bookmark.js (萬用增強版：自動從克漏字/文意選填文章擷取題幹句子) ===
+// === bookmark.js (終極穩定版：精準抓取 301/302/L3 所有文章句子與選填詞庫) ===
 const CONFIG = {
   // 👇 請替換成你部署的 Google Apps Script 網址
   GAS_URL: "https://script.google.com/macros/s/請替換成你的網址/exec",
@@ -111,37 +111,62 @@ const CONFIG = {
     toastTimer = setTimeout(() => { toast.style.opacity = "0"; }, 2400);
   }
 
-  // 🔍 關鍵新功能：若題目卡片本身沒有題幹（如 L1/L2 的克漏字、文意選填、篇章結構），自動從該大題的文章擷取對應句子！
+  // 🔍 終極版題幹擷取器：解決 _ 底線邊界問題，並自動附帶文意選填/篇章結構選項庫
   function extractContextFromSection(box, qNum) {
-    // 檢查卡片內是否已經有完整題幹 (.stem, .zh-stem, .border-l-4, 或 L1 閱測的題目文字)
     if (box.querySelector(".stem, .zh-stem, .border-l-4")) return "";
 
     const sec = box.closest("section");
     if (!sec) return "";
 
-    // 尋找該大題內的英文文章區塊
+    let extraHtml = "";
+
+    // 1. 若該大題有「文意選填詞庫 (.word-bank 或 #sec-3 詞庫)」或「篇章結構選項」，一併抓進來方便重測作答
+    const wordBank = sec.querySelector(".word-bank, .grid.grid-cols-2.sm\\:grid-cols-5");
+    if (wordBank) {
+      extraHtml += `<div style="background:#fffbeb;border:1px solid #fde68a;padding:8px 12px;border-radius:8px;margin-bottom:8px;font-size:13px;color:#92400e;"><b>【選項詞庫】</b> ${wordBank.innerText.replace(/\s+/g, " ")}</div>`;
+    }
+    const passageAllEn = sec.querySelectorAll(".passage .en");
+    if (passageAllEn.length > 1) {
+      // L2 第四部分「篇章結構」的第一個 .en 是 (A)~(E) 句子選項
+      extraHtml += `<div style="background:#fffbeb;border:1px solid #fde68a;padding:8px 12px;border-radius:8px;margin-bottom:8px;font-size:13px;color:#1e293b;"><b>【篇章選項】</b><br>${passageAllEn[0].innerHTML}</div>`;
+    }
+
+    // 2. 尋找包含題號的文章段落
     const passageContainers = sec.querySelectorAll(".passage .en, .font-mono");
+    // 注意：不用 \b 包尾，改用明確匹配： [21. C] 或 11.___ 或 獨立數字 11
+    const matchPattern = new RegExp(`(\\[${qNum}\\.\\s*[A-Z]\\]|(?:^|\\D)${qNum}\\.___|(?:^|\\s)${qNum}(?:\\s|[.,?!]|$))`);
+
     for (const p of passageContainers) {
       const fullText = p.innerText.replace(/\s+/g, " ").trim();
-      // 檢查是否包含該題號 (例如 "11.___", "11", "[21. C]")
-      const numRegex = new RegExp(`(\\[${qNum}\\.\\s*[A-Z]\\]|\\b${qNum}\\.___\vert{}\\b${qNum}\\b)`);
-      if (numRegex.test(fullText)) {
-        // 將文章切分成句子，找出題號所在的那一句（並包含前一句提供上下文）
-        const sentences = fullText.match(/[^.!?]+[.!?]+/g) || [fullText];
-        const idx = sentences.findIndex(s => numRegex.test(s));
+      if (matchPattern.test(fullText)) {
+        // 先把 "11." 暫時換成標記，避免切句子時把 "11." 的點當成句號切斷！
+        const safeText = fullText
+          .replace(/\[(\d+)\.\s*[A-Z]\]/g, "___BLANK_$1___")
+          .replace(/(\d+)\.___/g, "___BLANK_$1___");
+
+        const sentences = safeText.match(/[^.!?]+[.!?]+/g) || [safeText];
+        const targetToken = `___BLANK_${qNum}___`;
+        const looseNumRegex = new RegExp(`(^|\\s)${qNum}(\\s|[.,?!]|$)`);
+
+        const idx = sentences.findIndex(s => s.includes(targetToken) || looseNumRegex.test(s));
         if (idx !== -1) {
           const prevSent = idx > 0 ? sentences[idx - 1].trim() + " " : "";
           const currSent = sentences[idx].trim();
-          // 將 [21. C] 或 11.___ 統一替換成明顯的挖空標記
-          const masked = (prevSent + currSent)
-            .replace(new RegExp(`\\[${qNum}\\.\\s*[A-Z]\\]`, "g"), `<strong style="color:#9a3b2e;text-decoration:underline;"> ___${qNum}___ </strong>`)
-            .replace(new RegExp(`\\b${qNum}\\.___`, "g"), `<strong style="color:#9a3b2e;text-decoration:underline;"> ___${qNum}___ </strong>`)
-            .replace(new RegExp(`\\b${qNum}\\b`, "g"), `<strong style="color:#9a3b2e;text-decoration:underline;"> ___${qNum}___ </strong>`);
-          return `<div class="stem auto-extracted-stem" style="background:#f8fafc;padding:10px 14px;border-left:4px solid #9a3b2e;border-radius:6px;margin:10px 0;font-family:Georgia,serif;font-size:15px;color:#1e293b;"><b>【文章原句】</b>${masked}</div>`;
+          const nextSent = idx < sentences.length - 1 ? " " + sentences[idx + 1].trim() : "";
+
+          const combined = (prevSent + currSent + nextSent)
+            // 把目標題號換成醒目的紅色填空
+            .replace(new RegExp(`___BLANK_${qNum}___`, "g"), `<strong style="color:#c0392b;background:#fef3c7;padding:0 6px;border-bottom:2px solid #c0392b;border-radius:3px;"> [ ___(${qNum})___ ] </strong>`)
+            .replace(looseNumRegex, `$1<strong style="color:#c0392b;background:#fef3c7;padding:0 6px;border-bottom:2px solid #c0392b;border-radius:3px;"> [ ___(${qNum})___ ] </strong>$2`)
+            // 把同句中其他題號還原為普通空格
+            .replace(/___BLANK_(\d+)___/g, " ___($1)___ ");
+
+          extraHtml += `<div class="stem auto-extracted-stem" style="background:#f8fafc;padding:12px 14px;border-left:4px solid #9a3b2e;border-radius:6px;margin:10px 0;font-family:Georgia,serif;font-size:15.5px;line-height:1.7;color:#1e293b;"><b>📖 文章前後文題幹：</b><br>${combined}</div>`;
+          break;
         }
       }
     }
-    return "";
+    return extraHtml;
   }
 
   function getQuestionElements() {
@@ -167,6 +192,34 @@ const CONFIG = {
       }
     });
     return list;
+  }
+
+  // 🔄 自動升級已標記的舊題目：只要打開考卷網頁，若發現 localStorage 裡該考卷的舊標記沒抓到文章原句，立刻自動補齊！
+  function autoUpgradeExistingBookmarks(qItems) {
+    const data = getLocalData();
+    let updated = false;
+    qItems.forEach(({ box, qNum }, idx) => {
+      const cleanNum = String(qNum).replace(/[^\d]/g, "") || (idx + 1);
+      const qId = `${examTitle}_Q${cleanNum}`.replace(/\s+/g, "_");
+      const savedItem = data.questions.find(q => q.id === qId);
+      if (savedItem && !savedItem.htmlContent.includes("auto-extracted-stem")) {
+        const extraStemHtml = extractContextFromSection(box, cleanNum);
+        if (extraStemHtml) {
+          const clone = box.cloneNode(true);
+          clone.querySelector(".bm-star-btn")?.remove();
+          const firstChild = clone.firstElementChild;
+          if (firstChild) firstChild.insertAdjacentHTML("afterend", extraStemHtml);
+          else clone.insertAdjacentHTML("afterbegin", extraStemHtml);
+          savedItem.htmlContent = clone.outerHTML;
+          updated = true;
+          syncToCloud("upsert", "question", savedItem);
+        }
+      }
+    });
+    if (updated) {
+      saveLocalData(data);
+      showToast("✨ 已自動為舊標記補齊文章原句！");
+    }
   }
 
   function injectQuestionButtons() {
@@ -199,7 +252,6 @@ const CONFIG = {
           const clone = box.cloneNode(true);
           clone.querySelector(".bm-star-btn")?.remove();
 
-          // 若為 L1/L2 克漏字或文意選填，自動補上從文章擷取的原句題幹！
           const extraStemHtml = extractContextFromSection(box, cleanNum);
           if (extraStemHtml) {
             const firstChild = clone.firstElementChild;
@@ -231,6 +283,9 @@ const CONFIG = {
         header.appendChild(btn);
       }
     });
+
+    // 自動檢查並幫舊標記補上文章題幹
+    autoUpgradeExistingBookmarks(qItems);
     updateUI();
   }
 
