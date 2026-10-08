@@ -1,14 +1,14 @@
-// === bookmark.js (專為 kghspaul 考卷詳解 HTML 量身打造) ===
+// === bookmark.js (萬用相容版：同時支援 L1 Tailwind、L2 qcard、L3 details.q 與新考卷) ===
 const CONFIG = {
-  // 👇 請替換成你部署的 Google Apps Script 網頁應用程式網址
-  GAS_URL: "https://script.google.com/macros/s/AKfycbz4d11mhhpKrOul0U05G5J0MyrAODB9byZeOzfSeyd005XPf6m1jMSrAeuqgULevn5q/exec",
+  // 👇 請替換成你部署的 Google Apps Script 網址
+  GAS_URL: "https://script.google.com/macros/s/請替換成你的網址/exec",
   REVIEW_PAGE_URL: "review.html"
 };
 
 (function () {
   const STORAGE_KEY = "kghs_exam_bookmarks_v1";
   const STUDENT_KEY = "kghs_student_id";
-  const examTitle = (document.querySelector(".top h1")?.innerText || document.title || "未命名考卷").trim();
+  const examTitle = (document.querySelector("h1")?.innerText || document.title || "未命名考卷").trim();
 
   function getLocalData() {
     try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { questions: [], vocab: [] }; }
@@ -22,7 +22,6 @@ const CONFIG = {
     return localStorage.getItem(STUDENT_KEY) || "";
   }
 
-  // 雲端同步 (POST)
   async function syncToCloud(action, itemType, item) {
     const studentId = getStudentId();
     if (!studentId || !CONFIG.GAS_URL.startsWith("https://script.google.com")) return;
@@ -40,7 +39,6 @@ const CONFIG = {
     }
   }
 
-  // 從雲端讀取 (GET)
   async function pullFromCloud() {
     const studentId = getStudentId();
     if (!studentId) return showToast("請先輸入學號或暱稱！");
@@ -58,33 +56,44 @@ const CONFIG = {
     }
   }
 
-  // 1. 注入專屬樣式（完美沿用你原本的 CSS 變數與深淺色主題）
+  // 1. 注入萬用樣式（含 CSS 變數 Fallback 預設值，確保任何版型都清晰可見）
   const style = document.createElement("style");
   style.textContent = `
-    .bm-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-left: auto; }
-    .bm-input { padding: 4px 10px; border: 1px solid var(--line); border-radius: 99px; background: var(--card); color: var(--fg); font-size: .84rem; width: 125px; outline: none; }
-    .bm-input:focus { border-color: var(--acc); }
-    .bm-nav-link { padding: 5px 12px; border-radius: 99px; background: var(--acc) !important; color: #fff !important; font-weight: 600; text-decoration: none; font-size: .86rem; display: inline-flex; align-items: center; gap: 4px; border: none !important; }
-    .bm-nav-link:hover { opacity: .9; }
-    .bm-star-btn { padding: 2px 10px; border-radius: 99px; border: 1px solid var(--line); background: var(--bg); color: var(--mut); font-size: .8rem; cursor: pointer; transition: .15s; margin-left: 4px; }
-    .bm-star-btn:hover { border-color: var(--acc); color: var(--acc); }
-    .bm-star-btn.saved { background: var(--hl); border-color: var(--acc); color: var(--acc); font-weight: 700; }
-    .bm-popup { position: absolute; z-index: 9999; background: var(--fg); color: var(--bg); padding: 6px 14px; border-radius: 99px; font-size: .86rem; font-weight: 600; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25); display: none; transform: translate(-50%, -100%); margin-top: -10px; white-space: nowrap; }
-    .bm-toast { position: fixed; bottom: 20px; right: 20px; background: var(--fg); color: var(--bg); padding: 8px 16px; border-radius: 99px; font-size: .86rem; z-index: 9999; opacity: 0; transition: opacity .25s; pointer-events: none; box-shadow: 0 4px 12px rgba(0,0,0,.2); }
+    :root {
+      --bm-acc: var(--acc, var(--accent, #9a3b2e));
+      --bm-bg: var(--card, #ffffff);
+      --bm-fg: var(--fg, var(--ink, #1e293b));
+      --bm-line: var(--line, #cbd5e1);
+      --bm-hl: var(--hl, var(--clue-bg, #fef3c7));
+    }
+    .bm-bar { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-left: auto; padding: 2px 0; }
+    .bm-input { padding: 4px 10px !important; border: 1px solid var(--bm-line) !important; border-radius: 99px !important; background: var(--bm-bg) !important; color: var(--bm-fg) !important; font-size: 13px !important; width: 130px !important; outline: none !important; }
+    .bm-sync-btn { padding: 4px 10px !important; border: 1px solid var(--bm-line) !important; border-radius: 99px !important; background: var(--bm-bg) !important; color: var(--bm-fg) !important; font-size: 13px !important; cursor: pointer !important; }
+    .bm-nav-link { padding: 5px 12px !important; border-radius: 99px !important; background: var(--bm-acc) !important; color: #fff !important; font-weight: 600 !important; text-decoration: none !important; font-size: 13px !important; display: inline-flex !important; align-items: center !important; gap: 4px !important; border: none !important; }
+    .bm-star-btn { padding: 3px 10px !important; border-radius: 99px !important; border: 1px solid var(--bm-line) !important; background: var(--bm-bg) !important; color: #64748b !important; font-size: 12.5px !important; font-weight: 600 !important; cursor: pointer !important; transition: .15s !important; margin-left: 6px !important; display: inline-flex !important; align-items: center !important; }
+    .bm-star-btn:hover { border-color: var(--bm-acc) !important; color: var(--bm-acc) !important; }
+    .bm-star-btn.saved { background: var(--bm-hl) !important; border-color: var(--bm-acc) !important; color: var(--bm-acc) !important; font-weight: 700 !important; }
+    .bm-popup { position: absolute; z-index: 99999; background: #1e293b; color: #fff; padding: 6px 14px; border-radius: 99px; font-size: 13px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25); display: none; transform: translate(-50%, -100%); margin-top: -10px; white-space: nowrap; }
+    .bm-toast { position: fixed; bottom: 20px; right: 20px; background: #1e293b; color: #fff; padding: 8px 16px; border-radius: 99px; font-size: 13px; z-index: 99999; opacity: 0; transition: opacity .25s; pointer-events: none; box-shadow: 0 4px 12px rgba(0,0,0,.25); }
   `;
   document.head.appendChild(style);
 
-  // 2. 在你原本的 <nav id="nav"> 右側加入「學號同步＋總複習中心」按鈕
-  const nav = document.getElementById("nav");
-  if (nav) {
+  // 2. 自動尋找導覽列掛載（支援 L3 #nav、L2 nav.subnav、L1 header 控制列）
+  const navTarget =
+    document.getElementById("nav") ||
+    document.querySelector("nav.subnav") ||
+    document.querySelector("header .flex.items-center.gap-2") ||
+    document.querySelector("header");
+
+  if (navTarget) {
     const bmBar = document.createElement("div");
     bmBar.className = "bm-bar";
     bmBar.innerHTML = `
       <input type="text" class="bm-input" id="bm-sid" placeholder="👤 學號/暱稱同步" value="${getStudentId()}">
-      <button type="button" id="bm-sync-btn" title="從雲端載入紀錄">🔄 同步</button>
+      <button type="button" class="bm-sync-btn" id="bm-sync-btn" title="從雲端載入紀錄">🔄 同步</button>
       <a href="${CONFIG.REVIEW_PAGE_URL}" class="bm-nav-link">📚 複習本 (<span id="bm-total">0</span>)</a>
     `;
-    nav.appendChild(bmBar);
+    navTarget.appendChild(bmBar);
 
     document.getElementById("bm-sid").addEventListener("change", (e) => {
       localStorage.setItem(STUDENT_KEY, e.target.value.trim());
@@ -93,7 +102,6 @@ const CONFIG = {
     document.getElementById("bm-sync-btn").addEventListener("click", pullFromCloud);
   }
 
-  // Toast 提示訊息
   const toast = document.createElement("div");
   toast.className = "bm-toast";
   document.body.appendChild(toast);
@@ -105,15 +113,43 @@ const CONFIG = {
     toastTimer = setTimeout(() => { toast.style.opacity = "0"; }, 2400);
   }
 
-  // 3. 在每個 <details class="q"> 的 <summary> 自動插入「☆ 標記此題」按鈕
-  function injectQuestionButtons() {
-    document.querySelectorAll("details.q").forEach((det) => {
-      const summary = det.querySelector("summary");
-      if (!summary || summary.querySelector(".bm-star-btn")) return;
+  // 3. 智慧掃描所有題目容器（同時支援 L3 details.q、L2 .qcard、L1 article 與第3大題卡片）
+  function getQuestionElements() {
+    const list = [];
+    // (A) L3 格式: details.q
+    document.querySelectorAll("details.q").forEach(el => {
+      const qNum = el.querySelector("summary .n")?.innerText.trim() || el.id.replace("q", "");
+      const header = el.querySelector("summary");
+      const insertBeforeEl = header?.querySelector(".ans");
+      list.push({ box: el, header, insertBeforeEl, qNum });
+    });
+    // (B) L2 格式: .qcard
+    document.querySelectorAll(".qcard").forEach(el => {
+      const rawNum = el.querySelector(".qnum")?.innerText.trim() || "";
+      const qNum = rawNum.match(/^\d+/)?.[0] || rawNum;
+      const header = el.querySelector(".qhead") || el;
+      list.push({ box: el, header, insertBeforeEl: null, qNum });
+    });
+    // (C) L1 格式: article 與 #sec-3 內的單題卡片
+    document.querySelectorAll("article, #sec-3 .grid > div.bg-white.p-4").forEach(el => {
+      const firstRow = el.firstElementChild;
+      const numBadge = firstRow?.querySelector("span.font-extrabold, span.font-black");
+      if (numBadge) {
+        const qNum = numBadge.innerText.trim();
+        list.push({ box: el, header: firstRow, insertBeforeEl: firstRow.lastElementChild, qNum });
+      }
+    });
+    return list;
+  }
 
-      const qNumText = summary.querySelector(".n")?.innerText.trim() || det.id.replace("q", "");
-      const qId = `${examTitle}_Q${qNumText}`.replace(/\s+/g, "_");
-      det.setAttribute("data-bm-qid", qId);
+  function injectQuestionButtons() {
+    const qItems = getQuestionElements();
+    qItems.forEach(({ box, header, insertBeforeEl, qNum }, idx) => {
+      if (!header || header.querySelector(".bm-star-btn")) return;
+
+      const cleanNum = String(qNum).replace(/[^\d]/g, "") || (idx + 1);
+      const qId = `${examTitle}_Q${cleanNum}`.replace(/\s+/g, "_");
+      box.setAttribute("data-bm-qid", qId);
 
       const btn = document.createElement("button");
       btn.type = "button";
@@ -122,43 +158,43 @@ const CONFIG = {
 
       btn.addEventListener("click", (e) => {
         e.preventDefault();
-        e.stopPropagation(); // 避免點擊收藏時觸發 <details> 收合！
+        e.stopPropagation();
 
         const data = getLocalData();
-        const idx = data.questions.findIndex(q => q.id === qId);
+        const existIdx = data.questions.findIndex(q => q.id === qId);
 
-        if (idx >= 0) {
-          const removed = data.questions.splice(idx, 1)[0];
+        if (existIdx >= 0) {
+          const removed = data.questions.splice(existIdx, 1)[0];
           saveLocalData(data);
-          showToast(`已取消標記 第 ${qNumText} 題`);
+          showToast(`已取消標記 第 ${cleanNum} 題`);
           syncToCloud("delete", "question", removed);
         } else {
-          // 複製整題 <details> 內容（排除按鈕本身）
-          const clone = det.cloneNode(true);
+          const clone = box.cloneNode(true);
           clone.querySelector(".bm-star-btn")?.remove();
 
-          const note = prompt(`【標記第 ${qNumText} 題】\n可輸入這題的個人筆記（直接按確定可略過）：`, "");
+          const note = prompt(`【標記第 ${cleanNum} 題】\n可輸入這題的個人筆記（直接按確定可略過）：`, "");
           if (note === null) return;
 
           const newItem = {
             id: qId,
             examTitle,
-            qNum: `第 ${qNumText} 題`,
-            htmlContent: clone.innerHTML,
+            qNum: `第 ${cleanNum} 題`,
+            htmlContent: clone.outerHTML,
             note: note.trim(),
             timestamp: Date.now()
           };
           data.questions.push(newItem);
           saveLocalData(data);
-          showToast(`⭐ 已將 第 ${qNumText} 題 加入複習本`);
+          showToast(`⭐ 已將 第 ${cleanNum} 題 加入複習本`);
           syncToCloud("upsert", "question", newItem);
         }
       });
 
-      // 插在答案 (.ans) 的前面
-      const ansEl = summary.querySelector(".ans");
-      if (ansEl) summary.insertBefore(btn, ansEl);
-      else summary.appendChild(btn);
+      if (insertBeforeEl && insertBeforeEl.parentNode === header) {
+        header.insertBefore(btn, insertBeforeEl);
+      } else {
+        header.appendChild(btn);
+      }
     });
     updateUI();
   }
@@ -176,7 +212,7 @@ const CONFIG = {
     });
   }
 
-  // 4. 反白文字：自動抓取「單字/片語 + 原文英文例句 (.en) + 對應中文翻譯 (.zh)」
+  // 4. 反白文字：跨版型自動擷取「英文原句 + 中文翻譯」
   const popup = document.createElement("div");
   popup.className = "bm-popup";
   popup.textContent = "➕ 收藏單字 / 片語";
@@ -186,24 +222,45 @@ const CONFIG = {
   let selEnSentence = "";
   let selZhSentence = "";
 
+  function extractSingleSentence(text, target) {
+    if (!text) return target;
+    const clean = text.replace(/\s+/g, " ").trim();
+    const sents = clean.match(/[^.!?]+[.!?]+/g) || [clean];
+    return (sents.find(s => s.toLowerCase().includes(target.toLowerCase())) || clean).trim();
+  }
+
   function handleSelection(e) {
     if (popup.contains(e.target)) return;
     setTimeout(() => {
       const sel = window.getSelection();
       const text = sel.toString().trim();
-      if (text.length >= 2 && text.length <= 70) {
+      if (text.length >= 2 && text.length <= 75) {
         selWord = text;
         const anchorEl = sel.anchorNode?.parentElement;
 
-        // 優先從你設計的 .s (文章句子) 或 .stem (題幹) 抓取成對的中英句子！
-        const sentenceBlock = anchorEl?.closest(".s, .stem");
-        if (sentenceBlock) {
-          selEnSentence = (sentenceBlock.querySelector(".en")?.innerText || "").replace(/^參考譯文：\s*/, "").trim();
-          selZhSentence = (sentenceBlock.querySelector(".zh")?.innerText || "").trim();
+        // 支援 L3 (.s, .stem)、L2 (.qcard, .passage)、L1 (article, p)
+        const sBlock = anchorEl?.closest(".s, .stem");
+        const qCardL2 = anchorEl?.closest(".qcard");
+        const articleL1 = anchorEl?.closest("article");
+
+        if (sBlock && sBlock.querySelector(".en")) {
+          // L3 格式
+          selEnSentence = (sBlock.querySelector(".en")?.innerText || "").replace(/^參考譯文：\s*/, "").trim();
+          selZhSentence = (sBlock.querySelector(".zh")?.innerText || "").trim();
+        } else if (qCardL2 && qCardL2.querySelector(".stem")) {
+          // L2 單題格式
+          selEnSentence = qCardL2.querySelector(".stem")?.innerText.trim() || text;
+          selZhSentence = qCardL2.querySelector(".zh-stem")?.innerText.trim() || "";
+        } else if (articleL1 && articleL1.querySelector(".border-l-4")) {
+          // L1 單題格式
+          const box = articleL1.querySelector(".border-l-4");
+          const pTags = box.querySelectorAll("p");
+          selEnSentence = pTags[0]?.innerText.trim() || box.innerText.trim();
+          selZhSentence = (pTags[1]?.innerText || "").replace(/^【中譯】/, "").trim();
         } else {
-          // 若反白處在選項 (.op li) 或線索 (.clue) 裡，抓取該區塊文字
-          const fallbackBlock = anchorEl?.closest("li, .clue, p, div");
-          selEnSentence = (fallbackBlock?.innerText || text).replace(/\s+/g, " ").trim();
+          // 文章段落或其他區塊：自動從該段落切出包含該單字的那一句英文
+          const para = anchorEl?.closest("p, li, td, div");
+          selEnSentence = extractSingleSentence(para?.innerText || text, selWord);
           selZhSentence = "";
         }
 
@@ -224,10 +281,9 @@ const CONFIG = {
     e.preventDefault();
     popup.style.display = "none";
 
-    // 自動把中譯放進預設筆記，讓學生省去打字時間
     const defaultNote = selZhSentence ? `句意：${selZhSentence}` : "";
     const note = prompt(
-      `【收藏單字 / 片語】\n字詞：${selWord}\n例句：${selEnSentence}\n\n請輸入字義或筆記（已自動帶入原句中譯，可直接修改）：`,
+      `【收藏單字 / 片語】\n字詞：${selWord}\n例句：${selEnSentence}\n\n請輸入字義或筆記：`,
       defaultNote
     );
     if (note === null) return;
@@ -248,6 +304,5 @@ const CONFIG = {
     syncToCloud("upsert", "vocab", newItem);
   });
 
-  // 執行注入
   injectQuestionButtons();
 })();
