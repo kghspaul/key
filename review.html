@@ -1,407 +1,393 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>跨考卷錯題與單字總複習中心</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<style>
-:root{
-  --bg:#faf8f4;--fg:#222;--card:#fff;--line:#e4ded3;--acc:#9a3b2e;--ok:#1f7a4d;--no:#b3261e;--mut:#6b6558;--hl:#fff1c9;
-  --ink:#2b2620;--ink-soft:#5c5548;--accent:#c0392b;--correct:#1e7145;--correct-bg:#e6f4ec;--wrong:#a83232;--wrong-bg:#fbeceb;--clue:#8a5a00;--clue-bg:#fdf1dd;--tag-bg:#2b2620;
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
-.top{max-width:960px;margin:auto;padding:28px 18px 10px}
-.top h1{margin:0 0 4px;font-size:1.6rem;color:var(--acc);font-weight:800}
-.top p{margin:2px 0;color:var(--mut);font-size:.92rem}
-nav.top-nav{position:sticky;top:0;z-index:50;background:var(--bg);border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:10px 16px}
-nav.top-nav button,nav.top-nav select,nav.top-nav input{padding:5px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--fg);font:inherit;font-size:.86rem;cursor:pointer}
-nav.top-nav button.active{background:var(--acc);color:#fff;border-color:var(--acc);font-weight:600}
-main{max-width:960px;margin:auto;padding:16px 16px 70px}
+// === bookmark.js (終極穩定版：精準抓取 301/302/L3 所有文章句子與選填詞庫) ===
+const CONFIG = {
+  // 👇 請替換成你部署的 Google Apps Script 網址
+  GAS_URL: "https://script.google.com/macros/s/請替換成你的網址/exec",
+  REVIEW_PAGE_URL: "review.html"
+};
 
-.q,.qcard{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin:16px 0;position:relative}
-.bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 4px;border-radius:3px;font-weight:600}
-details.q>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.n,.qnum{background:var(--acc);color:#fff;border-radius:6px;padding:2px 10px;font-weight:700;font-size:.95rem}
-.tag,.badge-tag{font-size:.78rem;border:1px solid var(--acc);color:var(--acc);border-radius:99px;padding:1px 9px}
-.ans,.answer-line{margin-left:auto;font-weight:700;color:var(--ok)}
-.stem{margin:8px 0;padding:8px 10px;background:var(--bg);border-radius:6px}
-.clue,.clue-box{margin:8px 0;padding:8px 12px;border-left:4px solid var(--acc);background:var(--clue-bg);border-radius:0 6px 6px 0}
-.correct-box{background:var(--correct-bg);border-left:3px solid var(--correct);padding:8px 10px;border-radius:0 6px 6px 0;margin:6px 0}
-.wrong-item{background:var(--wrong-bg);border-left:3px solid var(--wrong);padding:8px 10px;border-radius:0 6px 6px 0;margin:6px 0}
-ul.op{list-style:none;margin:6px 0 0;padding:0}
-ul.op li{padding:7px 10px;margin:5px 0;border-radius:6px;border:1px solid var(--line)}
-ul.op li.ok,tr.correct td{background:var(--correct-bg);border-color:var(--ok)}
-table.opts{width:100%;border-collapse:collapse;margin:8px 0;font-size:14px}
-table.opts td{padding:6px 8px;border-bottom:1px solid var(--line)}
+(function () {
+  const STORAGE_KEY = "kghs_exam_bookmarks_v1";
+  const STUDENT_KEY = "kghs_student_id";
+  const examTitle = (document.querySelector("h1")?.innerText || document.title || "未命名考卷").trim();
 
-.exam-source{font-size:.78rem;background:var(--hl);color:var(--acc);padding:2px 10px;border-radius:99px;font-weight:700;display:inline-block;margin-bottom:6px}
-.user-note{margin-top:10px;padding:8px 12px;background:var(--hl);border-left:4px solid var(--acc);border-radius:4px;font-size:.9rem}
-.del-btn{border:1px solid var(--line);background:var(--bg);color:var(--no);border-radius:99px;padding:2px 10px;font-size:.78rem;cursor:pointer;float:right}
-.del-btn:hover{background:var(--no);color:#fff}
+  function getLocalData() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { questions: [], vocab: [] }; }
+    catch { return { questions: [], vocab: [] }; }
+  }
+  function saveLocalData(data) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    updateUI();
+  }
+  function getStudentId() {
+    return localStorage.getItem(STUDENT_KEY) || "";
+  }
 
-/* =========================================================
-   🎯 跨版型智慧「自我重測模式」：保留題幹與選項，只遮答案與詳解！
-   ========================================================= */
-/* 1. 遮住直接顯示的正解文字 */
-body.quiz-mode .bl,
-body.quiz-mode .ans,
-body.quiz-mode .answer-line,
-body.quiz-mode .badge-tag.bg-emerald-100,
-body.quiz-mode .text-emerald-600,
-body.quiz-mode .qnum-ans-part {
-  filter: blur(8px);
-  user-select: none;
-  cursor: pointer;
-}
-/* 2. 隱藏詳解線索與誤答分析區塊（但保留題幹與選項！） */
-body.quiz-mode .clue,
-body.quiz-mode .clue-box,
-body.quiz-mode .correct-box,
-body.quiz-mode .wrong-item,
-body.quiz-mode .expl,
-body.quiz-mode .bg-amber-50\/70,
-body.quiz-mode .bg-rose-50 {
-  display: none !important;
-}
-/* 3. L2 選項表格 (table.opts)：保留表格，但去除紅綠底色與中文括號提示 */
-body.quiz-mode table.opts tr.correct td,
-body.quiz-mode table.opts tr.wrong td {
-  background: transparent !important;
-  color: var(--fg) !important;
-}
-body.quiz-mode .opt-zh-hint {
-  display: none !important;
-}
-/* 4. L1 選項表格：保留第 1 欄 (A)(B)(C)(D) 選項，隱藏第 2、3 欄 (正誤判斷與解析) 與綠底 */
-body.quiz-mode article table tr {
-  background: transparent !important;
-}
-body.quiz-mode article table td:first-child {
-  color: var(--fg) !important;
-}
-body.quiz-mode article table th:nth-child(n+2),
-body.quiz-mode article table td:nth-child(n+2) {
-  display: none !important;
-}
-/* 5. L3 選項清單 (ul.op)：保留選項粗體字，隱藏後方中文與對錯解析 */
-body.quiz-mode ul.op li {
-  background: transparent !important;
-  border-color: var(--line) !important;
-}
-body.quiz-mode ul.op li small,
-body.quiz-mode ul.op li i,
-body.quiz-mode ul.op li .l3-exp-text {
-  display: none !important;
-}
-
-/* 點擊「揭曉此題」後，完整還原所有顏色與詳解 */
-body.quiz-mode .revealed-card .bl,
-body.quiz-mode .revealed-card .ans,
-body.quiz-mode .revealed-card .answer-line,
-body.quiz-mode .revealed-card .badge-tag.bg-emerald-100,
-body.quiz-mode .revealed-card .text-emerald-600,
-body.quiz-mode .revealed-card .qnum-ans-part {
-  filter: none !important;
-}
-body.quiz-mode .revealed-card .clue,
-body.quiz-mode .revealed-card .clue-box,
-body.quiz-mode .revealed-card .correct-box,
-body.quiz-mode .revealed-card .wrong-item,
-body.quiz-mode .revealed-card .expl,
-body.quiz-mode .revealed-card .bg-amber-50\/70,
-body.quiz-mode .revealed-card .bg-rose-50 {
-  display: block !important;
-}
-body.quiz-mode .revealed-card .opt-zh-hint,
-body.quiz-mode .revealed-card ul.op li small,
-body.quiz-mode .revealed-card ul.op li i,
-body.quiz-mode .revealed-card ul.op li .l3-exp-text {
-  display: inline !important;
-}
-body.quiz-mode .revealed-card article table th:nth-child(n+2),
-body.quiz-mode .revealed-card article table td:nth-child(n+2) {
-  display: table-cell !important;
-}
-body.quiz-mode .revealed-card table.opts tr.correct td {
-  background: var(--correct-bg) !important;
-}
-
-.reveal-exp-btn{display:none;margin-top:10px;padding:6px 16px;border-radius:99px;border:1px solid var(--acc);background:var(--card);color:var(--acc);cursor:pointer;font-size:.86rem;font-weight:700}
-body.quiz-mode .reveal-exp-btn{display:inline-block}
-
-.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-top:14px}
-.v-card{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--acc);border-radius:10px;padding:16px;position:relative}
-.v-word{font-size:1.25rem;font-weight:700;color:var(--acc);margin:8px 0;display:flex;align-items:center;gap:8px}
-.speak-btn{border:1px solid var(--line);background:var(--bg);border-radius:99px;padding:2px 8px;font-size:.8rem;cursor:pointer}
-</style>
-</head>
-<body>
-
-<div class="top">
-  <h1>📚 跨考卷錯題與單字總複習中心</h1>
-  <p>彙整你在各回詳解標記過的重點題目與反白單字，支援「自我重測遮罩」與「匯出 Anki / CSV」</p>
-</div>
-
-<nav class="top-nav">
-  <button id="tab-q" class="active" onclick="switchTab('questions')">📝 標記題目 (<span id="q-count">0</span>)</button>
-  <button id="tab-v" onclick="switchTab('vocab')">🔤 單字與片語卡 (<span id="v-count">0</span>)</button>
-  <select id="exam-filter" onchange="render()"><option value="ALL">所有考卷</option></select>
-  <button id="quiz-btn" onclick="toggleQuizMode()">🎯 自我重測模式（保留題目與選項、遮住答案）</button>
-
-  <div style="margin-left:auto;display:flex;flex-wrap:wrap;gap:6px;align-items:center">
-    <input type="text" id="sid-input" placeholder="👤 學號/暱稱" style="width:115px">
-    <button onclick="pullCloud()">🔄 雲端同步</button>
-    <button onclick="exportAnkiVocab()" style="border-color:var(--ok);color:var(--ok)">📥 單字 Anki (.tsv)</button>
-    <button onclick="exportAnkiQuestions()" style="border-color:var(--ok);color:var(--ok)">📥 錯題 Anki (.tsv)</button>
-    <button onclick="exportCSV()">📊 匯出 CSV</button>
-  </div>
-</nav>
-
-<main>
-  <div id="q-list"></div>
-  <div id="v-list" class="vocab-grid" style="display:none"></div>
-</main>
-
-<script>
-// 👇 請替換成與 bookmark.js 相同的 Google Apps Script 網址
-const GAS_URL = "https://script.google.com/macros/s/請替換成你的網址/exec";
-const STORAGE_KEY = "kghs_exam_bookmarks_v1";
-const STUDENT_KEY = "kghs_student_id";
-
-let currentTab = "questions";
-let vocabCloze = false;
-
-function getData() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { questions: [], vocab: [] }; }
-  catch { return { questions: [], vocab: [] }; }
-}
-function saveData(data) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  render();
-}
-
-document.getElementById("sid-input").value = localStorage.getItem(STUDENT_KEY) || "";
-document.getElementById("sid-input").addEventListener("change", e => {
-  localStorage.setItem(STUDENT_KEY, e.target.value.trim());
-  pullCloud();
-});
-
-async function pullCloud() {
-  const sid = document.getElementById("sid-input").value.trim();
-  if (!sid) return alert("請先輸入學號或暱稱！");
-  if (!GAS_URL.startsWith("https://script.google.com")) return alert("尚未設定 Google 試算表網址，目前顯示本機資料。");
-  try {
-    const res = await fetch(`${GAS_URL}?studentId=${encodeURIComponent(sid)}`);
-    const json = await res.json();
-    if (json.status === "ok") {
-      saveData({ questions: json.questions || [], vocab: json.vocab || [] });
-      alert("✅ 雲端標記同步完成！");
+  async function syncToCloud(action, itemType, item) {
+    const studentId = getStudentId();
+    if (!studentId || !CONFIG.GAS_URL.startsWith("https://script.google.com")) return;
+    showToast("☁️ 雲端同步中...");
+    try {
+      await fetch(CONFIG.GAS_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action, studentId, itemType, item })
+      });
+      showToast("✅ 已儲存並同步至雲端");
+    } catch (e) {
+      showToast("⚠️ 離線狀態，已先儲存於本機");
     }
-  } catch (e) {
-    alert("⚠️ 無法連線雲端，目前顯示本機紀錄");
   }
-}
 
-function switchTab(tab) {
-  currentTab = tab;
-  document.getElementById("tab-q").classList.toggle("active", tab === "questions");
-  document.getElementById("tab-v").classList.toggle("active", tab === "vocab");
-  document.getElementById("q-list").style.display = tab === "questions" ? "block" : "none";
-  document.getElementById("v-list").style.display = tab === "vocab" ? "grid" : "none";
-}
-
-function toggleQuizMode() {
-  if (currentTab === "questions") {
-    document.body.classList.toggle("quiz-mode");
-    const isQuiz = document.body.classList.contains("quiz-mode");
-    document.getElementById("quiz-btn").classList.toggle("active", isQuiz);
-    document.getElementById("quiz-btn").textContent = isQuiz ? "👁️ 顯示全部詳解" : "🎯 自我重測模式（保留題目與選項、遮住答案）";
-  } else {
-    vocabCloze = !vocabCloze;
-    document.getElementById("quiz-btn").classList.toggle("active", vocabCloze);
-    document.getElementById("quiz-btn").textContent = vocabCloze ? "👁️ 顯示全部單字" : "🎴 單字挖空背誦模式";
-    render();
+  async function pullFromCloud() {
+    const studentId = getStudentId();
+    if (!studentId) return showToast("請先輸入學號或暱稱！");
+    if (!CONFIG.GAS_URL.startsWith("https://script.google.com")) return showToast("⚠️ 尚未設定雲端網址，目前僅使用本機儲存");
+    showToast("🔄 正在從雲端同步標記...");
+    try {
+      const res = await fetch(`${CONFIG.GAS_URL}?studentId=${encodeURIComponent(studentId)}`);
+      const cloudData = await res.json();
+      if (cloudData.status === "ok") {
+        saveLocalData({ questions: cloudData.questions || [], vocab: cloudData.vocab || [] });
+        showToast("✅ 雲端同步完成！");
+      }
+    } catch (e) {
+      showToast("⚠️ 無法連線雲端，目前顯示本機紀錄");
+    }
   }
-}
 
-function removeItem(type, id, e) {
-  e.stopPropagation();
-  const data = getData();
-  data[type] = data[type].filter(x => x.id !== id);
-  saveData(data);
-  const sid = document.getElementById("sid-input").value.trim();
-  if (sid && GAS_URL.startsWith("https://script.google.com")) {
-    fetch(GAS_URL, {
-      method: "POST", mode: "no-cors",
-      body: JSON.stringify({ action: "delete", studentId: sid, itemType: type === "questions" ? "question" : "vocab", item: { id } })
+  const style = document.createElement("style");
+  style.textContent = `
+    :root {
+      --bm-acc: var(--acc, var(--accent, #9a3b2e));
+      --bm-bg: var(--card, #ffffff);
+      --bm-fg: var(--fg, var(--ink, #1e293b));
+      --bm-line: var(--line, #cbd5e1);
+      --bm-hl: var(--hl, var(--clue-bg, #fef3c7));
+    }
+    .bm-bar { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-left: auto; padding: 2px 0; }
+    .bm-input { padding: 4px 10px !important; border: 1px solid var(--bm-line) !important; border-radius: 99px !important; background: var(--bm-bg) !important; color: var(--bm-fg) !important; font-size: 13px !important; width: 130px !important; outline: none !important; }
+    .bm-sync-btn { padding: 4px 10px !important; border: 1px solid var(--bm-line) !important; border-radius: 99px !important; background: var(--bm-bg) !important; color: var(--bm-fg) !important; font-size: 13px !important; cursor: pointer !important; }
+    .bm-nav-link { padding: 5px 12px !important; border-radius: 99px !important; background: var(--bm-acc) !important; color: #fff !important; font-weight: 600 !important; text-decoration: none !important; font-size: 13px !important; display: inline-flex !important; align-items: center !important; gap: 4px !important; border: none !important; }
+    .bm-star-btn { padding: 3px 10px !important; border-radius: 99px !important; border: 1px solid var(--bm-line) !important; background: var(--bm-bg) !important; color: #64748b !important; font-size: 12.5px !important; font-weight: 600 !important; cursor: pointer !important; transition: .15s !important; margin-left: 6px !important; display: inline-flex !important; align-items: center !important; }
+    .bm-star-btn:hover { border-color: var(--bm-acc) !important; color: var(--bm-acc) !important; }
+    .bm-star-btn.saved { background: var(--bm-hl) !important; border-color: var(--bm-acc) !important; color: var(--bm-acc) !important; font-weight: 700 !important; }
+    .bm-popup { position: absolute; z-index: 99999; background: #1e293b; color: #fff; padding: 6px 14px; border-radius: 99px; font-size: 13px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25); display: none; transform: translate(-50%, -100%); margin-top: -10px; white-space: nowrap; }
+    .bm-toast { position: fixed; bottom: 20px; right: 20px; background: #1e293b; color: #fff; padding: 8px 16px; border-radius: 99px; font-size: 13px; z-index: 99999; opacity: 0; transition: opacity .25s; pointer-events: none; box-shadow: 0 4px 12px rgba(0,0,0,.25); }
+  `;
+  document.head.appendChild(style);
+
+  const navTarget =
+    document.getElementById("nav") ||
+    document.querySelector("nav.subnav") ||
+    document.querySelector("header .flex.items-center.gap-2") ||
+    document.querySelector("header");
+
+  if (navTarget) {
+    const bmBar = document.createElement("div");
+    bmBar.className = "bm-bar";
+    bmBar.innerHTML = `
+      <input type="text" class="bm-input" id="bm-sid" placeholder="👤 學號/暱稱同步" value="${getStudentId()}">
+      <button type="button" class="bm-sync-btn" id="bm-sync-btn" title="從雲端載入紀錄">🔄 同步</button>
+      <a href="${CONFIG.REVIEW_PAGE_URL}" class="bm-nav-link">📚 複習本 (<span id="bm-total">0</span>)</a>
+    `;
+    navTarget.appendChild(bmBar);
+
+    document.getElementById("bm-sid").addEventListener("change", (e) => {
+      localStorage.setItem(STUDENT_KEY, e.target.value.trim());
+      pullFromCloud();
+    });
+    document.getElementById("bm-sync-btn").addEventListener("click", pullFromCloud);
+  }
+
+  const toast = document.createElement("div");
+  toast.className = "bm-toast";
+  document.body.appendChild(toast);
+  let toastTimer;
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.style.opacity = "1";
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { toast.style.opacity = "0"; }, 2400);
+  }
+
+  // 🔍 終極版題幹擷取器：解決 _ 底線邊界問題，並自動附帶文意選填/篇章結構選項庫
+  function extractContextFromSection(box, qNum) {
+    if (box.querySelector(".stem, .zh-stem, .border-l-4")) return "";
+
+    const sec = box.closest("section");
+    if (!sec) return "";
+
+    let extraHtml = "";
+
+    // 1. 若該大題有「文意選填詞庫 (.word-bank 或 #sec-3 詞庫)」或「篇章結構選項」，一併抓進來方便重測作答
+    const wordBank = sec.querySelector(".word-bank, .grid.grid-cols-2.sm\\:grid-cols-5");
+    if (wordBank) {
+      extraHtml += `<div style="background:#fffbeb;border:1px solid #fde68a;padding:8px 12px;border-radius:8px;margin-bottom:8px;font-size:13px;color:#92400e;"><b>【選項詞庫】</b> ${wordBank.innerText.replace(/\s+/g, " ")}</div>`;
+    }
+    const passageAllEn = sec.querySelectorAll(".passage .en");
+    if (passageAllEn.length > 1) {
+      // L2 第四部分「篇章結構」的第一個 .en 是 (A)~(E) 句子選項
+      extraHtml += `<div style="background:#fffbeb;border:1px solid #fde68a;padding:8px 12px;border-radius:8px;margin-bottom:8px;font-size:13px;color:#1e293b;"><b>【篇章選項】</b><br>${passageAllEn[0].innerHTML}</div>`;
+    }
+
+    // 2. 尋找包含題號的文章段落
+    const passageContainers = sec.querySelectorAll(".passage .en, .font-mono");
+    // 注意：不用 \b 包尾，改用明確匹配： [21. C] 或 11.___ 或 獨立數字 11
+    const matchPattern = new RegExp(`(\\[${qNum}\\.\\s*[A-Z]\\]|(?:^|\\D)${qNum}\\.___|(?:^|\\s)${qNum}(?:\\s|[.,?!]|$))`);
+
+    for (const p of passageContainers) {
+      const fullText = p.innerText.replace(/\s+/g, " ").trim();
+      if (matchPattern.test(fullText)) {
+        // 先把 "11." 暫時換成標記，避免切句子時把 "11." 的點當成句號切斷！
+        const safeText = fullText
+          .replace(/\[(\d+)\.\s*[A-Z]\]/g, "___BLANK_$1___")
+          .replace(/(\d+)\.___/g, "___BLANK_$1___");
+
+        const sentences = safeText.match(/[^.!?]+[.!?]+/g) || [safeText];
+        const targetToken = `___BLANK_${qNum}___`;
+        const looseNumRegex = new RegExp(`(^|\\s)${qNum}(\\s|[.,?!]|$)`);
+
+        const idx = sentences.findIndex(s => s.includes(targetToken) || looseNumRegex.test(s));
+        if (idx !== -1) {
+          const prevSent = idx > 0 ? sentences[idx - 1].trim() + " " : "";
+          const currSent = sentences[idx].trim();
+          const nextSent = idx < sentences.length - 1 ? " " + sentences[idx + 1].trim() : "";
+
+          const combined = (prevSent + currSent + nextSent)
+            // 把目標題號換成醒目的紅色填空
+            .replace(new RegExp(`___BLANK_${qNum}___`, "g"), `<strong style="color:#c0392b;background:#fef3c7;padding:0 6px;border-bottom:2px solid #c0392b;border-radius:3px;"> [ ___(${qNum})___ ] </strong>`)
+            .replace(looseNumRegex, `$1<strong style="color:#c0392b;background:#fef3c7;padding:0 6px;border-bottom:2px solid #c0392b;border-radius:3px;"> [ ___(${qNum})___ ] </strong>$2`)
+            // 把同句中其他題號還原為普通空格
+            .replace(/___BLANK_(\d+)___/g, " ___($1)___ ");
+
+          extraHtml += `<div class="stem auto-extracted-stem" style="background:#f8fafc;padding:12px 14px;border-left:4px solid #9a3b2e;border-radius:6px;margin:10px 0;font-family:Georgia,serif;font-size:15.5px;line-height:1.7;color:#1e293b;"><b>📖 文章前後文題幹：</b><br>${combined}</div>`;
+          break;
+        }
+      }
+    }
+    return extraHtml;
+  }
+
+  function getQuestionElements() {
+    const list = [];
+    document.querySelectorAll("details.q").forEach(el => {
+      const qNum = el.querySelector("summary .n")?.innerText.trim() || el.id.replace("q", "");
+      const header = el.querySelector("summary");
+      const insertBeforeEl = header?.querySelector(".ans");
+      list.push({ box: el, header, insertBeforeEl, qNum });
+    });
+    document.querySelectorAll(".qcard").forEach(el => {
+      const rawNum = el.querySelector(".qnum")?.innerText.trim() || "";
+      const qNum = rawNum.match(/^\d+/)?.[0] || rawNum;
+      const header = el.querySelector(".qhead") || el;
+      list.push({ box: el, header, insertBeforeEl: null, qNum });
+    });
+    document.querySelectorAll("article, #sec-3 .grid > div.bg-white.p-4").forEach(el => {
+      const firstRow = el.firstElementChild;
+      const numBadge = firstRow?.querySelector("span.font-extrabold, span.font-black");
+      if (numBadge) {
+        const qNum = numBadge.innerText.trim();
+        list.push({ box: el, header: firstRow, insertBeforeEl: firstRow.lastElementChild, qNum });
+      }
+    });
+    return list;
+  }
+
+  // 🔄 自動升級已標記的舊題目：只要打開考卷網頁，若發現 localStorage 裡該考卷的舊標記沒抓到文章原句，立刻自動補齊！
+  function autoUpgradeExistingBookmarks(qItems) {
+    const data = getLocalData();
+    let updated = false;
+    qItems.forEach(({ box, qNum }, idx) => {
+      const cleanNum = String(qNum).replace(/[^\d]/g, "") || (idx + 1);
+      const qId = `${examTitle}_Q${cleanNum}`.replace(/\s+/g, "_");
+      const savedItem = data.questions.find(q => q.id === qId);
+      if (savedItem && !savedItem.htmlContent.includes("auto-extracted-stem")) {
+        const extraStemHtml = extractContextFromSection(box, cleanNum);
+        if (extraStemHtml) {
+          const clone = box.cloneNode(true);
+          clone.querySelector(".bm-star-btn")?.remove();
+          const firstChild = clone.firstElementChild;
+          if (firstChild) firstChild.insertAdjacentHTML("afterend", extraStemHtml);
+          else clone.insertAdjacentHTML("afterbegin", extraStemHtml);
+          savedItem.htmlContent = clone.outerHTML;
+          updated = true;
+          syncToCloud("upsert", "question", savedItem);
+        }
+      }
+    });
+    if (updated) {
+      saveLocalData(data);
+      showToast("✨ 已自動為舊標記補齊文章原句！");
+    }
+  }
+
+  function injectQuestionButtons() {
+    const qItems = getQuestionElements();
+    qItems.forEach(({ box, header, insertBeforeEl, qNum }, idx) => {
+      if (!header || header.querySelector(".bm-star-btn")) return;
+
+      const cleanNum = String(qNum).replace(/[^\d]/g, "") || (idx + 1);
+      const qId = `${examTitle}_Q${cleanNum}`.replace(/\s+/g, "_");
+      box.setAttribute("data-bm-qid", qId);
+
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "bm-star-btn";
+      btn.setAttribute("data-bm-btn", qId);
+
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const data = getLocalData();
+        const existIdx = data.questions.findIndex(q => q.id === qId);
+
+        if (existIdx >= 0) {
+          const removed = data.questions.splice(existIdx, 1)[0];
+          saveLocalData(data);
+          showToast(`已取消標記 第 ${cleanNum} 題`);
+          syncToCloud("delete", "question", removed);
+        } else {
+          const clone = box.cloneNode(true);
+          clone.querySelector(".bm-star-btn")?.remove();
+
+          const extraStemHtml = extractContextFromSection(box, cleanNum);
+          if (extraStemHtml) {
+            const firstChild = clone.firstElementChild;
+            if (firstChild) firstChild.insertAdjacentHTML("afterend", extraStemHtml);
+            else clone.insertAdjacentHTML("afterbegin", extraStemHtml);
+          }
+
+          const note = prompt(`【標記第 ${cleanNum} 題】\n可輸入這題的個人筆記（直接按確定可略過）：`, "");
+          if (note === null) return;
+
+          const newItem = {
+            id: qId,
+            examTitle,
+            qNum: `第 ${cleanNum} 題`,
+            htmlContent: clone.outerHTML,
+            note: note.trim(),
+            timestamp: Date.now()
+          };
+          data.questions.push(newItem);
+          saveLocalData(data);
+          showToast(`⭐ 已將 第 ${cleanNum} 題 加入複習本`);
+          syncToCloud("upsert", "question", newItem);
+        }
+      });
+
+      if (insertBeforeEl && insertBeforeEl.parentNode === header) {
+        header.insertBefore(btn, insertBeforeEl);
+      } else {
+        header.appendChild(btn);
+      }
+    });
+
+    // 自動檢查並幫舊標記補上文章題幹
+    autoUpgradeExistingBookmarks(qItems);
+    updateUI();
+  }
+
+  function updateUI() {
+    const data = getLocalData();
+    const totalEl = document.getElementById("bm-total");
+    if (totalEl) totalEl.textContent = data.questions.length + data.vocab.length;
+
+    document.querySelectorAll(".bm-star-btn").forEach(btn => {
+      const qId = btn.getAttribute("data-bm-btn");
+      const saved = data.questions.some(q => q.id === qId);
+      btn.classList.toggle("saved", saved);
+      btn.textContent = saved ? "★ 已標記" : "☆ 標記此題";
     });
   }
-}
 
-function speak(word, e) {
-  e.stopPropagation();
-  const u = new SpeechSynthesisUtterance(word);
-  u.lang = "en-US";
-  speechSynthesis.speak(u);
-}
+  // 反白文字收藏單字
+  const popup = document.createElement("div");
+  popup.className = "bm-popup";
+  popup.textContent = "➕ 收藏單字 / 片語";
+  document.body.appendChild(popup);
 
-// 細緻處理卡片內部結構，讓重測模式只遮住答案與解析、不遮住題號與選項英文
-function prepareCardForQuiz(wrapper) {
-  // 1. L2 的 .qnum 若包含答案 (如 "1. route" 或 "21. (G) hosted")，只把後面的答案包起來模糊，保留題號
-  wrapper.querySelectorAll(".qnum").forEach(el => {
-    el.innerHTML = el.innerHTML.replace(/^(\d+\.)\s*(.+)$/, `$1 <span class="qnum-ans-part">$2</span>`);
-  });
+  let selWord = "";
+  let selEnSentence = "";
+  let selZhSentence = "";
 
-  // 2. L2 的選項表格 (table.opts) 裡若有全形括號中文提示，如 "around the world（世界各地）"，將括號包起來以便重測時隱藏
-  wrapper.querySelectorAll("table.opts td:not(.letter)").forEach(td => {
-    td.innerHTML = td.innerHTML.replace(/（[^）]+）/g, `<span class="opt-zh-hint">$&</span>`);
-  });
+  function extractSingleSentence(text, target) {
+    if (!text) return target;
+    const clean = text.replace(/\s+/g, " ").trim();
+    const sents = clean.match(/[^.!?]+[.!?]+/g) || [clean];
+    return (sents.find(s => s.toLowerCase().includes(target.toLowerCase())) || clean).trim();
+  }
 
-  // 3. L3 的選項清單 (ul.op li)，將 <br> 之後的解析文字包進 .l3-exp-text 以便重測時隱藏，只留 (A) 英文選項
-  wrapper.querySelectorAll("ul.op li").forEach(li => {
-    const parts = li.innerHTML.split(/<br\s*\/?>/i);
-    if (parts.length > 1) {
-      li.innerHTML = parts[0] + `<span class="l3-exp-text"><br>` + parts.slice(1).join("<br>") + `</span>`;
-    }
-  });
+  function handleSelection(e) {
+    if (popup.contains(e.target)) return;
+    setTimeout(() => {
+      const sel = window.getSelection();
+      const text = sel.toString().trim();
+      if (text.length >= 2 && text.length <= 75) {
+        selWord = text;
+        const anchorEl = sel.anchorNode?.parentElement;
 
-  // 4. L1 的解題關鍵線索段落，在重測模式時隱藏
-  wrapper.querySelectorAll("article p").forEach(p => {
-    if (p.innerText.includes("🎯") || p.innerText.includes("❌")) {
-      p.classList.add("clue");
-    }
-  });
-}
+        const sBlock = anchorEl?.closest(".s, .stem");
+        const qCardL2 = anchorEl?.closest(".qcard");
+        const articleL1 = anchorEl?.closest("article");
 
-function render() {
-  const data = getData();
-  const filterEl = document.getElementById("exam-filter");
-  const currFilter = filterEl.value;
-  const exams = [...new Set([...data.questions.map(q => q.examTitle), ...data.vocab.map(v => v.examTitle)])];
+        if (sBlock && sBlock.querySelector(".en")) {
+          selEnSentence = (sBlock.querySelector(".en")?.innerText || "").replace(/^參考譯文：\s*/, "").trim();
+          selZhSentence = (sBlock.querySelector(".zh")?.innerText || "").trim();
+        } else if (qCardL2 && qCardL2.querySelector(".stem")) {
+          selEnSentence = qCardL2.querySelector(".stem")?.innerText.trim() || text;
+          selZhSentence = qCardL2.querySelector(".zh-stem")?.innerText.trim() || "";
+        } else if (articleL1 && articleL1.querySelector(".border-l-4")) {
+          const box = articleL1.querySelector(".border-l-4");
+          const pTags = box.querySelectorAll("p");
+          selEnSentence = pTags[0]?.innerText.trim() || box.innerText.trim();
+          selZhSentence = (pTags[1]?.innerText || "").replace(/^【中譯】/, "").trim();
+        } else {
+          const para = anchorEl?.closest("p, li, td, div");
+          selEnSentence = extractSingleSentence(para?.innerText || text, selWord);
+          selZhSentence = "";
+        }
 
-  filterEl.innerHTML = `<option value="ALL">所有考卷 (${exams.length})</option>` +
-    exams.map(ex => `<option value="${ex}">${ex}</option>`).join("");
-  if (exams.includes(currFilter)) filterEl.value = currFilter;
+        const rect = sel.getRangeAt(0).getBoundingClientRect();
+        popup.style.left = `${rect.left + rect.width / 2 + window.scrollX}px`;
+        popup.style.top = `${rect.top + window.scrollY}px`;
+        popup.style.display = "block";
+      } else {
+        popup.style.display = "none";
+      }
+    }, 15);
+  }
 
-  const activeFilter = filterEl.value;
-  const qs = data.questions.filter(q => activeFilter === "ALL" || q.examTitle === activeFilter);
-  const vs = data.vocab.filter(v => activeFilter === "ALL" || v.examTitle === activeFilter);
+  document.addEventListener("mouseup", handleSelection);
+  document.addEventListener("touchend", handleSelection);
 
-  document.getElementById("q-count").textContent = qs.length;
-  document.getElementById("v-count").textContent = vs.length;
+  popup.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+    popup.style.display = "none";
 
-  const qList = document.getElementById("q-list");
-  qList.innerHTML = qs.length ? "" : `<p style="color:var(--mut);text-align:center;padding:40px 0">目前還沒有標記任何題目喔！在考卷詳解頁點擊「☆ 標記此題」即可加入。</p>`;
-  qs.forEach(q => {
-    const wrapper = document.createElement("div");
-    wrapper.className = "q";
-    wrapper.innerHTML = `
-      <div style="margin-bottom:8px">
-        <span class="exam-source">${q.examTitle} - ${q.qNum}</span>
-        <button class="del-btn" onclick="removeItem('questions', '${q.id}', event)">✕ 移除</button>
-      </div>
-      <div>${q.htmlContent}</div>
-      ${q.note ? `<div class="user-note"><b>📝 我的筆記：</b>${q.note}</div>` : ""}
-      <button class="reveal-exp-btn" onclick="this.parentElement.classList.toggle('revealed-card')">👁️ 點擊揭曉此題答案與詳解</button>
-    `;
-    const innerDet = wrapper.querySelector("details");
-    if (innerDet) innerDet.open = true;
+    const defaultNote = selZhSentence ? `句意：${selZhSentence}` : "";
+    const note = prompt(
+      `【收藏單字 / 片語】\n字詞：${selWord}\n例句：${selEnSentence}\n\n請輸入字義或筆記：`,
+      defaultNote
+    );
+    if (note === null) return;
 
-    prepareCardForQuiz(wrapper);
-    qList.appendChild(wrapper);
-  });
-
-  const vList = document.getElementById("v-list");
-  vList.innerHTML = vs.length ? "" : `<p style="color:var(--mut);grid-column:1/-1;text-align:center;padding:40px 0">目前還沒有收藏單字喔！在考卷詳解反白任何英文字即可收藏。</p>`;
-  vs.forEach(v => {
-    const card = document.createElement("div");
-    card.className = "v-card";
-    const safeRegex = new RegExp(`(${v.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, "gi");
-    const highlightedSent = v.contextSentence.replace(safeRegex, `<span class="bl">$1</span>`);
-    const maskedSent = v.contextSentence.replace(safeRegex, `<span class="bl" style="color:transparent!important;background:var(--line)!important">______</span>`);
-
-    card.innerHTML = `
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <span class="exam-source">${v.examTitle}</span>
-        <button class="del-btn" onclick="removeItem('vocab', '${v.id}', event)">✕ 移除</button>
-      </div>
-      <div class="v-word">
-        <span class="v-word-text">${vocabCloze ? "❓ 點擊卡片翻開" : v.word}</span>
-        <button class="speak-btn" onclick="speak('${v.word.replace(/'/g, "\\'")}', event)">🔊 發音</button>
-      </div>
-      <div class="stem"><div class="en">${vocabCloze ? maskedSent : highlightedSent}</div></div>
-      ${v.note ? `<div class="user-note" style="display:${vocabCloze ? 'none' : 'block'}">${v.note}</div>` : ""}
-    `;
-    card.onclick = () => {
-      if (!vocabCloze) return;
-      const wordEl = card.querySelector(".v-word-text");
-      const enEl = card.querySelector(".en");
-      const noteEl = card.querySelector(".user-note");
-      const isHidden = wordEl.textContent.includes("❓");
-      wordEl.textContent = isHidden ? v.word : "❓ 點擊卡片翻開";
-      enEl.innerHTML = isHidden ? highlightedSent : maskedSent;
-      if (noteEl) noteEl.style.display = isHidden ? "block" : "none";
+    const data = getLocalData();
+    const newItem = {
+      id: "v_" + Date.now(),
+      examTitle,
+      word: selWord,
+      contextSentence: selEnSentence,
+      note: note.trim(),
+      timestamp: Date.now()
     };
-    vList.appendChild(card);
+    data.vocab.push(newItem);
+    saveLocalData(data);
+    window.getSelection().removeAllRanges();
+    showToast(`⭐ 已收藏「${selWord}」`);
+    syncToCloud("upsert", "vocab", newItem);
   });
-}
 
-function downloadBlob(filename, text, mime) {
-  const blob = new Blob(["\uFEFF" + text], { type: mime });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = filename;
-  a.click();
-}
-
-function exportAnkiVocab() {
-  const { vocab } = getData();
-  if (!vocab.length) return alert("尚無收藏的單字可匯出！");
-  const lines = vocab.map(v => {
-    const safeRegex = new RegExp(`(${v.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, "gi");
-    const sentHtml = v.contextSentence.replace(safeRegex, `<b><u>$1</u></b>`).replace(/[\t\r\n]+/g, " ");
-    const front = `<div style="font-size:22px;font-weight:bold;color:#9a3b2e">${v.word}</div><br><div style="font-family:Georgia,serif">${sentHtml}</div>`;
-    const back = `<div>${(v.note || "").replace(/[\t\r\n]+/g, "<br>")}</div><hr><small style="color:#6b6558">出處：${v.examTitle}</small>`;
-    const tag = v.examTitle.replace(/\s+/g, "_");
-    return `${front}\t${back}\t${tag}`;
-  });
-  downloadBlob("Anki_單字片語卡.tsv", lines.join("\n"), "text/tab-separated-values;charset=utf-8");
-}
-
-function exportAnkiQuestions() {
-  const { questions } = getData();
-  if (!questions.length) return alert("尚無標記的題目可匯出！");
-  const lines = questions.map(q => {
-    const temp = document.createElement("div");
-    temp.innerHTML = q.htmlContent;
-    const stemEl = temp.querySelector(".stem, .border-l-4") || temp;
-    const stemClone = stemEl.cloneNode(true);
-    stemClone.querySelectorAll(".bl, .underline").forEach(b => b.innerHTML = " <b>[ ______ ]</b> ");
-
-    const frontHtml = `<div><small>[${q.examTitle} ${q.qNum}]</small><br>${stemClone.innerHTML}</div>`.replace(/[\t\r\n]+/g, " ");
-    const backHtml = `<div>${temp.innerHTML}${q.note ? `<hr><b>📝 筆記：</b>${q.note}` : ""}</div>`.replace(/[\t\r\n]+/g, " ");
-    const tag = q.examTitle.replace(/\s+/g, "_");
-    return `${frontHtml}\t${backHtml}\t${tag}`;
-  });
-  downloadBlob("Anki_錯題重測卡.tsv", lines.join("\n"), "text/tab-separated-values;charset=utf-8");
-}
-
-function exportCSV() {
-  const { vocab, questions } = getData();
-  const esc = s => `"${String(s || "").replace(/"/g, '""').replace(/[\r\n]+/g, " ")}"`;
-  const rows = [["類型", "考卷名稱", "題號或單字", "內容", "個人筆記"]];
-  vocab.forEach(v => rows.push(["單字/片語", v.examTitle, v.word, v.contextSentence, v.note]));
-  questions.forEach(q => {
-    const temp = document.createElement("div");
-    temp.innerHTML = q.htmlContent;
-    rows.push(["標記題目", q.examTitle, q.qNum, temp.innerText, q.note]);
-  });
-  downloadBlob("考卷標記彙整表.csv", rows.map(r => r.map(esc).join(",")).join("\n"), "text/csv;charset=utf-8");
-}
-
-render();
-</script>
-</body>
-</html>
+  injectQuestionButtons();
+})();
