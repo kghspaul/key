@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>301-303龍騰複習卷詳解</title>
+<style>
+:root{--bg:#faf8f4;--fg:#222;--card:#fff;--line:#e4ded3;--acc:#9a3b2e;--ok:#1f7a4d;--no:#b3261e;--mut:#6b6558;--hl:#fff1c9}
+@media(prefers-color-scheme:dark){:root{--bg:#161512;--fg:#e8e4da;--card:#201f1b;--line:#3a372f;--acc:#e08a78;--ok:#6fcf9a;--no:#f08a82;--mut:#a39d8f;--hl:#4a3f1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+.top{max-width:900px;margin:auto;padding:28px 18px 10px}
+.top h1{margin:0 0 4px;font-size:1.6rem;color:var(--acc)}
+.top p{margin:2px 0;color:var(--mut);font-size:.92rem}
+nav{position:sticky;top:0;z-index:9;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto;padding:8px 12px}
+nav a,nav button{flex:none;padding:5px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--fg);text-decoration:none;font:inherit;font-size:.88rem;cursor:pointer}
+nav a:hover,nav button:hover{border-color:var(--acc);color:var(--acc)}
+main{max-width:900px;margin:auto;padding:0 16px 70px}
+h2{margin:36px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--acc);font-size:1.3rem}
+h3{margin:0 0 8px;font-size:1.05rem;color:var(--acc)}
+.pas,.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.para{margin-bottom:14px}
+.s{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--line)}
+.en{font-family:Georgia,"Times New Roman",serif;font-size:1.02rem}
+.zh{color:var(--mut);font-size:.93rem}
+.note{color:var(--mut);font-size:.85rem;margin:6px 0 0}
+.bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 4px;border-radius:3px;font-weight:600}
+.bl sup{color:var(--acc);margin-right:3px;font-size:.7em}
+.bank{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.92rem;margin-bottom:8px}
+details.q>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+details.q>summary::-webkit-details-marker{display:none}
+.n{background:var(--acc);color:#fff;border-radius:6px;padding:0 10px;font-weight:700;font-size:1.05rem}
+.tag{font-size:.78rem;border:1px solid var(--acc);color:var(--acc);border-radius:99px;padding:0 9px;line-height:1.6}
+.tag.pos{border-color:var(--ok);color:var(--ok)}
+.ans{margin-left:auto;font-weight:700;color:var(--ok)}
+.qb{margin-top:10px}
+.stem{margin-bottom:8px;padding:8px 10px;background:var(--bg);border-radius:6px}
+.clue{margin:8px 0;padding:8px 12px;border-left:4px solid var(--acc);background:var(--bg);border-radius:0 6px 6px 0}
+.clue h4,.qb h4{margin:0 0 2px;font-size:.92rem;color:var(--acc)}
+ul.op{list-style:none;margin:6px 0 0;padding:0}
+ul.op li{padding:7px 10px;margin:5px 0;border-radius:6px;border:1px solid var(--line);font-size:.95rem}
+ul.op li.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 9%,transparent)}
+ul.op li.no{border-color:color-mix(in srgb,var(--no) 45%,transparent)}
+ul.op i{font-style:normal;font-weight:700;font-size:.82rem}
+li.ok i{color:var(--ok)}li.no i{color:var(--no)}
+small{color:var(--mut)}
+footer{max-width:900px;margin:auto;padding:0 16px 40px;color:var(--mut);font-size:.82rem}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>301-303龍騰複習卷詳解</h1>
+  <p>每題含：考點標籤 → 題幹逐句中英對照 → 解題線索 → 正解與全部誤答分析（含「這個字何時才會是對的」）</p>
+  <p>圖例：<span class="bl">黃底</span> ＝ 正確答案填入處 ｜ <span class="tag">考點</span> <span class="tag pos">詞性需求</span></p>
+</div>
+<nav id="nav"></nav>
+<main id="app"></main>
+<footer>限定用途教學教材。本詳解為教學輔助，題目版權屬原出版單位。</footer>
+
+<script>
+const L="ABCD";
+const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[(\d*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const SENT={};
+function passage(title,paras,note){
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[(\d+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  return '<section class="pas"><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
+}
+function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
+const clue=t=>'<div class="clue"><h4>解題線索</h4>'+t+'</div>';
+function ops(list,ans,lab){lab=lab||'ABCDEF';return '<ul class="op">'+list.map((o,i)=>{const k=ans.indexOf(lab[i])>=0;return '<li class="'+(k?'ok':'no')+'"><b>'+(lab==='ABCDEF'&&list.length<=4?'('+L[i]+') ':lab==='ABCDEF'?'('+'ABCDEF'[i]+') ':'')+o[0]+'</b>'+(o[1]?' <small>'+o[1]+'</small>':'')+' <i>'+(k?'✔ 正解':'✘ 誤答')+'</i><br>'+o[2]+'</li>';}).join('')+'</ul>';}
+function card(n,tags,ans,body){
+  return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
+}
+
+// === 各大題資料與渲染邏輯 ===
+
+// I. 字彙與慣用語 (1-15)
+const VOC=[
+  [1,["考點：建築設計語境搭配 (pyramid / designed by / Ieoh Ming Pei)","詞性需求：單數可數名詞 (n.)"],"C",
+    ["The pyramid at the entrance of the Louvre Museum in Paris was designed by a famous Chinese-American [[1|architect]] named Ieoh Ming Pei.","巴黎羅浮宮博物館入口處的金字塔是由一位名叫貝聿銘（Ieoh Ming Pei）的著名華裔美籍建築師所設計的。"],
+    "主詞為建築構造 <code>The pyramid at the entrance of the Louvre Museum</code>（羅浮宮入口處的金字塔），動詞為被動語態 <code>was designed by</code>（由……設計），且後方人物為知名建築師 <code>Ieoh Ming Pei</code>（貝聿銘），故專門設計建築物的人稱為 <code>architect</code>（建築師）。",
+    [
+      ["graduate","n. 大學畢業生","「畢業生」並非負責設計博物館金字塔的專業頭銜。<br><b>何時才對：</b><i>The company hired twenty college graduates this summer.</i>"],
+      ["champion","n. 冠軍；擁護者","用於體育競賽或社會倡議，不搭配 <code>was designed by</code>（設計建築）。<br><b>何時才對：</b><i>She became the world boxing champion at the age of twenty.</i>"],
+      ["architect","n. 建築師","符合「設計羅浮宮玻璃金字塔的華裔美籍建築師貝聿銘」之專業身分與 <code>designed by</code> 搭配。"],
+      ["employee","n. 受僱者；員工","貝聿銘是受託設計的大師而非一般「員工」，且無法呼應 <code>The pyramid ... was designed by</code>。<br><b>何時才對：</b><i>All employees are required to wear ID badges in the office.</i>"]
+    ]
+  ],
+  [2,["考點：及物動詞語意＋名詞子句受詞 (that S + V)","詞性需求：過去式及物動詞 (V-ed)"],"B",
+    ["In Katie’s medical report, the doctor [[2|mentioned]] that she had a heart problem and should avoid heavy exercise.","在凱蒂的醫療報告中，醫生提到她有心臟問題，且應該避免劇烈運動。"],
+    "介系詞片語 <code>In Katie's medical report</code>（在凱蒂的醫療報告中）點出書面陳述語境，空格後直接接 <code>that</code> 引導的名詞子句 <code>that she had a heart problem...</code> 作受詞。四個選項中只有 <code>mentioned</code>（提及、說到）能以「人（<code>the doctor</code>）」為主詞並直接接 <code>that 子句</code> 表達在報告中「提到」某病情。",
+    [
+      ["contacted","v. 聯繫；聯絡","及物動詞 <code>contact</code> 後方必須接「人（受詞）」而非直接接 <code>that 子句</code>（不可說 <i>*contacted that...</i>）。<br><b>何時才對：</b><i>The doctor contacted Katie immediately after seeing her test results.</i>"],
+      ["mentioned","v. 提到；提及","及物動詞，可直接接 <code>that 子句</code>（<code>mentioned that + S + V</code>），契合在醫療報告中「指出、提到」病況的語境。"],
+      ["equipped","v. 配備；裝備","用法為 <code>equip A with B</code>，後面不可接 <code>that 子句</code>。<br><b>何時才對：</b><i>The ambulance is equipped with advanced medical devices.</i>"],
+      ["reduced","v. 減少；降低","受詞應為數量、成本、風險等名詞，不可接 <code>that 子句</code>。<br><b>何時才對：</b><i>Regular exercise reduced her risk of heart disease.</i>"]
+    ]
+  ],
+  [3,["考點：反義對比線索 (produced in a laboratory vs. real meat)","詞性需求：形容詞 (adj.)"],"D",
+    ["Some consumers claim that [[3|artificial]] meat produced in a laboratory tastes as good as real meat.","有些消費者聲稱，在實驗室裡生產的人造肉嚐起來跟真肉一樣美味。"],
+    "空格修飾名詞 <code>meat</code>（肉），後面過去分詞片語 <code>produced in a laboratory</code>（在實驗室中製造的）說明其非自然生長，且句尾比較對象 <code>as good as real meat</code>（跟「真肉」一樣好吃）中的 <code>real</code>（真正的、天然的）直接提示空格需填其反義詞 <code>artificial</code>（人造的）。",
+    [
+      ["corporate","adj. 企業的；法人的","「企業的肉」語意不通，且無法與 <code>produced in a laboratory</code> 及 <code>real meat</code> 對比。<br><b>何時才對：</b><i>They are trying to improve the company's corporate image.</i>"],
+      ["beneficial","adj. 有益的","雖可修飾食物，但無法精準對應「在實驗室製造」與「真肉（<code>real meat</code>）」的真假／天然與人造對比。<br><b>何時才對：</b><i>A balanced diet is beneficial to your health.</i>"],
+      ["frail","adj. 虛弱的；脆弱的","通常形容年長者身體虛弱或器物易碎，不可修飾 <code>meat</code>。<br><b>何時才對：</b><i>His frail health prevented him from traveling abroad.</i>"],
+      ["artificial","adj. 人造的；人工的","<code>artificial meat</code>（人造肉）直接呼應 <code>produced in a laboratory</code>，並與句尾 <code>real meat</code> 形成完美對比。"]
+    ]
+  ],
+  [4,["考點：轉折詞 (instead) 前後語意對比","詞性需求：不可數名詞 (n.)"],"A",
+    ["As a soldier, Mark never regards the five-thousand-meter race as [[4|torture]]; instead, he thinks that it is a necessary part of his training.","身為一名軍人，馬克從不把五千公尺賽跑視為一種折磨；相反地，他認為這是他訓練中必要的一部分。"],
+    "動詞片語 <code>regards A as B</code>（把 A 視為 B）中，A 為高體能負荷的「五千公尺長跑（<code>the five-thousand-meter race</code>）」，分號後以轉折副詞 <code>instead</code>（相反地）帶出正面態度「認為是訓練必要的一部分」，可見一般人常把跑五千公尺當作痛苦的「酷刑、折磨（<code>torture</code>）」，而馬克從不這麼認為。",
+    [
+      ["torture","n. 折磨；酷刑","常比喻極度辛苦或痛苦的體能訓練或差事，完美契合「五千公尺長跑」的體感。"],
+      ["theft","n. 偷竊；竊盜罪","「把五千公尺賽跑視為偷竊」語意荒謬。<br><b>何時才對：</b><i>He reported the theft of his bicycle to the police.</i>"],
+      ["fright","n. 驚嚇；恐懼","跑五千公尺是體力上的「煎熬／折磨（<code>torture</code>）」，而非突如其來的「驚嚇（<code>fright</code>）」。<br><b>何時才對：</b><i>The loud thunder gave the little girl quite a fright.</i>"],
+      ["misery","n. 悲慘境遇；窮困不幸","<code>misery</code> 指長期處於貧困、喪親或災難中的「悲慘生活境遇」，不指單項體能跑步測驗。<br><b>何時才對：</b><i>The war brought untold misery to millions of refugees.</i>"]
+    ]
+  ],
+  [5,["考點：不及物動詞搭配 (rank among the + 最高級)","詞性需求：第三人稱單數現在式動詞 (V-s)"],"A",
+    ["Since the hotpot restaurant provides delicious food and high-quality service, it [[5|ranks]] among the finest in our town.","由於這家火鍋店提供美味的食物與高品質的服務，它在我們鎮上名列前茅（位居最優秀的餐廳之列）。"],
+    "從屬子句 <code>Since...</code> 說明火鍋店食物美味、服務優質（因），主要子句空格後接介系詞片語 <code>among the finest in our town</code>（在我們鎮上最頂尖的餐廳之列）；固定搭配 <code>rank among...</code> 表示「名列……之中、排名在……之列」。",
+    [
+      ["ranks","v. 名列；排名；位居","構成固定搭配 <code>rank among the finest / best</code>（名列最優秀之列），因果邏輯順暢。"],
+      ["flexes","v. 彎曲（關節）；收縮（肌肉）","餐廳不會「彎曲或收縮肌肉」。<br><b>何時才對：</b><i>The bodybuilder flexed his muscles in front of the mirror.</i>"],
+      ["freezes","v. 結冰；凍結","火鍋店「在最頂尖餐廳中結冰」語意不通。<br><b>何時才對：</b><i>Water freezes at zero degrees Celsius.</i>"],
+      ["banishes","v. 放逐；驅逐","及物動詞，後方須接受詞（搭配 <code>banish sb. from...</code>），語法與語意皆不合。<br><b>何時才對：</b><i>The king banished the traitor from the kingdom forever.</i>"]
+    ]
+  ],
+  [6,["考點：因果連詞 (so) 與讓步細節 (just because of a few minor errors)","詞性需求：形容詞 (adj.)"],"D",
+    ["We have spent a lot of time and money on this experiment, so it would be [[6|ridiculous]] to give it up just because of a few minor errors.","我們已經在這個實驗上花費了大量的時間與金錢，所以如果只因為幾個小錯誤就放棄它，那將會是荒謬可笑的。"],
+    "前半句指出「已經投入大量時間與金錢（<code>spent a lot of time and money</code>）」，後半句假設「只因為幾個微不足道的小錯誤就放棄（<code>to give it up just because of a few minor errors</code>）」，兩相對比可知這樣做極不合理、非常「荒謬可笑的（<code>ridiculous</code>）」。",
+    [
+      ["generous","adj. 慷慨的；大方的","半途放棄實驗與「慷慨大方」無關。<br><b>何時才對：</b><i>It was very generous of you to pay for everyone's dinner.</i>"],
+      ["furious","adj. 狂怒的","<code>furious</code> 的主詞必須是「人」（如 <i>He was furious...</i>），不可用於虛主詞句型 <code>it would be furious to V</code>。<br><b>何時才對：</b><i>The professor was furious when the students ruined the experiment.</i>"],
+      ["unique","adj. 獨特的；獨一無二的","因小錯而放棄大筆心血是「荒謬愚蠢」而非正面的「獨一無二」。<br><b>何時才對：</b><i>Each person's fingerprints are completely unique.</i>"],
+      ["ridiculous","adj. 荒謬的；可笑的；不合理的","適用虛主詞句型 <code>It is/would be ridiculous to V</code>，精準表達「因小失大、輕言放棄」的不合理。"]
+    ]
+  ],
+  [7,["考點：比較分詞片語 (Compared with...) 搭配程度副詞","詞性需求：副詞 (adv.)"],"B",
+    ["Compared with the male workers at this company, the female workers doing the same jobs receive [[7|relatively]] low pay.","與這家公司的男性員工相比，從事相同工作的女性員工領到相對較低的薪資。"],
+    "句首分詞構句 <code>Compared with the male workers...</code>（與男性員工「相比」之下）明確建立比較基準，空格位於形容詞 <code>low</code> 之前，需填表「相對而言、比較起來」的副詞 <code>relatively</code> 來修飾 <code>low</code>。",
+    [
+      ["naturally","adv. 自然地；天生地","男女同工不同酬並非「天生地、理所當然地」低薪。<br><b>何時才對：</b><i>Speaking in public doesn't come naturally to everyone.</i>"],
+      ["relatively","adv. 相對地；比較而言","與句首 <code>Compared with...</code>（與……相比）直接呼應，修飾形容詞 <code>low</code>（相對較低的）。"],
+      ["consistently","adv. 一貫地；始終如一地","強調時間上的持續一致，無法呼應句首「與男員工相比（<code>Compared with</code>）」的橫向對比關係。<br><b>何時才對：</b><i>Our team has consistently performed well over the past five years.</i>"],
+      ["effectively","adv. 有效地；實際上","不可用來修飾负面狀態形容詞 <code>low (pay)</code>。<br><b>何時才對：</b><i>The new medicine can effectively reduce pain.</i>"]
+    ]
+  ],
+  [8,["考點：M型社會定義與後文解釋 (uneven / super-rich vs. very poor)","詞性需求：單數名詞 (n.)"],"C",
+    ["In an M-shaped society, the [[8|distribution]] of wealth is uneven; some people are super-rich, while others are very poor.","在 M 型社會中，財富的分配是不均勻的；有些人超級富有，而另一些人卻非常貧窮。"],
+    "空格位於 <code>the ___ of wealth is uneven</code>（財富的……是不均的），且分號後進一步解釋「有人極富、有人極貧」，這是經濟學與社會學標準搭配詞 <code>the distribution of wealth</code>（財富分配）。",
+    [
+      ["hesitation","n. 猶豫；躊躇","財富沒有「猶豫不均」的說法。<br><b>何時才對：</b><i>She agreed to help the poor family without hesitation.</i>"],
+      ["innovation","n. 創新；革新","「財富的創新是不均的」語意不通。<br><b>何時才對：</b><i>Technological innovation has changed the way we communicate.</i>"],
+      ["distribution","n. 分配；分佈","<code>the distribution of wealth</code>（財富分配）完美搭配表語 <code>uneven</code>（不均勻的）及後句貧富差距的說明。"],
+      ["graduation","n. 畢業","與財富不均毫無關聯。<br><b>何時才對：</b><i>He plans to find a job right after graduation from college.</i>"]
+    ]
+  ],
+  [9,["考點：被動語態時序流程 (Parts ... are produced ..., shipped ..., and finally ___)","詞性需求：過去分詞 (V-ed / p.p.)"],"C",
+    ["Parts of this aircraft are produced in different countries, shipped back to the country, and finally [[9|assembled]] in the factory nearby.","這架飛機的零件是在不同國家生產，運回國內，最後在附近的工廠裡組裝起來。"],
+    "主詞為 <code>Parts of this aircraft</code>（這架飛機的零件），動詞由 <code>and finally</code> 串聯三個被動生產流程：在不同國家生產（<code>produced</code>）→ 運回國內（<code>shipped back</code>）→ 最後在工廠裡被「組裝（<code>assembled</code>）」成一架飛機。",
+    [
+      ["banished","v. 放逐；驅逐（過去分詞）","零件運回工廠不是為了被「放逐」。<br><b>何時才對：</b><i>He was banished to a remote island for his crimes.</i>"],
+      ["stabilized","v. 使穩定（過去分詞）","工廠裡的最後一道工序是把分散製造的零件「組裝（<code>assembled</code>）」起來，而非「穩定零件」。<br><b>何時才對：</b><i>The patient's condition has finally stabilized after the surgery.</i>"],
+      ["assembled","v. 組裝；裝配（過去分詞）","與主詞 <code>Parts of this aircraft</code>（飛機零件）及地點 <code>in the factory</code> 構成標準工業流程搭配。"],
+      ["frightened","v. 使驚嚇（過去分詞）","飛機零件沒有生命，不會被「嚇到」。<br><b>何時才對：</b><i>The children were frightened by the sudden blackout.</i>"]
+    ]
+  ],
+  [10,["考點：分號後因果解釋 (often breaks down on the way to work)","詞性需求：形容詞 (adj.)"],"B",
+    ["My old car is not as [[10|reliable]] as it used to be; it often breaks down on the way to work.","我的老車不如以前那麼可靠了；它經常在上班途中拋錨故障。"],
+    "分號後句 <code>it often breaks down on the way to work</code>（它常在上班半路拋錨故障）直接解釋了這輛老車「不再像以前那樣可靠、耐用（<code>not as reliable as it used to be</code>）」。",
+    [
+      ["drowsy","adj. 昏昏欲睡的","用來形容人想睡覺（如吃感冒藥後），不可形容汽車。<br><b>何時才對：</b><i>Never drive a car when you feel drowsy after taking medicine.</i>"],
+      ["reliable","adj. 可靠的；可信賴的","用來形容機器或車輛「性能穩定、不易故障」，與後句 <code>often breaks down</code> 完美對應。"],
+      ["hollow","adj. 中空的；空洞的","汽車常拋錨與是不是「中空的」無關。<br><b>何時才對：</b><i>The fox hid inside a hollow tree trunk.</i>"],
+      ["precious","adj. 珍貴的；寶貴的","半路常拋錨代表機器性能不再「可靠（<code>reliable</code>）」，而非不再「珍貴」。<br><b>何時才對：</b><i>Clean water is a precious resource in the desert.</i>"]
+    ]
+  ],
+  [11,["考點：材質觸感搭配 (Silk / smooth ___)","詞性需求：單數名詞 (n.)"],"D",
+    ["Clothes made of silk are rather expensive, but because of their smooth [[11|texture]], many people love to purchase them.","絲綢製成的衣服相當昂貴，但因為它們滑順的質地（觸感），許多人喜愛購買。"],
+    "主詞為 <code>Clothes made of silk</code>（絲綢製的衣服），空格前有所有格與觸覺形容詞 <code>their smooth</code>（它們滑順的……），形容布料摸起來柔滑的「質地、觸感」必用 <code>texture</code>。",
+    [
+      ["terminal","n. 航廈；終點站 ／ adj. 末期的","絲綢衣服沒有「滑順的航廈」。<br><b>何時才對：</b><i>Our flight departs from Terminal 2 at 8 a.m.</i>"],
+      ["sparkle","n. 閃耀；光芒","光芒不用觸覺形容詞 <code>smooth</code>（滑順的）修飾。<br><b>何時才對：</b><i>There was a lively sparkle in the child's eyes.</i>"],
+      ["benefit","n. 益處；好處","「滑順的好處（<i>smooth benefit</i>）」搭配不合邏輯。<br><b>何時才對：</b><i>Regular exercise brings many health benefits.</i>"],
+      ["texture","n. 質地；觸感；口感","與材質 <code>silk</code> 及觸覺形容詞 <code>smooth</code> 構成黃金搭配 <code>smooth texture</code>（滑順的質地）。"]
+    ]
+  ],
+  [12,["考點：及物動詞搭配受詞與目的 (___ his schedule to meet the needs...)","詞性需求：原形及物動詞 (V)"],"C",
+    ["As a salesperson, Matt sometimes has to [[12|adjust]] his schedule to meet the needs of his customers.","身為一名業務員，麥特有時必須調整他的行程表以配合客戶的需求。"],
+    "空格前有助動詞 <code>has to</code>，後接名詞受詞 <code>his schedule</code>（他的行程表）以及目的不定詞 <code>to meet the needs of his customers</code>（以迎合客戶需求），故需填及物動詞 <code>adjust</code>（調整）。",
+    [
+      ["collaborate","v. 合作；協作（不及物動詞）","<code>collaborate</code> 為不及物動詞（用法：<code>collaborate with sb. on sth.</code>），不可直接接名詞受詞 <code>his schedule</code>。<br><b>何時才對：</b><i>Our company will collaborate with a local design team on this project.</i>"],
+      ["slaughter","v. 屠宰；殘殺","「屠殺他的行程表」語意荒謬。<br><b>何時才對：</b><i>Thousands of cattle are slaughtered for meat every day.</i>"],
+      ["adjust","v. 調整；調節","及物動詞，構成常見搭配 <code>adjust one's schedule</code>（調整某人的行程表）。"],
+      ["conflict","v. 衝突；牴觸（不及物動詞）","<code>conflict</code> 作動詞時為不及物動詞（需搭配 <code>conflict with</code>），不可直接接受詞 <code>his schedule</code>。<br><b>何時才對：</b><i>His statement conflicted with the evidence found by the police.</i>"]
+    ]
+  ],
+  [13,["考點：each + individual + 單數名詞（強調每一個別個體）","詞性需求：形容詞 (adj.)"],"C",
+    ["Before the plane took off, the flight attendant made her way around the cabin to check whether each [[13|individual]] passenger had fastened their seat belt.","在飛機起飛前，空服員在機艙內走動，檢查是否每一位個別的乘客都已繫好安全帶。"],
+    "限定詞 <code>each</code> 與單數名詞 <code>passenger</code>（乘客）之間，常用形容詞 <code>individual</code> 構成固定強調搭配 <code>each individual + 單數名詞</code>，意為「每一個別的、逐一的（乘客）」。",
+    [
+      ["electronic","adj. 電子的","乘客是人，不是「電子的乘客」。<br><b>何時才對：</b><i>Passengers must switch their electronic devices to airplane mode.</i>"],
+      ["constructive","adj. 具建設性的","多修飾批評或建議（<code>constructive criticism / advice</code>），不可修飾乘客。<br><b>何時才對：</b><i>The teacher gave the students some constructive feedback on their essays.</i>"],
+      ["individual","adj. 個別的；單獨的","<code>each individual passenger</code> 強調空服員逐一檢查機艙內「每一位個別的乘客」。"],
+      ["elementary","adj. 初級的；基本的；國小的","機上乘客不只有小學生，且無「初級乘客」之說。<br><b>何時才對：</b><i>My younger brother goes to an elementary school near our house.</i>"]
+    ]
+  ],
+  [14,["考點：片語動詞搭配 (map out the future 規劃未來)","詞性需求：過去分詞片語 (have + p.p.)"],"D",
+    ["Dora does not like the future her parents have [[14|mapped out]] for her; she simply wants to do something she is really interested in.","朵拉不喜歡她父母為她規劃好的未來；她只想做自己真正感興趣的事。"],
+    "關係子句 <code>(that) her parents have ___ for her</code> 修飾先行詞 <code>the future</code>（未來），分號後說明「她只想做自己真正有興趣的事」，可知父母已經替她「規劃、安排好（<code>mapped out</code>）」未來藍圖。",
+    [
+      ["built on","phr. 建立在……基礎上；以……為基礎繼續發展","用法為 <code>build on + 既有成就/基礎</code>，不說 <i>build the future on for her</i>。<br><b>何時才對：</b><i>Our new business plan is built on the success of our previous products.</i>"],
+      ["dressed up","phr. 盛裝打扮；裝扮","不能「把未來盛裝打扮」。<br><b>何時才對：</b><i>The children dressed up as ghosts and witches for Halloween.</i>"],
+      ["passed on","phr. 傳遞；留傳；去世","父母是「替她規劃未來」，而非「把未來傳遞給她」。<br><b>何時才對：</b><i>This diamond ring has been passed on from generation to generation.</i>"],
+      ["mapped out","phr. 精心規劃；安排（未來、計畫、路線）","<code>map out one's future / career / route</code> 為標準搭配，指「詳細規劃某人的未來」。"]
+    ]
+  ],
+  [15,["考點：正面與負面特質互補 (positive attitude vs. lack of experience)","詞性需求：原形動詞片語"],"A",
+    ["The newcomer is a quick learner; the manager thinks that her positive attitude can [[15|make up for]] her lack of experience.","這位新人學習很快；經理認為她積極的態度可以彌補她經驗上的不足。"],
+    "主詞為優點 <code>her positive attitude</code>（她積極的態度），受詞為缺點 <code>her lack of experience</code>（她經驗的缺乏），以優點去填補缺點即為片語 <code>make up for</code>（彌補、補償）。",
+    [
+      ["make up for","phr. 彌補；補償","常以「某項優勢（如努力、態度）」作主詞，後接「某項劣勢（如 <code>lack of experience</code>）」作受詞。"],
+      ["get down to","phr. 開始認真處理／著手做","後方應接工作或正事（如 <code>get down to business / work</code>），不可接「缺乏經驗」。<br><b>何時才對：</b><i>After a short break, we got down to discussing the budget.</i>"],
+      ["run out of","phr. 用光；耗盡","積極態度不會「用光她的缺乏經驗」。<br><b>何時才對：</b><i>We need to stop at a gas station before we run out of fuel.</i>"],
+      ["set the stage for","phr. 為……鋪路；為……做好準備","積極態度是「彌補」經驗不足，而非「促成／導致她缺乏經驗」。<br><b>何時才對：</b><i>The peace talks set the stage for a new era of cooperation.</i>"]
+    ]
+  ]
+];
+
+// II. 綜合測驗 (A) 16-25
+const P_CLOZE_A=[
+  [
+    ["Builder Jason Haney and his coworkers arrived at their place of work across the street from a children’s hospital every morning.","建築工人傑森．漢尼（Jason Haney）和他的同事每天早上都會抵達他們位於一家兒童醫院街對面的工作工地。"],
+    ["Jason considered [[16|it]] his responsibility to bring some joy to the sick children’s lives.","傑森認為為這些生病孩子的生活帶來一些歡樂是他的責任。"],
+    ["[[17|Although]] he wasn’t allowed to visit the kids personally, there was something he could do to be of some assistance.","雖然他不被允許親自去探望這些孩子，但仍有一些他能做的事可以幫上一點忙。"]
+  ],
+  [
+    ["Jason had always loved the “Where’s Waldo?” books.","傑森一直很喜歡《威利在哪裡？》（Where's Waldo?）系列繪本。"],
+    ["[[18|As a result]], he believed that kids in the hospital would also love them.","因此，他相信醫院裡的孩子們也會喜歡它們。"],
+    ["This belief [[19|prompted]] him to create a giant Waldo model.","這個信念促使他製作了一個巨大的威利模型。"],
+    ["When the kids looked out of their windows every day, they found Waldo [[20|standing]] somewhere new.","當孩子們每天從窗戶往外看時，他們都會發現威利正站在某個新的地方。"],
+    ["It appeared [[21|that]] the children had great fun looking for Waldo.","孩子們尋找威利似乎玩得非常開心。"],
+    ["Moreover, the doctors were thankful to Jason for [[22|cheering]] the kids [[22|up]].","此外，醫生們也很感激傑森讓孩子們振作開心起來。"],
+    ["Apparently, the kids [[23|no longer]] sat in bed bored all day.","顯然地，孩子們不再整天無聊地坐在病床上。"],
+    ["Also, the game gave them something to look forward to in spite of their [[24|illnesses]].","同時，儘管身患疾病，這個遊戲也給了他們一些可以期待的事物。"]
+  ],
+  [
+    ["Thanks to what Jason did, kids who were [[25|confined]] to hospital beds had a sparkle in their eyes.","多虧了傑森所做的一切，那些被困在醫院病床上的孩子們眼中閃爍著光芒。"],
+    ["All Jason wanted to do was take the worry out of those children’s lives, and he surely succeeded in some way.","傑森想做的就只是消除那些孩子生活中的憂慮，而從某種程度上來說，他確實成功了。"]
+  ]
+];
+
+const Q_CLOZE_A=[
+  [16,["考點：虛受詞句型 (consider + it + OC + to V)","詞性需求：代名詞（虛受詞）"],"A",
+    "動詞 <code>considered</code> 後方有受詞補語名詞片語 <code>his responsibility</code>（他的責任），句尾則為真正受詞——不定詞片語 <code>to bring some joy to the sick children's lives</code>。在英文五動詞（<code>find / make / think / consider / believe</code>）後若受詞為不定詞 <code>to V</code> 且帶有受詞補語，必須先用<b>虛受詞 <code>it</code></b> 佔位，絕不可用 <code>this / that / such</code>。",
+    [
+      ["it","pron. 虛受詞","構成 <code>consider + it (虛受詞) + N/adj. (受詞補語) + to V (真受詞)</code> 標準句型。"],
+      ["this","pron. 這個","指示代名詞 <code>this</code> 不可當虛受詞代替後方的不定詞片語。<br><b>何時才對：</b><i>Jason considered this his greatest achievement.</i>（後無 <code>to V</code> 真受詞時）"],
+      ["such","pron./adj. 這樣的","不可作虛受詞。<br><b>何時才對：</b><i>He had never considered such a possibility before.</i>"],
+      ["that","pron. 那個","指示代名詞 <code>that</code> 不可作虛受詞。<br><b>何時才對：</b><i>Jason considered that it was his responsibility to help the kids.</i>（作連接詞引導完整子句時）"]
+    ]
+  ],
+  [17,["考點：讓步副詞子句邏輯 (Although 雖然……但是……)","詞性需求：從屬連接詞 (conj.)"],"D",
+    "逗號前子句為「他不被允許親自去探視孩子（<code>he wasn't allowed to visit the kids personally</code>，負面限制）」，逗號後主要子句為「仍有他能做來幫忙的事（<code>there was something he could do to be of some assistance</code>，正面行動）」，前後兩句構成明顯的「讓步轉折（雖然……但是……）」關係，故選 <code>Although</code>。",
+    [
+      ["Unless","conj. 除非（＝ if ... not）","代入變成「除非他不被允許親自探視，否則他能做點事幫忙」，邏輯不通。<br><b>何時才對：</b><i>Visitors are not allowed to enter the ward unless they wear masks.</i>"],
+      ["Until","conj. 直到……為止","時間關係不合，他始終都只能在對面工地而沒有進病房探視。<br><b>何時才對：</b><i>He waited outside the hospital until the rain stopped.</i>"],
+      ["Since","conj. 因為；自從","「不被允許探視」不是「他有辦法幫忙」的原因，而是他必須克服的阻礙。<br><b>何時才對：</b><i>Since he worked across the street, he could see the hospital windows every day.</i>"],
+      ["Although","conj. 雖然；儘管","正確引導讓步副詞子句，表達「雖然無法親自探病，卻仍能隔街帶來歡樂」。"]
+    ]
+  ],
+  [18,["考點：轉承詞因果邏輯 (As a result 因此)","詞性需求：轉承副詞片語"],"C",
+    "前句說「傑森一直很喜愛《威利在哪裡？》系列繪本（因）」，本句說「他相信醫院裡的孩子們也會喜歡它們（果）」，並進而促使他做出巨型威利模型，故連接「因→果」應使用 <code>As a result</code>（結果、因此）。",
+    [
+      ["After all","phr. 畢竟；終究","用於補充說明理由或退一步解釋，非順承推導出後面想法的因果詞。<br><b>何時才對：</b><i>Don't be too hard on him; after all, he is just a child.</i>"],
+      ["At last","phr. 終於；最後","指經過漫長等待或重重困難後終於達成某結果，此處只是心理推想，無漫長過程。<br><b>何時才對：</b><i>After hours of searching, they found the hidden Waldo at last.</i>"],
+      ["As a result","phr. 因此；結果","承接前句「自己熱愛這套書」的原因，自然推導出「因此相信孩子們也會喜歡」的結果。"],
+      ["In that case","phr. 如果是那樣的話；既然如此","用於回應某個假設條件或他人剛提出的狀況，此處無假設條件。<br><b>何時才對：</b><i>It's going to rain heavily? In that case, we should cancel the picnic.</i>"]
+    ]
+  ],
+  [19,["考點：動詞句型搭配 (prompt sb. to V 促使某人做某事)","詞性需求：過去式及物動詞 (V-ed)"],"A",
+    "主詞為 <code>This belief</code>（這個信念），空格後接 <code>him to create a giant Waldo model</code>（受詞 <code>him</code> + 不定詞補語 <code>to create...</code>）。表「某信念／原因促使某人去做某事」的標準句型為 <code>prompt + sb. + to V</code>。",
+    [
+      ["prompted","v. 促使；激起","符合 <code>prompt sb. to V</code> 句型與「信念促使他製作巨型威利模型」的文意。"],
+      ["suffered","v. 遭受；受苦","不及物動詞（<code>suffer from</code>）或及物接痛苦損失，不可接 <code>sb. to V</code>。<br><b>何時才對：</b><i>Many children in the hospital suffered from serious diseases.</i>"],
+      ["punished","v. 懲罰","用法為 <code>punish sb. for V-ing</code>，不可接 <code>to V</code>，且語意荒謬。<br><b>何時才對：</b><i>The boy was punished for lying to his parents.</i>"],
+      ["constructed","v. 建造；構築","受詞應為建築物或模型（如 <i>constructed a giant model</i>），不可接 <code>him to create...</code>。<br><b>何時才對：</b><i>Jason constructed a giant Waldo model out of wood.</i>"]
+    ]
+  ],
+  [20,["考點：感官／發現動詞受詞補語 (find + O + V-ing)","詞性需求：現在分詞 (V-ing)"],"C",
+    "空格前為 <code>they found Waldo</code>（他們發現威利……），後方為地點副詞 <code>somewhere new</code>（在某個新地方）。<code>find + 受詞 (Waldo) + 受詞補語</code> 結構中，威利模型與「站立（<code>stand</code>）」為主動且正在進行的狀態，故受詞補語必須使用現在分詞 <code>standing</code>。",
+    [
+      ["stand","v. 原形動詞","<code>find</code> 不是感官動詞（如 <i>see / watch / hear</i>）也不是使役動詞，受詞補語不可用原形動詞 <code>stand</code>。<br><b>何時才對：</b><i>They saw Waldo stand somewhere new.</i>"],
+      ["to standing","phr. 介系詞 to + V-ing（語法錯誤）","<code>find + O</code> 後絕不接 <code>to + V-ing</code>。<br><b>何時才對：</b><i>The sick kids were not used to standing for a long time.</i>"],
+      ["standing","V-ing 現在分詞","符合 <code>find + O + V-ing</code>（發現某人／某物正處於……狀態）的語法規則。"],
+      ["to stand","to-V 不定詞","<code>find + O + to V</code> 僅用於 <code>find it + adj. + to V</code> 或少數搭配 <code>to be</code>（表發現某事實），表「發現某人正站在某處」必用現在分詞 <code>standing</code>。<br><b>何時才對：</b><i>The kids found it exciting to look for Waldo every morning.</i>"]
+    ]
+  ],
+  [21,["考點：虛主詞句型 (It appeared that + S + V)","詞性需求：從屬連接詞 (conj.)"],"D",
+    "句首為虛主詞與連綴動詞 <code>It appeared</code>（似乎……），後方 <code>the children had great fun looking for Waldo</code> 為結構與語意皆完整的子句，故需用無詞義且不充當句子成分的從屬連接詞 <code>that</code> 引導名詞子句作真主詞。",
+    [
+      ["how","conj. 如何","代入會變成「似乎孩子們是如何開心地找威利」，語意多出疑問方式且不合 <code>It appeared that...</code> 句型。<br><b>何時才對：</b><i>The doctors were amazed by how much fun the children had.</i>"],
+      ["what","pron. 什麼／……的事物","<code>what</code> 引導子句時在子句中必須充當主詞或受詞，但後方子句 <code>the children (S) had (V) great fun (O)</code> 已經完整。<br><b>何時才對：</b><i>What appeared in the window every morning made the children happy.</i>"],
+      ["which","pron. 哪一個","不可引導 <code>It appeared...</code> 後的確定事實子句。<br><b>何時才對：</b><i>The kids tried to guess which building Waldo was hiding behind.</i>"],
+      ["that","conj. 從屬連接詞","構成固定句型 <code>It appears/appeared that + S + V</code>（似乎……）。"]
+    ]
+  ],
+  [22,["考點：可分片語動詞語意 (cheer sb. up 使某人振作／高興起來)","詞性需求：動名詞片語 (V-ing ... prt.)"],"C",
+    "前文提到孩子們找威利玩得很開心（<code>had great fun</code>），且醫生們對傑森心懷感激（<code>the doctors were thankful to Jason for ___ the kids ___</code>），在介系詞 <code>for</code> 後需填能「讓生病的孩子們開心、振作起來」的動名詞片語 <code>cheering the kids up</code>。",
+    [
+      ["picking; up","phr. 撿起；接載（某人）；偶然學會","傑森不被允許離開工地去接載孩子，語意不合。<br><b>何時才對：</b><i>Parents are waiting outside the school gate to pick their kids up.</i>"],
+      ["turning; down","phr. 拒絕（某人／提議）；調低（音量）","拒絕孩子不會讓醫生感謝他。<br><b>何時才對：</b><i>She thanked him for the invitation, even though she had to turn it down.</i>"],
+      ["cheering; up","phr. 使（某人）高興起來；使振作","<code>cheer the kids up</code> 呼應第一段 <code>bring some joy to the sick children's lives</code> 與前句 <code>had great fun</code>。"],
+      ["letting; down","phr. 使（某人）失望","與前文 <code>the doctors were thankful to Jason</code> 完全相反。<br><b>何時才對：</b><i>He promised to help the children and never let them down.</i>"]
+    ]
+  ],
+  [23,["考點：前後狀態轉變副詞 (no longer 不再……)","詞性需求：副詞片語 (adv.)"],"B",
+    "空格後為負面狀態 <code>sat in bed bored all day</code>（整天無聊地坐在病床上）；由於前文已經說明孩子們現在每天早上記得往窗外找威利、玩得很開心，而且下一句說「這遊戲給了他們期待的事物」，因此孩子們顯然「不再（<code>no longer</code>）」整天無聊地坐在床上了。",
+    [
+      ["on time","phr. 準時","「準時整天無聊地坐在床上」語意荒謬。<br><b>何時才對：</b><i>Jason and his coworkers arrived at the construction site on time every morning.</i>"],
+      ["no longer","phr. 不再……","置於一般動詞 <code>sat</code> 之前，表達有了找威利遊戲之後，孩子們「不再」整天無聊坐床。"],
+      ["in turn","phr. 輪流；反過來；繼而","孩子們不是「輪流整天無聊坐在床上」。<br><b>何時才對：</b><i>Each child looked through the telescope in turn to find Waldo.</i>"],
+      ["at least","phr. 至少","若說「孩子們至少整天無聊地坐在床上」，與前文「讓孩子開心振作」完全矛盾。<br><b>何時才對：</b><i>Even if he couldn't visit them, at least he could make them smile from afar.</i>"]
+    ]
+  ],
+  [24,["考點：讓步介系詞 (in spite of) ＋ 兒童醫院語境 (children's hospital / sick children)","詞性需求：複數可數名詞 (n.)"],"B",
+    "空格前為讓步介系詞片語 <code>in spite of their ___</code>（儘管他們有……），用來與前句正面效果 <code>gave them something to look forward to</code>（給了他們期待的事物）對比；第一段已指出這些孩子是住在 <code>a children's hospital</code> 的 <code>sick children</code>（生病的孩子），故儘管他們身患「疾病（<code>illnesses</code>）」，仍有所期待。",
+    [
+      ["capabilities","n. 能力；才能","「儘管他們有能力」與生病住院找威利的情境無關。<br><b>何時才對：</b><i>The task was beyond the capabilities of a five-year-old child.</i>"],
+      ["illnesses","n. 疾病；生病","呼應第一段的 <code>children's hospital</code> 與 <code>sick children</code>，構成「儘管身患疾病（<code>in spite of their illnesses</code>），卻仍有盼頭」的感人對比。"],
+      ["hugs","n. 擁抱","「儘管他們有擁抱」邏輯不通。<br><b>何時才對：</b><i>The nurse gave the crying child a warm hug.</i>"],
+      ["elements","n. 元素；要素","「儘管他們有元素」語意不通。<br><b>何時才對：</b><i>Trust is one of the most important elements of a strong friendship.</i>"]
+    ]
+  ],
+  [25,["考點：被動語態固定介系詞搭配 (be confined to 受困於／局限於……)","詞性需求：過去分詞 (V-ed / p.p.)"],"A",
+    "關係子句 <code>who were ___ to hospital beds</code> 修飾 <code>kids</code>，空格後接介系詞 <code>to</code> 與名詞 <code>hospital beds</code>（醫院病床）。形容生病住院的病人「長期臥床、受困於病床上」的標準固定搭配為 <code>be confined to bed / a wheelchair</code>。",
+    [
+      ["confined","v. 限制；使受困於（過去分詞）","<code>be confined to + 場所/病床/輪椅</code> 表「因病或外力而被困在……」，完全符合住院病童處境。"],
+      ["enabled","v. 使能夠（過去分詞）","用法為 <code>be enabled to + 原形動詞</code>，後不可接名詞 <code>hospital beds</code>。<br><b>何時才對：</b><i>With the help of the glasses, he was enabled to see clearly again.</i>"],
+      ["distributed","v. 分配；分發（過去分詞）","物品或物資才會被「分發到（<code>distributed to</code>）」某處，病童不是被分發的物資。<br><b>何時才對：</b><i>Free toys and books were distributed to the children in the hospital.</i>"],
+      ["erected","v. 建造；豎立（過去分詞）","建築物或雕像才會被「建造」，且不搭配 <code>kids who were erected to hospital beds</code>。<br><b>何時才對：</b><i>A new wing was erected next to the main hospital building.</i>"]
+    ]
+  ]
+];
+
+// II. 綜合測驗 (B) 26-30
+const P_CLOZE_B=[
+  [
+    ["How can you help your team at work become stronger?","要如何幫助你的工作團隊變得更強大呢？"],
+    ["[[26|What]] many businesses around the world are now discovering is that an “escape room” is one possible answer to this question.","世界各地許多企業現在正發現的事情是，「密室逃脫」是這個問題的一個可行解答。"],
+    ["The reason for this is that escape rooms not only train employees to work under pressure [[27|but also]] force them to work with others.","這其中的原因是，密室逃脫不僅訓練員工在壓力下工作，還迫使他們與他人合作。"],
+    ["The challenge faced by people in an escape room is to [[28|figure out]] how to get out.","身處密室逃脫中的人們所面臨的挑戰，就是想出如何逃出去。"],
+    ["However, doing so is certainly not easy; there are many puzzles to solve and traps to avoid.","然而，要做到這一點絕非易事；裡面有許多謎題要解開，還有許多陷阱要避開。"],
+    ["After solving one puzzle, the players must then [[29|explore]] the next one to get new clues.","在解開一個謎題之後，玩家們接著必須探索下一個謎題以取得新線索。"],
+    ["The challenge is made even greater by the dark and sometimes scary nature of the room.","房間昏暗且有時令人恐懼的特性，讓這項挑戰變得更加艱鉅。"],
+    ["If the players find a way out of the room, they have passed the test.","如果玩家們找到逃出房間的方法，他們就通過了考驗。"],
+    ["In addition, they have proven to themselves that through [[30|collaboration]], anything is possible.","此外，他們也向自己證明了，透過合作，任何事都是可能的。"],
+    ["This challenge is surely an excellent team-building exercise!","這項挑戰無疑是一項絕佳的團隊建立練習！"]
+  ]
+];
+
+const Q_CLOZE_B=[
+  [26,["考點：複合關係代名詞 What (= the thing that) 引導名詞子句作主詞","詞性需求：複合關係代名詞 (pron.)"],"B",
+    "從句首到主要動詞 <code>is</code> 之前（<code>___ many businesses around the world are now discovering</code>）為整個句子的名詞子句主詞；在此子句中，及物動詞 <code>are discovering</code>（正在發現……）<b>缺少受詞</b>，因此必須選用同時包含先行詞與關係代名詞功能的複合關係代名詞 <code>What</code>（＝ <code>the thing which/that</code>，……的事情）。",
+    [
+      ["That","conj. 從屬連接詞","<code>That</code> 引導名詞子句作主詞時，子句內部必須完整不缺成分，但此處及物動詞 <code>discovering</code> 缺少受詞。<br><b>何時才對：</b><i>That escape rooms can build strong teams is now widely known.</i>"],
+      ["What","pron. 複合關係代名詞（＝ the thing which）","充當 <code>discovering</code> 的受詞並引導名詞子句作為主要動詞 <code>is</code> 的主詞。"],
+      ["It","pron. 虛主詞","若用虛主詞 <code>It</code>，後面應直接接動詞（如 <code>It is now being discovered by many businesses that...</code>），不可直接接主詞 <code>many businesses</code>。<br><b>何時才對：</b><i>It is now clear to many businesses that escape rooms are useful.</i>"],
+      ["Which","pron. 疑問代名詞／關係代名詞","關係代名詞 <code>Which</code> 不能沒有先行詞就單獨在句首引導名詞子句當主詞（除非是問「哪一個」的疑問句）。<br><b>何時才對：</b><i>Businesses are trying escape rooms, which have proven very effective.</i>"]
+    ]
+  ],
+  [27,["考點：對等相關連接詞 (not only A but also B)","詞性需求：對等相關連接詞"],"C",
+    "前半句出現明顯標記 <code>not only train employees to work under pressure</code>（不僅訓練員工在壓力下工作），後半句並列第二個動詞片語 <code>force them to work with others</code>（迫使他們與他人合作），固定相關連接詞為 <code>not only ... but also ...</code>。",
+    [
+      ["along with","phr. 連同；以及","不與前面的 <code>not only</code> 搭配，且若作為附加介系詞片語，後面應接動名詞 <code>forcing</code> 而非原形動詞 <code>force</code>。<br><b>何時才對：</b><i>The manager, along with his employees, joined the escape room game.</i>"],
+      ["so that","conj. 以便；為了","引導目的狀語子句（後須接完整子句 <code>S + V</code>），不能與 <code>not only</code> 搭配接原形動詞 <code>force</code>。<br><b>何時才對：</b><i>They use escape rooms so that employees can learn to work together.</i>"],
+      ["but also","conj. 而且還……","與前面的 <code>not only</code> 構成對等相關連接詞，平行連接兩個動詞 <code>train</code> 與 <code>force</code>。"],
+      ["rather than","phr. 而不是","與 <code>not only</code> 衝突；密室逃脫是「同時具備」抗壓與合作兩種訓練，而非選一棄一。<br><b>何時才對：</b><i>Players must cooperate with each other rather than work alone.</i>"]
+    ]
+  ],
+  [28,["考點：片語動詞語意＋疑問詞加不定詞 (figure out how to V)","詞性需求：原形動詞片語"],"A",
+    "空格位於不定詞 <code>to</code> 之後，受詞為名詞片語 <code>how to get out</code>（如何逃出去）。後文提到有許多謎題要解開（<code>many puzzles to solve</code>），故密室逃脫玩家的挑戰就是動腦「想出、弄清楚（<code>figure out</code>）」如何逃出房間。",
+    [
+      ["figure out","phr. 想出；理解；弄清楚","後面常接 <code>how to V / wh-子句 / the answer</code>，完全契合解謎找逃脫方法的語境。"],
+      ["dream of","phr. 夢想；夢見","後接名詞或動名詞 <code>V-ing</code>，不接 <code>how to get out</code>，且被關在密室需要實際解謎而非「做夢」。<br><b>何時才對：</b><i>She has always dreamed of starting her own business.</i>"],
+      ["clear out","phr. 清理乾淨；把……清空；匆匆離開","清空房間與「解開謎題如何逃出去」無關，也不接 <code>how to get out</code>。<br><b>何時才對：</b><i>It took me all weekend to clear out the old garage.</i>"],
+      ["feed on","phr. 以……為食","主詞為動物或昆蟲，後接食物名稱。<br><b>何時才對：</b><i>Giant pandas mainly feed on bamboo.</i>"]
+    ]
+  ],
+  [29,["考點：解謎探索動詞搭配 (___ the next puzzle to get new clues)","詞性需求：原形及物動詞 (V)"],"D",
+    "前句說「在解開一個謎題後（<code>After solving one puzzle</code>）」，本句說玩家接著必須「……下一個謎題（<code>the next one [puzzle]</code>）以取得新線索（<code>to get new clues</code>）」，能夠搭配下一個謎題／機關以尋找新線索的及物動詞為 <code>explore</code>（探索、探究）。",
+    [
+      ["blame","v. 責怪；歸咎於","玩家不會去「責怪下一個謎題」來拿線索。<br><b>何時才對：</b><i>Don't blame your teammates when you fail to solve a puzzle.</i>"],
+      ["benefit","v. 有益於；使受益","「使下一個謎題受益」語意不通。<br><b>何時才對：</b><i>This team-building activity will benefit all employees in the company.</i>"],
+      ["stretch","v. 伸展；拉長","不能「拉長下一個謎題」來獲得線索。<br><b>何時才對：</b><i>You should stretch your muscles before and after exercising.</i>"],
+      ["explore","v. 探索；探究；仔細檢查","及物動詞，指玩家深入「探索、研究」下一個謎題與場景機關以發掘新線索。"]
+    ]
+  ],
+  [30,["考點：全文主題詞呼應 (help your team / work with others / team-building)","詞性需求：不可數名詞 (n.)"],"D",
+    "全文首句問 <code>How can you help your team at work become stronger?</code>，中間強調 <code>force them to work with others</code>（與他人合作），最後一句總結 <code>an excellent team-building exercise</code>（絕佳的團隊建立練習），因此玩家在密室逃脫中證明了：透過「合作、協作（<code>collaboration</code>）」，任何事都有可能達成！",
+    [
+      ["banishment","n. 放逐；驅逐","密室逃脫強調團隊合作而非放逐。<br><b>何時才對：</b><i>In ancient times, banishment was a severe punishment for criminals.</i>"],
+      ["civilization","n. 文明","幾個員工玩密室逃脫是靠「團隊合作」過關，而非靠「人類文明」。<br><b>何時才對：</b><i>Ancient Egypt is one of the oldest civilizations in the world.</i>"],
+      ["feedback","n. 回饋意見；反應","過關靠的是玩家之間的「共同合作（<code>collaboration</code>）」，而非事後的意見回饋。<br><b>何時才對：</b><i>The company welcomes feedback from customers to improve its service.</i>"],
+      ["collaboration","n. 合作；協作","直接呼應前文的 <code>work with others</code> 與末句的 <code>team-building exercise</code>。"]
+    ]
+  ]
+];
+
+// III. 文意選填 (31-40)
+const P_FILL=[
+  [
+    ["In Greek mythology, Zeus was the king of the gods.","在希臘神話中，宙斯（Zeus）是眾神之王。"],
+    ["He was known as the god of the sky and thunder, and he ruled from the top of Mount Olympus.","他以天空與雷電之神聞名，並從奧林匹斯山頂進行統治。"],
+    ["As a god, he had power over every man, woman, child, and creature in the [[31|universe]].","身為神明，他掌控了宇宙中每一個男人、女人、小孩與生物的權力。"],
+    ["Nevertheless, as a baby, he had been in great danger.","然而，當他還是個嬰兒時，他曾處於極大的危險之中。"]
+  ],
+  [
+    ["When Zeus was young, his father, Cronus, had a [[32|tremendous]] desire for power.","當宙斯年幼時，他的父親克羅諾斯（Cronus）對權力抱有極大的慾望。"],
+    ["Unfortunately, his children fell [[33|victim]] to his craving.","不幸地，他的孩子們成了他這股強烈渴求下的受害者。"],
+    ["Cronus ate his children at birth so they could not [[34|replace]] him as king.","克羅諾斯在孩子出生時就把他們吃掉，好讓他們無法取代他成為國王。"],
+    ["However, Rhea, Cronus’s wife, [[35|refused]] to let this happen to Zeus.","然而，克羅諾斯的妻子瑞亞（Rhea）拒絕讓這種事發生在宙斯身上。"],
+    ["When Zeus was born, Rhea [[36|tricked]] her husband by handing him a rock wrapped in a blanket.","當宙斯出生時，瑞亞藉由遞給丈夫一塊包裹在毯子裡的石頭，欺騙了他。"],
+    ["In this way, she was [[37|capable]] of fooling Cronus.","透過這種方式，她成功做到了愚弄克羅諾斯。"],
+    ["Zeus was then hidden from his father until he reached manhood.","宙斯隨後被藏起來不讓他父親發現，直到他成年。"],
+    ["When Zeus became a man, he [[38|promised]] his siblings that he would save them.","當宙斯長大成人後，他向他的手足們承諾他會拯救他們。"],
+    ["He therefore confronted his father and forced him to [[39|remove]] his brothers and sisters from his stomach.","因此他挺身面對父親，並迫使他將他的兄弟姊妹們從肚子裡吐（移）出來。"],
+    ["For his good work in saving his family, Zeus was given the power to control thunder, lightning, and [[40|humankind]].","因為他拯救家人的義舉，宙斯被賦予掌管雷、電以及全人類的權力。"],
+    ["He would have many more adventures to come.","他接下來還會有更多冒險。"]
+  ]
+];
+
+const BANK_DICT={
+  A:["capable","adj. 有能力的"],
+  B:["promised","v. 承諾；答應（過去式）"],
+  C:["universe","n. 宇宙；天地萬物"],
+  D:["remove","v. 移除；取出（原形動詞）"],
+  E:["victim","n. 受害者；犧牲品"],
+  F:["refused","v. 拒絕（過去式）"],
+  G:["humankind","n. [U] 人類（集合不可數名詞）"],
+  H:["tremendous","adj. 巨大的；極強烈的"],
+  I:["replace","v. 取代；接替（原形動詞）"],
+  J:["tricked","v. 欺騙；哄騙（過去式）"]
+};
+
+function makeFillOps(correctLetter, reasonMap){
+  const keys="ABCDEFGHIJ".split("");
+  return keys.map(k=>{
+    const [word,pos]=BANK_DICT[k];
+    return ['('+k+') '+word, pos, reasonMap[k]];
+  });
+}
+
+const Q_FILL=[
+  [31,["考點：定冠詞 the + 空間範圍名詞 (in the universe)","詞性需求：單數名詞 (n.)"],"C",
+    "空格前為介系詞與定冠詞 <code>in the ___</code>，用來界定眾神之王宙斯統治 <code>every man, woman, child, and creature</code>（每一個男女老幼與一切生物）的最大空間範圍；構成固定片語 <code>in the universe</code>（在全宇宙／天地萬物之中）。",
+    makeFillOps("C",{
+      A:"詞性不符：<code>capable</code> 為形容詞，不可置於 <code>in the ___</code> 後作介系詞受詞。<br><b>何時才對：</b><i>In this way, she was capable of fooling Cronus.</i>（見第 37 題）",
+      B:"詞性不符：<code>promised</code> 為過去式動詞。<br><b>何時才對：</b><i>He promised his siblings that he would save them.</i>（見第 38 題）",
+      C:"詞性與搭配皆正確：單數名詞 <code>universe</code> 搭配定冠詞構成 <code>in the universe</code>（在宇宙中），涵蓋前文所有人類與生物。",
+      D:"詞性不符：<code>remove</code> 為動詞原形。<br><b>何時才對：</b><i>He forced him to remove his brothers and sisters from his stomach.</i>（見第 39 題）",
+      E:"語意不合：<code>in the victim</code>（在受害者體內）與統治天下蒼生不合。<br><b>何時才對：</b><i>His children fell victim to his craving.</i>（見第 33 題）",
+      F:"詞性不符：<code>refused</code> 為過去式動詞。<br><b>何時才對：</b><i>Rhea refused to let this happen to Zeus.</i>（見第 35 題）",
+      G:"語法與語意不合：<code>humankind</code> 為不加冠詞 <code>the</code> 的不可數集合名詞，且前面已列舉 <code>every man, woman, child, and creature</code>（包含動物生靈），範圍大於「人類」。<br><b>何時才對：</b><i>Zeus was given the power to control thunder, lightning, and humankind.</i>（見第 40 題）",
+      H:"詞性不符：<code>tremendous</code> 為形容詞。<br><b>何時才對：</b><i>Cronus had a tremendous desire for power.</i>（見第 32 題）",
+      I:"詞性不符：<code>replace</code> 為原形動詞。<br><b>何時才對：</b><i>Cronus ate his children so they could not replace him as king.</i>（見第 34 題）",
+      J:"詞性不符：<code>tricked</code> 為過去式動詞。<br><b>何時才對：</b><i>Rhea tricked her husband by handing him a rock.</i>（見第 36 題）"
+    })
+  ],
+  [32,["考點：冠詞 + 形容詞 + 名詞搭配 (a tremendous desire 強烈的慾望)","詞性需求：形容詞 (adj.)"],"H",
+    "空格位於不定冠詞 <code>a</code> 與單數名詞 <code>desire (for power)</code>（對權力的慾望）之間，需填形容詞；下一句用強烈的同義詞 <code>his craving</code>（他的極度渴求）呼應此處，說明克羅諾斯對權力有著「極大的、強烈的（<code>tremendous</code>）」慾望。",
+    makeFillOps("H",{
+      A:"搭配與語意不符：<code>capable</code> 修飾人「有能力的（<code>capable of</code>）」，不修飾名詞 <code>desire</code>。<br><b>何時才對：</b><i>She was capable of fooling Cronus.</i>（見第 37 題）",
+      B:"詞性不符：過去式動詞 <code>promised</code> 不修飾 <code>desire</code>。<br><b>何時才對：</b><i>He promised his siblings that he would save them.</i>",
+      C:"詞性不符：名詞 <code>universe</code> 不可修飾 <code>desire</code>。<br><b>何時才對：</b><i>He had power over every creature in the universe.</i>",
+      D:"詞性不符：原形動詞 <code>remove</code> 不可修飾名詞。<br><b>何時才對：</b><i>He forced him to remove his brothers and sisters.</i>",
+      E:"詞性不符：名詞 <code>victim</code> 不可修飾 <code>desire</code>。<br><b>何時才對：</b><i>His children fell victim to his craving.</i>",
+      F:"詞性不符：過去式動詞 <code>refused</code>。<br><b>何時才對：</b><i>Rhea refused to let this happen.</i>",
+      G:"詞性不符：名詞 <code>humankind</code>。<br><b>何時才對：</b><i>Zeus controlled thunder, lightning, and humankind.</i>",
+      H:"詞性與搭配皆正確：形容詞 <code>tremendous</code> 修飾 <code>desire</code>，構成高頻搭配 <code>a tremendous desire for power</code>（對權力的極大慾望），並呼應下句的 <code>craving</code>。",
+      I:"詞性不符：原形動詞 <code>replace</code>。<br><b>何時才對：</b><i>They could not replace him as king.</i>",
+      J:"詞性不符：過去式動詞 <code>tricked</code>。<br><b>何時才對：</b><i>Rhea tricked her husband.</i>"
+    })
+  ],
+  [33,["考點：固定慣用語搭配 (fall victim to 成為……的受害者)","詞性需求：單數名詞（慣用語補語）"],"E",
+    "空格前為連綴動詞 <code>fell</code>（<code>fall</code> 的過去式），後方緊接介系詞片語 <code>to his craving</code>（他對權力的渴求），且下一句說「克羅諾斯在孩子出生時就把他們吃掉」；構成核心片語 <code>fall victim to + N</code>（成為……的受害者／犧牲品，注意此片語中 <code>victim</code> 習慣用單數不加冠詞）。",
+    makeFillOps("E",{
+      A:"搭配錯誤：<code>capable</code> 需搭配 <code>be capable of</code>，不搭配 <code>fell ___ to</code>。<br><b>何時才對：</b><i>She was capable of fooling Cronus.</i>",
+      B:"詞性不符：<code>promised</code> 為動詞，不可置於 <code>fell</code> 後。<br><b>何時才對：</b><i>He promised his siblings that he would save them.</i>",
+      C:"語意不符：沒有 <i>fell universe to</i> 的用法。<br><b>何時才對：</b><i>Every creature in the universe obeyed him.</i>",
+      D:"詞性不符：<code>remove</code> 為原形動詞。<br><b>何時才對：</b><i>Please remove your shoes before entering.</i>",
+      E:"詞性與片語搭配皆正確：構成固定片語 <code>fall victim to + N</code>（成為……的受害者）。",
+      F:"詞性不符：<code>refused</code> 為動詞。<br><b>何時才對：</b><i>She refused to give up her child.</i>",
+      G:"語意不符：沒有 <i>fell humankind to</i> 的用法。<br><b>何時才對：</b><i>This invention will benefit all humankind.</i>",
+      H:"搭配不符：<code>tremendous</code> 不搭配 <code>fell ___ to</code>。<br><b>何時才對：</b><i>Cronus had a tremendous desire for power.</i>",
+      I:"詞性不符：<code>replace</code> 為原形動詞。<br><b>何時才對：</b><i>Nothing can replace a mother's love.</i>",
+      J:"詞性不符：<code>tricked</code> 為過去式動詞。<br><b>何時才對：</b><i>Rhea tricked her husband with a rock.</i>"
+    })
+  ],
+  [34,["考點：助動詞 could not + 原形及物動詞 ＋ 搭配詞 (replace sb. as king)","詞性需求：原形及物動詞 (V)"],"I",
+    "空格前為情態助動詞 <code>could not</code>，需填原形及物動詞；後面受詞與身分補語為 <code>him as king</code>（他作為國王的地位）。前文提到克羅諾斯極度貪戀王權，所以吃掉剛出生的孩子，目的是讓孩子們無法「取代（<code>replace</code>）」他的王位。",
+    makeFillOps("I",{
+      A:"詞性不符：助動詞 <code>could not</code> 後需接原形動詞，<code>capable</code> 為形容詞。<br><b>何時才對：</b><i>She was capable of fooling Cronus.</i>",
+      B:"詞性不符：<code>promised</code> 為過去式動詞，不可置於助動詞 <code>could not</code> 後。<br><b>何時才對：</b><i>He promised to save them.</i>",
+      C:"詞性不符：<code>universe</code> 為名詞。<br><b>何時才對：</b><i>The universe is vast and mysterious.</i>",
+      D:"搭配與文意次佳：雖然 <code>remove</code> 也是原形動詞，但「取代某人成為國王」的標準搭配是 <code>replace him as king</code>，而 <code>remove</code> 留給第 39 題搭配 <code>remove ... from his stomach</code>（從胃裡取出／吐出）。<br><b>何時才對：</b><i>He forced him to remove his brothers and sisters from his stomach.</i>（見第 39 題）",
+      E:"詞性不符：<code>victim</code> 為名詞。<br><b>何時才對：</b><i>His children fell victim to his craving.</i>",
+      F:"詞性不符：<code>refused</code> 為過去式動詞。<br><b>何時才對：</b><i>Rhea refused to let this happen.</i>",
+      G:"詞性不符：<code>humankind</code> 為名詞。<br><b>何時才對：</b><i>He ruled over humankind.</i>",
+      H:"詞性不符：<code>tremendous</code> 為形容詞。<br><b>何時才對：</b><i>He had a tremendous desire for power.</i>",
+      I:"詞性與搭配皆正確：原形動詞 <code>replace</code> 置於 <code>could not</code> 後，構成 <code>replace sb. as king</code>（取代某人成為國王）。",
+      J:"詞性不符：<code>tricked</code> 為過去式動詞。<br><b>何時才對：</b><i>Rhea tricked her husband.</i>"
+    })
+  ],
+  [35,["考點：轉折詞 However ＋ 動詞搭配不定詞 (refuse to V 拒絕做某事)","詞性需求：過去式動詞 (V-ed)"],"F",
+    "句首以 <code>However</code>（然而）與前句「克羅諾斯把剛出生的孩子吃掉」轉折，主詞為母親 <code>Rhea, Cronus's wife</code>，空格後接不定詞片語 <code>to let this happen to Zeus</code>（讓這種慘事發生在宙斯身上），可見母親「拒絕（<code>refused</code>）」讓宙斯也被吃掉。",
+    makeFillOps("F",{
+      A:"詞性不符：句子缺少主要過去式動詞，<code>capable</code> 為形容詞且前無 be 動詞。<br><b>何時才對：</b><i>She was capable of fooling Cronus.</i>",
+      B:"語法與語意相反：母親絕不會「承諾（<i>promised</i>）讓孩子被吃掉的事發生在宙斯身上」，且 <code>promised</code> 用於第 38 題 <code>promised his siblings that...</code>。<br><b>何時才對：</b><i>He promised his siblings that he would save them.</i>",
+      C:"詞性不符：<code>universe</code> 為名詞。<br><b>何時才對：</b><i>Zeus ruled the universe.</i>",
+      D:"時態與用法不符：全文敘事為過去簡單式，且 <code>remove</code> 後不接 <code>to let...</code>。<br><b>何時才對：</b><i>He forced him to remove his brothers and sisters from his stomach.</i>",
+      E:"詞性不符：<code>victim</code> 為名詞。<br><b>何時才對：</b><i>His children fell victim to his craving.</i>",
+      F:"詞性、時態與搭配皆正確：過去式動詞 <code>refused</code> 搭配不定詞 <code>to let this happen to Zeus</code>（拒絕讓這件事發生在宙斯身上）。",
+      G:"詞性不符：<code>humankind</code> 為名詞。<br><b>何時才對：</b><i>Zeus had power over humankind.</i>",
+      H:"詞性不符：<code>tremendous</code> 為形容詞。<br><b>何時才對：</b><i>He had a tremendous desire for power.</i>",
+      I:"時態與搭配不符：<code>replace</code> 為現在式／原形，且不接 <code>to let</code>。<br><b>何時才對：</b><i>They could not replace him as king.</i>",
+      J:"語法不符：<code>tricked</code> 後須接「受詞（人）」，不可直接接不定詞 <code>*tricked to let...</code>。<br><b>何時才對：</b><i>Rhea tricked her husband by handing him a rock.</i>（見第 36 題）"
+    })
+  ],
+  [36,["考點：過去式及物動詞 ＋ 方法狀語呼應 (by handing him a rock... / fooling Cronus)","詞性需求：過去式及物動詞 (V-ed)"],"J",
+    "主詞為 <code>Rhea</code>，受詞為 <code>her husband</code>，後面方式介系詞片語 <code>by handing him a rock wrapped in a blanket</code>（藉由遞給他一塊包在毯子裡的石頭）以及下一句的同義呼應詞 <code>fooling Cronus</code>（愚弄／欺騙克羅諾斯），直接證明此處為「欺騙、哄騙（<code>tricked</code>）」她的丈夫。",
+    makeFillOps("J",{
+      A:"詞性不符：缺少過去式及物動詞，<code>capable</code> 為形容詞。<br><b>何時才對：</b><i>She was capable of fooling Cronus.</i>",
+      B:"文意不合：「藉由給他包在毯子裡的石頭來承諾丈夫」不合邏輯，拿假嬰兒給丈夫吃是「欺騙（<code>tricked</code>）」。<br><b>何時才對：</b><i>He promised his siblings that he would save them.</i>",
+      C:"詞性不符：<code>universe</code> 為名詞。<br><b>何時才對：</b><i>He was the ruler of the universe.</i>",
+      D:"時態與語意不符：<code>remove</code> 為原形動詞。<br><b>何時才對：</b><i>He forced him to remove his brothers and sisters from his stomach.</i>",
+      E:"詞性不符：<code>victim</code> 為名詞。<br><b>何時才對：</b><i>His children fell victim to his craving.</i>",
+      F:"語法與文意不符：<code>refused</code> 已於第 35 題使用，且不說「藉由給他石頭來拒絕丈夫」。<br><b>何時才對：</b><i>Rhea refused to let this happen to Zeus.</i>",
+      G:"詞性不符：<code>humankind</code> 為名詞。<br><b>何時才對：</b><i>Zeus controlled thunder, lightning, and humankind.</i>",
+      H:"詞性不符：<code>tremendous</code> 為形容詞。<br><b>何時才對：</b><i>He had a tremendous desire for power.</i>",
+      I:"時態與語意不符：<code>replace</code> 為原形動詞。<br><b>何時才對：</b><i>They could not replace him as king.</i>",
+      J:"詞性與文意皆正確：過去式及物動詞 <code>tricked</code>（欺騙）接受詞 <code>her husband</code>，並與後文 <code>by handing him a rock...</code> 及下句的 <code>fooling Cronus</code> 完美呼應。"
+    })
+  ],
+  [37,["考點：固定形容詞片語搭配 (be capable of + V-ing)","詞性需求：形容詞 (adj.)"],"A",
+    "空格前為 be 動詞 <code>she was</code>，空格後為介系詞加動名詞 <code>of fooling Cronus</code>（愚弄克羅諾斯）。構成核心片語 <code>be capable of + V-ing</code>（有能力做到……）。",
+    makeFillOps("A",{
+      A:"詞性與搭配皆正確：形容詞 <code>capable</code> 與前後文構成固定搭配 <code>was capable of fooling Cronus</code>。",
+      B:"語法不符：被動語態 <code>was promised</code> 後不接 <code>of fooling</code>。<br><b>何時才對：</b><i>He promised his siblings that he would save them.</i>",
+      C:"詞性與搭配不符：<code>universe</code> 為名詞。<br><b>何時才對：</b><i>Every creature in the universe feared him.</i>",
+      D:"詞性不符：<code>was</code> 後不可接原形動詞 <code>remove</code>。<br><b>何時才對：</b><i>He forced him to remove his brothers and sisters from his stomach.</i>",
+      E:"語法不符：缺少冠詞且語意相反（騙過丈夫的人是瑞亞，她不是受害者）。<br><b>何時才對：</b><i>His children fell victim to his craving.</i>",
+      F:"語法不符：<code>was refused</code> 後不接 <code>of V-ing</code>。<br><b>何時才對：</b><i>Rhea refused to let this happen.</i>",
+      G:"詞性與語意不符：<code>humankind</code> 為名詞。<br><b>何時才對：</b><i>Zeus had power over humankind.</i>",
+      H:"搭配不符：形容詞 <code>tremendous</code> 不搭配 <code>of fooling</code>。<br><b>何時才對：</b><i>Cronus had a tremendous desire for power.</i>",
+      I:"詞性不符：<code>was</code> 後不可接原形動詞 <code>replace</code>。<br><b>何時才對：</b><i>They could not replace him as king.</i>",
+      J:"語法不符：<code>was tricked</code> 為被動「被騙」，且不接 <code>of fooling</code>。<br><b>何時才對：</b><i>Rhea tricked her husband.</i>"
+    })
+  ],
+  [38,["考點：雙受詞動詞句型 (promise + sb. + that 子句)","詞性需求：過去式及物動詞 (V-ed)"],"B",
+    "主詞為 <code>he (Zeus)</code>，空格後接間接受詞 <code>his siblings</code>（他的兄弟姊妹）與直接受詞名詞子句 <code>that he would save them</code>（他將會拯救他們）。能接「人 + <code>that 子句</code>」表達「向某人承諾會做某事」的過去式動詞為 <code>promised</code>。",
+    makeFillOps("B",{
+      A:"詞性不符：缺少過去式動詞，<code>capable</code> 為形容詞。<br><b>何時才對：</b><i>She was capable of fooling Cronus.</i>",
+      B:"詞性、時態與句型皆正確：<code>promised + sb. (his siblings) + that S + would V</code>（向手足們承諾他會救他們）。",
+      C:"詞性不符：<code>universe</code> 為名詞。<br><b>何時才對：</b><i>He ruled the universe.</i>",
+      D:"時態與句型不符：<code>remove</code> 為原形動詞，且不可接 <code>sb. + that 子句</code>。<br><b>何時才對：</b><i>He forced him to remove his brothers and sisters from his stomach.</i>",
+      E:"詞性不符：<code>victim</code> 為名詞。<br><b>何時才對：</b><i>His children fell victim to his craving.</i>",
+      F:"句型與語意不符：<code>refused</code> 不接 <code>his siblings that he would save them</code>。<br><b>何時才對：</b><i>Rhea refused to let this happen to Zeus.</i>",
+      G:"詞性不符：<code>humankind</code> 為名詞。<br><b>何時才對：</b><i>Zeus controlled thunder, lightning, and humankind.</i>",
+      H:"詞性不符：<code>tremendous</code> 為形容詞。<br><b>何時才對：</b><i>He had a tremendous desire for power.</i>",
+      I:"時態與句型不符：<code>replace</code> 為原形動詞且不接 <code>that 子句</code>。<br><b>何時才對：</b><i>They could not replace him as king.</i>",
+      J:"句型與語意不符：<code>trick</code> 不直接接 <code>sb. + that 子句</code>（需用 <code>trick sb. into V-ing</code>），且宙斯是真的去救手足而非欺騙他們。<br><b>何時才對：</b><i>Rhea tricked her husband by handing him a rock.</i>"
+    })
+  ],
+  [39,["考點：不定詞 forced him to V ＋ 介系詞搭配 (remove A from B)","詞性需求：原形及物動詞 (V)"],"D",
+    "空格前為 <code>forced him to</code>（迫使他去……），需填原形及物動詞；後面受詞與介系詞片語為 <code>his brothers and sisters from his stomach</code>（把他的兄弟姊妹從他肚子裡……出來），符合固定搭配 <code>remove A from B</code>（將 A 從 B 移除／取出）。",
+    makeFillOps("D",{
+      A:"詞性不符：不定詞 <code>to</code> 後需接原形動詞，<code>capable</code> 為形容詞。<br><b>何時才對：</b><i>She was capable of fooling Cronus.</i>",
+      B:"詞性不符：<code>promised</code> 為過去式動詞。<br><b>何時才對：</b><i>He promised his siblings that he would save them.</i>",
+      C:"詞性不符：<code>universe</code> 為名詞。<br><b>何時才對：</b><i>He ruled the universe.</i>",
+      D:"詞性與搭配皆正確：原形及物動詞 <code>remove</code> 置於 <code>forced him to</code> 後，搭配 <code>from his stomach</code> 構成 <code>remove A from B</code>。",
+      E:"詞性不符：<code>victim</code> 為名詞。<br><b>何時才對：</b><i>His children fell victim to his craving.</i>",
+      F:"詞性不符：<code>refused</code> 為過去式動詞。<br><b>何時才對：</b><i>Rhea refused to let this happen.</i>",
+      G:"詞性不符：<code>humankind</code> 為名詞。<br><b>何時才對：</b><i>Zeus controlled thunder, lightning, and humankind.</i>",
+      H:"詞性不符：<code>tremendous</code> 為形容詞。<br><b>何時才對：</b><i>He had a tremendous desire for power.</i>",
+      I:"搭配不符：<code>replace</code> 搭配介系詞 <code>with</code>（以 B 取代 A），不搭配 <code>from his stomach</code>。<br><b>何時才對：</b><i>Cronus ate his children so they could not replace him as king.</i>（見第 34 題）",
+      J:"詞性不符：<code>tricked</code> 為過去式動詞。<br><b>何時才對：</b><i>Rhea tricked her husband.</i>"
+    })
+  ],
+  [40,["考點：對等連接詞並列受詞 (control thunder, lightning, and ___)","詞性需求：不可數名詞 (n.)"],"G",
+    "空格與前面的名詞 <code>thunder</code>（雷）、<code>lightning</code>（閃電）由 <code>and</code> 並列作為及物動詞 <code>control</code>（掌管、控制）的受詞，且前無冠詞；字庫中能不加冠詞並作為眾神之王宙斯統治對象的名詞即為集合名詞 <code>humankind</code>（人類）。",
+    makeFillOps("G",{
+      A:"詞性不符：<code>capable</code> 為形容詞，不可作 <code>control</code> 的受詞。<br><b>何時才對：</b><i>She was capable of fooling Cronus.</i>",
+      B:"詞性不符：<code>promised</code> 為過去式動詞。<br><b>何時才對：</b><i>He promised his siblings that he would save them.</i>",
+      C:"語法不符：單數可數名詞 <code>universe</code> 必須加定冠詞 <code>the</code>（<code>the universe</code>），但空格前無冠詞 <code>the</code>。<br><b>何時才對：</b><i>He had power over every creature in the universe.</i>（見第 31 題）",
+      D:"詞性不符：<code>remove</code> 為動詞。<br><b>何時才對：</b><i>He forced him to remove his brothers and sisters from his stomach.</i>",
+      E:"語法與語意不符：<code>victim</code> 為單數可數名詞不可裸用，且宙斯受封掌管的是雷電與「全人類」而非「受害者」。<br><b>何時才對：</b><i>His children fell victim to his craving.</i>",
+      F:"詞性不符：<code>refused</code> 為過去式動詞。<br><b>何時才對：</b><i>Rhea refused to let this happen.</i>",
+      G:"詞性、語法與神話語意皆正確：不可數集合名詞 <code>humankind</code>（人類）無須加冠詞，與 <code>thunder, lightning</code> 並列作 <code>control</code> 的受詞，且首段亦提到 <code>he had power over every man, woman, child...</code>。",
+      H:"詞性不符：<code>tremendous</code> 為形容詞。<br><b>何時才對：</b><i>He had a tremendous desire for power.</i>",
+      I:"詞性不符：<code>replace</code> 為動詞。<br><b>何時才對：</b><i>They could not replace him as king.</i>",
+      J:"詞性不符：<code>tricked</code> 為過去式動詞。<br><b>何時才對：</b><i>Rhea tricked her husband.</i>"
+    })
+  ]
+];
+
+// IV. 閱讀測驗 (41-45)
+const P_READ=[
+  [
+    ["Nowadays, there is a lot of discussion surrounding 3D printing.","現今，有許多圍繞著 3D 列印的討論。"],
+    ["Much of the focus is on how 3D printers can be used in medical and industrial fields.","大部分的焦點都集中在 3D 印表機能如何應用於醫療與工業領域。"],
+    ["However, there are also many other fascinating applications.","然而，還有許多其他引人入勝的應用。"],
+    ["Here are a few ways in which 3D printing is changing the world, one field at a time.","以下是 3D 列印正在改變世界的幾種方式，一次改變一個領域。"]
+  ],
+  [
+    ["First, many artists are now using 3D printers to produce customized jewelry.","首先，許多藝術家現在正使用 3D 印表機來生產客製化珠寶。"],
+    ["For example, you could ask an artist to make you a pair of earrings in just about any shape you want.","舉例來說，你可以請藝術家為你製作一副幾乎任何你想要之形狀的耳環。"],
+    ["There are also 3D printed dolls for kids available, and some chocolate makers have even taken to printing chocolates in all kinds of shapes by using 3D printers.","市面上也有提供給孩子的 3D 列印玩偶，而且有些巧克力製造商甚至已經開始利用 3D 印表機印出各種形狀的巧克力。"],
+    ["This means that designers no longer have to depend on molds* and are limited only by their own imaginations.","這意味著設計師不再需要仰賴模具，而只受限於他們自己的想像力。"]
+  ],
+  [
+    ["Speaking of art, the most common type of photograph today has to be the selfie.","說到藝術，今日最常見的照片類型肯定就是自拍照了。"],
+    ["3D printing has taken selfies to the next level by introducing 3D selfies.","3D 列印藉由推出 3D 自拍，將自拍照提升到了下一個層次。"],
+    ["In the Netherlands, at a theme park called Madurodam, there is a special photo booth called the “Fantasitron.”","在荷蘭一座名為馬德羅丹（Madurodam）的主題樂園裡，有一個稱為「Fantasitron」的特殊拍照亭。"],
+    ["Inside this booth, a 2D photograph of one or two people can be taken; this photo can then be transformed into a 3D model.","在這個拍照亭內，可以為一或兩個人拍攝一張 2D 平面照片；這張照片隨後可以被轉換成一座 3D 立體模型。"]
+  ],
+  [
+    ["On a more serious note, 3D printing is also being used to help the environment.","談到比較嚴肅的層面，3D 列印也正被用來幫助環境。"],
+    ["In Bahrain, for example, 3D printers are being used to print structures that are similar to coral reef.","以巴林（Bahrain）為例，3D 印表機正被用來列印與珊瑚礁相似的結構物。"],
+    ["These structures can be placed in the ocean to encourage new coral to grow in places where it has died out.","這些結構物可以放置於海洋中，在珊瑚已經絕跡的地方促進新珊瑚生長。"]
+  ],
+  [
+    ["What great use for 3D printing will we think of next?","接下來我們還會想出 3D 列印的什麼絕妙用途呢？"]
+  ]
+];
+
+const Q_READ=[
+  [41,["考點：寫作目的題 (Author's Purpose)","詞性需求：不定詞片語 (To + V)"],"D",
+    ["What is the purpose of this passage?","這篇文章的寫作目的是什麼？"],
+    "定位第一段最後兩句主題句（Thesis Statement）：<code>However, there are also many other fascinating applications. Here are a few ways in which 3D printing is changing the world, one field at a time.</code>（然而還有許多其他迷人的應用。以下是 3D 列印正在改變世界的幾種方式，一次一個領域），隨後第二、三、四段分別介紹珠寶／玩具／食品設計、3D 自拍模型、海洋珊瑚礁保育等不同領域的應用，故全文目的為「說明 3D 列印已被應用在哪些領域」。",
+    [
+      ["To encourage people to use 3D printing.","為了鼓勵人們使用 3D 列印。","目的偏差：本文為客觀介紹各領域新奇應用的說明文（如巴林海底造礁、荷蘭主題樂園拍照亭），並非推銷或呼籲讀者親自去買／使用 3D 印表機。<br><b>何時才對：</b>若文章結尾呼籲讀者購買家用 3D 印表機自己印日常用品，此選項才對。"],
+      ["To teach people how to use 3D printing.","為了教導人們如何使用 3D 列印。","無中生有：文中完全沒有任何操作步驟、建模軟體教學或機器設定指南。<br><b>何時才對：</b>若文章說明如何組裝印表機、匯入 3D 圖檔並開始列印，此選項才對。"],
+      ["To warn people against the use of 3D printing.","為了警告人們不要使用 3D 列印。","與原文態度完全相反：全文用 <code>fascinating applications</code>、<code>great use</code> 讚揚 3D 列印的正面創新，毫無警告意味。<br><b>何時才對：</b>若文章探討 3D 列印被用於製造非法武器或產生塑膠污染，此選項才對。"],
+      ["To explain what fields 3D printing has been applied to.","為了說明 3D 列印已經被應用在哪些領域。","直接對應第一段主題句 <code>many other fascinating applications ... one field at a time</code> 及後續各段跨領域實例。"]
+    ]
+  ],
+  [42,["考點：段落主旨題 (Paragraph Main Idea)","詞性需求：完整句子"],"C",
+    ["What is the main idea of the second paragraph?","第二段的主旨是什麼？"],
+    "定位第二段：首句指出藝術家用 3D 印表機生產「客製化珠寶（<code>customized jewelry</code>）」，第二句舉例「你可以請藝術家做出幾乎任何你想要形狀的耳環（<code>make you a pair of earrings in just about any shape you want</code>）」，接著提到兒童玩偶與各種形狀的巧克力，末句總結設計師不再受限於模具，只受限於想像力。這說明 3D 列印能讓顧客獲得他們心目中渴望的各式客製化產品。",
+    [
+      ["3D printing can produce only a limited range of products.","3D 列印只能生產有限種類的產品。","與原文相反：第二段列舉了耳環珠寶、兒童玩偶、各種形狀的巧克力，並說 <code>are limited only by their own imaginations</code>（只受限於自己的想像力，即產品種類無限多元）。<br><b>何時才對：</b>改為 <i>3D printing can produce a wide variety of customized products.</i> 才正確。"],
+      ["3D printing may cause modern artists to lose their imagination.","3D 列印可能會導致現代藝術家失去他們的想像力。","曲解原意：第二段末句 <code>limited only by their own imaginations</code> 意思是「完全不再受傳統模具限制，能盡情發揮想像力」，而非失去想像力。<br><b>何時才對：</b>改為 <i>3D printing allows modern artists to give full play to their imagination.</i> 才正確。"],
+      ["3D printing enables customers to obtain the products they desire.","3D 列印使顧客能夠獲得他們所渴望的產品。","精準涵蓋第二段 <code>produce customized jewelry</code> 與 <code>make you a pair of earrings in just about any shape you want</code> 的核心概念。"],
+      ["3D printed dolls and chocolates are not popular with consumers.","3D 列印玩偶與巧克力並不受消費者歡迎。","無中生有且違背文意：文中提到市面上已有 3D 列印玩偶，且巧克力商甚至紛紛採用（<code>have even taken to printing chocolates</code>），並未說不受歡迎。<br><b>何時才對：</b>改為 <i>3D printed dolls and chocolates are among the creative products made possible by 3D printing.</i> 才正確。"]
+    ]
+  ],
+  [43,["考點：細節是非判斷題 (NOT true)","詞性需求：完整句子"],"D",
+    ["Which of the following is NOT true about “Fantasitron”?","關於「Fantasitron」，下列何者為非？"],
+    "定位第三段最後兩句：<code>In the Netherlands, at a theme park called Madurodam, there is a special photo booth called the “Fantasitron.” Inside this booth, a 2D photograph of one or two people can be taken; this photo can then be transformed into a 3D model.</code>（在荷蘭名為馬德羅丹的主題樂園裡，有個叫 Fantasitron 的特殊拍照亭。在亭子裡，可以拍下一或兩個人的 2D 照片；這張照片隨後能轉換成 3D 模型）。因此它是把「一或兩個人的自拍照（<code>a 2D photograph of one or two people</code>）」轉成 3D 模型，而不是把「主題樂園的照片（<i>a photo of the theme park</i>）」轉成 3D 模型，故 (D) 錯誤。",
+    [
+      ["It allows one or two people to take a 2D photo.","它允許一或兩個人拍攝一張 2D 照片。","符合原文（不可選）：對應第三段 <code>Inside this booth, a 2D photograph of one or two people can be taken</code>。"],
+      ["It is known for being able to produce 3D selfies.","它以能夠製作出 3D 自拍模型而聞名。","符合原文（不可選）：對應第三段 <code>introducing 3D selfies ... this photo can then be transformed into a 3D model</code>。"],
+      ["It is a photo booth inside the Madurodam theme park.","它是馬德羅丹主題樂園裡面的一個拍照亭。","符合原文（不可選）：對應第三段 <code>at a theme park called Madurodam, there is a special photo booth called the “Fantasitron.”</code>。"],
+      ["It transforms a photo of the theme park into a 3D model.","它將該主題樂園的照片轉換成 3D 模型。","與原文不符（本題正解）：被轉換成 3D 模型的照片是「一或兩位遊客的人像自拍照（<code>a 2D photograph of one or two people</code>）」，而非「主題樂園的風景照」。<br><b>何時才對：</b>改為 <i>It transforms a 2D photo of one or two people into a 3D model.</i> 才符合原文。"]
+    ]
+  ],
+  [44,["考點：推論題 (Inference / Implication)","詞性需求：完整句子"],"D",
+    ["What does the author imply in this passage?","作者在這篇文章中暗示了什麼？"],
+    "定位第四段第 2～3 句：<code>In Bahrain, for example, 3D printers are being used to print structures that are similar to coral reef. These structures can be placed in the ocean to encourage new coral to grow in places where it has died out.</code>（在巴林，3D 印表機被用來印製類似珊瑚礁的結構。這些結構可放入海中，在珊瑚已絕跡處促進新珊瑚生長）。既然能「促進新珊瑚生長（<code>encourage new coral to grow</code>）」，即可合理推論「3D 列印很可能有助於增加海洋中真實珊瑚的數量」。",
+    [
+      ["Artists should not rely on 3D printing too much.","藝術家不應該過度依賴 3D 列印。","無中生有：第二段讚揚 3D 列印讓設計師不再需要依賴傳統模具（<code>no longer have to depend on molds</code>），完全沒有勸戒藝術家不要依賴 3D 列印。<br><b>何時才對：</b>改為 <i>With 3D printing, designers no longer need to rely on traditional molds.</i> 才正確。"],
+      ["2D selfies will one day be replaced by 3D selfies.","2D 自拍總有一天會被 3D 自拍取代。","過度推論：第三段只說 3D 列印將自拍提升到新層次（<code>taken selfies to the next level by introducing 3D selfies</code>），並未暗示傳統 2D 自拍會被淘汰取代。<br><b>何時才對：</b>改為 <i>3D printing offers a new and exciting way for people to take selfies.</i> 才正確。"],
+      ["3D printing should be used only in medical and industrial fields.","3D 列印應該只被應用在醫療與工業領域。","與全文主旨相反：第一段明明說除了醫療和工業之外，還有許多其他迷人的應用（藝術、娛樂、環保）。<br><b>何時才對：</b>改為 <i>3D printing can be used not only in medical and industrial fields, but also in art, entertainment, and environmental protection.</i> 才正確。"],
+      ["3D printing is likely to help increase the amount of real coral in the ocean.","3D 列印很可能有助於增加海洋中真實珊瑚的數量。","合理推論自第四段末句 <code>encourage new coral to grow in places where it has died out</code>（促進新珊瑚在已白化絕跡的海域生長）。"]
+    ]
+  ],
+  [45,["考點：作者態度與語氣題 (Author's Attitude / Tone)","詞性需求：形容詞 (adj.)"],"A",
+    ["Which of the following words best describes the author’s attitude toward the future of 3D printing?","下列哪一個字最能描述作者對 3D 列印未來的態度？"],
+    "檢視作者在文中的用字：第一段稱讚其為 <code>fascinating applications</code>（引人入勝的應用）、<code>changing the world</code>（改變世界）；第四段說明它能 <code>help the environment</code>（幫助環境）；最後一段更以充滿期待的修辭問句結尾：<code>What great use for 3D printing will we think of next?</code>（接下來我們還會想出 3D 列印的什麼絕妙用途呢？）。可見作者對 3D 列印的未來充滿期待與樂觀希望（<code>Hopeful</code>）。",
+    [
+      ["Hopeful.","adj. 抱有希望的；樂觀期待的","呼應末段 <code>What great use for 3D printing will we think of next?</code> 的正向期待語氣。"],
+      ["Negative.","adj. 負面的；悲觀的","文中完全沒有提及 3D 列印的缺點或危害。<br><b>何時才對：</b>若作者在末段擔憂 3D 列印會造成大量失業或環境災難，態度才會是 <i>Negative</i>。"],
+      ["Uncertain.","adj. 不確定的；懷疑的","末段問句 <code>What great use ... will we think of next?</code> 是讚嘆未來將有更多絕妙用途（肯定必有 <code>great use</code>），而非對其未來發展存疑。<br><b>何時才對：</b>若末段寫 <i>Whether 3D printing will truly succeed in the future remains to be seen.</i>，態度才會是 <i>Uncertain</i>。"],
+      ["Amused.","adj. 感到好笑的；覺得滑稽的","第四段明確寫道 <code>On a more serious note, 3D printing is also being used to help the environment.</code>（在更嚴肅的層面上，它也被用來拯救環境與珊瑚礁），並非只是覺得滑稽好笑。<br><b>何時才對：</b>若文章通篇只描寫人們用 3D 印表機印出各種荒唐搞笑的惡作劇道具，態度才會是 <i>Amused</i>。"]
+    ]
+  ]
+];
+
+// V. 翻譯 (46-49)
+const TRANS=[
+  [46,["考點：虛主詞句型 It seems that... ＋ 現在完成被動語態 have been told ＋ 動名詞主詞 eating...","詞性需求：完整英文句子"],"It seems that we have been told for years that eating too much fat will make us sick.",
+    "我們似乎多年以來一直被告知吃太多脂肪（fat）會讓我們生病。（It seems….）",
+    "1. <b>「似乎……」</b>：依提示以虛主詞句型 <code>It seems that + S + V</code> 開頭。<br>2. <b>「我們多年以來一直被告知……」</b>：時間副詞片語 <code>for years</code>（多年以來）搭配「從過去持續到現在的被動經驗」，使用<b>現在完成式被動語態</b> <code>we have been told for years that...</code>。<br>3. <b>「吃太多脂肪會讓我們生病」</b>：在第二個 <code>that</code> 子句中，以動名詞片語 <code>eating too much fat</code> 作主詞，後接助動詞與使役結構 <code>will make us sick</code>。",
+    "`[[|It seems that we have been told for years that eating too much fat will make us sick.]]`"
+  ],
+  [47,["考點：關係子句修飾 people who... ＋ 比較級 more likely to V than... ＋ 代名詞 those 指代複數名詞","詞性需求：完整英文句子"],"But in fact, people who eat too much sugar are more likely to get sick than those who eat too much fat.",
+    "但事實上，吃太多糖的人比那些吃太多脂肪的人更有可能生病。（...those...）",
+    "1. <b>「但事實上」</b>：轉折片語 <code>But in fact,</code>（或 <code>However, in fact,</code>）。<br>2. <b>「吃太多糖的人」</b>：先行詞 <code>people</code> 後接關係子句 <code>who eat too much sugar</code>。<br>3. <b>「比……更有可能生病」</b>：使用比較級句型 <code>are more likely to get/become sick than...</code>。<br>4. <b>「那些吃太多脂肪的人」</b>：為避免重複前面的複數名詞 <code>people</code>，依提示使用複數指示代名詞 <b><code>those</code></b>（＝ <code>the people</code>），後接關係子句 <code>who eat too much fat</code>。",
+    "`[[|But in fact, people who eat too much sugar are more likely to get sick than those who eat too much fat.]]`"
+  ],
+  [48,["考點：By the time + 過去簡單式，主要子句搭配過去完成式 (had + p.p.)","詞性需求：完整英文句子"],"By the time we were aware of the disease, it had already spread throughout the neighborhood.",
+    "當我們察覺到這個疾病時，它早已在社區中傳播開來。（By the time....）",
+    "1. <b>「當我們察覺到這個疾病時」</b>：依提示使用時間連接詞片語 <code>By the time</code>（到……的時候），引導<b>過去簡單式</b>子句 <code>we were aware of the disease</code>（或 <code>we noticed / realized the disease</code>）。<br>2. <b>「它早已在社區中傳播開來」</b>：因為「疾病傳播」發生在過去「我們察覺」之前（過去的過去），主要子句必須使用<b>過去完成式</b> <code>it had already spread</code>（注意 <code>spread</code> 三態同形：<code>spread-spread-spread</code>），搭配地點片語 <code>throughout / in the neighborhood (or community)</code>。",
+    "`[[|By the time we were aware of the disease, it had already spread throughout the neighborhood.]]`"
+  ],
+  [49,["考點：虛受詞句型 (find + it + adj. + to V) ＋ 對等不定詞 (report ... and seek ...)","詞性需求：完整英文句子"],"Therefore, we found it necessary to report the situation to the government and seek help.",
+    "因此，我們認為有必要向政府報告狀況並尋求幫助。（...find it...）",
+    "1. <b>「因此」</b>：因果轉承副詞 <code>Therefore,</code>（或 <code>Thus, / As a result,</code>）。<br>2. <b>「我們認為有必要……」</b>：承接上題第 48 題的過去時態，並依提示使用五動詞<b>虛受詞句型</b> <code>we found it necessary to V</code>（若依中文現在式寫 <code>we find it necessary to V</code> 亦可，但題組連貫以過去式 <code>found</code> 最佳）。<br>3. <b>「向政府報告狀況並尋求幫助」</b>：在真正受詞不定詞 <code>to</code> 後平行連接兩個原形動詞片語：<code>report the situation (or condition) to the government</code> 以及 <code>and seek (or ask for) help</code>。",
+    "`[[|Therefore, we found it necessary to report the situation to the government and seek help.]]`"
+  ]
+];
+
+// === 組裝導覽列與渲染至 #app ===
+const navItems=[
+  ["#sec1","I. 字彙與慣用語 (1-15)"],
+  ["#sec2","II. 綜合測驗 (16-30)"],
+  ["#sec3","III. 文意選填 (31-40)"],
+  ["#sec4","IV. 閱讀測驗 (41-45)"],
+  ["#sec5","V. 翻譯 (46-49)"]
+];
+document.getElementById("nav").innerHTML=navItems.map(x=>'<a href="'+x[0]+'">'+x[1]+'</a>').join('');
+
+let html="";
+
+// Render Section I
+html+='<h2 id="sec1">I. 字彙與慣用語（30%）</h2>';
+VOC.forEach(q=>{
+  SENT[q[0]]=q[3];
+  html+=card(q[0],q[1],q[2],stem(q[0])+clue(q[4])+ops(q[5],q[2]));
+});
+
+// Render Section II
+html+='<h2 id="sec2">II. 綜合測驗（30%）</h2>';
+html+=passage("綜合測驗 (A) 全文中英對照（第 16–25 題）",P_CLOZE_A);
+Q_CLOZE_A.forEach(q=>{
+  html+=card(q[0],q[1],q[2],stem(q[0])+clue(q[3])+ops(q[4],q[2]));
+});
+html+=passage("綜合測驗 (B) 全文中英對照（第 26–30 題）",P_CLOZE_B);
+Q_CLOZE_B.forEach(q=>{
+  html+=card(q[0],q[1],q[2],stem(q[0])+clue(q[3])+ops(q[4],q[2]));
+});
+
+// Render Section III
+html+='<h2 id="sec3">III. 文意選填（10%）</h2>';
+const bankHtml='<div class="pas"><h3>選項字庫（10 選 10）</h3><div class="bank">'+
+  Object.keys(BANK_DICT).map(k=>'<span><b>('+k+') '+BANK_DICT[k][0]+'</b> <small>'+BANK_DICT[k][1]+'</small></span>').join('')+
+  '</div></div>';
+html+=bankHtml;
+html+=passage("文意選填全文中英對照（第 31–40 題）",P_FILL);
+Q_FILL.forEach(q=>{
+  html+=card(q[0],q[1],q[2]+' ('+BANK_DICT[q[2]][0]+')',stem(q[0])+clue(q[3])+ops(q[4],q[2],"ABCDEFGHIJ"));
+});
+
+// Render Section IV
+html+='<h2 id="sec4">IV. 閱讀測驗（10%）</h2>';
+html+=passage("閱讀測驗全文中英對照（第 41–45 題）",P_READ,"註：mold 模具");
+Q_READ.forEach(q=>{
+  SENT[q[0]]=q[3];
+  html+=card(q[0],q[1],q[2],stem(q[0])+clue(q[4])+ops(q[5],q[2]));
+});
+
+// Render Section V
+html+='<h2 id="sec5">V. 翻譯（20%，46 至 47、48 至 49 各為一題組）</h2>';
+TRANS.forEach(t=>{
+  const transStem='<div class="stem"><div class="zh" style="color:inherit">'+t[3]+'</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx(t[5].replace(/^`|`$/g,''))+'</div></div>';
+  html+=card(t[0],t[1],t[2],transStem+clue(t[4]));
+});
+
+document.getElementById("app").innerHTML=html;
+</script>
+<script src="bookmark.js"></script>
+</body>
+</html>
