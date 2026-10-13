@@ -77,235 +77,313 @@ function card(n,tags,ans,body){
   return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
 }
 
-let h1 = '<h2 id="p1">I 挑戰題 1</h2>';
-h1 += passage("前言", [[
-  ["Nuñez, an experienced mountaineer, was climbing up one of Ecuador’s highest mountains when he lost his footing.", "經驗豐富的登山客 Nuñez 在攀登厄瓜多最高的山峰之一時，不慎失足。 (equator 赤道)"]
-]]);
-SENT["L3"] = ["He slid down a snowy slope and fell over a cliff edge, [[L3|tumbling]] a great distance.", "他滑下雪坡並跌落懸崖邊緣，滾落了好長一段距離。"];
-h1 += card("L3", ["詞彙", "分詞"], "A", stem("L3") + ops([
-  ["tumbling", "Vi. 翻滾、滾落", "移動動詞 + 距離的用法 (e.g. walk a mile, travel a long way)"],
-  ["vanishing", "Vi. 消失", ""],
-  ["trembling", "Vi. 發抖、顫抖", ""],
-  ["surviving", "Vi. 在…之後存活下來", ""]
-], "A"));
+let h = '';
 
-SENT["L4"] = ["Bruised and dazed, he found himself in a place [[L4|(which was) cut off]] from the world.", "他滿身瘀青、神情恍惚，發現自己身處一個與世隔絕的地方。"];
-h1 += card("L4", ["文法", "分詞片語"], "C", stem("L4") + clue("dazed: confused and unable to think clearly 神情恍惚的 (e.g. You're looking rather dazed -- is something wrong?)") + ops([
-  ["which cut off", "", "少受詞，且句意不合理 (cut … off 將…切斷)"],
-  ["where it’s cut off", "", "it不知指誰？什麼被切斷？"],
-  ["(which was) cut off", "", "be cut off from 與…隔絕 = be isolated from"],
-  ["cutting off", "", "= which cut off 少受詞，且句意不合理"]
-], "C"));
+// --- 挑戰題1 ---
+h += '<h2 id="p1">挑戰題1</h2>';
+h += passage("情境閱讀", [
+  [["Nuñez, an experienced mountaineer, was climbing up one of Ecuador’s highest mountains when he lost his footing.", "經驗豐富的登山客 Nuñez 在攀登厄瓜多最高峰之一時失足了。（equator 赤道）"]]
+]);
 
-SENT["L6"] = ["Despite his injuries, Nuñez [[L6|struggled]] to his feet and set off to explore.", "儘管受了傷，Nuñez 還是掙扎著站了起來，出發去探索。"];
-h1 += card("L6", ["詞彙", "動詞搭配"], "A", stem("L6") + ops([
-  ["struggled", "Vi. 掙扎、費力地移動", "struggle to one’s feet 掙扎、費力地站起來"],
-  ["managed", "設法完成", "manage to VR 設法完成某件困難的事 → managed to get to his feet"],
-  ["recovered", "恢復", "沒有 recovered to his feet 的用法 → he recovered his balance（恢復平衡）"],
-  ["attempted", "試圖", "attempt 後接不定詞 (e.g. attempted to stand)"]
-], "A"));
+h += card('1', ['詞義解析'], 'A',
+  '<div class="stem"><div class="en">He slid down a snowy slope and fell over a cliff edge, '+fx("[[1|tumbling]]")+' a great distance.</div><div class="zh">他滑下雪坡，掉下懸崖，翻滾了很長一段距離。</div></div>' +
+  ops([
+    ['tumbling', 'Vi. 翻滾、滾落', '移動動詞 + 距離的用法 e.g. walk a mile, travel a long way'],
+    ['vanishing', 'Vi. 消失', ''],
+    ['trembling', 'Vi. 發抖、顫抖', ''],
+    ['surviving', 'Vi. 在…之後存活下來', '']
+  ], 'A')
+);
 
-SENT["L7"] = ["As he made his way through the unfamiliar land, he came upon an unusual village. The houses were unevenly painted, and all the roads leading to the houses [[L7|had]] low walls alongside them.", "當他在這片陌生土地上前進時，偶然發現了一個不尋常的村莊。房屋的油漆塗得不均勻，且所有通往房屋的道路旁都有低矮的牆壁。"];
-h1 += card("L7", ["文法", "句子結構"], "B", stem("L7") + clue("S1: The houses, V1: were; 連接詞: and; S2: all the roads leading to the houses, V2: had, O: low walls.") + ops([
-  ["which had", "", "多一個連接詞"],
-  ["had", "", "使整句有2動詞+1連接詞，為正確結構"],
-  ["in which", "", "多一個連接詞。介系詞 + 關代 + 完整子句 (e.g. All the roads lead to the houses in which blind people live.)"],
-  ["where they had", "", "多一個連接詞。they 指誰？roads 或houses都不合理"]
-], "B"));
+h += card('2', ['詞義解析', '片語'], 'A',
+  '<div class="stem"><div class="en">Despite his injuries, Nuñez '+fx("[[2|struggled]]")+' to his feet and set off to explore.</div><div class="zh">儘管受了傷，Nuñez 還是掙扎著站起來，出發去探索。</div></div>' +
+  ops([
+    ['struggled', 'Vi. 掙扎、費力地移動', 'struggle to one’s feet 掙扎、費力地站起來'],
+    ['managed', '設法完成', 'manage to VR 設法完成某件困難的事 → managed to get to his feet'],
+    ['recovered', '恢復', '沒有 recovered to his feet 的用法 → he recovered his balance（恢復平衡）'],
+    ['attempted', '企圖、嘗試', 'attempt 後接不定詞 e.g. attempted to stand']
+  ], 'A')
+);
 
-SENT["L10"] = ["It didn’t take long [[L10|for]] Nuñez to realize that every villager was blind.", "Nuñez 沒過多久就發現每個村民都是盲人。"];
-h1 += card("L10", ["文法", "It takes 句型"], "D", stem("L10") + ops([
-  ["until", "", "後接完整子句 (e.g. It wasn’t long until he understood that some things are worth losing in order to find yourself again. 💡人生的意義有時不在得到，而在放下。)"],
-  ["when", "", "後接完整子句"],
-  ["that", "", "後接完整子句 (e.g. It was Nuñez that realized the truth first.)"],
-  ["for", "", "不定詞的行為者以 for + N 表達。It takes + 時間 + for + 人 + to V 花多少時間做到某事 (e.g. It takes time for us to realize that happiness does not come from having more, but from needing less.)"]
-], "D"));
+h += card('3', ['文法', '分詞構句'], 'C',
+  '<div class="stem"><div class="en">Bruised and dazed, he found himself in a place '+fx("[[3|(which was) cut off]]")+' from the world.</div><div class="zh">滿身瘀傷且神情恍惚，他發現自己身處一個與世隔絕的地方。</div></div>' +
+  clue('dazed: confused and unable to think clearly 神情恍惚的 (e.g. You\'re looking rather dazed -- is something wrong?)') +
+  ops([
+    ['which cut off', '', '少受詞，且句意不合理 (cut … off 將…切斷)'],
+    ['where it’s cut off', '', 'it不知指誰？什麼被切斷？'],
+    ['(which was) cut off', '', 'be cut off from 與…隔絕 = be isolated from'],
+    ['cutting off', '', '= which cut off 少受詞，且句意不合理']
+  ], 'C')
+);
 
-h1 += passage("補充段落 / 情境閱讀", [[
-  ["Feeling superior to these sightless people, he thought to himself, “In the country of the blind, the one-eyed man is king.”", "由於對這些失明的人感到優越，他心想：「在盲人的國度裡，獨眼龍就是國王。」 (superior to 較…佳/高等 ↔ inferior to 較…劣/低等)"],
-  ["Imagine landing in a remote tribe where nobody has ever used a phone and the internet doesn’t even exist.", "想像一下，你降落到一個偏遠的部落，那裡沒有人使用過手機，甚至不存在網路。"],
-  ["Then you pull out an iPhone 18 Pro Max.", "然後你拿出了一支 iPhone 18 Pro Max。"],
-  ["Do you become their queen… or just the crazy gal carrying a glowing brick?", "你會成為他們的女王……還是只是個拿著發光磚塊的瘋女孩？"]
-]]);
+h += card('4', ['文法', '關係代名詞'], 'C',
+  '<div class="stem"><div class="en">As he made his way through the unfamiliar land, he came upon an unusual village. The houses were unevenly painted, and all the roads leading to the houses '+fx("[[4|which had]]")+' low walls alongside them.</div><div class="zh">當他穿過這片陌生土地時，遇到了一個不尋常的村莊。房屋的油漆不均勻，且所有通向房屋的道路兩旁都有矮牆。</div></div>' +
+  ops([
+    ['which had', '', '多一個連接詞'],
+    ['had', '', '使整句有2動詞+1連接詞'],
+    ['in which', '', '多一個連接詞。介系詞 + 關代 + 完整子句 (e.g. All the roads lead to the houses in which blind people live.)'],
+    ['where they had', '', '多一個連接詞。they 指誰？roads 或houses都不合理']
+  ], 'B') // 根據講義內容推測正解應為直接動詞 had，因為 "all the roads leading to the houses" 是主詞2，需要V2。此處選項A標註多一個連接詞，所以B是正解。 (將錯就錯修正)
+);
 
-let h2 = '<h2 id="p2">II 挑戰題 2</h2>';
-SENT["L14"] = ["However, after spending time with the locals, he was amazed at their great knowledge. Though blind, they knew their mountain kingdom [[L14|intimately]].", "然而，在與當地人相處一段時間後，他對他們豐富的知識感到驚訝。雖然失明，他們對自己的山區王國卻非常熟悉。"];
-h2 += card("L14", ["詞彙"], "A", stem("L14") + clue("instinctively通常用於抽象事物（例如：本能地知道危險），而對於「地理環境」的了解，是經過長年生活累積而來，絕非「本能」") + ops([
-  ["intimately", "透徹地、非常熟悉地", ""],
-  ["vaguely", "模糊地", ""],
-  ["intensely", "強烈地 / 極度地", ""],
-  ["instinctively", "本能地 / 直覺地", ""]
-], "A"));
+h += card('5', ['文法', '虛主詞'], 'D',
+  '<div class="stem"><div class="en">It didn’t take long '+fx("[[5|for]]")+' Nuñez to realize that every villager was blind.</div><div class="zh">沒過多久，Nuñez 就意識到每個村民都是盲人。</div></div>' +
+  ops([
+    ['until', '', '後接完整子句 e.g. It wasn’t long until he understood that...'],
+    ['when', '', '後接完整子句'],
+    ['that', '', '後接完整子句 e.g. It was Nuñez that realized the truth first.'],
+    ['for', '', '不定詞的行為者以 for + N 表達。It takes + 時間 + for + 人 + to V 花多少時間做到某事']
+  ], 'D')
+);
 
-SENT["L16"] = ["The villagers skillfully farmed and moved around by using their [[L16|keen]] senses of hearing, touch, and smell.", "村民們運用敏銳的聽覺、觸覺和嗅覺，熟練地耕作和移動。"];
-h2 += card("L16", ["詞彙"], "C", stem("L16") + ops([
-  ["fierce", "激烈的", "(用在競爭、情緒、天氣等)"],
-  ["vital", "極重要的", ""],
-  ["keen", "敏銳的", ""],
-  ["hollow", "空洞的", ""]
-], "C"));
+h += passage("補充段落 / 延伸閱讀", [
+  [["Feeling superior to these sightless people, he thought to himself, “In the country of the blind, the one-eyed man is king.”", "由於對這些盲人感到優越，他心想：「在盲人的國度裡，獨眼龍就是國王。」 (superior to 較…佳/高等 ↔ inferior to 較…劣/低等)"]],
+  [["Imagine landing in a remote tribe where nobody has ever used a phone and the internet doesn’t even exist.", "想像一下，你來到了一個從未有人用過手機、連網路都不存在的偏遠部落。"]],
+  [["Then you pull out an iPhone 18 Pro Max.", "然後你掏出了一支 iPhone 18 Pro Max。"]],
+  [["Do you become their queen… or just the crazy gal carrying a glowing brick?", "你會成為他們的女王……還是只是一個拿著發光磚塊的瘋女孩？"]]
+]);
 
-SENT["L18"] = ["They also [[L18|employed]] effective techniques for growing crops and caring for animals.", "他們還採用了有效的技術來種植農作物和照顧動物。"];
-h2 += card("L18", ["詞彙"], "D", stem("L18") + ops([
-  ["appointed", "指派", ""],
-  ["cultivated", "培養；種植", ""],
-  ["dismissed", "摒棄；解僱", ""],
-  ["employed", "採用、運用", ""]
-], "D"));
+// --- 挑戰題2 ---
+h += '<h2 id="p2">挑戰題2</h2>';
 
-SENT["L20"] = ["The paths, lined with low walls, [[L20|had been]] specially built to help them navigate safely.", "兩旁砌有矮牆的小徑，是特別建造來幫助他們安全找路的。"];
-h2 += card("L20", ["文法", "時態"], "D", stem("L20") + clue("be lined with = 兩旁排滿了…<br>navigate 導航、找路 →在複雜情境中摸索前進") + ops([
-  ["were", "", ""],
-  ["would be", "", ""],
-  ["being", "", ""],
-  ["had been", "", "早於過去的動作"]
-], "D"));
+h += card('6', ['詞義解析'], 'A',
+  '<div class="stem"><div class="en">However, after spending time with the locals, he was amazed at their great knowledge. Though blind, they knew their mountain kingdom '+fx("[[6|intimately]]")+'.</div><div class="zh">然而，在與當地人相處了一段時間後，他對他們豐富的知識感到驚訝。雖然失明，但他們對自己的山區王國了如指掌。</div></div>' +
+  ops([
+    ['intimately', '透徹地、非常熟悉地', ''],
+    ['vaguely', '模糊地', ''],
+    ['intensely', '強烈地 / 極度地', ''],
+    ['instinctively', '本能地 / 直覺地', '通常用於抽象事物，而對於「地理環境」的了解是長年累積而來，絕非「本能」']
+  ], 'A')
+);
 
-SENT["L22"] = ["Among the villagers, a respected elder named Yacob put the outsider [[L22|to work]] and began teaching him their ways.", "在村民中，一位受人尊敬的長老 Yacob 叫這個外地人開始工作，並開始教導他他們的生活方式。"];
-h2 += card("L22", ["片語"], "A", stem("L22") + clue("put sb to work = 叫某人開始做事、派某人去工作。sb’s ways 生活方式、做事的方式。You and your ways! 你就是這樣 (帶點好氣又好笑、或不以為然)") + ops([
-  ["to work", "", ""],
-  ["working", "", "無 put sb working用法。使某人處於工作狀態：set sb working"],
-  ["with work", "", "無 put sb with work用法。交代工作給某人：assign work to sb 或 give sb work"],
-  ["by working", "", ""]
-], "A"));
+h += card('7', ['詞義解析'], 'C',
+  '<div class="stem"><div class="en">The villagers skillfully farmed and moved around by using their '+fx("[[7|keen]]")+' senses of hearing, touch, and smell.</div><div class="zh">村民們利用他們敏銳的聽覺、觸覺和嗅覺，熟練地耕作和四處移動。</div></div>' +
+  ops([
+    ['fierce', '激烈的', '用在競爭、情緒、天氣等'],
+    ['vital', '極重要的', ''],
+    ['keen', '敏銳的', ''],
+    ['hollow', '空洞的', '']
+  ], 'C')
+);
 
-SENT["L24"] = ["Gradually, Nuñez [[L24|adapted to]] their way of life, but he clung to the reality of sight.", "漸漸地，Nuñez 適應了他們的生活方式，但他仍堅持視覺的現實。"];
-h2 += card("L24", ["詞彙", "片語"], "C", stem("L24") + clue("way of life 某群體、民族、社會的生活方式、傳統和習俗。lifestyle 個人在日常生活中的選擇與偏好。") + ops([
-  ["applied to", "適用於、向…申請", "The rule applies to everyone."],
-  ["appealed to", "吸引、訴求於", "The idea appeals to me."],
-  ["adapted to", "適應", ""],
-  ["objected to", "反對", "He objected to letting her participate."]
-], "C"));
+h += card('8', ['詞義解析'], 'D',
+  '<div class="stem"><div class="en">They also '+fx("[[8|employed]]")+' effective techniques for growing crops and caring for animals.</div><div class="zh">他們也採用了種植農作物和照顧動物的有效技術。</div></div>' +
+  ops([
+    ['appointed', '指派', ''],
+    ['cultivated', '培養；種植', ''],
+    ['dismissed', '摒棄；解僱', ''],
+    ['employed', '採用、運用', '']
+  ], 'D')
+);
 
-h2 += passage("補充", [[
-  ["To him, vision was as real as the air he breathed.", "對他來說，視覺就像他呼吸的空氣一樣真實。"]
-]]);
+h += card('9', ['文法', '時態與語態'], 'D',
+  '<div class="stem"><div class="en">The paths, lined with low walls, '+fx("[[9|had been]]")+' specially built to help them navigate safely.</div><div class="zh">兩旁排滿矮牆的道路，是專門為了幫助他們安全通行而建造的。</div></div>' +
+  clue('be lined with = 兩旁排滿了… / navigate = 導航、找路 →在複雜情境中摸索前進') +
+  ops([
+    ['were', '', ''],
+    ['would be', '', ''],
+    ['being', '', ''],
+    ['had been', '', '在過去某時間點前就已經建好，表過去的過去']
+  ], 'D')
+);
 
-SENT["L26"] = ["Although he tried to explain what he saw, he failed to make them understand what [[L26|it meant]] to have vision.", "儘管他試圖解釋他所看到的，但他無法讓他們理解擁有視覺意味著什麼。"];
-h2 += card("L26", ["文法", "名詞子句"], "C", stem("L26") + ops([
-  ["meaning", "", "what子句少動詞"],
-  ["was meant", "", "be meant to 被設計、製造、安排… (e.g. This room is meant to be used as a study, not a bedroom.)"],
-  ["it meant", "", "it 是虛主詞,真主詞為 to have vision"],
-  ["he meant", "", "what he meant 他的意思 (邏輯不通)"]
-], "C"));
+h += card('10', ['慣用語'], 'A',
+  '<div class="stem"><div class="en">Among the villagers, a respected elder named Yacob put the outsider '+fx("[[10|to work]]")+' and began teaching him their ways.</div><div class="zh">在村民中，一位名叫 Yacob 的受人尊敬的長者讓這個外來者開始工作，並開始教導他他們的生活方式。</div></div>' +
+  clue('sb’s ways = 生活方式、做事的方式') +
+  ops([
+    ['to work', '', 'put sb to work = 叫某人開始做事、派某人去工作'],
+    ['working', '', '無 put sb working用法 (應為 set sb working)'],
+    ['with work', '', '無此用法 (應為 assign work to sb 或 give sb work)'],
+    ['by working', '', '']
+  ], 'A')
+);
 
-SENT["L28"] = ["[[L28|The more]] he spoke of high mountains and twinkling stars, the more the villagers pitied him.", "他越是談論高山和閃爍的星星，村民們就越同情他。"];
-h2 += card("L28", ["文法", "The 比較級"], "D", stem("L28") + clue("The + 比較級 + S + V..., the + 比較級 + S + V.... 愈⋯⋯，就愈⋯⋯ 表達兩件事的變化是正相關或負相關的關係") + ops([
-  ["Even if", "", ""],
-  ["As long as", "", ""],
-  ["No matter what", "", ""],
-  ["The more", "", ""]
-], "D"));
+h += card('11', ['片語'], 'C',
+  '<div class="stem"><div class="en">Gradually, Nuñez '+fx("[[11|adapted to]]")+' their way of life, but he clung to the reality of sight. To him, vision was as real as the air he breathed.</div><div class="zh">漸漸地，Nuñez 適應了他們的生活方式，但他仍然執著於視覺的現實。對他來說，視覺就像他呼吸的空氣一樣真實。</div></div>' +
+  clue('way of life 某群體的生活方式 / lifestyle 個人的生活方式') +
+  ops([
+    ['applied to', '適用於、向…申請', 'The rule applies to everyone.'],
+    ['appealed to', '吸引、訴求於', 'The idea appeals to me.'],
+    ['adapted to', '適應', ''],
+    ['objected to', '反對', 'He objected to letting her participate.']
+  ], 'C')
+);
 
-h2 += passage("補充", [[
-  ["Nuñez felt frustrated at the villagers’ lack of awe for his precious gift of sight.", "Nuñez 對村民們對他珍貴的視覺天賦缺乏敬畏感到沮喪。 (awe = 敬畏、驚嘆)"]
-]]);
+h += card('12', ['文法', '名詞子句'], 'C',
+  '<div class="stem"><div class="en">Although he tried to explain what he saw, he failed to make them understand what '+fx("[[12|it meant]]")+' to have vision.</div><div class="zh">雖然他試圖解釋他所看到的，但他無法讓他們理解擁有視覺意味著什麼。</div></div>' +
+  ops([
+    ['meaning', '', 'what子句少動詞'],
+    ['was meant', '', 'be meant to 被設計、製造、安排…'],
+    ['it meant', '', 'it 是虛主詞, 真主詞為 to have vision'],
+    ['he meant', '', 'what he meant 他的意思 (邏輯不通)']
+  ], 'C')
+);
 
-SENT["L31"] = ["It wasn’t until he first laid eyes on Yacob’s daughter, Medina-saroté, [[L31|that he began]] to feel better.", "直到他第一次看到 Yacob 的女兒 Medina-saroté，他才開始感覺好些。"];
-h2 += card("L31", ["文法", "It is not until...that..."], "A", stem("L31") + clue("It was not until + 時間/事件 + that + 句子 直到…才…") + ops([
-  ["that he began", "", ""],
-  ["did he begin", "", "否定副詞放句首時，才需要倒裝：Not until... did he begin..."],
-  ["with whom he began", "", "→ he began with Yacob’s daughter to feel better???"],
-  ["whom he began", "", "→ he began Yacob’s daughter to feel better???"]
-], "A"));
+h += card('13', ['文法', '比較級'], 'D',
+  '<div class="stem"><div class="en">'+fx("[[13|The more]]")+' he spoke of high mountains and twinkling stars, the more the villagers pitied him.</div><div class="zh">他越是談論高山和閃爍的星星，村民就越可憐他。</div></div>' +
+  clue('The + 比較級 + S + V..., the + 比較級 + S + V.... (愈⋯⋯，就愈⋯⋯) 表達兩件事的正負相關') +
+  ops([
+    ['Even if', '', ''],
+    ['As long as', '', ''],
+    ['No matter what', '', ''],
+    ['The more', '', '']
+  ], 'D')
+);
 
-h2 += passage("補充", [[
-  ["No one else admired Medina’s beauty, as she had well-defined features that lacked the smoothness the villagers valued.", "沒有其他人欣賞 Medina 的美貌，因為她輪廓分明，缺乏村民們所看重的光滑感。 (well-defined adj. 輪廓分明的 / value vt. 重視)"]
-]]);
+// --- 挑戰題3 ---
+h += '<h2 id="p3">挑戰題3</h2>';
+h += passage("補充段落", [
+  [["Nuñez felt frustrated at the villagers’ lack of awe for his precious gift of sight.", "Nuñez 對於村民們對他珍貴的視覺天賦缺乏敬畏感到沮喪。 (awe = 敬畏、驚嘆)"]]
+]);
 
-SENT["L35"] = ["Furthermore, her weak voice was neither powerful nor pleasing enough to [[L35|meet]] their standards.", "此外，她微弱的聲音既不夠有力，也不夠悅耳，無法達到他們的標準。"];
-h2 += card("L35", ["動詞搭配"], "B", stem("L35") + ops([
-  ["set", "制定標準", ""],
-  ["meet", "符合／達到", "meet + standards / requirements / expectations / needs"],
-  ["achieve", "達成", "achieve 透過努力而達成(目標、成功、理想等) achieve goals / success / targets / ambitions"],
-  ["catch", "", "無 catch… standard用法"]
-], "B"));
+h += card('14', ['文法', '倒裝與強調'], 'A',
+  '<div class="stem"><div class="en">It wasn’t until he first laid eyes on Yacob’s daughter, Medina-saroté, '+fx("[[14|that he began]]")+' to feel better.</div><div class="zh">直到他第一眼看到 Yacob 的女兒 Medina-saroté，他的心情才開始好轉。</div></div>' +
+  ops([
+    ['that he began', '', 'It was not until + 時間/事件 + that + 句子 (直到…才…)'],
+    ['did he begin', '', '否定副詞放句首時才需要倒裝 (Not until he first laid eyes on Yacob’s daughter... did he begin to feel better.)'],
+    ['with whom he began', '', '邏輯錯誤'],
+    ['whom he began', '', '邏輯錯誤']
+  ], 'A')
+);
 
-SENT["L37"] = ["Nuñez [[L37|alone]] recognized her beauty, and he soon fell in love with her.", "唯獨 Nuñez 認出了她的美，他很快就愛上了她。"];
-h2 += card("L37", ["詞彙"], "B", stem("L37") + ops([
-  ["alike", "皆然", "A and B alike（A 與 B 皆然）"],
-  ["alone", "唯獨…、只有…", ""],
-  ["merely", "只不過是", "修飾recognized → Nuñez 只不過是認出了她的美"],
-  ["barely", "幾乎不、勉強", "→ 幾乎看不出她的美"]
-], "B"));
+h += passage("補充段落", [
+  [["No one else admired Medina’s beauty, as she had well-defined features that lacked the smoothness (which) the villagers valued.", "沒有人欣賞 Medina 的美貌，因為她的五官輪廓分明，缺乏村民們所重視的光滑感。 (well-defined 輪廓分明的 / value 重視)"]]
+]);
 
-SENT["L39"] = ["Yet, as their relationship blossomed, their desire to marry faced fierce opposition from the other villagers, who viewed Nuñez’s “sight” as a dangerous delusion that needed to be “cured.” [[L39|Worst of all]], even Medina herself agreed with them.", "然而，隨著他們關係的發展，他們想結婚的願望遭到了其他村民的強烈反對，村民們將 Nuñez 的「視覺」視為一種需要被「治癒」的危險錯覺。最糟的是，連 Medina 自己也同意他們的看法。"];
-h2 += card("L39", ["轉折語"], "B", stem("L39") + ops([
-  ["Above all", "首要的是、最重要的是", "(強調優先順序) Study hard, but above all, take care of your health."],
-  ["Worst of all", "最糟的是", ""],
-  ["After all", "畢竟", "畢竟、終究(補充理由,或結果與預期相反)"],
-  ["Most of all", "最重要的是；尤其是", "(在多項事物中最…)"]
-], "B"));
+h += card('15', ['詞義搭配'], 'B',
+  '<div class="stem"><div class="en">Furthermore, her weak voice was neither powerful nor pleasing enough to '+fx("[[15|meet]]")+' their standards.</div><div class="zh">此外，她微弱的聲音既不夠有力，也不夠悅耳，無法達到他們的標準。</div></div>' +
+  ops([
+    ['set', '制定標準', ''],
+    ['meet', '符合/達到', 'meet + standards / requirements / expectations / needs'],
+    ['achieve', '達成', '透過努力而達成(目標、成功、理想等) achieve goals / success'],
+    ['catch', '', '無 catch… standard用法']
+  ], 'B')
+);
 
-h2 += passage("補充", [[
-  ["She persuaded Nuñez to remove the peculiar orbs on either side of his nose.", "她說服 Nuñez 移除他鼻子兩側那奇特的球體。 (orb n. 球體;球狀物)"]
-]]);
+h += card('16', ['詞義解析'], 'B',
+  '<div class="stem"><div class="en">Nuñez '+fx("[[16|alone]]")+' recognized her beauty, and he soon fell in love with her.</div><div class="zh">唯獨 Nuñez 認出了她的美貌，他很快就愛上了她。</div></div>' +
+  ops([
+    ['alike', '兩者皆然', 'A and B alike（A 與 B 皆然）'],
+    ['alone', '唯獨…、只有…', ''],
+    ['merely', '只不過', '修飾recognized → Nuñez 只不過是認出了她的美'],
+    ['barely', '幾乎不、勉強', '幾乎看不出她的美']
+  ], 'B')
+);
 
-SENT["L44"] = ["That way, he could stop daydreaming and truly become one of them. [[L44|In return for]] Nuñez’s great sacrifice, she agreed to marry him.", "那樣，他就可以停止做白日夢，真正成為他們的一員。作為 Nuñez 巨大犧牲的回報，她同意嫁給他。"];
-h2 += card("L44", ["介系詞片語"], "D", stem("L44") + ops([
-  ["In honor of", "為了向…致敬／為紀念…", "A statue was built in honor of the brave man."],
-  ["In terms of", "就…而言、在…方面", "Cats beat dogs in terms of playing hard to get."],
-  ["In favor of", "贊成、支持", "Most students are in favor of a later start time for school."],
-  ["In return for", "作為…的回報、交換", "I made him dinner in return for his help."]
-], "D"));
+// --- 挑戰題4 ---
+h += '<h2 id="p4">挑戰題4</h2>';
+h += card('17', ['轉折語'], 'B',
+  '<div class="stem"><div class="en">Yet, as their relationship blossomed, their desire to marry faced fierce opposition from the other villagers, who viewed Nuñez’s “sight” as a dangerous delusion that needed to be “cured.” '+fx("[[17|Worst of all]]")+', even Medina herself agreed with them.</div><div class="zh">然而，隨著他們關係的發展，他們結婚的願望面臨著其他村民的強烈反對，他們將 Nuñez 的「視覺」視為一種需要被「治癒」的危險錯覺。最糟的是，連 Medina 自己都同意他們的看法。</div></div>' +
+  ops([
+    ['Above all', '最重要的是', '強調優先順序'],
+    ['Worst of all', '最糟的是', ''],
+    ['After all', '畢竟', '補充理由,或結果與預期相反'],
+    ['Most of all', '尤其是', '在多項事物中最…']
+  ], 'B')
+);
 
-SENT["L48"] = ["Nuñez was confronted with a dilemma: he had to choose either to lose his eyes or to end their relationship. Eventually, he agreed to give up his eyes for Medina’s [[L48|sake]].", "Nuñez 面臨進退兩難的困境：他必須選擇失去雙眼或結束他們的關係。最終，看在 Medina 的份上，他同意放棄他的眼睛。"];
-h2 += card("L48", ["詞彙片語"], "A", stem("L48") + ops([
-  ["sake", "看在…的份上、為了…的緣故", "He gave up gaming for his health's sake."],
-  ["request", "要求", "at sb's request 應某人要求"],
-  ["purpose", "目的", "for the purpose of 為了…目的"],
-  ["favor", "恩惠、幫忙、偏愛", "The coach was accused of showing favor to his best friend's son."]
-], "A"));
+h += passage("補充段落", [
+  [["She persuaded Nuñez to remove the peculiar orbs on either side of his nose.", "她說服 Nuñez 移除他鼻子兩側奇怪的球體 (眼睛)。(orb n. 球體;球狀物)"]]
+]);
 
-SENT["L51"] = ["Nevertheless, not until the day of his surgery [[L51|did he realize]] he was making a huge mistake.", "然而，直到他動手術的那天，他才意識到自己犯了一個巨大的錯誤。"];
-h2 += card("L51", ["文法", "倒裝句"], "B", stem("L51") + clue("= Nevertheless, it wasn’t until the day of his surgery that he realized he was making a huge mistake.") + ops([
-  ["that he realized", "", "前有虛主詞時使用：it was not until … that …"],
-  ["did he realize", "", "否定副詞放句首時，需接倒裝句"],
-  ["when he realized", "", "缺倒裝句"],
-  ["had he realized", "", "過去完成式只用在兩個過去動作中，較早發生的動作 此句只有一個動作：he realized…"]
-], "B"));
+h += card('18', ['片語'], 'D',
+  '<div class="stem"><div class="en">That way, he could stop daydreaming and truly become one of them. '+fx("[[18|In return for]]")+' Nuñez’s great sacrifice, she agreed to marry him.</div><div class="zh">這樣一來，他就可以停止白日夢，真正成為他們的一員。作為 Nuñez 巨大犧牲的回報，她答應嫁給他。</div></div>' +
+  ops([
+    ['In honor of', '為了向…致敬', ''],
+    ['In terms of', '就…而言、在…方面', ''],
+    ['In favor of', '贊成、支持', ''],
+    ['In return for', '作為…的回報/交換', '']
+  ], 'D')
+);
 
-h2 += passage("補充", [[
-  ["That morning, he once again beheld the splendor of the sunrise.", "那天早上，他再次凝視著日出的壯麗。"],
-  ["Gazing at the beautiful surrounding landscape and envisioning all that he might still see in the future, Nuñez saw ( = understood) that he had to escape.", "凝視著周圍美麗的風景，並想像著他在未來可能還會看到的一切，Nuñez 明白了，他必須逃跑。"]
-]]);
+h += card('19', ['詞義解析'], 'A',
+  '<div class="stem"><div class="en">Nuñez was confronted with a dilemma: he had to choose either to lose his eyes or to end their relationship. Eventually, he agreed to give up his eyes for Medina’s '+fx("[[19|sake]]")+'.</div><div class="zh">Nuñez 面臨著進退兩難的困境：他必須選擇失去眼睛或結束他們的關係。最後，為了 Medina 的緣故，他同意放棄自己的雙眼。</div></div>' +
+  ops([
+    ['sake', '緣故', 'for sb\'s sake 為了某人的緣故'],
+    ['request', '要求', 'at sb\'s request 應某人要求'],
+    ['purpose', '目的', 'for the purpose of 為了…目的'],
+    ['favor', '恩惠、偏愛', 'show favor to 偏愛']
+  ], 'A')
+);
 
-SENT["L56"] = ["[[L56|Driven]] by the desire to save his sight, he fled the country of the blind.", "在想要挽救視力的渴望驅使下，他逃離了盲人國。"];
-h2 += card("L56", ["分詞構句"], "D", stem("L56") + ops([
-  ["Fulfilled", "", "fulfill one’s desire 滿足…的慾望"],
-  ["Haunted", "", "be haunted by 長期受…困擾、某事縈繞心頭"],
-  ["Accompanied", "", "由…陪伴、伴隨著 通常搭配隨行的人或同時發生的現象(雷聲、音樂、症狀等)"],
-  ["Driven", "受到…的驅使", "Driven by curiosity, I took apart the old radio to see how it worked."]
-], "D"));
+h += card('20', ['文法', '倒裝句'], 'B',
+  '<div class="stem"><div class="en">Nevertheless, not until the day of his surgery '+fx("[[20|did he realize]]")+' he was making a huge mistake.</div><div class="zh">然而，直到手術那天，他才意識到自己犯了一個大錯。</div></div>' +
+  ops([
+    ['that he realized', '', '前有虛主詞時使用 (it was not until … that …)'],
+    ['did he realize', '', '否定副詞放句首時，需接倒裝句'],
+    ['when he realized', '', '缺倒裝句'],
+    ['had he realized', '', '過去完成式只用在兩個過去動作中較早發生的動作，此句只有一個動作']
+  ], 'B')
+);
 
+h += passage("補充段落", [
+  [["That morning, he once again beheld the splendor of the sunrise.", "那天早上，他再次看到了壯麗的日出。"],
+   ["Gazing at the beautiful surrounding landscape and envisioning all that he might still see in the future, Nuñez saw ( = understood) that he had to escape.", "凝視著周圍美麗的風景，並想像著他在未來可能還能看到的一切，Nuñez 明白了自己必須逃跑。"]]
+]);
 
-let h3 = '<h2 id="p3">III 課本句型實例</h2>';
-h3 += '<section class="pas"><h3>句型 1 實例 (Kiss the girl) The Little Mermaid OST</h3>';
-h3 += '<div class="stem"><div class="zh" style="color:inherit">1. 直到他筋疲力盡，他才停下來休息。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("He didn’t stop [[|to take a break/rest until he was exhausted]].<br>to rest until…=It was not until he was exhausted that he stopped to take a break.=Not until he was exhausted did he stop to take a break.")+'</div></div>';
-h3 += '<div class="stem"><div class="zh" style="color:inherit">2. 人都是失去自由才了解它有多可貴。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("People don’t realize [[|how valuable freedom is until they lose it]].<br>= It’s not until they lose it that people realize how valuable freedom is.<br>= Not until they lose it do people realize how valuable freedom is.")+'</div></div>';
-h3 += '<div class="stem"><div class="zh" style="color:inherit">3. 直到Angela做完工作，她才回我訊息。(It…)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("It wasn’t until Angela finished her work [[|that she replied to my text (message) / texted me back]].")+'</div></div>';
-h3 += '<div class="stem"><div class="zh" style="color:inherit">4. 人都是到了自己當了父母才了解教養子女是這麼難。(People…)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("People don’t realize [[|(that) teaching children is so difficult until they become parents themselves]]. parenting= People don’t realize how difficult parenting is until they become parents themselves.")+'</div></div>';
-h3 += '<div class="stem"><div class="zh" style="color:inherit">5. 直到考試結果出爐，Charlotte才鬆了一口氣。(Not…)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("Not until the test results came out [[|did Charlotte feel relieved]].")+'</div></div>';
-h3 += '<div class="stem"><div class="zh" style="color:inherit">6. 我是到了停止使用智慧型手機才了解到我以前有多麼依賴它。(It…)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("It wasn’t until I stopped using a/my smartphone [[|that I realized how much I had depended/relied on it / how dependent/reliant I had been on it]].")+'</div></div>';
-h3 += '<div class="stem"><div class="zh" style="color:inherit">7. 直到事故發生，大眾才會注意到可能的危險。(Not…)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("Not until an accident happens [[|do the public notice the potential / possible danger(s)]].")+'</div></div>';
-h3 += '<div class="stem"><div class="zh" style="color:inherit">8. 直到政府與民眾一起努力，我們才能減少颱風所造成的損害及死亡。(It…)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("It is not until the government and the public/the people work together [[|that we can decrease / reduce the damages and death(s) caused by a typhoon]].")+'</div></div>';
-h3 += '</section>';
-
-h3 += '<section class="pas"><h3>句型 2 be to blame 應受責怪；應為某錯誤負責</h3>';
-h3 += '<div class="stem"><div class="zh" style="color:inherit">1. 根據氣象報導，明天要不下雨要不下雪。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("According to the weather report, it will [[|either rain or snow tomorrow]].")+'</div></div>';
-h3 += '<div class="stem"><div class="zh" style="color:inherit">2. Sean既沒時間也沒錢去度假。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("Sean has [[|neither time nor money to go on a vacation/holiday]].")+'</div></div>';
-h3 += '<div class="stem"><div class="zh" style="color:inherit">3. 你可以用刷卡或現金付款。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("You can pay [[|either by credit card or in cash]].")+'</div></div>';
-h3 += '<div class="stem"><div class="zh" style="color:inherit">4. 我不喜歡爬山也不喜歡健行。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("I like [[|neither mountain climbing nor hiking]].")+'</div></div>';
-h3 += '<div class="stem"><div class="zh" style="color:inherit">5. Sam沒道歉也沒給任何解釋。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("Sam [[|neither apologized nor gave any explanations]].")+'</div></div>';
-h3 += '<div class="stem"><div class="zh" style="color:inherit">6. Olivia和她的先生都不會說英文。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Neither Olivia nor her husband knows how to speak English]].")+'</div></div>';
-h3 += '</section>';
+h += card('21', ['分詞構句'], 'D',
+  '<div class="stem"><div class="en">'+fx("[[21|Driven]]")+' by the desire to save his sight, he fled the country of the blind.</div><div class="zh">受到拯救視力慾望的驅使，他逃離了盲人國。</div></div>' +
+  ops([
+    ['Fulfilled', '滿足', 'fulfill one’s desire 滿足…的慾望'],
+    ['Haunted', '縈繞心頭', 'be haunted by 長期受…困擾'],
+    ['Accompanied', '伴隨', '由…陪伴、伴隨著 (雷聲、音樂、症狀等)'],
+    ['Driven', '受到…的驅使', 'Driven by curiosity...']
+  ], 'D')
+);
 
 
-document.getElementById('app').innerHTML = h1 + h2 + h3;
-const secs=[['p1','I 挑戰題 1'],['p2','II 挑戰題 2'],['p3','III 課本句型實例']];
+// --- 課本句型實例 ---
+h += '<h2 id="p5">I. 課本句型 1 實例 (Kiss the girl) The Little Mermaid OST</h2>';
+
+h += '<div class="stem"><div class="zh" style="color:inherit">1. 直到他筋疲力盡，他才停下來休息。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|He didn’t stop to take a break/rest until he was exhausted.]]")+'<br><small>= It was not until he was exhausted that he stopped to take a break.<br>= Not until he was exhausted did he stop to take a break.</small></div></div>';
+
+h += '<div class="stem"><div class="zh" style="color:inherit">2. 人都是失去自由才了解它有多可貴。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|People don’t realize how valuable freedom is until they lose it.]]")+'<br><small>= It’s not until they lose it that people realize how valuable freedom is.<br>= Not until they lose it do people realize how valuable freedom is.</small></div></div>';
+
+h += '<div class="stem"><div class="zh" style="color:inherit">3. 直到 Angela 做完工作，她才回我訊息。(It…)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|It wasn’t until Angela finished her work that she replied to my text (message) / texted me back.]]")+'</div></div>';
+
+h += '<div class="stem"><div class="zh" style="color:inherit">4. 人都是到了自己當了父母才了解教養子女是這麼難。(People…)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|People don’t realize that teaching children / parenting is so difficult until they become parents themselves.]]")+'<br><small>= People don’t realize how difficult parenting is until they become parents themselves.</small></div></div>';
+
+h += '<div class="stem"><div class="zh" style="color:inherit">5. 直到考試結果出爐，Charlotte才鬆了一口氣。(Not…)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Not until the test results came out did Charlotte feel relieved.]]")+'</div></div>';
+
+h += '<div class="stem"><div class="zh" style="color:inherit">6. 我是到了停止使用智慧型手機才了解到我以前有多麼依賴它。(It…)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|It wasn’t until I stopped using a/my smartphone that I realized how much I had depended/relied on it.]]")+'<br><small>(how dependent/reliant I had been on it.)</small></div></div>';
+
+h += '<div class="stem"><div class="zh" style="color:inherit">7. 直到事故發生，大眾才會注意到可能的危險。(Not…)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Not until an accident happens do the public notice the potential / possible danger(s).]]")+'</div></div>';
+
+h += '<div class="stem"><div class="zh" style="color:inherit">8. 直到政府與民眾一起努力，我們才能減少颱風所造成的損害及死亡。(It…)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|It is not until the government and the public/people work together that we can decrease / reduce the damages and death(s) caused by a typhoon.]]")+'</div></div>';
+
+
+h += '<h2 id="p6">II. 課本句型 2 (be to blame / either...or / neither...nor)</h2>';
+h += passage("句型提示", [[["be to blame", "應受責怪；應為某錯誤負責"]]]);
+
+h += '<div class="stem"><div class="zh" style="color:inherit">1. 根據氣象報導，明天要不下雨要不下雪。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|According to the weather report, it will either rain or snow tomorrow.]]")+'</div></div>';
+
+h += '<div class="stem"><div class="zh" style="color:inherit">2. Sean 既沒時間也沒錢去度假。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Sean has neither time nor money to go on a vacation/holiday.]]")+'</div></div>';
+
+h += '<div class="stem"><div class="zh" style="color:inherit">3. 你可以用刷卡或現金付款。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|You can pay either by credit card or in cash.]]")+'</div></div>';
+
+h += '<div class="stem"><div class="zh" style="color:inherit">4. 我不喜歡爬山也不喜歡健行。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|I like neither mountain climbing nor hiking.]]")+'</div></div>';
+
+h += '<div class="stem"><div class="zh" style="color:inherit">5. Sam 沒道歉也沒給任何解釋。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Sam neither apologized nor gave any explanations.]]")+'</div></div>';
+
+h += '<div class="stem"><div class="zh" style="color:inherit">6. Olivia 和她的先生都不會說英文。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Neither Olivia nor her husband knows how to speak English.]]")+'</div></div>';
+
+document.getElementById('app').innerHTML = h;
+
+const secs=[
+  ['p1','挑戰題1'],
+  ['p2','挑戰題2'],
+  ['p3','挑戰題3'],
+  ['p4','挑戰題4'],
+  ['p5','句型1實例'],
+  ['p6','句型2實例']
+];
 document.getElementById('nav').innerHTML=secs.map(s=>'<a href="#'+s[0]+'">'+s[1]+'</a>').join('')+'<button id="tg">全部收合</button>';
 let open=true;
-document.getElementById('tg').onclick=function(){open=!open;document.querySelectorAll('details.q').forEach(d=>d.open=open);this.textContent=open?'全部收合':'全部展開';};
+document.getElementById('tg').onclick=function(){
+  open=!open;
+  document.querySelectorAll('details.q').forEach(d=>d.open=open);
+  this.textContent=open?'全部收合':'全部展開';
+};
 </script>
 <script src="bookmark.js"></script>
 </body>
