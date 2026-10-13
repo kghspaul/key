@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>305 Blackboard</title>
+<style>
+:root{--bg:#faf8f4;--fg:#222;--card:#fff;--line:#e4ded3;--acc:#9a3b2e;--ok:#1f7a4d;--no:#b3261e;--mut:#6b6558;--hl:#fff1c9}
+@media(prefers-color-scheme:dark){:root{--bg:#161512;--fg:#e8e4da;--card:#201f1b;--line:#3a372f;--acc:#e08a78;--ok:#6fcf9a;--no:#f08a82;--mut:#a39d8f;--hl:#4a3f1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+.top{max-width:900px;margin:auto;padding:28px 18px 10px}
+.top h1{margin:0 0 4px;font-size:1.6rem;color:var(--acc)}
+.top p{margin:2px 0;color:var(--mut);font-size:.92rem}
+nav{position:sticky;top:0;z-index:9;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto;padding:8px 12px}
+nav a,nav button{flex:none;padding:5px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--fg);text-decoration:none;font:inherit;font-size:.88rem;cursor:pointer}
+nav a:hover,nav button:hover{border-color:var(--acc);color:var(--acc)}
+main{max-width:900px;margin:auto;padding:0 16px 70px}
+h2{margin:36px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--acc);font-size:1.3rem}
+h3{margin:0 0 8px;font-size:1.05rem;color:var(--acc)}
+.pas,.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.para{margin-bottom:14px}
+.s{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--line)}
+.en{font-family:Georgia,"Times New Roman",serif;font-size:1.02rem}
+.zh{color:var(--mut);font-size:.93rem}
+.note{color:var(--mut);font-size:.85rem;margin:6px 0 0}
+.bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 4px;border-radius:3px;font-weight:600}
+.bl sup{color:var(--acc);margin-right:3px;font-size:.7em}
+.bank{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.92rem;margin-bottom:8px}
+details.q>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+details.q>summary::-webkit-details-marker{display:none}
+.n{background:var(--acc);color:#fff;border-radius:6px;padding:0 10px;font-weight:700;font-size:1.05rem}
+.tag{font-size:.78rem;border:1px solid var(--acc);color:var(--acc);border-radius:99px;padding:0 9px;line-height:1.6}
+.tag.pos{border-color:var(--ok);color:var(--ok)}
+.ans{margin-left:auto;font-weight:700;color:var(--ok)}
+.qb{margin-top:10px}
+.stem{margin-bottom:8px;padding:8px 10px;background:var(--bg);border-radius:6px}
+.clue{margin:8px 0;padding:8px 12px;border-left:4px solid var(--acc);background:var(--bg);border-radius:0 6px 6px 0}
+.clue h4,.qb h4{margin:0 0 2px;font-size:.92rem;color:var(--acc)}
+ul.op{list-style:none;margin:6px 0 0;padding:0}
+ul.op li{padding:7px 10px;margin:5px 0;border-radius:6px;border:1px solid var(--line);font-size:.95rem}
+ul.op li.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 9%,transparent)}
+ul.op li.no{border-color:color-mix(in srgb,var(--no) 45%,transparent)}
+ul.op i{font-style:normal;font-weight:700;font-size:.82rem}
+li.ok i{color:var(--ok)}li.no i{color:var(--no)}
+small{color:var(--mut)}
+footer{max-width:900px;margin:auto;padding:20px 16px 40px;color:var(--mut);font-size:.85rem;line-height:1.6;border-top:1px solid var(--line);margin-top:40px;}
+footer a{color:var(--acc);text-decoration:none;font-weight:bold;}
+footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>305 Blackboard</h1>
+  <p>每題含：考點標籤 → 題幹逐句中英對照 → 解題線索 → 正解與全部誤答分析</p>
+  <p>圖例：<span class="bl">黃底</span> ＝ 正確答案填入處 ｜ <span class="tag">考點</span></p>
+</div>
+<nav id="nav"></nav>
+<main id="app"></main>
+<footer>
+  限定用途教學教材。本詳解為教學輔助，題目版權屬原出版單位。<br>
+  💡 <b>問題回報與建議：</b> Line: etpaul ｜ IG: <a href="https://www.instagram.com/etpaul" target="_blank">@etpaul</a>
+</footer>
+
+<script>
+const L="ABCD";
+const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[(\d*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const SENT={};
+function passage(title,paras,note){
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[(\d+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  return '<section class="pas"><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
+}
+function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
+const clue=t=>'<div class="clue"><h4>解題線索</h4>'+t+'</div>';
+function ops(list,ans,lab){lab=lab||'ABCDEF';return '<ul class="op">'+list.map((o,i)=>{const k=ans.indexOf(lab[i])>=0;return '<li class="'+(k?'ok':'no')+'"><b>'+(lab==='ABCDEF'&&list.length<=4?'('+L[i]+') ':lab==='ABCDEF'?'('+'ABCDEF'[i]+') ':'')+o[0]+'</b>'+(o[1]?' <small>'+o[1]+'</small>':'')+' <i>'+(k?'✔ 正解':'✘ 誤答')+'</i><br>'+o[2]+'</li>';}).join('')+'</ul>';}
+function card(n,tags,ans,body){
+  return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
+}
+
+let h1 = '<h2 id="p1">I 課前單字與引導</h2>';
+h1 += passage("單字列表與克漏字", [[
+  ["Kyoto, which is full of amazing attractions, is worth visiting over and over again.", "充滿驚人旅遊景點的京都，值得一再造訪。"],
+  ["You can enjoy boiled tofu, a typical Buddhist cuisine.", "您可以享用湯豆腐，一種典型的佛教美食。"],
+  ["Also, taking a cruise on the Hozugawa River is a great activity.", "此外，在保津川上搭乘遊船也是一項很棒的活動。"],
+  ["Of course, don’t miss the sunset, which is overwhelming in its beauty; the sky sparkles orange as if it were on fire.", "當然，千萬別錯過美麗到令人驚嘆的日落；天空閃耀著橘紅色的光芒，彷彿著火了一般。"],
+  ["What a wonderful city!", "多麼美妙的城市！"]
+]], "單字補充：1. overwhelming 令人驚嘆的 2. attraction 旅遊景點 3. cruise 遊船 4. attain 達到 5. typical 典型的 6. symbol 象徵 7. prevalent 盛行的 8. sparkle 閃耀");
+
+let h2 = '<h2 id="p2">II 挑戰題 1</h2>';
+SENT["L1"] = ["Kyoto, like a beauty in a bright and colorful kimono, [[L1|delights]] tourists throughout the year.", "京都就像一位穿著明亮多彩和服的美女，全年都令遊客感到愉悅。"];
+h2 += card("L1", ["文法", "句子結構"], "C", stem("L1") + clue("主詞：Kyoto。like a beauty in a bright and colorful kimono 是介系詞片語(當形容詞用)。所以需要一個動詞 Vt.，受詞為 tourists。") + ops([
+  ["where delights", "", "多連接詞 where (29%)"],
+  ["which delights", "", "多連接詞 which (24%)"],
+  ["delights", "Vt. 使…愉快", "(38%)"],
+  ["delighting", "", "缺動詞 (9%)"]
+], "C"));
+
+h2 += card("L2-1", ["詞性", "衍生字"], "B", '<div class="stem"><div class="en">I am <span class="bl">delighted</span> to meet you.</div><div class="zh">我很高興能遇見你。</div></div>' + ops([
+  ["delight", "", "(9%)"],
+  ["delighted", "adj. 感到愉快的", "(62%)"],
+  ["delighting", "", "(16%)"],
+  ["delightful", "adj. 令人愉快的", "(13%)"]
+], "B"));
+
+h2 += card("L2-2", ["詞性", "衍生字"], "D", '<div class="stem"><div class="en">That was a <span class="bl">delightful</span> party.</div><div class="zh">那是一場令人愉快的派對。</div></div>' + clue("∵ 一個動詞如果本身可當名詞/形容詞，或有名詞/形容詞的衍生字，就不可以用Ving。∴既然有 delightful 就切記不可用 delighting 來表達「令人愉快的」。") + ops([
+  ["delight", "", "(1%)"],
+  ["delighted", "", "(8%)"],
+  ["delighting", "", "(41%)"],
+  ["delightful", "adj. 令人愉快的", "(50%)"]
+], "D"));
+
+h2 += passage("補充：throughout 用法", [[
+  ["There was not even a drop of rain throughout the summer.", "整個夏天連一滴雨都沒有。 (throughout 表示「整個⋯」，可接時間或地方)"],
+  ["The firefighters in Australia couldn’t control the fires, so the fires spread rapidly throughout the country.", "澳洲的消防員無法控制火勢，因此大火迅速蔓延全國。"]
+]]);
+
+h2 += passage("補充段落", [[
+  ["In spring, romance is in the air as the city is filled with a sea of pink cherry blossoms.", "在春天，這座城市充滿了粉紅色的櫻花海，浪漫的氣息瀰漫在空氣中。 (sth is in the air = lots of people feel it)"],
+  ["There was a feeling in the air that it was time for a change.", "空氣中瀰漫著一種該是改變的時候了的感覺。<br>→ 配合「短前長後」原則：There was a feeling that it was time for a change in the air. (名詞子句當 feeling 同位語)"]
+]]);
+
+SENT["L4"] = ["In summer, green leaves can be heard rustling in the wind and can be [[L4|seen]] sparkling in the sunshine.", "夏天，可以聽到綠葉在風中沙沙作響，並能看到它們在陽光下閃閃發光。"];
+h2 += card("L4", ["文法", "感官動詞被動"], "C", stem("L4") + clue("be heard rustling 被聽到發出沙沙聲 (對等連接詞 and 連接兩個被動語態)。") + ops([
+  ["see", "", "(10%)"],
+  ["to see", "", "(7%)"],
+  ["seen", "", "(71%)"],
+  ["seeing", "", "(13%)"]
+], "C"));
+
+h2 += passage("補充段落", [[
+  ["Maple leaves in autumn set the landscape on fire with orange and red colors.", "秋天的楓葉以橘紅色將風景點燃。 (set sth on fire 使…開始燃燒)"],
+  ["Sparks from the fireplace could easily set the curtains on fire.", "壁爐的火花很容易點燃窗簾。 (be on fire 燃燒中/非常成功)"],
+  ["Then, when winter comes, white snow turns the whole city into a magic, silver kingdom.", "然後，當冬天來臨時，白雪將整座城市變成了一個神奇的銀色王國。 (turn / change / transform / convert A into B 將A變成B)"]
+]]);
+
+let h3 = '<h2 id="p3">III 挑戰題 2</h2>';
+SENT["L9"] = ["[[L9|Apart from]] its natural splendor, Kyoto has so much more to feast one’s eyes on.", "除了自然的美景之外，京都還有更多令人大飽眼福的事物。"];
+h3 += card("L9", ["片語"], "D", stem("L9") + clue("apart from = aside from = other than (可同時當 besides / except (for) 使用)") + ops([
+  ["Except for", "表例外", "意即 Kyoto do NOT have natural splendor (14%)"],
+  ["Beside", "在…旁邊", "cf. besides 除…外 (34%)"],
+  ["Instead of", "並非", "(2%)"],
+  ["Apart from", "除了...之外", "(49%)"]
+], "D"));
+
+h3 += passage("補充：historic vs. historical", [[
+  ["Having previously been the capital of Japan for over a thousand years, the city boasts a large number of historic shrines and temples.", "作為日本以前超過一千年的首都，這座城市擁有大量歷史悠久的神社和寺廟。"],
+  ["We are gathered here to witness this historic event.", "我們聚集在這裡見證這歷史性的一刻。 (historic 有歷史的/重大的)"],
+  ["The painting depicts an actual historical event.", "這幅畫描繪了一個真實的歷史事件。 (historical 歷史上真實存在的)"]
+]]);
+
+SENT["L13"] = ["No visit to Kyoto would be complete [[L13|without]] seeing one of the most photographed landmarks: the Kinkaku-ji, or the Golden Pavilion Temple in English.", "如果沒有看到最常被拍照的地標之一：金閣寺，那麼京都之旅就不算完整。"];
+h3 += card("L13", ["介系詞"], "B", stem("L13") + clue("No … without … 如果沒有…則不… (例如：No life is complete without a touch of madness.)") + ops([
+  ["despite", "儘管", "(14%)"],
+  ["without", "沒有", "(83%)"],
+  ["while", "", "任何時候省略主詞時皆表示前後主詞一致，還原後語意不合理"],
+  ["until", "", "同上 (3%)"]
+], "B"));
+
+SENT["L14"] = ["With giant, leafy maple trees leading up to its main entrance, [[L14|what]] comes into view is this magnificent three-story pavilion.", "隨著巨大、枝葉繁茂的楓樹通往正門，映入眼簾的是這座宏偉的三層樓閣。"];
+h3 += card("L14", ["文法", "名詞子句"], "D", stem("L14") + clue("what = the thing that/which。what comes into view … = the thing that comes into view …") + ops([
+  ["which", "", "形容詞子句 (46%)"],
+  ["where", "", "+ 完整子句 (21%)"],
+  ["it", "", "(11%)"],
+  ["what", "名詞子句", "(21%)"]
+], "D"));
+
+h3 += passage("舊版課文與句子分析", [[
+  ["With giant, leafy maple trees leading up to its main entrance, the first view one gets of this magnificent three-story pavilion is truly amazing.", "隨著巨大的楓樹通向正門，人們對這座宏偉的三層樓閣的第一眼印象真是令人驚嘆。 (原題介系詞選 of)"],
+  ["Rising up behind a crystal-clear pond, it is covered in sparkling gold leaf and crowned with a large bronze phoenix on its shimmering roof.", "它聳立在清澈的池塘後方，覆蓋著閃閃發光的金箔，閃爍的屋頂上加冕著一隻大型的青銅鳳凰。 (be covered in/with 被⋯覆蓋；be crowned with 在頂端有...)"],
+  ["The reflection of the pavilion on the glassy surface of the pond is a breathtaking sight.", "池塘如玻璃般的表面上樓閣的倒影是令人屏息的景象。 (sight n. 景象、畫面)"],
+  ["Visitors can take a leisurely walk through the surrounding gardens and enjoy many stunning views of this beautiful structure.", "遊客可以在周圍的花園中悠閒地散步，欣賞這座美麗建築的許多迷人景色。 (take a walk 散步 vs. walk 走)"]
+]]);
+
+let h4 = '<h2 id="p4">IV 挑戰題 3 & 4</h2>';
+h4 += passage("補充段落", [[
+  ["Another unforgettable Kyoto sight involves coming face to face with one of the old capital’s very special “persons of art,” or geishas.", "另一個難忘的京都景象是與這座古都非常特別的「藝術之人」（即藝伎）面對面接觸。 (come face to face with 與…面對面接觸)"],
+  ["These are women dressed in delicate kimonos with silk sleeves.", "這些是穿著帶有絲綢袖子的精緻和服的女性。"]
+]]);
+
+SENT["L27"] = ["Geishas’ distinctive white makeup, bright red lipstick, and graceful hairpins also make them easy [[L27|to recognize]].", "藝伎獨特的白色妝容、鮮紅的口紅和優雅的髮簪也使她們很容易被認出。"];
+h4 += card("L27", ["不定詞"], "B", stem("L27") + ops([
+  ["to be recognized", "", ""],
+  ["to recognize", "", "(26%)"],
+  ["get recognized", "", "(14%)"],
+  ["to have recognized", "", "(1%)"]
+], "B"));
+
+SENT["L31"] = ["And it’s not just their unique appearance [[L31|that makes]] geishas stand out from the crowd.", "而讓藝伎在人群中脫穎而出的，不僅僅是她們獨特的外表。"];
+h4 += card("L31", ["文法", "分裂句"], "D", stem("L31") + clue("it’s … that … 為分裂句的用法(強調句型)，用於強調句子的某個部分。 (e.g. It was math that she flunked last semester.)") + ops([
+  ["to make", "", "將造成虛主詞與真主詞的邏輯錯誤 (28%)"],
+  ["but also makes", "", "not only/just … but also 需連接詞性相同的字詞 (19%)"],
+  ["to have made", "", "同(A)"],
+  ["that makes", "", "(53%)"]
+], "D"));
+
+SENT["L40"] = ["Regardless of the season, the city is a must-see destination for tourists [[L40|looking]] for an authentic local experience.", "不論季節為何，這座城市都是尋找道地當地體驗的遊客必訪的目的地。"];
+h4 += card("L40", ["分詞片語"], "D", stem("L40") + clue("seek (Vt.) 直接加受詞不加 for；hunt for 通常指急切仔細尋找；in search of 才是正確片語。look for 尋找。") + ops([
+  ["in search", "", "(X) in search for / (O) in search of (6%)"],
+  ["seeking", "", "(X) seeking for，seek 為及物動詞 (49%)"],
+  ["hunting", "急切、仔細地尋找", "(3%)"],
+  ["looking", "looking for", "(42%)"]
+], "D"));
+
+SENT["L42"] = ["Those who visit are [[L42|likely]] to end up falling in love with the heart of Japan.", "來訪的人很可能會愛上這個日本的中心。"];
+h4 += card("L42", ["詞彙用法"], "D", stem("L42") + clue("possible/impossible/probable 通常以虛主詞 it 當主詞，不能以普通名詞當主詞。若需以普通名詞當主詞則需改用 likely。") + ops([
+  ["possible", "", "(12%)"],
+  ["probable", "", "(10%)"],
+  ["certainly", "", "應為 certain。be certain to = be bound to (16%)"],
+  ["likely", "adj.", "(62%)"]
+], "D"));
+
+h4 += passage("補充：end up 用法", [[
+  ["John was addicted to gambling and ended up losing all his money.", "John 沉迷於賭博，最後輸光了所有的錢。 (end up + V-ing)"],
+  ["He ended up penniless.", "他最後身無分文。 (end up + adj.)"],
+  ["Unfortunately, he ended up a bank robber.", "不幸的是，他最後成了一名銀行搶匪。 (end up + N)"],
+  ["After he was caught, he ended up in prison.", "被捕後，他最後進了監獄。 (end up + 介系詞片語)"]
+]]);
+
+let h5 = '<h2 id="p5">V 課本句型實例</h2>';
+h5 += '<section class="pas"><h3>句型 1 (感官動詞被動語態)</h3><p class="note">seen/heard to VR  強調看到或聽到的事實 / seen/heard Ving  強調在進行的當下被看/聽到</p>';
+h5 += '<div class="stem"><div class="zh" style="color:inherit">1. 有人看到一個身穿黑衣的男子解開門鎖進入大樓。(A man…)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("A man in black was seen [[|to open / unlock the door lock and go/get into the building]].")+'</div></div>';
+h5 += '<div class="stem"><div class="zh" style="color:inherit">2. 有人聽到一些小孩正在公園玩捉迷藏(hide-and-seek)。(Some kids…)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("Some kids were heard [[|playing hide-and-seek in the park]].")+'</div></div>';
+h5 += '<div class="stem"><div class="zh" style="color:inherit">3. 有人聽到街上有女人在尖叫大吼的聲音。(A woman…)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("A woman was heard [[|screaming and shouting/yelling on the street]].")+'</div></div>';
+h5 += '<div class="stem"><div class="zh" style="color:inherit">4. 有人注意到Louis在爆炸發生後不久離開犯罪現場。(Louis…)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("Louis was noticed [[|to leave the crime scene shortly after the explosion happened]].")+'</div></div>';
+h5 += '<div class="stem"><div class="zh" style="color:inherit">5. 有人看到一位學生正在街角被霸凌。(A student…)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("A student was seen [[|being bullied on/at the street corner]].")+'</div></div>';
+h5 += '</section>';
+
+h5 += '<section class="pas"><h3>句型 2 (雙重否定 No/never ... without)</h3>';
+h5 += '<div class="stem"><div class="zh" style="color:inherit">1. 沒有我媽媽的允許我不能出門。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("I can't go outside without my mother's [[|permission/approval/agreement]].")+'</div></div>';
+h5 += '<div class="stem"><div class="zh" style="color:inherit">2. Tony做重要決定前必會三思。(never)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("Tony never makes important decisions [[|without thinking twice]].")+'</div></div>';
+h5 += '<div class="stem"><div class="zh" style="color:inherit">3. Cecilia出國旅遊前必定會事先訂好機票和飯店房間。(never)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("Cecilia never travels abroad [[|without booking plane tickets and hotel rooms / a hotel room in advance]].")+'</div></div>';
+h5 += '<div class="stem"><div class="zh" style="color:inherit">4. 有些學生每次考試都會感到緊張。(never)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("Some students never take a test [[|without feeling nervous]].")+'</div></div>';
+h5 += '<div class="stem"><div class="zh" style="color:inherit">5. 一個團隊沒有合作是不會贏得比賽的。(not)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("A team will not win the contest/competition/game [[|without cooperation]].")+'</div></div>';
+h5 += '<div class="stem"><div class="zh" style="color:inherit">6. 去巴黎旅遊若沒有造訪艾菲爾鐵塔(Eiffel Tower)就不算完整。(no)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("No trip to Paris is complete [[|without visiting the Eiffel tower / without a visit to the Eiffel tower]].")+'</div></div>';
+h5 += '</section>';
+
+document.getElementById('app').innerHTML = h1 + h2 + h3 + h4 + h5;
+const secs=[['p1','I 課前單字與引導'],['p2','II 挑戰題 1'],['p3','III 挑戰題 2'],['p4','IV 挑戰題 3 & 4'],['p5','V 課本句型實例']];
+document.getElementById('nav').innerHTML=secs.map(s=>'<a href="#'+s[0]+'">'+s[1]+'</a>').join('')+'<button id="tg">全部收合</button>';
+let open=true;
+document.getElementById('tg').onclick=function(){open=!open;document.querySelectorAll('details.q').forEach(d=>d.open=open);this.textContent=open?'全部收合':'全部展開';};
+</script>
+<script src="bookmark.js"></script>
+</body>
+</html>
