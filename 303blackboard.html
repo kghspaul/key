@@ -64,10 +64,10 @@ footer a:hover{text-decoration:underline;}
 
 <script>
 const L="ABCD";
-const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[(\d*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[([^|\]]*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
 const SENT={};
 function passage(title,paras,note){
-  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[(\d+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[([^|\]]+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
   return '<section class="pas"><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
 }
 function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
@@ -77,201 +77,170 @@ function card(n,tags,ans,body){
   return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
 }
 
-let h = '';
+const st=(en,zh)=>'<div class="stem"><div class="en">'+fx(en)+'</div><div class="zh">'+zh+'</div></div>';
 
-// --- 補充段落 ---
-h += passage("情境閱讀", [
-  [["At a time when there were all-powerful gods in the universe, a Titan known as Prometheus created human beings out of clay.", "在一個宇宙中存在著全能神祇的時代，一位名叫 Prometheus 的泰坦神用泥土創造了人類。[cite: 3]"]],
-  [["His brother Epimetheus then gave all living creatures on earth different qualities.", "他的兄弟 Epimetheus 隨後賦予了地球上所有生物不同的特質。[cite: 3]"]],
-  [["Epimetheus gave animals speed, strength, fur, and wings. By the time he got to human beings, however, he had run out of gifts.", "Epimetheus 賦予動物速度、力量、毛皮和翅膀。然而，當他輪到人類時，他已經沒有禮物了。[cite: 3]"]],
-  [["To make up for their weaker state, Prometheus enabled them to stand upright like the gods.", "為了彌補他們較弱的狀態，Prometheus 讓他們能夠像神一樣直立行走。[cite: 3]"]],
-  [["Not only kind but also generous, he gave them fire too so that they could keep warm, cook food, and make tools.", "他不僅仁慈而且慷慨，他還給了他們火，這樣他們就可以保暖、煮食物和製作工具。[cite: 3]"]]
-]);
+/* === Part 1: L1 ~ L46 課文講解與非題目句子依序呈現 === */
+const h1 = '<h2 id="p1">L1 ~ L46 課文講解</h2>' +
+  passage("L1 ~ L9 課文段落", [[
+    ["【L1】At a time when there were all-powerful gods in the universe, a Titan known as Prometheus created human beings out of clay.", "在一個宇宙中存在著全能神祇的時代，一位名叫普羅米修斯（Prometheus）的泰坦神用泥土創造了人類。"],
+    ["【L3】His brother Epimetheus then gave all living creatures on earth different qualities.", "他的兄弟伊피米修斯（Epimetheus）隨後賦予了地球上所有生物不同的特質。"],
+    ["【L4】Epimetheus gave animals speed, strength, fur, and wings. By the time he got to human beings, however, he had run out of gifts.", "伊皮米修斯賦予動物速度、力量、毛皮和翅膀。然而，當他輪到人類時，他已經把天賦禮物分完了。"],
+    ["【L6】To make up for their weaker state, Prometheus enabled them to stand upright like the gods.", "為了彌補他們較弱的狀態，普羅米修斯讓他們能夠像神一樣直立行走。"],
+    ["【L8】Not only kind but also generous, he gave them fire too so that they could keep warm, cook food, and make tools.", "他不僅仁慈而且慷慨，還給了他們火，好讓他們可以保暖、烹煮食物和製作工具。"]
+  ]]) + [
+  card("L10", ["詞義搭配", "bring sb into conflict with"], "A",
+    st("However, Prometheus’s love for humankind [[L10|brought]] him into conflict with Zeus, the king of the Olympian gods.", "然而，普羅米修斯對人類的愛使他與奧林帕斯眾神之王宙斯發生了衝突。") +
+    clue("<code>bring</code> 可表示「使…處於某狀態」：<code>bring … into conflict with …</code>（使…與…陷入衝突）。") +
+    ops([
+      ["brought", "使...進入", "<code>bring him into conflict with Zeus</code>。"],
+      ["made", "使", "用法為 <code>make + O + VR / adj.</code>（e.g., <i>It made me happy.</i>）。"],
+      ["cause", "導致", "用法為 <code>cause + O + to VR</code>（e.g., <i>It caused me to work harder.</i>）。"],
+      ["let", "讓", "用法為 <code>let + O + VR</code>（e.g., <i>Don’t let yourself be lazy.</i>）。"]
+    ], "A")
+  ),
 
-// --- 挑戰題 1 ---
-h += '<h2 id="p1">挑戰題1</h2>';
+  card("L12", ["詞義搭配", "make sacrifices to 獻祭"], "C",
+    st("When the gods and humans met at Mecone to decide on the distribution of sacrifices that humans should [[L12|make]] to the gods, Prometheus tricked Zeus for the benefit of humans.", "當神與人類在梅科內相聚，決定人類應向眾神獻上何種祭品時，普羅米修斯為了人類的利益欺騙了宙斯。") +
+    clue("<code>sacrifice</code> n. 犧牲／祭品。慣用搭配：<code>make sacrifices to the gods</code>（向眾神獻上祭品）。") +
+    ops([
+      ["devote", "致力於", "搭配 <code>devote time/energy/oneself to sth</code>。"],
+      ["submit", "繳交/上繳", "搭配 <code>submit sth (申請或報告) to sb</code>。"],
+      ["make", "獻祭", "<code>make sacrifices to the gods</code>。"],
+      ["contribute", "捐獻/貢獻", "搭配 <code>contribute time/money to …</code>。"]
+    ], "C")
+  ),
 
-h += card('1', ['詞義搭配', '動詞片語'], 'A',
-  '<div class="stem"><div class="en">However, Prometheus’s love for humankind '+fx("[[1|brought]]")+' him into conflict with Zeus, the king of the Olympian gods.</div><div class="zh">然而，普羅米修斯對人類的愛使他與奧林帕斯眾神之王宙斯發生了衝突。[cite: 3]</div></div>' +
-  clue('bring 可表示「使…」。bring … into … 「使」…進入(某狀態)[cite: 3]') +
-  ops([
-    ['brought', '使...進入', 'bring him into conflict[cite: 3]'],
-    ['made', '使', 'made + O + VR / adj. (e.g. It made me happy)[cite: 3]'],
-    ['cause', '導致', 'cause + O + to VR (e.g. It caused me to work harder.)[cite: 3]'],
-    ['let', '讓', 'let + O + VR (e.g. Don’t let yourself be lazy.)[cite: 3]']
-  ], 'A')
-);
+  card("L15", ["不定代名詞", "One ... and the other ..."], "D",
+    st("He slaughtered a bull and created two offerings. One was a pile of beef hidden inside a bull’s stomach, and [[L15|the other]] was a pile of bones covered in shiny fat.", "他宰殺了一頭公牛並製作了兩份祭品。一份是藏在牛胃裡的一堆牛肉，另一份是覆蓋著閃亮脂肪的一堆骨頭。") +
+    clue("列舉明確總數為「兩項（two offerings）」的事物時，一個用 <code>One</code>，剩下的最後那一個用 <code>the other</code>。") +
+    ops([
+      ["other", "", "不可單獨當代名詞出現，後需加名詞（e.g., <i>other people</i>）。"],
+      ["others", "", "= <code>other + 複數名詞</code>（無明確範圍的其他事物）。"],
+      ["another", "另一個", "用於無明確總數或三者以上不特定的另一個。"],
+      ["the other", "另一個 (有明確總數)", "兩份祭品中剩下的最後那一個。"]
+    ], "D")
+  ),
 
-h += card('2', ['詞義搭配'], 'C',
-  '<div class="stem"><div class="en">When the gods and humans met at Mecone to decide on the distribution of sacrifices that humans should '+fx("[[2|make]]")+' to the gods, Prometheus tricked Zeus for the benefit of humans.</div><div class="zh">當神與人類在梅科內相聚，決定人類應向眾神獻上何種祭品時，普羅米修斯為了人類的利益欺騙了宙斯。[cite: 3]</div></div>' +
-  ops([
-    ['devote', '致力於', 'devote time/energy to sth[cite: 3]'],
-    ['submit', '繳交/上繳', 'submit sth to sb[cite: 3]'],
-    ['make', '獻祭', 'sacrifice n. 犧牲/祭品。make sacrifices to the gods 向眾神獻上祭品[cite: 3]'],
-    ['contribute', '捐獻/貢獻', 'contribute time/money to …[cite: 3]']
-  ], 'C')
-);
+  card("L17", ["不定代名詞", "choose one (二選一)"], "B",
+    st("He then asked Zeus to choose [[L17|one]].", "然後他要求宙斯選擇其中一份。") +
+    clue("<code>one</code> 可取代前面出現過的可數單數名詞（<code>= one of the two offerings/sacrifices</code>，在兩份祭品中選一份）。") +
+    ops([
+      ["them", "", "= the offerings（選全部兩份祭品？若加上 from 才可說 <i>choose one from them</i>）。"],
+      ["one", "其中之一", "<code>= one of the sacrifices/offerings</code>（選擇兩份祭品中的一份）。"],
+      ["it", "", "指代特定單一物品，但前文是兩份祭品二選一。"],
+      ["those", "", "複數代名詞，語意同 (A) 不合理。"]
+    ], "B")
+  ),
 
-h += card('3', ['代名詞'], 'D',
-  '<div class="stem"><div class="en">He slaughtered a bull and created two offerings. One was a pile of beef hidden inside a bull’s stomach, and '+fx("[[3|the other]]")+' was a pile of bones covered in shiny fat.</div><div class="zh">他宰殺了一頭公牛並製作了兩份祭品。一份是藏在牛胃裡的一堆牛肉，另一份是覆蓋著閃亮脂肪的一堆骨頭。[cite: 3]</div></div>' +
-  clue('列舉兩項事物時，一個用 One，另一個 (有明確總數的最後一個) 用 the other。[cite: 3]') +
-  ops([
-    ['other', '', '單獨出現時需加複數名詞 (e.g. other people)[cite: 3]'],
-    ['others', '', '= other + 複數名詞[cite: 3]'],
-    ['another', '另一個', '列舉時無明確總數[cite: 3]'],
-    ['the other', '另一個 (有明確總數)', '列舉時的最後一個 (有明確總數)[cite: 3]']
-  ], 'D')
-);
+  card("L15-補充", ["分詞後位修飾", "cookies (which are) hidden"], "C",
+    st("補充題：She has some cookies [[L15-補充|hidden]] in her drawer.", "她在抽屜裡藏了一些餅乾。") +
+    clue("呼應課文 L15 <code>a pile of beef (which was) hidden inside a bull's stomach</code>：餅乾是「被藏在抽屜裡」，故用過去分詞 <code>hidden</code>。") +
+    ops([
+      ["hide", "", "餅乾不會聽她使喚主動躲起來。"],
+      ["that hide", "", "餅乾不會主動躲起來。"],
+      ["hidden", "被藏", "<code>= (which are) hidden</code>，餅乾被藏在抽屜裡。"],
+      ["hiding", "", "現在分詞表主動，語態錯誤。"]
+    ], "C") +
+    passage("L18 ~ L21 課文段落", [[
+      ["【L18】The king of the gods chose the second one, believing there must be juicy meat underneath the fat, but instead he ended up with nothing but bones.", "眾神之王選擇了第二份，相信脂肪下一定有鮮嫩多汁的肉，但結果他除了骨頭什麼也沒得到。"],
+      ["【L20】As a result, from that day on, humans would keep the meat for themselves and burn animal bones as an offering to the gods.", "結果，從那天起，人類就把肉留給自己，並燃燒動物骨頭作為對神的祭品。"]
+    ]])
+  ),
 
-h += card('4', ['代名詞'], 'B',
-  '<div class="stem"><div class="en">He then asked Zeus to choose '+fx("[[4|one]]")+'.</div><div class="zh">然後他要求宙斯選擇其中一份。[cite: 3]</div></div>' +
-  clue('one 可取代前面出現過的可數單數名詞 (one of the sacrifices/offerings)。[cite: 3]') +
-  ops([
-    ['them', '', '= the sacrifices 選擇所有祭品？若加上 from 就可以 (choose one from them)[cite: 3]'],
-    ['one', '其中之一', '= one of the sacrifices/offerings 選擇祭品中的一份[cite: 3]'],
-    ['it', '', '前文沒有可數單數名詞可以 = it[cite: 3]'],
-    ['those', '', '= the sacrifices/offerings 邏輯 = (A)[cite: 3]']
-  ], 'B')
-);
+  card("L22", ["動名詞被動式", "Angry about being tricked"], "B",
+    st("Angry about [[L22|being tricked]], Zeus took fire away from humankind.", "宙斯對被欺騙感到憤怒，便將火從人類手中奪走。") +
+    clue("原句為 <code>(Because Zeus was) angry about being tricked, Zeus...</code>。<br>介系詞 <code>about</code> 後需接動名詞，而宙斯是「被普羅米修斯欺騙」，動名詞的被動式為 <code>being + p.p. (being tricked)</code>。") +
+    ops([
+      ["tricking", "騙", "V-ing 表主動，且缺少受詞（騙了誰？）。"],
+      ["being tricked", "被騙", "介系詞 about + 動名詞被動式 <code>being tricked</code>。"],
+      ["tricked", "", "介系詞後需接動名詞，不可直接接過去分詞 tricked。"],
+      ["trick", "", "單數可數名詞不可單獨無冠詞出現。"]
+    ], "B") +
+    passage("L23 ~ L26 課文段落", [[
+      ["【L23】Without it, humans began to starve and freeze.", "沒有了火，人類開始挨餓和受凍。"],
+      ["【L24】Unable to make tools or weapons, they had to live in caves and often fell victim to wild beasts.", "因為無法製造工具或武器，他們只好住在洞穴裡，並經常成為野獸的獵物（受害者）。"],
+      ["【L26】Prometheus saw how miserable they were and decided to help.", "普羅米修斯看到他們多麼悲慘，決定伸出援手。"]
+    ]])
+  ),
 
-h += card('5', ['分詞構句'], 'C',
-  '<div class="stem"><div class="en">She has some cookies '+fx("[[5|hidden]]")+' in her drawer.</div><div class="zh">她在抽屜裡藏了一些餅乾。[cite: 3]</div></div>' +
-  ops([
-    ['hide', '', '若 has 為使役動詞，文法對但邏輯錯：餅乾會聽她使喚主動躲起來？[cite: 3]'],
-    ['that hide', '', '餅乾主動躲起來？[cite: 3]'],
-    ['hidden', '被藏', '= (which are) hidden，餅乾被藏在抽屜裡[cite: 3]'],
-    ['hiding', '', '餅乾主動躲起來？[cite: 3]']
-  ], 'C')
-);
+  card("L27", ["過去完成式", "had stolen (先發生)"], "D",
+    st("He took a stalk of fennel and lit its hollow center with fire that he [[L27|had stolen]] from the sun.", "他拿了一根茴香稈，用他從太陽那裡偷來的火點燃了它中空的中心。") +
+    clue("過去完成式（<code>had stolen</code>）表示「從太陽偷火」的動作發生在過去式動詞 <code>took</code> 和 <code>lit</code>（點燃）<b>之前</b>。") +
+    ops([
+      ["stole", "偷", "一般過去式，未標示先後順序。"],
+      ["was stolen", "被偷", "主詞是 he（普羅米修斯主動偷火），非被偷。"],
+      ["would have stolen", "本來要偷", "與過去事實相反的假設語氣。"],
+      ["had stolen", "已經偷了", "過去完成式，表在點燃茴香稈之前已先偷來火種。"]
+    ], "D")
+  ),
 
-h += passage("補充段落", [
-  [["The king of the gods chose the second one, believing there must be juicy meat underneath the fat, but instead he ended up with nothing but bones.", "眾神之王選擇了第二份，相信脂肪下一定有鮮嫩多汁的肉，但結果他除了骨頭什麼也沒得到。[cite: 3]"]],
-  [["As a result, from that day on, humans would keep the meat for themselves and burn animal bones as an offering to the gods.", "結果，從那天起，人類就把肉留給自己，並燃燒動物骨頭作為對神的祭品。[cite: 3]"]]
-]);
+  card("L28", ["附帶狀況", "with + O + OC (inside it)"], "D",
+    st("Then, he gave humans this stalk [[L28|with]] the fire inside it.", "然後，他把這根裡面裝著火的茴香稈給了人類。") +
+    clue("全句只有唯一一個動詞 <code>gave</code>（不需要連接詞！），後方 <code>with + O (the fire) + OC (inside it)</code> 表附帶狀態說明，譯為「裡面裝著火的」。") +
+    ops([
+      ["where", "", "全句只有一個動詞 gave，後方 inside it 無動詞，不需連接詞。"],
+      ["which", "", "同上，後方無動詞。"],
+      ["that", "", "同上，後方無動詞。"],
+      ["with", "帶有", "<code>with + O + OC</code> 表附加狀態。"]
+    ], "D")
+  ),
 
-// --- 挑戰題 2 ---
-h += '<h2 id="p2">挑戰題 2</h2>';
+  card("L30", ["介系詞片語表手段", "punish sb by + V-ing"], "C",
+    st("Furious about Prometheus’s theft, Zeus punished the Titan [[L30|by banishing]] him to a place far to the East.", "對普羅米修斯的偷竊行為感到狂怒，宙斯藉由將他放逐到遙遠東方的地方來懲罰這位泰坦神。") +
+    clue("<code>by + V-ing</code> 表示「藉由（某種手段、方法）」。") +
+    ops([
+      ["that banished", "", "若 that 為關代指 the Titan，變成泰坦神自己放逐自己，語意不合理。"],
+      ["to banish", "", "語意不合，放逐本身就是懲罰的手段而非目的。"],
+      ["by banishing", "藉由放逐", "<code>by + V-ing</code> 表懲罰的方式。"],
+      ["of banishing", "", "punish 無搭配 of 的用法。"]
+    ], "C")
+  ),
 
-h += card('6', ['分詞構句', '被動語態'], 'B',
-  '<div class="stem"><div class="en">Angry about '+fx("[[6|being tricked]]")+', Zeus took fire away from humankind.</div><div class="zh">宙斯對被欺騙感到憤怒，便將火從人類手中奪走。[cite: 3]</div></div>' +
-  clue('介系詞 (about) 後需加名詞。動名詞的被動式 = being + p.p.。 (Because Zeus was angry about being tricked, he...)[cite: 3]') +
-  ops([
-    ['tricking', '騙', 'Ving 表「主動」，文法上少了受詞 (騙了誰？)[cite: 3]'],
-    ['being tricked', '被騙', '介系詞後需加名詞故加上 being。being + p.p. = 動名詞的被動式[cite: 3]'],
-    ['tricked', '', '介系詞後需加名詞，但 tricked 為動詞/過去分詞[cite: 3]'],
-    ['trick', '', '可數名詞不可能單獨出現，一定要加冠詞/所有格/複數[cite: 3]']
-  ], 'B')
-);
+  card("L32", ["分詞後位修飾", "an eagle (which was) sent by Zeus"], "C",
+    st("There, Prometheus was chained to a rock, and an eagle [[L32|sent]] by Zeus fed on Prometheus’s liver.", "在那裡，普羅米修斯被鎖在岩石上，一隻由宙斯派來的鷹啃食著他的肝臟。") +
+    clue("後半句的主要動詞是 <code>fed on</code>（啃食、以…為食），因此修飾主詞 <code>an eagle</code> 的形容詞子句 <code>(which was) sent by Zeus</code> 省略關代與 be 動詞後，保留過去分詞 <code>sent</code> 表被動。") +
+    ops([
+      ["was sent", "", "會造成後半句有兩個動詞（was sent 與 fed on）卻無關代或連接詞。"],
+      ["which sent", "", "老鷹是「被派來」，應為 <code>which was sent</code>。"],
+      ["sent", "被派來", "過去分詞片語後位修飾 <code>an eagle</code>。"],
+      ["had been sent", "", "同樣多出一個動詞。"]
+    ], "C") +
+    passage("L34 ~ L36 課文段落", [[
+      ["Though his liver kept growing back, the eagle would return every day to gnaw at it again, torturing Prometheus until the end of time.", "儘管他的肝臟不斷長回來，那隻鷹每天都會回來再次啃食它，折磨普羅米修斯直到時間的盡頭。"]
+    ]])
+  ),
 
-h += passage("補充段落", [
-  [["Without it, humans began to starve and freeze.", "沒有了它，人類開始挨餓和受凍。[cite: 3]"]],
-  [["Unable to make tools or weapons, they had to live in caves and often fell victim to wild beasts.", "無法製造工具或武器，他們只好住在洞穴裡，並經常成為野獸的受害者。[cite: 3]"]],
-  [["Prometheus saw how miserable they were and decided to help.", "普羅米修斯看到他們多麼悲慘，決定伸出援手。[cite: 3]"]]
-]);
+  card("L37", ["句子主要動詞與片語", "Prometheus, who..., came to be known as"], "A",
+    st("Through his sacrifice, Prometheus, who gave humans not only the ability to stand upright but also the gift of fire that set the stage for human civilization, [[L37|came]] to be known in later centuries as the “Champion of Humankind.”", "透過他的犧牲，普羅米修斯（他不僅賦予人類直立行走的能力，還賜予了為人類文明奠定基礎的火）在後世逐漸被稱為「人類的捍衛者」。") +
+    clue("結構拆解：主詞是 <code>Prometheus</code>，兩個逗號中間的 <code>, who gave humans ... human civilization,</code> 是長達兩行的非限定關係子句，因此空格處需要整句話的<b>主要動詞</b> <code>came</code>（<code>come to VR</code> 表「漸漸、開始…」）！") +
+    ops([
+      ["came", "逐漸", "主要動詞，構成 <code>came to be known as...</code>（逐漸被稱為…）。"],
+      ["which came", "", "多了關代 which，導致主詞 Prometheus 沒有動詞。"],
+      ["coming", "", "分詞無法作整句的主要動詞。"],
+      ["and that came", "", "文法不合。"]
+    ], "A")
+  )
+].join('');
 
+/* === Part 2: 課本句型 1 & 句型 2 === */
+const h2 = '<h2 id="p2">課本句型 1 ＆ 句型 2</h2>' + [
+  card("句1-1", ["句型1", "not only ... but also ..."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">1. 這間美術館不僅對當地人是個景點，對於遊客也是。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|This art museum/gallery is an attraction for not only the locals but also the tourists.]]")+'</div></div>'),
+  card("句1-2", ["句型1", "not only ... but also ..."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">2. 我不但欣賞 Rita 的才華，也欣賞她積極的人生態度。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|I admire not only Rita's talent(s) but also her positive attitude toward(s) life.]]")+'</div></div>'),
+  card("句1-3", ["句型1", "not only V1 ... but also V2 ..."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">3. 運動不但能讓我保持健康，更能幫助我放鬆。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Doing exercise not only keeps me healthy (in good health / in good shape) but also helps me relax.]]")+'</div></div>'),
+  card("句1-4", ["句型1：Not only 句首倒裝", "Not only did/was + S..."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">4. 她男友不僅對她不忠，還散播關於她的謠言。(Not only…)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Not only did her boyfriend cheat on her, but he also spread rumors about her.]]")+'<br><small>= '+fx("[[|Not only was her boyfriend unfaithful to her, but he also spread rumors about her.]]")+'</small></div></div>'),
+  card("句1-5", ["句型1：Not only 句首倒裝", "Not only did we..."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">5. 我們不僅親眼看到那位籃球傳奇人物，還跟他拍了自拍。(Not only…)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Not only did we (get to) see the basketball legend in person, but we also took a selfie with him.]]")+'</div></div>'),
+  card("句1-6", ["句型1", "can not only VR1 ... but also VR2 ..."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">6. 少吃紅肉不但能減少心臟疾病的風險，也對環境有益。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Eating less red meat can not only decrease/reduce/lower the risk of heart disease(s) but also benefit the environment.]]")+'</div></div>'),
+  card("句1-7", ["句型1：動詞鄰近一致", "Not only A but also B + V (依 B 決定)"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">7. 不僅她的父母，就連她的閨蜜也待她像公主一樣。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Not only her parents but also her best friend treats her like a princess.]]")+'</div></div>' + clue("<code>Not only A but also B</code> 連接兩個主詞時，動詞單複數須配合靠近動詞的 <b>B（<code>her best friend</code>，單數）</b>，故用 <code>treats</code>！")),
 
-h += card('7', ['時態', '過去完成式'], 'D',
-  '<div class="stem"><div class="en">He took a stalk of fennel and lit its hollow center with fire that he '+fx("[[7|had stolen]]")+' from the sun.</div><div class="zh">他拿了一根茴香稈，用他從太陽那裡偷來的火點燃了它中空的中心。[cite: 3]</div></div>' +
-  clue('過去完成式 (had stolen) 表示偷竊的動作發生在 took 和 lit 之前。[cite: 3]') +
-  ops([
-    ['stole', '偷', '過去式[cite: 3]'],
-    ['was stolen', '被偷', '被動語態[cite: 3]'],
-    ['would have stolen', '本來要偷', '與過去事實相反的假設語氣[cite: 3]'],
-    ['had stolen', '已經偷了', '過去完成式[cite: 3]']
-  ], 'D')
-);
+  card("句2-1", ["句型2：過去完成式", "By + 過去時間, S + had p.p."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">1. 到了今天上午 11 點，所有的票都已售罄。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|By eleven o’clock this morning, all the tickets had (been) sold out.]]")+'</div></div>'),
+  card("句2-2", ["句型2：過去完成式", "By the time + V-ed, S + had p.p."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">2. Cinderella 從舞會離開時，魔法早已經消失了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|By the time Cinderella left the dance/ball, the magic had already disappeared.]]")+'</div></div>'),
+  card("句2-3", ["句型2：未來完成式", "By the time + 現在式, S + will have p.p."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">3. 等搜救隊抵達災區時，生還者將已受困 3 小時。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|By the time the rescue team arrives at the disaster area, the survivors will have been trapped for three hours.]]")+'</div></div>' + clue("在時間副詞子句 <code>By the time...</code> 中，以<b>現在簡單式（<code>arrives</code>）代替未來式</b>，主要子句則用<b>未來完成式（<code>will have been trapped</code>）</b>。")),
+  card("句2-4", ["句型2：過去完成式", "By the time + V-ed, S + had p.p."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">4. 等 Alice 寫完數學考卷時，她所有的同學都已經交卷了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|By the time Alice finished her math test, all her classmates had already handed in their (test/exam) papers.]]")+'</div></div>'),
+  card("句2-5", ["句型2：未來完成式", "By the time + 現在式, S + will have p.p."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">5. 等到警察明天發現竊案時，我們早就已在前往西班牙的班機上。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|By the time the police find out about the burglary/theft tomorrow, we will have been on board the flight to Spain.]]")+'</div></div>')
+].join('');
 
-h += card('8', ['介系詞'], 'D',
-  '<div class="stem"><div class="en">Then, he gave humans this stalk '+fx("[[8|with]]")+' the fire inside it.</div><div class="zh">然後，他把這根裡面裝著火的莖給了人類。[cite: 3]</div></div>' +
-  clue('with + O + OC 表附加狀態的說明，可譯為「在…的情況下」。[cite: 3]') +
-  ops([
-    ['where', '', '全句只有一個動詞，不需連接詞[cite: 3]'],
-    ['which', '', '同上[cite: 3]'],
-    ['that', '', '同上[cite: 3]'],
-    ['with', '帶有', '介系詞表附加狀態[cite: 3]']
-  ], 'D')
-);
-
-// --- 挑戰題 3 ---
-h += '<h2 id="p3">挑戰題 3</h2>';
-
-h += card('9', ['分詞構句', '介系詞用法'], 'C',
-  '<div class="stem"><div class="en">Furious about Prometheus’s theft, Zeus punished the Titan '+fx("[[9|by banishing]]")+' him to a place far to the East.</div><div class="zh">對普羅米修斯的偷竊行為感到狂怒，宙斯藉由將他放逐到遙遠東方的地方來懲罰這位泰坦神。[cite: 3]</div></div>' +
-  clue('by + V-ing 表示藉由(某種手段、方法)。[cite: 3]') +
-  ops([
-    ['that banished', '', 'that 為關代 = the Titan，語意不合理[cite: 3]'],
-    ['to banish', '', '處罰 the Titan 去放逐他到遠東？[cite: 3]'],
-    ['by banishing', '藉由放逐', 'by + V-ing[cite: 3]'],
-    ['of banishing', '', 'punish 無搭配 of 的用法[cite: 3]']
-  ], 'C')
-);
-
-h += card('10', ['分詞構句'], 'C',
-  '<div class="stem"><div class="en">There, Prometheus was chained to a rock, and an eagle '+fx("[[10|sent]]")+' by Zeus fed on Prometheus’s liver.</div><div class="zh">在那裡，普羅米修斯被鎖在岩石上，一隻由宙斯派來的鷹啃食著他的肝臟。[cite: 3]</div></div>' +
-  clue('eagle (which was) sent by Zeus... 省略關代與 be 動詞，保留過去分詞表被動。[cite: 3]') +
-  ops([
-    ['was sent', '', '多一動詞[cite: 3]'],
-    ['which sent', '', '應為 which was sent[cite: 3]'],
-    ['sent', '被派來', '過去分詞修飾 eagle[cite: 3]'],
-    ['had been sent', '', '多一動詞[cite: 3]']
-  ], 'C')
-);
-
-h += passage("補充段落", [
-  [["Though his liver kept growing back, the eagle would return every day to gnaw at it again, torturing Prometheus until the end of time.", "儘管他的肝臟不斷長回來，那隻鷹每天都會回來再次啃食它，折磨普羅米修斯直到時間的盡頭。[cite: 3]"]]
-]);
-
-h += card('11', ['動詞片語'], 'A',
-  '<div class="stem"><div class="en">Through his sacrifice, Prometheus, who gave humans not only the ability to stand upright but also the gift of fire that set the stage for human civilization, '+fx("[[11|came]]")+' to be known in later centuries as the “Champion of Humankind.”</div><div class="zh">透過他的犧牲，普羅米修斯 (他不僅賦予人類直立行走的能力，還賜予了為人類文明奠定基礎的火) 在後世逐漸被稱為「人類的捍衛者」。[cite: 3]</div></div>' +
-  clue('come to VR 漸漸；開始… (e.g. I came to believe...)[cite: 3]') +
-  ops([
-    ['came', '逐漸', 'came to be known[cite: 3]'],
-    ['which came', '', '多了關代[cite: 3]'],
-    ['coming', '', '動名詞/現在分詞，使句子缺乏主要動詞[cite: 3]'],
-    ['and that came', '', '文法不合[cite: 3]']
-  ], 'A')
-);
-
-
-// --- 課本句型實例 ---
-h += '<h2 id="p4">課本句型 1 (Not only... but also...)</h2>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">1. 這間美術館不僅對當地人是個景點，對於遊客也是。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|This art museum/gallery is an attraction for not only the locals but also the tourists.]]")+'[cite: 3]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">2. 我不但欣賞 Rita 的才華，也欣賞她積極的人生態度。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|I admire not only Rita's talent(s) but also her positive attitude toward(s) life.]]")+'[cite: 3]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">3. 運動不但能讓我保持健康，更能幫助我放鬆。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Doing Exercise not only makes me keep healthy but also helps me relax.]]")+'[cite: 3]<br><small>(keeps me healthy / in good health / in good shape)</small></div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">4. 她男友不僅對她不忠，還散播關於她的謠言。(Not only…)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Not only did her boyfriend cheat on her but also he (also) spread rumors about her.]]")+'[cite: 3]<br><small>= Not only was her boyfriend unfaithful to her but he also spread rumors about her.</small></div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">5. 我們不僅親眼看到那位籃球傳奇人物，還跟他拍了自拍(Not only…)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Not only did we (get to) see the basketball legend in person but also we (also) took a selfie with him.]]")+'[cite: 3]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">6. 少吃紅肉不但能減少心臟疾病的風險，也對環境有益。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Eating less red meat can not only decrease/reduce/lower the risk of heart disease(s) but also benefit the environment.]]")+'[cite: 3]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">7. 不僅她的父母，就連她的閨蜜也待她像公主一樣。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Not only her parents but also her best friend treats her like a princess.]]")+'[cite: 3]</div></div>';
-
-
-h += '<h2 id="p5">課本句型 2 (By the time...)</h2>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">1. 到了今天上午11點，所有的票都已售罄。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|By eleven o’clock this morning, all the tickets had sold out.]]")+'[cite: 3]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">2. Cinderella 從舞會離開時，魔法早已經消失了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|By the time Cinderella left the dance/ball, the magic had already disappeared.]]")+'[cite: 3]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">3. 等搜救隊抵達災區時，生還者將已受困3小時。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|By the time the rescue team arrives at the disaster area, the survivors will have been trapped for three hours.]]")+'[cite: 3]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">4. 等 Alice 寫完數學考卷時，她所有的同學都已經交卷了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|By the time Alice finished her math test, all her classmates had already handed in their (test/exam) papers.]]")+'[cite: 3]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">5. 等到警察明天發現竊案時，我們早就已在前往西班牙的班機上。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|By the time the police find out about the burglary/theft tomorrow, we will have been on board the flight to Spain.]]")+'[cite: 3]</div></div>';
-
-document.getElementById('app').innerHTML = h;
-
-const secs=[
-  ['p1','挑戰題 1'],
-  ['p2','挑戰題 2'],
-  ['p3','挑戰題 3'],
-  ['p4','句型 1'],
-  ['p5','句型 2']
-];
+document.getElementById('app').innerHTML = h1 + h2;
+const secs=[['p1','L1~L46 課文講解'],['p2','句型1 & 句型2']];
 document.getElementById('nav').innerHTML=secs.map(s=>'<a href="#'+s[0]+'">'+s[1]+'</a>').join('')+'<button id="tg">全部收合</button>';
 let open=true;
 document.getElementById('tg').onclick=function(){

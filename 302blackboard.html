@@ -64,10 +64,10 @@ footer a:hover{text-decoration:underline;}
 
 <script>
 const L="ABCD";
-const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[(\d*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[([^|\]]*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
 const SENT={};
 function passage(title,paras,note){
-  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[(\d+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[([^|\]]+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
   return '<section class="pas"><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
 }
 function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
@@ -77,235 +77,196 @@ function card(n,tags,ans,body){
   return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
 }
 
-let h = '';
+const st=(en,zh)=>'<div class="stem"><div class="en">'+fx(en)+'</div><div class="zh">'+zh+'</div></div>';
 
-// --- 補充段落 / 情境閱讀 ---
-h += passage("情境引導", [
-  [["How can twenty sticks of dry spaghetti, a yard of tape, a yard of string, and one marshmallow help build a stronger team?", "二十根乾義大利麵條、一碼膠帶、一碼細繩和一顆棉花糖，如何能幫助建立一個更強大的團隊？[cite: 4]"]],
-  [["A popular team-building exercise known as the Marshmallow Challenge promises to do just that.", "一項名為「棉花糖挑戰」的受歡迎團隊建立活動，正保證能做到這一點。[cite: 4]"]],
-  [["In this challenge, with only the materials mentioned above, teams compete to build the tallest free-standing structure capable of supporting the weight of one marshmallow at the top.", "在這個挑戰中，隊伍們僅能使用上述材料，競爭建造出最高、能獨立站立，且頂端能支撐一顆棉花糖重量的結構。[cite: 4]"]],
-  [["With only 18 minutes to complete the task, the teams must learn to collaborate quickly.", "隊伍只有18分鐘來完成任務，他們必須學會快速合作。[cite: 4]"]],
-  [["The Marshmallow Challenge, promoted by Canadian technology expert Tom Wujec, has been conducted around the world with architects and engineers, CEOs, lawyers, business graduates, and even kindergarteners.", "由加拿大科技專家 Tom Wujec 推廣的「棉花糖挑戰」，已在世界各地與建築師和工程師、執行長、律師、商科畢業生，甚至幼稚園兒童一起進行過。[cite: 4]"]],
-  [["Over the years the challenge has produced some surprising results.", "這些年來，這個挑戰產生了一些令人驚訝的結果。[cite: 4]"]]
-]);
+/* === Part 1: L1 ~ L46 課文講解與非題目句子依序呈現 === */
+const h1 = '<h2 id="p1">L1 ~ L46 課文講解</h2>' +
+  passage("L1 ~ L12 課文段落", [[
+    ["【L1】How can twenty sticks of dry spaghetti, a yard of tape, a yard of string, and one marshmallow help build a stronger team?", "二十根乾義大利麵條、一碼膠帶、一碼細繩和一顆棉花糖，如何能幫助建立一個更強大的團隊？"],
+    ["【L3】A popular team-building exercise known as the Marshmallow Challenge promises to do just that.", "一項名為「棉花糖挑戰」的受歡迎團隊建立活動，正保證能做到這一點。"],
+    ["【L4】In this challenge, with only the materials mentioned above, teams compete to build the tallest free-standing structure capable of supporting the weight of one marshmallow at the top.", "在這個挑戰中，隊伍們僅能使用上述材料，競爭建造出最高、能獨立站立，且頂端能支撐一顆棉花糖重量的結構。"],
+    ["【L7】With only 18 minutes to complete the task, the teams must learn to collaborate quickly.", "隊伍只有 18 分鐘來完成任務，他們必須學會快速合作。"],
+    ["【L8】The Marshmallow Challenge, promoted by Canadian technology expert Tom Wujec, has been conducted around the world with architects and engineers, CEOs, lawyers, business graduates, and even kindergarteners.", "由加拿大科技專家 Tom Wujec 推廣的「棉花糖挑戰」，已在世界各地與建築師和工程師、執行長、律師、商科畢業生，甚至幼稚園兒童一起進行過。"],
+    ["【L11】Over the years the challenge has produced some surprising results.", "這些年來，這個挑戰產生了一些令人驚訝的結果。"]
+  ]]) + [
+  card("L3-補充", ["詞義搭配", "be called = be known as"], "B",
+    st("補充題：The arrow that appears on the screen is [[L3-補充|called]] a cursor.", "出現在螢幕上的箭頭被稱為游標。") +
+    clue("<code>be called sth</code>（被稱為…）= <code>be known as sth</code>。") +
+    ops([
+      ["named", "被命名為", "通常用於人名、路名、校名等專有名詞。"],
+      ["called", "被稱為", "一般名詞、專有名詞皆可。"],
+      ["known", "以...為人所知", "需加介系詞 “as” 才能接名稱（be known as）。"],
+      ["entitled", "被給予標題", "用於書籍、文章或演講的標題。"]
+    ], "B")
+  ),
 
-// --- 挑戰題1 ---
-h += '<h2 id="p1">挑戰題 1</h2>';
+  card("L13", ["句子主要動詞", "the average height ... was"], "D",
+    st("In Wujec’s study, the average height of the structures constructed [[L13|was]] 20 inches.", "在 Wujec 的研究中，建造出的結構平均高度為 20 英吋。") +
+    clue("<code>the average height</code> 是單數主詞，<code>of the structures (which were) constructed</code> 是修飾主詞的介系詞與過去分詞片語，整句話缺乏主要動詞，故選單數過去式動詞 <code>was</code>。") +
+    ops([
+      ["to be", "", "不定詞，非主要動詞。"],
+      ["being", "", "分詞，非主要動詞。"],
+      ["have been", "", "複數現在完成式，與單數主詞 the average height 不符。"],
+      ["was", "是", "單數過去式主要動詞。"]
+    ], "D")
+  ),
 
-h += card('1', ['詞義搭配', '被動語態'], 'B',
-  '<div class="stem"><div class="en">The arrow that appears on the screen is '+fx("[[1|called]]")+' a cursor.</div><div class="zh">出現在螢幕上的箭頭被稱為游標。[cite: 4]</div></div>' +
-  clue('be called sth 被稱為… = be known as sth[cite: 4]') +
-  ops([
-    ['named', '被命名為', '通常用於人名、路名、校名等專有名詞[cite: 4]'],
-    ['called', '被稱為', '一般、專有名詞皆可[cite: 4]'],
-    ['known', '以...為人所知', '需加 “as” 才能接名稱[cite: 4]'],
-    ['entitled', '被給予標題', '[cite: 4]']
-  ], 'B')
-);
+  card("L14", ["慣用語", "as (was) expected 正如預期"], "A",
+    st("The group that built the highest structure was, [[L14|as expected]], architects and engineers.", "建造出最高結構的群體，正如預期般，是建築師和工程師。") +
+    clue("<code>as</code> 表「正如⋯」；<code>as (was) expected</code> 意為「正如被預期的」。") +
+    ops([
+      ["as expected", "正如被預期的", "慣用插入片語。"],
+      ["to expect", "為了預期", "語意不合。"],
+      ["as expecting", "正如(主動)預期", "事情是「被預期」，主動分詞語態錯誤。"],
+      ["although expected", "雖然被預期", "前後文無轉折關係，語意不合。"]
+    ], "A") +
+    passage("L15 課文段落", [[
+      ["CEOs performed slightly better than average, coming in third.", "執行長的表現略優於平均水準，排名第三。"]
+    ]])
+  ),
 
-// --- 挑戰題2 ---
-h += '<h2 id="p2">挑戰題 2</h2>';
+  card("L16", ["轉折語", "on the other hand 另一方面"], "B",
+    st("Lawyers, [[L16|on the other hand]], performed below average, ranking second to last.", "另一方面，律師的表現低於平均水準，排名倒數第二。") +
+    clue("與前句（<code>CEOs performed slightly better than average</code>）形成表現好壞的對比，故使用 <code>on the other hand</code>（另一方面／然而）。") +
+    ops([
+      ["in addition", "此外", "用於補充同性質論點。"],
+      ["on the other hand", "另一方面", "≒ however（與前句形成對比）。"],
+      ["in other words", "換言之", "用於重述前句。"],
+      ["as a result", "因此", "表因果關係。"]
+    ], "B")
+  ),
 
-h += card('2', ['文法', '動詞與分詞'], 'D',
-  '<div class="stem"><div class="en">In Wujec’s study, the average height of the structures constructed '+fx("[[2|was]]")+' 20 inches.</div><div class="zh">在 Wujec 的研究中，建造出的結構平均高度為 20 英吋。[cite: 4]</div></div>' +
-  clue('the average height 是主詞 (單數)，of the structures (which were) constructed 是形容詞片語，句子缺乏主要動詞，故選 was。[cite: 4]') +
-  ops([
-    ['to be', '', '不定詞，非主要動詞[cite: 4]'],
-    ['being', '', '分詞，非主要動詞[cite: 4]'],
-    ['have been', '', '與單數主詞 the average height 不符[cite: 4]'],
-    ['was', '是', '單數過去式動詞[cite: 4]']
-  ], 'D')
-);
+  card("L17", ["連接詞與介系詞", "although + S + V"], "B",
+    st("And [[L17|although]] they worked to create the best plan, business graduates performed the worst.", "而且儘管他們努力制定最好的計畫，商科畢業生的表現卻是最差的。") +
+    clue("<code>they worked to create the best plan</code> 為完整子句，需接從屬連接詞 <code>although</code>。") +
+    ops([
+      ["despite", "儘管", "介系詞，後面只能接名詞或動名詞。"],
+      ["although", "雖然", "連接詞，後接完整子句。"],
+      ["as", "因為/正如", "語意不符。"],
+      ["since", "自從/既然", "語意不符。"]
+    ], "B")
+  ),
 
-h += card('3', ['慣用語'], 'A',
-  '<div class="stem"><div class="en">The group that built the highest structure was, '+fx("[[3|as expected]]")+', architects and engineers.</div><div class="zh">建造出最高結構的群體，正如預期般，是建築師和工程師。[cite: 4]</div></div>' +
-  clue('as 表「正如⋯」；as expected 意為「正如被預期的」。[cite: 4]') +
-  ops([
-    ['as expected', '正如被預期的', '[cite: 4]'],
-    ['to expect', '為了預期', '語意不合[cite: 4]'],
-    ['as expecting', '正如(主動)預期', 'the group主動預期？語態錯誤[cite: 4]'],
-    ['although expected', '雖然被預期', '語意不合[cite: 4]']
-  ], 'A')
-);
+  card("L17-補充", ["連接詞簡化", "Though (she was) in poor health"], "D",
+    st("補充題：[[L17-補充|Though]] in poor health, she continued to carry out her duties.", "雖然健康狀況不佳，她仍繼續履行職責。") +
+    clue("<code>in poor health</code> 為介系詞片語（作主詞補語）。介系詞（<code>Regardless of / Despite</code>）後面只能接名詞，不能再接介系詞片語 <code>in poor health</code>！此處原句為 <code>Though (she was) in poor health</code>，省略了相同的「主詞 + be 動詞」。") +
+    ops([
+      ["Regardless of", "不論", "介系詞後只能接名詞，不可接 in poor health。"],
+      ["As", "因為", "語意不符。"],
+      ["Despite", "儘管", "介系詞後只能接名詞（若用 Despite 應寫 <i>Despite her poor health</i> 或 <i>Despite being in poor health</i>）。"],
+      ["Though", "雖然", "從屬連接詞，可省略相同的「主詞 + be 動詞」保留介片補語。"]
+    ], "D") +
+    passage("L19 課文段落", [[
+      ["Amazingly, kindergarteners outperformed most of the adult teams, achieving the second best performance.", "令人驚訝的是，幼稚園兒童勝過了大多數成人隊伍，取得了第二好的成績。"]
+    ]])
+  ),
 
-h += passage("補充段落", [
-  [["CEOs performed slightly better than average, coming in third.", "執行長的表現略優於平均水準，排名第三。[cite: 4]"]]
-]);
+  card("L21", ["句子主要動詞", "The high ranking ... was"], "D",
+    st("The high ranking of the kindergarten group, whose impressive structures were taller than those of most adult teams, [[L21|was]] mainly a result of their unique and innovative ideas.", "幼稚園組的高排名（他們令人印象深刻的結構比大多數成人隊伍的都高），主要是因為他們獨特和創新的想法。") +
+    clue("主詞為單數的 <code>The high ranking</code>，兩個逗號中間的 <code>, whose impressive structures were taller than those of most adult teams,</code> 為非限定形容詞子句，全句缺乏主要動詞，故選單數過去式動詞 <code>was</code>。") +
+    ops([
+      ["as", "作為", "介系詞，會導致本句缺主要動詞。"],
+      ["had", "有", "語意不合。"],
+      ["thus", "因此", "副詞，會導致本句缺主要動詞。"],
+      ["was", "是", "單數過去式主要動詞。"]
+    ], "D")
+  ),
 
-h += card('4', ['轉折語'], 'B',
-  '<div class="stem"><div class="en">Lawyers, '+fx("[[4|on the other hand]]")+', performed below average, ranking second to last.</div><div class="zh">另一方面，律師的表現低於平均水準，排名倒數第二。[cite: 4]</div></div>' +
-  clue('與前句 (CEOs performed slightly better) 成對比，故使用 on the other hand (另一方面/然而)。[cite: 4]') +
-  ops([
-    ['in addition', '此外', '與前句同性質[cite: 4]'],
-    ['on the other hand', '另一方面', '≒ however (與前句成對比)[cite: 4]'],
-    ['in other words', '換言之', '[cite: 4]'],
-    ['as a result', '因此', '[cite: 4]']
-  ], 'B')
-);
+  card("L24", ["複合關係代名詞", "what (= the things which)"], "B",
+    st("One reason for this is that kids usually get started with [[L24|what]] has been given to them right away, whereas adults usually don’t start putting the structure together until they have spent most of the time planning.", "其中一個原因是，孩子們通常會立刻開始使用「給予他們的東西」，而成人通常在花費大部分時間計畫之後，才開始把結構組合起來。") +
+    clue("<code>what = the thing(s) which</code>，引導名詞子句當介系詞 <code>with</code> 的受詞，同時充當子句動詞 <code>has been given</code> 的主詞。") +
+    ops([
+      ["which", "", "前面是介系詞 with，無先行詞名詞可當 which 的先行詞。"],
+      ["what", "...的事物", "複合關代，引導名詞子句當 with 的受詞。"],
+      ["that", "", "關係代名詞或名詞子句連接詞 that 前方一般不可直接放介系詞 with，且缺主詞。"],
+      ["it", "", "缺少連接詞連接動詞 has been given。"]
+    ], "B") +
+    passage("L27 課文段落", [[
+      ["This leaves no time to adjust the design if it cannot support the marshmallow.", "如果設計無法支撐棉花糖，這將沒有時間來調整設計。"]
+    ]])
+  ),
 
-h += card('5', ['連接詞與介系詞'], 'B',
-  '<div class="stem"><div class="en">And '+fx("[[5|although]]")+' they worked to create the best plan, business graduates performed the worst.</div><div class="zh">而且儘管他們努力制定最好的計畫，商科畢業生的表現卻是最差的。[cite: 4]</div></div>' +
-  clue('they worked... 為完整子句，需接連接詞 although。[cite: 4]') +
-  ops([
-    ['despite', '儘管', '為介系詞，後面只能接名詞或動名詞[cite: 4]'],
-    ['although', '雖然', '連接詞，後接完整子句[cite: 4]'],
-    ['as', '因為/正如', '語意不符[cite: 4]'],
-    ['since', '自從/既然', '語意不符[cite: 4]']
-  ], 'B')
-);
+  card("L28", ["字彙搭配", "failed approaches 失敗的作法"], "A",
+    st("Another reason is that unlike adults, kindergarteners are quicker to change their methods after [[L28|failed approaches]].", "另一個原因是，不同於成人，幼稚園兒童在作法失敗後，改變方法的速度更快。") +
+    clue("• <code>failed</code> adj. = unsuccessful（已經失敗的）<br>• <code>failing</code> adj.（越來越弱或正在衰退中的，如 <i>failing eyesight / health</i>）。") +
+    ops([
+      ["failed approaches", "失敗的作法", "過去分詞作形容詞表「失敗的嘗試／作法」。"],
+      ["failing approaches", "越來越弱的作法", "語意不合。"],
+      ["approached failures", "被靠近的失敗", "語意不合。"],
+      ["approaching failures", "迫近的失敗", "語意不合。"]
+    ], "A") +
+    passage("L30 課文段落", [[
+      ["They rely on trial and error—if one method doesn’t work, they quickly move on to the next.", "他們依靠反覆試驗——如果一種方法沒用，他們會迅速換下一個。"]
+    ]])
+  ),
 
-// --- 挑戰題3 ---
-h += '<h2 id="p3">挑戰題 3</h2>';
+  card("L31", ["名詞子句", "about what + N + V"], "D",
+    st("This approach gives them immediate feedback [[L31|about what]] design elements work to give their structure height and stability.", "這種作法給予他們關於「什麼設計元素有效」的即時回饋，以賦予他們的結構高度和穩定性。") +
+    clue("<code>what design elements work...</code>（哪些設計元素有效）為疑問形容詞 <code>what</code> 引導的名詞子句，作為介系詞 <code>about</code>（或 <code>on</code>）的受詞，說明 feedback 的主題。") +
+    ops([
+      ["in which", "", "in which 後需接完整子句，且語意不是「在回饋中設計元素有效」。"],
+      ["that", "", "若用 that 當同位語，語意會變成「設計元素有效」這件事就是回饋本身，缺少「哪些（what）」的疑問選擇概念。"],
+      ["when", "", "時間關係副詞，語意不合。"],
+      ["about what", "關於什麼...", "<code>about + what design elements work...</code>。"]
+    ], "D")
+  ),
 
-h += card('6', ['連接詞與介系詞'], 'D',
-  '<div class="stem"><div class="en">'+fx("[[6|Though]]")+' in poor health, she continued to carry out her duties.</div><div class="zh">雖然健康狀況不佳，她仍繼續履行職責。[cite: 4]</div></div>' +
-  clue('in poor health 為形容詞片語。介系詞 (Regardless of / Despite) 後只能接名詞，此處為 Though (she was) in poor health (省略主詞與 be 動詞)。[cite: 4]') +
-  ops([
-    ['Regardless of', '不論', '介系詞後只能接名詞[cite: 4]'],
-    ['As', '因為', '語意不符[cite: 4]'],
-    ['Despite', '儘管', '介系詞後只能接名詞[cite: 4]'],
-    ['Though', '雖然', '連接詞，可省略相同的「主詞+be動詞」[cite: 4]']
-  ], 'D')
-);
+  card("L34", ["不定代名詞列舉", "One ... Another ... Still another"], "C",
+    st("[[L34|Still another]] reason for their success is that children tend to collaborate freely and naturally.", "他們成功的「還有一個」原因是，孩子們往往會自由且自然地合作。") +
+    clue("列舉總數不明確的多個原因時：<code>One reason...</code>（L24） → <code>Another reason...</code>（L28） → <code><b>Still another</b> (或 Yet another) reason...</code>（還有另一個原因）。") +
+    ops([
+      ["Other", "", "<code>Other</code> 後面必須接複數名詞（Other reasons），但此處是單數 reason。"],
+      ["The other", "", "用於已知只有兩個原因時「剩下的最後那一個」，但前文已經講了兩個原因，這是第三個！"],
+      ["Still another", "還有一個", "承接 One ... Another ... 的第三項列舉。"],
+      ["Others", "", "代名詞，後面不可再接名詞 reason。"]
+    ], "C") +
+    passage("L35 ~ L37 課文段落", [[
+      ["They don't waste time deciding who is in charge.", "他們不浪費時間決定誰負責。"],
+      ["Instead, they are more focused on working together to figure out how to build the tallest structure.", "相反地，他們更專注於一起合作，想出如何建造最高的結構。"]
+    ]])
+  ),
 
-h += passage("補充段落", [
-  [["Amazingly, kindergarteners outperformed most of the adult teams, achieving the second best performance.", "令人驚訝的是，幼稚園兒童勝過了大多數成人隊伍，取得了第二好的成績。[cite: 4]"]]
-]);
+  card("L38", ["介系詞 to + 名詞", "routes to success"], "B",
+    st("The Marshmallow Challenge teaches us that age and experience are not the only routes to [[L38|success]].", "棉花糖挑戰告訴我們，年齡和經驗並不是通往成功的唯一途徑。") +
+    clue("<code>the route / key / road / path to + N / V-ing</code>（通往…的途徑），此處的 <code>to</code> 為<b>介系詞</b>，後須接名詞 <code>success</code>！") +
+    ops([
+      ["succeed", "成功(動詞)", "不及物動詞，不可放在介系詞 to 之後。"],
+      ["success", "成功(名詞)", "名詞作介系詞 to 的受詞。"],
+      ["be successful", "成功", "原形動詞片語。"],
+      ["achieve success", "達成成功", "應改為動名詞 <code>achieving success</code>。"]
+    ], "B") +
+    passage("L40 ~ L43 課文段落", [[
+      ["In order to solve problems, we must roll up our sleeves and get down to work right away, explore and experiment with new ideas, and collaborate effectively.", "為了解決問題，我們必須捲起袖子立刻著手工作，探索並嘗試新想法，以及有效地合作。"],
+      ["In this way, we can surely get the marshmallow to the top.", "這樣一來，我們一定能讓棉花糖站上頂端。"]
+    ]])
+  )
+].join('');
 
-// --- 挑戰題4 ---
-h += '<h2 id="p4">挑戰題 4</h2>';
+/* === Part 2: 課本句型 1 & 句型 2 === */
+const h2 = '<h2 id="p2">課本句型 1 ＆ 句型 2</h2>' +
+  passage("課本句型 1 觀念提示 (until vs. not ... until)", [[
+    ["• until 表示『延續性動作一直持續到…才結束』（例：Cathy studied until midnight. 凱西讀書讀到半夜。）", "• not ... until 表示『瞬間或起點動作直到…才開始發生』（例：Cathy did not go to bed until midnight. 凱西直到半夜才去睡覺。）"]
+  ]]) + [
+  card("句1-1", ["句型1", "not ... until"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">1. Charlotte 直到開始使用螢幕使用時間追蹤裝置才知道她每天花了多少時間在手機上。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Charlotte didn’t know how much time she spent on her phone every day until she started to use Screen Time Tracker.]]")+'</div></div>'),
+  card("句1-2", ["句型1", "not ... until"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">2. 直到她開始跟我說話我才認出她來。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|I didn’t recognize her until she started talking to me.]]")+'</div></div>'),
+  card("句1-3", ["句型1", "lasted until"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">3. 昨天的會議持續到下午兩點。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The meeting yesterday lasted until 2 p.m.]]")+'</div></div>' + clue("因為「持續（lasted）」是延續性動作，一直持續到兩點結束，故直接用肯定句 <code>lasted until 2 p.m.</code>。")),
+  card("句1-4", ["句型1", "not ... until 三種句型轉換"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">4. 直到 Cindy 牙痛，她才去看牙醫。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Cindy didn't go to the dentist until her teeth ached / until she had a toothache.]]")+'<br><small>• 倒裝句：'+fx("[[|Not until Cindy's teeth ached did she go to the dentist.]]")+'<br>• 強調句：'+fx("[[|It was not until Cindy's teeth ached that she went to the dentist.]]")+'</small></div></div>'),
+  card("句1-5", ["句型1", "not ... until 三種句型轉換"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">5. 直到 Mike 考試不及格，他才開始用功。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Mike didn't start to study hard until he failed the test.]]")+'<br><small>• 倒裝句：'+fx("[[|Not until he failed the test did Mike start to study hard.]]")+'<br>• 強調句：'+fx("[[|It was not until he failed the test that Mike started to study hard.]]")+'</small></div></div>')
+].join('') +
+  passage("課本句型 2 觀念提示 (that / those 代替前文名詞)", [[
+    ["前面出現過的名詞，單數或不可數名詞用 that 取代，複數名詞用 those 取代。", "結構：N ... + that / those + 介系詞片語 / 關係子句 / 分詞片語。"]
+  ]]) + [
+  card("句2-1", ["句型2", "that 代替 the population"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">1. 紐約市的人口比西雅圖多。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The population in/of New York City is larger than that in/of Seattle.]]")+'</div></div>'),
+  card("句2-2", ["句型2", "that 代替 the monthly salary"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">2. 馬克的月收入比詹姆士還低。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The monthly salary of Mark is lower than that of James.]]")+'</div></div>'),
+  card("句2-3", ["句型2", "that 代替 the average score"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">3. A 班的平均成績比 B 班高 15 分。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The average score of Class A is 15 points higher than that of Class B.]]")+'</div></div>'),
+  card("句2-4", ["句型2", "that 代替 the number"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">4. 這個學校男學生的數量比女學生多。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The number of male students in this school is larger than that of female students.]]")+'</div></div>'),
+  card("句2-5", ["句型2", "those 代替 the prices"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">5. 進口車通常比台灣國產車要貴得多。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The prices of imported cars are usually higher than those of cars made in Taiwan.]]")+'</div></div>'),
+  card("句2-6", ["句型2", "that 代替 the color"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">6. 我新手機的顏色跟你的手機一模一樣。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The color of my new phone is the same as that of your phone / yours.]]")+'</div></div>'),
+  card("句2-7", ["句型2", "that 代替 the climate"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">7. 高雄的氣候跟屏東差不多。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The climate in Kaohsiung is similar to that in Pingtung.]]")+'</div></div>')
+].join('');
 
-h += card('7', ['主要動詞'], 'D',
-  '<div class="stem"><div class="en">The high ranking of the kindergarten group, whose impressive structures were taller than those of most adult teams, '+fx("[[7|was]]")+' mainly a result of their unique and innovative ideas.</div><div class="zh">幼稚園組的高排名（他們令人印象深刻的結構比大多數成人隊伍的都高），主要是因為他們獨特和創新的想法。[cite: 4]</div></div>' +
-  clue('主詞為單數的 The high ranking，中間 whose... 為形容詞子句，全句缺主要動詞，故選 was。[cite: 4]') +
-  ops([
-    ['as', '作為', '導致本句缺動詞[cite: 4]'],
-    ['had', '有', '語意不合 (get a result 得到他們創新的結果？)[cite: 4]'],
-    ['thus', '因此', '導致本句缺動詞[cite: 4]'],
-    ['was', '是', '單數過去式動詞[cite: 4]']
-  ], 'D')
-);
-
-h += card('8', ['名詞子句'], 'B',
-  '<div class="stem"><div class="en">One reason for this is that kids usually get started with '+fx("[[8|what]]")+' has been given to them right away, whereas adults usually don’t start putting the structure together until they have spent most of the time planning.</div><div class="zh">其中一個原因是，孩子們通常會立刻開始使用「給予他們的東西」，而成人通常在花費大部分時間計畫之後，才開始把結構組合起來。[cite: 4]</div></div>' +
-  clue('what = the thing(s) which，引導名詞子句當 with 的受詞。[cite: 4]') +
-  ops([
-    ['which', '', '前面無適當N可當 which 的先行詞[cite: 4]'],
-    ['what', '...的事物', '引導名詞子句[cite: 4]'],
-    ['that', '', 'that 前不可有介系詞[cite: 4]'],
-    ['it', '', '少連接詞[cite: 4]']
-  ], 'B')
-);
-
-h += passage("補充段落", [
-  [["This leaves no time to adjust the design if it cannot support the marshmallow.", "如果設計無法支撐棉花糖，這將沒有時間來調整設計。[cite: 4]"]]
-]);
-
-h += card('9', ['字彙搭配'], 'A',
-  '<div class="stem"><div class="en">Another reason is that unlike adults, kindergarteners are quicker to change their methods after '+fx("[[9|failed approaches]]")+'.</div><div class="zh">另一個原因是，不同於成人，幼稚園兒童在作法失敗後，改變方法的速度更快。[cite: 4]</div></div>' +
-  clue('failed adj. = unsuccessful (失敗的)；failing adj. (越來越弱或衰退的)。[cite: 4]') +
-  ops([
-    ['failed approaches', '失敗的作法', '[cite: 4]'],
-    ['failing approaches', '越來越弱的作法', '語意不合[cite: 4]'],
-    ['approached failures', '被靠近的失敗', '語意不合[cite: 4]'],
-    ['approaching failures', '迫近的失敗', '語意不合[cite: 4]']
-  ], 'A')
-);
-
-h += passage("補充段落", [
-  [["They rely on trial and error—if one method doesn’t work, they quickly move on to the next.", "他們依靠反覆試驗——如果一種方法沒用，他們會迅速換下一個。[cite: 4]"]]
-]);
-
-h += card('10', ['名詞子句', '名詞修飾'], 'D',
-  '<div class="stem"><div class="en">This approach gives them immediate feedback '+fx("[[10|about what]]")+' design elements work to give their structure height and stability.</div><div class="zh">這種作法給予他們關於「什麼設計元素有效」的即時回饋，以賦予他們的結構高度和穩定性。[cite: 4]</div></div>' +
-  clue('what design elements work... 引導名詞子句，作為介系詞 about 的受詞。[cite: 4]') +
-  ops([
-    ['in which', '', '= and in the feedback[cite: 4]'],
-    ['that', '', '+ 完整子句 = 名詞子句，當feedback的同位語 (但後方不完整)[cite: 4]'],
-    ['when', '', '= and at that time[cite: 4]'],
-    ['about what', '關於什麼...', 'what 引導名詞子句當 about 的受詞[cite: 4]']
-  ], 'D')
-);
-
-h += card('11', ['代名詞'], 'C',
-  '<div class="stem"><div class="en">'+fx("[[11|Still another]]")+' reason for their success is that children tend to collaborate freely and naturally.</div><div class="zh">他們成功的「還有一個」原因是，孩子們往往會自由且自然地合作。[cite: 4]</div></div>' +
-  clue('列舉總數不明確時：One reason..., another reason..., still another reason... (還有一個)[cite: 4]') +
-  ops([
-    ['Other', '', 'Other + 複N[cite: 4]'],
-    ['The other', '', '用於兩者中剩下的那一個[cite: 4]'],
-    ['Still another', '還有一個', '[cite: 4]'],
-    ['Others', '', '代名詞，不可再接名詞 reason[cite: 4]']
-  ], 'C')
-);
-
-h += passage("補充段落", [
-  [["They don't waste time deciding who is in charge.", "他們不浪費時間決定誰負責。[cite: 4]"],
-   ["Instead, they are more focused on working together to figure out how to build the tallest structure.", "相反地，他們更專注於一起合作，想出如何建造最高的結構。[cite: 4]"]]
-]);
-
-h += card('12', ['名詞'], 'B',
-  '<div class="stem"><div class="en">The Marshmallow Challenge teaches us that age and experience are not the only routes to '+fx("[[12|success]]")+'.</div><div class="zh">棉花糖挑戰告訴我們，年齡和經驗並不是通往成功的唯一途徑。[cite: 4]</div></div>' +
-  clue('the route to + N/Ving (to 在此為介系詞，表通往...的方向)。[cite: 4]') +
-  ops([
-    ['succeed', '成功(動詞)', 'Vi.，介系詞 to 後須接名詞[cite: 4]'],
-    ['success', '成功(名詞)', 'N.[cite: 4]'],
-    ['be successful', '成功', '動詞片語[cite: 4]'],
-    ['achieve success', '達成成功', 'V. + N.，應改為 achieving success[cite: 4]']
-  ], 'B')
-);
-
-h += passage("補充段落", [
-  [["In order to solve problems, we must roll up our sleeves and get down to work right away, explore and experiment with new ideas, and collaborate effectively.", "為了解決問題，我們必須捲起袖子立刻著手工作，探索並嘗試新想法，以及有效地合作。[cite: 4]"],
-   ["In this way, we can surely get the marshmallow to the top.", "這樣一來，我們一定能讓綿花糖站上頂端。[cite: 4]"]]
-]);
-
-
-// --- 課本句型實例 ---
-h += '<h2 id="p5">課本句型 1 (until / not until)</h2>';
-h += passage("句型提示", [
-  [["until 表示『動作直到…才結束』 (e.g. Cathy studied until midnight.)", "not until 表示『動作直到…才發生』 (e.g. Cathy did not go to bed until midnight.)[cite: 4]"]]
-]);
-
-h += '<div class="stem"><div class="zh" style="color:inherit">1. Charlotte 直到開始使用螢幕使用時間追蹤裝置才知道她每天花了多少時間在手機上。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Charlotte didn’t know how much time she spent on her phone every day until she started to use Screen Time Tracker.]]")+'[cite: 4]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">2. 直到她開始跟我說話我才認出她來。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|I didn’t recognize her until she started talking to me.]]")+'[cite: 4]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">3. 昨天的會議持續到下午兩點。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|The meeting yesterday lasted until 2 p.m. / It was not until 2 p.m. yesterday that the meeting continued.]]")+'[cite: 4]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">4. 直到 Cindy 牙痛，她才去看牙醫。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Cindy didn't go to the dentist until her teeth ached / until she had a toothache.]]")+'<br><small>Not until Cindy\'s teeth ached did she go to the dentist.<br>It was not until Cindy\'s teeth ached that she went to the dentist.</small>[cite: 4]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">5. 直到 Mike 考試不及格，他才開始用功。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Mike didn't start to study hard until he failed the test.]]")+'<br><small>Not until he failed the test did Mike start to study hard.<br>It was not until he failed the test that Mike started to study hard.</small>[cite: 4]</div></div>';
-
-
-h += '<h2 id="p6">課本句型 2 (that / those 代替名詞)</h2>';
-h += passage("句型提示", [
-  [["前面出現過的名詞，單數用 that 取代，複數用 those 取代。", "N ... that/those + 介片 / 關係子句 / 分詞構句[cite: 4]"]]
-]);
-
-h += '<div class="stem"><div class="zh" style="color:inherit">1. 紐約市的人口比西雅圖多。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|The population in New York City is larger than that of Seattle.]]")+'[cite: 4]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">2. 馬克的月收入比詹姆士還低。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|The monthly salary of Mark is lower than that of James.]]")+'[cite: 4]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">3. A班的平均成績比B班高15分。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|The average score of Class A is 15 points higher than that of Class B.]]")+'[cite: 4]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">4. 這個學校男學生的數量比女學生多。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|The number of male students in this school is larger than that of female students.]]")+'[cite: 4]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">5. 進口車通常比台灣國產車要貴得多。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|The prices of imported cars are usually higher than those of cars made in Taiwan.]]")+'[cite: 4]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">6. 我新手機的顏色跟你的手機一模一樣。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|The color of my new phone is the same as that of your phone / yours.]]")+'[cite: 4]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">7. 高雄的氣候跟屏東差不多。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|The climate in Kaohsiung is similar to that in Pingtung.]]")+'[cite: 4]</div></div>';
-
-document.getElementById('app').innerHTML = h;
-
-const secs=[
-  ['p1','挑戰題 1'],
-  ['p2','挑戰題 2'],
-  ['p3','挑戰題 3'],
-  ['p4','挑戰題 4'],
-  ['p5','句型 1'],
-  ['p6','句型 2']
-];
+document.getElementById('app').innerHTML = h1 + h2;
+const secs=[['p1','L1~L46 課文講解'],['p2','句型1 & 句型2']];
 document.getElementById('nav').innerHTML=secs.map(s=>'<a href="#'+s[0]+'">'+s[1]+'</a>').join('')+'<button id="tg">全部收合</button>';
 let open=true;
 document.getElementById('tg').onclick=function(){

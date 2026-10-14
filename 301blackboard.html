@@ -64,10 +64,10 @@ footer a:hover{text-decoration:underline;}
 
 <script>
 const L="ABCD";
-const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[(\d*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[([^|\]]*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
 const SENT={};
 function passage(title,paras,note){
-  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[(\d+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[([^|\]]+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
   return '<section class="pas"><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
 }
 function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
@@ -77,218 +77,168 @@ function card(n,tags,ans,body){
   return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
 }
 
-let h = '';
+const st=(en,zh)=>'<div class="stem"><div class="en">'+fx(en)+'</div><div class="zh">'+zh+'</div></div>';
 
-// --- 背景補充 ---
-h += passage("情境閱讀", [
-  [["A few years ago, I was employed by the McDonald’s Corporation.", "幾年前，我受僱於麥當勞公司。[cite: 5]"]],
-  [["On “Ronald Day,” I would dress up as Ronald McDonald and visit the community hospital’s sick children.", "在「麥當勞叔叔日」，我會打扮成麥當勞叔叔去探望社區醫院裡的病童。[cite: 5]"]],
-  [["Most of these young patients were suffering from terminal illnesses.", "這些年輕的病患大多患有絕症。[cite: 5]"]],
-  [["Thus, I would try my best to ease their pain.", "因此，我會盡力減輕他們的痛苦。[cite: 5]"]],
-  [["And I found it tremendously rewarding to be able to bring some laughter to the kids.", "而且我發現能夠帶給孩子們一些歡笑是非常有意義的。[cite: 5]"]]
-]);
+/* === Part 1: L1 ~ L46 課文講解與非題目句子依序呈現 === */
+const h1 = '<h2 id="p1">L1 ~ L46 課文講解</h2>' +
+  passage("L1 ~ L5 課文段落", [[
+    ["A few years ago, I was employed by the McDonald’s Corporation.", "幾年前，我受僱於麥當勞公司。"],
+    ["On “Ronald Day,” I would dress up as Ronald McDonald and visit the community hospital’s sick children.", "在「麥當勞叔叔日」，我會打扮成麥當勞叔叔去探望社區醫院裡的病童。"],
+    ["Most of these young patients were suffering from terminal illnesses.", "這些年輕的病患大多患有絕症。"],
+    ["Thus, I would try my best to ease their pain.", "因此，我會盡力減輕他們的痛苦。"],
+    ["And I found it tremendously rewarding to be able to bring some laughter to the kids.", "而且我發現能夠帶給孩子們一些歡笑是非常有意義的。"]
+  ]]) + [
+  card("L6", ["對等連接詞", "for 表因為"], "D",
+    st("One of the rules of my job was never to visit the children alone when I was dressed as Ronald, [[L6|for]] I might frighten them with my painted face and red wig.", "我工作的一項規定是，當我打扮成麥當勞叔叔時，絕不能單獨去探望孩子，因為我畫滿顏料的臉和紅假髮可能會嚇到他們。") +
+    clue("<code>for</code> 作為對等連接詞（conj.，置於逗號後補充說明理由）表示「因為」。") +
+    ops([
+      ["so", "因此", "conj. 表結果，與前後因果邏輯相反。"],
+      ["though", "雖然", "conj. 表讓步。"],
+      ["whereas", "雖然；而", "conj. 表對比或讓步。"],
+      ["for", "因為", "conj. 表原因（注意：for 當介系詞 prep. 時才表「為了」）。"]
+    ], "D")
+  ),
 
-// --- 挑戰題 1-1 ---
-h += '<h2 id="p1">挑戰題 1</h2>';
+  card("L9", ["動名詞作主詞", "doing so"], "A",
+    st("I wasn’t permitted to have any physical contact with the children either, since [[L9|doing]] so might pass on germs to them.", "我也不被允許與孩子們有任何身體接觸，因為這樣做可能會把細菌傳染給他們。") +
+    clue("<code>since</code> 在此為連接詞「因為」。<code>doing so</code> 作為動名詞片語，當作 since 子句中的主詞（動詞為後方的 <code>might pass on</code>），動名詞當主詞視為單數。") +
+    ops([
+      ["doing", "這樣做", "動名詞作 since 子句的主詞。"],
+      ["I did", "", "多了動詞 did，會造成子句中有兩個動詞（did 與 might pass on）。"],
+      ["I have done", "", "多了動詞 have done。"],
+      ["by doing", "", "介系詞片語 = adj./adv.，不能當主詞（主詞必為名詞）。"]
+    ], "A") +
+    passage("L11 ~ L15 課文段落", [[
+      ["【L11】Though I understood the reasoning behind these rules, I also felt that sometimes nothing could convey love, empathy, and warmth like a heartfelt embrace.", "雖然我了解這些規定背後的理由，但我也覺得有時候沒有什麼比一個發自內心的擁抱更能傳達愛、同理心和溫暖。"],
+      ["【L13】Once, as I was leaving the hospital after finishing my work for the day, I heard a voice coming from a half-open door.", "有一次，當我結束一天的工作準備離開醫院時，我聽到半開的門裡傳來一個聲音。"],
+      ["【L15】\"Ronald,\" the frail voice called, prompting me to push open the door and go in.", "「麥當勞叔叔，」虛弱的聲音呼喚著，促使我推開門走進去。"]
+    ]])
+  ),
 
-h += card('1', ['連接詞'], 'D',
-  '<div class="stem"><div class="en">One of the rules of my job was never to visit the children alone when I was dressed as Ronald, '+fx("[[1|for]]")+' I might frighten them with my painted face and red wig.</div><div class="zh">我工作的一項規定是，當我打扮成麥當勞叔叔時，絕不能單獨去探望孩子，因為我畫滿顏料的臉和紅假髮可能會嚇到他們。[cite: 5]</div></div>' +
-  clue('for 作為連接詞 (conj.) 表示「因為」。[cite: 5]') +
-  ops([
-    ['so', '因此', 'conj.[cite: 5]'],
-    ['though', '雖然', 'conj.[cite: 5]'],
-    ['whereas', '雖然；而', 'conj.[cite: 5]'],
-    ['for', '因為', 'conj. (for prep. 表「為了」)[cite: 5]']
-  ], 'D')
-);
+  card("L16", ["動詞變化", "find + O + OC (lying)"], "A",
+    st("I found a small boy of about five [[L16|lying]] in bed and looking extremely weak and pale.", "我發現一個大約五歲的小男孩躺在床上，看起來極度虛弱和蒼白。") +
+    clue("<code>find + O + OC</code>。男孩是主動「正躺」在床上，<code>lie</code>（躺）的現在分詞為 <code>lying</code>（與後方的 <code>and looking</code> 平行）。") +
+    ops([
+      ["lying", "躺", "lie（躺）的現在分詞，表主動進行。"],
+      ["laid", "放置", "lay（放置）的過去式／過去分詞。"],
+      ["lain", "躺", "lie（躺）的過去分詞，不及物動詞不用 p.p. 作被動補語。"],
+      ["lied", "說謊", "lie（說謊）的過去式／過去分詞。"]
+    ], "A")
+  ),
 
-// --- 挑戰題 1-2 ---
-h += card('2', ['動名詞作主詞'], 'A',
-  '<div class="stem"><div class="en">I wasn’t permitted to have any physical contact with the children either, since '+fx("[[2|doing]]")+' so might pass on germs to them.</div><div class="zh">我也不被允許與孩子們有任何身體接觸，因為這樣做可能會把細菌傳染給他們。[cite: 5]</div></div>' +
-  clue('since 在此為連接詞「因為」。doing so 作為動名詞片語，當作 since 子句中的主詞，視為單數。[cite: 5]') +
-  ops([
-    ['doing', '這樣做', '動名詞作主詞[cite: 5]'],
-    ['I did', '', '多了動詞 did[cite: 5]'],
-    ['I have done', '', '多了動詞 have done[cite: 5]'],
-    ['by doing', '', '介系詞片語 = adj./adv. (主詞必為名詞)[cite: 5]']
-  ], 'A')
-);
+  card("L16-補充", ["感官動詞", "saw + O + p.p. (被動)"], "C",
+    st("補充題：The old lady told the police that she saw the bank [[L16-補充|robbed]] by three armed men.", "老太太告訴警察，她看到銀行被三名武裝人員搶劫。") +
+    clue("感官動詞 <code>saw</code> + 受詞 <code>the bank</code> + 過去分詞 <code>robbed</code>（銀行是「被搶劫」，故用 p.p. 表被動）。") +
+    ops([
+      ["rob", "", "原形動詞表主動（銀行不會主動搶劫）。"],
+      ["robbing", "", "現在分詞表主動進行。"],
+      ["robbed", "被搶", "過去分詞表被動。"],
+      ["to rob", "", "感官動詞主動時不接帶 to 不定詞。"]
+    ], "C") +
+    passage("L18 ~ L22 課文段落", [[
+      ["【L18】“His name is Billy,” his parents told me, smiling.", "「他的名字叫比利，」他的父母微笑著告訴我。"],
+      ["【L19】It was really heartbreaking to see such a young boy confined to a hospital bed.", "看到這麼小的一個男孩被困在病床上，真的很令人心碎。"],
+      ["【L20】I knew I had to do anything I could to cheer little Billy up, so I stayed and did some magic tricks for him.", "我知道我必須盡我所能讓小比利振作起來，所以我留下來為他變了一些魔術。"],
+      ["【L22】A sparkle soon came to his eyes and I asked if I could do anything else for him. Billy replied, “Ronald, can I have a hug?”", "他眼裡很快閃現出光芒，我問是否還能為他做些什麼。比利回答說：「麥當勞叔叔，我可以要一個擁抱嗎？」"]
+    ]])
+  ),
 
-h += passage("補充段落", [
-  [["Though I understood the reasoning behind these rules, I also felt that sometimes nothing could convey love, empathy, and warmth like a heartfelt embrace.", "雖然我了解這些規定背後的理由，但我也覺得有時候沒有什麼比一個發自內心的擁抱更能傳達愛、同理心和溫暖。[cite: 5]"]]
-]);
+  card("L24", ["連接詞與動名詞主詞", "Although having to... pained me"], "B",
+    st("[[L24|Although having to]] turn him down pained me deeply, I had no choice.", "雖然不得不拒絕他讓我深感痛苦，但我別無選擇。") +
+    clue("觀察後半句的動詞 <code>pained me deeply</code>！<br><code>Although</code> 為從屬連接詞，後接完整子句，而在該子句中，動名詞片語 <code>having to turn him down</code>（不得不拒絕他這件事）就是主詞，<code>pained</code> 則是子句的動詞！（<code>despite</code> 只能當介系詞，後面不能有動詞 <code>pained</code>）。") +
+    ops([
+      ["Although I had to", "", "若加 I had to，則後方的 pained 會變成無連接詞的多餘動詞。"],
+      ["Although having to", "雖然不得不...", "having to turn him down 作為 although 子句的動名詞主詞，pained 為動詞。"],
+      ["Despite having to", "", "Despite 為介系詞，後面不能接子句（pained 是動詞！）。"],
+      ["Despite the fact that I had to", "", "I had to turn him down 為完整子句，導致後方的 pained 多出一個動詞。"]
+    ], "B") +
+    passage("L25 ~ L28 課文段落", [[
+      ["【L25】I told Billy that it was against the rules and then quickly added that we could do some coloring instead.", "我告訴比利這違反了規定，然後迅速補充說我們可以改畫畫。"],
+      ["【L27】A while later, it appeared that he was getting drowsy, so I rose to my feet to get ready to leave.", "過了一會兒，他似乎開始昏昏欲睡，所以我站起身準備離開。"]
+    ]])
+  ),
 
-// --- 挑戰題 2-1 ---
-h += '<h2 id="p2">挑戰題 2</h2>';
+  card("L28", ["不定詞表目的", "to hug"], "A",
+    st("That was when he stretched out his tiny arms [[L28|to hug]] me. I was about to refuse again, but then I saw the look of hope in his eyes.", "就在那時，他伸出小手臂要擁抱我。我正準備再次拒絕，但接著我看到他眼中充滿希望的眼神。") +
+    clue("不定詞 <code>to hug</code> 表「尚未做的事、目的（為了擁抱我）」。") +
+    ops([
+      ["to hug", "為了擁抱", "不定詞表目的。"],
+      ["hugging", "", "現在分詞表「正在做、持續發生、已發生」。"],
+      ["hugged", "", "過去分詞表「被動」。"],
+      ["by hugging", "", "by 表「藉著…手段」。"]
+    ], "A")
+  ),
 
-h += passage("補充段落", [
-  [["Once, as I was leaving the hospital after finishing my work for the day, I heard a voice coming from a half-open door.", "有一次，當我結束一天的工作準備離開醫院時，我聽到半開的門裡傳來一個聲音。[cite: 5]"]],
-  [["\"Ronald,\" the frail voice called, prompting me to push open the door and go in.", "「麥當勞叔叔，」虛弱的聲音呼喚著，促使我推開門走進去。[cite: 5]"]]
-]);
+  card("L30", ["被動與分詞補語", "be caught + V-ing"], "D",
+    st("Suddenly, I realized I no longer cared if I was caught [[L30|breaking]] the rules.", "突然，我意識到我不再在乎是否會被逮到違反規定。") +
+    clue("句型：<code>catch + sb + V-ing</code>（抓到／撞見某人正在做某事） → 被動：<code>be caught + V-ing</code>（被逮到正在做…）。") +
+    ops([
+      ["to break", "", "不定詞表「尚未做、目的」，不搭配 be caught。"],
+      ["break", "", "原形動詞，造成子句多出一個動詞。"],
+      ["broken", "", "被抓到被打破？語態與語意皆不通。"],
+      ["breaking", "違反(進行)", "<code>was caught breaking the rules</code>（被抓到正在違反規定）。"]
+    ], "D") +
+    passage("L31 ~ L38 課文段落", [[
+      ["【L31】Some things in life, after all, were more important. I picked him up and held him in my arms.", "畢竟，生活中有些事情更重要。我抱起他，將他擁入懷中。"],
+      ["【L33】After that, we talked and talked. He confided his worries to me.", "那之後，我們聊了又聊。他向我傾訴了他的煩惱。"],
+      ["【L34】He was afraid that his little brother would have no one to play with.", "他害怕他的弟弟會沒有人一起玩。"],
+      ["【L35】Also, he was scared that his dog would go hungry because he had hidden all its bones.", "此外，他也害怕他的狗會挨餓，因為他把牠所有的骨頭都藏起來了。"],
+      ["【L37】It seemed that Billy knew he would never be going home. And yet, even then, he was only thinking of others.", "比利似乎知道他再也回不了家了。然而，即使在那時，他心裡想的仍是別人。"]
+    ]])
+  ),
 
-h += card('3', ['動詞變化', 'find + O + OC'], 'A',
-  '<div class="stem"><div class="en">I found a small boy of about five '+fx("[[3|lying]]")+' in bed and looking extremely weak and pale.</div><div class="zh">我發現一個大約五歲的小男孩躺在床上，看起來極度虛弱和蒼白。[cite: 5]</div></div>' +
-  clue('find + O + OC。男孩是主動「躺」在床上，lie 的現在分詞為 lying。[cite: 5]') +
-  ops([
-    ['lying', '躺', 'lie 的現在分詞[cite: 5]'],
-    ['laid', '放置', 'lay 的過去式/過去分詞[cite: 5]'],
-    ['lain', '躺', 'lie 的過去分詞[cite: 5]'],
-    ['lied', '說謊', 'lie (說謊) 的過去式/過去分詞[cite: 5]']
-  ], 'A')
-);
+  card("L39", ["of + 抽象名詞 = 形容詞", "be of assistance = be helpful"], "A",
+    st("When I finally stood up to leave, I gave Billy’s parents my number and told them not to hesitate to call me if I could be [[L39|of assistance]].", "當我終於站起來準備離開時，我把電話號碼給了比利的父母，並告訴他們如果我能幫上忙，請毫不猶豫地打電話給我。") +
+    clue("<code>be of (any) assistance = be helpful</code>（能幫得上忙的）。<code>of + 抽象名詞</code> 可替換為對應的形容詞。") +
+    ops([
+      ["of assistance", "有幫助的", "<code>of + 抽象名詞</code>（= helpful）。"],
+      ["assisting", "", "及物動詞現在分詞缺受詞。"],
+      ["assistant", "助理", "可數名詞（少了冠詞 an，且語意不是當助理）。"],
+      ["assistance", "幫助", "抽象名詞不可直接當主詞補語說明 I，前方需加介系詞 of。"]
+    ], "A")
+  ),
 
-// --- 挑戰題 2-2 ---
-h += card('4', ['感官動詞'], 'C',
-  '<div class="stem"><div class="en">The old lady told the police that she saw the bank '+fx("[[4|robbed]]")+' by three armed men.</div><div class="zh">老太太告訴警察，她看到銀行被三名武裝人員搶劫。[cite: 5]</div></div>' +
-  clue('感官動詞 (saw) + O (the bank) + p.p. (robbed) 表被動。[cite: 5]') +
-  ops([
-    ['rob', '', '原形動詞表主動[cite: 5]'],
-    ['robbing', '', '現在分詞表主動進行[cite: 5]'],
-    ['robbed', '被搶', '過去分詞表被動[cite: 5]'],
-    ['to rob', '', '感官動詞不接不定詞[cite: 5]']
-  ], 'C')
-);
+  card("L42", ["介系詞 + 關係代名詞", "in which she told"], "B",
+    st("Two days later, I received a call from Billy’s mom [[L42|in which she told]] me her son had passed away.", "兩天後，我接到比利媽媽的一通電話，她在電話中告訴我她的兒子過世了。") +
+    clue("<code>in which she told me... = and in the call she told me...</code>，關係代名詞 <code>which</code> 代替先行詞 <code>a call</code>（在電話中告訴我）。") +
+    ops([
+      ["and told", "", "若用 and told，主詞會變成前面的 I（我接到電話而且我告訴我…），主詞錯誤！"],
+      ["in which she told", "在電話中告訴...", "<code>which = the call</code>（在那通電話中她告訴我…）。"],
+      ["which she told", "", "缺少介系詞 in（tell 的受詞是 me，不是 the call）。"],
+      ["she told", "", "缺少連接詞或介系詞。"]
+    ], "B") +
+    passage("L44 ~ L46 課文段落", [[
+      ["She wanted to thank me for making a difference in his life, for he’d said to her, “Mommy, I don’t mind if I can’t see Santa this year because I’ve hugged Ronald.”", "她想謝謝我改變了他的人生，因為他曾對她說：「媽咪，我不介意今年看不到聖誕老人，因為我已經擁抱過麥當勞叔叔了。」"]
+    ]])
+  )
+].join('');
 
-h += passage("補充段落", [
-  [["“His name is Billy,” his parents told me, smiling.", "「他的名字叫比利，」他的父母微笑著告訴我。[cite: 5]"]],
-  [["It was really heartbreaking to see such a young boy confined to a hospital bed.", "看到這麼小的一個男孩被限制在病床上，真的很令人心碎。[cite: 5]"]],
-  [["I knew I had to do anything I could to cheer little Billy up, so I stayed and did some magic tricks for him.", "我知道我必須盡我所能讓小比利振作起來，所以我留下來為他變了一些魔術。[cite: 5]"]],
-  [["A sparkle soon came to his eyes and I asked if I could do anything else for him. Billy replied, “Ronald, can I have a hug?”", "他眼裡很快閃現出光芒，我問是否還能為他做些什麼。比利回答說：「麥當勞叔叔，我可以要一個擁抱嗎？」[cite: 5]"]]
-]);
+/* === Part 2: 課本句型 1 & 句型 2 === */
+const h2 = '<h2 id="p2">課本句型 1 ＆ 句型 2</h2>' + [
+  card("句1-1", ["句型1", "think it a great achievement to VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">1. 許多球迷認為贏得三次冠軍是項偉大的成就。(Many fans think...)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Many fans think it a great achievement to win three championships.]]")+'<br><small>= Many fans think (that) it is a great achievement to win three championships.</small></div></div>'),
+  card("句1-2", ["句型1", "consider it convenient to VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">2. 許多人認為用手機付費很方便。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Many people consider it convenient to use mobile payment / pay by their phones.]]")+'</div></div>'),
+  card("句1-3", ["句型1", "find it a waste of time to VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">3. Peter 發現通勤上班很浪費時間。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Peter finds it a waste of time (time-wasting) to commute to work.]]")+'</div></div>'),
+  card("句1-4", ["句型1", "consider it inappropriate to VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">4. 有些美國人認為握手時握太用力是不恰當的。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Some Americans consider it inappropriate (for people) to squeeze too hard when shaking hands.]]")+'</div></div>'),
+  card("句1-5", ["句型1", "think it a good chance to VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">5. Mandy 認為成為大公司的實習生是個很棒的機會。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Mandy thinks it a good chance to become an intern in a large company/corporation.]]")+'</div></div>'),
+  card("句1-6", ["句型1", "consider it worthwhile to VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">6. 多數父母認為投資他們孩子的教育是值得的。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Most parents consider it worthwhile to invest money in the education of their kids.]]")+'</div></div>'),
+  card("句1-7", ["句型1", "consider it essential to VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">7. 越來越多人認為採取立即行動來阻止全球暖化是必要的。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|More and more people consider it essential to take immediate action to stop global warming.]]")+'</div></div>'),
+  card("句1-8", ["句型1", "consider it a great shame/pity for sb to VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">8. Aaron 認為他最喜愛的球隊輸掉冠軍是很可惜的事。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Aaron considers it a great shame/pity for his favorite team to lose the championship.]]")+'</div></div>'),
+  card("句1-9", ["句型1", "find it disturbing for sb to VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">9. 動物權利支持者覺得有些人虐待動物的行為令人憂慮。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Animal rights supporters find it disturbing for some people to abuse animals.]]")+'</div></div>')
+].join('') +
+  passage("課本句型 2 觀念提示 (appear / seem to have p.p.)", [[
+    ["seem / appear to have p.p. 表示該動作發生的時間比 seem / appear 更早。", "不定詞 to VR 的過去／完成式用 to have p.p.。"]
+  ]]) + [
+  card("句2-1", ["句型2", "It appears that..."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">1. 這女孩似乎對這個禮物感到驚訝。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|It appears that the girl is surprised by the gift.]]")+'</div></div>'),
+  card("句2-2", ["句型2", "appeared to be..."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">2. 當地居民似乎對空氣污染感到不滿。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The local residents appeared to be unhappy with the air pollution.]]")+'</div></div>'),
+  card("句2-3", ["句型2", "It seemed that..."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">3. 觀眾似乎對那部浪漫電影評價很高。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|It seemed that the audience thought highly of the romantic movie.]]")+'</div></div>'),
+  card("句2-4", ["句型2", "appear to have + p.p."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">4. 你似乎把牛仔褲撕破了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|You appear to have torn your jeans.]]")+'</div></div>'),
+  card("句2-5", ["句型2", "It seems/appears that..."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">5. 他的第一次約會似乎進行得很順利。(It…)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|It seems/appears that his first date went / has gone very well.]]")+'</div></div>'),
+  card("句2-6", ["句型2", "It seems/appears that..."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">6. 他似乎忘了回家的路。(It…)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|It seems/appears that the man forgot / has forgotten his way home.]]")+'</div></div>'),
+  card("句2-7", ["句型2", "seem to have been p.p."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">7. 他們似乎被什麼可怕的東西嚇到了。(They…)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|They seem to have been frightened by some scary things / something scary.]]")+'</div></div>')
+].join('');
 
-// --- 挑戰題 3 ---
-h += '<h2 id="p3">挑戰題 3</h2>';
-
-h += card('5', ['連接詞與介系詞'], 'B',
-  '<div class="stem"><div class="en">'+fx("[[5|Although having to]]")+' turn him down pained me deeply, I had no choice.</div><div class="zh">雖然不得不拒絕他讓我深感痛苦，但我別無選擇。[cite: 5]</div></div>' +
-  clue('Although 為連接詞，後接子句。having to turn him down (動名詞片語) 為該子句的主詞，pained 為動詞。despite 只能當介系詞。[cite: 5]') +
-  ops([
-    ['Although I had to', '', '若加 I had to，則 pained 會變成多餘的動詞 (V3)[cite: 5]'],
-    ['Although having to', '雖然不得不...', 'having to... 作為 although 子句的主詞[cite: 5]'],
-    ['Despite having to', '', '介系詞片語不能當主詞 (缺連接詞)[cite: 5]'],
-    ['Despite the fact that I had to', '', 'I had to... 為子句，但後方加上 pained 會產生文法錯誤[cite: 5]']
-  ], 'B')
-);
-
-h += passage("補充段落", [
-  [["I told Billy that it was against the rules and then quickly added that we could do some coloring instead.", "我告訴比利這違反了規定，然後迅速補充說我們可以改畫畫。[cite: 5]"]],
-  [["A while later, it appeared that he was getting drowsy, so I rose to my feet to get ready to leave.", "過了一會兒，他似乎開始昏昏欲睡，所以我站起身準備離開。[cite: 5]"]]
-]);
-
-// --- 挑戰題 3-1 ---
-h += card('6', ['不定詞表目的'], 'A',
-  '<div class="stem"><div class="en">That was when he stretched out his tiny arms '+fx("[[6|to hug]]")+' me. I was about to refuse again, but then I saw the look of hope in his eyes.</div><div class="zh">就在那時，他伸出小手臂要擁抱我。我正準備再次拒絕，但接著我看到他眼中充滿希望的眼神。[cite: 5]</div></div>' +
-  clue('不定詞 to hug 表「尚未做的事、目的」。[cite: 5]') +
-  ops([
-    ['to hug', '為了擁抱', '不定詞表目的[cite: 5]'],
-    ['hugging', '', '現在分詞表「正在做、持續發生、已發生」[cite: 5]'],
-    ['hugged', '', '過去分詞表「被動」[cite: 5]'],
-    ['by hugging', '', 'by表「藉著」[cite: 5]']
-  ], 'A')
-);
-
-// --- 挑戰題 3-2 ---
-h += card('7', ['被動與分詞'], 'D',
-  '<div class="stem"><div class="en">Suddenly, I realized I no longer cared if I was caught '+fx("[[7|breaking]]")+' the rules.</div><div class="zh">突然，我意識到我不再在乎是否會被逮到違反規定。[cite: 5]</div></div>' +
-  clue('be caught + V-ing 被逮到在做⋯。[cite: 5]') +
-  ops([
-    ['to break', '', '不定詞為「尚未做」、「目的」等[cite: 5]'],
-    ['break', '', '多了一個動詞[cite: 5]'],
-    ['broken', '', '被抓到被打破？語意不通[cite: 5]'],
-    ['breaking', '違反(進行)', 'Ving 表「正在做、持續發生、已發生」[cite: 5]']
-  ], 'D')
-);
-
-h += passage("補充段落", [
-  [["Some things in life, after all, were more important. I picked him up and held him in my arms.", "畢竟，生活中有些事情更重要。我抱起他，將他擁入懷中。[cite: 5]"]],
-  [["After that, we talked and talked. He confided his worries to me.", "那之後，我們聊了又聊。他向我傾訴了他的煩惱。[cite: 5]"]],
-  [["He was afraid that his little brother would have no one to play with.", "他害怕他的弟弟會沒有人一起玩。[cite: 5]"]],
-  [["Also, he was scared that his dog would go hungry because he had hidden all its bones.", "此外，他也害怕他的狗會挨餓，因為他把牠所有的骨頭都藏起來了。[cite: 5]"]],
-  [["It seemed that Billy knew he would never be going home. And yet, even then, he was only thinking of others.", "比利似乎知道他再也回不了家了。然而，即使在那時，他心裡想的仍是別人。[cite: 5]"]]
-]);
-
-// --- 挑戰題 4 ---
-h += '<h2 id="p4">挑戰題 4</h2>';
-
-h += card('8', ['名詞與介系詞'], 'A',
-  '<div class="stem"><div class="en">When I finally stood up to leave, I gave Billy’s parents my number and told them not to hesitate to call me if I could be '+fx("[[8|of assistance]]")+'.</div><div class="zh">當我終於站起來準備離開時，我把電話號碼給了比利的父母，並告訴他們如果我能幫上忙，請毫不猶豫地打電話給我。[cite: 5]</div></div>' +
-  clue('be of (any) assistance = be helpful。of + 抽象名詞可替換為形容詞。[cite: 5]') +
-  ops([
-    ['of assistance', '有幫助的', 'of + 抽象名詞[cite: 5]'],
-    ['assisting', '', '正在協助？[cite: 5]'],
-    ['assistant', '助理', '名詞 (或作形容詞修飾，但此處不合)[cite: 5]'],
-    ['assistance', '幫助', '名詞，前方需加 of[cite: 5]']
-  ], 'A')
-);
-
-h += card('9', ['關係代名詞/分詞構句'], 'B',
-  '<div class="stem"><div class="en">Two days later, I received a call from Billy’s mom '+fx("[[9|in which she told]]")+' me her son had passed away.</div><div class="zh">兩天後，我接到比利媽媽的一通電話，她在電話中告訴我她的兒子過世了。[cite: 5]</div></div>' +
-  clue('in which she told = and in the call she told me。which 代替 the call。[cite: 5]') +
-  ops([
-    ['and told', '', 'and (she) told (省略主詞)，但前方的受詞是 a call，易混淆[cite: 5]'],
-    ['in which she told', '在電話中告訴...', 'which = the call[cite: 5]'],
-    ['which she told', '', '她告訴這通電話(call)？[cite: 5]'],
-    ['she told', '', 'and she told / who told[cite: 5]']
-  ], 'B')
-);
-
-h += passage("補充段落", [
-  [["She wanted to thank me for making a difference in his life, for he’d said to her, “Mommy, I don’t mind if I can’t see Santa this year because I’ve hugged Ronald.”", "她想謝謝我改變了他的人生，因為他曾對她說：「媽咪，我不介意今年看不到聖誕老人，因為我已經擁抱過麥當勞叔叔了。」[cite: 5]"]]
-]);
-
-// --- 課本句型實例 1 ---
-h += '<h2 id="p5">課本句型 1 (find/consider/think/feel/believe + it + OC + to VR)</h2>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">1. 許多球迷認為贏得三次冠軍是項偉大的成就。(Many fans think...)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Many fans think it a great achievement to win three championships.]]")+'[cite: 5]<br><small>= Many fans think (that) it is a great achievement to win three championships.</small></div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">2. 許多人認為用手機付費很方便。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Many people consider it convenient to use mobile payment / pay by their phones.]]")+'[cite: 5]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">3. Peter發現通勤上班很浪費時間。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Peter finds it a waste of time (time-wasting) to commute to work.]]")+'[cite: 5]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">4. 有些美國人認為握手時握太用力是不恰當的。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Some Americans consider it inappropriate (for people) to squeeze too hard when shaking hands.]]")+'[cite: 5]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">5. Mandy認為成為大公司的實習生是個很棒的機會。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Mandy thinks it a good chance to become an intern in a large company/corporation.]]")+'[cite: 5]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">6. 多數父母認為投資他們孩子的教育是值得的。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Most parents consider it worthwhile to invest money in the education of their kids.]]")+'[cite: 5]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">7. 越來越多人認為採取立即行動來阻止全球暖化是必要的。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|More and more people consider it essential to take immediate action to stop global warming.]]")+'[cite: 5]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">8. Aaron認為他最喜愛的球隊輸掉冠軍是很可惜的事。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Aaron considers it a great shame/pity for his favorite team to lose the championship.]]")+'[cite: 5]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">9. 動物權利支持者覺得有些人虐待動物的行為令人憂慮。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Animal rights supporters find it disturbing for some people to abuse animals.]]")+'[cite: 5]</div></div>';
-
-
-// --- 課本句型實例 2 ---
-h += '<h2 id="p6">課本句型 2 (appear / seem to have p.p.)</h2>';
-h += passage("句型提示", [
-  [["seem/appear to have pp 表示該動作發生的時間比 seem/appear 更早。", "to VR 的過去式用 to have p.p.[cite: 5]"]]
-]);
-
-h += '<div class="stem"><div class="zh" style="color:inherit">1. 這女孩似乎對這個禮物感到驚訝。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|It appears that the girl is surprised by the gift.]]")+'[cite: 5]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">2. 當地居民似乎對空氣污染感到不滿。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|The local residents appeared to be unhappy with the air pollution.]]")+'[cite: 5]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">3. 觀眾似乎對那部浪漫電影評價很高。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|It seemed that the audience thought highly of the romantic movie.]]")+'[cite: 5]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">4. 你似乎把牛仔褲撕破了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|You appear to have torn your jeans.]]")+'[cite: 5]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">5. 他的第一次約會似乎進行的很順利。(It…)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|It seems/appears that his first date went / has gone very well.]]")+'[cite: 5]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">6. 他似乎忘了回家的路。(It…)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|It seems/appears that the man forgot / has forgotten his way home.]]")+'[cite: 5]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">7. 他們似乎被什麼可怕的東西嚇到了。(They…)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|They seem to have been frightened by some scary things / something scary.]]")+'[cite: 5]</div></div>';
-
-
-document.getElementById('app').innerHTML = h;
-
-const secs=[
-  ['p1','挑戰題 1'],
-  ['p2','挑戰題 2'],
-  ['p3','挑戰題 3'],
-  ['p4','挑戰題 4'],
-  ['p5','句型 1'],
-  ['p6','句型 2']
-];
+document.getElementById('app').innerHTML = h1 + h2;
+const secs=[['p1','L1~L46 課文講解'],['p2','句型1 & 句型2']];
 document.getElementById('nav').innerHTML=secs.map(s=>'<a href="#'+s[0]+'">'+s[1]+'</a>').join('')+'<button id="tg">全部收合</button>';
 let open=true;
 document.getElementById('tg').onclick=function(){
