@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>401 Blackboard</title>
+<style>
+:root{--bg:#faf8f4;--fg:#222;--card:#fff;--line:#e4ded3;--acc:#9a3b2e;--ok:#1f7a4d;--no:#b3261e;--mut:#6b6558;--hl:#fff1c9}
+@media(prefers-color-scheme:dark){:root{--bg:#161512;--fg:#e8e4da;--card:#201f1b;--line:#3a372f;--acc:#e08a78;--ok:#6fcf9a;--no:#f08a82;--mut:#a39d8f;--hl:#4a3f1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+.top{max-width:900px;margin:auto;padding:28px 18px 10px}
+.top h1{margin:0 0 4px;font-size:1.6rem;color:var(--acc)}
+.top p{margin:2px 0;color:var(--mut);font-size:.92rem}
+nav{position:sticky;top:0;z-index:9;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto;padding:8px 12px}
+nav a,nav button{flex:none;padding:5px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--fg);text-decoration:none;font:inherit;font-size:.88rem;cursor:pointer}
+nav a:hover,nav button:hover{border-color:var(--acc);color:var(--acc)}
+main{max-width:900px;margin:auto;padding:0 16px 70px}
+h2{margin:36px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--acc);font-size:1.3rem}
+h3{margin:0 0 8px;font-size:1.05rem;color:var(--acc)}
+.pas,.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.para{margin-bottom:14px}
+.s{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--line)}
+.en{font-family:Georgia,"Times New Roman",serif;font-size:1.02rem}
+.zh{color:var(--mut);font-size:.93rem}
+.note{color:var(--mut);font-size:.85rem;margin:6px 0 0}
+.bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 4px;border-radius:3px;font-weight:600}
+.bl sup{color:var(--acc);margin-right:3px;font-size:.7em}
+.bank{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.92rem;margin-bottom:8px}
+details.q>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+details.q>summary::-webkit-details-marker{display:none}
+.n{background:var(--acc);color:#fff;border-radius:6px;padding:0 10px;font-weight:700;font-size:1.05rem}
+.tag{font-size:.78rem;border:1px solid var(--acc);color:var(--acc);border-radius:99px;padding:0 9px;line-height:1.6}
+.tag.pos{border-color:var(--ok);color:var(--ok)}
+.ans{margin-left:auto;font-weight:700;color:var(--ok)}
+.qb{margin-top:10px}
+.stem{margin-bottom:8px;padding:8px 10px;background:var(--bg);border-radius:6px}
+.clue{margin:8px 0;padding:8px 12px;border-left:4px solid var(--acc);background:var(--bg);border-radius:0 6px 6px 0}
+.clue h4,.qb h4{margin:0 0 2px;font-size:.92rem;color:var(--acc)}
+ul.op{list-style:none;margin:6px 0 0;padding:0}
+ul.op li{padding:7px 10px;margin:5px 0;border-radius:6px;border:1px solid var(--line);font-size:.95rem}
+ul.op li.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 9%,transparent)}
+ul.op li.no{border-color:color-mix(in srgb,var(--no) 45%,transparent)}
+ul.op i{font-style:normal;font-weight:700;font-size:.82rem}
+li.ok i{color:var(--ok)}li.no i{color:var(--no)}
+small{color:var(--mut)}
+footer{max-width:900px;margin:auto;padding:20px 16px 40px;color:var(--mut);font-size:.85rem;line-height:1.6;border-top:1px solid var(--line);margin-top:40px;}
+footer a{color:var(--acc);text-decoration:none;font-weight:bold;}
+footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>401 Blackboard</h1>
+  <p>每題含：考點標籤 → 題幹逐句中英對照 → 解題線索 → 正解與全部誤答分析</p>
+  <p>圖例：<span class="bl">黃底</span> ＝ 正確答案填入處 ｜ <span class="tag">考點</span></p>
+</div>
+<nav id="nav"></nav>
+<main id="app"></main>
+<footer>
+  限定用途教學教材。本詳解為教學輔助，題目版權屬原出版單位。<br>
+  💡 <b>問題回報與建議：</b> Line: etpaul ｜ IG: <a href="https://www.instagram.com/etpaul" target="_blank">@etpaul</a>
+</footer>
+
+<script>
+const L="ABCD";
+const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[([^|\]]*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const SENT={};
+function passage(title,paras,note){
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[([^|\]]+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  return '<section class="pas"><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
+}
+function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
+const clue=t=>'<div class="clue"><h4>解題線索</h4>'+t+'</div>';
+function ops(list,ans,lab){lab=lab||'ABCDEF';return '<ul class="op">'+list.map((o,i)=>{const k=ans.indexOf(lab[i])>=0;return '<li class="'+(k?'ok':'no')+'"><b>'+(lab==='ABCDEF'&&list.length<=4?'('+L[i]+') ':lab==='ABCDEF'?'('+'ABCDEF'[i]+') ':'')+o[0]+'</b>'+(o[1]?' <small>'+o[1]+'</small>':'')+' <i>'+(k?'✔ 正解':'✘ 誤答')+'</i><br>'+o[2]+'</li>';}).join('')+'</ul>';}
+function card(n,tags,ans,body){
+  return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
+}
+
+const st=(en,zh)=>'<div class="stem"><div class="en">'+fx(en)+'</div><div class="zh">'+zh+'</div></div>';
+
+/* === Part 1: L1 ~ L49 講解與非題目例句依序呈現 === */
+const h1 = '<h2 id="p1">L1 ~ L49 課文講解</h2>' + [
+  card("L1", ["地方副詞倒裝", "there + V + S"], "C",
+    st("Once upon a time in a faraway, isolated kingdom, [[L1|there]] lived a king who ruled the land with an iron fist.", "從前在一個遙遠、孤立的王國裡，住著一位以鐵腕統治國家的國王。") +
+    clue("→ <code>in the kingdom there lived a king …</code>（地 adv. + Vi/Be + S）<br>注意：必須是不及物動詞或 be 動詞才可用此句型，被動和及物動詞不適用。") +
+    ops([
+      ["where", "25%", "where + 完子（不倒裝），且會使整句缺主要子句。"],
+      ["which", "34%", "不合理，lived 為不及物動詞且整句缺主要子句。"],
+      ["there", "31%", "引導存在句型 <code>there lived a king...</code>。"],
+      ["in which", "10%", "in which + 完子（不倒裝），且會使整句缺主要子句。"]
+    ], "C") +
+    passage("L1 補充例句", [[
+      ["Here comes the bus.", "公車來了。"],
+      ["In the classroom were 40 students.", "教室裡有四十名學生。"]
+    ]])
+  ),
+
+  card("L3", ["介系詞 vs. 連接詞", "表原因"], "B",
+    st("This king was considered (to be) unfair and cruel, primarily [[L3|due to]] his “unique” sense of justice.", "這位國王被認為既不公平又殘酷，主要是因為他「獨特」的正義感。") +
+    clue("∵ <code>owing to / due to / because of</code> 都是『介系詞』<br>∴ 後面只能有『名詞』不能有『動詞』，此外需有主要子句。<br>• <code>because / since</code> 是連接詞，後面要有『句子』(S + V…)<br>• <code>result from</code> (起因於) / <code>result in</code> (導致) 是動詞片語，前後皆為名詞，分別當主詞和受詞。") +
+    ops([
+      ["because", "4%", "連接詞，後面要有句子 (S + V…)。"],
+      ["due to", "76%", "介系詞片語，後接名詞片語 <code>his “unique” sense of justice</code>。"],
+      ["result from", "18%", "動詞片語（起因於），前後皆須為名詞當主詞與受詞。"],
+      ["result in", "2%", "動詞片語（導致），前後皆須為名詞當主詞與受詞。"]
+    ], "B") +
+    passage("L3 補充例句", [[
+      ["He retired because of ill health.", "他因為健康不佳而退休。（主要子句 + 介 + 名）"],
+      ["= He retired because he was not healthy.", "他因為健康不佳而退休。（連 + S + V…，because 後的 S 和 Be 不可省）"],
+      ["= His retirement resulted from his illness.", "他的退休起因於他的疾病。（名詞當主詞 + resulted from + 名詞當受詞）"],
+      ["= His illness resulted in his retirement.", "他的疾病導致了他的退休。"]
+    ]])
+  ),
+
+  card("L4", ["動詞時態", "過去習慣 would", "過去完成式"], "B",
+    st("Each time a man was accused of a crime, the king [[L4|would never rely]] on evidence to prove the man’s guilt or innocence.", "每次有人被指控犯罪時，國王從不依賴證據來證明此人的有罪或清白。") +
+    clue("*1 <code>each time</code> → 每次 → 習慣：<code>would</code> 可用來表示過去習慣、經常。<br>*2 一個句子有兩個過去時間或動作時，先發生的需用過去完成式。若沒有 2 個過去時間或動作則不可用。<br>*3 含有 <code>time</code> 的片語（省略 when）常可視為連接詞。") +
+    ops([
+      ["had never relied", "28%", "無兩個過去時間或動作的先後對比，不可用過去完成式。"],
+      ["would never rely", "47%", "<code>would + VR</code> 表過去習慣、經常。"],
+      ["has never relied", "19%", "現在完成式與過去式背景不合。"],
+      ["didn’t rely", "6%", "缺乏 never 語氣與過去習慣的常態感。"]
+    ], "B") +
+    passage("L4 補充例句", [[
+      ["When we worked in the same office, we would have coffee together.", "當我們在同一間辦公室工作時，我們常一起喝咖啡。"],
+      ["On summer evenings they would sit out in the garden.", "在夏日的傍晚，他們常坐在花園裡。"],
+      ["I fell asleep in Professor Li’s class.", "我在李教授的課堂上睡著了。（只有一個過去動作，故用過去式即可）"],
+      ["I had fallen asleep before Professor Li even began his class.", "在李教授開始上課前，我就已經睡著了。（兩個過去動作，先發生者 fall asleep 用過去完成式）"],
+      ["1. Every time I see her, she is smiling.", "每次我看到她，她都在微笑。"],
+      ["2. By the time we arrived, the movie had already started.", "到我們抵達時，電影已經開始了。"],
+      ["3. The next time you come, bring your laptop.", "下次你來時，帶著你的筆電。"],
+      ["4. Any time you need help, just call me.", "任何時候你需要幫忙，打給我即可。"],
+      ["5. The first time I visited Paris, I fell in love with the city.", "我第一次造訪巴黎時，就愛上了這座城市。"],
+      ["6. The last time we met, we discussed the project.", "我們上次見面時，討論了這個專案。"]
+    ]])
+  ),
+
+  card("L7", ["假設語氣", "要命建堅 + (should) VR"], "C",
+    st("Rather, he believed that the gods decided the suspect’s fate and insisted that the suspect [[L7|be put]] on public trial.", "相反地，他相信眾神決定嫌犯的命運，並堅持嫌犯應接受公開審判。") +
+    clue("<code>rather = instead</code> 取而代之地 (adv.)；<code>put sb on trial</code> 審判…。<br>有『要命建堅』含意的動詞，後面的子句需用 VR（因省略 should）：<br>• (要求) <code>ask, demand, require, request</code><br>• (命令) <code>order, command, direct</code> + <code>that S (should) VR</code><br>• (建議) <code>suggest, recommend, propose, urge, move</code><br>• (堅持) <code>insist</code>") +
+    ops([
+      ["put", "28%", "嫌犯是「被審判」，主動錯誤。"],
+      ["to put", "3%", "that 子句內不可用不定詞。"],
+      ["be put", "28%", "省略 should 的被動原形 <code>(should) be put</code>。"],
+      ["to be put", "41%", "不可加 to。"]
+    ], "C") +
+    passage("L7 補充例句", [[
+      ["He urged that the policy be adopted.", "他強烈建議該政策應被採納。"]
+    ]])
+  ),
+
+  card("L8", ["詞性：the + adj.", "單複數同形"], "D",
+    st("The [[L8|accused]] would be brought to the center of an amphitheater filled with people.", "被告會被帶到擠滿群眾的圓形競技場中央。") +
+    clue("通常 <code>the + adj. = adj. + people</code> 泛指具有某種特性或特質的人，例如：<code>the poor</code>（窮人）、<code>the rich</code>（富人）、<code>the disadvantaged</code>（弱勢族群），以上通常都視為複數名詞。<br>但有些用語可指單數或複數名詞，應視上下文而定，例如：<code>the accused</code>（被指控者，1 個或多個）、<code>the deceased</code>（死者，1 個或多個）。") +
+    ops([
+      ["accuses", "22%", "動詞第三人稱單數。"],
+      ["accusing", "13%", "現在分詞表主動。"],
+      ["accuser", "31%", "原告、指控者。"],
+      ["accused", "34%", "<code>the accused</code> 被指控者（被告）。"]
+    ], "D")
+  ),
+
+  card("L10", ["地方副詞倒裝", "地 adv. + Vi/Be + S"], "A",
+    st("Directly opposite the person (who was) on trial [[L10|would be]] two closed doors, (which were) exactly alike and side by side.", "正對著受審者的會是兩扇緊閉的門，完全一模一樣且並排著。") +
+    clue("<code>地 adv. + Vi/Be + S</code>：注意必須是不及物動詞或 be 動詞才可用此句型，被動和及物動詞不適用。<br>• <code>close</code> adj./adv. 靠近的／親近的；<code>closely</code> adv. 緊密的／密切的<br>• <code>closed</code> adj. 關閉的；<code>close</code> vt./vi. 關閉（無「靠近」之意）") +
+    ops([
+      ["would be", "34%", "Be 動詞構成地方副詞倒裝。"],
+      ["would be placed", "31%", "被動語態不適用此句型。"],
+      ["would have", "6%", "及物動詞不適用此句型。"],
+      ["would face", "28%", "及物動詞不適用此句型。"]
+    ], "A") +
+    passage("L10 補充例句", [[
+      ["Here comes the bus.", "公車來了。"],
+      ["In the classroom were 40 students.", "教室裡有四十名學生。"],
+      ["I don't mind where we go on vacation as long as it's close to a beach.", "只要靠近海灘，我不介意我們去哪裡度假。"],
+      ["She kept her eyes tightly closed.", "她緊閉雙眼。"],
+      ["We are all working closely with each other.", "我們大家都在彼此密切合作。"],
+      ["Beth closed her eyes and tried to sleep.", "貝絲閉上眼睛試著入睡。"]
+    ]])
+  ),
+
+  card("L12", ["轉折與順序副詞", "上下文邏輯"], "A",
+    st("The accused (person) would [[L12|then]] be forced to open one of the two doors.", "接著被告會被迫打開這兩扇門的其中一扇。") +
+    clue("依審判流程順序，被告接著（then）被迫打開其中一扇門。") +
+    ops([
+      ["then", "81%", "然後。"],
+      ["therefore", "9%", "因此。"],
+      ["however", "3%", "然而。"],
+      ["further", "6%", "更進一步。"]
+    ], "A")
+  ),
+
+  card("L14", ["易混淆動詞", "lie / lay 三態", "讓步倒裝"], "C",
+    st("(As) identical as the doors looked, what [[L14|lay]] behind them was very different.", "儘管這兩扇門看起來一模一樣，門後的事物卻截然不同。") +
+    clue("*1 <code>(as) + adj./adv. + as + S + V…</code> = 雖然 (adv. conj.)<br>動詞三態與 V-ing：<br>• 躺/位於/存在：<code>lie, lay, lain, lying</code><br>• 說謊：<code>lie, lied, lied, lying</code><br>• 放置：<code>lay, laid, laid, laying</code>") +
+    ops([
+      ["lied", "24%", "說謊的過去式。"],
+      ["laid", "25%", "放置的過去式（若用此字需改為被動 <code>was laid</code>）。"],
+      ["lay", "51%", "位於（lie）的過去式。"],
+      ["lain", "0%", "過去分詞，不可單獨當動詞。"]
+    ], "C") +
+    passage("L14 補充例句", [[
+      ["(As) much as I respect him, I still have to disagree with him on this.", "儘管我非常尊敬他，在這件事上我仍必須不同意他。"],
+      ["(As) strange as it may seem, I never really wanted to be rich.", "儘管這看起來可能很奇怪，但我從未真正想成為有錢人。"]
+    ]])
+  ),
+
+  card("L15", ["不定代名詞", "one ... the other"], "D",
+    st("Behind one door was a fierce, man-eating tiger, and behind [[L15|the other]] was a beautiful young woman.", "一扇門後是一隻兇猛的食人虎，而另一扇門後則是一位美麗的年輕女子。") +
+    clue("凡是有明確總數（2 扇門）時，最後一個皆用 <code>the other</code>。<br><code>another</code> 為單數（源自 an + other），故 <code>others</code> 可視為 another 的複數。因此，<code>other</code> 不可單獨出現，一定要加 the 或加 -s。<br>• <code>another (+ 單數N)</code>：額外（明確總數以外）的另一個<br>• <code>the other + N</code> 或 <code>the other</code>：剩下的那一個（通常前文會提到一個明確總數）<br>• <code>the others</code>：剩下的那些人事物（= <code>the other + 複N</code>）<br>• <code>others</code>：其他的人事物（= <code>other + 複N</code>）") +
+    ops([
+      ["other", "2%", "不可單獨出現。"],
+      ["others", "2%", "複數代名詞。"],
+      ["another", "24%", "不特定或額外的另一個。"],
+      ["the other", "67%", "兩扇門中剩下的那一個。"]
+    ], "D") +
+    passage("L15 補充例句", [[
+      ["I'm going to have another cup of coffee.", "我要再喝一杯咖啡。"],
+      ["I just drank two cups of coffee but I think I need another.", "我剛喝了兩杯咖啡，但我想我還需要另一杯。（雖有明確總數 two，但 another 並非包含在明確總數以內）"],
+      ["I have two flowers. One is red, and the other (one) is yellow.", "我有兩朵花。一朵是紅的，剩下的那朵是黃的。"],
+      ["I parked on the other side of the street.", "我把車停在街道的另一邊。（街道只有兩邊，另一邊 = 剩下的那一邊）"],
+      ["We stayed until [the other guests / the others] had left.", "我們一直待到其他剩下的客人離開。"],
+      ["(X) We should learn to think for other. → (O) We should learn to think for [other people / others].", "我們應該學會為他人著想。"]
+    ]])
+  ),
+
+  card("L17", ["轉折詞辨析", "In other words"], "A",
+    st("[[L17|In other words]], one door would ultimately lead to death for the accused, while the other would lead to glory.", "換言之，一扇門最終會使被告走向死亡，而另一扇門則通往榮耀。") +
+    clue("<code>in/by contrast</code> adv. 形成對比的是（用來比較兩個不同的人事物）。此處句首是重述前一句「一扇門是老虎、一扇門是美女」的結果，故用「換言之（In other words）」。") +
+    ops([
+      ["In other words", "76%", "換言之。"],
+      ["For instance", "6%", "例如。"],
+      ["On the other hand", "2%", "在另一方面（≒ however）。"],
+      ["In contrast", "16%", "形成對比的是。"]
+    ], "A") +
+    passage("L17 補充例句", [[
+      ["Some people see obstacles as barriers; in contrast, others see them as opportunities to grow.", "有些人將阻礙視為屏障；形成對比的是，另一些人將其視為成長的機會。"]
+    ]])
+  ),
+
+  card("L19", ["易混淆形容詞", "live / lively / for life / alive"], "D",
+    st("The king believed that if someone was genuinely guilty, he would choose the door to the tiger and be eaten (while he was) [[L19|alive]].", "國王相信如果某人確實有罪，他就會選擇老虎的門並被活生生吃掉。") +
+    clue("*1 主詞相同時可省略「連接詞 + 主詞 + be」（即 <code>while he was</code>），保留補語位置的形容詞 <code>alive</code>。") +
+    ops([
+      ["live", "5%", "adj./adv. 現場的；adj. 活的（只用於名詞前）。"],
+      ["lively", "47%", "adj. 熱鬧的／充滿活力的（a lively child/market）。"],
+      ["for life", "9%", "終生（= for the rest of one’s life）。"],
+      ["alive", "39%", "adj. 活的（只用於補語位置）。"]
+    ], "D") +
+    passage("L19 補充例句", [[
+      ["There will be live TV coverage of tonight's big match.", "今晚的大賽將有現場電視轉播。"],
+      ["They are against experiments on live animals.", "他們反對活體動物實驗。"],
+      ["Surround yourself with lively and passionate people; they bring energy to your life.", "讓自己身邊圍繞著充滿活力與熱情的人；他們會為你的生活帶來能量。"],
+      ["Love isn’t about perfection; it’s about choosing someone, flaws and all, for life.", "愛不是關於完美，而是選擇一個人、連同其缺點與一切，相伴一生。"],
+      ["The best way to feel alive is to step out of your comfort zone and experience something new.", "感受活著最好的方式就是跨出舒適圈並體驗新事物。"]
+    ]])
+  ),
+
+  card("L21", ["轉折詞與情緒分詞", "on the other hand / terrifying"], "B",
+    st("If, [[L21-1|on the other hand]], he was truly innocent, fate would guide him toward the door hiding the beautiful woman. The king would then allow him to marry this woman. Spectators at these trials never knew in advance whether they would witness a [[L21-2|terrifying]] death or a grand wedding.", "另一方面，如果他確實無辜，命運會引導他走向藏著美女的門。國王隨後會允許他迎娶這位女子。這些審判的觀眾事先從不知道他們會目睹一場駭人的死亡還是一場盛大的婚禮。") +
+    clue("• <code>spectator</code> [C] 體育場、運動競賽的觀眾；<code>audience</code> [U] 節目、演講的觀眾。<br>• 試題卷第 12 題考 <code>terrifying death</code>（駭人的死亡：<code>(A) terrify (B) terrifying (C) terrified (D) terrific</code>）。<br>• 講解卷 L21 考轉折詞辨析 <code>on the other hand</code>。") +
+    ops([
+      ["in contrast / (試題 A) terrify", "—", "形成對比的是（比較兩個不同的人事物，常是明顯對比）。"],
+      ["on the other hand / (試題 B) terrifying", "—", "<code>on the other hand</code> ≒ however；<code>terrifying</code> 令人恐懼的（修飾 death）。"],
+      ["to the contrary / (試題 C) terrified", "—", "<code>to/on the contrary</code> 用來比較相同的人事物，且通常反駁前一句話。"],
+      ["in comparison / (試題 D) terrific", "—", "相較之下（比較兩個不同的人事物，不強調明顯對比）。"]
+    ], "B") +
+    passage("L21 補充例句", [[
+      ["The loudest voices often dominate the conversation, but in contrast, the quietest individuals can offer the most profound insights when given space to speak.", "最大聲的意見往往主導對話，但形成對比的是，最安靜的人若獲得發言空間，往往能提供最深刻的洞見。（dominate vt. 主導；profound adj. 深刻的；insight n. 洞見）"],
+      ["Some believe that strict discipline leads to better academic performance. On the other hand, others argue that a more flexible approach fosters creativity and independent thinking.", "有些人相信嚴格的紀律能帶來更好的學業表現。另一方面，其他人則認為較有彈性的做法能促進創造力與獨立思考。（strict discipline 嚴格的紀律；academic adj. 學業的；flexible adj. 有彈性的；foster vt. 促進）"],
+      ["Some think failure is the end of the road. To/On the contrary, it is often the beginning of a great comeback.", "有些人認為失敗是窮途末路。恰恰相反，它往往是偉大東山再起的開端。（comeback n. 東山再起）"],
+      ["Complaining about problems only amplifies negativity. In comparison, focusing on solutions empowers us to take control of our lives.", "抱怨問題只會放大負面情緒。相較之下，專注於解決方案能賦予我們掌控自己生活的能力。（amplify vt. 放大；negativity n. 負面性/負面情緒；empower vt. 使…有能力）"]
+    ]])
+  ),
+
+  card("L26", ["複合關係代名詞", "What 引導名詞子句"], "C",
+    st("The king had a daughter whom he cherished above all else in the world. [[L26|What]] the royal father didn’t know, however, was that the princess had a secret lover.", "國王有一位他視如珍寶、勝過世上一切的女兒。然而，這位父王所不知道的是，公主有一位秘密情人。") +
+    clue("<code>[What the royal father didn’t know]</code>（名詞子句當主詞）, however, <code>was</code> <code>[that the princess had a secret lover]</code>（名詞子句當主詞補語）。<br>小挑戰：請用 whereas 將本句改成合理且合文法的句子 → <code>Whereas/Although the royal father didn’t know (it), the princess had a secret lover.</code>（去掉 however 與 was that）。") +
+    ops([
+      ["Although", "5%", "引導副詞子句，不可當主詞。"],
+      ["Unfortunately", "5%", "副詞，少連接詞。"],
+      ["What", "69%", "引導名詞子句當主詞並作 know 的受詞。"],
+      ["Whereas", "21%", "= although，引導副詞子句。"]
+    ], "C")
+  ),
+
+  card("L28", ["讓步倒裝句", "(As) + adj./adv. + as + S + V"], "D",
+    st("[[L28|As]] handsome and honorable as this young man was, he came from a family of very low social status in the kingdom and (he) was by no means a worthy match for the princess.", "儘管這位年輕人既英俊又高尚，但他來自王國中社會地位極低的家庭，絕非公主門當戶對的對象。") +
+    clue("*1 <code>worthy</code> adj. 值得考慮的；值得尊敬的（<code>a worthy opponent</code> 夠資格的對手 / <code>a worthy goal</code>）<br>*2 <code>match</code> n. 婚姻、婚配的對象<br>句型：<code>(as) + adj./adv. + as + S + V…</code> = 雖然。") +
+    ops([
+      ["While", "5%", "While + S + V…（不搭配 as 倒裝）。"],
+      ["Though", "19%", "Though + S + V…（不置於 adj. as 句首）。"],
+      ["Despite", "16%", "介系詞 (prep.)，後接名詞或 V-ing。"],
+      ["As", "60%", "副詞 (adv.)，構成 <code>As + adj. + as + S + V</code>。"]
+    ], "D") +
+    passage("L28 補充例句", [[
+      ["(As) much as I respect him, I still have to disagree with him on this.", "儘管我非常尊敬他，在這件事上我仍必須不同意他。"],
+      ["(As) strange as it may seem, I never really wanted to be rich.", "儘管這看起來可能很奇怪，但我從未真正想成為有錢人。"]
+    ]])
+  ),
+
+  card("L31", ["假設語氣", "order that S (should) VR"], "B",
+    st("One day, the princess and her secret lover were seen embracing (to embrace) passionately in the palace garden. When the king became aware of their romance, he immediately ordered that the young man [[L31|be thrown]] in jail to await trial.", "有一天，公主和她的秘密情人被看見在皇宮花園裡熱情相擁。當國王得知他們的戀情時，他立刻下令將這位年輕人關進監獄等待審判。") +
+    clue("<code>await</code> vt. = <code>wait for</code>。<br>有『要命建堅』含意的動詞，後面的子句需用 VR（因省略 should）：<br>• (要求) <code>ask, demand, require, request</code><br>• (命令) <code>order, command, direct</code> + <code>that S (should) VR</code><br>• (建議) <code>suggest, recommend, propose, urge</code><br>• (堅持) <code>insist, persist, maintain</code>") +
+    ops([
+      ["was thrown", "14%", "不可用一般過去式。"],
+      ["(should) be thrown", "51%", "省略 should 的被動原形。"],
+      ["to be thrown", "21%", "不可用不定詞。"],
+      ["should have been thrown", "14%", "過去本應該做卻未做，語意不合。"]
+    ], "B") +
+    passage("L31 補充例句", [[
+      ["He urged that the policy be adopted.", "他強烈建議該政策應被採納。"]
+    ]])
+  ),
+
+  card("L36", ["關係副詞", "短前長後"], "D",
+    st("Not long after(ward)(s), the day arrived [[L36|when]] the accused was brought before the two doors.", "不久之後，被告被帶到兩扇門前的那一天到來了。") +
+    clue("短前長後：<code>the day arrived [when the accused was brought before the two doors].</code><br>= <code>the day [when the accused was brought before the two doors] arrived.</code>（關係子句／形容詞子句修飾先行詞 <code>day</code>）。") +
+    ops([
+      ["that", "19%", "關係子句後移與先行詞分離時，用明確的關係副詞 when。"],
+      ["what", "0%", "已有先行詞 the day。"],
+      ["so that", "17%", "以便、如此一來（語意不合）。"],
+      ["when", "64%", "關係副詞修飾 the day。"]
+    ], "D")
+  ),
+
+  card("L37", ["介系詞片語", "at the thought of"], "A",
+    st("The amphitheater had never been so full, and the entire kingdom was curious to learn the young lover’s fate. Terrified at the [[L37|thought]] of death, he nervously paced back and forth as the people of the kingdom watched. He also looked to the princess for help, hoping that she would know which door hid the beautiful woman and which hid the terrible tiger. His eyes desperately begged her for a clue.", "圓形競技場從未如此爆滿，整個王國都很好奇想得知年輕情人的命運。一想到死亡就恐懼不已，他在王國眾人的注視下緊張地來回踱步。他也向公主求助，希望她知道哪扇門藏著美女、哪扇門藏著惡虎。他的眼神絕望地向她乞求線索。") +
+    clue("• <code>at the thought of</code> 一想到 ｜ <code>at the sound of</code> 一聽到<br>• <code>at the sight of</code> 一看到 ｜ <code>at the moment of</code> 在那一刻 ｜ <code>at the price</code> 以該價格<br>• <code>look to A for B = turn to A for B = appeal to A for B</code> 向 A 尋求 B") +
+    ops([
+      ["thought", "52%", "<code>at the thought of death</code> 一想到死亡。"],
+      ["moment", "40%", "尚未開門，還沒到死亡的那一刻。"],
+      ["price", "3%", "價格、代價。"],
+      ["sight", "5%", "尚未看見死亡。"]
+    ], "A")
+  ),
+
+  card("L45", ["動名詞複合結構", "of + 受格 + V-ing"], "A",
+    st("The princess felt tragically conflicted. She did not want her true love to be torn apart by a wild beast. However, she couldn’t stand the thought [[L45|of him]] marrying someone else either.", "公主感到悲劇性地矛盾掙扎。她不希望她的真愛被野獸撕碎。然而，她也無法忍受他迎娶別人的想法。") +
+    clue("• <code>dilemma</code> 兩難的選擇；<code>tear - tore - torn</code> 撕裂<br>• <code>the thought of him marrying someone else = the thought that he would marry someone else</code><br>∵ <code>of</code> 是『介系詞』，其後不能有動詞 → 將動詞改為 V-ing (<code>marrying</code>)<br>∵ <code>of</code> 是『介系詞』，其後代名詞需用受格 → 將 he 改為 <code>him</code>") +
+    ops([
+      ["of him", "63%", "介系詞 of + 受格 him + V-ing (marrying)。"],
+      ["that he", "36%", "that 需引導子句 → 後需有動詞（不可只接 marrying）。"],
+      ["in which he", "1%", "in which 也需引導子句 → 後需有動詞。"],
+      ["of why he", "0%", "why 也需引導子句 → 後需有動詞。"]
+    ], "A")
+  ),
+
+  card("L48", ["分詞構句", "主動 V-ing"], "D",
+    st("[[L48|Shaking]] with anxiety, she made her decision.", "焦慮地顫抖著，她做出了決定。") +
+    clue("= <code>(Although she was) shaking with anxiety, …</code><br>主詞相同時可省略「連接詞 + 主詞 + be」；<code>shake</code> vi. 發抖 / vt. 搖動。") +
+    ops([
+      ["Shake", "1%", "原形動詞不可直接作伴隨狀語。"],
+      ["Shook", "6%", "過去式動詞，缺連接詞。"],
+      ["Shaken", "9%", "因焦慮發抖為主動進行。"],
+      ["Shaking", "83%", "現在分詞構句。"]
+    ], "D")
+  ),
+
+  card("L49", ["代名詞與慣用語", "none but vs. nothing but"], "A",
+    st("To instruct her lover which door to open, the princess made a subtle movement (with her hand), a sign (that) (she was sure) [[L49|none]] but he would see. After seeing this gesture, the young man slowly approached one of the doors. All the onlookers waited with bated breath as he leaned forward to open it.", "為了指示情人該打開哪扇門，公主用手做了一個微妙的動作，她確信這個暗號除了他之外沒有人會看見。看到這個手勢後，年輕人緩緩走向其中一扇門。所有旁觀者在他傾身向前開門時都屏息以待。") +
+    clue("<code>a sign</code> 為 movement 的同位語；在關係子句中，<code>sb thinks/believes/is sure</code> 都可視為插入語；<code>but = except</code>。<br>• <code>none but = no one except</code>：除了…外沒有別人（<b>此片語只能指人</b>）<br>• <code>nothing but = nothing except</code>：除了…外沒有其它事物（<b>只能指事物</b>）") +
+    ops([
+      ["none", "77%", "<code>none but he</code>（除了他之外沒有別人）。"],
+      ["nothing", "21%", "只能指事物。"],
+      ["neither", "3%", "兩者都不。"],
+      ["never", "0%", "副詞，不可當主詞。"]
+    ], "A") +
+    passage("L49 補充例句與故事結局討論", [
+      [
+        ["None but he knew the truth.", "除了他之外沒有別人知道真相。"],
+        ["He has nothing but praise for the managers at his company.", "他對公司裡的經理們只有讚美。"]
+      ],
+      [
+        ["1. 男主很愛公主所以不顧公主的提示還是選擇了野獸的門，公主看到跑下去救他，國王怕公主受傷所以讓侍衛殺掉野獸，最後也同意讓兩人在一起", "學生創意結局 1"],
+        ["2. 讓他被吃掉哇哈哈哈哈哈哈（但現實中我會讓他活著啦畢竟我愛他嘛他們再離婚就好^_^", "學生創意結局 2"],
+        ["3. The princess killed the king and ruled the country in a proper way.", "公主殺了國王，並以妥善的方式統治國家。"],
+        ["4. 公主指給情人老虎的門，然後讓他被老虎吃掉，她再跟其他人約會，讓他們也被老虎吃，其實公主喜歡的是老虎。", "學生創意結局 4"],
+        ["5. 結果兩個門都是老虎 因為國王很生氣他和公主談戀愛 直接把他殺了", "學生創意結局 5"],
+        ["6. 公主雖然指向有美女的那扇門，但在婚禮期間那個男孩就會逃走，跟公主一起遠走高飛**（童話故事的美好結局）", "學生創意結局 6"],
+        ["7. 公主和哆啦A夢借穿透環及任意門然後與王子一起逃到別的國家", "學生創意結局 7"],
+        ["8. Maybe I would end this story with the man open the door that hind a tiger, then he died. Because of the sadness of her lover died, the princess will 殉情而死…hahaha (kill herself for him / martyrdom)", "也許我會讓男人打開藏有老虎的門死去，而因為愛人死去的悲傷，公主也為愛殉情而死。"],
+        ["9. Let the man marrys the girl first, and after the king die, the princess can marry the man.", "讓男人先娶那個女孩，等國王死後，公主就可以嫁給那個男人。"],
+        ["10. 公主衝出來，強吻門後的女人，最後公主和美女舉辦盛大的婚禮，幸福的生活在一起。至於國王跟男人都被吊在城牆喂禿鷲了。", "學生創意結局 10"],
+        ["11. 打開野獸的門，再打開美女的門，把美女推出去給野獸吃掉，自己躲進去！", "學生創意結局 11"],
+        ["12. 門正要打開時，老虎突然衝出門攻擊國王", "學生創意結局 12"],
+        ["13. 公主突然帶兵包圍競技場，然後篡位救了那個男的", "學生創意結局 13"],
+        ["14. 殺掉男人跟國王，自己當王", "學生創意結局 14"],
+        ["15. 篡位吧當女王不好嗎", "學生創意結局 15"],
+        ["16. 讓公主殺了那個王，帶著愛人私奔。", "學生創意結局 16"],
+        ["17. 公主刺殺國王結束這個荒謬的制度", "學生創意結局 17"]
+      ]
+    ])
+  )
+].join('');
+
+/* === Part 2: 講義重點 1 & 牛刀小試 === */
+const h2 = '<h2 id="p2">講義重點 1 ＆ 牛刀小試</h2>' + [
+  card("重點1-①", ["request 假設語氣", "被動原形"], "B",
+    st("① The old man requested that the damaged item [[重點1-①|be refunded]].", "這位老人要求那件損壞的商品應予退貨退款。") +
+    clue("<code>refund</code> vt. (退貨且)退款。") +
+    ops([["refund","","主動錯誤。"],["be refunded","","省略 should 的被動原形。"],["were returned","","時態與單複數錯誤。"]], "B")
+  ),
+  card("重點1-②", ["require 假設語氣", "被動原形"], "C",
+    st("② The car hire company’s policy requires that insurance [[重點1-②|be bought]] to cover the rented vehicle.", "租車公司的政策規定必須購買保險以保障租賃車輛。") +
+    clue("<code>car hire company</code> 租車公司；<code>hire</code> vt./n. 租賃；<code>insurance</code> n. 保險；<code>cover</code> vt. 保障。") +
+    ops([["to be bought","","不可用不定詞。"],["buy","","主動錯誤。"],["be bought","","省略 should 的被動原形。"],["should buy","","主動錯誤。"]], "C")
+  ),
+  card("重點1-③", ["ask 假設語氣", "原形動詞"], "A",
+    st("③ He asked that Tai-hua [[重點1-③|teach]] him some important words and phrases.", "他請求太華教他一些重要的單字和片語。") +
+    clue("<code>asked</code>（請求、要求）+ <code>that + S + (should) + VR</code>。") +
+    ops([["teach","","省略 should 的原形動詞。"],["taught","","過去式錯誤。"],["to teach","","不可用不定詞。"],["would teach","","不可用 would。"]], "A")
+  ),
+  card("重點1-④", ["demand 假設語氣", "原形動詞"], "D",
+    st("④ The strikers have demanded that the president [[重點1-④|resign]].", "罷工者要求總統辭職。") +
+    clue("<code>striker</code> 罷工者；<code>strike</code> n./vi. 罷工；<code>resign</code> n./v. 辭職。") +
+    ops([["resigns","","不可加 s。"],["be resigned","","辭職為主動。"],["to resign","","不可用不定詞。"],["resign","","省略 should 的原形動詞。"]], "D")
+  ),
+  card("重點1-⑤", ["insist 堅稱事實", "be to blame"], "A",
+    st("⑤ The teacher insists that the school [[重點1-⑤|is not]] to blame for the situation.", "老師堅稱學校不應為這個情況受責怪。") +
+    clue("<code>be to blame (for sth)</code> 應受責怪／應為某事負責；<code>insist</code> 堅稱 + 正常動詞變化。") +
+    ops([["is not","","現在簡單式。"],["was not","","時態不符。"],["should not","","缺 be 動詞且不用假設。"],["should not be","","誤用假設語氣。"]], "A")
+  ),
+  card("重點1-⑥", ["suggest 顯示", "正常動詞時態"], "C",
+    st("⑥ Opinion polls suggest that only 10% of the population [[重點1-⑥|trusts / trust]] the government.", "民意調查顯示只有 10% 的人口信任政府。") +
+    clue("<code>poll</code> 民意調查；<code>suggest = show = indicate</code> 顯示（接正常現在式動詞）。") +
+    ops([["trust","","視 population 為複數群體。"],["be trusted","","誤用被動假設。"],["trusts","","視 population 為單數整體。"],["trusted","","過去式不符。"]], "AC")
+  ),
+  card("重點1-⑦", ["move 提出動議", "假設語氣"], "D",
+    st("⑦ Mr. Chairman, I move that the matter [[重點1-⑦|be]] discussed after lunch.", "主席先生，我提議（動議）這件事在午餐後討論。") +
+    clue("<code>move</code> vt.（開會時）提出動議。") +
+    ops([["is","","需用原形。"],["to be","","不可用不定詞。"],["must be","","不用 must。"],["be","","省略 should 的原形 be。"]], "D")
+  ),
+
+  card("牛刀1-①", ["suggest 暗示", "lie/lay 三態"], "D",
+    st("① Are you suggesting (暗示) that he [[牛刀1-①|lied]] to you last night?", "你是在暗示他昨晚對你說謊嗎？") +
+    clue("• 躺/位於/存在：<code>lie, lay, lain, lying</code><br>• 說謊：<code>lie, lied, lied, lying</code><br>• 放置：<code>lay, laid, laid, laying</code>") +
+    ops([["lie","23%","誤用原形。"],["lay","7%","躺的過去式或放置的原形。"],["laid","5%","放置的過去式。"],["lied","66%","說謊的過去式。"]], "D")
+  ),
+  card("牛刀1-②", ["insist 假設語氣", "片語辨析"], "D",
+    st("② The accident was Mr. Lin’s fault. We insisted that he [[牛刀1-②|pay for]] the damage he did to us.", "這場車禍是林先生的錯。我們堅持他必須賠償他對我們造成的損失。") +
+    clue("<code>insisted</code>（堅持要求）+ <code>that + S + (should) + VR</code>。") +
+    ops([["paid for","17%","支付…的費用（過去式錯誤）。"],["pays back","3%","償還（<code>sth pays off</code> 得到好的結果）。"],["paying off","1%","還清（非完整動詞）。"],["pay for","80%","原形動詞片語。"]], "D")
+  ),
+  card("牛刀1-③", ["recommend 假設語氣", "被動原形"], "C",
+    st("③ The committee recommends that the matter [[牛刀1-③|be discussed]] at the next meeting.", "委員會建議這件事在下次會議中討論。") +
+    clue("<code>committee</code> n. 委員會；<code>recommends</code> + <code>that + S + (should) + be p.p.</code>。") +
+    ops([["would be discussed","1%","不可用 would。"],["will be discussed","12%","不可用 will。"],["be discussed","86%","省略 should 的被動原形。"],["may be discussed","1%","不可用 may。"]], "C")
+  ),
+  card("牛刀1-④", ["suggest 句型", "that S (should) VR"], "C",
+    st("④ The book suggests [[牛刀1-④|(that) we take]] responsibility for our own happiness, rather than expecting the world to provide it.", "這本書建議我們為自己的幸福負責，而不是指望這個世界來提供。") +
+    clue("<code>suggest</code> 後接 <code>(that) + S + (should) + VR</code> 或 <code>V-ing</code>。") +
+    ops([["that taking","9%","that 後需接子句。"],["to take","13%","suggest 不可接 to VR。"],["(that) we take","78%","正確子句結構。"],["that to take","0%","文法錯誤。"]], "C")
+  ),
+  card("牛刀1-⑤", ["suggest + 所有格 + V-ing", "動名詞意義主詞"], "A",
+    st("⑤ John suggested [[牛刀1-⑤|our going]] on a picnic this Sunday.", "約翰建議我們這個星期天去野餐。") +
+    clue("<code>suggest</code> 用法總整理與動名詞意義主詞（見下方補充例句）。") +
+    ops([["our going","6%","<code>suggest + 所有格 + V-ing</code>。"],["that we went","19%","→ 應為 <code>that we go</code>。"],["we must go","20%","應為 <code>(should) go</code>。"],["us to go","56%","不可接 sb to VR。"]], "A") +
+    passage("牛刀小試 ⑤ 補充例句", [[
+      ["(X) He suggested John to leave immediately. (不可接 to VR)", "錯誤用法"],
+      ["(O) Doctors suggest taking a walk every day. (但可接 V-ing / N)", "醫生建議每天散步。"],
+      ["(X) He suggested John that he leave immediately. (不可以人為受詞)", "錯誤用法"],
+      ["(O) He suggested to John that he (should) leave immediately.", "他向約翰建議他應該立刻離開。"],
+      ["(O) He suggested that John (should) leave immediately. (要命建堅)", "他建議約翰應該立刻離開。"],
+      ["I don't like speaking ill of others.", "我不喜歡（我）說別人壞話。"],
+      ["I don't like your/you speaking ill of others.", "我不喜歡你說別人壞話。（第 2 句中的 speaking 的主詞是你，和主要子句的主詞我不同，故用所有格 your 表達）"]
+    ]])
+  ),
+  card("牛刀1-⑥", ["order 假設語氣", "否定被動 not be p.p."], "C",
+    st("⑥ Our manager ordered that the air conditioner [[牛刀1-⑥|not be turned on]] unless the temperature was over 28 degrees.", "我們經理下令除非溫度超過 28 度，否則不得打開冷氣。") +
+    clue("<code>air conditioner</code> 冷氣；<code>temperature</code> 溫度。") +
+    ops([["be on","0%","語意相反。"],["should turn on","1%","主動與語意皆錯。"],["not be turned on","78%","省略 should 的否定被動原形。"],["be turned on","21%","語意相反。"]], "C")
+  ),
+  card("牛刀1-⑦", ["order 假設語氣", "that action be taken"], "B",
+    st("⑦ The wisdom of a true leader lies in knowing when to order [[牛刀1-⑦|that action be taken]] and when to let time reveal the best course (of action).", "真正領袖的智慧在於知道何時下令採取行動，何時讓時間揭示最佳方案。") +
+    clue("<code>course (of action)</code> 行動的途徑；做法。") +
+    ops([["to take action","13%","order 不直接接 to VR。"],["that action be taken","83%","<code>order that + S + (should) be p.p.</code>。"],["that to take action","0%","文法錯誤。"],["action to be taken","4%","標準用法為 that 子句。"]], "B") +
+    passage("牛刀小試 ⑦ 補充例句", [[
+      ["We need to decide on the best course (of action) before proceeding.", "我們在繼續進行之前需要先決定最佳行動方案。"]
+    ]])
+  ),
+  card("牛刀1-⑧", ["insist 堅稱事實", "時態一致性"], "D",
+    st("⑧ Both of my parents insisted that they [[牛刀1-⑧|were]] right, so they kept arguing until Uncle Garry called.", "我父母雙方都堅稱自己是對的，所以他們一直爭吵到蓋瑞叔叔打電話來。") +
+    clue("<code>insist</code> 堅稱 + 正常動詞變化；從屬子句中的時態需要與主要子句一致。") +
+    ops([["are","21%","時態不一致。"],["be","17%","誤用假設語氣。"],["being","0%","非完整動詞。"],["were","63%","過去式動詞。"]], "D") +
+    passage("牛刀小試 ⑧ 補充例句", [[
+      ["He said (that) he wanted to see me.", "他說他想見我。（從屬子句時態與主要子句一致）"]
+    ]])
+  ),
+  card("牛刀1-⑨", ["suggest 表表明", "lie not in... but in..."], "D",
+    st("⑨ The ancient philosopher's words suggest that true wisdom [[牛刀1-⑨|lies]] not in the accumulation of knowledge, but in the understanding of one's own ignorance.", "這位古代哲學家的話表明，真正的智慧不在於知識的積累，而在於理解自身無知。") +
+    clue("<code>lie in</code> 在於；<code>lie not in … but in …</code> 不在於…而是在於…；<code>philosopher</code> n. 哲學家；<code>accumulation</code> n. 累積；<code>ignorance</code> n. 無知。") +
+    ops([["be laid","13%","誤用被動假設。"],["lay","17%","過去式或放置。"],["lays","29%","放置（vt.）。"],["lies","42%","在於（單數現在式）。"]], "D")
+  ),
+  card("牛刀1-⑩", ["insist 堅稱事實", "be to blame for"], "A",
+    st("⑩ The teacher insists that the school [[牛刀1-⑩|is not]] to blame for the situation.", "老師堅稱學校不應為這個情況受責怪。") +
+    clue("<code>be to blame for = be responsible for</code> 應為某問題負責。") +
+    ops([["is not","69%","現在簡單式。"],["was not","5%","時態不符。"],["should not","5%","缺 be 動詞。"],["should not be","21%","誤用假設語氣。"]], "A") +
+    passage("牛刀小試 ⑩ 補充例句", [[
+      ["Officials believe that more than one person may be to blame for the fire.", "官員們認為可能不只一人應為這場火災負責。"]
+    ]])
+  ),
+  card("牛刀1-⑪", ["move 提出動議", "take a vote"], "B",
+    st("⑪ Since there are considerable disagreements among us, I move that a vote [[牛刀1-⑪|be taken]] on this matter.", "既然我們之間有相當大的意見分歧，我提議就此事進行投票表決。") +
+    clue("<code>considerable</code> 相當大／多的；<code>disagreement</code> 意見不合；<code>take a vote</code> 舉行投票。") +
+    ops([["take","9%","應為被動。"],["be taken","78%","省略 should 的被動原形。"],["to take","4%","不可用不定詞。"],["to be taken","10%","不可用不定詞。"]], "B")
+  ),
+  card("牛刀1-⑫", ["字彙辨析", "safety procedures"], "D",
+    st("⑫ Investigators urged that safety [[牛刀1-⑫|procedures]] at the site be improved.", "調查人員強烈建議工地的安全程序（措施）應予改善。") +
+    clue("<code>investigator</code> 調查員；<code>urge</code> 強烈建議。") +
+    ops([["proceed","43%","v. 接著做 / n. 收益 (usu. pl.)。"],["proceeds","11%","n. 收益。"],["proceeding","8%","一系列的行動、事件。"],["procedures","39%","程序／措施。"]], "D")
+  )
+].join('');
+
+/* === Part 3: 講義重點 2 & 牛刀小試 === */
+const h3 = '<h2 id="p3">講義重點 2 ＆ 牛刀小試</h2>' +
+  passage("重點 2 (p.5 練習題)", [[
+    ["例1：despite (介) + N → [[|having (very) little money]]", "儘管幾乎沒有錢"],
+    ["② [[|In spite of / Despite / Regardless of]] objections", "儘管有反對意見（objections 反對）"],
+    ["③ <del>A</del> [[|Poor child as]]...", "儘管是個貧窮的孩子（單數可數名詞提前時省略冠詞 a）"],
+    ["④ [[|Despite the fact that / Although / Though / Even if / Even though]]...", "儘管…（後接完整子句）"],
+    ["句2：⑤ [[|Regardless of / No matter]] ｜ ⑥ [[|Regardless of]] ｜ ⑦ [[|Whether]] ((X) No matter)", "課本 p.5 句型 2 練習題解答"]
+  ]]) + [
+  card("牛刀2-①", ["介系詞片語", "Except for"], "A",
+    st("① [[牛刀2-①|Except for]] very large pieces too heavy to move, virtually all surviving Angkorian statues, wood carvings and artifacts have been replaced with copies.", "除了太大、太重而無法搬動的藝術品之外，幾乎所有現存的吳哥窟雕像、木雕和文物都已被複製品取代。") +
+    clue("<code>piece</code> 一件藝術品；<code>virtually</code> 幾乎；<code>surviving</code> 殘存的；<code>Angkorian</code> 吳哥窟的；<code>statue</code> 雕像；<code>carving</code> 雕刻；<code>artifact</code> 文物。") +
+    ops([["Except for","13%","除…之外（表例外）。"],["In spite of","31%","儘管。"],["Owing to","53%","因為。"],["In addition to","3%","除…之外還有。"]], "A")
+  ),
+  card("牛刀2-②", ["連接詞與介系詞", "By the time / despite"], "D, A",
+    st("② [[牛刀2-②-1|By the time]] the gold was gone, [[牛刀2-②-2|despite]] once being nicknamed “Little Shanghai,” Chiufen was almost completely forgotten.", "到了黃金採盡之時，儘管曾有「小上海」的稱號，九份幾乎完全被人遺忘。") +
+    clue("第 1 空後接子句用連接詞 <code>By the time</code>；第 2 空後接 V-ing 用介系詞 <code>despite</code>。") +
+    ops([
+      ["(1) At that time 在當時 / (2) despite (介) 雖然；儘管","31% / 38%","(1) 應選 D；(2) A 正確。"],
+      ["(1) In no time 立刻 / (2) even (adv.) 甚至","3% / 25%","even though (conj.) 雖然；even if (conj.) 即使。"],
+      ["(1) During this time 在此期間 / (2) as (介) 正如","3% / 34%","as 表雖然時用在 (as) … as 的句型。"],
+      ["(1) By the time 到了…時 / (2) when","63% / 3%","(1) D 正確；(2) 應選 A。"]
+    ], "D")
+  ),
+  card("牛刀2-③", ["連接詞與副詞", "Although / barely / through"], "D, A, A",
+    st("③ [[牛刀2-③-1|Although]] a hummingbird's wingspread is [[牛刀2-③-2|barely]] four inches long on average, it can rush [[牛刀2-③-3|through]] the air as swiftly as sixty miles an hour.", "雖然蜂鳥的翼展平均僅僅四英吋長，但牠能以高達每小時六十英里的速度快速穿梭於空氣中。") +
+    clue("<code>hummingbird</code> 蜂鳥；<code>wingspread</code>（鳥類等的）翼展；<code>swiftly</code> 快速地；<code>as … as…</code> 到…的程度（如 <code>as many as 600 people</code> 多達 600 人）。") +
+    ops([
+      ["(1) Despite / (2) barely / (3) through","11% / 29% / 75%","barely = hardly（僅僅）；(2)(3) 選 A 正確。"],
+      ["(1) Concerning / (2) mainly / (3) out","6% / 37% / 6%","concerning = regarding = about 關於；mainly = chiefly = primarily 主要地。"],
+      ["(1) However / (2) likely / (3) down","0% / 21% / 4%","However 不能直接連接兩子句。"],
+      ["(1) Although / (2) chiefly / (3) above","83% / 13% / 14%","(1) D (Although) 正確。"]
+    ], "D")
+  ),
+  card("牛刀2-④", ["因果介系詞", "Due to"], "A",
+    st("④ [[牛刀2-④|Due to]] scientific research, we have known more about the relationship between sleep and dreams. However, why a dream will take a certain symbolic form is still a mystery.", "由於科學研究，我們對睡眠與夢境之間的關係有了更多了解。然而，為什麼夢會呈現某種象徵形式至今仍是個謎。") +
+    clue("<code>take form</code> 形成、以…的形式出現；<code>symbolic</code> 象徵的；<code>mystery</code> 謎；<code>consist of</code> 由…組成。") +
+    ops([["Due to","87%","由於。"],["As far as","2%","就…而言。"],["In spite of","5%","儘管。"],["Consisting of","6%","由…組成。"]], "A")
+  ),
+  card("牛刀2-⑤", ["片語與被動動名詞", "at any cost / being turned"], "C, D",
+    st("⑤ The twins were determined to be separated [[牛刀2-⑤-1|at any cost]] despite [[牛刀2-⑤-2|being turned]] down by other doctors who deemed the operation too risky.", "這對連體嬰決心不計代價都要進行分割手術，儘管遭到其他認為手術風險太高的醫生婉拒。") +
+    clue("<code>twin</code> 雙胞胎／連體嬰；<code>determine</code> 決定；<code>separate</code> 分割；<code>deem + O + OC = consider + O + OC</code> 將…視為；<code>operation</code> 手術；<code>turn down</code> 婉拒。") +
+    ops([
+      ["(1) at best 在最佳的情況下 / (2) turning","14% / 19%","主動語態錯誤。"],
+      ["(1) far and wide 到處 / (2) of being turned","21% / 7%","despite 後不加 of。"],
+      ["(1) at any cost 不計代價 / (2) turned","35% / 6%","(1) C 正確；(2) 應選 D。"],
+      ["(1) by no means 絕非 (by all means 當然) / (2) being turned","29% / 68%","(2) D 正確。"]
+    ], "C")
+  ),
+  card("牛刀2-⑥", ["介系詞片語", "Regardless of"], "D",
+    st("⑥ [[牛刀2-⑥|Regardless of]] the weather, the athletic meetings will be held on time.", "不論天氣如何，運動會都將準時舉行。") +
+    clue("<code>athletic meeting</code> 運動會；<code>in relation to</code> 關於；<code>on behalf of</code> 代表（行使權力）。") +
+    ops([["Instead of","2%","代替。"],["In relation to","4%","關於。"],["On behalf of","2%","代表。"],["Regardless of","92%","不管、不論。"]], "D")
+  ),
+  card("牛刀2-⑦", ["因果介系詞", "Because of"], "B",
+    st("⑦ As new materials develop, one invention often leads to another. Steel, for instance, was developed by engineers in the 19th century. [[牛刀2-⑦|Because of]] its strength, steel soon became a useful building material.", "隨著新材料發展，一項發明往往會促成另一項發明。例如鋼鐵是十九世紀由工程師研發出來的。因為它的高強度，鋼鐵很快就成為實用的建築材料。") +
+    clue("<code>material</code> 材料；<code>invention</code> 發明；<code>steel</code> 鋼；<code>engineer</code> 工程師；<code>strength</code> 強度／硬度；<code>prior to</code> 在…之前；<code>not to mention</code> 更別提。") +
+    ops([["Prior to","1%","在…之前。"],["Because of","90%","因為。"],["In spite of","8%","儘管。"],["Not to mention","2%","更別提。"]], "B")
+  ),
+  card("牛刀2-⑧", ["複合關係詞讓步", "No matter"], "B",
+    st("⑧ [[牛刀2-⑧|No matter]] how much they pay, I am not interested in this kind of job.", "無論他們付多少薪水，我對這種工作都沒興趣。") +
+    clue("<code>no sooner</code>（否定副詞）+ <code>had + S1 + p.p.</code>（否定副詞之後接倒裝句）+ <code>than + S2 + V過去式</code>：★ 此句型只表示「一…就…」，且只能用在過去的事件，請勿濫用！") +
+    ops([["In spite of","1%","介系詞片語。"],["No matter","98%","無論…。"],["No sooner","0%","一…就…。"],["Even though","1%","後接陳述句。"]], "B") +
+    passage("牛刀小試 ⑧ 補充例句", [[
+      ["No sooner had he sat down than the phone rang.", "他一坐下電話就響了。"]
+    ]])
+  ),
+  card("牛刀2-⑨", ["介系詞片語", "Instead of"], "D",
+    st("⑨ [[牛刀2-⑨|Instead of]] treating the homeless man as a shame of the society, Mrs. Wang provided him with food and water.", "王太太非但沒有把這位無家可歸的人視為社會之恥，反而提供他食物和水。") +
+    clue("<code>In the event of</code> 如果發生…。") +
+    ops([["Regardless of","24%","不管。"],["As a result of","2%","由於。"],["In the event of","10%","如果發生…。"],["Instead of","64%","而不是、非但沒有…反而…。"]], "D") +
+    passage("牛刀小試 ⑨ 補充例句", [[
+      ["In the event of a strike, the army will take over responsibility for firefighting.", "如果發生罷工，部隊將承擔起消防職責。"]
+    ]])
+  ),
+  card("牛刀2-⑩", ["介系詞片語與字彙", "In conjunction with / affected"], "D, A",
+    st("⑩ [[牛刀2-⑩-1|In conjunction with]] the Health Ministry and the Malaria Center, The CAMBODIA DAILY will distribute the nets to the most [[牛刀2-⑩-2|affected]] areas of the country.", "《柬埔寨日報》將與衛生部及瘧疾中心合作，把蚊帳分發到該國受災（受影響）最嚴重的地區。") +
+    clue("<code>Health Ministry</code> 衛生部；<code>malaria</code> 瘧疾；<code>Cambodia</code> 柬埔寨；<code>distribute</code> 分發；<code>in view of</code> 考慮到；<code>in conjunction with</code> 與…合作；<code>affected area</code> 災區／受影響的地區；<code>effective</code> 有效的。") +
+    ops([
+      ["(1) In view of / (2) affected","21% / 50%","(2) A (affected) 正確。"],
+      ["(1) In spite of / (2) frequent","21% / 5%","frequent 頻繁的。"],
+      ["(1) In case of / (2) effective","23% / 40%","effective 有效的。"],
+      ["(1) In conjunction with / (2) included","36% / 6%","(1) D (In conjunction with) 正確。"]
+    ], "D") +
+    passage("牛刀小試 ⑩ 補充例句", [[
+      ["In view of what you've said, I think we should reconsider our proposed course of action.", "考慮到你剛才所說的，我認為我們應該重新考慮擬訂的行動計劃。"],
+      ["There is a team of writers working in conjunction (with each other) on the book.", "有一個作家小組在合作撰寫這部書。"]
+    ]])
+  )
+].join('');
+
+/* === Part 4: 句型練習 === */
+const h4 = '<h2 id="p4">句型練習與參考答案</h2>' + [
+  card("句1-1", ["句型1", "suggest that S (should) VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">1. 醫生建議我們常洗手並且避開人多的地方。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Doctors suggest that we (should) wash our hands regularly and avoid crowded places.]]")+'</div></div>' + clue("對照與修正：<code>Doctors advised that we (should) wash our hands often and avoid <del>(visiting)</del> <del>public</del> crowded places.</code>")),
+  card("句1-2", ["句型1", "insist that S (should) VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">2. 那位服務生堅持我在進餐廳之前得戴上口罩。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The waiter insisted that I (should) put on a mask before I entered/went into the restaurant.]]")+'</div></div>' + clue("對照與修正：<code><del>That</del> The waiter insisted that I <del>wear</del> put on <del>the</del> a mask before entering <del>into</del> the restaurant.</code>")),
+  card("句1-3", ["句型1", "order that S (should) VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">3. 船長命令全體船員棄船 (abandon ship)。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The captain ordered that the crew (should) abandon ship.]]")+'</div></div>' + clue("對照與修正：<code>The captain ordered all the sailors to abandon ship.</code>（若用 order sb to VR，to 不可省）。")),
+  card("句1-4", ["句型1", "demand that S (should) be p.p."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">4. 有些人要求該布條 (banner) 應撤下。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Some people demanded that the banner (should) be taken down.]]")+'</div></div>' + clue("對照與修正：<code>Some people asked that the banner be <del>moved away</del> removed.</code>")),
+  card("句1-5", ["句型1", "propose that S (should) not be p.p."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">5. 該專家提議這則影片不應公諸於世。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The expert proposed that the video (should) not be made public.]]")+'</div></div>' + clue("對照與修正：<code>The expert proposed that this video <del>to</del> not be made public.</code>")),
+  card("句2-1", ["句型2", "(As) + adj. + as + S + V"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">句2-1：儘管這個房間又小又舊，裡面卻非常舒適溫馨。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|(As) small and old as the room is, it is very cozy inside.]]")+'</div></div>'),
+  card("句2-2", ["句型2", "(As) + adv. + as + S + V"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">句2-2：儘管珍妮在圖書館裡講手機已經很小聲了，她還是打擾到了其他人。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|(As) quietly as Jenny spoke on her cell phone, she still disturbed other people in the library.]]")+'</div></div>'),
+  card("句2-3", ["句型2", "(As) + adj. + as + S + may seem"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">句2-3：儘管這隻怪獸看起來可能很嚇人，牠卻有一顆善良的心。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|(As) scary as the monster may seem, it has a kind heart.]]")+'</div></div>'),
+  card("句2-4", ["句型2", "(As) + adv. + as + S + V"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">句2-4：儘管竊賊已經非常小心地開門了，他還是觸發了防盜警報器。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|(As) carefully as the burglar opened the door, he still triggered the security alarm.]]")+'</div></div>')
+].join('');
+
+document.getElementById('app').innerHTML = h1 + h2 + h3 + h4;
+const secs=[['p1','L1~L49 課文講解'],['p2','重點1 & 牛刀小試'],['p3','重點2 & 牛刀小試'],['p4','句型練習']];
+document.getElementById('nav').innerHTML=secs.map(s=>'<a href="#'+s[0]+'">'+s[1]+'</a>').join('')+'<button id="tg">全部收合</button>';
+let open=true;
+document.getElementById('tg').onclick=function(){open=!open;document.querySelectorAll('details.q').forEach(d=>d.open=open);this.textContent=open?'全部收合':'全部展開';};
+</script>
+<script src="bookmark.js"></script>
+</body>
+</html>

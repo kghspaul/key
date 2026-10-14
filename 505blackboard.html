@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>505 Blackboard</title>
+<style>
+:root{--bg:#faf8f4;--fg:#222;--card:#fff;--line:#e4ded3;--acc:#9a3b2e;--ok:#1f7a4d;--no:#b3261e;--mut:#6b6558;--hl:#fff1c9}
+@media(prefers-color-scheme:dark){:root{--bg:#161512;--fg:#e8e4da;--card:#201f1b;--line:#3a372f;--acc:#e08a78;--ok:#6fcf9a;--no:#f08a82;--mut:#a39d8f;--hl:#4a3f1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+.top{max-width:900px;margin:auto;padding:28px 18px 10px}
+.top h1{margin:0 0 4px;font-size:1.6rem;color:var(--acc)}
+.top p{margin:2px 0;color:var(--mut);font-size:.92rem}
+nav{position:sticky;top:0;z-index:9;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto;padding:8px 12px}
+nav a,nav button{flex:none;padding:5px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--fg);text-decoration:none;font:inherit;font-size:.88rem;cursor:pointer}
+nav a:hover,nav button:hover{border-color:var(--acc);color:var(--acc)}
+main{max-width:900px;margin:auto;padding:0 16px 70px}
+h2{margin:36px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--acc);font-size:1.3rem}
+h3{margin:0 0 8px;font-size:1.05rem;color:var(--acc)}
+.pas,.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.para{margin-bottom:14px}
+.s{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--line)}
+.en{font-family:Georgia,"Times New Roman",serif;font-size:1.02rem}
+.zh{color:var(--mut);font-size:.93rem}
+.note{color:var(--mut);font-size:.85rem;margin:6px 0 0}
+.bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 4px;border-radius:3px;font-weight:600}
+.bl sup{color:var(--acc);margin-right:3px;font-size:.7em}
+.bank{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.92rem;margin-bottom:8px}
+details.q>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+details.q>summary::-webkit-details-marker{display:none}
+.n{background:var(--acc);color:#fff;border-radius:6px;padding:0 10px;font-weight:700;font-size:1.05rem}
+.tag{font-size:.78rem;border:1px solid var(--acc);color:var(--acc);border-radius:99px;padding:0 9px;line-height:1.6}
+.tag.pos{border-color:var(--ok);color:var(--ok)}
+.ans{margin-left:auto;font-weight:700;color:var(--ok)}
+.qb{margin-top:10px}
+.stem{margin-bottom:8px;padding:8px 10px;background:var(--bg);border-radius:6px}
+.clue{margin:8px 0;padding:8px 12px;border-left:4px solid var(--acc);background:var(--bg);border-radius:0 6px 6px 0}
+.clue h4,.qb h4{margin:0 0 2px;font-size:.92rem;color:var(--acc)}
+ul.op{list-style:none;margin:6px 0 0;padding:0}
+ul.op li{padding:7px 10px;margin:5px 0;border-radius:6px;border:1px solid var(--line);font-size:.95rem}
+ul.op li.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 9%,transparent)}
+ul.op li.no{border-color:color-mix(in srgb,var(--no) 45%,transparent)}
+ul.op i{font-style:normal;font-weight:700;font-size:.82rem}
+li.ok i{color:var(--ok)}li.no i{color:var(--no)}
+small{color:var(--mut)}
+footer{max-width:900px;margin:auto;padding:20px 16px 40px;color:var(--mut);font-size:.85rem;line-height:1.6;border-top:1px solid var(--line);margin-top:40px;}
+footer a{color:var(--acc);text-decoration:none;font-weight:bold;}
+footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>505 Blackboard</h1>
+  <p>每題含：考點標籤 → 題幹逐句中英對照 → 解題線索 → 正解與全部誤答分析</p>
+  <p>圖例：<span class="bl">黃底</span> ＝ 正確答案填入處 ｜ <span class="tag">考點</span></p>
+</div>
+<nav id="nav"></nav>
+<main id="app"></main>
+<footer>
+  限定用途教學教材。本詳解為教學輔助，題目版權屬原出版單位。<br>
+  💡 <b>問題回報與建議：</b> Line: etpaul ｜ IG: <a href="https://www.instagram.com/etpaul" target="_blank">@etpaul</a>
+</footer>
+
+<script>
+const L="ABCD";
+const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[([^|\]]*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const SENT={};
+function passage(title,paras,note){
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[([^|\]]+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  return '<section class="pas"><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
+}
+function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
+const clue=t=>'<div class="clue"><h4>解題線索</h4>'+t+'</div>';
+function ops(list,ans,lab){lab=lab||'ABCDEF';return '<ul class="op">'+list.map((o,i)=>{const k=ans.indexOf(lab[i])>=0;return '<li class="'+(k?'ok':'no')+'"><b>'+(lab==='ABCDEF'&&list.length<=4?'('+L[i]+') ':lab==='ABCDEF'?'('+'ABCDEF'[i]+') ':'')+o[0]+'</b>'+(o[1]?' <small>'+o[1]+'</small>':'')+' <i>'+(k?'✔ 正解':'✘ 誤答')+'</i><br>'+o[2]+'</li>';}).join('')+'</ul>';}
+function card(n,tags,ans,body){
+  return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
+}
+
+const st=(en,zh)=>'<div class="stem"><div class="en">'+fx(en)+'</div><div class="zh">'+zh+'</div></div>';
+
+/* === Part 1: L1 ~ L75 課文講解與非題目句子依序呈現 === */
+const h1 = '<h2 id="p1">L1 ~ L75 課文講解</h2>' +
+  passage("1. L1 ~ 3. L6 課文與高階寫作技巧", [[
+    ["1. L1 Venice was built on the sea more than a thousand years ago, and its magnificence sets it apart from any other city in the world.", "威尼斯在一千多年前建於海上，其壯麗輝煌使它與世界上任何其他城市都截然不同。"],
+    ["2. L3 A prominent center of commerce in its early days, this Italian city depended largely on sea trade. (= Because this Italian city was a prominent center of commerce in its early days, this Italian city depended largely on sea trade.)", "這座義大利城市在早期是個重要的商業中心，很大程度上依賴海上貿易。"],
+    ["運用「N (同位語/分詞構句省略 Being), S + V …」晉升高階寫作：初階：Phoebe is a senior in high school. She is working around the clock because she needs to prepare for college admission. → 中階：Phoebe is a senior in high school, so she is working around the clock to prepare for college admission. → 高階：A senior in high school, Phoebe is working around the clock to prepare for college admission.", "身為高三生，菲比正夜以繼日地努力準備大學入學考試。"],
+    ["3. L5 Today, Venice’s tranquil lagoons, ancient bridges, and vast web of canals attract tens of millions of visitors every year.", "如今，威尼斯寧靜的潟湖、古老的橋樑與龐大的運河網每年吸引數千萬名遊客。"],
+    ["L6 數量單位（ten, hundred, thousand, million, billion, dozen, ton）用法：(1) 前有數字、many 等字時不加 s（如 2 dozen eggs / 3 hundred people）；(2) 前無數字時需加 s + of（如 dozens of people / millions of dollars）；(3) 複合數量詞前面只能放 tens of 或 hundreds of（如 tens of thousands of 數萬、hundreds of thousands of 數十萬、tens of millions of 數千萬、hundreds of millions of 數億；(X) thousands of millions of → (O) billions of 數十億）。", "數量單位核心規則。"]
+  ]]) + [
+  card("L7", ["名詞字彙辨析", "a source of concern 擔憂的來源"], "B",
+    st("However, in recent years, the waters of Venice have been a constant source of [[L7|concern]].", "然而，近年來，威尼斯的水患一直是人們持續擔憂的來源。") +
+    clue("5. L7：<code>recent / recently</code> 常與現在完成式連用（例：<i>Housing prices have increased considerably in recent years.</i>）。<br>句首有 <code>However</code> 轉折，威尼斯的水域近年來一直是持續令人「擔憂（concern）」的根源。") +
+    ops([
+      ["prosperity", "11%", "成功、繁榮。"],
+      ["concern", "74%", "擔憂、關切（<code>a constant source of concern</code>）。"],
+      ["motivation", "15%", "動機、動力。"],
+      ["reflection", "0%", "反思、沉思。"]
+    ], "B") +
+    passage("4. L7 選項與 6. L9 (rise/raise/arise/arouse) 補充例句", [[
+      ["(A) The country's economic policies have led to increased prosperity for its citizens. / After years of hard work, she finally achieved financial prosperity.", "該國的經濟政策提升了國民的繁榮。／經過多年努力，她終於實現了財務富裕。"],
+      ["(B) Environmental concern is growing as people become more aware of climate change. / Her concern for her friend's well-being led her to offer help and support.", "隨著人們對氣候變遷意識提高，環保關切也日益增加。／她對朋友安康的擔憂促使她提供協助。"],
+      ["(C) Self-improvement is a strong motivation for many people to set and achieve goals. / The coach's words of encouragement served as motivation for the team to win the game.", "自我提升是許多人設定並達成目標的強大動機。／教練的鼓勵話語成為球隊贏球動力。"],
+      ["(D) After the project's completion, there was a period of reflection on what went well and what could be improved. / Taking a walk in the park provides a peaceful setting for self-reflection and relaxation.", "專案完成後有一段反思期。／在公園散步為自我反思與放鬆提供了寧靜環境。"],
+      ["6. L9 四大易混淆動詞：rise (vi. 上升：Oil prices have risen by 20 percent so far this year.) ｜ raise (vt. 募款/提高/舉起：The charitable organization is raising funds to build an orphanage. / Many shops have raised their prices. / Please raise your hand if you would like to share your insights.) ｜ arise (vi. 發生/產生：A misunderstanding usually arises from a lack of communication.) ｜ arouse (vt. 激起：The shiny pebbles on the beach aroused the little boy’s curiosity.)", "rise / raise / arise / arouse 完整例句對照。"]
+    ]])
+  ),
+
+  card("L9", ["動詞與名詞搭配", "pose a threat to 對…構成威脅"], "D",
+    st("Rising water levels due to increasing flooding now [[L9|pose]] a serious threat to the city’s future, and some experts are even speaking as if it were a foregone conclusion that the whole city of Venice will one day be permanently under water.", "由於洪水日益增加而不斷上升的水位，現在對這座城市的未來構成了嚴重威脅，有些專家甚至說得好像整座威尼斯城終有一天會永久沒入水中已是定局。") +
+    clue("固定搭配：<code>pose a threat / risk / danger / hazard / challenge / problem to...</code>（對…構成威脅／風險／挑戰）。<br>8. L14 字根補充：<code>alt = high</code>（<code>altitude</code> 海拔高度、<code>altimeter</code> 高度計）；<code>aqua = water</code>（<code>aquarium</code> 水族館、<code>Aquarius</code> 水瓶座；西語 <i>agua</i>）。") +
+    ops([
+      ["receive", "4%", "收到威脅（receive a threat）。"],
+      ["carry out", "44%", "執行、實施威脅（carry out a threat，主詞應為發出威脅的罪犯）。"],
+      ["give in to", "7%", "屈服於威脅（give in to a threat）。"],
+      ["pose", "44%", "構成威脅（<code>pose a serious threat to...</code>）。"]
+    ], "D") +
+    passage("7. L9 選項補充例句", [[
+      ["Plastic waste poses a serious threat to our environment.", "塑膠廢棄物對我們的環境構成嚴重威脅。"],
+      ["(A) The company's CEO received a threat via email, demanding a substantial ransom to protect sensitive information.", "公司執行長收到一封恐嚇信，要求支付巨額贖金。"],
+      ["(B) The criminal had made several threats, and to everyone's horror, he carried out his threat by setting fire to the building.", "罪犯曾多次發出威脅，令眾人驚駭的是，他真的放火燒大樓執行了他的威脅。"],
+      ["(C) Negotiating with terrorists is always a difficult decision; governments often face the dilemma of whether to give in to the threats or hold firm to their principles.", "與恐怖分子談判總是艱難決定；政府常面臨該屈服於威脅還是堅守原則的兩難。"],
+      ["(D) Climate change poses a significant threat to coastal communities, as rising sea levels can lead to severe flooding and erosion.", "氣候變遷對沿海社區構成重大威脅，因為海平面上升可能導致嚴重水災與侵蝕。"]
+    ]])
+  ),
+
+  card("L15", ["非限定關係副詞與因果動詞", ", when / causes + O + to VR"], "D, B",
+    st("Flooding in Venice results from two natural factors. One is acqua alta, which literally means “high water.” Acqua alta commonly occurs in winter, [[L15-1|when]] a combination of high tides, strong winds, and large waves [[L15-2|causes]] a huge volume of water to surge into the city.", "威尼斯的淹水起因於兩個自然因素。其一是「acqua alta」，字面意思是「高水位」。高水位通常發生在冬季，這時大潮、強風與巨浪的結合會導致大量海水湧入城中。") +
+    clue("• 第 1 空：先行詞為時間 <code>winter</code>，逗號後接完整子句，故用非限定關係副詞 <code>when</code>（= and/because in winter）。<br>• 第 2 空：注意受詞後方接的是<b>不定詞 <code>to surge into the city</code></b>！<br><code>lead to / bring about / result in / give rise to</code> 雖然都表「導致」，但其中的 <code>to / in / about</code> 是介系詞，後面只能接名詞或 V-ing（如 <i>leads to a huge volume of water surging...</i>），<b>只有 <code>causes</code> 可以接 <code>O + to VR</code></b>！") +
+    ops([
+      ["(1) no matter / (2) leads to", "11% / 14%", "no matter 需接 wh-；leads to 後不可接 to VR。"],
+      ["(1) by which / (2) causes", "29% / 43%", "by which 語意不通；(2) causes 正確。"],
+      ["(1) whether / (2) results in", "0% / 32%", "results in 後不可接 to VR。"],
+      ["(1) when / (2) gives rise to", "61% / 10%", "(1) when 正確；gives rise to 後不可接 to VR。"]
+    ], "DB")
+  ),
+
+  card("L17", ["as 插入語辨析", "as one would expect 正如預期"], "A",
+    st("This, [[L17|as one would expect]], greatly increases the likelihood of flooding.", "正如人們所預期的，這大大增加了淹水的可能性。") +
+    clue("大潮、強風和巨浪將大量海水灌進城裡，「正如人們所預料的（as one would expect）」，這自然會大幅增加淹水的可能性。") +
+    ops([
+      ["as one would expect", "39%", "正如人們所預期的。"],
+      ["as it turns out", "39%", "事實證明、結果卻是（常用於出乎意料的結果，但海水湧入導致淹水是理所當然的預期結果）。"],
+      ["as is mentioned before", "10%", "正如前面所提到的（前文尚未提過這句結論）。"],
+      ["as far as water supply is concerned", "13%", "就供水而言（與海水倒灌淹水無關）。"]
+    ], "A") +
+    passage("10. L17 & 11. L19 補充例句", [[
+      ["(A) The team's hard work paid off, and they won the championship, as one would expect with such dedication.", "球隊的辛勤付出獲得回報並贏得冠軍，正如人們對如此投入的預期。"],
+      ["(B) We were worried about the weather for the outdoor event, but as it turns out, we had a beautiful, sunny day. / That guy turned out to be Maria's second cousin. / It turned out that (= As it turned out,) she had known him when they were children.", "我們原本擔心戶外活動的天氣，但結果是個大晴天。／那傢伙結果竟然是瑪麗亞的遠房表親。／原來她小時候就認識他了。"],
+      ["(C) As is mentioned before, the company's profits have been steadily increasing over the past year.", "正如前面所提到的，公司利潤在過去一年穩定成長。"],
+      ["(D) As far as water supply is concerned, we need to address the issue of water conservation to ensure sustainability.", "就供水而言，我們需要解決節水問題以確保永續性。"],
+      ["11. L19 The other factor is natural subsidence. 字根拆解：sub (under) + sid- (sit) → subside (消退/下陷：Simon waited until the laughter subsided.) → subsidence (n. 地層下陷) ｜ reside (居住) / residence (住宅) ｜ subsidy (n. 補助金) / subsidize (v. 補助)", "sid- (sit) 字根家族整理。"]
+    ]])
+  ),
+
+  card("L19", ["lack 詞性與主詞結構", "the lack of + N"], "D",
+    st("Venice was constructed on weak marshland, and in consequence, [[L19|the lack of]] a solid, stable foundation has caused the city’s buildings to sink over time.", "威尼斯建於脆弱的沼澤地上，因此，缺乏堅固穩定的地基導致這座城市的建築物隨著時間推移而下沉。") +
+    clue("後半句的動詞是 <code>has caused</code>，前面需要一個<b>名詞片語當主詞</b>：<br>• <code>the lack (N.) of a solid, stable foundation</code>（缺乏堅固穩定的地基）<br>★ 觀念提醒：一個動詞如果本身已有名詞衍生字（如 <code>lack / chat</code>），當純名詞主詞時優先用現成名詞 <code>the lack of</code>（若用動名詞則為及物的 <code>lacking a solid, stable foundation</code>，不加 in！）。") +
+    ops([
+      ["lacked", "9%", "過去式或過去分詞不可當主詞。"],
+      ["lacking in", "32%", "<code>lacking in</code> 是形容詞片語，不能當主詞！"],
+      ["to lack", "0%", "不合慣用主詞結構。"],
+      ["the lack of", "59%", "名詞片語當 <code>has caused</code> 的主詞。"]
+    ], "D") +
+    passage("12. L19 & 13. L24 課文與補充例句", [[
+      ["He lacks (Vt.) courage. / He is lacking (adj.) in courage. / The lack (N.) of courage makes her shy.", "lack 三種詞性標準句型。"],
+      ["13. L24 Venice’s subsidence is also due to its location on top of the Adriatic Plate, which is gradually shifting beneath the Apennine Mountains.", "威尼斯的地層下陷也是因為它位於亞得里亞海板塊上方，而該板塊正逐漸向亞平寧山脈下方移動。"]
+    ]])
+  ),
+
+  card("L27", ["關係子句動詞", "that Venice sits on"], "C",
+    st("This shift is causing the land that Venice [[L27|sits]] on to drop even further in elevation.", "這種板塊移動正導致威尼斯所座落的土地在海拔高度上進一步下沉。") +
+    clue("在關係子句 <code>that Venice ___ on</code> 中，主詞是單數專有名詞 <code>Venice</code>，還缺少具備時態的動詞！<br>因為 <code>be located / situated + 介 = lie / stand / sit + 介</code>，且空格前沒有 <code>is</code>，故選主動現在簡單式單數動詞 <code>sits</code>！<br>15. L28：<code>in elevation</code> 在海拔高度上、<code>in width</code> 在寬度上、<code>in height</code> 在（自身）高度上、<code>in depth</code> 在深度上。") +
+    ops([
+      ["located", "16%", "缺少 be 動詞 <code>is</code>（應為 <i>is located on</i>）。"],
+      ["standing", "27%", "關係代名詞 that 後方必須是完整動詞 <code>stands</code> 而非分詞。"],
+      ["sits", "51%", "<code>that Venice sits on</code>（威尼斯所位於的土地）。"],
+      ["situates", "5%", "situate 為及物動詞，須用被動 <code>is situated</code>。"]
+    ], "C")
+  ),
+
+  card("L29", ["介系詞片語與字彙", "for industrial purposes 為了工業目的"], "C",
+    st("In addition to these natural forces, two human factors also pose a real threat to Venice. In the 1930s, [[L29|for industrial purposes]], people began to pump out the water that helped to sustain and support this floating city.", "除了這些自然力量之外，兩個「人為因素」也對威尼斯構成了真正的威脅。在 1930 年代，為了工業目的，人們開始抽取有助於維持並支撐這座水上城市的地下水。") +
+    clue("1930 年代人們大量抽取地下水是「為了工業用途（for industrial purposes）」。<br>19. L31：<code>pump</code> 使（氣體、液體等）往某方向移動：<code>pump air into a tire</code>（給輪胎打氣）、<code>The heart pumps blood around the body</code>（心臟將血液輸送到全身）、<code>pump out the water</code>（抽取地下水）。") +
+    ops([
+      ["for recreational purposes", "4%", "為了娛樂目的。"],
+      ["for evaluation purposes", "4%", "為了評估目的。"],
+      ["for industrial purposes", "82%", "為了工業目的。"],
+      ["for promotional purposes", "11%", "為了宣傳目的。"]
+    ], "C") +
+    passage("17. L30 補充例句", [[
+      ["Ginseng (人參) has been used for medical purposes for ages in China.", "人參在中國被用於醫療目的已有悠久歷史。"],
+      ["(A) The park was designed with various amenities for recreational purposes, such as playgrounds and picnic areas.", "這座公園設計了各種供娛樂目的使用的設施，如遊樂場和野餐區。"],
+      ["(B) The survey was conducted for evaluation purposes to gather feedback from customers about their experience.", "這次調查是為了評估目的而進行，以收集顧客的體驗回饋。"],
+      ["(C) The chemicals are manufactured for industrial purposes, primarily for use in the production of plastics.", "這些化學品是為了工業目的而製造的，主要用於塑膠生產。"],
+      ["(D) The company printed brochures and posters for promotional purposes.", "公司為了宣傳目的印製了小冊子和海報。"]
+    ]])
+  ),
+
+  card("L32", ["名詞字彙與動詞搭配", "the rate of subsidence 下陷的速度"], "A",
+    st("This activity caused the [[L32|rate]] of subsidence to accelerate dramatically throughout the rest of the 20th century.", "這項活動導致地層下陷的速度在二十世紀剩餘的時間裡急劇加速。") +
+    clue("後方動詞是 <code>to accelerate dramatically</code>（急劇加速），會「加速」的是下陷的「速度、速率（rate）」！") +
+    ops([
+      ["rate", "63%", "速度、比率（<code>the rate of subsidence</code> 下陷速率）。"],
+      ["factor", "7%", "因素。"],
+      ["pattern", "0%", "模式。"],
+      ["impact", "30%", "影響（影響不會 accelerate 加速）。"]
+    ], "A") +
+    passage("20. L32 & 21. L34 課文與補充例句", [[
+      ["(A) The rate of technological advancement in recent years has been remarkable.", "近年來的科技進步速度令人矚目。"],
+      ["(B) Nutrition is a significant factor in maintaining good health.", "營養是維持健康的重要因素。"],
+      ["(C) The weather pattern in this region follows a predictable cycle.", "該地區的氣候模式遵循可預測的週期。"],
+      ["(D) The environmental impact of the construction project must be assessed before it proceeds.", "建設工程的環境影響必須在動工前進行評估。"],
+      ["21. L34 Although pumping water was banned in the 1970s, considerable damage had already been done.", "雖然抽水在 1970 年代遭到禁止，但相當大的損害已經造成了。"],
+      ["L35 considerate (adj. 體貼的 = thoughtful) vs. considerable (adj. 相當多的；相當大的) ／ do damage/harm (to...)：The violent earthquake and its subsequent aftershocks did substantial damage to numerous buildings.", "猛烈的地震及其隨後的餘震對許多建築物造成了重大損壞。"]
+    ]])
+  ),
+
+  card("L36", ["表示差距之介系詞", "sunk by about 25 cm 下沉了約 25 公分"], "D",
+    st("It is estimated that Venice has sunk [[L36|by]] about 25 centimeters in the past century alone.", "據估計，光是在過去一個世紀裡，威尼斯就下沉了約 25 公分。") +
+    clue("介系詞 <code>by + 數量/百分比</code> 用來表示「（上升、下降、勝負變化後的）差距幅度」。") +
+    ops([
+      ["due to", "4%", "因為、由於。"],
+      ["in the event of", "19%", "萬一、如果發生…。"],
+      ["with respect to", "4%", "關於、就…而言。"],
+      ["by", "74%", "表示變化幅度的差距（下沉了 25 公分）。"]
+    ], "D") +
+    passage("22. L36 ~ 24. L37 補充例句", [[
+      ["That was a close basketball game; we beat our rivals by only one point in the end.", "那是一場勢均力敵的籃球賽；最終我們只以一分之差擊敗對手。"],
+      ["(A) Due to the heavy rain, the outdoor concert was canceled.", "由於大雨，戶外音樂會取消了。"],
+      ["(B) In the event of a fire, please use the nearest exit.", "若發生火災，請使用最近的出口。"],
+      ["(C) We need to make some decisions with respect to the budget for next year.", "我們需要就明年的預算做出一些決定。"],
+      ["(D) The price of the product has been reduced by 15% to attract more customers.", "該產品價格已調降 15% 以吸引更多顧客。"],
+      ["23. L36 It is estimated that S + V (據估計)：It is estimated that the case number of the disease in the country will reach one thousand next week.", "據估計該國下週的染病人數將達到一千人。"],
+      ["24. L37 alone 放在名詞或時間後當副詞表「僅僅、光憑…」：The thought of bungee jumping alone is already horrifying to me. I really have no stomach for it (= really can’t stomach it / have no desire for it).", "光想到高空彈跳就已經讓我毛骨悚然了。我真的不敢嘗試。"]
+    ]])
+  ),
+
+  card("L37", ["本課句型：As if 與事實相反假設", "As if ... were not ..."], "D",
+    st("[[L37|As if]] land subsidence were not a serious enough problem, the city also has to contend with the effects of climate change.", "彷彿地層下陷還不算夠嚴重的問題似的，這座城市還必須應付氣候變遷帶來的影響。") +
+    clue("觀察後方動詞使用了與現在事實相反的假設語氣 <code><b>were</b> not a serious enough problem</code>（事實上地層下陷已經是非常嚴重的問題了！），故選 <code>As if</code>（彷彿…還不夠嚴重似的，雪上加霜的是…）。") +
+    ops([
+      ["Unless", "4%", "除非（直說條件句不用 were）。"],
+      ["Not until", "7%", "直到…才…（置於句首時主要子句須倒裝）。"],
+      ["Since", "15%", "既然（直說原因句用 is 而非 were）。"],
+      ["As if", "74%", "彷彿…似的（搭配與現在事實相反的假設語氣 <code>were</code>）。"]
+    ], "D")
+  ),
+
+  card("L39", ["數量修飾語辨析", "vast quantities of (可數/不可數皆可)"], "A",
+    st("Since the start of the Industrial Revolution, humans have burned [[L39|vast quantities of]] fossil fuels and thus have released excessive carbon dioxide into the atmosphere.", "自工業革命開始以來，人類燃燒了大量的化石燃料，因此向大氣中釋放了過量的二氧化碳。") +
+    clue("注意空格後的受詞是複數可數名詞 <code>fossil fuels</code>（加了 -s）！<br>• <code>vast / large quantities of</code>（= lots of）：可接<b>可數或不可數名詞</b>（✔）<br>• <code>huge amounts of</code>：<b>只能接不可數名詞</b>（✘）<br>• <code>substantial sums of</code>：<b>只用於金錢數量</b>（✘）<br>• <code>a wide variety of</code>：表「各式各樣種類的」，而非強調燃燒的「龐大數量」（✘）") +
+    ops([
+      ["vast quantities of", "26%", "大量的（可接複數可數名詞 <code>fossil fuels</code>）。"],
+      ["a wide variety of", "15%", "各種各樣的（強調種類多樣而非總量龐大）。"],
+      ["huge amounts of", "56%", "常見誤答！<code>amounts of</code> 只能接不可數名詞，但後面是複數的 <code>fuels</code>！"],
+      ["substantial sums of", "4%", "大筆的（金額）。"]
+    ], "A") +
+    passage("26. L39 選項補充例句", [[
+      ["(A) They ordered vast quantities of food for the party to ensure everyone would have enough to eat. / The library has vast quantities of books on various subjects.", "他們為派對訂購了大量食物。／圖書館擁有大量各主題的書籍。"],
+      ["(B) The supermarket offers a wide variety of fresh produce. / The travel agency can arrange a wide variety of vacation packages.", "這家超市提供各式各樣的新鮮農產品。／旅行社可安排各種度假套裝行程。"],
+      ["(C) She spent huge amounts of time studying for the important exam. / The charity organization raised huge amounts of money to support their cause.", "她花了大量時間準備重要考試。／慈善機構募集了大量資金。"],
+      ["(D) The company invested substantial sums of money in research and development.", "該公司在研發方面投入了可觀的資金。"]
+    ]])
+  ),
+
+  card("L42", ["連鎖反應片語", "in turn 繼而/轉而（引起下一結果）"], "A",
+    st("This process has led to global warming, which [[L42|in turn]] has resulted in the melting of polar ice caps and rising sea levels around the world.", "這個過程導致了全球暖化，而全球暖化繼而（轉而）導致極地冰冠融化與全球海平面上升。") +
+    clue("觀察連鎖因果鏈：燃燒化石燃料 → 導致全球暖化（事件 A），而全球暖化 <code>which <b>in turn</b> has resulted in...</code> → 繼而導致冰冠融化與海平面上升（事件 B）。<br>在一連串相關事件中，因前一事件發生而「繼而、轉而」引發下一事件，固定搭配 <code>in turn</code>（且後方已經有 <code>has resulted in</code>，若選 <code>in consequence</code> 會與 resulted in 語意重疊）！") +
+    ops([
+      ["in turn", "26%", "（1）依序；（2）繼而、轉而（在連鎖反應中引發下一個結果）。"],
+      ["in consequence", "67%", "常見誤答！後面已經有動詞片語 <code>has resulted in</code>（導致），前面夾在關係代名詞與 has resulted in 中間表「繼而、反過來又…」的標準搭配是 <code>which in turn has resulted in</code>！"],
+      ["in response", "4%", "作為回應。"],
+      ["in like manner", "4%", "同樣地、以類似方式。"]
+    ], "A") +
+    passage("27. L42 補充例句", [[
+      ["They gave their names in turn. / Interest rates were cut and, in turn, share prices rose. / The oil-producing nations have decreased production, and this decision in turn has caused oil prices to rise.", "他們依序報上自己的名字。／利率調降，繼而使股價上漲。／產油國減產，而這項決定繼而導致油價上漲。"],
+      ["(A) The team members worked together to finish their project on time, and in turn, they received praise from their supervisor. / Supporting local businesses can boost the economy, and in turn, create more job opportunities for the community.", "團隊成員合作準時完成專案，繼而獲得主管讚賞。／支持在地商家能促進經濟，進而為社區創造更多就業機會。"],
+      ["(B) He missed his flight, and in consequence, he had to reschedule his entire trip. / The heavy rain caused flooding in many areas, and in consequence, several roads were closed.", "他錯過班機，結果必須重新安排整個行程。／大雨導致多處淹水，因此數條道路封閉。"],
+      ["(C) When she smiled at him, he blushed in response.", "當她對他微笑時，他臉紅地回應。"],
+      ["(D) The two companies operate in like manner, focusing on customer satisfaction.", "這兩家公司以類似方式經營，專注於顧客滿意度。"]
+    ]])
+  ),
+
+  card("L45", ["同位語名詞子句與主詞判斷", "Estimates (n.) that... appear to..."], "A",
+    st("[[L45|Estimates]] that the overall water level in Venice will rise by as much as 53 centimeters by 2100 appear to confirm that climate change is having a very serious and dangerous impact indeed.", "認為威尼斯整體水位在 2100 年前將上升多達 53 公分的這類估計數據，似乎證實了氣候變遷確實正造成非常嚴重且危險的影響。") +
+    clue("看清楚整句話真正的動詞在哪裡：在後面的複數動詞 <code><b>appear</b> to confirm...</code>！<br>結構拆解：<code><b>Estimates</b> (複數名詞當主詞：估計數據) [that the overall water level in Venice will rise by as much as 53 centimeters by 2100 (同位語名詞子句，說明 Estimates 的內容)] <b>appear</b> (複數動詞) to confirm...</code>！") +
+    ops([
+      ["Estimates", "4%", "複數名詞「估計數據、估計值」當整句主詞，後接 that 同位語子句，並與複數動詞 <code>appear</code> 完美呼應！"],
+      ["Estimated", "25%", "過去分詞不能當主詞。"],
+      ["Estimating", "18%", "若用動名詞 Estimating 當主詞，後方的動詞應為單數 <code>appears</code> 而非複數 <code>appear</code>！"],
+      ["It’s estimated", "54%", "超高誤答率！若填 <code>It's estimated that...</code>，這整塊就已經是一個完整句子了，後面的動詞 <code>appear to confirm...</code> 就會變成多出來的無主詞動詞！"]
+    ], "A") +
+    passage("28. L45 補充例句", [[
+      ["estimate (n. 估計值 / vt. 估計)：A conservative estimate puts annual sales at around $100 million. / Our estimate is that it will cost a million dollars.", "保守估計年銷售額約一億美元。／我們的估計是那將花費一百萬美元。"],
+      ["1. as much/many as 最多達 ｜ 2. by + 時間 (= before or at/in 到了某時間之前) ｜ 3. have an impact (on sth) 對…造成影響", "本句三大片語考點。"]
+    ]])
+  ),
+
+  card("L49", ["轉折與補充副詞", "As a matter of fact = In fact 事實上"], "C",
+    st("Both the natural and human factors mentioned have combined to result in frequent flooding in Venice, and the situation is only getting worse. [[L49|As a matter of fact]], in the past century alone, the incidence of flooding has increased from fewer than 10 times a year to more than 60!", "上述的自然與人為因素結合起來導致威尼斯頻繁淹水，而且情況只會越來越糟。事實上，光是在過去一個世紀裡，淹水的發生頻率就從每年不到 10 次增加到超過 60 次！") +
+    clue("前句說「情況越來越糟」，本句提出具體數據「從每年不到 10 次暴增到 60 次以上」來<b>加強並補充細節</b>，故用 <code>In fact = As a matter of fact</code>（事實上）。") +
+    ops([
+      ["On the other hand", "2%", "另一方面。"],
+      ["In other words", "9%", "換句話說（數據是具體佐證而非單純換句話說）。"],
+      ["As a matter of fact", "82%", "<code>= In fact</code> 事實上（表加強、補充細節或更正）。"],
+      ["In addition", "7%", "此外。"]
+    ], "C") +
+    passage("29. L49 補充例句", [[
+      ["She said he was a good chef. In fact, his culinary skills were exceptional. (加強)", "她說他是個好廚師。事實上，他的廚藝超群。"],
+      ["The project was completed ahead of schedule. In fact, it was finished a week earlier than expected. (補充)", "這項專案提前完成了。事實上，比預期提早了一週完成。"],
+      ["I thought it would be a small gathering, but in fact, it turned out to be a grand celebration. (更正)", "我原以為只是小型聚會，但事實上卻是一場盛大的慶祝活動。"]
+    ]])
+  ),
+
+  card("L53", ["形容詞後接主動不定詞", "hard to imagine"], "C",
+    st("If this scenario seems hard [[L53|to imagine]], take a glimpse back in history.", "如果這種情況似乎很難想像，不妨回顧一下歷史。") +
+    clue("重要語法：在 <code>S + be/seem + easy / hard / difficult / impossible + to VR</code> 句型中（可還原為虛主詞句 <code>If it seems hard <b>to imagine</b> this scenario</code>），不定詞一律用<b>主動形式 <code>to VR</code></b>，不用被動！") +
+    ops([
+      ["to be imaginable", "0%", "結構重複。"],
+      ["to be imaginary", "4%", "imaginary 為「虛構的、幻想的」，語意錯誤。"],
+      ["to imagine", "59%", "<code>seems hard to imagine</code>（似乎很難想像）。"],
+      ["to be imagined", "37%", "常見誤答！在 hard / easy / difficult 後修飾主詞時，用主動不定詞 <code>to imagine</code>。"]
+    ], "C") +
+    passage("31. L54 ~ 33. L54 補充例句", [[
+      ["31. L54 scenario = a possible situation（可能發生的情況、設想情境）：In the worst-case scenario, we'll lose control of the company.", "在最糟的情況下，我們將失去公司的控制權。"],
+      ["32. L54 take a glimpse (at...) 看一眼：Jeremy was amazed by the interior design after taking a glimpse at the inside of the house.", "傑瑞米瞄了一眼屋內後，對室內的設計驚嘆不已。"],
+      ["33. L54 back = in the past（在過去、回溯以前）：(Back) in the 70s, disco music was very popular. / She had a minor operation a few years back. / Things were different back then.", "回溯到七零年代，迪斯可音樂非常流行。／她幾年前動過一次小手術。／當年情況大不相同。"]
+    ]])
+  ),
+
+  card("L57", ["動詞字彙與字根", "submerged 淹沒"], "D",
+    st("In November 1966, a high tide swept into Venice, causing a flood that reached an extraordinary height of 194 centimeters and [[L57|submerged]] the city for 22 hours.", "1966 年 11 月，大潮席捲威尼斯，引發高達 194 公分的罕見大洪水，並將整座城市淹沒長達 22 小時。") +
+    clue("洪水高達 194 公分，將城市「淹沒（submerged）」了 22 個小時。<br>35. 字根 <code>merg- / mers- = dive（潛、浸沒）</code>：<br>• <code>merge</code>：合併、融入（<i>merging into the crowds</i>）<br>• <code>submerge</code>：sub (under) + merge →（使）淹沒；潛入水中<br>• <code>immerse</code>：im (in) + merse → 使浸入；使沉浸於（<i>immersed herself in work</i>）<br>• <code>emerge</code>：e (out) + merge → 浮現、顯露出來（<code>emergence</code> n. 出現；<code>emergency</code> n. 突然浮現的事件 → 緊急情況）") +
+    ops([
+      ["destroyed", "11%", "摧毀、毀滅（威尼斯並未被毀滅，且後面接 for 22 hours 表持續狀態）。"],
+      ["plagued", "19%", "長期困擾（通常接 for years/decades，而非 22 小時的洪水淹沒）。"],
+      ["compensate", "4%", "賠償。"],
+      ["submerged", "67%", "淹沒（<code>submerged the city for 22 hours</code>）。"]
+    ], "D") +
+    passage("34. L57 & 35. 補充例句", [[
+      ["(A) The war, with its relentless bombings, destroyed the city and displaced thousands of people.", "戰爭無情的轟炸摧毀了城市，使數千人流離失所。"],
+      ["(B) Crime and violence have plagued the city for years. / Pollution and environmental issues have plagued the city for a long time. / Economic challenges have plagued the city's businesses.", "犯罪與暴力多年來一直困擾著這座城市。／污染與環境問題長期困擾該市。／經濟挑戰困擾著該市企業。"],
+      ["(C) The company agreed to compensate the city for the environmental damage caused by their industrial activities.", "該公司同意賠償這座城市因其工業活動造成的環境損害。"],
+      ["(D) The heavy rains and flooding submerged the city, forcing residents to evacuate their homes. / The dam's breach caused the river to overflow and submerged the city for an extended period.", "大雨和洪水淹沒了城市。／水壩潰堤導致河水氾濫並淹沒城市好一段時間。"],
+      ["35. 字根例句：She avoided reporters at the airport by merging into the crowds. / The main argument was submerged in a mass of tedious detail. / Sandra immersed herself in work to try and forget her problems at home. / He emerged as leader at the age of thirty. / The emergence of small Japanese cars in the 1970s challenged the US and European manufacturers.", "她在機場藉由混入人群避開記者。／主要論點被淹沒在大量瑣碎細節中。／珊卓拉埋首工作試圖忘卻家中問題。／他三十歲時嶄露頭角成為領袖。／1970 年代日本小型車的出現挑戰了歐美車廠。"]
+    ]])
+  ),
+
+  card("L58", ["動詞字彙辨析", "was nearly matched 幾乎被追平/匹敵"], "C",
+    st("This flood, the highest on record, was nearly [[L58|matched]] in 2019, when the water level rose to 187 centimeters.", "這場有史以來最高紀錄的洪水（194 公分），在 2019 年幾乎被追平，當時水位上升到了 187 公分。") +
+    clue("1966 年的紀錄是 194 公分，而 2019 年達到 187 公分，兩者高度非常接近，故說 1966 年的最高紀錄在 2019 年「幾乎被追平／匹敵（was nearly matched）」。<br>• 37. L58：<code>最高級 + on record</code> 有紀錄以來最…（例：<i>This summer has been the hottest on record.</i>）<br>• 38. L62：<code>instance + when/where = instance in which</code>（例：<i>I have not found a single instance where/when/in which someone was actually denied their right to vote.</i>）") +
+    ops([
+      ["devastated", "11%", "使悲痛欲絕；徹底摧毀。"],
+      ["overwhelmed", "29%", "壓倒、使不知所措。"],
+      ["matched", "36%", "相匹敵、追平（紀錄）。"],
+      ["surged", "25%", "surge 為不及物動詞「湧入、暴漲」，不可用被動 was surged。"]
+    ], "C") +
+    passage("36. L58 選項補充例句", [[
+      ["(A) The loss of her pet dog left her devastated, as they had been inseparable for years.", "失去愛犬讓她悲痛欲絕，因為他們多年來形影不離。"],
+      ["(B) I felt overwhelmed by the amount of work I had to complete in a short time.", "我對短時間內必須完成的龐大工作量感到不知所措。"],
+      ["(C) The two soccer teams were (evenly) matched, and the game ended in a draw. / The job candidate's skills and qualifications matched the requirements of the position.", "這兩支足球隊實力相當，比賽以平手收場。／應徵者的技能與資格符合該職位要求。"],
+      ["(D) The demand for the new product surged as soon as it was introduced in the market. / The crowd surged forward when the gates to the concert venue opened.", "新產品一上市需求便急劇暴增。／演唱會大門一開，人群便往前湧入。"]
+    ]])
+  ),
+
+  card("L59", ["動詞字彙辨析", "marked 標誌著/代表"], "B",
+    st("Although this latter instance of flooding was not quite as severe as the 1966 event, it should be noted that it [[L59|marked]] the first of five instances (that year) when flood waters in the city reached heights of over 140 centimeters.", "雖然後者這起淹水事件不如 1966 年那場嚴重，但值得注意的是，它標誌著（代表）該市（當年）洪水高度超過 140 公分的五起案例中的第一起。") +
+    clue("L61：<code>mark</code> vt. 表示／代表（…的開始或結束、某種重大轉變等）。*解題小撇步：若看不懂時，可將 <code>mark</code> 代換為 <code>be (was)</code>，意義上沒有太大出入！<br>40. L62：<code>rise to / reach the heights of</code> 達到…的高度／巔峰成就（例：<i>He reached the heights of his profession at the age of 35.</i> / <i>Her husband rose to the (dizzy/lofty) heights of transport minister.</i>）。") +
+    ops([
+      ["recalled", "0%", "回憶；召回。"],
+      ["marked", "54%", "標誌著、代表（當年五次破 140 公分大淹水的第一次）。"],
+      ["cited", "29%", "引用；舉例（主詞為人且常用被動 <i>was cited as</i>）。"],
+      ["occurred", "18%", "發生（不及物動詞，後面不可接名詞受詞 <i>the first of five instances</i>！）。"]
+    ], "B") +
+    passage("39. L61 補充例句", [[
+      ["This tournament marks the official start of the season. / Her death marked the end of an era. / Her latest novel marks a turning point in her development as a writer.", "這場錦標賽標誌著賽季正式開始。／她的逝世代表一個時代的結束。／她的新小說標誌著她作家生涯的轉捩點。"],
+      ["(A) She recalled a vivid instance from her childhood when she met her favorite author.", "她回憶起童年時見到最喜愛作家的生動往事。"],
+      ["(C) The success story of the entrepreneur was often cited as an inspiring instance of perseverance and determination.", "這位企業家的成功故事常被引用為毅力與決心的勵志範例。"],
+      ["(D) The car accident occurred at the intersection when the traffic lights malfunctioned.", "紅綠燈故障時，十字路口發生了車禍。"]
+    ]])
+  ),
+
+  card("L63", ["動詞與 warnings 搭配", "issue warnings 發出警告"], "B",
+    st("Scientists have, unsurprisingly, [[L63|issued]] warnings about this trend, and some have even predicted that Venice will cease to exist by the 22nd century!", "毫不意外地，科學家們已經針對這股趨勢發出警告，有些人甚至預測威尼斯到了二十二世紀就會不復存在！") +
+    clue("主詞是「科學家們（Scientists）」，科學家研究氣候與水患趨勢後，會對世人「發出警告（issue warnings）」；而一般民眾或政府才是「聽從警告（heed / follow warnings）」或「忽視警告（dismiss warnings）」的人！") +
+    ops([
+      ["heeded", "21%", "聽從、留心警告（heed warnings）。"],
+      ["issued", "61%", "發出、發布警告（<code>issue warnings</code>）。"],
+      ["dismissed", "11%", "對警告不予理會（dismiss warnings）。"],
+      ["followed", "7%", "聽從、遵循警告（follow warnings）。"]
+    ], "B") +
+    passage("41. L63 選項補充例句", [[
+      ["(A) She heeded the weather warnings and decided to stay home during the storm.", "她聽從氣象警告，決定在暴風雨期間待在家裡。"],
+      ["(B) The government health department issued warnings about the flu outbreak.", "政府衛生部門發出了關於流感爆發的警告。"],
+      ["(C) Despite the ominous weather forecast, they dismissed the warnings and went on their camping trip.", "儘管天氣預報不妙，他們仍無視警告去露營。"],
+      ["(D) They wisely followed the fire safety warnings and evacuated the building when the alarm sounded.", "他們明智地遵循消防安全警告，在警報響起時疏散。"]
+    ]])
+  ),
+
+  card("L67", ["語氣副詞", "Indeed 的確/確實"], "A",
+    st("As the world’s sea levels continue to rise, largely owing to human factors, the outlook for Venice remains grim. [[L67|Indeed]], the case of Venice poses a test for humanity—a test of how we can make joint efforts to curb global warming and prevent the environment from being destroyed.", "隨著全球海平面持續上升（很大程度上歸因於人為因素），威尼斯的前景依然黯淡。的確，威尼斯的案例對全人類構成了一場考驗——考驗我們如何共同努力遏止全球暖化並防止環境遭到破壞。") +
+    clue("43. L66：<code>largely = mainly</code>（主要地、很大程度上）。<br>前句說威尼斯前景黯淡，本句進一步深化並加強語氣：「的確（Indeed），威尼斯的案例對人類是一場考驗。」") +
+    ops([
+      ["Indeed", "39%", "的確、確實（加強並深化前句論點）。"],
+      ["Instead", "4%", "反而。"],
+      ["In addition", "39%", "此外（此處並非列舉另一件不相干的事，而是深化威尼斯處境的意義）。"],
+      ["In consequence", "18%", "因此。"]
+    ], "A")
+  ),
+
+  card("L72", ["對等連接詞平行結構", "require + O + to VR1 and to VR2"], "B",
+    st("Such efforts are far from being the responsibility of only individual governments or groups. Instead, they require all humans to acknowledge what is happening [[L72|and to work]] toward the common goal of preserving our beloved Earth for future generations.", "這類努力絕非僅是個別政府或團體的責任。相反地，它們需要全人類正視正在發生的事，並朝著為後代子孫保護我們摯愛地球的共同目標而努力。") +
+    clue("動詞搭配：<code>require + O (all humans) + <b>to acknowledge</b> what is happening <b>and to work</b> toward the common goal...</code>，由 <code>and</code> 連接兩個平行的受詞補語不定詞！<br>45. 字彙補充：<code>human = human being</code> [C] 人類（複數是 <code>humans</code> 而非 humen！）；<code>humankind = mankind</code> [U] 人類總稱；<code>humanity</code> [U] 人類；人性。") +
+    ops([
+      ["working", "12%", "缺連接詞且與 to acknowledge 不對稱。"],
+      ["and to work", "61%", "與前面的 <code>to acknowledge</code> 平行對稱。"],
+      ["so that work", "0%", "so that 後須接完整子句。"],
+      ["and working", "27%", "與不定詞 to acknowledge 不對稱。"]
+    ], "B")
+  )
+].join('');
+
+/* === Part 2: 課本句型與翻譯練習 (as if / as though) === */
+const h2 = '<h2 id="p2">課本句型與翻譯練習 (as if / as though 假設語氣)</h2>' +
+  passage("句型講義 Part A (1~5) ＆ 觀念補充", [[
+    ["A1. Antonio is a lousy driver. He always drives [[|as if he were]] the only driver on the road.", "安東尼奧是個很爛的駕駛。他開車總是表現得好像他是路上唯一的駕駛似的。（與現在事實相反用過去式/were）"],
+    ["A2. The guy stuffed himself with five hamburgers and two hot dogs [[|as if he hadn’t eaten]] for days.", "那傢伙塞了五個漢堡和兩根熱狗，好像他好幾天沒吃東西似的。（與過去事實相反用 had + p.p.）"],
+    ["A3. It was so freezing that my legs went numb [[|as if they were]] not mine.", "天氣冷到我的雙腿麻木，彷彿不是我的一樣。（與當時事實相反用 were）"],
+    ["A4. Nick often talks [[|as if he had lived]] abroad for a long time, but actually, he has never been to another country.", "尼克講話常表現得好像他曾在國外住過很長一段時間，但事實上他從未出過國。（與過去經驗相反用 had lived）"],
+    ["A5. Tommy is silly and shows poor judgement. He always acts [[|as if he had]] no brain in his head.", "湯米很傻且判斷力差。他總是表現得好像腦袋裡沒裝大腦一樣。（與現在事實相反用過去式 had）"],
+    ["★ 觀念補充：不確定事實（可能為真）時，用正常直說時態：It looks as if it is going to rain.", "看起來好像快下雨了。（沒人能確定不會下雨，非與事實相反，故用正常時態 is going to rain）"]
+  ]]) + [
+  card("句型-B1", ["as if + had p.p.", "與過去事實相反"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">1. 我真的是受不了那場會議！實在是無聊到像是持續了一個世紀似的。<br>I really couldn’t stand that meeting! It was so boring ___________</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|I really couldn't stand that meeting! It was so boring, as if it had lasted for a century.]]")+'</div></div>' + clue("會議已經開完了，描述那場會議「彷彿已經持續了一個世紀（與過去事實相反）」，用過去完成式 <code>as if it had lasted for a century</code>。")),
+  card("句型-B2", ["as if + had p.p.", "與過去事實相反"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">2. Joyce 剛跟男友分手但她看起來好開心，像是什麼事都沒發生過似的。<br>Joyce just broke up with her boyfriend, but she looks happy, ___________</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Joyce just broke up with her boyfriend, but she looks happy, as if nothing had happened.]]")+'</div></div>' + clue("分手是「剛剛已經發生的事（just broke up）」，看起來像「之前什麼事都沒發生過」，與過去事實相反用 <code>as if nothing had happened</code>。")),
+  card("句型-B3", ["as if + were", "與當時事實相反"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">3. 有些學生在聊天，有些在打撲克牌，有些則跑來跑去，彷彿老師不在教室裡似的。<br>Some students were chatting, some were playing poker, and some were running around, ___________</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Some students were chatting, some were playing poker, and some were running around, as if the teacher were not in the classroom.]]")+'</div></div>' + clue("與當時在場的狀態相反（老師其實在教室裡），be 動詞用 <code>were not</code>。")),
+  card("句型-B4", ["as if + didn't VR", "與現在事實相反"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">4. 不要那樣看著我，好像你不認識我似的。<br>Don’t look at me ___________</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Don't look at me like that, as if you didn’t know me.]]")+'</div></div>' + clue("對方現在其實認識我，與現在事實相反用過去式 <code>as if you didn't know me</code>。")),
+  card("句型-B5", ["as if + were", "與現在事實相反"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">5. 每次 Albert 出門購物時，他花錢花得就像沒有明天似的。<br>Every time Albert goes shopping, he spends money ___________</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Every time Albert goes shopping, he spends money as if there were no tomorrow.]]")+'</div></div>' + clue("慣用語：「彷彿沒有明天似的」為 <code>as if there were no tomorrow</code>。"))
+].join('');
+
+document.getElementById('app').innerHTML = h1 + h2;
+const secs=[['p1','L1~L75 課文講解'],['p2','as if 句型與翻譯']];
+document.getElementById('nav').innerHTML=secs.map(s=>'<a href="#'+s[0]+'">'+s[1]+'</a>').join('')+'<button id="tg">全部收合</button>';
+let open=true;
+document.getElementById('tg').onclick=function(){open=!open;document.querySelectorAll('details.q').forEach(d=>d.open=open);this.textContent=open?'全部收合':'全部展開';};
+</script>
+<script src="bookmark.js"></script>
+</body>
+</html>

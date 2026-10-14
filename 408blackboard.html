@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>408 Blackboard</title>
+<style>
+:root{--bg:#faf8f4;--fg:#222;--card:#fff;--line:#e4ded3;--acc:#9a3b2e;--ok:#1f7a4d;--no:#b3261e;--mut:#6b6558;--hl:#fff1c9}
+@media(prefers-color-scheme:dark){:root{--bg:#161512;--fg:#e8e4da;--card:#201f1b;--line:#3a372f;--acc:#e08a78;--ok:#6fcf9a;--no:#f08a82;--mut:#a39d8f;--hl:#4a3f1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+.top{max-width:900px;margin:auto;padding:28px 18px 10px}
+.top h1{margin:0 0 4px;font-size:1.6rem;color:var(--acc)}
+.top p{margin:2px 0;color:var(--mut);font-size:.92rem}
+nav{position:sticky;top:0;z-index:9;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto;padding:8px 12px}
+nav a,nav button{flex:none;padding:5px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--fg);text-decoration:none;font:inherit;font-size:.88rem;cursor:pointer}
+nav a:hover,nav button:hover{border-color:var(--acc);color:var(--acc)}
+main{max-width:900px;margin:auto;padding:0 16px 70px}
+h2{margin:36px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--acc);font-size:1.3rem}
+h3{margin:0 0 8px;font-size:1.05rem;color:var(--acc)}
+.pas,.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.para{margin-bottom:14px}
+.s{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--line)}
+.en{font-family:Georgia,"Times New Roman",serif;font-size:1.02rem}
+.zh{color:var(--mut);font-size:.93rem}
+.note{color:var(--mut);font-size:.85rem;margin:6px 0 0}
+.bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 4px;border-radius:3px;font-weight:600}
+.bl sup{color:var(--acc);margin-right:3px;font-size:.7em}
+.bank{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.92rem;margin-bottom:8px}
+details.q>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+details.q>summary::-webkit-details-marker{display:none}
+.n{background:var(--acc);color:#fff;border-radius:6px;padding:0 10px;font-weight:700;font-size:1.05rem}
+.tag{font-size:.78rem;border:1px solid var(--acc);color:var(--acc);border-radius:99px;padding:0 9px;line-height:1.6}
+.tag.pos{border-color:var(--ok);color:var(--ok)}
+.ans{margin-left:auto;font-weight:700;color:var(--ok)}
+.qb{margin-top:10px}
+.stem{margin-bottom:8px;padding:8px 10px;background:var(--bg);border-radius:6px}
+.clue{margin:8px 0;padding:8px 12px;border-left:4px solid var(--acc);background:var(--bg);border-radius:0 6px 6px 0}
+.clue h4,.qb h4{margin:0 0 2px;font-size:.92rem;color:var(--acc)}
+ul.op{list-style:none;margin:6px 0 0;padding:0}
+ul.op li{padding:7px 10px;margin:5px 0;border-radius:6px;border:1px solid var(--line);font-size:.95rem}
+ul.op li.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 9%,transparent)}
+ul.op li.no{border-color:color-mix(in srgb,var(--no) 45%,transparent)}
+ul.op i{font-style:normal;font-weight:700;font-size:.82rem}
+li.ok i{color:var(--ok)}li.no i{color:var(--no)}
+small{color:var(--mut)}
+footer{max-width:900px;margin:auto;padding:20px 16px 40px;color:var(--mut);font-size:.85rem;line-height:1.6;border-top:1px solid var(--line);margin-top:40px;}
+footer a{color:var(--acc);text-decoration:none;font-weight:bold;}
+footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>408 Blackboard</h1>
+  <p>每題含：考點標籤 → 題幹逐句中英對照 → 解題線索 → 正解與全部誤答分析</p>
+  <p>圖例：<span class="bl">黃底</span> ＝ 正確答案填入處 ｜ <span class="tag">考點</span></p>
+</div>
+<nav id="nav"></nav>
+<main id="app"></main>
+<footer>
+  限定用途教學教材。本詳解為教學輔助，題目版權屬原出版單位。<br>
+  💡 <b>問題回報與建議：</b> Line: etpaul ｜ IG: <a href="https://www.instagram.com/etpaul" target="_blank">@etpaul</a>
+</footer>
+
+<script>
+const L="ABCD";
+const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[([^|\]]*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const SENT={};
+function passage(title,paras,note){
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[([^|\]]+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  return '<section class="pas"><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
+}
+function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
+const clue=t=>'<div class="clue"><h4>解題線索</h4>'+t+'</div>';
+function ops(list,ans,lab){lab=lab||'ABCDEF';return '<ul class="op">'+list.map((o,i)=>{const k=ans.indexOf(lab[i])>=0;return '<li class="'+(k?'ok':'no')+'"><b>'+(lab==='ABCDEF'&&list.length<=4?'('+L[i]+') ':lab==='ABCDEF'?'('+'ABCDEF'[i]+') ':'')+o[0]+'</b>'+(o[1]?' <small>'+o[1]+'</small>':'')+' <i>'+(k?'✔ 正解':'✘ 誤答')+'</i><br>'+o[2]+'</li>';}).join('')+'</ul>';}
+function card(n,tags,ans,body){
+  return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
+}
+
+const st=(en,zh)=>'<div class="stem"><div class="en">'+fx(en)+'</div><div class="zh">'+zh+'</div></div>';
+
+/* === Part 1: L1 ~ L54 課文講解與非題目句子依序呈現 === */
+const h1 = '<h2 id="p1">L1 ~ L54 課文講解</h2>' + [
+  card("L2", ["分詞構句平行結構", "taking ... and crowding ..."], "A",
+    st("In this busy European city, large groups of tourists are everywhere. They overflow the sidewalks and streets, taking pictures at landmarks like the “Sagrada Família” [[L2|and crowding]] narrow passageways leading to markets.", "在這座繁忙的歐洲城市裡，大批遊客隨處可見。他們擠滿了人行道和街道，在「聖家堂」等地標拍照，並塞滿了通往市場的狹窄通道。") +
+    clue("主要子句為 <code>They overflow the sidewalks and streets</code>，逗號後接兩個由對等連接詞 <code>and</code> 連接的現在分詞構句，同時修飾主詞 <code>They (large groups of tourists)</code>：<br><code>, <b>taking</b> pictures at landmarks... <b>and crowding</b> narrow passageways...</code>。<br>補充：<code>crowd</code> (vt.) 將…擠滿（如 <i>The students crowded the auditorium.</i>）。") +
+    ops([
+      ["and crowding", "40%", "與前面的 <code>taking pictures</code> 平行，表遊客主動擠滿了狹窄通道。"],
+      ["which crowds", "30%", "無逗號，若修飾 Sagrada Família 變成「聖家堂擠滿了市場通道」，邏輯錯誤。"],
+      ["and crowded", "3%", "遊客是「主動把通道擠滿（crowding）」，非被擠滿。"],
+      ["which crowded", "27%", "時態與先行詞邏輯皆錯。"]
+    ], "A") +
+    passage("L2 補充：聖家堂冷知識", [[
+      ["高第從 1882 年開始設計聖家堂，預計與高第逝世 100 週年結合完工。如果現在才開始興建，哪一年會完工？ → 2126 年就可以完工，因為要配合高第逝世 200 週年！（數學很美，但不能解決人性問題 😄）", "課堂幽默冷知識補充。"]
+    ]])
+  ),
+
+  card("L4", ["非限定關係代名詞", ", which 當主詞"], "B",
+    st("The city in question is Barcelona, Spain, [[L4|which]] each year receives more than fifteen times as many visitors as its actual population!", "這座討論中的城市就是西班牙的巴塞隆納，它每年接待的遊客數量超過其實際人口的十五倍以上！") +
+    clue("觀察空格後的結構：<code>___ (each year 時間副詞) <b>receives</b> (V) more than fifteen times...</code>。<br>注意！空格後面直接接動詞 <code>receives</code>，代表形容詞子句<b>缺主詞</b>！既然缺主詞，就必須選關係代名詞 <code>which</code>，絕對不能選關係副詞 <code>where</code>！") +
+    ops([
+      ["where", "60%", "超高誤答率！看到前面的地點 <code>Barcelona, Spain</code> 就直覺選 where，卻沒檢查後面 <code>receives</code> 缺主詞！"],
+      ["which", "31%", "非限定關係代名詞，代替 Barcelona 並充當動詞 <code>receives</code> 的主詞。"],
+      ["whose city", "2%", "Barcelona 本身就是城市，不說 whose city。"],
+      ["of which", "8%", "不合句意與結構。"]
+    ], "B")
+  ),
+
+  card("L6", ["時間/條件連接詞", "occurs when 當…時就會發生"], "C",
+    st("Barcelona is suffering from a phenomenon called “overtourism.” This occurs [[L6|when]] an attraction becomes overrun with tourists to such an extent that the local residents’ quality of life declines dramatically.", "巴塞隆納正飽受一種稱為「過度旅遊（觀光公害）」的現象所苦。當一個景點被遊客擠爆，到了當地居民生活品質急劇下降的程度時，就會發生這種情況。") +
+    clue("句型：<code>sth occurs when + S + V</code>（當…的情況出現時，某現象就會發生）。<br>補充：<code>to such an extent that...</code>（到了…的程度）。") +
+    ops([
+      ["that", "19%", "occur 為不及物動詞，後面不接 that 名詞子句當受詞。"],
+      ["in which", "20%", "前無先行詞名詞可供 in which 修飾。"],
+      ["when", "55%", "<code>This occurs when...</code>（當景點被遊客擠爆時，這種現象就會發生）。"],
+      ["so that", "6%", "表目的或結果，語意顛倒。"]
+    ], "C")
+  ),
+
+  card("L9", ["慣用俚語", "put sth on the map 使出名"], "A",
+    st("The 1992 Olympics put Barcelona on the tourist [[L9|map]], and soon afterward the number of tourists flocking to the city began to increase.", "1992 年的奧運會使巴塞隆納成為知名的旅遊勝地，此後不久，湧入該市的遊客數量便開始增加。") +
+    clue("慣用片語：<code>put sth / sb on the (tourist) map</code> 意為「使某地或某人聲名大噪、成為知名熱門地點」（彷彿以前沒人知道，現在終於被標註在地圖上了）。") +
+    ops([
+      ["map", "37%", "<code>put Barcelona on the tourist map</code>（使巴塞隆納成為知名旅遊勝地）。"],
+      ["guide", "31%", "<code>tourist guide</code> 指「導遊（人）」或「旅遊指南（書）」，不搭配 put ... on。"],
+      ["industry", "5%", "<code>tourist industry</code>（旅遊業）。"],
+      ["destination", "28%", "<code>tourist destination</code>（旅遊目的地）。"]
+    ], "A")
+  ),
+
+  card("L11", ["代名詞指代", "that 代替 the number"], "A",
+    st("In 2017, the number of annual visitors to Barcelona grew to almost five times as large as [[L11|that]] in 1992.", "在 2017 年，巴塞隆納的年遊客量成長到幾乎是 1992 年數量的五倍之多。") +
+    clue("句首主詞的核心是單數名詞 <code>the number</code>（<code>the number of annual visitors</code> 年遊客的「數量」），比較對象是「1992 年的遊客數量（<code>the number in 1992</code>）」，代替前面出現過的單數名詞用 <code>that</code>！<br>補充：<code>the number of + 複數N</code>（…的數量，接<b>單數動詞</b>） vs. <code>a number of + 複數N</code>（許多…，接<b>複數動詞</b>）。") +
+    ops([
+      ["that", "49%", "代替單數名詞 <code>the number</code>。"],
+      ["them", "6%", "不能接後置修飾語 in 1992 表達 1992 年的數量。"],
+      ["those", "39%", "常見誤答！被複數的 visitors 誤導，但成長為五倍大（five times as large as）的是單數的「數量（the number）」！"],
+      ["what", "6%", "後無動詞，不合結構。"]
+    ], "A")
+  ),
+
+  card("L13", ["連接詞與分詞簡化", "As (was) expected 正如預期"], "A",
+    st("[[L13|As]] expected, local hotels and businesses benefited from this expansion of tourism. However, the city’s residents had to bear the cost. This invasion of visitors has resulted in various problems.", "正如預期地，當地的飯店和商家從這波旅遊業擴張中獲益。然而，該市的居民卻必須承擔代價。這波遊客的入侵已導致各種問題。") +
+    clue("<code>As (was) expected</code> 表示「正如所預期地」（類似 <i>as usual</i> / <i>as promised</i>）。") +
+    ops([
+      ["As", "87%", "<code>As expected</code>（正如預期地）。"],
+      ["While", "5%", "雖然（與後文飯店獲益的順承語意不合）。"],
+      ["As though", "3%", "彷彿、好像。"],
+      ["Since", "5%", "自從／既然。"]
+    ], "A") +
+    passage("L13 ~ L15 補充例句", [[
+      ["A benefits from B (A 從 B 獲益) = B benefits A (B 使 A 獲益)：Countless cancer patients will benefit from this new drug. = This new drug will benefit countless cancer patients.", "無數的癌症病患將受惠於這種新藥。"],
+      ["bear the cost (承擔代價／費用) & result in (= cause / lead to / bring about / contribute to / give rise to 導致)：If you procrastinate too much, you’ll eventually bear the cost of last-minute cramming and poor grades.", "如果你拖延太嚴重，最終就得承擔臨時抱佛腳和成績低落的代價。"]
+    ]])
+  ),
+
+  card("L16", ["分詞後位修飾與因果動詞", "caused by 由…造成的"], "A",
+    st("Complaints about problems [[L16|caused by]] thoughtless visitors are common.", "關於粗心遊客所造成的問題之抱怨屢見不鮮。") +
+    clue("修飾前面的名詞 <code>problems</code>：「由粗心遊客所造成的問題」為被動關係 <code>problems (which are) caused by thoughtless visitors</code>。") +
+    ops([
+      ["caused by", "66%", "過去分詞片語表被動「由…所引起的」。"],
+      ["resulted in", "4%", "<code>A results in B</code>（A 導致 B，為主動且一般不用被動 resulted in by）。"],
+      ["resulted from", "27%", "<code>result from</code>（起因於）為<b>不及物動詞片語，沒有被動式</b>！若要用應改為主動的 <code>which result from</code> 或 <code>resulting from</code>。"],
+      ["led to", "4%", "<code>lead to</code>（導致）一般不用被動 led to by。"]
+    ], "A") +
+    passage("L17 ~ L21 課文段落與補充例句", [[
+      ["【L17】“They play loud music late at night and throw garbage all over the place,” said Emilio Shasta, a local who has lived in Barcelona his entire life.", "「他們在深夜大聲播放音樂，還到處亂丟垃圾，」一輩子都住在巴塞隆納的當地人艾米利歐・沙斯塔說道。"],
+      ["【L19】Residents are also fed up with some visitors’ inappropriate behavior, such as urinating and throwing up on streets outside nightclubs.", "居民們也受夠了一些遊客的不當行為，例如在夜店外的街道上隨地便溺和嘔吐。"],
+      ["be fed up with (= be sick of / be tired of / be sick and tired of 受夠了、厭倦了)：He is sick and tired of the long commute to work every day.", "他厭倦了每天長時間的通勤上班。"]
+    ]])
+  ),
+
+  card("L17-挑戰1", ["時間片語翻譯挑戰", "late at night / at midnight / in the middle of the night"], "參考譯文",
+    '<div class="stem"><div class="zh" style="color:inherit">A. 兩起意外都發生在深夜的鄉道上。<br>B. 我半夜醒來後就無法再入睡了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>A. '+fx("[[|Both accidents occurred late at night on country roads.]]")+'<br>B. '+fx("[[|I woke up in the middle of the night and couldn’t get back to sleep.]]")+'</div></div>' +
+    clue("• 深夜：<code>late at night</code>（修飾名詞作 <code>late-night country roads</code>）<br>• 午夜 12 點：<code>at midnight</code>（不可說 in the midnight！）<br>• 三更半夜：<code>in the middle of the night</code>")
+  ),
+
+  card("L18-挑戰2", ["「一輩子」翻譯挑戰", "for the rest of my life vs. all my life"], "參考譯文",
+    '<div class="stem"><div class="zh" style="color:inherit">A. 我會愛你一輩子。<br>B. 我認識她一輩子了。<br>C. 他一輩子都在演藝圈 (show business) 工作。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>A. '+fx("[[|I will love you for the rest of my life / for life / forever.]]")+'<br>B. '+fx("[[|I've known her all my life / my entire life / my whole life.]]")+'<br>C. '+fx("[[|He has worked in show business all his life / his entire life / his whole life.]]")+'</div></div>' +
+    clue("• 指未來餘生的「一輩子（配未來式）」：<code>for the rest of one's life / for life / forever</code><br>• 指從過去到現在的「一輩子（配現在完成式）」：<code>all one's life / one's entire life / one's whole life</code><br>• 在某人有生之年：<code>in one's lifetime</code> ｜ 終生的摯友：<code>a lifelong friend</code>")
+  ),
+
+  card("L22", ["介系詞 to + V-ing", "be partial to V-ing 偏愛…"], "D",
+    st("Furthermore, some local tenants have even been forced to leave their apartments because landlords are partial [[L22|to renting]] their places out through Airbnb.", "此外，一些當地房客甚至被迫搬離他們的公寓，因為房東偏愛透過 Airbnb 將房子租給遊客。") +
+    clue("片語 <code>be partial to + N / V-ing</code> 意為「偏愛…、對…有偏好」（例：<i>She's always been partial to classical music.</i>）。<br>注意：此處的 <code>to</code> 是<b>介系詞</b>，後面必須接動名詞 <code>renting</code>！<br>補充：<code>rent sth out</code>（房東把房子租出去） vs. <code>rent sth</code>（房客租房子）。") +
+    ops([
+      ["that rent", "2%", "partial 後不接 that 子句。"],
+      ["that they rent", "2%", "partial 後不接 that 子句。"],
+      ["to rent", "77%", "極高誤答率！誤把 <code>be partial to</code> 的 to 當成不定詞，其實它是介系詞！"],
+      ["to renting", "20%", "介系詞 <code>to</code> + 動名詞 <code>renting</code>。"]
+    ], "D")
+  ),
+
+  card("L25", ["連接詞與分詞簡化", "As (is) stated by 正如…所述"], "A",
+    st("In this way, landlords can make more money by charging tourists higher nightly rents. [[L25|As]] stated by Lucia Trebocini, the head of a Barcelona neighborhood association, “Many residents of this area are so sick and tired of tourists that they have decided to leave. Even I myself am also considering that option.”", "透過這種方式，房東可以向遊客收取較高的每晚租金來賺取更多錢。正如巴塞隆納一個社區協會負責人露西亞・特雷博西尼所言：「這一帶的許多居民已經對遊客厭煩透頂，因此決定搬走。連我自己也在考慮這個選項。」") +
+    clue("<code>As (is) stated by...</code>（正如…所陳述的），引出後面雙引號內的直接引述句子。") +
+    ops([
+      ["As", "59%", "正如…所言，可搭配後方完整的引述句。"],
+      ["What", "21%", "若用 What 應為 <code>What is stated by...</code>，且這整個會變成名詞子句當主詞，後面必須再接一個動詞（如 <i>is that...</i>），不能直接打逗號接引號句子！"],
+      ["While", "13%", "雖然，語意與結構皆不合。"],
+      ["Until", "7%", "直到，語意不合。"]
+    ], "A")
+  ),
+
+  card("L30", ["副詞與形容詞搭配", "keenly aware 敏銳/深刻意識到"], "B",
+    st("The good news is that city officials are [[L30|keenly]] aware of all these complaints.", "好消息是，市政府官員敏銳且深刻地意識到所有這些抱怨。") +
+    clue("<code>keen</code> (adj.) 表「（感官、心智）敏銳的；（感受）強烈的」，副詞 <code>keenly</code> 常與 <code>aware</code> 搭配成 <code>be keenly aware of</code>，表「敏銳地、深刻地意識到…」。") +
+    ops([
+      ["actively", "32%", "積極地（常修飾參與行動 <i>actively participate</i>，而非靜態的知覺 aware）。"],
+      ["keenly", "59%", "敏銳地、深切地（標準搭配 <code>keenly aware of</code>）。"],
+      ["dimly", "7%", "微弱地、模糊地（如 <i>dimly remembered</i>，與 The good news 語意相反）。"],
+      ["socially", "2%", "社交上地（<code>socially aware</code> 指具有社會意識的，不接 of all these complaints）。"]
+    ], "B")
+  ),
+
+  card("L31", ["Only + 副詞句首倒裝", "only by + V-ing + 助 + S + VR"], "C",
+    st("They believe that [[L31|only by]] introducing practical measures can the impact of overtourism be reduced.", "他們相信，唯有透過推行實際的措施，才能減少過度旅遊帶來的衝擊。") +
+    clue("本課核心句型 1：<code>Only + 副詞片語/子句（by / in / with / when / after / if...）</code> 置於句首時，後方主要子句須<b>倒裝（助動詞/be + S + VR）</b>！<br>此處空格後為動名詞片語 <code>introducing practical measures</code>，且後句已倒裝為 <code><b>can</b> the impact of overtourism <b>be</b> reduced</code>，故選 <code>only by</code>（唯有透過…）。<br>挑戰改寫：若改用 <code>not until</code>，後面須接完整子句：<code>not until the government introduces practical measures can the impact of overtourism be reduced.</code>") +
+    ops([
+      ["not until", "23%", "<code>not until</code> 後面必須接「時間名詞（如 yesterday）」或「完整子句（S + V）」，不能接手段動名詞 <code>introducing...</code>！"],
+      ["rather than", "5%", "而不是（置於句首不會觸發倒裝）。"],
+      ["only by", "70%", "<code>only by + V-ing</code>（唯有透過…）置於句首，觸發後方 <code>can the impact... be reduced</code> 倒裝。"],
+      ["in spite of", "2%", "儘管（不觸發倒裝且語意相反）。"]
+    ], "C")
+  ),
+
+  card("L34", ["常見 time 片語辨析", "at a time 每次/一次"], "B",
+    st("Such measures include putting limits on the number of people who can visit certain hotspots [[L34|at a time]], and banning large tour groups in particularly popular areas.", "這類措施包括限制一次可以造訪特定熱門景點的人數，以及在特別熱門的區域禁止大型旅行團進入。") +
+    clue("限制「每次、同一時間（at a time）」可以造訪特定熱門景點的人數。") +
+    ops([
+      ["at one time", "39%", "常見誤答！<code>at one time</code> 通常指「曾經、一度（= in the past，如 <i>At one time Tom was my best friend.</i>）」或「同時搶著做某事」。"],
+      ["at a time", "52%", "每次、一次（某個數量或時長，如 <i>Take two pills at a time.</i> / <i>for hours at a time</i>）。"],
+      ["at times", "7%", "有時（= sometimes）。"],
+      ["at all times", "2%", "隨時、無時無刻（= always，如 <i>Children must be supervised at all times.</i>）。"]
+    ], "B")
+  ),
+
+  card("L36", ["假設語氣", "order that S (should) VR"], "C",
+    st("The city has also restricted the development of new hotels and ordered that websites like Airbnb [[L36|take]] down their listings of guesthouses that are not licensed.", "該市還限制了新飯店的開發，並下令像 Airbnb 這類的網站撤下未經許可的民宿清單。") +
+    clue("<code>ordered</code> 為「要命建堅」中的命令動詞，後接 <code>that + S (websites like Airbnb) + (should) + VR</code>。網站「撤下（take down）」清單為主動，故用原形動詞 <code>take</code>。") +
+    ops([
+      ["taking", "36%", "分詞不能當 that 子句的主要動詞。"],
+      ["be taken", "13%", "主詞是 websites（網站主動撤下 listings），非被撤下。"],
+      ["take", "39%", "省略 should 的原形動詞 <code>(should) take down</code>。"],
+      ["taken", "13%", "過去分詞不能單獨當動詞。"]
+    ], "C")
+  ),
+
+  card("L39", ["上下文文意推理", "less A and more B"], "A",
+    st("Finally, the government has come up with a thorough plan that concentrates [[L39|less]] on promotion and [[L39|more]] on tourism management.", "最後，政府提出了一項周全的計畫，減少對觀光宣傳的關注，並將更多重心放在旅遊管理上。") +
+    clue("克漏字考閱讀理解：巴塞隆納已經遊客過多（overtourism），政府為了減少衝擊，提出的新計畫當然是「<b>減少（less）</b>觀光宣傳（promotion），並將<b>更多（more）</b>重心放在旅遊管理（tourism management）上」！") +
+    ops([
+      ["less ... more", "36%", "減少宣傳、多加管理，唯一符合解決過度旅遊脈絡的選項。"],
+      ["not only ... but also", "55%", "常見誤答！若選此項變成「不但專注於宣傳，還專注於管理」，都已經遊客爆炸了還繼續大力宣傳招攬遊客，與前文限制飯店與人數的政策自相矛盾！"],
+      ["either ... or", "9%", "二選一，不合語意。"],
+      ["neither ... nor", "0%", "兩者皆非（連管理都不管了）。"]
+    ], "A")
+  ),
+
+  card("L42", ["轉折與列舉片語辨析", "On the one hand ... On the other (hand)"], "A",
+    st("It has been said that tourism is a double-edged sword. [[L42|On the one hand]], tourism provides local business owners with great economic benefits. [[L42|On the other]], it disturbs the lives of local residents and can cause numerous social problems.", "人們常說觀光業是一把雙面刃。一方面，觀光業為當地業主帶來龐大的經濟利益；另一方面，它卻干擾了當地居民的生活，並可能引發眾多社會問題。") +
+    clue("前句關鍵字：<code>tourism is a double-edged sword</code>（觀光業是一把<b>雙面刃</b>——有一好必有一壞，前後兩面互相對立）！<br>• 第一句講好處：帶來龐大經濟利益<br>• 第二句講壞處：干擾居民生活並引發社會問題<br>用在<b>前後對立（一好一壞）</b>的雙面分析，必須用 <code>On the one hand ... On the other (hand)</code>！") +
+    ops([
+      ["On the one hand ... On the other", "75%", "一方面…（但）在另一方面…，專用於前後對立、一正一反的雙面刃情況。"],
+      ["For one thing ... For another", "20%", "一來…二來…，專門用來列舉支持同一結論的「兩個相同方向的理由」（如 <i>I don't want to buy a car. For one thing, I don't have money; for another, there is no parking space.</i>）。"],
+      ["To begin with ... Secondly", "2%", "首先…第二…，同樣用於純列舉相同方向的理由。"],
+      ["In the beginning ... In the end", "4%", "起初…最後…（表時間先後演變，而非同時存在的正反兩面）。"]
+    ], "A") +
+    passage("L46 課文段落與補充例句", [[
+      ["【L46】Clearly, Barcelona is striving to deal with the negative aspects of tourism and is acting to strike a balance between the local community and international visitors.", "顯然地，巴塞隆納正努力應對觀光業的負面影響，並採取行動在當地社區與國際遊客之間取得平衡。"],
+      ["the authorities (concerned)（有關當局 ≒ the government）：The authorities concerned are working together to address the environmental issues in the region.", "有關當局正共同努力解決該地區的環境問題。"]
+    ]])
+  ),
+
+  card("L49", ["Only + 副詞子句句首倒裝", "Only after + S + V + will + S + VR"], "D",
+    st("Only after the authorities have developed sustainable solutions [[L49|will overtourism be]] manageable and stop causing problems in society.", "唯有在有關當局制定出永續的解決方案之後，過度旅遊才會變得可控，並停止在社會上製造問題。") +
+    clue("句首為 <code>Only after the authorities have developed sustainable solutions</code>（Only + 時間副詞子句），後方的<b>主要子句必須倒裝</b>：將助動詞 <code>will</code> 移至主詞 <code>overtourism</code> 之前，即 <code>will overtourism be manageable...</code>。") +
+    ops([
+      ["that overtourism will be", "27%", "誤套用 It is ... that 分裂句，且未倒裝。"],
+      ["then overtourism will be", "16%", "多餘副詞 then 且未倒裝。"],
+      ["with which overtourism will be", "11%", "結構錯誤且未倒裝。"],
+      ["will overtourism be", "46%", "<code>Only + 副詞子句</code> 置於句首，主要子句正確倒裝為 <code>will overtourism be</code>。"]
+    ], "D")
+  )
+].join('');
+
+/* === Part 2: 課本句型與翻譯練習 === */
+const h2 = '<h2 id="p2">課本句型與翻譯練習</h2>' + [
+  card("句1-課本", ["句型1：課本 Practice A & B", "Only + 副詞片語/子句 + 倒裝"], "參考解答", '<div class="stem"><div class="en"><b>Practice A：</b><br>1. '+fx("[[|Only in the Amazon rainforest can we see this kind of insect.]]")+'<br>2. '+fx("[[|Only by boat is the castle built on the rocky island accessible.]]")+'<br>3. '+fx("[[|Only with all their skin covered can Muslim women enter a mosque.]]")+'<br>4. '+fx("[[|Only after they turn eighteen are citizens of this country allowed to vote.]]")+'<br>5. '+fx("[[|Only when the traffic light turns from red to green can you cross the street.]]")+'<br><br><b>Practice B：</b><br>2. '+fx("[[|Only with the lights off can Jessica fall asleep.]]")+'（或 '+fx("[[|Only when the light is switched off can Jessica fall asleep.]]")+'）<br>3. '+fx("[[|Only when the husband comes home will the wife go to bed.]]")+'<br>4. '+fx("[[|Only at night do bats leave their caves.]]")+'<br>5. '+fx("[[|Only after thirty minutes can the students hand in their exam papers.]]")+'<br>6. '+fx("[[|Only when Bill had lost everything did he realize what a blessed life he used to have.]]")+'</div><div class="zh">課本句型 1 Practice A & B 完整參考答案。</div></div>' + clue("特別注意 Practice A 第 2 題：主詞是 <code>the castle (built on the rocky island)</code>，動詞是 <code>is</code>，主詞補語是形容詞 <code>accessible</code>，倒裝時只把 <code>is</code> 移到主詞前：<code>is [the castle built on the rocky island] [accessible]</code>。")),
+  card("句1-翻譯", ["句型1：講義翻譯 (1~6)", "Only 倒裝句與 Only + 主詞（不倒裝）"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">1. 這種水果只有在熱帶地區才種得起來。<br>2. 只有在必須跟老外說話的時候我才理解到英文的重要。<br>3. 你把債務還清我才能再借你錢。<br>4. 只有輸入正確的密碼才能打開保險箱 (the safe)。<br>5. 讓我們原諒彼此——只有那時我們才能平靜 (live in peace)。<br>6. 只有持邀請卡的人才能進入會場 (the venue)。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>1. '+fx("[[|Only in tropical areas can this kind of fruit be grown/cultivated.]]")+'<br>2. '+fx("[[|Only when I have to speak to a foreigner do I realize the importance of English.]]")+'<br>3. '+fx("[[|Only if/when you pay off your debts will I lend you money again.]]")+'<br>4. '+fx("[[|Only by entering the correct password can you open the safe / can the safe be opened.]]")+'<br>5. '+fx("[[|Let us forgive each other—only then can/will we live in peace.]]")+'<br>6. '+fx("[[|Only people with the invitation can enter the venue.]]")+'（或倒裝：'+fx("[[|Only with an invitation card can people enter the venue.]]")+'）</div></div>' + clue("注意第 6 題：如果 <code>Only</code> 直接修飾主詞 <code>Only people with the invitation</code>，因為句首就是主詞而非副詞，<b>不需要倒裝</b>；若改為副詞片語置於句首 <code>Only with an invitation card</code>，後方才要倒裝為 <code>can people enter...</code>！")),
+  card("句2-合併", ["句型2：倍數比較句型", "X times as ... as / X times more ... than"], "參考解答", '<div class="stem"><div class="en">1. '+fx("[[|The sumo wrestler weighs five times as much as Emily (does).]]")+'<br>（= '+fx("[[|The sumo wrestler weighs five times more than Emily (does).]]")+'）<br><br>2. '+fx("[[|The jet fighter travels four times as fast as the speed of light.]]")+'<br>（= '+fx("[[|The jet fighter travels four times faster than the speed of light.]]")+'）<br><br>3. '+fx("[[|There are five times as many questions in the English exam as (there are) in the math exam.]]")+'<br>（= '+fx("[[|There are five times more questions in the English exam than (there are) in the math exam.]]")+'）</div><div class="zh">課本句型 2 倍數句型合併練習。</div></div>' + clue("重要觀念：<br>1. <code>weigh</code> 表「重達…」時不接 heavy/heavily，倍數用 <code>weighs five times as much as</code>。<br>2. 如果倍數形容詞有修飾名詞（如 <code>many questions / much sugar</code>），該名詞必須緊跟在形容詞後面：<code>five times as many questions as...</code>。<br>3. 英文不說 <i>The questions are many</i>，應使用存在句 <code>There are five times as many questions...</code>。")),
+  card("句2-翻譯", ["句型2：講義翻譯 (1~4)", "倍數表達法"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">1. 這棟摩天大樓是那幢建築物的十倍高。(as…as)<br>2. 據說俄羅斯的冬天比臺灣冷很多倍。(more)<br>3. Alice 在咖啡裡加了比我多兩倍的糖。(as…as…)<br>4. Vicky 的高跟鞋是我的 10 倍。(more) Vicky has…</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>1. '+fx("[[|The skyscraper is ten times as tall as that/the building.]]")+'<br>2. '+fx("[[|It is said that winter in Russia is many times colder than winter/that in Taiwan.]]")+'<br>3. '+fx("[[|Alice added twice as much sugar to her coffee as I did.]]")+'<br>4. '+fx("[[|Vicky has ten times more high-heeled shoes (high heels) than I do/have.]]")+'</div></div>' + clue("補充 <code>tall vs. high</code> 終極比較：<br>• <code>tall</code>：細長瘦高的（人、樹、摩天大樓 <i>a tall building/vase</i>）<br>• <code>high</code>：寬廣高聳的或離地面位置高的（高山、高牆、高處的架子 <i>a high mountain/wall/shelf</i>）。"))
+].join('') +
+  passage("補充：同學自由造句精選", [[
+    ["Only when the restrictions are lifted can we go back to school and watch Friends again.", "唯有當防疫限制解除時，我們才能回到學校並再次看《六人行》。"],
+    ["Only when I go to bed can my eyes leave my computer screen.", "只有當我上床睡覺時，我的眼睛才能離開電腦螢幕。"],
+    ["I eat twice as many snacks at home as at school.", "我在家吃的零食是在學校的兩倍多。"]
+  ]]);
+
+document.getElementById('app').innerHTML = h1 + h2;
+const secs=[['p1','L1~L54 課文講解'],['p2','句型1 & 句型2']];
+document.getElementById('nav').innerHTML=secs.map(s=>'<a href="#'+s[0]+'">'+s[1]+'</a>').join('')+'<button id="tg">全部收合</button>';
+let open=true;
+document.getElementById('tg').onclick=function(){open=!open;document.querySelectorAll('details.q').forEach(d=>d.open=open);this.textContent=open?'全部收合':'全部展開';};
+</script>
+<script src="bookmark.js"></script>
+</body>
+</html>

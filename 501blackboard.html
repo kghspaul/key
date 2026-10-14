@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>501 Blackboard</title>
+<style>
+:root{--bg:#faf8f4;--fg:#222;--card:#fff;--line:#e4ded3;--acc:#9a3b2e;--ok:#1f7a4d;--no:#b3261e;--mut:#6b6558;--hl:#fff1c9}
+@media(prefers-color-scheme:dark){:root{--bg:#161512;--fg:#e8e4da;--card:#201f1b;--line:#3a372f;--acc:#e08a78;--ok:#6fcf9a;--no:#f08a82;--mut:#a39d8f;--hl:#4a3f1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+.top{max-width:900px;margin:auto;padding:28px 18px 10px}
+.top h1{margin:0 0 4px;font-size:1.6rem;color:var(--acc)}
+.top p{margin:2px 0;color:var(--mut);font-size:.92rem}
+nav{position:sticky;top:0;z-index:9;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto;padding:8px 12px}
+nav a,nav button{flex:none;padding:5px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--fg);text-decoration:none;font:inherit;font-size:.88rem;cursor:pointer}
+nav a:hover,nav button:hover{border-color:var(--acc);color:var(--acc)}
+main{max-width:900px;margin:auto;padding:0 16px 70px}
+h2{margin:36px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--acc);font-size:1.3rem}
+h3{margin:0 0 8px;font-size:1.05rem;color:var(--acc)}
+.pas,.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.para{margin-bottom:14px}
+.s{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--line)}
+.en{font-family:Georgia,"Times New Roman",serif;font-size:1.02rem}
+.zh{color:var(--mut);font-size:.93rem}
+.note{color:var(--mut);font-size:.85rem;margin:6px 0 0}
+.bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 4px;border-radius:3px;font-weight:600}
+.bl sup{color:var(--acc);margin-right:3px;font-size:.7em}
+.bank{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.92rem;margin-bottom:8px}
+details.q>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+details.q>summary::-webkit-details-marker{display:none}
+.n{background:var(--acc);color:#fff;border-radius:6px;padding:0 10px;font-weight:700;font-size:1.05rem}
+.tag{font-size:.78rem;border:1px solid var(--acc);color:var(--acc);border-radius:99px;padding:0 9px;line-height:1.6}
+.tag.pos{border-color:var(--ok);color:var(--ok)}
+.ans{margin-left:auto;font-weight:700;color:var(--ok)}
+.qb{margin-top:10px}
+.stem{margin-bottom:8px;padding:8px 10px;background:var(--bg);border-radius:6px}
+.clue{margin:8px 0;padding:8px 12px;border-left:4px solid var(--acc);background:var(--bg);border-radius:0 6px 6px 0}
+.clue h4,.qb h4{margin:0 0 2px;font-size:.92rem;color:var(--acc)}
+ul.op{list-style:none;margin:6px 0 0;padding:0}
+ul.op li{padding:7px 10px;margin:5px 0;border-radius:6px;border:1px solid var(--line);font-size:.95rem}
+ul.op li.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 9%,transparent)}
+ul.op li.no{border-color:color-mix(in srgb,var(--no) 45%,transparent)}
+ul.op i{font-style:normal;font-weight:700;font-size:.82rem}
+li.ok i{color:var(--ok)}li.no i{color:var(--no)}
+small{color:var(--mut)}
+footer{max-width:900px;margin:auto;padding:20px 16px 40px;color:var(--mut);font-size:.85rem;line-height:1.6;border-top:1px solid var(--line);margin-top:40px;}
+footer a{color:var(--acc);text-decoration:none;font-weight:bold;}
+footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>501 Blackboard</h1>
+  <p>每題含：考點標籤 → 題幹逐句中英對照 → 解題線索 → 正解與全部誤答分析</p>
+  <p>圖例：<span class="bl">黃底</span> ＝ 正確答案填入處 ｜ <span class="tag">考點</span></p>
+</div>
+<nav id="nav"></nav>
+<main id="app"></main>
+<footer>
+  限定用途教學教材。本詳解為教學輔助，題目版權屬原出版單位。<br>
+  💡 <b>問題回報與建議：</b> Line: etpaul ｜ IG: <a href="https://www.instagram.com/etpaul" target="_blank">@etpaul</a>
+</footer>
+
+<script>
+const L="ABCD";
+const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[([^|\]]*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const SENT={};
+function passage(title,paras,note){
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[([^|\]]+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  return '<section class="pas"><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
+}
+function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
+const clue=t=>'<div class="clue"><h4>解題線索</h4>'+t+'</div>';
+function ops(list,ans,lab){lab=lab||'ABCDEF';return '<ul class="op">'+list.map((o,i)=>{const k=ans.indexOf(lab[i])>=0;return '<li class="'+(k?'ok':'no')+'"><b>'+(lab==='ABCDEF'&&list.length<=4?'('+L[i]+') ':lab==='ABCDEF'?'('+'ABCDEF'[i]+') ':'')+o[0]+'</b>'+(o[1]?' <small>'+o[1]+'</small>':'')+' <i>'+(k?'✔ 正解':'✘ 誤答')+'</i><br>'+o[2]+'</li>';}).join('')+'</ul>';}
+function card(n,tags,ans,body){
+  return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
+}
+
+const st=(en,zh)=>'<div class="stem"><div class="en">'+fx(en)+'</div><div class="zh">'+zh+'</div></div>';
+
+/* === Part 1: 課前字彙 & P3 詩作註解 & L1 ~ L65 課文講解 === */
+const h1 = '<h2 id="p1">課前字彙、P3 詩作註解 ＆ L1 ~ L65 課文講解</h2>' +
+  passage("Thinking Ahead 課前字彙與填空練習", [[
+    ["字彙表：1. wrinkle-prone (adj. 容易起皺摺的) ｜ 2. nooks and crannies (n. 狹小的空間/洞/縫等) ｜ 3. bond (v. 聯繫；建立關係) ｜ 4. luggage (n. 行李 [U]) ｜ 5. knack (n. 技巧) ｜ 6. text (v. 傳訊息) ｜ 7. funeral (n. 葬禮) ｜ 8. wasted (adj. 被浪費的)", "課前核心字彙整理。"],
+    ["I am an exhibition organizer. I have to travel all over Taiwan all year to design hundreds of exhibitions. It is important for me to pack my [[1|luggage]] efficiently.", "我是一名展覽策劃人。我必須全年走遍全台灣設計數百場展覽。對我來說，有效率地打包行李是很重要的。"],
+    ["There is a [[2|knack]] to arranging everything in a small suitcase. For example, [[3|wrinkle-prone]] shirts must be placed on top of cotton things.", "把所有東西安排進一個小行李箱裡是有技巧（訣竅）的。例如，容易起皺摺的襯衫必須放在棉質衣物上方。"],
+    ["Rolled socks can be tucked into [[4|nooks and crannies]]. In this way, there is no [[5|wasted]] space in my suitcase.", "捲起來的襪子可以塞進邊邊角角的狹小縫隙裡。如此一來，我的行李箱裡就不會有被浪費的空間。"]
+  ]]) +
+  passage("P3 原詩註解與例句 (左L4 ~ 右L13)", [[
+    ["1. 左L4 make allowance for 將…列入考慮：My calculations make allowance for two paid employees.", "我的計算考慮了兩名帶薪僱員的費用。"],
+    ["2. 左L6 deal in = be involved in / be interested in：As a scientist, I do not deal in speculation. / Lawrence is not a man who deals in rumors.", "作為一名科學家，我不從事猜測。／勞倫斯不是一個散佈謠言的人。"],
+    ["3. 左L12 impostor n. 冒名頂替的人：He felt like an impostor among all those intelligent people, as if he had no right to be there.", "在那些聰明人當中，他覺得自己像個冒名頂替者，彷彿自己沒有權利待在那裡。"],
+    ["4. 左L14 knave n. 騙子 (古字)", "原詩字彙註解。"],
+    ["5. 左L16 stoop vi. 彎腰 vs. squat vi. 蹲：He stooped (down) to pick his wallet up. / He's beginning to stoop with age. / He squatted down beside the little girl.", "他彎腰撿起皮夾。／他年事漸高，背也開始變駝了。／他蹲在小女孩旁。"],
+    ["6. 右L2 pitch-and-toss：一種玩家向某個標記投擲硬幣的遊戲，硬幣擊中最接近標記的人將所有硬幣拋向空中，並贏得所有正面朝下的硬幣。", "原詩文化背景註解。"],
+    ["7. 右L5 nerve n. 勇氣；神經 ＆ 8. 右L5 sinew 肌腱：It takes a lot of nerve to report a colleague for sexual harassment.", "檢舉同事性騷擾需要很大的勇氣。"],
+    ["9. 右L6 serve one’s turn 盡義務；完成任務：In a team project, each member has to serve their turn. For example, one person might be responsible for conducting research, another for creating the presentation, and another for coordinating the team's efforts.", "在團隊專案中，每個成員都必須盡自己的任務。例如，一個人可能負責進行研究，另一個人負責製作簡報，還有一個人負責協調團隊的工作。"],
+    ["10. 右L10 common touch n. 平易近人的態度：He's made it to the top without losing the common touch.", "他爬到了顛峰，卻沒有失去平易近人的態度。"],
+    ["11. 右L12 count with 對…很重要：You really count with me.", "你對我來說真的很重要。"],
+    ["12. 右L13 unforgiving adj. 艱困的：The island is an unforgiving place in winter.", "這座島嶼在冬天是個嚴酷艱困的地方。"]
+  ]]) + [
+  card("L1", ["翻譯挑戰", "succeed in + V-ing"], "參考譯文",
+    '<div class="stem"><div class="zh" style="color:inherit">14. 請翻譯這個句子：她已瘦身成功。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|She (has) succeeded in losing weight. / She (has) lost weight successfully.]]")+'</div></div>' +
+    clue("注意：(X) <code>She succeeded to lose weight.</code>（<code>succeed</code> 必須搭配 <code>in + N / V-ing</code>，不可接不定詞 to VR！）。") +
+    passage("14. L1 課文句子", [[
+      ["Poems have the power to move us, inspire us, and guide us to do great things. “If—” succeeds in doing all three.", "詩歌有力量感動我們、激勵我們，並引導我們做出偉大的事。《如果——》成功做到了這三點。"]
+    ]])
+  ),
+
+  card("L3", ["介系詞搭配", "advice on + 主題"], "D",
+    st("Written by Rudyard Kipling, British Nobel Laureate in Literature, and first published in 1910, the poem contains advice from a father to his son [[L3|on]] living a good life.", "這首詩由英國諾貝爾文學獎得主魯德亞德・吉卜林所寫，並於 1910 年首次發表，內容包含一位父親給兒子關於過美好生活的忠告。") +
+    clue("• <code>Written by...</code>（分詞構句 1，修飾 poem）與 <code>first published in 1910</code>（分詞構句 2，修飾 poem）。<br>• <code>advice ... on + N / V-ing</code>：介系詞 <code>on</code> 表「關於…主題」。") +
+    ops([
+      ["with", "7%", "和…一起。"],
+      ["by", "6%", "藉著。"],
+      ["for", "57%", "為了 + N / V-ing（常見誤答，表「關於某主題的建議」搭配 on）。"],
+      ["on", "34%", "表主題（<code>advice on living a good life</code>）。"]
+    ], "D") +
+    passage("15. L3 & 16. L5 補充例句", [[
+      ["I just attended an international conference on global warming.", "我剛參加了一場關於全球暖化的國際會議。"],
+      ["16. L5 live/lead a(n) + adj. + life 過著⋯⋯的生活（常搭配 comfortable、good、simple、busy 等形容詞）", "課文片語整理。"]
+    ]])
+  ),
+
+  card("L6", ["泛指代名詞", "one 一個人/任何人"], "D",
+    st("The speaker brings up common circumstances [[L6|one]] may encounter in life and explains the best way to confront each of them.", "說話者提出了人在一生中可能會遭遇的常見境遇，並解釋面對每一種情況的最佳方式。") +
+    clue("結構剖析：<code>common circumstances [(that/which) <b>one</b> may encounter in life]</code>。<br>關係代名詞受詞 <code>that/which</code> 已省略，後方關係子句缺的是「主詞」<code>one</code>（一個人／任何人，文雅用法）。") +
+    ops([
+      ["that", "61%", "常見誤答！若填關代受詞 that，後方的 <code>may encounter</code> 就沒有主詞了！"],
+      ["those", "9%", "複數代名詞，语意不合。"],
+      ["what", "12%", "前已有先行詞 circumstances，不可用 what。"],
+      ["one", "18%", "泛指「一個人／任何人」，作關係子句 <code>(that/which) one may encounter</code> 的主詞。"]
+    ], "D") +
+    passage("18. L6 補充例句", [[
+      ["brings up 提出 = raise, bring forth, put forth, put forward：The reporter raised some embarrassing questions that the singer refused to answer.", "記者提出了一些令那位歌手拒絕回答的尷尬問題。"]
+    ]])
+  ),
+
+  card("L9", ["時間片語與時態搭配", "to this day 直到今天"], "A",
+    st("“If—” was one of the twentieth century’s most beloved poems, and its words of wisdom remain relevant [[L9|to this day]].", "《如果——》是二十世紀最受喜愛的詩作之一，其智慧話語直到今天依然切合實際。") +
+    clue("• <code>to this day</code> 直到現在（= until and including now，<b>常搭配現在簡單式</b>，如本句的 <code>remain</code>）。<br>• <code>so far = thus far, to date, up to now, (up) until now</code> 到目前為止（★概念：止 = 完成，<b>常搭配現在完成式</b>）。") +
+    ops([
+      ["to this day", "79%", "直到今天（搭配現在簡單式 remain）。"],
+      ["so far", "9%", "到目前為止（常搭配現在完成式）。"],
+      ["up to now", "11%", "到目前為止（常搭配現在完成式）。"],
+      ["to date", "2%", "到目前為止（常搭配現在完成式）。"]
+    ], "A") +
+    passage("19. L9 & 20. L10 補充例句", [[
+      ["To this day I don't know exactly what started the fight. / To this day, he denies any involvement in the crime.", "直到今天我仍不確切知道是什麼引發了那場爭吵。／直到今天，他仍否認涉入該起犯罪。"],
+      ["To date, we have not received any replies.", "到目前為止，我們尚未收到任何回覆。"],
+      ["20. L10 remain / retain / maintain / sustain 教學影片：https://youtu.be/O3CG1ua6Xl8", "四個「保持／維持」動詞辨析影片連結。"]
+    ]])
+  ),
+
+  card("L11", ["保留連接詞之分詞構句", "when facing"], "A",
+    st("The poem begins with advice regarding how to behave righteously [[L11|when facing]] unrighteousness.", "這首詩以關於在面對不義時應如何行為端正的建議作為開端。") +
+    clue("• <code>when facing = when you face = (when) (you are) faced with = (when) (you are) in the face of</code><br>*主詞相同時可省略「連接詞 + 主詞 + be」；連接詞在語意有需要時可選擇保留。<br>• 勇敢面對問題：<code>face (up to) a problem</code><br>• 碰到問題：<code>[be faced with / face] a problem</code>（被動必須有 <code>with</code>！）<br>• 面對某人：<code>face sb</code>") +
+    ops([
+      ["when facing", "78%", "主動分詞片語 <code>when facing unrighteousness</code>。"],
+      ["when faced", "5%", "缺少介系詞 <code>with</code>（應為 <code>when faced with</code>）。"],
+      ["when you faced", "13%", "全段說明詩中普世建議用現在式，不用過去式 faced。"],
+      ["faced", "3%", "缺少介系詞 <code>with</code>。"]
+    ], "A") +
+    passage("21. L11 ~ 24. L13 補充例句", [[
+      ["I have grown up now and I have to face (up to) my responsibilities.", "我現在長大了，必須勇敢面對自己的責任。"],
+      ["I was faced with the awful job of breaking the news to the girl's family.", "我面臨向女孩家人宣布這個壞消息的艱難工作。"],
+      ["I don't know how I'm going to face her after what happened.", "事發之後我不知道該如何面對她。"],
+      ["22. L11 regarding (介) 關於 = with/in regard to = considering = about：I asked the librarian for some tips regarding how to find the books that I was searching for.", "我向圖書館員詢問一些關於如何找到我正在尋找的書籍的訣竅。"],
+      ["23. L13 steady = composed = poised 沉穩的", "同義字整理。"],
+      ["24. L13 have faith in sb 對某人有信心 = have confidence in sb：The coach had faith in Roger and believed that he would finish first in the race.", "教練對羅傑有信心，相信他會在比賽中獲得第一名。"]
+    ]])
+  ),
+
+  card("L12", ["形容詞字彙辨析", "constructive criticism 建設性的批評"], "B",
+    st("When people are hostile toward you, remain calm and steady. Have faith in yourself when others blame or doubt you, but be receptive to [[L12|constructive]] criticism.", "當人們對你懷有敵意時，保持冷靜與沉穩。當別人責備或懷疑你時，要對自己有信心，但也要樂於接受具建設性的批評。") +
+    clue("26. L15：<code>receptive = open</code>（願意接受的）。對於別人的責備或懷疑要有自信，但對於「有建設性的批評（constructive criticism）」則應開放接受。") +
+    ops([
+      ["bitter", "2%", "嚴厲的、尖酸刻薄的批評（bitter criticism）。"],
+      ["constructive", "86%", "建設性的批評（constructive criticism）。"],
+      ["hostile", "13%", "有敵意的批評（hostile criticism）。"],
+      ["widespread", "0%", "廣泛的批評（widespread criticism）。"]
+    ], "B") +
+    passage("25. L12 選項補充例句", [[
+      ["(A) The author's latest novel received bitter criticism from literary critics for its lack of originality.", "這位作家的最新小說因缺乏原創性而受到文學評論家的嚴厲批評。"],
+      ["(B) The teacher provided constructive criticism to help the students improve their writing skills.", "老師提供了建設性的批評，幫助學生提升他們的寫作技巧。"],
+      ["(C) The politician's proposal was met with hostile criticism from the opposing party, leading to a heated debate.", "這位政治家的提案遭到對立黨派有敵意的批評，引發了一場激烈的辯論。"],
+      ["(D) The government's new policy faced widespread criticism from various sectors of society.", "政府的新政策受到社會各界的廣泛批評。"]
+    ]])
+  ),
+
+  card("L15", ["對等連接詞與表語倒裝", "for 因為（補充說明理由）"], "C",
+    st("No less important is the quality of patience, [[L15|for]] without it, the fruits of your labor may be lost.", "同樣重要的是耐心的特質，因為要是沒有耐心，你辛勤勞動的成果可能會付諸東流。") +
+    clue("• 前半句為表語倒裝句，可還原為：<code>The quality of patience (S) is no less important (SC) …</code>。<br>• L16：<code>for</code>（對等連接詞） vs. <code>because, since, as</code>（從屬連接詞）：<br>【同】都指「因為」<br>【異】<code>for</code> 所引導的對等子句只能放在另一子句後面當作補充說明，且必須用逗號隔開。") +
+    ops([
+      ["unless", "26%", "除非（後面已經有 without it，若再用 unless 會雙重否定）。"],
+      ["except", "7%", "除了。"],
+      ["for", "53%", "對等連接詞表「因為」，置於逗號後補充說明理由（後接 <code>without it, the fruits... may be lost</code> 完整子句）。"],
+      ["despite", "16%", "介系詞，後面不能接子句 <code>the fruits... may be lost</code>。"]
+    ], "C") +
+    passage("27. L15 ~ L16 補充例句", [[
+      ["Less measurable, but no less profound, is a sapping of confidence across our land. — Barack Obama's Inaugural Address (*sap 削弱/降低)", "較難衡量、但影響絲毫不減的，是我們全國各地信心的削弱。"],
+      ["She is no less pretty than her sister.", "她和她姊姊一樣漂亮。（no less … than … 和…一樣地…）"],
+      ["Trent didn’t go to school last week, for/because he had caught a bad cold.", "崔特上週沒去上學，因為他得了重感冒。"],
+      ["Because he had been in prison, employers were unwilling to offer him a job.", "因為他曾坐過牢，雇主都不願提供他工作。（句首只能用 Because，不可用 For）"]
+    ]])
+  ),
+
+  card("L17", ["動詞與介系詞搭配", "refrain from + N / V-ing"], "D",
+    st("And if people despise you or spread lies about you, be truthful and refrain [[L17|from returning]] the hatred.", "而且如果人們鄙視你或散佈關於你的謊言，要保持真誠，並克制自己不要以怨報怨（回敬仇恨）。") +
+    clue("• <code>refrain</code> 只有一種用法（不可引導任何子句）：<code>refrain from + N / V-ing</code> 克制（不要做…）<br>• <code>restrain sb from V-ing = stop sb from doing sth</code> 阻止某人做某事<br>• 29. L17 字根：<code>de- = down</code> → <code>despise = look down on</code>；<code>spic/spec/spis- = look/see</code>（<code>spectacle</code> 景象/奇觀、<code>spectator</code> 觀眾、<code>conspicuous</code> 引人側目的 ↔ <code>inconspicuous</code> 不顯眼的）。") +
+    ops([
+      ["to return", "40%", "refrain 不可接不定詞 to VR。"],
+      ["whether to return", "4%", "refrain 不接名詞片語。"],
+      ["that don’t return", "9%", "refrain 不可接 that 子句。"],
+      ["from returning", "47%", "<code>refrain from + V-ing</code>（克制不要回報仇恨）。"]
+    ], "D") +
+    passage("28. L17 補充例句", [[
+      ["Please refrain from smoking in this area. / Let's hope they will refrain (from hostile action).", "請勿在此區域吸菸。／希望他們能克制（不採取敵對行動）。"],
+      ["I had to restrain her from running out into the street. / He had to be restrained from using violence.", "我不得不阻止她跑到街上。／他必須被制止使用暴力。"]
+    ]])
+  ),
+
+  card("L19", ["轉折與附加副詞", "In addition 除此之外"], "A",
+    st("Doing so is the only way to put an end to the cycle of hatred and dishonesty. [[L19|In addition]], it is essential to be modest and humble.", "這麼做是終結仇恨與不誠實惡性循環的唯一方法。除此之外，保持謙遜與謙卑也是極為重要的。") +
+    clue("31. L21：<code>modest</code>（不喜歡談論自己的成就）、<code>humble</code>（不覺得自己比別人強）。") +
+    ops([
+      ["In addition", "62%", "除此之外（附加另一項重要美德）。"],
+      ["On the other hand", "16%", "另一方面（≒ however）。"],
+      ["Conversely", "15%", "相反地。"],
+      ["In contrast", "7%", "形成對比的是。"]
+    ], "A") +
+    passage("30. L19 選項補充例句", [[
+      ["(A) She is an accomplished pianist. In addition, she is also skilled in playing the violin.", "她是一位傑出的鋼琴家。除此之外，她還精通小提琴的演奏。"],
+      ["(B) Some people prefer working in teams. On the other hand, others prefer to work independently.", "有些人喜歡在團隊中工作，另一方面，有些人則更喜歡獨立工作。"],
+      ["(C) Regular exercise can improve physical health. Conversely, a sedentary lifestyle can lead to various health issues. / Some people enjoy living in big cities for the fast-paced lifestyle. Conversely, others prefer the tranquility of rural areas. / In some cultures, elders are highly respected. Conversely, youth is valued more in other societies.", "定期鍛煉可以改善身體健康，相反地，久坐的生活方式會導致各種健康問題。／有些人喜歡大城市的快節奏生活，相反地，其他人更喜歡鄉村地區的寧靜。／在某些文化中長者受到高度尊重，相反地，在其他社會中更重視年輕人。"],
+      ["(D) The manager has a hands-on approach and closely monitors the team's progress. In contrast, my supervisor takes a more hands-off approach and gives team members more autonomy.", "經理採取親力親為的方式密切監控團隊進展，形成對比的是，我的主管採取更放手的方式，給予團隊成員更多的自主權。"]
+    ]])
+  ),
+
+  card("L22", ["形容詞字彙辨析", "in a balanced manner 以平衡的方式"], "D",
+    st("The second stanza focuses on pursuing one’s dreams and suggests that people do so in a [[L22|balanced]] manner. As the speaker explains, you can dream and think, but your dreams and thoughts should be translated into rational and direct action in the real world.", "第二節聚焦於追求夢想，並建議人們以平衡的方式去追夢。正如說話者所解釋的，你可以做夢和思考，但你的夢想與思想應該轉化為現實世界中理性而直接的行動。") +
+    clue("後句說「可以做夢和思考，但也應該轉化為現實世界的理性行動（兼顧夢想與現實行動）」，故是以「平衡的（balanced）」方式追求夢想。") +
+    ops([
+      ["timely", "15%", "及時的。"],
+      ["similar", "15%", "相似的。"],
+      ["professional", "19%", "專業的。"],
+      ["balanced", "52%", "平衡的（<code>in a balanced manner</code>）。"]
+    ], "D") +
+    passage("32. L22 & 33. L22 補充例句", [[
+      ["(A) The project's success was attributed to the team's timely decision-making and efficient execution.", "該專案的成功歸功於團隊及時的決策和高效的執行。"],
+      ["(B) The siblings have similar interests and hobbies, often engaging in activities together.", "這對兄妹擁有相似的興趣和愛好，經常一起參與活動。"],
+      ["(C) The lawyer provided professional legal advice to assist her clients in making informed decisions.", "律師提供專業的法律建議，協助她的客戶做出明智的決策。"],
+      ["(D) The successful manager knows how to maintain a balanced work-life schedule, prioritizing both personal and professional responsibilities.", "成功的經理知道如何維持平衡的工作與生活時間表，將個人和專業責任都列為優先。"],
+      ["33. L22 in a(n) + adj. + manner 以…的方式 = in a(n) + adj. + fashion = in a(n) + adj. + way：Christine always talks to people in a polite manner. / She will be working out her problems in her own fashion.", "克莉絲汀總是很有禮貌地與人交談。／她將會以她自己的方式解決問題。"]
+    ]])
+  ),
+
+  card("L26", ["代名詞受詞", "accept both (success and failure)"], "B",
+    st("Of course, you’ll have success and failure in life. You need to accept [[L26|both]] with grace and continue to persevere in either case.", "當然，你在人生中會有成功與失敗。你需要優雅地接受這兩者，並在任何一種情況下繼續堅持不懈。") +
+    clue("解題關鍵：<br>1) <code>accept</code> 為及物動詞，必需有受詞<br>2) 所有選項中只有 <code>both</code> 可當代名詞（受詞必為名詞）<br>3) 從語意上來說，也只有 <code>both</code> 合理（<code>both = success and failure</code>）<br>補充：35. L27 <code>with grace = gracefully</code>；36. L28 <code>in either case = whether you succeed or fail = either in the case of success or (in the case of) failure</code>（either 兩者任一）。") +
+    ops([
+      ["so that", "4%", "連接詞，不可作 accept 的受詞。"],
+      ["both", "79%", "代名詞指代 <code>success and failure</code>。"],
+      ["so", "16%", "副詞，accept 需要名詞當它的受詞。"],
+      ["as well as", "2%", "連接片語，非代名詞受詞。"]
+    ], "B")
+  ),
+
+  card("L30", ["附帶狀況", "with + O + OC (on your goals)"], "D",
+    st("Furthermore, when others distort your words and deeds, always push forward [[L30|with]] your eyes on your goals.", "此外，當別人扭曲你的言行時，永遠要目光專注於目標、勇往直前。") +
+    clue("<code>with + O (your eyes) + OC (on your goals)</code> 表示「附帶狀況」（本句中的受詞補語 OC 是介系詞片語 <code>on your goals</code>）。<br>38. L31：<code>end in failure</code> 以失敗收場。") +
+    ops([
+      ["set", "5%", "→ 應為 <code>and set your eyes on...</code>。"],
+      ["turning", "18%", "→ <code>turn ... to your goals</code>（介系詞搭配 to 而非 on）。"],
+      ["and let", "23%", "<code>let + sb + VR</code>，後方沒有原形動詞。"],
+      ["with", "54%", "構成 <code>with + O + OC</code> 附帶狀況。"]
+    ], "D") +
+    passage("37. L30 補充例句（受詞補語的其它情況）", [[
+      ["1) 形容詞：Never talk with your mouth full of food.", "嘴裡塞滿食物時絕不要說話。"],
+      ["2) 現在分詞（主動進行）：Mary always takes a walk along the river with her pet dog following her.", "瑪麗總是沿著河岸散步，她的寵物狗跟在身後。"],
+      ["3) 過去分詞（被動接受）：The soldier sat on the ground with one of his legs seriously injured.", "那名士兵坐在地上，其中一條腿受了重傷。"]
+    ]])
+  ),
+
+  card("L31", ["目的不定詞", "do whatever you can (do) to start"], "C",
+    st("Even if your plans end in failure, you should pick yourself up and do whatever you can [[L31|to start]] again.", "即使你的計畫以失敗收場，你也應該重新振作，並竭盡所能重新開始。") +
+    clue("結構剖析：<code>do [whatever you can (do)] (O.) [(in order) to start again]</code>。<br>注意：<code>can</code> 後方省略的是與前面重複的原形動詞 <code>do</code>，故後面表目的「為了重新開始」必須用不定詞 <code>to start</code>！") +
+    ops([
+      ["start", "45%", "常見誤答！誤以為接在 can 後面，其實 <code>whatever you can (do)</code> 已經結束，是 <code>do</code> 的受詞！"],
+      ["starting", "2%", "變成 when you are starting，語意不合。"],
+      ["to start", "46%", "不定詞表目的 <code>(in order) to start again</code>。"],
+      ["by starting", "7%", "藉由重新開始，邏輯顛倒。"]
+    ], "C")
+  ),
+
+  card("L33", ["關係子句語序", "(that) one must possess"], "C",
+    st("The third stanza explores mental toughness and the power of will [[L33|one must possess]].", "第三節探討心理韌性以及一個人必須擁有的意志力。") +
+    clue("省略關係代名詞受詞 <code>(that/which)</code> 的形容詞子句，修飾先行詞 <code>mental toughness and the power of will</code>，子句內部維持正常陳述語序 <code>S (one) + V (must possess)</code>。") +
+    ops([
+      ["possess one", "14%", "語序顛倒。"],
+      ["must possess one", "32%", "語序顛倒。"],
+      ["one must possess", "48%", "<code>(that) one must possess</code>（一個人必須擁有的）。"],
+      ["possess one must", "5%", "語序錯誤。"]
+    ], "C") +
+    passage("40. L33 & 41. L33 補充例句", [[
+      ["What possessed sb to VR（什麼原因使某人做出某種讓人驚訝的事）：What possessed you to quit your stable job and pursue a risky business venture? / What possessed her to dye her hair neon green?", "是什麼讓你放棄穩定的工作去冒險創業的？／是什麼讓她把頭髮染成霓虹綠色的？"],
+      ["41. L33 explore: discuss or think about sth carefully 探討/思考 (= deal with / look at)：Management need to explore ways of improving office security. / I'm going to explore the possibility of a part-time job.", "管理階層需要探討改善辦公室安全的方法。／我打算探討兼職工作的可能性。"]
+    ]])
+  ),
+
+  card("L35-翻譯", ["翻譯挑戰", "chance / fortune / luck"], "參考譯文",
+    '<div class="stem"><div class="zh" style="color:inherit">42. 挑戰題：(翻譯) 運氣在許多桌遊中扮演重要的角色。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Chance plays a big part/role in many board games.]]")+'</div></div>' +
+    clue("• <code>chance</code>：機緣／運氣（中性，可好可壞）／巧合<br>• <code>fortune</code>：通常指好運，若用複數 <code>fortunes</code> 則指「氣運、家道運勢」<br>• <code>luck</code>：通常指好運（= good luck = good fortune）") +
+    passage("42. L35 補充例句", [[
+      ["It was pure chance that they were seated next to each other on the flight back to Paris.", "在飛回巴黎的班機上，他們坐在一起純屬巧合。"],
+      ["He had the (good) fortune to train with some of the world's top athletes. / The family's fortunes changed overnight.", "他有幸能與幾位世界頂尖運動員一起訓練。／這個家庭的運勢在一夕之間改變了。"],
+      ["Owen has had no luck with job-hunting.", "歐文找工作一直不太順利（沒運氣）。"]
+    ]])
+  ),
+
+  card("L34", ["目的不定詞", "to be successful"], "B",
+    st("Life is a game of chance, the speaker warns, so sometimes you must bet whatever you have on one game of “pitch-and-toss” [[L34|to be successful]].", "說話者警告說，人生是一場機運遊戲，所以有時為了成功，你必須將你所擁有的一切全押在一場「擲硬幣遊戲」上。") +
+    clue("<code>bet sth (in order) to be successful</code>（為了獲得成功而賭上一切）。") +
+    ops([
+      ["to success", "43%", "<code>success</code> 為名詞（搭配如 <i>pave one's way to success</i>），但 <code>bet ... on a game</code> 後接目的不定詞 <code>to be successful</code>。"],
+      ["to be successful", "52%", "不定詞片語表目的「為了要成功」。"],
+      ["so that succeed", "5%", "<code>so that</code> 後必須接完整子句（含主詞與助動詞，如 <i>so that you can succeed</i>）。"],
+      ["by success", "0%", "語意與結構不合。"]
+    ], "B") +
+    passage("43. L34 選項補充例句", [[
+      ["(A) The young entrepreneur had a clear vision and worked relentlessly to pave her way to success.", "這位年輕企業家有著明確的願景，並不懈地努力為自己通往成功之路鋪路。"],
+      ["(C) She studied diligently so that she would succeed in her final exams and secure a spot at her dream university.", "她努力學習，以便在期末考試中取得成功，並獲得進入她理想大學的機會。"],
+      ["(D) The author's reputation was established by success in publishing several best-selling novels.", "這位作者通過成功出版幾本暢銷小說建立了自己的聲望。"]
+    ]])
+  ),
+
+  card("L38", ["讓步連接詞", "even if 即使"], "D",
+    st("However, [[L38|even if]] you lose everything, don’t indulge in self-pity. And if exhaustion overtakes you, rely on your willpower to carry you through.", "然而，即使你輸掉了一切，也不要沉溺於自憐之中。而且如果極度疲憊擊倒了你，要依靠你的意志力支撐你度過難關。") +
+    clue("前句說把一切賭在一場遊戲上，本句假設「即使（even if）你輸掉了一切，也不要自怨自艾」。") +
+    ops([
+      ["whereas", "2%", "然而、鑑於（對比兩個事實）。"],
+      ["since", "2%", "自從／既然。"],
+      ["while", "14%", "儘管（針對已存在的既定事實，不針對假設萬一輸掉一切的情況）。"],
+      ["even if", "82%", "即使（包含假設條件）。"]
+    ], "D") +
+    passage("44. L38 ~ 47. L41 補充例句", [[
+      ["(A) She prefers staying in and reading a book, whereas her brother enjoys going out and socializing with friends.", "她喜歡待在家裡讀書，然而她的兄弟喜歡外出和朋友交際。"],
+      ["(B) Since the new manager took over, the company's performance has improved significantly.", "自從新經理接手以來，公司的表現有了顯著的改善。"],
+      ["(C) While he is a talented actor, he still has a lot to learn.", "儘管他是一位有才華的演員，他還有很多需要學習的地方。"],
+      ["(D) She would pursue her dreams, even if it meant sacrificing her current job.", "即使這意味著放棄她現在的工作，她也會追尋自己的夢想。"],
+      ["45. L40 sth overtakes sb = overcome = overwhelm vt. 某人感到強烈的…：A terrible sense of panic overtook him. / Harriet was overwhelmed by a feeling of homesickness. / Charles was overcome with grief.", "一股強烈的恐慌感席捲了他。／哈莉特被思鄉之情淹沒。／查爾斯悲痛欲絕。"],
+      ["46. L40 rely on 依賴；依靠 (= depend on, count on)：The boss relies on his capable secretary to help him arrange his busy schedule.", "老闆依賴他能幹的秘書幫他安排忙碌的行程。"],
+      ["47. L41 carry sth through 成功完成 ＆ through (adj. = done / finished 做完某事的；結束關係的)：She carried the project through despite all those difficulties. / Please be still until I'm through. / When will you be through with school? / I’m through/done with you. / Joey and I are through.", "儘管困難重重，她仍成功完成了這項專案。／在我忙完之前請保持安靜。／你什麼時候會從學校畢業？／我跟你沒完（絕交了）。／喬伊和我分手了。"]
+    ]])
+  ),
+
+  card("L42", ["形容詞字彙辨析", "Ultimate success 最終的成功"], "D",
+    st("In short, do everything you can to accomplish your goals and never give up. [[L42|Ultimate]] success comes to those who find inner strength and have the will to persevere.", "簡言之，竭盡所能去達成目標並且絕不放棄。最終的成功屬於那些找到內在力量並擁有堅持到底意志的人。") +
+    clue("全段總結：不放棄並堅持到底的人，終將獲得「最終的成功（Ultimate success）」。") +
+    ops([
+      ["Commercial", "0%", "商業上的成功。"],
+      ["Academic", "2%", "學業上的成功。"],
+      ["Financial", "5%", "財務上的成功。"],
+      ["Ultimate", "93%", "最終的、終極的成功。"]
+    ], "D") +
+    passage("48. L42 選項補充例句", [[
+      ["(A) The new product launch was a commercial success, with record-breaking sales in its first month. / The company's advertising campaign led to significant commercial success, increasing brand awareness and attracting new customers.", "這款新產品的推出取得了商業上的成功，在首個月創下了銷售紀錄。／該公司的廣告活動帶來了顯著的商業成功。"],
+      ["(B) Sarah's hard work resulted in academic success, earning her a scholarship to a prestigious university. / The professor's guidance and mentorship played a crucial role in his students' academic success.", "莎拉的努力使她在學業上取得成功，獲得名校獎學金。／教授的指導在學生的學業成功中扮演關鍵角色。"],
+      ["(C) Through strategic investments and sound financial planning, he achieved long-term financial success. / Hard work and smart decisions led to their family's financial success and stability.", "透過策略性投資與健全財務規劃，他實現了長期財務成功。／努力工作與明智決策帶來家庭的財務成功與穩定。"],
+      ["(D) The writer's perseverance paid off when her novel became a bestseller, marking the ultimate success of her literary career. / Despite facing numerous challenges along the way, they never gave up and eventually reached their ultimate success in establishing a successful business.", "作家的堅持獲得回報，小說成為暢銷書，標誌著她文學生涯的最終成功。／儘管面臨無數挑戰，他們從不放棄，最終成功創立企業。"]
+    ]])
+  ),
+
+  card("L45", ["動詞片語辨析", "deal with 探討/處理"], "B",
+    st("The final stanza [[L45|deals with]] one’s personal relationships and the value of time.", "最後一節探討個人的人際關係與時間的價值。") +
+    clue("主詞為單數名詞 <code>The final stanza</code>（最後一節詩），表示書籍、文章、演講「探討、論及（某主題）」用 <code>deals with</code>。") +
+    ops([
+      ["stick with", "3%", "堅持選擇、持續維持（且單數主詞未加 -s）。"],
+      ["deals with", "70%", "處理；（書、演講、文章等）探討、涉及。"],
+      ["comply with", "7%", "遵守、符合（規定或標準）。"],
+      ["contend with", "20%", "必須應對、對付（難題或困境）。"]
+    ], "B") +
+    passage("50. L45 選項補充例句", [[
+      ["(A) Despite the challenges, she decided to stick with her original plan and pursue her dreams. / Despite the criticisms, the team decided to stick with their innovative approach and proved its effectiveness.", "儘管面臨挑戰，她決定堅持最初的計畫。／儘管受到批評，團隊決定堅持其創新做法並證明其有效性。"],
+      ["(B) The book deals with complex social issues and offers insightful perspectives. / These ideas are dealt with more fully in Chapter Four.", "這本書探討了複雜的社會問題並提供深入觀點。／這些概念在第四章中會有更完整的探討。"],
+      ["(C) All employees are required to comply with the company's code of conduct and ethical guidelines. / The building was designed to comply with the latest safety regulations and standards.", "所有員工都必須遵守公司的行為準則與道德規範。／這座建築的設計符合最新的安全法規與標準。"],
+      ["(D) The small town had to contend with a sudden influx of tourists during the holiday season. / As a working parent, she constantly contends with the challenge of balancing her career and family responsibilities.", "小鎮在假期間不得不應付突然湧入的遊客。／身為職業父母，她經常得面對平衡事業與家庭責任的挑戰。"]
+    ]])
+  ),
+
+  card("L46", ["字彙與動詞辨析", "common people / retain + O"], "A, A",
+    st("As the speaker says, associate with people from all walks of life, from kings to [[L46-1|common]] people, but [[L46-2|retain]] a balanced world view in all your interactions.", "正如說話者所言，要與各行各業的人交往，從國王到平民百姓，但在所有互動中都要保持平衡的世界觀。") +
+    clue("• 第 1 空：與貴族國王（kings）相對的「平民、庶民（非貴族）」稱為 <code>common people / commoners</code>（呼應原詩的 <i>lose the common touch</i>）。<br>• 第 2 空：空格後有受詞名詞片語 <code>a balanced world view</code>！<br><code>remain</code> 是連綴動詞（Vi.），後接形容詞補語；<code>retain</code> 才是及物動詞（Vt.），後接名詞受詞！") +
+    ops([
+      ["(1) common / (2) retain", "40% / 53%", "<code>common people</code> 平民（非貴族）；<code>retain + O</code> 保有、保持（平衡的世界觀）。"],
+      ["(1) ordinary / (2) remain", "27% / 43%", "ordinary people 指平凡人（無特殊能力者）；remain 為不及物連綴動詞，不可直接接 a balanced world view 作受詞。"],
+      ["(1) normal / (2) restrain", "20% / 3%", "normal people 指正常人（無異常或畸形）；restrain 表限制、制止。"],
+      ["(1) average / (2) refrain", "13% / 0%", "the average person/people 指一般水準的人；refrain 表克制不做（搭配 from）。"]
+    ], "A") +
+    passage("53. & 54. L46 補充例句", [[
+      ["(A) retain (保留/保持)：It is important to retain important documents for future reference. / The company implemented strategies to retain its top talent and reduce employee turnover.", "保留重要文件供日後參考是很重要的。／公司實施策略以留住頂尖人才並降低員工流失率。"],
+      ["(B) remain (保持/繼續)：Despite the challenges, she remained determined to achieve her goals. / The company remained competitive in the market by continuously innovating its products.", "儘管面臨挑戰，她依然堅定追求目標。／公司透過持續創新產品在市場上保持競爭力。"],
+      ["(C) restrain (限制/抑制)：The police officer used handcuffs to restrain the suspect and prevent escape.", "警官使用手銬來制伏嫌犯並防止逃跑。"],
+      ["(D) refrain (避免/克制)：Please refrain from using your cell phones during the movie. / He refrained from making any comments until he had more information.", "請避免在電影放映期間使用手機。／在獲得更多資訊之前，他克制住不發表任何評論。"],
+      ["54. L46 associate with sb. 和…結交、來往：Most of the people whom Kevin associates with are celebrities or politicians.", "凱文交往的對象大多是名人或政客。"]
+    ]])
+  ),
+
+  card("L49", ["不定代名詞辨析", "not ... by either (兩者任一)"], "D",
+    st("You will unavoidably encounter both friends and foes in life, but avoid being overly hurt or influenced by [[L49|either]].", "你在人生中難免會遇到朋友與敵人，但要避免受到這兩者中任何一方的過度傷害或影響。") +
+    clue("前面提到「朋友與敵人（both friends and foes）」共兩方，且動詞 <code>avoid</code> 本身已帶有否定意味（「避免被…影響」），故用 <code>either</code>（= either friends or foes，兩者中的任何一方）。") +
+    ops([
+      ["that", "0%", "單數代名詞，不合語意。"],
+      ["those", "47%", "常見誤答！those 作代名詞時後面通常必須接修飾語（關係子句、介片或分詞），不能單獨放在句尾代替 friends and foes。"],
+      ["neither", "7%", "avoid 已有否定意思，若再用 neither 會造成雙重否定。"],
+      ["either", "47%", "指 <code>friends and foes</code> 兩者中的任何一方。"]
+    ], "D")
+  ),
+
+  card("L52", ["否定對等連接詞倒裝", ", nor does it... 也不…"], "D",
+    st("In addition, keep in mind that time is precious. It doesn’t wait for anyone, [[L52|nor]] does it give anyone a second chance.", "此外，要謹記時間是寶貴的。它不等待任何人，也不會給任何人第二次機會。") +
+    clue("前句為否定句 <code>It doesn't wait for anyone</code>，逗號後接倒裝結構 <code>___ does it give...</code>，唯一能當連接詞直接連接兩句並觸發後方否定倒裝的是對等連接詞 <code>nor</code>（也不…）。") +
+    ops([
+      ["or", "13%", "or 後方不倒裝。"],
+      ["not until", "3%", "直到…才…（語意不合且非對等連接詞）。"],
+      ["only", "6%", "副詞，無法連接兩個獨立子句。"],
+      ["nor", "78%", "對等連接詞「也不…」，後接倒裝句 <code>nor does it give...</code>。"]
+    ], "D") +
+    passage("56. L52 ~ 58. L55 課文與補充例句", [[
+      ["Norman doesn’t like going shopping with his girlfriend, nor does Jack.", "諾曼不喜歡陪女朋友逛街，傑克也是。"],
+      ["ambiguous adj. 語意模糊的（雙關歧義句）：He killed the man with a cane.", "他用拐杖殺了那個男人 ／ 他殺了那個拿拐杖的男人。"],
+      ["57. L54 All of this advice, from the poem’s start to its finish, is presented in the form of conditions, or “ifs.”", "從這首詩的開頭到結尾，所有這些忠告都是以條件句（亦即「如果」）的形式呈現。"],
+      ["advise vt. 建議 vs. advice n. [U] 建議（不可數）：Evans advised him to leave London. / Let me give you a piece/word of advice. Wear a blue suit to the interview. / He [[|took / followed]] my advice and sold the house. ((X) listen to / accept)", "伊凡斯建議他離開倫敦。／讓我給你一個忠告：穿藍色西裝去面試。／他採納了我的建議把房子賣了。"],
+      ["58. L55 in the form of... 以…的形式：The witch appeared in the form of a beautiful woman, trying to seduce the prince.", "女巫以美女的模樣出現，試圖誘惑王子。"]
+    ]])
+  ),
+
+  card("L56", ["句型搭配", "not ... until 直到…才…"], "B",
+    st("The poet doesn’t mention the result of following these conditions [[L56|until]] the final two lines, revealing that if you fulfill all of these conditions, you will become a man and the world will be in your hands.", "詩人直到最後兩行才提到遵循這些條件的結果，揭示了如果你達成所有這些條件，你就會成為一個真正的男人，而且整個世界都將掌握在你手中。") +
+    clue("與前面的否定動詞 <code>doesn’t mention</code> 構成 <code>not … until …</code>（直到最後兩行才提到…）。") +
+    ops([
+      ["despite", "8%", "儘管。"],
+      ["until", "81%", "<code>not ... until</code> 直到…才…。"],
+      ["regardless of", "11%", "不管；不顧。"],
+      ["due to", "0%", "因為。"]
+    ], "B") +
+    passage("60. L61 補充例句", [[
+      ["the key to + N / V-ing（某事的關鍵，注意 to 為介系詞！）：Working well as a team is the key to success. / The missing guy probably holds the key to solving the crime.", "良好的團隊合作是成功的關鍵。／那名失蹤男子可能握有破案的關鍵。"]
+    ]])
+  ),
+
+  card("L61", ["字彙與複合關代", "celebrated (被歌頌的) / what (所重視的)"], "D, C",
+    st("In “If—,” Kipling lays out all of the qualities that are key to living a successful life. Instead of the qualities that are typically [[L61-1|celebrated]] in society—power, wealth, fame, and physical strength, [[L61-2|what]] Kipling values are virtues such as integrity, composure, humility, perseverance, and moderation.", "在《如果——》中，吉卜林列出了過成功生活所需的關鍵特質。吉卜林所重視的不是社會上通常歌頌推崇的特質——權力、財富、名聲與體力，而是正直、沉著、謙遜、毅力與中庸節制等美德。") +
+    clue("• 第 1 空：權力、財富、名聲是社會上通常被「歌頌、推崇、讚揚（celebrated）」的特質。<br>• 第 2 空：前半部 <code>Instead of the qualities...</code> 只是介系詞片語（不能當主詞！），逗號後面才是主要子句，主要動詞是 <code>are</code>，故需要複合關係代名詞 <code>what</code>（= the things/qualities that）引導名詞子句 <code>what Kipling values</code> 當整句的主詞，同時當及物動詞 <code>values</code> 的受詞！") +
+    ops([
+      ["(1) distributed / (2) which", "0% / 23%", "distributed 分配；若選 which 會變成形容詞子句，導致整句話沒有主詞！"],
+      ["(1) committed / (2) those", "18% / 18%", "committed 犯（罪）；those 不是連接詞，後面不能直接接 Kipling values（除非寫 those which Kipling values）。"],
+      ["(1) generated / (2) in which", "39% / 7%", "generated 產生；in which 後接完整子句，但 values 缺受詞。"],
+      ["(1) celebrated / (2) what", "18% / 52%", "<code>celebrated</code>（被歌頌讚揚的，如 <i>His songs celebrate the joys of love.</i>）；<code>what Kipling values</code>（吉卜林所重視的事物）。"]
+    ], "DC")
+  ),
+
+  card("L65", ["複合關係代名詞與被動搭配", "whoever / though / regarded as"], "C, B, B",
+    st("These values reveal why “If—” resonates with [[L65-1|whoever]] reads it and, [[L65-2|though]] over a century old, is [[L65-3|regarded]] as timeless to this day.", "這些價值觀揭示了為什麼《如果——》能與任何閱讀它的人產生共鳴，而且儘管已超過一個世紀之久，直到今天仍被視為永恆不朽。") +
+    clue("• 第 1 空：主格或受格的判斷是看「後方子句結構」，而非空格前的介系詞 <code>with</code>！因為後方動詞 <code>reads it</code> 缺「主詞」，故必須用主格的 <code>whoever</code>（= anyone who reads it）。<br>• 第 2 空：原句為 <code>though (the poem is) over a century old</code>，省略主詞與 be 動詞後留下形容詞片語，連接詞用 <code>though</code>（介系詞 despite 後只能接名詞，不能接形容詞 old！）。<br>• 第 3 空：空格後有介系詞 <code>as</code>（<code>is ___ as timeless</code>），四個選項中直接搭配 <code>as</code> 的是 <code>regarded as</code>（considered 不加 as；thought 須加 of as；looked 須加 on/upon as）。") +
+    ops([
+      ["(1) whatever / (2) despite / (3) considered", "7% / 45% / 42%", "whatever 指事物；despite 為介系詞不可接形容詞 old；considered 不搭配 as。"],
+      ["(1) whomever / (2) though / (3) regarded", "26% / 45% / 42%", "(1) whomever 為受格，不能當 reads 的主詞；(2) though 與 (3) regarded (as) 正確。"],
+      ["(1) whoever / (2) thus / (3) thought", "63% / 9% / 8%", "(1) whoever（正確）；thus 為副詞；thought 少 of。"],
+      ["(1) whichever / (2) however / (3) looked", "4% / 2% / 8%", "whichever 用於特定範圍選擇；looked 少 on/upon。"]
+    ], "CBB")
+  )
+].join('');
+
+/* === Part 2: 句型與翻譯練習 === */
+const h2 = '<h2 id="p2">課本句型與翻譯練習 (Whoever / Whatever / Whichever)</h2>' +
+  passage("句型觀念：複合關係代名詞引導「名詞子句」vs.「讓步副詞子句」", [[
+    ["【名詞子句】Whoever (= Anyone who) violates the traffic regulation will be fined.", "任何違反交通規則的人都將被罰款。"],
+    ["【名詞子句】Mia doesn’t believe whatever (= anything that) the politician says.", "米婭不相信那個政客說的任何話。"],
+    ["【名詞子句】Choose whichever of the T-shirts (= any of the T-shirts that) suits you best. They come in several sizes.", "選擇這些 T 恤中最適合你的任何一件。它們有好幾種尺寸。（whichever 用於前有先提到特定範圍的多個人事物）"],
+    ["【名詞子句】Rachel: Do you want tea or coffee? Monica: I don't mind. Whichever one you're making is fine.", "瑞秋：妳要茶還是咖啡？ 莫妮卡：我不介意，妳泡哪一種都可以。"],
+    ["【比較：讓步副詞子句 (Wh-ever = No matter wh-)】Whatever (= No matter what) happens, I’ll always stand by your side.", "無論發生什麼事，我都會一直站在你這邊。"],
+    ["【讓步副詞子句】Whoever (= No matter who) wins a gold medal in the Olympics, he or she will be regarded as the pride of his/her own country.", "無論是誰在奧運中贏得金牌，他或她都會被視為自己國家的驕傲。"]
+  ]]) + [
+  card("句型-1", ["複合關代", "Whoever (= Anyone who)"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">1. 任何沒有入境簽證的人都不被允許造訪這個國家。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Whoever has no entry visa is not allowed to visit this country.]]")+'</div></div>' + clue("<code>Whoever</code> 引導名詞子句當整句主詞，視為單數，搭配單數動詞 <code>has</code> 與 <code>is</code>。")),
+  card("句型-2", ["複合關代", "whatever / what is on one's mind"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">2. Tina 會告訴她最好的朋友她心裡所想的任何事。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Tina tells her best friend whatever / what is on her mind.]]")+'</div></div>' + clue("<code>whatever / what is on her mind</code> 作 <code>tells</code> 的直接受詞。")),
+  card("句型-3", ["複合關代", "Whichever + N"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">3. 你走的任何一條路都會帶你到中央車站。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Whichever road you take will lead you to the central station.]]")+'</div></div>' + clue("<code>Whichever road you take</code> 引導名詞子句當 <code>will lead</code> 的主詞。")),
+  card("句型-4", ["複合關代", "eat whatever she wants"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">4. Lucy 不能想吃什麼就吃什麼，因為她正在節食。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Lucy can’t just eat whatever she wants, for she is on a diet.]]")+'</div></div>' + clue("<code>whatever she wants</code>（= anything that she wants）作 <code>eat</code> 的受詞。")),
+  card("句型-5", ["複合關代", "Whichever country"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">5. 任何率先引爆原子彈的國家都將引發另一場世界大戰。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Whichever country explodes an atomic bomb first will trigger another world war.]]")+'</div></div>' + clue("在眾多國家之中「無論哪一個率先引爆原子彈的國家」，用 <code>Whichever country...</code> 當主詞。")),
+  card("句型-6", ["複合關代", "Whoever wants to apply for..."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">6. 任何想應徵這份工作的人都應該至少擁有碩士學位。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Whoever wants to apply for this job should have at least a master’s degree.]]")+'</div></div>' + clue("<code>Whoever</code>（= Anyone who）當主詞，接單數動詞 <code>wants</code>。")),
+  card("句型-7", ["複合關代", "whatever + N + S + V"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">7. 那位勤奮的學生竭盡所能完成老師交派給他的任何作業。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The diligent student did everything he could to finish whatever assignment the teacher gave him.]]")+'</div></div>' + clue("<code>whatever assignment the teacher gave him</code>（= any assignment that the teacher gave him）。"))
+].join('');
+
+document.getElementById('app').innerHTML = h1 + h2;
+const secs=[['p1','P3 註解 & L1~L65 課文講解'],['p2','句型與翻譯練習']];
+document.getElementById('nav').innerHTML=secs.map(s=>'<a href="#'+s[0]+'">'+s[1]+'</a>').join('')+'<button id="tg">全部收合</button>';
+let open=true;
+document.getElementById('tg').onclick=function(){open=!open;document.querySelectorAll('details.q').forEach(d=>d.open=open);this.textContent=open?'全部收合':'全部展開';};
+</script>
+<script src="bookmark.js"></script>
+</body>
+</html>

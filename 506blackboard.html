@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>506 Blackboard</title>
+<style>
+:root{--bg:#faf8f4;--fg:#222;--card:#fff;--line:#e4ded3;--acc:#9a3b2e;--ok:#1f7a4d;--no:#b3261e;--mut:#6b6558;--hl:#fff1c9}
+@media(prefers-color-scheme:dark){:root{--bg:#161512;--fg:#e8e4da;--card:#201f1b;--line:#3a372f;--acc:#e08a78;--ok:#6fcf9a;--no:#f08a82;--mut:#a39d8f;--hl:#4a3f1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+.top{max-width:900px;margin:auto;padding:28px 18px 10px}
+.top h1{margin:0 0 4px;font-size:1.6rem;color:var(--acc)}
+.top p{margin:2px 0;color:var(--mut);font-size:.92rem}
+nav{position:sticky;top:0;z-index:9;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto;padding:8px 12px}
+nav a,nav button{flex:none;padding:5px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--fg);text-decoration:none;font:inherit;font-size:.88rem;cursor:pointer}
+nav a:hover,nav button:hover{border-color:var(--acc);color:var(--acc)}
+main{max-width:900px;margin:auto;padding:0 16px 70px}
+h2{margin:36px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--acc);font-size:1.3rem}
+h3{margin:0 0 8px;font-size:1.05rem;color:var(--acc)}
+.pas,.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.para{margin-bottom:14px}
+.s{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--line)}
+.en{font-family:Georgia,"Times New Roman",serif;font-size:1.02rem}
+.zh{color:var(--mut);font-size:.93rem}
+.note{color:var(--mut);font-size:.85rem;margin:6px 0 0}
+.bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 4px;border-radius:3px;font-weight:600}
+.bl sup{color:var(--acc);margin-right:3px;font-size:.7em}
+.bank{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.92rem;margin-bottom:8px}
+details.q>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+details.q>summary::-webkit-details-marker{display:none}
+.n{background:var(--acc);color:#fff;border-radius:6px;padding:0 10px;font-weight:700;font-size:1.05rem}
+.tag{font-size:.78rem;border:1px solid var(--acc);color:var(--acc);border-radius:99px;padding:0 9px;line-height:1.6}
+.tag.pos{border-color:var(--ok);color:var(--ok)}
+.ans{margin-left:auto;font-weight:700;color:var(--ok)}
+.qb{margin-top:10px}
+.stem{margin-bottom:8px;padding:8px 10px;background:var(--bg);border-radius:6px}
+.clue{margin:8px 0;padding:8px 12px;border-left:4px solid var(--acc);background:var(--bg);border-radius:0 6px 6px 0}
+.clue h4,.qb h4{margin:0 0 2px;font-size:.92rem;color:var(--acc)}
+ul.op{list-style:none;margin:6px 0 0;padding:0}
+ul.op li{padding:7px 10px;margin:5px 0;border-radius:6px;border:1px solid var(--line);font-size:.95rem}
+ul.op li.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 9%,transparent)}
+ul.op li.no{border-color:color-mix(in srgb,var(--no) 45%,transparent)}
+ul.op i{font-style:normal;font-weight:700;font-size:.82rem}
+li.ok i{color:var(--ok)}li.no i{color:var(--no)}
+small{color:var(--mut)}
+footer{max-width:900px;margin:auto;padding:20px 16px 40px;color:var(--mut);font-size:.85rem;line-height:1.6;border-top:1px solid var(--line);margin-top:40px;}
+footer a{color:var(--acc);text-decoration:none;font-weight:bold;}
+footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>506 Blackboard</h1>
+  <p>每題含：考點標籤 → 題幹逐句中英對照 → 解題線索 → 正解與全部誤答分析</p>
+  <p>圖例：<span class="bl">黃底</span> ＝ 正確答案填入處 ｜ <span class="tag">考點</span></p>
+</div>
+<nav id="nav"></nav>
+<main id="app"></main>
+<footer>
+  限定用途教學教材。本詳解為教學輔助，題目版權屬原出版單位。<br>
+  💡 <b>問題回報與建議：</b> Line: etpaul ｜ IG: <a href="https://www.instagram.com/etpaul" target="_blank">@etpaul</a>
+</footer>
+
+<script>
+const L="ABCD";
+const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[([^|\]]*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const SENT={};
+function passage(title,paras,note){
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[([^|\]]+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  return '<section class="pas"><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
+}
+function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
+const clue=t=>'<div class="clue"><h4>解題線索</h4>'+t+'</div>';
+function ops(list,ans,lab){lab=lab||'ABCDEF';return '<ul class="op">'+list.map((o,i)=>{const k=ans.indexOf(lab[i])>=0;return '<li class="'+(k?'ok':'no')+'"><b>'+(lab==='ABCDEF'&&list.length<=4?'('+L[i]+') ':lab==='ABCDEF'?'('+'ABCDEF'[i]+') ':'')+o[0]+'</b>'+(o[1]?' <small>'+o[1]+'</small>':'')+' <i>'+(k?'✔ 正解':'✘ 誤答')+'</i><br>'+o[2]+'</li>';}).join('')+'</ul>';}
+function card(n,tags,ans,body){
+  return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
+}
+
+const st=(en,zh)=>'<div class="stem"><div class="en">'+fx(en)+'</div><div class="zh">'+zh+'</div></div>';
+
+/* === Part 1: L1 ~ L107 課文講解與非題目句子依序呈現 === */
+const h1 = '<h2 id="p1">L1 ~ L107 課文講解 (I Have a Dream)</h2>' + [
+  card("L1", ["慣用搭配與語意精析", "treat A as equals 把…當作地位平等的人對待"], "C",
+    st("On August 28, 1963, Martin Luther King, Jr., marched to the Lincoln Memorial in Washington, DC and delivered a historic speech before a crowd of over 250,000 people. In that speech, King outlined his hopes for the future—a time when racism would end and African Americans would be treated by whites [[L1|as equals]].", "1963 年 8 月 28 日，馬丁・路德・金恩二世遊行至華盛頓特區的林肯紀念堂，在超過二十五萬名群眾面前發表了一場歷史性的演說。在那場演說中，金恩勾勒出他對未來的希望——一個種族歧視終結、非裔美國人被白人當作地位平等的人來對待的時代。") +
+    clue("注意 <code>equally</code> 與 <code>as equals</code> 的細膩語意差異：<br>• <code>equal</code> (n.)：地位同等之人（8. L7）；<code>treat A as B</code>：把 A 當作 B 來看待（7. L6）。<br>• 若說 <code>African Americans would be treated by whites equally</code>：只代表「所有黑人被白人一視同仁地對待（沒有哪個黑人比較尊貴，就算全部黑人都一起被白人平等地虐待也叫 treated equally）」，並未表達「黑人與白人地位平等」！<br>• <code>African Americans would be treated by whites <b>as equals</b></code>：才是「黑人被白人當作（與白人自己）<b>地位平等的人</b>來對待」！") +
+    ops([
+      ["to equal", "2%", "動詞「等同於、比得上」，不合 treat 用法。"],
+      ["equally", "73%", "超高誤答率！忽略主詞只有 African Americans（而非 Everyone），需用 <code>as equals</code> 才能表達「被白人視為與白人地位對等的人」。"],
+      ["as equals", "23%", "作為地位平等的人（<code>treat sb as equals</code>）。"],
+      ["to be equaled", "2%", "被比得上、被追平。"]
+    ], "C") +
+    passage("2. L1 ~ 8. L7 補充例句", [[
+      ["(A) His achievements in the field of science cannot be easily equaled by others.", "他在科學領域的成就不容易被其他人追平（超越）。"],
+      ["(B) In a fair society, everyone should be treated equally, regardless of their background.", "在公平的社會中，每個人都應該被平等對待，不論其背景為何。"],
+      ["(C) The two nations sat down for negotiations as equals, seeking a diplomatic solution.", "這兩個國家作為地位平等的夥伴坐下來談判，尋求外交解決方案。"],
+      ["(D) The record-breaking performance by the athlete has yet to be equaled by any competitor.", "這位運動員破紀錄的表現尚未被任何競爭對手追平。"],
+      ["3. L2 march (1) 遊行；行軍 (2) walk determinedly and angrily 生氣地走：She marched in and demanded an apology.", "她氣沖沖地走進來要求道歉。"],
+      ["4. L3 make/give/deliver a speech 做演講 ｜ 5. L5 a time when... = a time in which = a future in which ｜ 6. blacks = black people (negro 為舊時稱呼，現代具冒犯性)；黃種人 Asian", "課文用法整理。"],
+      ["7. L6 treat A as B 表「把 A 當作 B 來看待」：The B&B owner treats his guests as his own family.", "這位民宿老闆把客人當作自己的家人對待。"]
+    ]])
+  ),
+
+  card("L7", ["turn out 三大句型結構", "S + turned out to be..."], "C",
+    st("[[L7|That speech turned out]] to be a decisive moment in the civil rights movement.", "那場演說結果成為民權運動中的一個決定性時刻。") +
+    clue("觀察空格後面直接接的是不定詞 <code><b>to be</b> a decisive moment...</code>，而且整句話沒有其他動詞或子句！<br><code>turn out</code> 三種句型對照：<br>1. <code><b>S + turn out</b> + to be...</code>（單一主詞 + 動詞 + 不定詞）<br>2. <code><b>It turns out that</b> + S + V...</code>（that 後面必須是完整動詞 <code>was</code> 而非 to be！）<br>3. <code><b>As it turned out,</b> S + V...</code>（As 引導從屬子句，逗號後還必須有另一個主要子句！）") +
+    ops([
+      ["As that speech turned out", "11%", "As 是連接詞，後面必須有第 2 個句子與動詞，不能只接 to be。"],
+      ["It turned out that the speech", "10%", "that 子句內必須有完整動詞 <code>was</code>（不可接 to be）。"],
+      ["That speech turned out", "79%", "構成 <code>That speech (S) turned out (V) to be...</code>。"],
+      ["With that speech turned out", "0%", "介系詞片語，會導致整句話沒有動詞。"]
+    ], "C") +
+    passage("9. L7 補充例句", [[
+      ["Everyone thought the quiet new student was unfriendly, but she turned out to be the most loyal friend I've ever had.", "大家都以為那位安靜的新同學不友善，但她結果卻是我有過最忠實的朋友。"],
+      ["As it turned out, they were both right. / As it turned out, he passed the exam quite easily.", "結果證明，他們兩個都是對的。／結果他相當輕鬆地通過了考試。"],
+      ["It turned out that (= As it turned out,) she had known him when they were children.", "原來她小時候就認識他了。"]
+    ]])
+  ),
+
+  card("L8", ["省略 If 之假設倒裝", "Had + S + not + p.p."], "D",
+    st("[[L8|Had]] Dr. King not made the speech, the United States might not have introduced a series of laws to grant new rights to African Americans within just a few years.", "要是當時金恩博士沒有發表那場演說，美國可能就不會在短短幾年內推出一連串賦予非裔美國人新權利的法律。") +
+    clue("觀察空格後面已經有主詞 <code>Dr. King</code> 以及否定過去分詞 <code>not made the speech</code>！<br>原句為 <code>If Dr. King had not made the speech</code>，省略 <code>If</code> 後將助動詞 <code>Had</code> 移至句首倒裝：<code><b>Had</b> Dr. King not made the speech</code>（= <code>Had it not been for / Without / But for Dr. King's speech</code>）。<br>11. L11：<code>within</code> 在…（時間、範圍）之內：<i>You should learn to live within your means.</i>（量入為出；<code>means</code> 財富/方法/工具，單複同形；<code>riches</code> 財富，複數）。") +
+    ops([
+      ["Had it not been", "10%", "缺少介系詞 <code>for</code>，且後方是子句 <code>Dr. King not made...</code> 而非名詞片語。"],
+      ["If it had not been for", "30%", "<code>If it had not been for</code> 後面只能接<b>名詞片語</b>（如 <i>Dr. King's speech</i>），不能接 <code>Dr. King not made the speech</code>！"],
+      ["Should", "6%", "Should 用於萬一假設（後接原形 make），不接過去分詞 made。"],
+      ["Had", "55%", "省略 If 的過去完成式假設倒裝：<code>Had + S + not + p.p.</code>。"]
+    ], "D")
+  ),
+
+  card("L12", ["介系詞 + 複合關係代名詞", "in what (= in the demonstration that)"], "D",
+    st("I am happy to join with you today [[L12|in what]] will go down in history as the greatest demonstration for freedom in the history of our nation.", "我很高興今天能與你們一起參與這場將在歷史上留名、成為我國歷史上最偉大爭取自由示威遊行的盛會。") +
+    clue("1. <code>join (with) sb <b>in</b> + 活動</code>（與某人一起參與某活動）。<br>2. 空格前面是時間副詞 <code>today</code>（<b>沒有先行詞名詞</b>！），而空格後面直接接動詞 <code>will go down in history...</code>（缺主詞！），故必須用包含先行詞的複合關係代名詞 <code>what</code>（= <code>the thing/demonstration that</code>），合起來即為 <code>in what</code>！") +
+    ops([
+      ["when", "19%", "when 後面必須接完整子句（S + V），但後面缺主詞。"],
+      ["which", "53%", "超高誤答率！前面是 <code>you today</code>，沒有先行詞名詞可供 which 修飾，且缺介系詞 in！"],
+      ["in which", "15%", "前面沒有先行詞名詞，且 in which 後面必須接完整子句（S + V）。"],
+      ["in what", "13%", "<code>in + what (= the demonstration that) will go down in history...</code>。"]
+    ], "D")
+  ),
+
+  card("L15", ["介系詞 + 所有格關係代名詞", "in whose symbolic shadow"], "C",
+    st("Five score years ago, a great American, [[L15|in whose]] symbolic shadow we stand today, signed the Emancipation Proclamation.", "一百年前，一位偉大的美國人——今天我們就站在他象徵性的庇蔭之下——簽署了《解放奴隸宣言》。") +
+    clue("結構拆解：主詞是 <code>a great American</code>（指林肯總統，因為紀念集會就辦在林肯紀念堂林肯雕像前），主要動詞是最後面的 <code>signed the Emancipation Proclamation</code>。<br>兩個逗號中間為非限定關係子句：還原為 <code>and we stand <b>in his</b> symbolic shadow today</code>。<br>因為「连接詞 + 所有格（<code>and + his</code>）」＝ <code><b>whose</b></code>，連同前面的介系詞 <code>in</code> 一起移到關係子句句首，即為 <code><b>in whose</b> symbolic shadow we stand today</code>！") +
+    ops([
+      ["in that", "7%", "in that 表「因為」，且 symbolic shadow 前缺所有格。"],
+      ["where", "23%", "若選 where，後面的名詞 <code>symbolic shadow</code> 就會懸空沒有介系詞與所有格連接。"],
+      ["in whose", "45%", "<code>= and in his (symbolic shadow)</code>，介系詞 in + 所有格關代 whose。"],
+      ["in which", "25%", "which 是主格或受格，不能修飾無冠詞的名詞片語 symbolic shadow（需用所有格 whose）。"]
+    ], "C") +
+    passage("14. L15 ~ 18. L20 課文與補充例句", [[
+      ["14. L15 score = 20（Five score years ago = 100 年前，呼應林肯《蓋茲堡演說》the Gettysburg Address 開頭名句：“Four score and seven years ago our fathers brought forth, on this continent, a new nation...” 八十七年前…）。", "演說典故與數字用法。"],
+      ["15. L15 score, hundred, thousand, million, billion, dozen, ton 用法：前有數字不加 s（Five score years）；前無數字加 s + of（scores of people 許多人）。", "數量詞複習。"],
+      ["16. L17 This momentous decree came as a great beacon light of hope to millions of Negro slaves who had been seared in the flames of withering injustice.", "這道重大的法令對於數百萬在令人畏縮的不公烈焰中備受煎熬的黑奴而言，宛如一座巨大的希望燈塔。"],
+      ["come as a surprise / relief / blow, etc. (to sb) ≒ be a surprise / relief / blow (to sb)：The decision came as a great relief to us all. / The news will come as no surprise to his colleagues.", "這項決定讓我們所有人都如釋重負。／這則消息對他的同事來說一點也不意外。"],
+      ["17. L19 withering adj. 令人畏縮的（wither vi. 枯萎 / vt. 使枯萎；使畏縮）", "字彙註解。"],
+      ["18. L20 It came as a joyous daybreak to end the long night of their captivity.", "它宛如歡樂的破曉黎明，終結了他們漫長的黑夜囚禁歲月。"]
+    ]])
+  ),
+
+  card("L22", ["修辭平行意象與字彙", "chains of discrimination 歧視的枷鎖"], "B",
+    st("But one hundred years later, the Negro still is not free. One hundred years later, the life of the Negro is still sadly crippled by the manacles of segregation and the [[L22|chains]] of discrimination.", "但一百年後的今天，黑人依然沒有獲得自由。一百年後的今天，黑人的生活依然悲慘地受到種族隔離的手銬與種族歧視的枷鎖所桎梏。") +
+    clue("觀察前面的平行暗喻修辭：<code>the <b>manacles</b> (手銬、鐐銬) of segregation</code>，後方對應的即是「歧視的鎖鏈／枷鎖（<code>the <b>chains</b> of discrimination</code>）」！<br>20. L24 字根：<code>segregation</code>（種族隔離）：<code>se- = apart</code>（分開）+ <code>greg- = group</code>（群體，如 <code>gregarious</code> 合群的／群居的）。") +
+    ops([
+      ["forms", "23%", "形式（缺乏與 manacles 呼應的枷鎖比喻意象）。"],
+      ["chains", "60%", "鎖鏈、枷鎖（與前面的 <code>manacles</code> 手銬構成完美對仗修辭）。"],
+      ["grounds", "6%", "理由、根據（常作 <code>on the grounds of</code>）。"],
+      ["claims", "11%", "主張、指控。"]
+    ], "B") +
+    passage("19. L22 選項補充例句", [[
+      ["(A) Various forms of discrimination exist in society, including racial, gender, and age discrimination.", "社會上存在著各種形式的歧視，包括種族、性別與年齡歧視。"],
+      ["(C) Discrimination on the grounds of race or gender is unacceptable in any civilized society.", "基於種族或性別理由的歧視在任何文明社會中都是不可接受的。"],
+      ["(D) Individuals have the right to file claims of discrimination if they experience unequal treatment.", "如果個人遭受不平等待遇，有權提出歧視指控。"]
+    ]])
+  ),
+
+  card("L25", ["對比修辭與字彙", "poverty vs. material prosperity (物質繁榮)"], "C",
+    st("One hundred years later, the Negro lives on a lonely island of poverty in the midst of a vast ocean of material [[L25|prosperity]]. One hundred years later, the Negro is still languishing in the corners of American society and finds himself an exile in his own land. And so we’ve come here today to dramatize a shameful condition.", "一百年後的今天，黑人生活在汪洋般龐大物質繁榮包圍下的一座貧窮孤島上。一百年後的今天，黑人依然在美國社會的角落裡受苦萎靡，發現自己在自己的土地上成了流亡者。因此，我們今天來到這裡，將這種可恥的處境公諸於世。") +
+    clue("觀察強烈的對比修辭：<br>• <code>a lonely island</code>（孤島） ↔ <code>a vast ocean</code>（汪洋大海）<br>• <code>of <b>poverty</b></code>（貧窮） ↔ <code>of material <b>prosperity</b></code>（物質繁榮／富裕）！") +
+    ops([
+      ["properties", "23%", "物理或化學的「物質特性（material properties）」。"],
+      ["support", "25%", "物質支援。"],
+      ["prosperity", "38%", "物質繁榮、富裕（<code>material prosperity</code>，與前面的 <code>poverty</code> 貧窮形成強烈對比）。"],
+      ["conditions", "14%", "物質條件。"]
+    ], "C") +
+    passage("21. L25 ~ 26. L36 課文與補充例句", [[
+      ["(C) The government's economic policies aim to promote material prosperity and improve living standards.", "政府的經濟政策旨在促進物質繁榮並提升生活水準。"],
+      ["(A) Engineers study the material properties of different metals to determine their suitability for specific applications.", "工程師研究不同金屬的物質特性，以確定其對特定應用的適用性。"],
+      ["(B) Providing material support to those in need is a humanitarian responsibility.", "為有需要的人提供物質支援是一項人道責任。"],
+      ["(D) The study aimed to assess the material conditions of households in low-income neighborhoods.", "該研究旨在評估低收入社區家庭的物質條件。"],
+      ["22. L29 find + O + OC（OC 可為名詞、形容詞、分詞或介系詞片語）：John found the errand boy an asset to his company. (名詞) / Everybody found Shanice very pleasant. (形容詞) / The residents found trash piled up everywhere in their neighborhood park. (分詞) / Lena now finds herself in the same situation that her husband was in a year ago. (介片)", "find + O + OC 四種補語例句。"],
+      ["24. L32 演講原文：There are those who are asking the devotees of civil rights, “When will you be satisfied?” We can never be satisfied as long as the Negro is the victim of the unspeakable horrors of police brutality. (devotee = someone who is devoted to sth 熱衷支持者)", "有人問民權運動的追隨者：「你們什麼時候才會滿足？」只要黑人仍是警察暴行難以言喻之恐怖下的受害者，我們就永遠不會滿足。"],
+      ["25. L34 horrors (usu. pl. = shocking or frightening things)：Nuclear war is one of the horrors that face the modern world. (be faced with = face 面臨)", "核戰是現代世界所面臨的恐怖威脅之一。"],
+      ["26. L36 We can never be satisfied as long as our bodies, heavy with the fatigue of travel, cannot gain lodging in the motels of the highways and the hotels of the cities.", "只要我們因旅途勞頓而沉重的身軀，無法在公路旁的汽車旅館與城市裡的飯店獲得住宿，我們就永遠不會滿足。（lodging = accommodation 住宿：It's £90 a week for board and lodging 膳宿費每週 90 英鎊；呼應第 9 課 1962 年背景的《幸福綠皮書》Green Book！）"]
+    ]])
+  ),
+
+  card("L39", ["剝奪動詞搭配", "be stripped of 被剝奪…"], "D",
+    st("We cannot be satisfied as long as the Negro’s basic mobility is from a smaller ghetto to a larger one. We can never be satisfied as long as our children are [[L39|stripped]] of their self-hood and (our children are) robbed of their dignity by a sign stating: “For Whites Only.”", "只要黑人的基本流動只是從較小的貧民窟搬到較大的貧民窟，我們就無法滿足。只要我們的孩子因為一塊寫著「限白人專用」的告示牌，而被剝奪了自我認同並被奪走尊嚴，我們就永遠不會滿足。") +
+    clue("三大「剝奪、奪走」動詞片語（與後方的 <code>and robbed of their dignity</code> 平行對稱）：<br>主動：<code>deprive / strip / rob + sb (人) + <b>of</b> + sth (被奪走之物)</code><br>被動：<code>sb + be deprived / <b>stripped</b> / <b>robbed</b> + <b>of</b> + sth</code>（= lose 失去／被奪走）。") +
+    ops([
+      ["rid", "30%", "<code>be rid of</code> 意為「擺脫（不想要的壞事物）」，但自我認同（self-hood）是寶貴的事物，是被「剝奪（stripped of）」而非擺脫！"],
+      ["in favor", "7%", "<code>be in favor of</code> 支持、贊同。"],
+      ["in awe", "4%", "<code>be in awe of</code> 對…感到敬畏。"],
+      ["stripped", "59%", "<code>are stripped of their self-hood</code>（被剝奪了他們的自我人格與認同）。"]
+    ], "D") +
+    passage("27. L39 補充例句", [[
+      ["(A) After a thorough decluttering, I was finally rid of unnecessary belongings in my home.", "經過徹底斷捨離整理後，我終於擺脫了家中不必要的物品。"],
+      ["(B) Public opinion is generally in favor of investing in renewable energy sources.", "輿論普遍支持投資再生能源。"],
+      ["(C) The young musicians were in awe of the famous conductor they had the opportunity to work with.", "年輕音樂家們對有機會合作的著名指揮家心懷敬畏。"],
+      ["(D) After the scandal, the athlete was stripped of his medals and banned from competing.", "醜聞曝光後，該運動員被剝奪獎牌並禁止參賽。"],
+      ["A lot of these children have been deprived/stripped/robbed of a normal home life. / The courts cannot deprive/strip/rob me of the right to see my child.", "這些孩子中有許多人被剝奪了正常的家庭生活。／法院不能剝奪我探視孩子的權利。"]
+    ]])
+  ),
+
+  card("L41", ["介系詞 + 關代 + to VR", "nothing for which to vote"], "A",
+    st("We cannot be satisfied as long as a Negro in Mississippi cannot vote and a Negro in New York believes he has nothing [[L41|for which]] to vote.", "只要密西西比州的黑人無法投票，而且紐約州的黑人認為自己沒有任何值得投票支持的對象，我們就無法滿足。") +
+    clue("結構還原：<br><code>he has nothing [which he can vote <b>for</b>]</code><br>= <code>he has nothing [to vote <b>for</b>]</code><br>= <code>he has nothing [<b>for which</b> to vote]</code>（將介系詞 <code>for</code> 移至關係代名詞 <code>which</code> 之前，並保留不定詞 <code>to vote</code>）！<br>因為「投票支持（某候選人或理念）」是 <code>vote <b>for</b></code>，故選 <code>for which</code>。") +
+    ops([
+      ["for which", "70%", "<code>nothing for which to vote = nothing to vote for</code>（沒有值得投票支持的對象或目標）。"],
+      ["in which", "11%", "在某場所投票。"],
+      ["against which", "19%", "投票反對。"],
+      ["by which", "0%", "透過某種投票方式。"]
+    ], "A") +
+    passage("28. L41 選項補充例句", [[
+      ["(A) I have carefully considered the candidates, and I am still unsure for which to vote in the upcoming election.", "我仔細考慮了各候選人，但在即將到來的選舉中仍不確定該投給誰。"],
+      ["(B) The polling station is well-organized, providing a comfortable environment in which to vote.", "投票所規劃完善，提供舒適的投票環境。"],
+      ["(C) After thorough consideration, I have decided against which to vote on the proposed changes to the city's traffic regulations.", "深思熟慮後，我已決定對該市交通法規修改案投下反對票。"],
+      ["(D) The election committee discussed the various methods by which to vote, including both traditional and electronic options.", "選委會討論了各種投票方式，包括傳統與電子投票選項。"]
+    ]])
+  ),
+
+  card("L44", ["句型搭配", "not ... until 直到…才…"], "D",
+    st("No, no, we are not satisfied, and we will not be satisfied [[L44|until]] justice rolls down like waters, and righteousness (rolls down) like a mighty stream.", "不，不，我們並不滿足，而且我們永遠不會滿足，直到正義如水奔流，公義如浩瀚溪流般傾瀉而下。") +
+    clue("與前面的否定 <code>we will not be satisfied</code> 構成 <code>not ... until ...</code>（直到正義如水奔流，我們才會滿足）。<br>30. L47：<code>Let us not wallow in the valley of despair, I say to you today, my friends.</code>（<code>wallow in self-pity / despair / defeat = indulge in</code> 沉溺於自憐／絕望／挫敗之中：<i>His tired mind continued to wallow in self-pity.</i>）。") +
+    ops([
+      ["whereas", "3%", "然而。"],
+      ["since", "3%", "自從／既然。"],
+      ["as if", "7%", "彷彿。"],
+      ["until", "87%", "<code>not ... until</code> 直到…才…。"]
+    ], "D")
+  ),
+
+  card("L49", ["分詞片語搭配", "deeply rooted in 深植於…"], "B",
+    st("And so even though we face the difficulties of today and tomorrow, I still have a dream. It is a dream deeply [[L49|rooted]] in the American dream.", "因此，儘管我們面對今日與明日的種種困難，我依然有一個夢。這是一個深深植根於美國夢之中的夢想。") +
+    clue("注意空格前是 <code>It is a dream deeply ___ in...</code>（過去分詞片語 <code>(which is) deeply ___ in</code> 修飾 a dream）：<br>• <code>be (deeply) rooted in...</code>：深深植根於、根源於…（✔）<br>• <code>originate in / derive from</code>：當「起源於…」時為<b>主動不及物用法</b>，不可用被動過去分詞 <code>originated in / derived in</code>！") +
+    ops([
+      ["originated", "7%", "originate in 為主動不及物，不用過去分詞表被動。"],
+      ["rooted", "85%", "<code>(which is) deeply rooted in the American dream</code>（深深植根於美國夢）。"],
+      ["immersed", "0%", "沉浸於（通常指人沉浸於活動或文化中）。"],
+      ["derived", "7%", "derive 搭配介系詞 <code>from</code>（derive from），不搭配 in。"]
+    ], "B") +
+    passage("31. L49 選項補充例句", [[
+      ["(A) Many popular sayings and proverbs originate in folk wisdom and cultural traditions.", "許多通俗諺語起源於民間智慧與文化傳統。"],
+      ["(B) Her values and principles are rooted in her upbringing and cultural background.", "她的價值觀與原則根植於她的成長與文化背景。"],
+      ["(C) The students were fully immersed in the cultural exchange program, learning about traditions from around the world.", "學生們完全沉浸在文化交流計畫中，學習世界各地的傳統。"],
+      ["(D) The customs of the celebration derive from ancient rituals and practices.", "這項慶典的習俗源自古老的儀式與做法。"]
+    ]])
+  ),
+
+  card("L52", ["同位語名詞子句後移（短前長後）", "these truths ..., that all men are created equal"], "B",
+    st("I have a dream that one day this nation will rise up and live out the true meaning of its creed: “We hold these truths to be self-evident, [[L52|that]] all men are created equal.”", "我有一個夢，有一天這個國家將奮起，並實踐其立國信條的真正意義：「我們認為這些真理是不證自明的——人人生而平等。」") +
+    clue("《美國獨立宣言》（The Declaration of Independence, 1776）最著名的開頭句型：<br>「短前長後」原則：原結構為 <code>We hold (O: <b>these truths [that all men are created equal]</b>) (OC: <b>to be self-evident</b>).</code><br>因為後面還有好幾個平行的 <code>that</code> 同位語名詞子句（說明 <code>these truths</code> 的具體內容），為了避免受詞太長把受詞補語 <code>to be self-evident</code> 擠到太後面，故先講完受詞補語 <code>to be self-evident</code>，再用 <code>, <b>that</b> all men are created equal</code> 引出同位語名詞子句！") +
+    ops([
+      ["in which", "30%", "後方是說明 truths 的內容（同位語），而非在真理裡面做某事。"],
+      ["that", "19%", "引導名詞子句作 <code>these truths</code> 的同位語。"],
+      ["since", "37%", "常見誤答！「人人生而平等」本身就是那個不證自明的真理（truth）內容，不是原因！"],
+      ["so that", "15%", "表目的或結果，語意不合。"]
+    ], "B") +
+    passage("32. L52 ~ 35. L55 課文與補充例句", [[
+      ["《美國獨立宣言》(1776) 原文：We hold these truths to be self-evident, that all men are created equal, that they are endowed by their Creator with certain unalienable Rights, that among these are Life, Liberty and the pursuit of Happiness.", "我們認為這些真理是不證自明的：人人生而平等，造物者賦予他們若干不可剝奪的權利，其中包括生命權、自由權和追求幸福的權利。"],
+      ["33. L53 hold / consider + O + (to be) + OC 把…視為：She was held to be one of the most talented actors of her time.", "她被公認為是她那個時代最有才華的演員之一。"],
+      ["34. L54 all men are created (X) equally → (O) equal (= When all men are created, they are equal，主詞相同時省略「連接詞 + 主詞 + be」，保留主詞補語形容詞 equal！)", "重要文法觀念。"],
+      ["35. L55 I have a dream that one day on the red hills of Georgia, the sons of former slaves and the sons of former slave owners will be able to sit down together at the table of brotherhood.", "我有一個夢，有一天在喬治亞州的紅山丘上，昔日黑奴的後代與昔日奴隸主的後代，將能夠在手足情誼的桌旁並肩坐在一起。"]
+    ]])
+  ),
+
+  card("L58", ["同位語插入後之主要動詞", "even the state of Mississippi ... will be transformed"], "A",
+    st("I have a dream that one day even the state of Mississippi, a state sweltering with the heat of injustice, sweltering with the heat of oppression, [[L58|will be]] transformed into an oasis of freedom and justice.", "我有一個夢，有一天甚至連密西西比州——一個在不公的熱浪中煎熬、在壓迫的熱浪中煎熬的州——也將轉變為自由與正義的綠洲。") +
+    clue("結構剖析：在 <code>that</code> 子句中，主詞是 <code>even the state of Mississippi</code>，兩個逗號中間的 <code>, a state sweltering with the heat of injustice, sweltering with the heat of oppression,</code> 是修飾密西西比州的同位語，因此空格處需要填 that 子句的<b>主要動詞</b>（與前後段落的 <code>will rise up / will be able to...</code> 時態一致），故填 <code>will be</code>！") +
+    ops([
+      ["will be", "48%", "與整段 <code>I have a dream that one day ... will ...</code> 平行的未來被動式。"],
+      ["to be", "0%", "不定詞不能作 that 子句的主要動詞。"],
+      ["being", "30%", "常見誤答！分詞不能單獨作子句的主要動詞！"],
+      ["would be", "22%", "全段排比句主動詞為現在式 <code>I have a dream that one day...</code>，子句皆用真實未來式 <code>will</code> 而非過去式 would。"]
+    ], "A") +
+    passage("36. L60 補充例句", [[
+      ["sweltering = scorching = searing (adj. = extremely hot 酷熱難耐的)：High school students in Taiwan generally live in a hell sweltering with (incessant/endless) exams and tests.", "台灣的高中生普遍生活在一個充滿無盡大小考試煎熬的地獄裡。"],
+      ["with = because of（因為…而…）：They were trembling with fear. / Jack beamed with pleasure when he heard the news. / He was too weak with hunger to cry.", "他們因恐懼而顫抖。／傑克聽到消息時高興得眉開眼笑。／他餓到虛弱得哭不出來。"]
+    ]])
+  ),
+
+  card("L63", ["名句字彙辨析", "the content of their character 品格的內涵"], "C",
+    st("I have a dream that my four little children will one day live in a nation where they will not be judged by the color of their skin but by the content of their [[L63|character]].", "我有一個夢，我的四個年幼孩子有一天將生活在一個不以他們的膚色，而是以他們品格的內涵來評價他們的國家。") +
+    clue("金恩博士最廣為人知的千古名句：<code>not be judged by the color of their skin, but by the content of their <b>character</b></code>（不是依他們的膚色，而是依他們「品格／品性的內涵」來評斷）！<br><code>character vs. personality</code>：<br>• <code>character</code>：品格、品性（與道德、正直、是非對錯有關的內在人格特質，且與 <code>color</code> 構成頭韻 <b>c</b>olor / <b>c</b>ontent / <b>c</b>haracter！）<br>• <code>personality</code>：外在社交個性（如外向、害羞、幽默等，無關道德評判）") +
+    ops([
+      ["ratings", "3%", "評分、收視率／滿意度（如 <i>approval rating</i>）。"],
+      ["messages", "7%", "訊息。"],
+      ["character", "31%", "品格、品性（<code>the content of their character</code>）。"],
+      ["personality", "59%", "常見誤答！評斷一個人是否值得尊重是看其道德「品格（character）」，而非外向或內向的「社交個性（personality）」！"]
+    ], "C") +
+    passage("38. L63 ~ 53. L91 課文與補充例句完整收錄", [
+      [
+        ["There is a negative side to his character that you haven't seen yet. / It’s a small town of (great) character. / Despite their different personalities, they became best friends. / She is intelligent, hard-working and personable (adj. 外表與個性討人喜歡的).", "他品性中有消極的一面是你還沒見過的。／這是個很有特色的小鎮。／儘管個性不同，他們仍成為摯友。／她既聰明、勤奮又討人喜歡。"],
+        ["39. L64 not... but... 表「不是…而是…」，連接詞性相同的字詞：The whale is not a fish but a mammal. (N.) / The child is not stupid but naïve. (adj.) / The book was found not in my car but in my office. (介片) / The young man got what he wanted not because he was lucky but because he was determined. (副子) 【注意】此句型通常不用在動詞：(X) I won’t wait until tomorrow but do it now. → (O) I won’t wait until tomorrow. Instead, I’ll do it now.", "not A but B 對等結構與動詞限制。"],
+        ["40. L64 by 表「依據…(判斷)」：Never judge a book by its cover. / Her performance was amazing by any standard.", "切勿以貌取人。／以任何標準來看，她的表現都令人驚艷。"]
+      ],
+      [
+        ["41. L67 I have a dream that one day, down in Alabama, with its vicious racists, with its governor having his lips dripping with the words of “interposition” and “nullification”—one day right there in Alabama little black boys and black girls will be able to join hands with little white boys and white girls as sisters and brothers.", "我有一個夢，有一天在南方的阿拉巴馬州——儘管那裡有惡毒的種族主義者，儘管那裡的州長嘴裡滿是「州權干預」與「拒絕執行聯邦法」的言詞——有一天就在阿拉巴馬州那裡，黑人小男孩與小女孩將能與白人小男孩與小女孩如兄弟姊妹般手牽著手。"],
+        ["down = in / toward the south（在南方／往南）：They drove all the way down from Taipei to Kenting. / Now he's bought a villa down south (= in the south).", "他們一路從台北開車南下到墾丁。／現在他在南方買了一棟別墅。"],
+        ["42. & 43. L67 with + O + OC 表「附帶狀態／在…的情況下」：It is not polite to speak with your mouth full of food. / Esther sat under a tree with her head down. / The girl ran away with tears running down her cheeks. / The boy lay on the grass with his eyes closed. / The robber with a gun in his hand burst into the bank.", "with + O + OC 五種常見補語例句。"],
+        ["44. L68 使役動詞 have 三種補語：1. have + sb/sth + V-ing（使…持續處於某動作狀態）：The joke had the whole class roaring with laughter. / The strange object in the sky had the woman shouting “Aliens!” ｜ 2. have + sb + VR（= get sb to VR 叫/安排某人做）：The minister will have his press officer announce the news tomorrow. ｜ 3. have + sth + p.p.（安排讓某事被完成）：Don’t worry. I’ll have the report finished before the board meeting. / We had a burglar alarm fitted by a security company last year.", "have + O + V-ing / VR / p.p. 完整比較。"],
+        ["45. L68 drip (vi. 滴水) / be dripping (濕到滴水) / be dripping with (充滿著…)：Her boots were muddy and her hair was dripping. / The hand that held the gun was dripping with sweat. / The complaint letter was dripping with anger and accusation.", "她的靴子沾滿泥巴，頭髮濕得滴水。／握槍的手滿是汗水。／這封投訴信充滿了憤怒與指責。"]
+      ],
+      [
+        ["46. L75 I have a dream that one day every valley shall be exalted, and every hill and mountain shall be made low, the rough places will be made plain, and the crooked places will be made straight; and the glory of the Lord shall be revealed and all flesh shall see it together.", "我有一個夢，有一天每座深谷都將升起，每座山岡與高山都將被削平，崎嶇之地將成為平原，彎曲之處將被修直；主的榮耀將顯現，凡有血氣的眾生都將一同看見。"],
+        ["L76 shall (formal) 表示發言者的決心 (= will)：You shall receive all the money that is owed to you. / He shall be given a fair trial.", "你必定會收到所有欠你的錢。／他必定會獲得公平的審判。"],
+        ["47. L76 exalt = raise / praise（使升高；讚頌；字根 alt- = high：altitude 海拔高度、altar 祭壇/聖餐桌）：After a five-year courtship, he led her to the altar (= married her).", "經過五年的交往，他與她步入禮堂。"],
+        ["48. L81 all flesh 所有凡人、眾生（相對於神） vs. all human beings 全人類（相對於動物，或強調人性）", "聖經修辭用語。"],
+        ["49. L82 This is our hope, and this is the faith that I go back to the South with. (= ... the faith with which I go back to the South.)", "這是我們的希望，也是我帶回南方的信念。"],
+        ["50. L84 With this faith, we will be able to hew out of the mountain of despair a stone of hope. (hew/cut/carve A out of B 從 B 鑿/剪/雕刻出 A，因受詞 a stone of hope 較重要且為尾重排比，將 out of the mountain of despair 前置)：I cut this article out of a magazine for you. / The monument was hewn out of the side of a mountain.", "懷著這個信念，我們將能從絕望的高山中鑿出一塊希望之石。／我從雜誌上剪下這篇文章給你。／這座紀念碑是從山壁上鑿出來的。"],
+        ["51. L85 With this faith, we will be able to transform the jangling discords of our nation into a beautiful symphony of brotherhood.", "懷著這個信念，我們將能把我們國家刺耳的不和諧音，轉化為一首手足情誼的美麗交響曲。"],
+        ["52. L87 With this faith, we will be able to work together, to pray together, to struggle together, to go to jail together, to stand up for freedom together, knowing that we will be free one day. (★ 自由的雙重意涵：External Freedom 外在法律政治自由 vs. Internal Freedom 內在心靈解放：I unlocked the cage to set the prisoner free and realized that I was the prisoner.)", "懷著這個信念，我們將能一起工作、一起祈禱、一起奮鬥、一起入獄、一起為自由挺身而出，因為我們知道我們終有一天會獲得自由。"],
+        ["53. L91 And when this happens, when we allow freedom [to] ring, when we let it ring from every village and every hamlet (小村落), from every state and every city, we will be able to speed up that day when (= and on that day = on which) all of God’s children, black men and white men, Jews and Gentiles, Protestants and Catholics, will be able to join hands and sing in the words of the old Negro spiritual: Free at last! Free at last! Thank God Almighty, we are free at last!", "而當這一切發生時，當我們讓自由之聲響起，當我們讓它從每一個村莊與每一個小聚落、從每一州與每一座城市響起時，我們就能加速那一天的到來——屆時上帝所有的兒女，黑人與白人、猶太人與非猶太人、新教徒與天主教徒，將能攜手同唱那首古老的黑人靈歌：終於自由了！終於自由了！感謝全能的上帝，我們終於自由了！"]
+      ]
+    ])
+  ),
+
+  card("L102", ["動詞片語與過去時態", "appealed to human emotions 打動人類情感"], "A",
+    st("Although Dr. King’s dream has yet to be fully realized, his speech did lead to significant change. His eloquence [[L102|appealed]] to human emotions, and his rhetorical skills awoke the consciences of many Americans who had ignored or condoned racial oppression.", "雖然金恩博士的夢想尚未完全實現，但他的演說確實帶來了重大的改變。他的雄辯口才打動（訴諸）了人類的情感，而他的修辭技巧喚醒了許多曾忽視或縱容種族壓迫的美國人的良知。") +
+    clue("1. 前後動詞皆為過去式（<code>did lead ... awoke ... had ignored</code>），選項中只有 <code>(A) appealed</code> 是過去式！<br>2. <code>appeal to human emotions</code> 表示「打動、觸動、訴諸於人類的情感」。") +
+    ops([
+      ["appealed", "21%", "過去式，構成 <code>appealed to human emotions</code>（打動人心、訴諸情感）。"],
+      ["cater", "7%", "迎合、滿足（時態錯誤，且語意不合）。"],
+      ["give rise", "69%", "超高誤答率！一來時態是現在式（與過去式 awoke 不合），二來「口才」不是「製造出人類原本沒有的情緒（give rise to）」，而是「打動／訴諸於（appealed to）」人們的情感！"],
+      ["adjust", "3%", "適應、調整（時態與語意皆錯）。"]
+    ], "A") +
+    passage("54. L102 選項補充例句", [[
+      ["(A) The charismatic speaker's words appealed to the emotions of the crowd.", "這位充滿魅力的演講者的話語打動了群眾的情感。"],
+      ["(B) The restaurant has a menu designed to cater to both vegetarians and meat lovers.", "這家餐廳的菜單設計同時滿足素食者與肉食愛好者。"],
+      ["(C) The new policy gave rise to a heated debate among the members of the committee.", "新政策在委員會成員間引發了激烈辯論。"],
+      ["(D) After the upgrade, users need to adjust to the new interface of the software.", "升級後，使用者需要適應軟體的新介面。"]
+    ]])
+  ),
+
+  card("L104", ["類比句型", "A is to B what/as C is to D"], "C, D",
+    st("“I Have a Dream” was to civil rights supporters [[L104|what / as]] a battle cry is to a warrior.", "《我有一個夢》之於民權支持者，就如同戰吼之於戰士一般。") +
+    clue("經典類比句型：<code>A is to B <b>what / as</b> C is to D</code>（A 之於 B，猶如 C 之於 D）。<br>句型推導：<br>① <i>Women are a puzzle to men.</i>（女人對男人而言就像個謎）<br>② <i>Greek is a puzzle to the world.</i> → 轉為名詞子句 <code>what Greek is to the world</code>（希臘文對世人而言是什麼）<br>③ 代入①的 <i>a puzzle</i> 並依短前長後原則將 <code>to men</code> 移前：<i>Women are <b>to men what</b> Greek is <b>to the world</b>.</i><br>56. L107：<i>The speech continues to inspire people to this day and will likely do so (= inspire people) as long as inequality exists.</i>") +
+    ops([
+      ["that", "15%", "不可用 that。"],
+      ["which", "3%", "不可用 which。"],
+      ["what", "18%", "標準用法：<code>A is to B what C is to D</code>。"],
+      ["as", "64%", "標準用法：<code>A is to B as C is to D</code>（what 與 as 皆正確）。"]
+    ], "CD")
+  )
+].join('');
+
+/* === Part 2: 句型講義與翻譯練習（省略 If 之假設倒裝 Were / Had / Should） === */
+const h2 = '<h2 id="p2">課本句型與翻譯練習（省略 If 之假設倒裝：Were / Had / Should）</h2>' + [
+  card("句型-1", ["省略 If 過去假設倒裝", "Had + S + p.p."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">1. 如果早知道你要來，我就會準備你最愛的點心。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Had I known you were coming (would come), I would have prepared your favorite snacks.]]")+'</div></div>' + clue("<code>If I had known...</code> 省略 If 倒裝為 <code>Had I known...</code>（in advance = beforehand 事先）。")),
+  card("句型-2", ["省略 If 過去假設倒裝", "Had + S + not + p.p."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">2. 如果你當時沒有邊走路邊打簡訊，就不會撞到樹了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Had you not texted and walked at the same time, you would not have bumped into a tree.]]")+'<br>（或：'+fx("[[|Had you not been texting while (you were) walking, you might/would not have bumped into the tree.]]")+'）</div></div>' + clue("注意：否定倒裝時，<code>not</code> 必須放在主詞 <code>you</code> 後面（<code>Had you not...</code>，絕對不可寫 Hadn't you...）！")),
+  card("句型-3", ["省略 If 過去假設倒裝", "Had + S + not been..."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">3. 要不是他醉成那樣，他不會把你誤認為 Samantha。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Had he not been so drunk, he wouldn’t have mistaken you for Samantha.]]")+'</div></div>' + clue("「把 A 誤認為 B」為 <code>mistake A for B</code>（三態：<code>mistake - mistook - mistaken</code>）。")),
+  card("句型-4", ["省略 If 過去假設倒裝", "Had + S + not been..."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">4. 如果那時候 Leah 沒有懷孕，他們可能就不會結婚了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Had Leah not been pregnant, they might not have gotten/got married.]]")+'</div></div>' + clue("<code>If Leah had not been pregnant</code> → <code>Had Leah not been pregnant</code>。")),
+  card("句型-5", ["省略 If 未來絕無可能假設倒裝", "Were + S + to VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">5. 如果哪天人類可以回到過去，你想回到哪個時刻？</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Were humans to go back in time (to the past), what moment/time would you like/want to return/go back to?]]")+'</div></div>' + clue("與未來事實相反或極不可能實現的假設：<code>If + S + were to VR</code> → 倒裝為 <code>Were + S + to VR</code>。")),
+  card("句型-6", ["省略 If 萬一假設倒裝", "Should + S + VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">6. 萬一這個有花到你任何錢，把帳單寄給我。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Should this cost you anything (any money), just send me the bill (send the bill to me).]]")+'</div></div>' + clue("萬一假設句可搭配祈使句：<code>If this should cost...</code> → 倒裝為 <code>Should this cost...</code>。")),
+  card("句型-7", ["Were it not for + N", "與現在事實相反"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">7. 若沒有國際合作，疫苗的研發就無法成為可能。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Were it not for international/global cooperation, the development of vaccines (vaccine development) would not be possible.]]")+'</div></div>' + clue("<code>If it were not for + N</code> → 倒裝為 <code>Were it not for + N</code>（= But for / If not for / Without）。")),
+  card("句型-8", ["Had it not been for + N", "與過去事實相反"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">8. 若不是因為定期健檢，他不會發現自己有癌症。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Had it not been for the regular health check-ups (examination), he would not have found (out) that he had cancer.]]")+'</div></div>' + clue("<code>If it had not been for + N</code> → 倒裝為 <code>Had it not been for + N</code>。")),
+  card("句型-9", ["Were it not for + N", "與現在事實相反"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">9. 若不是因為這個 COVID-19 大流行 (pandemic)，我們就不會在家工作或在家上課了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Were it not for the COVID-19 pandemic, we would not be working from home or studying from home.]]")+'</div></div>' + clue("描述當時正在進行的居家辦公與上課狀態，主要子句用 <code>would not be V-ing</code>，條件句用 <code>Were it not for...</code>。"))
+].join('');
+
+document.getElementById('app').innerHTML = h1 + h2;
+const secs=[['p1','L1~L107 課文講解'],['p2','假設倒裝句型與翻譯']];
+document.getElementById('nav').innerHTML=secs.map(s=>'<a href="#'+s[0]+'">'+s[1]+'</a>').join('')+'<button id="tg">全部收合</button>';
+let open=true;
+document.getElementById('tg').onclick=function(){open=!open;document.querySelectorAll('details.q').forEach(d=>d.open=open);this.textContent=open?'全部收合':'全部展開';};
+</script>
+<script src="bookmark.js"></script>
+</body>
+</html>

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>404 Blackboard</title>
+<style>
+:root{--bg:#faf8f4;--fg:#222;--card:#fff;--line:#e4ded3;--acc:#9a3b2e;--ok:#1f7a4d;--no:#b3261e;--mut:#6b6558;--hl:#fff1c9}
+@media(prefers-color-scheme:dark){:root{--bg:#161512;--fg:#e8e4da;--card:#201f1b;--line:#3a372f;--acc:#e08a78;--ok:#6fcf9a;--no:#f08a82;--mut:#a39d8f;--hl:#4a3f1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+.top{max-width:900px;margin:auto;padding:28px 18px 10px}
+.top h1{margin:0 0 4px;font-size:1.6rem;color:var(--acc)}
+.top p{margin:2px 0;color:var(--mut);font-size:.92rem}
+nav{position:sticky;top:0;z-index:9;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto;padding:8px 12px}
+nav a,nav button{flex:none;padding:5px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--fg);text-decoration:none;font:inherit;font-size:.88rem;cursor:pointer}
+nav a:hover,nav button:hover{border-color:var(--acc);color:var(--acc)}
+main{max-width:900px;margin:auto;padding:0 16px 70px}
+h2{margin:36px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--acc);font-size:1.3rem}
+h3{margin:0 0 8px;font-size:1.05rem;color:var(--acc)}
+.pas,.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.para{margin-bottom:14px}
+.s{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--line)}
+.en{font-family:Georgia,"Times New Roman",serif;font-size:1.02rem}
+.zh{color:var(--mut);font-size:.93rem}
+.note{color:var(--mut);font-size:.85rem;margin:6px 0 0}
+.bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 4px;border-radius:3px;font-weight:600}
+.bl sup{color:var(--acc);margin-right:3px;font-size:.7em}
+.bank{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.92rem;margin-bottom:8px}
+details.q>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+details.q>summary::-webkit-details-marker{display:none}
+.n{background:var(--acc);color:#fff;border-radius:6px;padding:0 10px;font-weight:700;font-size:1.05rem}
+.tag{font-size:.78rem;border:1px solid var(--acc);color:var(--acc);border-radius:99px;padding:0 9px;line-height:1.6}
+.tag.pos{border-color:var(--ok);color:var(--ok)}
+.ans{margin-left:auto;font-weight:700;color:var(--ok)}
+.qb{margin-top:10px}
+.stem{margin-bottom:8px;padding:8px 10px;background:var(--bg);border-radius:6px}
+.clue{margin:8px 0;padding:8px 12px;border-left:4px solid var(--acc);background:var(--bg);border-radius:0 6px 6px 0}
+.clue h4,.qb h4{margin:0 0 2px;font-size:.92rem;color:var(--acc)}
+ul.op{list-style:none;margin:6px 0 0;padding:0}
+ul.op li{padding:7px 10px;margin:5px 0;border-radius:6px;border:1px solid var(--line);font-size:.95rem}
+ul.op li.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 9%,transparent)}
+ul.op li.no{border-color:color-mix(in srgb,var(--no) 45%,transparent)}
+ul.op i{font-style:normal;font-weight:700;font-size:.82rem}
+li.ok i{color:var(--ok)}li.no i{color:var(--no)}
+small{color:var(--mut)}
+footer{max-width:900px;margin:auto;padding:20px 16px 40px;color:var(--mut);font-size:.85rem;line-height:1.6;border-top:1px solid var(--line);margin-top:40px;}
+footer a{color:var(--acc);text-decoration:none;font-weight:bold;}
+footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>404 Blackboard</h1>
+  <p>每題含：考點標籤 → 題幹逐句中英對照 → 解題線索 → 正解與全部誤答分析</p>
+  <p>圖例：<span class="bl">黃底</span> ＝ 正確答案填入處 ｜ <span class="tag">考點</span></p>
+</div>
+<nav id="nav"></nav>
+<main id="app"></main>
+<footer>
+  限定用途教學教材。本詳解為教學輔助，題目版權屬原出版單位。<br>
+  💡 <b>問題回報與建議：</b> Line: etpaul ｜ IG: <a href="https://www.instagram.com/etpaul" target="_blank">@etpaul</a>
+</footer>
+
+<script>
+const L="ABCD";
+const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[([^|\]]*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const SENT={};
+function passage(title,paras,note){
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[([^|\]]+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  return '<section class="pas"><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
+}
+function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
+const clue=t=>'<div class="clue"><h4>解題線索</h4>'+t+'</div>';
+function ops(list,ans,lab){lab=lab||'ABCDEF';return '<ul class="op">'+list.map((o,i)=>{const k=ans.indexOf(lab[i])>=0;return '<li class="'+(k?'ok':'no')+'"><b>'+(lab==='ABCDEF'&&list.length<=4?'('+L[i]+') ':lab==='ABCDEF'?'('+'ABCDEF'[i]+') ':'')+o[0]+'</b>'+(o[1]?' <small>'+o[1]+'</small>':'')+' <i>'+(k?'✔ 正解':'✘ 誤答')+'</i><br>'+o[2]+'</li>';}).join('')+'</ul>';}
+function card(n,tags,ans,body){
+  return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
+}
+
+const st=(en,zh)=>'<div class="stem"><div class="en">'+fx(en)+'</div><div class="zh">'+zh+'</div></div>';
+
+/* === Part 1: L1 ~ L54 課文講解與非題目句子依序呈現 === */
+const h1 = '<h2 id="p1">L1 ~ L54 課文講解</h2>' + [
+  card("L1", ["關係副詞", "非限定用法 , where"], "D",
+    st("Are you feeling adventurous? Then spread your wings and travel 90 km southeast of Taiwan[[L1|, where]] you’ll discover a part of the country unlike any other.", "你覺得充滿冒險精神嗎？那就展開雙翅，前往台灣東南東方 90 公里處，在那裡你會發現這個國家獨一無二的地方。") +
+    clue("1. 後方子句 <code>you’ll discover a part of the country</code> 主詞、及物動詞、受詞皆完整，故須用關係副詞 <code>where</code>（= 介系詞 + which）修飾前面的地點。<br>2. 先行詞 <code>90 km southeast of Taiwan</code>（台灣東南東方 90 公里處）為明確、唯一的特定地理位置，需加上逗號構成<b>非限定用法</b>（翻譯成兩個獨立句子：前往台灣東南東方 90 公里處，在那裡你會發現…）。") +
+    ops([
+      ["which", "3%", "關係代名詞後接不完整子句，但後方 S + V + O 已完整。"],
+      [", which", "13%", "同上，後方不缺主詞或受詞，不可用 which。"],
+      ["where", "12%", "未加逗號為限定用法（用於範圍不明確的普通名詞，如 <i>the country where they first met</i>），但此處先行詞位置已明確限定。"],
+      [", where", "72%", "非限定關係副詞，補充說明在「台灣東南東方 90 公里處」那個地方會發現的事物。"]
+    ], "D") +
+    passage("L1 補充例句", [[
+      ["under sb’s wing 受…保護 / take ... under sb’s wing 照顧：Jose took Alison under his wing during her first weeks in his firm.", "荷西在艾莉森進公司的頭幾個星期裡特別關照她。"]
+    ]])
+  ),
+
+  card("L3", ["複合形容詞", "N-adj. 依賴海洋的"], "B",
+    st("Known as Lanyu or Orchid Island, this tiny drop of earth in the Pacific is home to the Tao, Taiwan’s only [[L3|ocean-dependent]] indigenous tribe.", "這座在太平洋中被稱為蘭嶼的小島，是台灣唯一依賴海洋維生的原住民族——達悟族的家園。") +
+    clue("複合形容詞結構：<code>N-adj. / N-p.p. = adj./p.p. + 介 + N</code>。<br>因為「依賴海洋的」原結構為 <code>a tribe (which is) dependent on the ocean</code>（= <code>which depends on the ocean</code>），將名詞移至形容詞前即構成 <code>an ocean-dependent tribe</code>。") +
+    ops([
+      ["ocean-depended", "56%", "常見陷阱！<code>depend on</code> 為不及物動詞片語，沒有被動式 <code>be depended on/by the ocean</code>，故不可用 p.p.。"],
+      ["ocean-dependent", "39%", "由 <code>dependent (adj.) on the ocean</code> 轉換而來的正確複合形容詞。"],
+      ["depending-ocean", "3%", "順序與結構皆錯（且 depend 為不及物動詞，不構成 N-Ving）。"],
+      ["depended-ocean", "2%", "無此結構。"]
+    ], "B") +
+    passage("L3 補充例句", [[
+      ["a drop (of sth) 極少量、一點點：I'll have a little more tea, just a drop. / He deserved it. I don’t have a drop of sympathy for him.", "我想再喝一點茶，只要一滴就好。／他活該，我對他沒有半點同情。"],
+      ["be home to 是…的所在地（棲息地）：According to biologists, this forest is home to several rare species of birds.", "根據生物學家的說法，這片森林是數種稀有鳥類的棲息地。"]
+    ]])
+  ),
+
+  card("L6", ["介系詞片語辨析", "at the heart of 核心"], "A",
+    st("The Tao people are the people of the “alibangbang,” or flying fish, one of Mother Nature’s greatest gifts. The annual flying fish season is [[L6|at the heart of]] Tao culture and comes with many traditions and taboos.", "達悟族是「alibangbang」（亦即飛魚，大自然最偉大的禮物之一）的子民。一年一度的飛魚季是達悟文化的核心，並伴隨著許多傳統與禁忌。") +
+    clue("飛魚季是達悟文化「最核心、最重要的部分」，用 <code>be at the heart of</code>。") +
+    ops([
+      ["at the heart of", "80%", "為…的核心／最重要的部分（例：<i>Education is at the heart of every developed society.</i>）。"],
+      ["under the surface of", "11%", "在…的表面之下；潛藏的（例：<i>There may be issues under the surface of this seemingly perfect project.</i>）。"],
+      ["in the middle of", "7%", "在…的中間；正在進行某事中（例：<i>I was in the middle of cooking dinner when the phone rang.</i>）。"],
+      ["on top of", "2%", "在…頂部；完全掌握（例：<i>be on top of my game</i>）。"]
+    ], "A")
+  ),
+
+  card("L9", ["分詞構句與字彙", "Spanning 橫跨"], "A",
+    st("[[L9|Spanning]] around eight months of the year, the flying fish season involves multiple customs and rituals.", "飛魚季橫跨一年中的大約八個月，包含多項習俗與儀式。") +
+    clue("空格後接明確的時間跨度 <code>around eight months of the year</code>（一年中的約八個月），表「橫跨（一段明確區間）」用 <code>span</code>，主動分詞構句為 <code>Spanning</code>。") +
+    ops([
+      ["Spanning", "88%", "橫跨（有明確的時間或空間跨度，此處橫跨八個月）。"],
+      ["Extending", "2%", "延長（通常指將原本的期限延長到某時間，如 <i>extended until Friday</i>）。"],
+      ["Persisting", "1%", "（壞事、疾病症狀等）持續存在（如 <i>The symptoms may persist for several weeks.</i>）。"],
+      ["Continuing", "9%", "繼續（不及物動詞時通常搭配 <code>for + 時間</code>，如 <i>continuing for decades</i>）。"]
+    ], "A")
+  ),
+
+  card("L11", ["分詞片語簡化", "held vs. takes place"], "A",
+    st("A special religious ceremony, usually [[L11|held]] in February, marks the beginning of this important period and ensures a prosperous and plentiful season.", "一場通常在二月舉行的特別宗教儀式，標誌著這個重要時期的開始，並確保一個繁榮且豐收的季節。") +
+    clue("句子已有主要動詞 <code>marks ... and ensures ...</code>，兩個逗號之間的 <code>, usually ___ in February,</code> 為形容詞子句簡化來的分詞片語，修飾主詞 <code>A special religious ceremony</code>。<br>• 若用及物動詞 <code>hold</code>：<code>(which is) usually held in February</code> → <code>usually held in February</code>。<br>• 若用不及物動詞 <code>take place / occur / happen</code>：必須保留關代 <code>which usually takes place</code> 或改為主動分詞 <code>usually taking place</code>。") +
+    ops([
+      ["held", "39%", "省略 <code>which is</code> 後的過去分詞片語，表「被舉行」。"],
+      ["takes place", "51%", "常見誤答！<code>takes place</code> 是具備時態的動詞，前面沒有關係代名詞 <code>which</code>，會造成一個句子有兩個動詞卻無連接詞。"],
+      ["occurred", "5%", "occur 為不及物動詞（無被動），不能當過去分詞表被動，且時態與現在簡單式不合。"],
+      ["happens", "6%", "缺關係代名詞 which（應為 <code>which usually happens</code> 或 <code>usually happening</code>）。"]
+    ], "A") +
+    passage("L11 補充例句", [[
+      ["mark (vt.) 標誌著、代表：This tournament marks the official start of the season. / Her death marked the end of an era.", "這場錦標賽標誌著賽季的正式開始。／她的逝世標誌著一個時代的結束。"]
+    ]])
+  ),
+
+  card("L13", ["附帶狀況", "with + O + OC"], "C",
+    st("Tao boat captains head to the beach [[L13|with]] elaborate costumes on.", "達悟族的船長們穿著精緻的傳統服飾前往海灘。") +
+    clue("注意句尾有一個關鍵字 <code>on</code>（adj./adv. 穿戴在身上的 = being worn）！<br>此處為附帶狀況句型：<code>with + O (elaborate costumes) + OC (on)</code>，表「穿著精緻傳統服飾」。") +
+    ops([
+      ["wearing", "7%", "若用 wearing，句尾不可再加 on（應直接寫 <i>wearing elaborate costumes</i>）。"],
+      ["putting", "23%", "<code>put ... on</code> 強調「穿上」的瞬間動作，而非前往海灘時的穿戴狀態。"],
+      ["with", "69%", "構成 <code>with + O (elaborate costumes) + OC (on)</code>。"],
+      ["despite", "2%", "儘管，語意與結構皆不合。"]
+    ], "C")
+  ),
+
+  card("L15", ["平行結構與介系詞", "appeal to A to VR, and to B for N"], "D",
+    st("There, they pray and make sacrifices to appeal to the flying fish spirits to bless their tribe, [[L15|and to]] the gods for good fortune and courage on the dangerous seas.", "在那裡，他們祈禱並獻祭，懇求飛魚神靈保佑他們的部落，並向眾神祈求在危險海面上的好運與勇氣。") +
+    clue("<code>appeal</code> 的兩種重要搭配：<br>1. <code>appeal to sb to VR</code>：懇求／呼籲某人做某事<br>2. <code>appeal to sb for sth</code>：向某人懇求／祈求某物<br>本句結合兩種結構並省略重複的動詞：<code>to appeal <b>to</b> the flying fish spirits to bless their tribe, <b>and (appeal) to</b> the gods for good fortune...</code>。") +
+    ops([
+      ["to which", "10%", "關係子句缺動詞，且語意不通。"],
+      ["in addition to", "10%", "除了…之外，無法與後方的 for good fortune 構成合理搭配。"],
+      ["with respect to", "52%", "關於（= regarding），代入後變成「關於眾神為了好運」，語意不通。"],
+      ["and to", "28%", "對等連接詞 <code>and</code> 連接兩個 <code>(appeal) to + 對象</code> 的平行結構。"]
+    ], "D") +
+    passage("L15 ~ L18 補充例句", [[
+      ["seas (pl.) 海況 vs. waters (pl.) 海域、領海：A fishing boat is missing in rough seas off the coast of Kaohsiung. / The boat has sailed into Taiwanese/international waters.", "一艘漁船在高雄外海波濤洶湧的海面上失蹤。／這艘船已駛入台灣領海／公海。"],
+      ["restrict ... (to + N/V-ing) 限制：I try to restrict myself to two meals a day.", "我試著限制自己一天只吃兩餐。"]
+    ]])
+  ),
+
+  card("L18", ["代名詞指代", "those 代替複數名詞"], "B",
+    st("Although local fishers can catch flying fish between March and June, they are restricted to capturing only [[L18|those]] found in shallow waters.", "雖然當地漁民可以在三月到六月之間捕捉飛魚，但他們被限制只能捕捉在淺水海域發現的那些飛魚。") +
+    clue("為了避免重複前句出現過的複數名詞 <code>flying fish</code>（注意：fish 單複數同形，此處指許多飛魚，且原關係子句為 <code>that are found...</code>，代表為複數），後方又有過去分詞片語 <code>found in shallow waters</code> 修飾，故用複數代名詞 <code>those</code>。") +
+    ops([
+      ["which", "11%", "which 為關係代名詞，前面必須有先行詞名詞，後面必須有動詞（如 <i>fish which are found</i>）。"],
+      ["those", "69%", "代替複數名詞 <code>flying fish</code>，後接 <code>(that are) found in shallow waters</code>。"],
+      ["what", "12%", "複合關代 what 後方必須接具備時態的動詞（如 <i>what is/are found</i>），不可直接接過去分詞 found。"],
+      ["that", "8%", "代名詞 that 只能代替單數或不可數名詞。"]
+    ], "B")
+  ),
+
+  card("L18-小練習", ["代名詞指代小練習", "those 代替 friendships"], "D",
+    st("小練習：The friendships you build through kindness will last longer than [[L18-小練習|those]] built on convenience.", "你用善意建立的友誼，會比那些基於利益（圖方便）而建立的友誼更長久。") +
+    clue("代替句首複數名詞 <code>The friendships</code>，後接過去分詞片語 <code>(which are) built on convenience</code>。<br>補充：<code>out of convenience</code> 表「為了方便、基於利益」（如 <i>work together out of convenience</i>）。") +
+    ops([
+      ["what", "—", "缺動詞。"],
+      ["which", "—", "缺先行詞與動詞。"],
+      ["that", "—", "只能代替單數或不可數名詞。"],
+      ["those", "—", "代替複數名詞 <code>friendships</code>。"]
+    ], "D")
+  ),
+
+  card("L21", ["過去分詞後位修飾", "the time needed to VR"], "A",
+    st("During this period, netting any deep-sea or coral reef fish is not permitted. If the fishers didn’t follow this rule, various species would not have the time [[L21|needed]] to recover their numbers, and harmony with nature would be lost.", "在此期間，不允許用網捕撈任何深海魚或珊瑚礁魚類。如果漁民不遵守這項規定，各個物種就不會有恢復數量所需的時間，與大自然的和諧也將隨之喪失。") +
+    clue("原結構為 <code>the time [which is needed (by these species) to recover their numbers]</code>（= <code>the time which they need to recover...</code>），省略關代與 be 動詞後，保留過去分詞 <code>needed</code> 修飾 <code>the time</code>。") +
+    ops([
+      ["needed", "39%", "過去分詞片語 <code>(which is) needed to recover...</code> 修飾 the time。"],
+      ["in need", "43%", "常見誤答！<code>be in need (of)</code> 的主詞必須是「有需求的人或物」（如 <i>Many families are in need of food</i>），不是「時間（time）」本身缺乏什麼。"],
+      ["with the need", "8%", "語意與結構不通。"],
+      ["it needs", "10%", "主詞是複數的 <code>various species</code>，代名詞應為 <code>they need</code> 而非單數 it needs。"]
+    ], "A") +
+    passage("L21 補充例句", [[
+      ["recover = regain 恢復：It was some hours before she recovered consciousness. / She soon recovered herself (her composure).", "過了幾個小時她才恢復意識。／她很快就恢復了鎮定。"]
+    ]])
+  ),
+
+  card("L24", ["動詞字彙與搭配", "conclude with 以…結束"], "B",
+    st("At the end of June, the annual sea harvest [[L24|concludes]] with another ceremony to express gratitude and respect for nature’s endless cycles.", "在六月底，年度的海洋豐收季以另一場儀式作結，以表達對大自然無盡循環的感激與敬意。") +
+    clue("句首時間為 <code>At the end of June</code>（在六月底），年度海洋豐收季「以另一場儀式作結（concludes with another ceremony）」。") +
+    ops([
+      ["assists", "10%", "協助（常搭配 <code>assist in</code>）。"],
+      ["concludes", "51%", "<code>conclude with...</code>（= end with... 以…結束）。"],
+      ["accelerates", "18%", "加速。"],
+      ["initiates", "21%", "啟動、開始（與 At the end of June 及後文「不再捕魚」矛盾）。"]
+    ], "B") +
+    passage("L26 ~ L29 課文段落", [[
+      ["After the ceremony, flying fish can no longer be caught. Therefore, from July onward, only dried and stored alibangbang can be eaten.", "儀式結束後，就不再允許捕捉飛魚。因此，從七月起，只能食用曬乾並儲存起來的飛魚。"],
+      ["Furthermore, after the Mid-Autumn Festival, even these dried fish must no longer be consumed.", "此外，在中秋節過後，連這些飛魚乾也不得再食用。"]
+    ]])
+  ),
+
+  card("L30", ["名詞字彙辨析", "abundance 豐饒/充裕"], "C",
+    st("This custom seems to have been engraved in the locals’ hearts and is believed to prevent ill luck and guarantee [[L30|abundance]] in seasons to come.", "這項習俗似乎已深深刻印在當地人的心中，並被認為能防止厄運，且保證未來季節的豐收充裕。") +
+    clue("遵守不捕魚、不吃魚乾的習俗，被認為能防止厄運並保證未來季節的「豐饒、充裕（abundance）」。") +
+    ops([
+      ["harvest", "48%", "常見誤答！<code>harvest</code> 僅指「收成、收穫（可好可壞）」，若要表「豐收」必須加上形容詞（如 <code>a good/rich harvest</code>），單獨用 harvest 不能表「豐收」。"],
+      ["preservation", "7%", "保存、保護（這是原因/手段，而非神明保佑未來季節賜予的結果）。"],
+      ["abundance", "33%", "豐富、充裕、富足（呼應未來捕魚季漁獲豐沛）。"],
+      ["sustainability", "12%", "永續性（永續性是長期的概念，不搭配 <code>in seasons to come</code>「在未來的各個季節裡」）。"]
+    ], "C") +
+    passage("L34 課文段落與補充", [[
+      ["Just as the locals are concluding their scaly harvest for the year, scores of tourists begin arriving on Lanyu for the summer season.", "正當當地人結束這一年有鱗漁獲（飛魚）的收穫季時，大批遊客開始在夏季抵達蘭嶼。"],
+      ["scores of + 複數名詞 (= a large number of 許多的) ／ arrive in (大地方) vs. arrive at (小地方) vs. arrive on (島嶼)", "字彙與介系詞搭配"]
+    ]])
+  ),
+
+  card("L37", ["保留連接詞之分詞構句", "while + V-ing"], "A",
+    st("To make sure you don’t feel like a fish out of water, here are some basic guidelines to help you enjoy your stay while [[L37|respecting]] local traditions.", "為了確保你不會感到格格不入，這裡有一些基本指南，幫助你在享受停留期間的同時，也能尊重當地傳統。") +
+    clue("原句為 <code>... help you enjoy your stay while (you are) respecting local traditions.</code>，前後主詞皆為 <code>you</code>，保留連接詞 <code>while</code> 後，主動動作改為現在分詞 <code>respecting</code>。") +
+    ops([
+      ["respecting", "90%", "<code>while respecting</code>（在尊重當地傳統的同時）。"],
+      ["respected", "2%", "遊客是「主動尊重」傳統，非被動。"],
+      ["respect", "5%", "連接詞 while 後若無主詞 you，不可直接接原形動詞。"],
+      ["respective", "3%", "形容詞「各自的」，字義錯誤。"]
+    ], "A")
+  ),
+
+  card("L40", ["被動句型搭配", "be considered (to be)"], "D",
+    st("First, it is [[L40|considered]] (to be) a taboo to touch or photograph the Tao fishing boats without permission since it would bring bad luck.", "首先，未經許可觸摸或拍攝達悟族拼板舟被認為是一項禁忌，因為這會帶來厄運。") +
+    clue("注意空格後的 <code>(to be) a taboo</code>，沒有介系詞 <code>as</code>！<br>表「被認為是…」的動詞中，只有 <code>be considered</code> 後面可以直接接 <code>(to be) + N/adj.</code>，其餘皆須搭配 <code>as</code>：<br>• <code>be considered (to be) + N/adj.</code><br>• <code>be regarded / seen / viewed / thought of / looked upon + <b>as</b> + N/adj.</code><br>• <code>be referred to + <b>as</b> + N/adj.</code>（被稱為是）") +
+    ops([
+      ["regarded", "14%", "必須搭配 <code>as</code>（be regarded as）。"],
+      ["thought of", "16%", "必須搭配 <code>as</code>（be thought of as）。"],
+      ["referred to", "17%", "必須搭配 <code>as</code>（be referred to as）。"],
+      ["considered", "53%", "<code>is considered (to be) a taboo</code>，唯一可直接接 (to be) a taboo 的選項。"]
+    ], "D")
+  ),
+
+  card("L43", ["主詞補語 / 分詞構句", "uninvited 不請自來地"], "D",
+    st("Also, you should never enter locals’ private gardens [[L43|uninvited]] to view or sample drying fish.", "此外，你絕不應該不請自來地進入當地人的私人庭院觀看或品嚐正在曬乾的魚。") +
+    clue("原句為 <code>you should never enter locals’ private gardens (when you are) uninvited</code>，省略連接詞、主詞與 be 動詞後，留下形容詞／過去分詞 <code>uninvited</code> 作主詞補語，表「未受邀請地、不請自來地」。") +
+    ops([
+      ["undisturbed", "12%", "不受干擾的（如 <i>The beach is usually undisturbed.</i>）。"],
+      ["unattended", "15%", "無人看管的（如 <i>an unattended bag</i>）。"],
+      ["unprepared", "5%", "毫無準備的。"],
+      ["uninvited", "68%", "未受邀請的、不請自來的。"]
+    ], "D")
+  ),
+
+  card("L44", ["平行結構與助動詞省略", "(may be) spoiled"], "D",
+    st("Additionally, avoid asking about future fishing trips, as locals believe that the gods may be angered and the harvest [[L44|spoiled]] as a consequence.", "再者，避免詢問未來的出海捕魚行程，因為當地人相信神明可能會因此動怒，而漁獲也會因此遭到破壞。") +
+    clue("<code>locals believe</code> 後方連接兩個平行的 that 子句：<br><code>believe [(that) the gods may be angered] and [(that) the harvest (may be) <b>spoiled</b> as a consequence]</code>。<br>當同一動詞後的兩個 that 子句都有相同的助動詞與 be 動詞（<code>may be</code>）時，後句的 <code>may be</code> 可省略，直接留下過去分詞 <code>spoiled</code>（被破壞）與前面的 <code>angered</code> 對稱！") +
+    ops([
+      ["spoil", "—", "若當主動原形，the harvest（漁獲）是「被破壞」，語態不合。"],
+      ["spoils", "—", "語態錯誤，漁獲是被破壞。"],
+      ["spoiling", "—", "無法構成完整子句謂語。"],
+      ["spoiled", "—", "省略 <code>may be</code> 的過去分詞，與前句 <code>may be angered</code> 平行。"]
+    ], "D")
+  ),
+
+  card("L47", ["轉折與列舉副詞", "First ... Also ... Additionally ... Finally"], "C",
+    st("[[L47|Finally]], as a sign of respect for the local community and environment, don’t snorkel or dive in the island’s traditional fishing waters during the flying fish season. Such activities can disturb the local ecosystem.", "最後，作為對當地社區和環境的尊重，請勿在飛魚季期間於島上的傳統捕魚海域浮潛或潛水。這類活動會干擾當地的生態系統。") +
+    clue("觀察第四段的結構：作者依序提出尊重蘭嶼當地傳統的幾項指南：<code>First...</code>（首先，L40）→ <code>Also...</code>（此外，L43）→ <code>Additionally...</code>（再者，L44）→ <code>Finally...</code>（最後，L47）。") +
+    ops([
+      ["Therefore", "19%", "因此（此句是最後一項平行的旅遊守則，並非前一句的結果）。"],
+      ["On the other hand", "25%", "另一方面（前後無對比轉折）。"],
+      ["Finally", "44%", "最後（用於列舉的最後一點）。"],
+      ["In short", "13%", "簡言之（此句是提出「不要浮潛或潛水」的新規定，而非總結前文）。"]
+    ], "C")
+  ),
+
+  card("L50", ["不定詞形容詞用法", "much to learn"], "A",
+    st("The customs and taboos mentioned above reflect the importance of preserving and cherishing natural resources and local culture. The ancient wisdom of Lanyu’s Tao inhabitants thus appears to give us much [[L50|to learn]] about living in harmony with this planet.", "上述提到的習俗和禁忌反映了保存和珍惜自然資源與當地文化的重要性。因此，蘭嶼達悟族居民的古老智慧似乎給了我們許多關於如何與這個星球和諧共處的學習之處。") +
+    clue("<code>much to learn</code> = <code>much (that/which we should/can) learn</code>，不定詞 <code>to learn</code> 修飾前面的代名詞 <code>much</code>，表「許多值得我們學習的事物」（類似 <i>There is nothing to do.</i>）。") +
+    ops([
+      ["to learn", "71%", "不定詞片語後位修飾 much。"],
+      ["learning", "22%", "much 不接 V-ing 後位修飾。"],
+      ["learned", "7%", "語意指「未來值得去學習的」，而非已經被學會的。"],
+      ["that learns", "0%", "much 是被我們學習的受詞，不會主動去 learn。"]
+    ], "A")
+  ),
+
+  card("L54", ["常見 all 片語辨析", "after all 畢竟"], "D",
+    st("Everyone is, [[L54|after all]], in the same boat under nature’s wing.", "畢竟，在大自然的羽翼下，每個人都在同一條船上（休戚與共）。") +
+    clue("總結全篇：為什麼我們要向達悟族學習與地球和諧共處？「畢竟（after all）」，在大自然的羽翼下，每個人都在同一條船上。") +
+    ops([
+      ["above all", "14%", "最重要的是（= most importantly）。"],
+      ["all in all", "42%", "整體而言、總歸一句（常用於句首總結多項評估，不夾在 <code>is, ___, in the same boat</code> 解釋原因）。"],
+      ["in all", "7%", "總計、一共（用於計算數量或金額）。"],
+      ["after all", "38%", "畢竟、終究（用於補充根本原因或常理）。"]
+    ], "D")
+  )
+].join('');
+
+/* === Part 2: 課本句型與翻譯練習 === */
+const h2 = '<h2 id="p2">課本句型與翻譯練習</h2>' +
+  passage("句型 1（seem / appear）基礎例句", [[
+    ["例1：The exam seems to be very difficult because many students are frowning.", "這次考試似乎很難，因為許多學生都皺著眉頭。"],
+    ["例2：The old man appears to have forgotten the way home.", "這位老先生似乎已經忘記回家的路了。（過去已發生用 to have + p.p.）"],
+    ["例3：The local residents don’t seem to like the policy.", "當地居民似乎不喜歡這項政策。"]
+  ]]) + [
+  card("句1-1", ["句型1", "seem / appear (to be) + adj."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">1. 他似乎比以前更快樂了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|He appears/seems (to be) happier than before.]]")+'</div></div>' + clue("<code>seem / appear (to be) + 形容詞</code> 表「似乎…」。")),
+  card("句1-2", ["句型1", "seem / appear to have + p.p."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">2. 他似乎已經猜到答案了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|He appears/seems to have guessed the answer.]]")+'</div></div>' + clue("表示「似乎已經完成／在過去發生過」，不定詞需用完成式 <code>to have + p.p.</code>。")),
+  card("句1-3", ["句型1", "過去時態 appeared / seemed to VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">3. 我們以前從未見過，但她似乎知道我的一切。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|We had never met before, but she appeared/seemed to know everything about me.]]")+'</div></div>' + clue("「當時似乎知道」與過去基調一致，用 <code>appeared / seemed to know</code>。")),
+  card("句1-4", ["句型1", "appeared to have + p.p."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">4. 他似乎是把它留在家裡了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|He appeared/seemed to have left it at home.]]")+'</div></div>' + clue("「留在家裡」發生在「似乎」之前，用 <code>to have left</code>。")),
+  card("句1-5", ["句型1", "否定 doesn't seem (to be) + adj."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">5. 他似乎對他的工作不滿意。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|He doesn’t seem (to be) satisfied with his job.]]")+'</div></div>' + clue("「對…感到滿意」為 <code>be satisfied with</code>。")),
+  card("句1-6", ["句型1", "過去否定 didn't seem to VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">6. 她好像不贊同他。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|She didn’t seem to agree with him.]]")+'</div></div>' + clue("「贊同某人」為 <code>agree with sb</code>。")),
+  card("句2-A1", ["句型2", "with + O + V-ing (主動進行)"], "blowing", st("練習A-1：The room was cold with a strong wind [[句2-A1|blowing]] through the open window.", "強風從敞開的窗戶吹進來，房間裡很冷。") + clue("風（a strong wind）是「主動吹進來」，故受詞補語用現在分詞 <code>blowing</code>（選項：blowing / blown）。")),
+  card("句2-A2", ["句型2", "with + O + p.p. (被動完成)"], "carved", st("練習A-2：The wooden dining table is six feet long with words [[句2-A2|carved]] into all four sides.", "這張木製餐桌長六英尺，四面都刻有文字。") + clue("文字（words）是「被雕刻（carve）」上去的，故用過去分詞 <code>carved</code>（選項：carving / carved）。")),
+  card("句2-A3", ["句型2", "with + O + p.p. (被動狀態)"], "left", st("練習A-3：It was careless of Mandy to enter the store with her wallet [[句2-A3|left]] in her car.", "曼蒂真粗心，把錢包留在車上就走進了商店。") + clue("錢包（her wallet）是「被留在（left）」車裡，故用過去分詞 <code>left</code>（選項：leaving / left）。"))
+].join('') +
+  passage("句型 2（with + O + OC）練習 B (1~4)", [[
+    ["練習B-1：The boy is running toward us with his hands waving from side to side.", "那個男孩雙手左右揮動地朝我們跑過來。"],
+    ["練習B-2：My grandfather dozed off in the living room chair with the TV still on.", "我爺爺在客廳椅子上打瞌睡，而電視還開著。"],
+    ["練習B-3：The suspect was taken to the police station with his hands cuffed.", "嫌犯雙手被上銬地被帶往警察局。"],
+    ["練習B-4：Mary's boss left his office with the door open.", "瑪麗的老闆離開辦公室時門還開著。"]
+  ]]) + [
+  card("句2-C1", ["句型2", "with + 身體部位 + p.p."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">C1. 請盤腿坐在瑜珈墊上。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Please sit on the yoga mat with your legs crossed.]]")+'</div></div>' + clue("腿是「被交叉（盤起來）」的，故用過去分詞 <code>with your legs crossed</code>。")),
+  card("句2-C2", ["句型2", "with + O + V-ing"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">C2. 音樂放那麼大聲，我覺得很難保持專注。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|I find it hard to stay focused with loud music playing.]]")+'</div></div>' + clue("注意：表「專注的」形容詞要用 <code>focused</code>（<code>concentrated</code> 當形容詞是「濃縮的」而非專注的！）；音樂正在播放用 <code>with loud music playing</code>。"))
+].join('');
+
+/* === Part 3: 複習補充練習 === */
+const h3 = '<h2 id="p3">句型複習（與現在事實相反的假設語氣）</h2>' + [
+  card("複習-A2", ["與現在事實相反", "If I were..., I could..."], "參考解答", '<div class="stem"><div class="zh" style="color:inherit">A2. 如果我夠高的話，我就能搆到上層架子了。</div><div class="en" style="margin-top:6px"><b>參考解答：</b>'+fx("[[|If I were tall enough, I could reach the upper shelf.]]")+'</div></div>' + clue("與現在事實相反，be 動詞用 <code>were</code>。")),
+  card("複習-A3", ["與現在事實相反", "If + S + V-ed"], "參考解答", '<div class="stem"><div class="zh" style="color:inherit">A3. 如果 Ruth 覺得身體不舒服／覺得舒服，她可能就不會／就會來參加派對了。</div><div class="en" style="margin-top:6px"><b>參考解答：</b>'+fx("[[|If Ruth didn't feel well, she might not come to the party. / If Ruth felt well, she might come to the party.]]")+'</div></div>' + clue("注意：助動詞 <code>didn't</code> 後面必須接原形動詞 <code>feel</code>（不可寫 didn't felt）！")),
+  card("複習-A4", ["與現在事實相反", "If + S + were"], "參考解答", '<div class="stem"><div class="zh" style="color:inherit">A4. 如果那位店員很友善，他就不會跟顧客爭吵了。</div><div class="en" style="margin-top:6px"><b>參考解答：</b>'+fx("[[|If the clerk were friendly, he would not argue with customers.]]")+'</div></div>' + clue("與現在事實相反，If 子句用 <code>were</code>，主要子句用 <code>would/might not + VR</code>。")),
+  card("複習-A5", ["與現在事實相反", "If + S + weren't"], "參考解答", '<div class="stem"><div class="zh" style="color:inherit">A5. 如果 Bernard 沒有生病，他就能環遊世界了。</div><div class="en" style="margin-top:6px"><b>參考解答：</b>'+fx("[[|If Bernard weren’t sick, he would be able to travel around the world.]]")+'</div></div>' + clue("正面假設：「如果他沒生病，他就能夠（<code>would be able to</code>）環遊世界」。")),
+  card("複習-A6", ["與現在事實相反", "didn't + VR"], "參考解答", '<div class="stem"><div class="zh" style="color:inherit">A6. 如果學生們沒有聽從老師的指示，他們就無法準時完成任務了。</div><div class="en" style="margin-top:6px"><b>參考解答：</b>'+fx("[[|If the students didn't follow the teacher's instructions, they wouldn't finish the task on time.]]")+'</div></div>' + clue("注意：<code>didn't</code> 後接原形 <code>follow</code>（不可寫 didn't followed）。")),
+  card("複習-B", ["與現在事實相反", "B2 ~ B6 綜合演練"], "參考解答", '<div class="stem"><div class="en">• B2: '+fx("[[|If Jason were richer, he would/could buy his girlfriend a new car.]]")+'<br>• B3: '+fx("[[|If Teresa had more friends, she might not feel alone.]]")+'<br>• B4: '+fx("[[|If Leonard drove more slowly, he would not get traffic tickets so often.]]")+'<br>• B5: '+fx("[[|If Patricia didn't oversleep, she would not miss the bus every day.]]")+'<br>• B6: '+fx("[[|If Ian worked harder, he would not have to stay in the office until eight o’clock every evening.]]")+'</div><div class="zh">B2~B6 與現在事實相反之假設語氣完整解答。</div></div>' + clue("掌握核心公式：<code>If + S + V-ed / were, S + would/could/might + (not) + VR</code>。"))
+].join('');
+
+document.getElementById('app').innerHTML = h1 + h2 + h3;
+const secs=[['p1','L1~L54 課文講解'],['p2','句型練習'],['p3','句型複習']];
+document.getElementById('nav').innerHTML=secs.map(s=>'<a href="#'+s[0]+'">'+s[1]+'</a>').join('')+'<button id="tg">全部收合</button>';
+let open=true;
+document.getElementById('tg').onclick=function(){open=!open;document.querySelectorAll('details.q').forEach(d=>d.open=open);this.textContent=open?'全部收合':'全部展開';};
+</script>
+<script src="bookmark.js"></script>
+</body>
+</html>

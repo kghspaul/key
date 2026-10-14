@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>503 Blackboard</title>
+<style>
+:root{--bg:#faf8f4;--fg:#222;--card:#fff;--line:#e4ded3;--acc:#9a3b2e;--ok:#1f7a4d;--no:#b3261e;--mut:#6b6558;--hl:#fff1c9}
+@media(prefers-color-scheme:dark){:root{--bg:#161512;--fg:#e8e4da;--card:#201f1b;--line:#3a372f;--acc:#e08a78;--ok:#6fcf9a;--no:#f08a82;--mut:#a39d8f;--hl:#4a3f1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+.top{max-width:900px;margin:auto;padding:28px 18px 10px}
+.top h1{margin:0 0 4px;font-size:1.6rem;color:var(--acc)}
+.top p{margin:2px 0;color:var(--mut);font-size:.92rem}
+nav{position:sticky;top:0;z-index:9;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto;padding:8px 12px}
+nav a,nav button{flex:none;padding:5px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--fg);text-decoration:none;font:inherit;font-size:.88rem;cursor:pointer}
+nav a:hover,nav button:hover{border-color:var(--acc);color:var(--acc)}
+main{max-width:900px;margin:auto;padding:0 16px 70px}
+h2{margin:36px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--acc);font-size:1.3rem}
+h3{margin:0 0 8px;font-size:1.05rem;color:var(--acc)}
+.pas,.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.para{margin-bottom:14px}
+.s{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--line)}
+.en{font-family:Georgia,"Times New Roman",serif;font-size:1.02rem}
+.zh{color:var(--mut);font-size:.93rem}
+.note{color:var(--mut);font-size:.85rem;margin:6px 0 0}
+.bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 4px;border-radius:3px;font-weight:600}
+.bl sup{color:var(--acc);margin-right:3px;font-size:.7em}
+.bank{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.92rem;margin-bottom:8px}
+details.q>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+details.q>summary::-webkit-details-marker{display:none}
+.n{background:var(--acc);color:#fff;border-radius:6px;padding:0 10px;font-weight:700;font-size:1.05rem}
+.tag{font-size:.78rem;border:1px solid var(--acc);color:var(--acc);border-radius:99px;padding:0 9px;line-height:1.6}
+.tag.pos{border-color:var(--ok);color:var(--ok)}
+.ans{margin-left:auto;font-weight:700;color:var(--ok)}
+.qb{margin-top:10px}
+.stem{margin-bottom:8px;padding:8px 10px;background:var(--bg);border-radius:6px}
+.clue{margin:8px 0;padding:8px 12px;border-left:4px solid var(--acc);background:var(--bg);border-radius:0 6px 6px 0}
+.clue h4,.qb h4{margin:0 0 2px;font-size:.92rem;color:var(--acc)}
+ul.op{list-style:none;margin:6px 0 0;padding:0}
+ul.op li{padding:7px 10px;margin:5px 0;border-radius:6px;border:1px solid var(--line);font-size:.95rem}
+ul.op li.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 9%,transparent)}
+ul.op li.no{border-color:color-mix(in srgb,var(--no) 45%,transparent)}
+ul.op i{font-style:normal;font-weight:700;font-size:.82rem}
+li.ok i{color:var(--ok)}li.no i{color:var(--no)}
+small{color:var(--mut)}
+footer{max-width:900px;margin:auto;padding:20px 16px 40px;color:var(--mut);font-size:.85rem;line-height:1.6;border-top:1px solid var(--line);margin-top:40px;}
+footer a{color:var(--acc);text-decoration:none;font-weight:bold;}
+footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>503 Blackboard</h1>
+  <p>每題含：考點標籤 → 題幹逐句中英對照 → 解題線索 → 正解與全部誤答分析</p>
+  <p>圖例：<span class="bl">黃底</span> ＝ 正確答案填入處 ｜ <span class="tag">考點</span></p>
+</div>
+<nav id="nav"></nav>
+<main id="app"></main>
+<footer>
+  限定用途教學教材。本詳解為教學輔助，題目版權屬原出版單位。<br>
+  💡 <b>問題回報與建議：</b> Line: etpaul ｜ IG: <a href="https://www.instagram.com/etpaul" target="_blank">@etpaul</a>
+</footer>
+
+<script>
+const L="ABCD";
+const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[([^|\]]*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const SENT={};
+function passage(title,paras,note){
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[([^|\]]+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  return '<section class="pas"><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
+}
+function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
+const clue=t=>'<div class="clue"><h4>解題線索</h4>'+t+'</div>';
+function ops(list,ans,lab){lab=lab||'ABCDEF';return '<ul class="op">'+list.map((o,i)=>{const k=ans.indexOf(lab[i])>=0;return '<li class="'+(k?'ok':'no')+'"><b>'+(lab==='ABCDEF'&&list.length<=4?'('+L[i]+') ':lab==='ABCDEF'?'('+'ABCDEF'[i]+') ':'')+o[0]+'</b>'+(o[1]?' <small>'+o[1]+'</small>':'')+' <i>'+(k?'✔ 正解':'✘ 誤答')+'</i><br>'+o[2]+'</li>';}).join('')+'</ul>';}
+function card(n,tags,ans,body){
+  return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
+}
+
+const st=(en,zh)=>'<div class="stem"><div class="en">'+fx(en)+'</div><div class="zh">'+zh+'</div></div>';
+
+/* === Part 1: L1 ~ L71 課文講解與非題目句子依序呈現 === */
+const h1 = '<h2 id="p1">L1 ~ L71 課文講解</h2>' +
+  passage("2. L1 課文與補充例句", [[
+    ["“Formosa” is commonly known as an unofficial name for Taiwan.", "「福爾摩沙」是眾所周知代表台灣的非正式名稱。"],
+    ["be known as（以某種身分或名稱而知名） vs. be known for（以某特點或長處而知名）：Yushan, (which is) also known as Jade Mountain, is the highest mountain in Taiwan. / Kenting National Park is known for its lush forests and splendid beaches.", "玉山，又稱為 Jade Mountain，是台灣最高的山。／墾丁國家公園以其茂密的森林與美麗的海灘而聞名。"]
+  ]]) + [
+  card("L2", ["分詞片語修飾", "situated = located 位於"], "C",
+    st("However, what many people don’t know is that there is another Formosa [[L2|situated]] on the banks of the Paraguay River in Argentina. Let’s take a detailed look at these two namesakes and investigate the aspects in which they are similar and those in which they differ.", "然而，許多人不知道的是，在阿根廷的巴拉圭河畔還有另一個福爾摩沙。讓我們仔細看看這兩個同名的地方，並探究它們相似與相異的面向。") +
+    clue("• 位於：<code>be located in/on/at = be situated in/on/at</code>（此處由 <code>(which is) located/situated</code> 簡化為過去分詞）。<br>• 動詞三態與 V-ing：<br>躺/位於/存在：<code>lie, lay, lain, lying</code><br>說謊：<code>lie, lied, lied, lying</code><br>放置：<code>lay, laid, laid, laying</code>") +
+    ops([
+      ["laid", "33%", "「放置（lay）」的過去分詞。"],
+      ["locates", "11%", "locate 為「使位於」，主動錯誤且前面已有動詞 is。"],
+      ["situated", "44%", "<code>= located</code>，過去分詞片語修飾 another Formosa。"],
+      ["lain", "11%", "lie（位於）為不及物動詞，分詞簡化應為主動現在分詞 <code>lying</code>。"]
+    ], "C")
+  ),
+
+  card("L8", ["語氣副詞", "Interestingly 有趣的是"], "B",
+    st("[[L8|Interestingly]], it appears that both Formosas were unintentionally discovered by European explorers in the sixteenth century.", "有趣的是，這兩個福爾摩沙似乎都是在十六世紀被歐洲探險家無意間發現的。") +
+    clue("• <code>Interestingly = Interesting to say</code> 說來有趣<br>• <code>Strangely = Strange to say</code> 說來奇怪") +
+    ops([
+      ["Additionally", "26%", "= In addition 此外。"],
+      ["Interestingly", "59%", "有趣的是（引出第一個有趣的歷史巧合）。"],
+      ["Accordingly", "11%", "= Therefore 因此。"],
+      ["Incidentally", "4%", "= By the way 附帶一提。"]
+    ], "B")
+  ),
+
+  card("L10", ["轉折與相似副詞", "Similarly = Likewise 同樣地"], "D",
+    st("It is believed that a crew of Portuguese sailors first came across Taiwan and named it “Ilha Formosa,” which means “beautiful island.” [[L10|Similarly]], Formosa was the European name given to an area of land discovered in South America by Spanish explorers around the same time.", "據信一群葡萄牙水手首先偶然發現了台灣，並將其命名為「Ilha Formosa」，意為「美麗之島」。同樣地，在大約同一時期，「福爾摩沙」也是西班牙探險家為在南美洲發現的一塊土地所取的歐洲名稱。") +
+    clue("兩地都是在約莫同一時期被歐洲探險家發現並命名為 Formosa，故用 <code>Similarly = Likewise</code>（同樣地）。") +
+    ops([
+      ["However", "33%", "然而（前後是相似巧合而非轉折）。"],
+      ["In consequence", "7%", "= As a consequence/result 因此。"],
+      ["On the contrary", "22%", "相反地（用在比較相同的人事物並反駁前句，如 <i>The risk of infection hasn't diminished; on the contrary, it has increased.</i>）。"],
+      ["Similarly", "37%", "= Likewise 同樣地。"]
+    ], "D")
+  ),
+
+  card("L14", ["結果副詞子句", "such + adj. + N + that..."], "D",
+    st("These explorers considered the area (which) they had found to possess [[L14|such]] exceptional beauty that they decided to settle there.", "這些探險家認為他們發現的這個地區擁有如此非凡的美麗，以至於他們決定在那裡定居。") +
+    clue("觀察空格後是「形容詞 + 不可數名詞（<code>exceptional beauty</code>）」+ <code>that + 完整子句</code>！<br>• <code>such + (a/an) + adj. + N + that + 完整子句</code>（單數、複數、不可數名詞皆可用！）<br>• <code>so + adj. + (a/an + 單數可數N) + that + 完整子句</code>（<b>不可用不可數或複數名詞</b>！若用 so 應改寫為 <i>so beautiful (an area) that...</i>）") +
+    ops([
+      ["so", "11%", "後方有不可數名詞 beauty，不可用 so。"],
+      ["highly", "16%", "highly 無法與 that 構成「如此…以至於…」句型。"],
+      ["most", "3%", "most 無法與 that 構成結果子句。"],
+      ["such", "68%", "<code>such exceptional beauty that...</code>。"]
+    ], "D") +
+    passage("2. L14 補充例句", [[
+      ["It's such a (tiny) kitchen that I don't have to do much to keep it clean.", "這間廚房是如此之小，以至於我不必花太多力氣就能保持乾淨。"],
+      ["These explorers considered the area they had found to be so beautiful (an area) that they decided to settle there.", "so + adj. + (a + 單數N) + that... 改寫對照。"],
+      ["*adv. + adj./adv. + (a + N)：She is as beautiful (a girl) as Nina (is). / That was too much (a burden) for her.", "她和妮娜一樣是個漂亮的女孩。／那對她來說是個太沉重的負擔。"]
+    ]])
+  ),
+
+  card("L18", ["介系詞片語辨析", "Aside from 除…之外"], "A",
+    st("[[L18|Aside from]] their shared name and historical similarities, there is another interesting geographical phenomenon that connects these two locations.", "除了它們共同的名稱與歷史相似之處外，還有另一個有趣的地理現象將這兩個地點連結在一起。") +
+    clue("<code>apart from / aside from / other than</code> 可同時當 <code>besides</code>（包含在內）或 <code>except</code>（不包含在內）。此處後文有 <code>another interesting geographical phenomenon</code>，故等於 <code>Besides / In addition to</code>。") +
+    ops([
+      ["Aside from", "86%", "除了…之外（還有…）。"],
+      ["In spite of", "8%", "儘管。"],
+      ["Regardless of", "2%", "不管。"],
+      ["As of", "4%", "從…起（如 <i>As of today…</i> 從今天起）。"]
+    ], "A") +
+    passage("4. L18 小練習", [[
+      ["I didn’t eat anything all day, apart from some peanuts. → apart from = [[|except]]", "我整天除了幾顆花生之外什麼也沒吃。"],
+      ["Apart from the cabin, Mark also owns a house by the lake. → Apart from = [[|besides]]", "除了小木屋之外，馬克在湖邊還有一棟房子。"]
+    ]])
+  ),
+
+  card("L20", ["表示「位於」之動詞", "sits / lies / stands + 介系詞"], "B",
+    st("Taiwan is located at 23° N and Argentina’s Formosa (is located) at 23° S, which means both areas are roughly the same distance from the equator. What’s more, each of them [[L20|sits]] on the exact opposite side of the world from the other.", "台灣位於北緯 23 度，而阿根廷的福爾摩沙位於南緯 23 度，這意味著兩個地區與赤道的距離大致相同。更有甚者，它們各自位於地球上與對方完全相反的另一端（對蹠點）。") +
+    clue("表達「位於…」的兩種公式：<br>• 被動：<code>be located / situated + 介系詞</code><br>• 主動不及物：<code>lie / stand / sit + 介系詞</code><br>此處空格前沒有 be 動詞 <code>is</code>，故須選主動不及物動詞 <code>sits</code>！") +
+    ops([
+      ["lays", "29%", "lay 為及物動詞「放置；下蛋」，表位於應為 <code>lies</code>。"],
+      ["sits", "57%", "不及物動詞表「位於（= lies / is located）」。"],
+      ["locates", "10%", "必須用被動 <code>is located</code>。"],
+      ["situates", "4%", "必須用被動 <code>is situated</code>。"]
+    ], "B") +
+    passage("5. L20 & 6. L23 補充例句", [[
+      ["The park is located/situated in the center of the city. = The park lies/stands/sits in the center of the city.", "這座公園位於市中心。"],
+      ["6. L23 on the opposite side of … from…（與…在…相對的兩邊/對面）：The church is on the opposite side of the road from the school. = The church is opposite (to) the school. ((X) from) = The church is across from the school.", "教堂在學校的馬路對面。"]
+    ]])
+  ),
+
+  card("L24", ["與現在/未來事實相反的假設", "If + S + V-ed, S + would + VR"], "C",
+    st("If someone in northern Taiwan dug a hole straight down into the Earth, penetrated its core, and then continued digging to the surface on the other side, he or she [[L24|would end]] up in Formosa, Argentina!", "如果有人在台灣北部筆直往地下挖一個洞，穿過地心，然後繼續挖到另一端的地表，他或她最終就會來到阿根廷的福爾摩沙！") +
+    clue("注意：<code>straight</code> 本身即為形容詞與副詞（筆直地，不可加 -ly！）。<br>If 子句中三個平行的過去式動詞 <code>dug ... penetrated ... and continued ...</code> 為與現在事實相反的假設（人不可能真的挖穿地心），故主要子句用 <code>would + VR (end)</code>。") +
+    ops([
+      ["ended up", "0%", "缺少助動詞 would。"],
+      ["would have ended", "31%", "過去完成式假設用於與過去某特定事件相反，此處為假想地理位置的恆常推論。"],
+      ["would end", "67%", "<code>would end up in Formosa, Argentina</code>。"],
+      ["must have ended", "0%", "對過去事實的推測，不合假設語氣。"]
+    ], "C")
+  ),
+
+  card("L28", ["原因連接詞", "Since 既然/由於"], "A",
+    st("[[L28|Since]] most of the globe is covered in ocean, it is even more amazing that these two bits of land are exactly antipodal!", "由於地球大部分面積都被海洋覆蓋，這兩塊陸地正好互為對蹠點就更加令人驚奇了！") +
+    clue("「地球大部分是海洋」是讓「兩塊陸地剛好在正對面更顯驚奇」的<b>原因／理由</b>，且置於句首，故用從屬連接詞 <code>Since</code>（由於、既然）。") +
+    ops([
+      ["Since", "51%", "由於、既然（引導原因副詞子句置於句首）。"],
+      ["While", "14%", "儘管（邏輯不合）。"],
+      ["For", "16%", "<code>For</code> 表「因為」時為對等連接詞，只能放在逗號後作補充說明，<b>不可置於句首</b>！"],
+      ["Though", "20%", "雖然（邏輯不合）。"]
+    ], "A")
+  ),
+
+  card("L32", ["讓步介系詞片語", "In spite of 儘管"], "C",
+    st("[[L32|In spite of]] these two special links, the two Formosas are, in many ways, still worlds apart.", "儘管有這兩個特殊的連結，這兩個福爾摩沙在許多方面仍然截然不同（天差地遠）。") +
+    clue("前文講兩地的相似處（同名、互為對蹠點），此段開始轉折講兩地的差異（<code>still worlds apart</code>），且後方受詞為名詞片語 <code>these two special links</code>，故用介系詞片語 <code>In spite of</code>（= Despite 儘管）。<br>• 10. L34：<code>Their natural landscapes, for a start, differ considerably.</code>（<code>for a start = to begin with = for starters</code> 首先）<br>• 11. L35：<code>differ considerably = are considerably different</code>（相差甚遠）。") +
+    ops([
+      ["With regard to", "10%", "關於（= In regard to = regarding = about）。"],
+      ["On account of", "0%", "因為（= because of）。"],
+      ["In spite of", "71%", "儘管（有）= despite。"],
+      ["In addition to", "20%", "除…之外還有。"]
+    ], "C")
+  ),
+
+  card("L35", ["非限定關係代名詞", ", some of which"], "D",
+    st("Two thirds of Taiwan’s 36,000 square kilometers are made up of majestic mountains covered in dense forest, some of [[L35|which]] soar thousands of meters above sea level.", "台灣三萬六千平方公里的土地中，有三分之二是由濃密森林覆蓋的雄偉高山所組成，其中有些山峰高聳入雲、海拔達數千公尺。") +
+    clue("前半句已有動詞 <code>are made up of</code>（V1），逗號後面又有動詞 <code>soar</code>（V2），中間沒有連接詞 <code>and</code>，故必須選兼具連接詞與代名詞功能的關係代名詞 <code>which</code>（代替 mountains）！") +
+    ops([
+      ["it", "0%", "無連接詞且單複數不合。"],
+      ["them", "24%", "無連接詞（若前面有 and 才寫 <i>and some of them</i>）。"],
+      ["those", "20%", "無連接詞。"],
+      ["which", "57%", "<code>, some of which soar...</code>（本題缺連接詞，故選 which）。"]
+    ], "D") +
+    passage("13. L35 (分數表達法) & 14. L39 課文與補充", [[
+      ["13. L35 分數的形式：分子在前（使用基數 one, two, three...）；分母在後（使用序數 first, third, fourth, fifth, tenth...）。*若分母為 2 則用 half（如 1/2 為 one half）；*若分子大於 1，分母序數須加 -s（如 two thirds = 2/3, three fifths = 3/5）。", "分數文法規則。"],
+      ["14. L39 Furthermore, the island’s mountains, valleys, rivers, and reefs are home to hundreds of unique species found only in Taiwan.", "此外，島上的高山、山谷、河流與珊瑚礁是數百種台灣特有物種的棲息地。"],
+      ["A be home to B（A 是 B 的棲息地/所在地）：The Congo is home to approximately 1,000 species of birds.", "剛果是大約一千種鳥類的棲息地。"]
+    ]])
+  ),
+
+  card("L41", ["句子主要動詞判斷", "S, 插入關係子句, + V (is)"], "C",
+    st("By contrast, most of Argentina’s Formosa, which is two times the size of Taiwan, [[L41|is]] fairly flat and covered with trees, grassland, or marshland.", "相較之下，面積是台灣兩倍大的阿根廷福爾摩沙，大部分地區相當平坦，並覆蓋著樹木、草原或沼澤地。") +
+    clue("結構剖析：<code>most of Argentina’s Formosa (S), [which is two times the size of Taiwan (非限定形容詞子句/插入修飾語)], <b>is</b> (V) fairly flat and (is) covered with...</code>。<br>兩個逗號中間是修飾主詞的關係子句，因此空格要填的是主詞 <code>most of Argentina's Formosa</code>（不可數／單數地名）的主要動詞 <code>is</code>！") +
+    ops([
+      ["in which", "14%", "會導致主詞沒有主要動詞。"],
+      ["it is", "0%", "前面已有主詞 most of Argentina's Formosa，不可重複加主詞 it。"],
+      ["is", "47%", "主要子句的單數動詞。"],
+      ["which is", "39%", "常見誤答！前面已經有一個 <code>, which is...</code> 插入子句了，若再填 which is 會導致整句話沒有主要動詞！"]
+    ], "C")
+  ),
+
+  card("L44", ["動詞字彙搭配", "receive rain 降雨/獲得雨水"], "A",
+    st("Its eastern region [[L44|receives]] more rain than its other parts and also has more forests and streams.", "其東部地區比其他地區獲得更多雨水（降雨量較多），也擁有較多的森林與溪流。") +
+    clue("表示某地區「常下雨、獲得降雨」的標準搭配動詞為 <code>get / have / receive lots of rain</code>。") +
+    ops([
+      ["receives", "80%", "獲得（降雨）。"],
+      ["inherits", "2%", "繼承（遺產、珠寶或基因特徵）。"],
+      ["sustains", "8%", "維持（= maintain）；遭受（= suffer 傷亡或損失）。"],
+      ["undergoes", "10%", "經歷（手術、治療或重大變革）。"]
+    ], "A") +
+    passage("16. L44 選項補充例句", [[
+      ["(A) The farmers in this region receive rain during the monsoon season, which is essential for their crops. / This area doesn't receive much rain, so water conservation is crucial.", "該地區的農民在季風季獲得降雨，這對作物至關重要。／這個地區雨水不多，因此節約用水非常重要。"],
+      ["(B) She inherits her grandmother's antique jewelry collection, which has been passed down through generations.", "她繼承了祖母代代相傳的古董珠寶收藏。"],
+      ["(C) A balanced diet and regular exercise are essential to sustain good health.", "均衡飲食與規律運動對於維持良好健康至關重要。"],
+      ["(D) After the accident, he underwent extensive physical therapy to regain mobility.", "事故發生後，他接受了廣泛的物理治療以恢復行動能力。"]
+    ]])
+  ),
+
+  card("L47", ["轉折與附加副詞", "What’s more 此外/而且"], "C",
+    st("There is, in addition, a stark contrast between their economies. Present-day Taiwan is known worldwide for its lively economy and its advanced information technology industry. [[L47|What’s more]], the Asian island is famous for its natural beauty and friendly people and thus attracts visitors from far and wide.", "此外，兩地的經濟也存在鮮明的對比。今日的台灣以其蓬勃的經濟與先進的資訊科技產業聞名全球。而且，這座亞洲島嶼還以自然美景與友善人民聞名，因此吸引了來自四面八方的遊客。") +
+    clue("前句講台灣以經濟和科技業聞名，本句進一步補充台灣還以自然美景和友善人民聞名，故用表「而且、此外」的 <code>What’s more</code>（= moreover, furthermore, besides, also, additionally, in addition）。<br>19. 補充：已開發國家 <code>developed countries</code> vs. 未開發（低度開發）國家 <code>underdeveloped / least developed countries</code>。") +
+    ops([
+      ["On the contrary", "28%", "相反地。"],
+      ["On the other hand", "9%", "另一方面（≒ however）。"],
+      ["What’s more", "62%", "而且，此外。"],
+      ["In general", "2%", "一般來說。"]
+    ], "C") +
+    passage("18. L47 選項補充例句", [[
+      ["(A) I expected the movie to be boring, but on the contrary, it was quite entertaining.", "我原以為這部電影很無聊，但恰恰相反，它相當有趣。"],
+      ["(B) I enjoy spending time outdoors, but on the other hand, I also like reading books indoors.", "我喜歡在戶外度過時光，但另一方面，我也喜歡在室內看書。"],
+      ["(C) I already have a busy schedule, and what's more, I just got a new project at work.", "我的行程已經很滿了，而且工作上又剛接了一個新專案。"],
+      ["(D) In general, exercise is good for your health, but it's important to consult a doctor before starting any new fitness routine.", "一般來說，運動對健康有益，但在開始任何新健身計畫前諮詢醫生是很重要的。"]
+    ]])
+  ),
+
+  card("L54", ["易混淆動詞四兄弟", "cattle raising 養牛業"], "D",
+    st("By contrast, Formosa is one of Argentina’s least developed areas. Its economy relies primarily on cattle [[L54|raising]] and other agricultural activities, such as growing cotton and fruit.", "相較之下，福爾摩沙是阿根廷開發程度最低的地區之一。其經濟主要依賴養牛業和其他農業活動，例如種植棉花和水果。") +
+    clue("必考動詞四兄弟：<br>• <code>arise - arose - arisen</code> (vi.)：（問題、困難）發生、出現；起身<br>• <code>arouse - aroused - aroused</code> (vt.)：引起、激起（情緒、懷疑、興趣）<br>• <code>rise - rose - risen</code> (vi.)：升起；上漲；起身<br>• <code>raise - raised - raised</code> (vt.)：舉起；提高；<b>飼養（動物）／撫養（小孩）</b>；募款<br>「養牛（<code>raise cattle</code>）」轉為複合名詞即為 <code>cattle raising</code>。") +
+    ops([
+      ["arising", "10%", "vi. 發生、出現。"],
+      ["arousing", "10%", "vt. 激起（情緒）。"],
+      ["rising", "12%", "vi. 升起、上漲（不及物動詞）。"],
+      ["raising", "68%", "vt. 飼養（<code>cattle raising</code> 養牛業）。"]
+    ], "D") +
+    passage("20. L54 選項補充例句", [[
+      ["(A) A problem arose in the project, and we need to address it immediately.", "專案中出現了一個問題，我們需要立即解決。"],
+      ["(B) The passionate speech by the leader was capable of arousing strong emotions in the audience.", "領袖充滿熱情的演講激起了聽眾強烈的情緒。"],
+      ["(C) The rising sun painted the sky with vibrant colors.", "冉冉升起的太陽將天空染上了鮮豔的色彩。"],
+      ["(D) She is raising her hand to ask a question in class.", "她在課堂上舉手提問。"]
+    ]])
+  ),
+
+  card("L59", ["可數與不可數數量詞", "number of cattle (cattle 為複數可數)"], "C",
+    st("Ranching is also extremely important to Formosa’s economy. The area’s total [[L59|number]] of cattle exceeds 1.5 million, which is more than three times the number of people living there!", "畜牧業對福爾摩沙的經濟也極為重要。該地區的牛隻總數超過一百五十萬頭，是當地居住人口數量的三倍以上！") +
+    clue("關鍵字：<code>cattle</code>（牛隻總稱，= a group of cows）<b>本身就是複數可數名詞，且沒有單數形式</b>！<br>既然是複數可數名詞，且後方有明確數字 <code>1.5 million</code> 及對照的 <code>the number of people</code>，故必須用可數的 <code>number</code>！") +
+    ops([
+      ["ratio", "5%", "比例（如 <i>The ratio of men to women is 3 to 1.</i>）。"],
+      ["rates", "5%", "比率、速率（如 <i>interest rates</i>）。"],
+      ["number", "53%", "可數名詞的數量（搭配複數可數名詞 <code>cattle</code>）。"],
+      ["amount", "37%", "常見誤答！<code>amount</code> 只能用於「不可數名詞（如 money, water, time）」，不能修飾複數可數的 cattle！"]
+    ], "C") +
+    passage("21. L59 選項補充例句", [[
+      ["(A) The ratio of men to women in the company is 3 to 1.", "這家公司的男女比例是 3 比 1。"],
+      ["(B) The interest rates on these loans have been increasing steadily.", "這些貸款的利率一直在穩定上升。"],
+      ["(C) The number of participants in the event exceeded our expectations.", "這場活動的參與人數超出了我們的預期。"],
+      ["(D) The total amount of money raised for charity was impressive.", "為慈善事業募集的總金額令人印象深刻。"]
+    ]])
+  ),
+
+  card("L62", ["複合關係形容詞讓步", "Whatever + N + V (No matter what...)"], "D",
+    st("[[L62|Whatever]] differences or similarities exist between the pair, thanks to those who explored the globe hundreds of years ago, people can now pay a visit to two “beautiful” lands.", "無論這兩地之間存在著什麼樣的差異或相似之處，多虧了數百年前探索地球的人們，現在人們得以造訪這兩片「美麗的」土地。") +
+    clue("空格後有主詞名詞 <code>differences or similarities</code> 以及動詞 <code>exist</code>！<br>• <code>Whatever + N + V = No matter what + N + V</code>（無論存在著什麼樣的差異或相似處）。<br>23. 補充：<code>thanks to</code>（多虧了…）只用在正面的理由。") +
+    ops([
+      ["Despite", "28%", "介系詞，後面不可有動詞 <code>exist</code>！"],
+      ["Whether", "10%", "無論是否（通常搭配 or not，不修飾名詞 differences or similarities 表「無論什麼樣的差異」）。"],
+      ["No matter", "18%", "<code>No matter</code> 後面必須加上疑問詞 <code>what</code>（<code>No matter what differences...</code>）才能接名詞與動詞！"],
+      ["Whatever", "43%", "複合關係形容詞（= No matter what），引導讓步副詞子句。"]
+    ], "D") +
+    passage("22. L62 & 24. L65 補充例句", [[
+      ["(A) Despite the heavy rain, they decided to go hiking in the mountains.", "儘管下著大雨，他們仍決定去山上健行。"],
+      ["(B) Whether you like it or not, you have to complete the assignment by tomorrow.", "無論你喜不喜歡，你都必須在明天之前完成這份作業。"],
+      ["(C) No matter how busy I am, I always find time to spend with my family.", "無論我有多忙，我總是會抽空陪伴家人。"],
+      ["(D) Whatever happens, I'll always be there to support you. (副子) / I’ll give him whatever (= anything that) he wants. (名子)", "無論發生什麼事，我都會一直在這裡支持你。／我會給他任何他想要的東西。"],
+      ["24. L65 with = 連 + S + have = which have：with its gorgeous green plains and lush forests = because it has / which has gorgeous green plains and lush forests.", "擁有美麗綠色平原與茂密森林的（阿根廷福爾摩沙）。"]
+    ]])
+  ),
+
+  card("L65", ["片語與動詞辨析", "be sure to VR 必定會…"], "A",
+    st("Both Argentina’s Formosa, with its gorgeous green plains and lush forests, and Taiwan, with its bustling cities and mighty, mountainous landscapes, [[L65|are sure]] to impress visitors.", "擁有美麗綠色平原與茂密森林的阿根廷福爾摩沙，以及擁有繁華城市與壯麗高山景觀的台灣，兩者必定都能讓遊客留下深刻印象。") +
+    clue("主詞是 <code>Both Argentina's Formosa ... and Taiwan ...</code>（複數主詞），空格後接不定詞 <code>to impress visitors</code>：<br>• <code>be sure to VR</code>：必定會…（表說話者的確信推論）／務必要…（祈使句）<br>• <code>make sure</code>：後接 <code>(that) + 完整子句</code> 或 <code>of + N</code>（一般不直接接 to VR 表「必定會」）<br>• <code>ensure</code> (vt.)：確保（後接 N 或 that 子句，不可接 to VR！）") +
+    ops([
+      ["are sure", "68%", "<code>are sure to impress visitors</code>（必定會讓遊客留下深刻印象）。"],
+      ["make sure", "15%", "人當主詞表「確認（make sure that...）」，兩處地名不會主動去「確認」。"],
+      ["ensure", "15%", "ensure 後面不可接不定詞 <code>to impress</code>！"],
+      ["insure", "2%", "投保、為…買保險。"]
+    ], "A") +
+    passage("25. L65 ~ 27. L69 補充例句", [[
+      ["(A) Be sure to fasten your seatbelt. / You're sure to fail if you do it that way.", "務必要繫上安全帶。／如果你那樣做一定會失敗。"],
+      ["(B) I wanted to make sure you were all right. / Always make sure of your facts before accusing anyone.", "我想確認你沒事。／在指控任何人之前，永遠要先確認事實。"],
+      ["(C) Regular maintenance will help ensure the longevity of your car.", "定期保養有助於確保您愛車的壽命。"],
+      ["(D) Many people insure their homes to protect themselves from unexpected disasters.", "許多人為房屋投保，以保護自己免受意外災害損失。"],
+      ["26. L68 風景字辨：landscape (自然地貌景觀) ｜ scenery [U] (風景總稱) ｜ scene (現場/一幕/畫面) ｜ view (從特定位置看出去的景致)", "四大「風景／景象」名詞辨析。"],
+      ["27. L69 impress (vt. 使佩服讚嘆，必為正面) / impressive (adj. 令人讚嘆的，必為正面) vs. unforgettable (adj. 令人難忘的，不一定正面)：Her talent for playing the piano never fails to impress the audience. / The speaker delivered an impressive presentation. / The accident was an unforgettable tragedy that shook the entire community.", "她彈鋼琴的才華總是令觀眾讚嘆。／演講者做了一場令人印象深刻的簡報。／這場事故是震撼全社區的難忘悲劇。"]
+    ]])
+  ),
+
+  card("L68", ["動詞片語辨析", "get to + VR 有機會可以…"], "B",
+    st("Perhaps the people of these two lands on (the) opposite sides of the world can even come face to face and [[L68|get to]] know each other a little better one day as well!", "也許這兩塊位於地球兩端土地上的人們，有一天甚至能面對面相見，並有機會多認識彼此一些！") +
+    clue("空格後是原形動詞 <code>know</code>！<br>• <code>get to + VR</code>：有機會、得以（= have a chance to VR），<code>get to know each other</code> 即「有機會認識彼此、逐漸了解彼此」。") +
+    ops([
+      ["opt to", "5%", "選擇去做（= choose to VR，語意不如「有機會認識彼此」自然）。"],
+      ["get to", "78%", "<code>get to know each other</code>（有機會認識彼此）。"],
+      ["resort to", "3%", "訴諸於（後面為介系詞 to，須接 N / V-ing，且用於走投無路的負面最後手段）。"],
+      ["look forward to", "13%", "期待（to 為介系詞，後面必須接動名詞 <code>knowing</code> 而非原形 know！）。"]
+    ], "B") +
+    passage("1. L68 & 2. L71 課文與補充例句", [[
+      ["(A) After careful consideration, John opted to pursue a career in music rather than engineering.", "經過仔細考慮，約翰選擇追求音樂事業而非工程。"],
+      ["(B) I'm excited that I get to visit Paris next month for a business conference.", "我很興奮下個月有機會去巴黎參加商務會議。"],
+      ["(C) When faced with financial difficulties, some people may resort to borrowing money from friends. / The company had to resort to layoffs as a last resort to cut costs.", "面臨財務困難時，有些人可能會訴諸向朋友借錢。／公司不得不訴諸裁員作為削減成本的最後手段。"],
+      ["(D) I look forward to spending my summer vacation at the beach.", "我期待在海灘度過暑假。"],
+      ["2. L71 That could make for a beautiful friendship! (A makes for B = A causes or helps to cause B = A makes B possible 促成、造就)：The sunny weather makes for a perfect day at the beach. / Her determination and hard work will surely make for a successful career.", "那可能會促成一段美麗的友誼！／晴朗的天氣造就了在海灘完美的一天。／她的決心與努力必定會造就成功的事業。"]
+    ]])
+  )
+].join('');
+
+/* === Part 2: 句型講義與各班練習訂正完整收錄 === */
+const h2 = '<h2 id="p2">課本句型與翻譯練習（倍數 + the + N + of / that...）</h2>' +
+  passage("句型講義 Practice (1~4) ＆ 課本句型練習（301 / 308 / 316 訂正對照）", [
+    [
+      ["觀念：twice her age = twice the age of her（倍數 + the + 度量/數量名詞 + of N / that 子句）", "本課核心倍數句型。"],
+      ["Practice 1：[[|A new smartphone costs/is twice the price of a second-hand one.]]", "一支新智慧型手機的價格是一支二手手機的兩倍。"],
+      ["Practice 2：[[|The golden retriever is eleven (11) times the weight of the Chihuahua.]]", "這隻黃金獵犬的體重是那隻吉娃娃的十一倍。"],
+      ["Practice 3：[[|Light travels at nearly nine hundred thousand (900,000) times the speed of sound.]]", "光傳播的速度幾乎是音速的九十萬倍。（注意：at the speed of 以…的速度，不可漏掉介系詞 at 或誤寫 travels are！）"],
+      ["Practice 4：[[|Eric has composed half the number of songs that his brother has (composed).]]", "艾瑞克創作的歌曲數量是他哥哥的一半。（注意：不可寫 than his brother has！）"]
+    ],
+    [
+      ["課本句型（巨人國 vs. 小人國 301 / 308 / 316 訂正整理）：", "課堂黑板各班造句與常見錯誤修正。"],
+      ["2. 人口倍數：(X) five times the amount/number of the Kingdom of Giants → (O) [[|Its population is five times the (size of the) population of / five times that of the Kingdom of Giants.]]", "人口（population）搭配 the size of the population 或代名詞 that，不可用 the amount of（且比較對象要對等）！"],
+      ["3. 身高倍數：[[|Giants are seven times the height of Dwarfs.]]", "巨人的身高是矮人的七倍。"],
+      ["4. 體重倍數：[[|They are twenty times the weight of the Dwarfs.]]", "他們的體重是矮人的二十倍。（注意比較對象是 Dwarfs 而非 the Kingdom of Dwarfs）"],
+      ["5. 年齡倍數：[[|He is twice the age of the king of the Kingdom of Giants.]] (= twice as old as...)", "他的年齡是巨人國國王的兩倍。"],
+      ["6. 小孩數量倍數：[[|He has six times the number of children that the king of the Kingdom of Dwarfs has.]]", "他的小孩數量是小人國國王的六倍。"]
+    ]
+  ]) + [
+  card("翻譯-1", ["倍數 + the (amount of) N", "一頭牛產生的廢棄物"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">1. 一頭牛產生的廢物是人的六倍。One cow produces…</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|One cow produces six times the (amount of) waste of a human.]]")+'<br>（= '+fx("[[|One cow produces six times the (amount of) waste that a human does.]]")+'）</div></div>' + clue("注意：<code>human / humans</code> 為可數名詞（= human being(s)）；<code>waste</code> 為不可數名詞，可用 <code>the waste</code> 或 <code>the amount of waste</code>。")),
+  card("翻譯-2", ["倍數 + the (amount of) water", "大象喝的水"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">2. 一隻大象喝的水是一匹馬的五倍。An elephant consumes…</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|An elephant consumes five times the (amount of) water (that) a horse does.]]")+'</div></div>' + clue("注意：(X) <code>the water of a horse</code>（水不是長在馬身上的所有物，是馬「喝（consumes → does）」的水，故後半句須用關係子句 <code>(that) a horse does</code>！）。")),
+  card("翻譯-3", ["twice the amount of time expected", "花兩倍時間做計畫"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">3. 我們花了比預計多兩倍的時間做這個計畫 (project)。We…</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|We spent twice the amount of time (that/which had been) expected doing/on the project.]]")+'</div></div>' + clue("<code>spend + 時間 + V-ing / on sth</code>；「預計的時間」為 <code>the amount of time (that had been) expected</code>。")),
+  card("翻譯-4", ["half the length of", "最長的河的長度"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">4. 台灣最長的河的長度是日本最長的河的一半。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The longest river in Taiwan is half the length of the longest river / that in Japan.]]")+'</div></div>' + clue("可用代名詞 <code>that</code> 代替單數名詞 <code>the longest river</code>。")),
+  card("翻譯-5", ["three times the number / that of", "收看才藝秀的人數"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">5. 收看才藝秀 (talent show) 的人數是收看音樂會的人數的 3 倍。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The number of people watching (who watched) the talent show is three times [the number / that] of people watching (who watched) the concert.]]")+'</div></div>' + clue("注意：「做某事的人數」必須用 <code>The number of people...</code>，絕對不可用 <code>population</code>（population 指整個國家或地區的總人口）！"))
+].join('');
+
+document.getElementById('app').innerHTML = h1 + h2;
+const secs=[['p1','L1~L71 課文講解'],['p2','句型與翻譯練習']];
+document.getElementById('nav').innerHTML=secs.map(s=>'<a href="#'+s[0]+'">'+s[1]+'</a>').join('')+'<button id="tg">全部收合</button>';
+let open=true;
+document.getElementById('tg').onclick=function(){open=!open;document.querySelectorAll('details.q').forEach(d=>d.open=open);this.textContent=open?'全部收合':'全部展開';};
+</script>
+<script src="bookmark.js"></script>
+</body>
+</html>

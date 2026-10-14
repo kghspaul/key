@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>403 Blackboard</title>
+<style>
+:root{--bg:#faf8f4;--fg:#222;--card:#fff;--line:#e4ded3;--acc:#9a3b2e;--ok:#1f7a4d;--no:#b3261e;--mut:#6b6558;--hl:#fff1c9}
+@media(prefers-color-scheme:dark){:root{--bg:#161512;--fg:#e8e4da;--card:#201f1b;--line:#3a372f;--acc:#e08a78;--ok:#6fcf9a;--no:#f08a82;--mut:#a39d8f;--hl:#4a3f1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+.top{max-width:900px;margin:auto;padding:28px 18px 10px}
+.top h1{margin:0 0 4px;font-size:1.6rem;color:var(--acc)}
+.top p{margin:2px 0;color:var(--mut);font-size:.92rem}
+nav{position:sticky;top:0;z-index:9;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto;padding:8px 12px}
+nav a,nav button{flex:none;padding:5px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--fg);text-decoration:none;font:inherit;font-size:.88rem;cursor:pointer}
+nav a:hover,nav button:hover{border-color:var(--acc);color:var(--acc)}
+main{max-width:900px;margin:auto;padding:0 16px 70px}
+h2{margin:36px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--acc);font-size:1.3rem}
+h3{margin:0 0 8px;font-size:1.05rem;color:var(--acc)}
+.pas,.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.para{margin-bottom:14px}
+.s{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--line)}
+.en{font-family:Georgia,"Times New Roman",serif;font-size:1.02rem}
+.zh{color:var(--mut);font-size:.93rem}
+.note{color:var(--mut);font-size:.85rem;margin:6px 0 0}
+.bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 4px;border-radius:3px;font-weight:600}
+.bl sup{color:var(--acc);margin-right:3px;font-size:.7em}
+.bank{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.92rem;margin-bottom:8px}
+details.q>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+details.q>summary::-webkit-details-marker{display:none}
+.n{background:var(--acc);color:#fff;border-radius:6px;padding:0 10px;font-weight:700;font-size:1.05rem}
+.tag{font-size:.78rem;border:1px solid var(--acc);color:var(--acc);border-radius:99px;padding:0 9px;line-height:1.6}
+.tag.pos{border-color:var(--ok);color:var(--ok)}
+.ans{margin-left:auto;font-weight:700;color:var(--ok)}
+.qb{margin-top:10px}
+.stem{margin-bottom:8px;padding:8px 10px;background:var(--bg);border-radius:6px}
+.clue{margin:8px 0;padding:8px 12px;border-left:4px solid var(--acc);background:var(--bg);border-radius:0 6px 6px 0}
+.clue h4,.qb h4{margin:0 0 2px;font-size:.92rem;color:var(--acc)}
+ul.op{list-style:none;margin:6px 0 0;padding:0}
+ul.op li{padding:7px 10px;margin:5px 0;border-radius:6px;border:1px solid var(--line);font-size:.95rem}
+ul.op li.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 9%,transparent)}
+ul.op li.no{border-color:color-mix(in srgb,var(--no) 45%,transparent)}
+ul.op i{font-style:normal;font-weight:700;font-size:.82rem}
+li.ok i{color:var(--ok)}li.no i{color:var(--no)}
+small{color:var(--mut)}
+footer{max-width:900px;margin:auto;padding:20px 16px 40px;color:var(--mut);font-size:.85rem;line-height:1.6;border-top:1px solid var(--line);margin-top:40px;}
+footer a{color:var(--acc);text-decoration:none;font-weight:bold;}
+footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>403 Blackboard</h1>
+  <p>每題含：考點標籤 → 題幹逐句中英對照 → 解題線索 → 正解與全部誤答分析</p>
+  <p>圖例：<span class="bl">黃底</span> ＝ 正確答案填入處 ｜ <span class="tag">考點</span></p>
+</div>
+<nav id="nav"></nav>
+<main id="app"></main>
+<footer>
+  限定用途教學教材。本詳解為教學輔助，題目版權屬原出版單位。<br>
+  💡 <b>問題回報與建議：</b> Line: etpaul ｜ IG: <a href="https://www.instagram.com/etpaul" target="_blank">@etpaul</a>
+</footer>
+
+<script>
+const L="ABCD";
+const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[([^|\]]*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const SENT={};
+function passage(title,paras,note){
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[([^|\]]+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  return '<section class="pas"><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
+}
+function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
+const clue=t=>'<div class="clue"><h4>解題線索</h4>'+t+'</div>';
+function ops(list,ans,lab){lab=lab||'ABCDEF';return '<ul class="op">'+list.map((o,i)=>{const k=ans.indexOf(lab[i])>=0;return '<li class="'+(k?'ok':'no')+'"><b>'+(lab==='ABCDEF'&&list.length<=4?'('+L[i]+') ':lab==='ABCDEF'?'('+'ABCDEF'[i]+') ':'')+o[0]+'</b>'+(o[1]?' <small>'+o[1]+'</small>':'')+' <i>'+(k?'✔ 正解':'✘ 誤答')+'</i><br>'+o[2]+'</li>';}).join('')+'</ul>';}
+function card(n,tags,ans,body){
+  return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
+}
+
+const st=(en,zh)=>'<div class="stem"><div class="en">'+fx(en)+'</div><div class="zh">'+zh+'</div></div>';
+
+/* === Part 1: L1 ~ L52 依原檔順序完整呈現（含所有非題目句子） === */
+const h1 = '<h2 id="p1">L1 ~ L52 課文講解</h2>' + [
+  card("L2", ["動詞片語辨析", "add to = raise 提升"], "D",
+    st("Cultural heritage gives us precious glimpses of life in the past and therefore [[L2|adds to]] our own sense of identity.", "文化遺產讓我們得以珍貴地一窺過去的生活，因此能提升（增進）我們對自身的認同感。") +
+    clue("• <code>add A to B</code> 把 A 加入 B<br>• <code>add to = raise</code> 提升") +
+    ops([
+      ["makes up", "56%", "組成。"],
+      ["takes over", "7%", "接管；接手。"],
+      ["puts in", "2%", "投入。"],
+      ["adds to", "35%", "提升、增進。"]
+    ], "D") +
+    passage("2. L2 ~ 6. (L1, L3, despite) 課文與補充例句", [[
+      ["We've added value to the information by organizing it.", "我們藉由整理資訊為其增加了價值。"],
+      ["Organizing the information adds to its value. / This show will no doubt add to his growing reputation.", "整理資訊提升了它的價值。／這場演出無疑會提升他日益增長的名聲。"],
+      ["試翻譯：Every small act of kindness you add to the world builds a ripple of hope that can change lives.", "你為這個世界增添的每一個小小善舉，都會築起一道能改變生命的希望漣漪。"],
+      ["(A) The rich history of our ancestors makes up a significant portion of our cultural heritage.", "我們祖先豐富的歷史組成了我們文化遺產的重要部分。"],
+      ["(B) With courage and vision, she stepped up to take over the leadership role, determined to guide her team to new heights.", "她帶著勇氣和遠見站出來接手領導角色，決心帶領團隊達到新高度。"],
+      ["(C) He put in years of relentless effort, transforming his dreams into a legacy that would inspire generations.", "他投入了多年不懈的努力，將夢想轉化為激勵後代的傳承。"],
+      ["3. L1 heritage [C] 通常只用單數：Beautiful old buildings are part of our heritage. (不可加 s)", "美麗的老建築是我們文化遺產的一部分。"],
+      ["4. L1 glance n./vi. 快速地看一眼(有意) ≒ look at：She glanced around the room to see who was there. / He gave her a quick glance and smiled.", "她環視房間看看有誰在那裡。／他快速看了她一眼並微笑。"],
+      ["glimpse n./vt. 瞥見(無意) ≒ see：They caught a glimpse of a dark green car. (= glimpsed <del>at</del> a dark green car) / Through the storm, she glimpsed <del>at</del> a brighter future beyond the clouds.", "他們瞥見了一輛深綠色的車。／穿過風暴，她瞥見了雲層彼端更光明的未來。（注意 glimpse 當動詞時為 Vt.，不可有介系詞 at）"],
+      ["5. L3 Despite this, our traditional view of progress has often been “out with the old, in with the new.”", "儘管如此，我們對進步的傳統觀念往往是「除舊迎新」。（Despite this / Despite that ≒ However ≒ Even so）"],
+      ["6. despite 用法複習：Despite the heavy rain, the scooter delivery guy tried to deliver everyone’s orders on time. = Despite the fact that / Although it was raining heavily, the scooter delivery guy tried to deliver everyone’s orders on time.", "儘管下著大雨，機車外送員仍設法準時送達每個人的訂單。"]
+    ]])
+  ),
+
+  card("L4", ["假設語氣與語態", "It is necessary that S (should) VR"], "A",
+    st("It is necessary that development [[L4|take]] place, of course, but this doesn’t have to come __3__ destroying ancient treasures that can never be replaced.", "當然，發展是必要的，但這不一定要以摧毀永遠無法取代的古老珍寶為代價。") +
+    clue("本課句 1：<code>It is necessary that + S + (should) + VR</code>。<br><code>活動 be held + 時間或地方副詞 = 活動 take place + 時間或地方副詞</code>。<br><code>take place</code> = 被舉行／發生 → <b>沒有被動式！</b>") +
+    ops([
+      ["take", "32%", "省略 should 的原形主動。"],
+      ["be taken", "46%", "take place 沒有被動式！"],
+      ["took", "14%", "不可用過去式。"],
+      ["taken", "9%", "不可單獨用過去分詞。"]
+    ], "A") +
+    passage("7. L4 補充例句", [[
+      ["The next meeting will take place / will be held on Thursday.", "下次會議將在星期四舉行。"],
+      ["The presidential election took place / was held on April 26.", "總統大選於 4 月 26 日舉行。"]
+    ]])
+  ),
+
+  card("L5", ["介系詞片語辨析", "at the cost of"], "B",
+    st("It is necessary that development take place, of course, but this doesn’t have to come [[L5|at the cost of]] destroying ancient treasures that can never be replaced.", "當然，發展是必要的，但這不一定要以摧毀永遠無法取代的古老珍寶為代價。") +
+    clue("L5：<code>However, this doesn’t have to come at the cost of destroying ancient treasures that can never be replaced.</code>") +
+    ops([
+      ["by means of", "39%", "透過某種手段或方式。"],
+      ["at the cost of", "30%", "以…為代價。"],
+      ["in spite of", "21%", "儘管；不管。"],
+      ["as a result of", "9%", "由於…的結果（講解補充 <code>in terms of</code> 就…而言）。"]
+    ], "B") +
+    passage("8. L5 ~ 11. L8 課文與補充例句", [[
+      ["(A) She improved her English by (means of) reading books.", "她透過閱讀書籍提升了自己的英語。"],
+      ["(B) He got rich at the cost of losing his true friends.", "他犧牲了真正的朋友換取了財富。"],
+      ["(C) In spite of the bad weather, we still went on the hike.", "儘管天氣不好，我們仍然去了遠足。"],
+      ["(D) It is a small country both in terms of size and population.", "就面積和人口而言它都是個小國。"],
+      ["9. L7 destroying ancient treasures that can never be replaced. = destroying irreplaceable ancient treasures.", "irreplaceable adj. 不可取代的（-able 可以；ir- = in- = not，如 legal → illegal）。"],
+      ["11. L8 An example of this took place in 1959, when the construction of the Aswan High Dam endangered the future of Egypt’s precious Abu Simbel temples.", "這樣的一個例子發生在 1959 年，當時亞斯文高壩的興建危及了埃及珍貴的阿布辛貝神殿的未來。（when 關係副詞 = 連 + 時間副詞 = and in 1959）"]
+    ]])
+  ),
+
+  card("L11", ["轉折與結果副詞", "as a result"], "C",
+    st("The proposed construction project would enable this North African country to control the annual flooding of the Nile. However, an artificial lake would be formed [[L11|as a result]], and the Abu Simbel temples would then be submerged.", "這項擬議的建設工程將使這個北非國家能夠控制尼羅河每年的氾濫。然而，一座人工湖將因此形成，而阿布辛貝神殿隨後將被淹沒。") +
+    clue("<code>as a result</code> (adv.) 因此 = <code>therefore, consequently, accordingly, hence = as a consequence</code>。這組字詞中，只有 <code>as a result</code> 常放句尾。") +
+    ops([
+      ["in response", "9%", "作為回應。"],
+      ["by all means", "14%", "當然可以（用在許可）。"],
+      ["as a result", "53%", "因此。"],
+      ["as risk (at risk)", "23%", "= in danger 處於危險中。"]
+    ], "C") +
+    passage("12. L11 & 13. L15 課文與補充例句", [[
+      ["He has already decided; thus, your efforts to persuade him are useless.", "他已經決定了；因此，你說服他的努力是無用的。"],
+      ["Lots of flooding took place during the typhoon, so many houses in the village were damaged as a result.", "颱風期間發生了許多水災，因此村裡許多房屋受損。"],
+      ["(A) In response to adversity, true strength is revealed.", "面對逆境時，真正的力量才會顯現。"],
+      ["(B) By all means, take my advice—just don’t blame me when it backfires.", "儘管聽我的建議吧——只是當結果適得其反時別怪我。"],
+      ["(D) My diet is always at risk—especially when dessert is involved.", "我的節食計畫總是岌岌可危，特別是當甜點出現時。"],
+      ["13. L15 Though Egypt has an abundance of historic sites, many felt that no part of its rich and unique cultural heritage should be lost.", "雖然埃及擁有豐富的歷史遺跡，但許多人認為其豐富且獨特的文化遺產不應有任何一部分流失。"],
+      ["an abundance of ≒ a lot of（可接複數或不可數名詞）：The lake attracts an abundance of wildlife/wild animals.", "這座湖泊吸引了大量的野生動物。"]
+    ]])
+  ),
+
+  card("L17", ["複合形容詞", "N-p.p."], "D",
+    st("After a [[L17|UNESCO-led]] campaign, it was concluded that the temples would be transported to higher ground.", "在聯合國教科文組織（UNESCO）主導的一場運動之後，最終決定將神殿搬遷到較高的地勢。") +
+    clue("<code>ground = an area of land</code>。<br><code>UNESCO-led</code> 為 <code>N-p.p.</code> 的複合形容詞，修飾 campaign：<br><code>a UNESCO-led campaign = a campaign (which is) led by UNESCO</code>（<code>N-p.p. = p.p. + 介 + N</code>）。") +
+    ops([
+      ["UNESCO-funding", "29%", "<code>N-Ving = Vt. + O = a campaign which funds UNESCO</code>。"],
+      ["UNESCO-leading", "34%", "<code>N-Ving = Vt. + O = a campaign which leads UNESCO</code>。"],
+      ["UNESCO-fund", "9%", "結構錯誤。"],
+      ["UNESCO-led", "28%", "由 UNESCO 主導的。"]
+    ], "D") +
+    passage("14. L17 複合形容詞練習", [[
+      ["a therapist-guided program = a program (which is) guided by a therapist", "由治療師指導的課程"],
+      ["a doctor-approved remedy = a remedy (which is) approved by doctors", "醫師認可的療法／藥物"]
+    ]])
+  ),
+
+  card("L20", ["分詞片語修飾", "be situated + 地方副詞"], "A",
+    st("In order to accomplish this challenging task, Egypt decided that the sacred structures would be cut into 16,000 huge blocks. These (blocks) were then moved and reassembled at a site [[L20|situated]] 65 meters higher up and 180 meters further back from the water.", "為了完成這項艱鉅的任務，埃及決定將這些神聖的建築切割成一萬六千塊巨石。這些石塊隨後被移動並重新組裝在一處位於高出 65 公尺、距離水面往後退 180 公尺的地點。") +
+    clue("<code>These (blocks) were then moved and reassembled at a site which was situated 65 meters higher up*1 and 180 meters further back from*2 the water.</code><br><code>situate</code>（使…位於…）：★ 原形動詞有「使…」者皆用被動表主動：<br><code>be located/situated + 地方副詞 = lie/sit/stand + 地方副詞</code>。") +
+    ops([
+      ["situated", "34%", "省略 which was 的過去分詞。"],
+      ["that situates", "22%", "不可用主動表位於。"],
+      ["which is situated in", "28%", "後方已是地方副詞，不加 in，且應為過去式 was。"],
+      ["that situates in", "16%", "主動與 in 皆錯。"]
+    ], "A") +
+    passage("15. L20 ~ 18. L23 補充講解與例句", [[
+      ["The park is located/situated in the center of the city. = The park lies in the center of the city.", "這座公園位於市中心。"],
+      ["16. L21 re- = again；assemble 組裝 → reassemble 重新組裝（cf. resemble = look like）", "字彙比較"],
+      ["17. L22 (*1) up (adv.) = in a higher place：The hotel is 1,500 feet up in the Black Mountains.", "這間飯店位於黑山高處 1,500 英尺處。（at a site situated 65 meters higher up (than the original site)，副詞修飾副詞 up）"],
+      ["18. L23 (*2) back (adv.) = away（所以搭配 from）；further back from… 在距…更遠處：(Because it is) Situated further back from the street, my new home is a lot quieter than the old one.", "（因為新家）在距離街道更遠處，所以我的新家比舊家安靜許多。（*此句暗示舊家本來就不臨街，但新家距離街道更遠；180 meters further back from the water = 180 meters further away from the water）"]
+    ]])
+  ),
+
+  card("L23", ["字彙與句型搭配", "be spared the loss"], "D",
+    st("In the end, the temples were saved from being drowned, and Egypt was [[L23|spared]] the loss of these historic treasures.", "最後，神殿免於被淹沒，埃及也得以免受失去這些歷史珍寶的損失。") +
+    clue("<code>spare sb (from) the trouble / pain (of …) = prevent someone from having to experience the trouble…</code> 使…免受…之苦。") +
+    ops([
+      ["preserved", "29%", "被保留／被保護。"],
+      ["prevented", "42%", "被避免（不可直接接 the loss）。"],
+      ["rescued", "14%", "拯救。"],
+      ["spared", "15%", "免受…之苦／損失。"]
+    ], "D") +
+    passage("19. L23 補充例句", [[
+      ["I wanted to spare them the trouble of buying me a present.", "我想讓他們免去幫我買禮物的麻煩。"],
+      ["Since Mrs. Bush announced the test scores right away, students were spared the anxiety of having to wait for their results.", "因為布希老師立刻公布了考試成績，學生們免去了必須等待結果的焦慮。"]
+    ]])
+  ),
+
+  card("L26", ["常見三大文法改錯", "southern / face / 間接問句"], "3處改錯",
+    st("Taiwan’s <del>south</del>*1 [[L26-1|southern]] port city of Kaohsiung once <del>faced with</del>*2 [[L26-2|faced]] a similar problem and also had to figure out <del>how could a priceless old structure</del>*3 [[L26-3|how a priceless old structure could]] be preserved.", "台灣南部的港口城市高雄也曾面臨類似的問題，同樣必須設法解決如何保存一座無價的古老建築。") +
+    clue("• <b>*1 (38%)</b>：應改成 <code>Taiwan’s southern port city of Kaohsiung</code>（<code>southern</code> adj.；<code>south</code> N. 當形容詞時通常用在地名如 South Korea, South Africa, South China Sea）。<br>• <b>*2 (46%)</b>：應改成 <code>Kaohsiung once faced <del>with</del> a similar problem</code>（碰到／面臨問題：<code>be faced with a problem = face a problem</code>；勇敢面對問題：<code>face (up to) a problem</code>；面對某人：<code>face</code>）。<br>• <b>*3 (46%)</b>：應改成 <code>how a priceless old structure could be preserved</code>（為 figure out 的受詞 → 受詞必需是名詞 → 名詞子句不可倒裝！）。") +
+    passage("21. L26 & 22. L28 課文與補充例句", [[
+      ["He came to the South to look for a job.", "他來到南方找工作。"],
+      ["I [was faced with / faced] the awful job of breaking the news to the girl's family.", "我面臨向女孩家人宣布這個壞消息的艱難工作。"],
+      ["I have grown up now and I have to face (up to) my responsibilities.", "我現在長大了，必須勇敢面對自己的責任。"],
+      ["I don't know how I'm going to face her after what happened.", "事發之後我不知道該如何面對她。"],
+      ["How are you? (倒裝 = 疑問句) → She wants to know how you are (名詞子句).", "名詞子句不倒裝對照 1"],
+      ["How could a priceless old structure be preserved? (倒裝 = 疑問句) → how a priceless old structure could be preserved (未倒裝 = 名詞子句)", "名詞子句不倒裝對照 2"],
+      ["22. L28 In the early 2000s, Kaohsiung was in need of a new underground metro and railway system to relieve traffic congestion and promote urban development.", "在 2000 年代初期，高雄需要新的地下捷運和鐵路系統，以緩解交通壅塞並促進都市發展。"]
+    ]])
+  ),
+
+  card("L31", ["名詞子句與不定詞主詞", "that + (for N to VR)"], "A",
+    st("The only problem was [[L31|that for]] the underground system to be built, the decades-old Kaohsiung Railway Station would need to be demolished.", "唯一的問題是，為了興建地下化系統，已有數十年歷史的高雄火車站將需要被拆除。") +
+    clue("• 重點 1：畫線部分為 <code>that</code> 引導的名詞子句，當 <code>the only problem</code> 的主詞補語。<br>• 重點 2：不定詞意義上的主詞用 <code>for + N</code> 表達：<code>(in order) for the underground system to be built</code>（為了興建地下系統，<code>the underground system</code> 為 <code>to be built</code> 的主詞）。") +
+    ops([
+      ["that for", "35%", "that 引導名詞子句 + for N to VR。"],
+      ["for which", "36%", "為了哪一個。"],
+      ["what for", "19%", "為了什麼。"],
+      ["for that", "10%", "為了它。"]
+    ], "A") +
+    passage("23. L31 補充對話", [[
+      ["Ross: I bought lots of flowers today. / Joey: What for? (= What did you buy all those flowers for? ≒ What's the occasion?)", "羅斯：我今天買了很多花。／喬伊：為了什麼？（有什麼特別場合嗎？）"]
+    ]])
+  ),
+
+  card("L33", ["主動與被動辨析", "took place = were held"], "A",
+    st("Since the train station held many precious memories for local residents, it was crucial that the authorities act quickly to save it. Urgent meetings [[L33|took place]], and plans for moving the old building were discussed.", "由於火車站承載了當地居民許多珍貴的回憶，當局必須迅速採取行動來拯救它，這點至關重要。緊急會議隨即召開，並討論了搬遷舊建築的計畫。") +
+    clue("25. L35：<code>it was crucial that the authorities (should) act quickly</code>。") +
+    ops([
+      ["took place", "57%", "= were held 被舉行。"],
+      ["held", "21%", "→ 應為 <code>were held</code>。"],
+      ["arranged", "12%", "→ 應為 <code>were arranged</code>。"],
+      ["organized", "10%", "→ 應為 <code>were organized</code>。"]
+    ], "A")
+  ),
+
+  card("L37", ["假設語氣", "suggest that S (should) be p.p."], "D",
+    st("Experts suggested that the structure [[L37|be moved]] as a whole.", "專家建議將這座建築作為一個整體進行搬遷。") +
+    clue("有『要命建堅』含意的動詞，後面的子句需用 VR（因省略 should）：<br>• (要求) <code>ask, demand, require, request</code><br>• (命令) <code>order, command, direct</code> + <code>that S (should) VR</code><br>• (建議) <code>suggest, recommend, propose, urge</code><br>• (堅持) <code>insist, persist, maintain</code>") +
+    ops([
+      ["to be moved", "14%", "不可用不定詞。"],
+      ["to move", "3%", "不可用不定詞且應為被動。"],
+      ["by moving", "3%", "不可用介系詞片語。"],
+      ["(should) be moved", "79%", "省略 should 的被動原形。"]
+    ], "D") +
+    passage("26. L37 & 27. L37 (as a whole) 補充例句", [[
+      ["He urged that the policy be adopted.", "他強烈建議該政策應被採納。"],
+      ["as a whole 總體上；整個來看（taken as a complete unit with all its parts，放 N/V 後，作為一個整體而非拆開）：Is his collection of stamps going to be divided up or sold as a whole?", "他這批郵票收藏是拆開零賣還是一起賣？"],
+      ["Students as a whole don’t like the new plan.", "學生全體都不喜歡這個新計畫。"],
+      ["on the whole (adv.)（通常放句首或主詞動詞之間）整體而言 = all in all：On the whole, I'm in favor of the proposal.", "整體而言，我贊成這個提議。"]
+    ]])
+  ),
+
+  card("L38", ["使役動詞被動", "be made to VR"], "D",
+    st("Enormous wooden tracks were built, and then the 3,500-ton building was raised up and (was) made [[L38|to slide]] along these tracks to its new location at a speed of six meters per day.", "巨大的木製軌道被建造起來，接著這座重達 3,500 噸的建築被抬升，並以每天六公尺的速度沿著這些軌道滑動到新位置。") +
+    clue("L40 使役動詞的被動用法：<code>be made to VR</code>。") +
+    ops([
+      ["slide", "27%", "被動時須還原 to。"],
+      ["sliding", "21%", "make 不接 V-ing。"],
+      ["by sliding", "18%", "不合句型。"],
+      ["to slide", "33%", "<code>(was) made to slide</code>。"]
+    ], "D") +
+    passage("28. L40 & 29. L41 (at a speed of) 補充例句", [[
+      ["He was made to apologize to his sister.", "他被迫向妹妹道歉。"],
+      ["29. L41 at a speed of 以…速度：The Earth travels around the sun at a speed of around 30 kilometers per second.", "地球以每秒約 30 公里的速度繞太陽運行。"],
+      ["其他類似用法：at the price of（以…的價格）、at the rate of（以…的速度/比例）：The company has been losing money at the rate of $7 million a month.", "這家公司一直以每月 700 萬美元的速度虧損。"]
+    ]])
+  ),
+
+  card("L41", ["花費動詞辨析", "It took + 時間 + to VR"], "C",
+    st("All in all, it [[L41|took]] 17 days to move the building to its new location. The rescue mission stayed on track, and both the station and the fond memories of local people were successfully preserved.", "總體而言，搬遷這座建築到新位置花了 17 天的時間。這項搶救任務順利進行，火車站與當地人的美好回憶都成功地被保存下來。") +
+    clue("L42 花費動詞：<br>• <code>人 spend 錢/時間 V-ing / on sth</code>（焦點在人）<br>• <code>事 cost 錢</code><br>• <code>事 take (sb) 時間 (to VR)</code>（表示「做某事花了…多久時間」，焦點在事）") +
+    ops([
+      ["spent", "8%", "主詞須為人。"],
+      ["cost", "5%", "後接金錢。"],
+      ["took", "88%", "<code>it took 17 days to move...</code>。"],
+      ["used", "0%", "不合句型。"]
+    ], "C") +
+    passage("30. L42 補充例句", [[
+      ["I spend 2 hours reading.", "我花兩小時閱讀。"],
+      ["The book cost me NT$80.", "這本書花了我台幣 80 元。"],
+      ["It took me 2 days to find him.", "找他花了我兩天的時間。"]
+    ]])
+  ),
+
+  card("L46", ["慣用搭配", "strike a balance"], "A",
+    st("As these two examples demonstrate, we don’t always have to clear out the old to make way for the new. After all, when it comes to development and cultural preservation, a balance that allows the two to exist side by side can be [[L46|struck]].", "正如這兩個例子所證明，我們不必總是清除舊事物來為新事物讓路。畢竟，說到發展與文化保存，我們可以取得一個讓兩者並存的平衡。") +
+    clue("L49：<code>strike a balance (between A and B)</code> 取得平衡（strike 三態：<code>strike, struck, struck</code>）。") +
+    ops([
+      ["struck", "34%", "<code>a balance ... can be struck</code>。"],
+      ["cleared", "22%", "清除。"],
+      ["replaced", "28%", "替換。"],
+      ["removed", "15%", "移除。"]
+    ], "A") +
+    passage("31. L49 & 32. L48 & 33. L49 補充例句", [[
+      ["Modern people have to work hard to strike a balance between their careers and family life.", "現代人必須努力在事業與家庭生活間取得平衡。"],
+      ["32. L48 when it comes to + N/V-ing 說到…：When it comes to the Ghost Month, many Taiwanese are still superstitious and avoid going out alone at night.", "說到鬼月，許多台灣人仍然很迷信，並避免在晚上獨自外出。"],
+      ["33. L49 side by side 一起：If we work side by side, we can finish this project earlier.", "如果我們並肩合作，就能提早完成這項專案。"]
+    ]])
+  ),
+
+  card("L50", ["名詞子句當主詞", "Whether + S + V"], "B",
+    st("[[L50|Whether]] it’s possible to preserve our heritage and still see progress simply depends on how much thought and effort we’re willing to put in.", "是否可能保存我們的文化遺產並同時看見進步，完全取決於我們願意投入多少心思與努力。") +
+    clue("<code>whether + S + V</code> 引導名詞子句當主詞；<code>how much thought and effort we’re willing to put in</code> 為名詞子句當受詞（注意：投入心力用 <code>put in</code>，(X) <code>pay</code>）。") +
+    ops([
+      ["Although", "11%", "副詞子句，不可當主詞。"],
+      ["Whether", "39%", "名詞／副詞子句（此處引導名詞子句當主詞）。"],
+      ["The fact that", "44%", "名詞子句，但既定事實不會「取決於（depends on）」投入多少努力。"],
+      ["What", "6%", "名詞子句，但後方子句不缺主詞或受詞。"]
+    ], "B") +
+    passage("35. L51 & 36. L52 補充例句", [[
+      ["35. L51 事物 + depend on... 視…而定：Exactly when my friends will arrive will depend on whether there’s a lot of traffic.", "我朋友確切何時抵達將取決於是否塞車。"],
+      ["36. L52 put in 投入/付出(努力/時間/精力) ((X) pay)：Suzie put in a lot of work to get everything ready for the party, so she should have the first slice of cake!", "蘇西投入了大量心力為派對做準備，所以她應該享用第一塊蛋糕！"]
+    ]])
+  )
+].join('');
+
+/* === Part 2: 句型 1 & 句型 2 === */
+const h2 = '<h2 id="p2">句型 1 ＆ 句型 2</h2>' +
+  passage("句型 1 (1~4) 課本例句", [[
+    ["1. It is necessary that teachers give students timely encouragement.", "老師給予學生及時的鼓勵是必要的。"],
+    ["2. It is essential that hospital staff be friendly and professional.", "醫院工作人員保持友善與專業是極為重要的。"],
+    ["3. It’s urgent that the government offer immediate help to people affected by the natural disaster.", "政府向受天災影響的民眾提供即時協助是刻不容緩的。"],
+    ["4. It's critical that people who wish to succeed devote time and effort to their goals.", "希望成功的人將時間與精力投入目標是至關重要的。"]
+  ]]) + [
+  card("句1-5", ["句型1", "It is important that S (should) VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">5. 學生按時繳交作業是很重要的。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|It is important that students hand in their assignments on time.]]")+'</div></div>'),
+  card("句1-6", ["句型1", "It is essential that S (should) VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">6. 父母注意孩子的行為是必要的。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|It is essential that parents pay attention to their children’s behavior.]]")+'</div></div>'),
+  card("句1-7", ["句型1", "It is necessary that S (should) VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">7. 青少年出遊時和家人保持聯絡是必要的。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|It is necessary that teenagers [keep in touch/contact] with their family when they [go out / travel / are away].]]")+'</div></div>'),
+  card("句1-8", ["句型1", "It is urgent that S (should) be p.p."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">8. 那些受困火場的民眾應緊急被救援。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|It is urgent that the people trapped in the fire (scene) be rescued.]]")+'</div></div>' + clue("(X) <code>populace</code>（一國的百姓）。")),
+  card("句1-9", ["句型1", "It is essential that S (should) VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">9. 在疫情期間，每個人戴醫療口罩並保持社交距離是極為重要的。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|During the pandemic, it is essential that everyone wear a surgical mask and keep social distance.]]")+'</div></div>' + clue("修正：<code>wear a surgical <del>masks</del> mask and keep <del>the</del> social distance</code>。"))
+].join('') +
+  passage("句型 2 (1~3) 課本例句", [[
+    ["1. I have no idea where Jack's dog went.", "我不知道傑克的狗去哪裡了。"],
+    ["2. People are curious about what the player said after the game.", "人們很好奇那位球員在賽後說了什麼。"],
+    ["3. <del>what on your mind is</del> → what is on your mind", "疑問詞 what 當主詞時，語序為 what + be + 補語。"]
+  ]]) + [
+  card("句2-3", ["句型2", "疑問詞當主詞之名詞子句"], "B",
+    st("The scholar asked [[句2-3|what was the matter]].", "那位學者詢問發生了什麼事。") +
+    clue("同 <code>what is on your mind</code>，<code>what</code> 為疑問代名詞當主詞，<code>the matter</code> 為補語。") +
+    ops([["what the matter was","","將 the matter 視為一般主詞。"],["what was the matter","","what 當主詞、the matter 當主詞補語。"]], "B")
+  ),
+  card("句2-4", ["句型2", "how + S + V"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">4. 許多人想看總統將如何處理這個危機。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Many people want to see how the president is going to deal with this crisis.]]")+'</div></div>'),
+  card("句2-5", ["句型2", "how + adj. + S + V"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">5. Darren 不知道上週的數學考試有多難。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Darren didn’t know how hard the math test was last week.]]")+'</div></div>' + clue("修正：<code>Darren didn’t know <del>how the math test last week was hard</del> → how hard the math test was last week.</code>")),
+  card("句2-6", ["句型2", "whether + S + V"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">6. 我們不確定新的颱風是否會侵襲台灣。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|We are not sure whether the new typhoon will hit Taiwan.]]")+'</div></div>'),
+  card("句2-7", ["句型2", "why + S + V"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">7. Neil 的同事不確定他為何請假一天。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Neil’s coworkers aren’t sure why he took a day off.]]")+'</div></div>' + clue("修正：<code>why he <del>would take</del> took a day off.</code>")),
+  card("句2-8", ["句型2", "how + S + V / how + to VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">8. 爸爸試著弄清楚如何修理好壞掉的電視。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Dad tried to figure out how the broken TV could be fixed. (= Dad tried to figure out how to fix the broken TV.)]]")+'</div></div>')
+].join('');
+
+document.getElementById('app').innerHTML = h1 + h2;
+const secs=[['p1','L1~L52 課文講解'],['p2','句型1 & 句型2']];
+document.getElementById('nav').innerHTML=secs.map(s=>'<a href="#'+s[0]+'">'+s[1]+'</a>').join('')+'<button id="tg">全部收合</button>';
+let open=true;
+document.getElementById('tg').onclick=function(){open=!open;document.querySelectorAll('details.q').forEach(d=>d.open=open);this.textContent=open?'全部收合':'全部展開';};
+</script>
+<script src="bookmark.js"></script>
+</body>
+</html>

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>502 Blackboard</title>
+<style>
+:root{--bg:#faf8f4;--fg:#222;--card:#fff;--line:#e4ded3;--acc:#9a3b2e;--ok:#1f7a4d;--no:#b3261e;--mut:#6b6558;--hl:#fff1c9}
+@media(prefers-color-scheme:dark){:root{--bg:#161512;--fg:#e8e4da;--card:#201f1b;--line:#3a372f;--acc:#e08a78;--ok:#6fcf9a;--no:#f08a82;--mut:#a39d8f;--hl:#4a3f1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+.top{max-width:900px;margin:auto;padding:28px 18px 10px}
+.top h1{margin:0 0 4px;font-size:1.6rem;color:var(--acc)}
+.top p{margin:2px 0;color:var(--mut);font-size:.92rem}
+nav{position:sticky;top:0;z-index:9;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto;padding:8px 12px}
+nav a,nav button{flex:none;padding:5px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--fg);text-decoration:none;font:inherit;font-size:.88rem;cursor:pointer}
+nav a:hover,nav button:hover{border-color:var(--acc);color:var(--acc)}
+main{max-width:900px;margin:auto;padding:0 16px 70px}
+h2{margin:36px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--acc);font-size:1.3rem}
+h3{margin:0 0 8px;font-size:1.05rem;color:var(--acc)}
+.pas,.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.para{margin-bottom:14px}
+.s{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--line)}
+.en{font-family:Georgia,"Times New Roman",serif;font-size:1.02rem}
+.zh{color:var(--mut);font-size:.93rem}
+.note{color:var(--mut);font-size:.85rem;margin:6px 0 0}
+.bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 4px;border-radius:3px;font-weight:600}
+.bl sup{color:var(--acc);margin-right:3px;font-size:.7em}
+.bank{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.92rem;margin-bottom:8px}
+details.q>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+details.q>summary::-webkit-details-marker{display:none}
+.n{background:var(--acc);color:#fff;border-radius:6px;padding:0 10px;font-weight:700;font-size:1.05rem}
+.tag{font-size:.78rem;border:1px solid var(--acc);color:var(--acc);border-radius:99px;padding:0 9px;line-height:1.6}
+.tag.pos{border-color:var(--ok);color:var(--ok)}
+.ans{margin-left:auto;font-weight:700;color:var(--ok)}
+.qb{margin-top:10px}
+.stem{margin-bottom:8px;padding:8px 10px;background:var(--bg);border-radius:6px}
+.clue{margin:8px 0;padding:8px 12px;border-left:4px solid var(--acc);background:var(--bg);border-radius:0 6px 6px 0}
+.clue h4,.qb h4{margin:0 0 2px;font-size:.92rem;color:var(--acc)}
+ul.op{list-style:none;margin:6px 0 0;padding:0}
+ul.op li{padding:7px 10px;margin:5px 0;border-radius:6px;border:1px solid var(--line);font-size:.95rem}
+ul.op li.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 9%,transparent)}
+ul.op li.no{border-color:color-mix(in srgb,var(--no) 45%,transparent)}
+ul.op i{font-style:normal;font-weight:700;font-size:.82rem}
+li.ok i{color:var(--ok)}li.no i{color:var(--no)}
+small{color:var(--mut)}
+footer{max-width:900px;margin:auto;padding:20px 16px 40px;color:var(--mut);font-size:.85rem;line-height:1.6;border-top:1px solid var(--line);margin-top:40px;}
+footer a{color:var(--acc);text-decoration:none;font-weight:bold;}
+footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>502 Blackboard</h1>
+  <p>每題含：考點標籤 → 題幹逐句中英對照 → 解題線索 → 正解與全部誤答分析</p>
+  <p>圖例：<span class="bl">黃底</span> ＝ 正確答案填入處 ｜ <span class="tag">考點</span></p>
+</div>
+<nav id="nav"></nav>
+<main id="app"></main>
+<footer>
+  限定用途教學教材。本詳解為教學輔助，題目版權屬原出版單位。<br>
+  💡 <b>問題回報與建議：</b> Line: etpaul ｜ IG: <a href="https://www.instagram.com/etpaul" target="_blank">@etpaul</a>
+</footer>
+
+<script>
+const L="ABCD";
+const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[([^|\]]*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const SENT={};
+function passage(title,paras,note){
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[([^|\]]+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  return '<section class="pas"><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
+}
+function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
+const clue=t=>'<div class="clue"><h4>解題線索</h4>'+t+'</div>';
+function ops(list,ans,lab){lab=lab||'ABCDEF';return '<ul class="op">'+list.map((o,i)=>{const k=ans.indexOf(lab[i])>=0;return '<li class="'+(k?'ok':'no')+'"><b>'+(lab==='ABCDEF'&&list.length<=4?'('+L[i]+') ':lab==='ABCDEF'?'('+'ABCDEF'[i]+') ':'')+o[0]+'</b>'+(o[1]?' <small>'+o[1]+'</small>':'')+' <i>'+(k?'✔ 正解':'✘ 誤答')+'</i><br>'+o[2]+'</li>';}).join('')+'</ul>';}
+function card(n,tags,ans,body){
+  return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
+}
+
+const st=(en,zh)=>'<div class="stem"><div class="en">'+fx(en)+'</div><div class="zh">'+zh+'</div></div>';
+
+/* === Part 1: 課前字彙 & L1 ~ L73 課文講解 === */
+const h1 = '<h2 id="p1">課前字彙 ＆ L1 ~ L73 課文講解</h2>' +
+  passage("Thinking Ahead 課前字彙與引言", [[
+    ["字彙表：groundbreaking (adj. 創新的) ｜ boost (v. 增強；提高) ｜ spot (v. 看見/注意到) ｜ sibling (n. 兄弟姐妹) ｜ exaggerated (adj. 誇張的) ｜ definitely (adv. 肯定地) ｜ come across (phr. 偶然發現) ｜ avoid (v. 避免) ｜ verify (v. 證實) ｜ consume (v. 食用；飲用)", "課前核心字彙整理。"],
+    ["Last Sunday, I [[1|came across]] Jack, an old friend of mine. He looked depressed because he had suffered a lot of losses. His sibling told him a [[2|groundbreaking]] piece of news: [[3|consuming]] one bottle of ostrich soup a day could keep COVID-19 away.", "上週日我偶遇了老朋友傑克。他看起來很沮喪，因為他遭受了許多損失。他的兄弟姊妹告訴他一則突破性的消息：每天喝一瓶鴕鳥湯可以預防新冠肺炎。"],
+    ["What’s better, it was on sale. Then, Jack spent a lot of money on the so-called ostrich soup. Then, these bottles were [[4|verified]] to be fake. Jack’s story tells us not to believe in foods with an [[5|exaggerated]] curative effect.", "更棒的是，它正在特價。於是傑克花了一大筆錢買所謂的鴕鳥湯。後來這些湯被證實是假貨。傑克的故事告訴我們不要相信具有誇大療效的食品。"],
+    ["1. 引言：It is easier to con people than to convince them (that) they have been conned.", "欺騙別人，比說服他們相信自己已經被騙了還要容易。"]
+  ]]) + [
+  card("L1", ["分詞後位修飾與字彙", "containing 包含"], "C",
+    st("Fake news can be defined as news [[L1|containing]] false or misleading information that appears truthful.", "假新聞可以定義為包含看似真實的錯誤或誤導性資訊的新聞。") +
+    clue("• <code>contain</code> vt. 包含（此處用主動現在分詞 <code>containing</code> 修飾 news）<br>• <code>consist of</code> 由…組成 = <code>be composed of = be comprised of = be made up of = comprise</code><br>• <code>consist in</code> 在於 = <code>lie in</code>") +
+    ops([
+      ["consisting in", "16%", "consist in 表「在於」，若表由…組成應為 <code>consisting of</code>。"],
+      ["composed by", "16%", "應為 <code>composed of</code>。"],
+      ["containing", "67%", "現在分詞 <code>(which contains) containing</code> 表包含。"],
+      ["comprised", "3%", "應為 <code>comprised of</code> 或主動 <code>comprising</code>。"]
+    ], "C") +
+    passage("3. L1 & 4. L2 補充例句", [[
+      ["The class consists of 20 students. = The class is [composed/comprised/made up] of 20 students. = The class contains/comprises 20 students.", "這個班級由 20 名學生組成。"],
+      ["True education does not consist in simply being taught facts.", "真正的教育並不在於只是被傳授事實。"],
+      ["4. L2 Fake news can be defined as news containing false or misleading information that appears (to be) truthful. (= seems (to be) truthful)", "課文句型對照。"],
+      ["true (adj. 真實的)：The movie is based on a true story. / It's true that I'm going to marry him.", "這部電影改編自真實故事。／我要嫁給他是真的。"],
+      ["truthful (adj. 誠實的；根據事實的)：The public has a right to expect truthful answers from politicians. / He gave a truthful account of his experiences in the jungle.", "大眾有權要求政治人物給出誠實的回答。／他如實敘述了自己在叢林中的經歷。"],
+      ["real (真實的，非人造/非偽造/非幻想的) vs. realistic (寫實的，看起來像真的) vs. right (正確的)：Santa Claus isn't a real person. / The coat is made of real fur. / The special effects were so realistic. / His ideas have now been proved right.", "聖誕老人不是真實存在的人。／這件大衣是真皮毛做的。／特效非常逼真寫實。／他的想法現在已被證明是正確的。"]
+    ]])
+  ),
+
+  card("L3", ["受詞補語句型", "make + O + OC"], "A",
+    st("Although fake news has long been in existence and this issue is as old as the news industry itself, the Internet and social media have [[L3|made]] creating and sharing fake news easier and faster than ever.", "雖然假新聞早已存在，且這個問題與新聞產業本身一樣古老，但網際網路與社群媒體已使製造與分享假新聞比以往更加容易且快速。") +
+    clue("<code>make + O. (creating and sharing fake news) + OC (easier and faster)</code> 使創造與分享假新聞更容易也更快速。") +
+    ops([
+      ["made", "50%", "構成 <code>have made + O + OC</code>。"],
+      ["been", "9%", "後接動名詞與形容詞比較級無法構成此語意。"],
+      ["kept", "40%", "keep 表「維持原本就有的狀態」，但以前並沒有這麼容易快速，是網路「使其變得（made）」更容易快速。"],
+      ["stayed", "3%", "不及物連綴動詞，後不可接動名詞受詞。"]
+    ], "A") +
+    passage("6. L3 ~ 8. L6 課文與補充例句", [[
+      ["6. L3 Although fake news has long been in existence (= existed) ...", "雖然假新聞早已存在…"],
+      ["7. L4 … and this issue is as old as the news industry itself (新聞業本身)：We've checked the wiring so the problem may be the television itself.", "我們已經檢查過線路，所以問題可能出在電視機本身。"],
+      ["8. L6 Consequently, people may be deceived by fake news, believing the content to be genuine (≒ true/real) without questioning (質疑) the sources.", "因此，人們可能會被假新聞欺騙，在不質疑消息來源的情況下相信內容是真實的。"],
+      ["We need laws that will protect genuine/real refugees. / The strap is genuine/real leather.", "我們需要能保護真正難民的法律。／這條錶帶是真皮的。"]
+    ]])
+  ),
+
+  card("L8", ["對等平行結構", "to understand ... and to question ..."], "C",
+    st("With so much fake news being spread every day, it is now more important than ever to understand where such news comes from and [[L8|to question]] the news stories we read.", "隨著每天有這麼多假新聞在散播，現在比以往任何時候都更重要的是去了解這類新聞從何而來，並質疑我們所讀到的新聞報導。") +
+    clue("• 句首 <code>With so much fake news being spread</code> 為 <code>with + O + OC</code>（spread 三態同形）。<br>• 後半句為虛主詞 <code>it</code> 搭配兩個由 <code>and</code> 連接的真主詞不定詞：<code>to understand ... and to question ...</code>。") +
+    ops([
+      ["questioning", "27%", "與前面的 <code>to understand</code> 不對稱。"],
+      ["be questioned", "11%", "我們是「主動質疑」新聞報導，非被質疑。"],
+      ["to question", "61%", "與 <code>to understand</code> 平行對稱。"],
+      ["by questioning", "3%", "結構不對稱。"]
+    ], "C")
+  ),
+
+  card("L12", ["因果動詞片語", "come from 源自於"], "A",
+    st("Although fake news comes in many forms, two are the most common. First, fake news can [[L12|come from]] sloppy journalism, which means that journalists write stories based on unreliable information or without fact-checking their sources prior to publication.", "雖然假新聞有許多形式，但有兩種最為常見。首先，假新聞可能源自於粗心草率的新聞工作，這意味著記者根據不可靠的資訊撰寫報導，或是在發表前沒有查核其消息來源。") +
+    clue("• 11. L12：<code>come in ... forms/sizes/colors</code> 是指「有⋯形式／尺寸／顏色」（例：<i>This skirt comes in many colors.</i>）。<br>• 假新聞是「結果」，粗心的新聞工作（sloppy journalism）是「原因」，故用 <code>come from / result from</code>（源自於、起因於）。") +
+    ops([
+      ["come from", "83%", "來自於、源自於（後接原因）。"],
+      ["result in", "12%", "導致（後接結果，應改為 <code>result from</code>）。"],
+      ["give rise to", "2%", "引起、導致。"],
+      ["lead to", "2%", "導致（<code>lead to = result in = give rise to = cause</code>）。"]
+    ], "A")
+  ),
+
+  card("L16", ["獨立分詞構句與 including 陷阱", "examples including"], "D",
+    st("Second, some news contains deliberately false information to achieve political results, [[L16|examples including]] attempts to influence people to vote for someone or to support a particular cause.", "其次，有些新聞包含蓄意捏造的錯誤資訊以達成政治目的，例子包括試圖影響人們投票給某人或支持特定理想目標。") +
+    clue("注意 <code>including</code> 的合理性：<br>• 若只填 <code>(A) including</code>（= which include），在語意上會變成前面的「政治結果（political results）包含這些企圖（attempts）」，但「企圖影響選民」是「假新聞的例子（examples）」，而不是「政治結果」本身！<br>• 課文原句為分號連接子句：<code>... achieve social or political results; examples include attempts to...</code><br>• 若前面改為逗號（無連接詞），因前後主詞不同（S1 為 <code>some news</code>，S2 為 <code>examples</code>），保留主詞 <code>examples</code> 並將動詞改為分詞 <code>including</code>，即構成獨立分詞結構 <code>, examples including attempts to...</code>！") +
+    ops([
+      ["including", "60%", "常見陷阱！會變成修飾緊鄰的 political results，造成「結果包含企圖」的邏輯矛盾。"],
+      ["inclusive of", "9%", "同上，修飾對象不合理。"],
+      ["examples included", "9%", "<code>examples included</code> 只能放在列舉項目的後面表「例子包含在內」。"],
+      ["examples including", "22%", "保留不同主詞 <code>examples</code> 的獨立分詞結構（= <code>; examples include...</code>）。"]
+    ], "D") +
+    passage("13. L19 ~ 17. L22 補充例句", [[
+      ["13. L19 vote for (= vote in favor of 投票支持…) vs. vote against (投票反對)：In the meeting, 55 people voted for Ken’s proposal, while only 2 voted against it.", "在會議中，55 人投票支持肯的提案，而只有 2 人投票反對。"],
+      ["14. L20 cause n. 某一群人所支持的崇高、利他的理想或目標：She devoted her life to the cause of women’s rights.", "她將一生奉獻給女權運動的理想。"],
+      ["16. L22 highlight vt. = emphasize 強調、凸顯", "同義字整理。"],
+      ["17. L22 long-lasting consequences 持續長久的後果 (= consequences that last long)：adv.-V-ing 的複合形容詞還有 hard-working（認真工作的）、fast-changing（快速變化的）、far-reaching（影響深遠的）。", "複合形容詞整理。"]
+    ]])
+  ),
+
+  card("L23", ["易混淆形容詞", "respected 受人尊敬的/權威的"], "A",
+    st("The following two examples illustrate the harm fake news can cause. The first highlights the potential long-lasting consequences of false information. In 1998, a British researcher published a small-scale study in a [[L23|respected]] medical journal, and it linked the MMR vaccine to autism.", "以下兩個例子說明了假新聞可能造成的傷害。第一個例子凸顯了錯誤資訊潛在的深遠後果。1998 年，一名英國研究人員在一份備受推崇（權威）的醫學期刊上發表了一項小規模研究，將麻疹腮腺炎德國麻疹混合疫苗（MMR）與自閉症連結在一起。") +
+    clue("<code>respect</code> 家族完整辨析：<br>• <code>respected</code> adj. 受人尊敬的、受推崇的（修飾人或權威期刊）<br>• <code>respectful</code> adj. 恭敬的、充滿敬意的（-ful = full，人對別人恭敬）<br>• <code>respective</code> adj. 個別的、各自的<br>• <code>respectable</code> adj. 品行端正的、體面的、正當的") +
+    ops([
+      ["respected", "40%", "備受推崇的、權威的（修飾 medical journal）。"],
+      ["respectful", "27%", "對他人恭敬有禮的（期刊不會對人恭敬）。"],
+      ["respecting", "7%", "現在分詞，不作此形容詞用法。"],
+      ["respective", "27%", "各自的。"]
+    ], "A") +
+    passage("18. L23 & 19. L25 補充例句", [[
+      ["She respected him for his honesty. / He is a highly respected journalist.", "她因為他的誠實而尊敬他。／他是一位備受敬重的記者。"],
+      ["They listened in respectful silence. / They chatted about their respective childhoods.", "他們恭敬地靜靜聆聽。／他們聊著各自的童年。"],
+      ["They are respectable citizens. / She leads a respectable life.", "他們是品行端正的公民。／她過著體面正當的生活。"],
+      ["19. L25 link A to B 把 A 和 B 聯繫在一起 / 把 A 連結到 B：Numerous studies have linked smoking to lung cancer.", "無數的研究已將吸菸與肺癌連結在一起。"]
+    ]])
+  ),
+
+  card("L26", ["因果轉折詞", "As a result 因此"], "D",
+    st("The media provided extensive coverage of this flawed study. [[L26|As a result]], the belief that the MMR vaccine could cause autism became widespread. Some people’s confidence in the vaccine was shattered, and vaccination rates dropped.", "媒體對這項有瑕疵的研究進行了廣泛報導。因此，認為 MMR 疫苗會導致自閉症的看法變得普遍。有些人對疫苗的信心破滅，疫苗接種率也隨之下降。") +
+    clue("媒體廣泛報導這項有瑕疵的研究，「因此（As a result）」造成錯誤信念廣為流傳。<br>21. L27：<code>flawed</code> adj. 有瑕疵的（例：<i>The research behind this report is seriously flawed.</i>）。") +
+    ops([
+      ["In addition", "16%", "此外。"],
+      ["On the other hand", "3%", "另一方面。"],
+      ["In other words", "6%", "換言之。"],
+      ["As a result", "75%", "因此。"]
+    ], "D")
+  ),
+
+  card("L30", ["主詞補語詞性", "be proved (to be) inaccurate"], "B",
+    st("However, subsequent studies with larger samples revealed different results, and the original study was eventually proved [[L30|inaccurate]].", "然而，後續有較大樣本數的研究顯示出不同的結果，最初的研究最終被證明是不準確的。") +
+    clue("• L30：<code>sample</code> 樣本（量）（a group of people used for getting information）。<br>• L31~L32：<code>be proved / proven (to be) + adj. (S.C.)</code> 被證明為…，主詞補語必須用形容詞 <code>inaccurate</code>！") +
+    ops([
+      ["inaccuracy", "13%", "名詞，不可直接作此處的形容詞補語。"],
+      ["inaccurate", "56%", "形容詞「不準確的」，作主詞補語（S.C.）。"],
+      ["inaccurately", "27%", "副詞不可作主詞補語說明 the original study 的狀態。"],
+      ["with inaccuracy", "3%", "不合 prove 的補語搭配。"]
+    ], "B") +
+    passage("22. L30 ~ 24. L32 補充例句", [[
+      ["After six weeks on the drug, over 60% of the sample showed some improvement.", "服用該藥物六週後，超過 60% 的樣本顯示出一些改善。"],
+      ["23. L32 In the end, the suspect was proved innocent and then released immediately.", "最後，嫌犯被證明無辜並隨即獲釋。"],
+      ["24. L32 even so ≒ however（儘管如此、然而）", "轉折詞同義整理。"]
+    ]])
+  ),
+
+  card("L33", ["分詞片語修飾", "(who were) exposed to 接觸到"], "A",
+    st("Even so, for years after, misleading details from the original study were still being reported. Some parents [[L33|exposed to]] these inaccurate reports refused to vaccinate their children for fear that it might do more harm than good.", "儘管如此，在之後的許多年裡，原始研究中的誤導性細節仍不斷被報導。一些接觸到這些不實報導的家長拒絕讓孩子接種疫苗，深怕弊大於利。") +
+    clue("<code>Some parents (who were) exposed to these inaccurate reports</code>：接觸到這些不實報導的家長。") +
+    ops([
+      ["exposed to", "35%", "接觸到（某種經歷、環境或資訊）。"],
+      ["drawing up", "17%", "草擬；制定（合約或計畫）。"],
+      ["related to", "15%", "與…有關。"],
+      ["pointed out", "32%", "指出；指明（家長不會「被指出這些報導」）。"]
+    ], "A") +
+    passage("25. L33 & 26. L35 補充例句", [[
+      ["(A) As a child, she was often exposed to different cultures through her family's travels. / The workers in the factory are required to wear protective gear because they are exposed to harmful chemicals.", "她小時候常透過家庭旅遊接觸不同文化。／工廠工人須穿防護裝備，因為他們暴露於有害化學物質中。"],
+      ["(B) The legal team is currently drawing up a contract to finalize the business deal. / The committee spent hours drawing up a plan to improve the company's productivity.", "法務團隊目前正在草擬合約以完成商業交易。／委員會花了數小時制定提升公司生產力的計畫。"],
+      ["(C) The book I'm reading is related to the history of ancient civilizations. / Her job involves tasks that are closely related to data analysis and management.", "我正在讀的書與古代文明歷史有關。／她的工作涉及與數據分析及管理密切相關的任務。"],
+      ["(D) During the presentation, the speaker pointed out the key reasons for the company's success. / The teacher pointed out the errors in the students' essays and gave them feedback.", "演講中講者指出了公司成功的關鍵原因。／老師指出了學生文章中的錯誤並給予回饋。"],
+      ["26. L35 do/cause harm (to...) (對…造成傷害) vs. do good (to …) (對…有益)：Playing games on a smartphone for a long time may do great harm (to your eyes).", "長時間用智慧型手機玩遊戲可能會（對眼睛）造成很大的傷害。"]
+    ]])
+  ),
+
+  card("L36", ["時態與連接詞搭配", "現在完成式 + since + 過去式"], "B",
+    st("More than two decades have now passed [[L36|since]] the original study was published, but its effects can still be observed worldwide.", "自從最初的研究發表以來，現在已經過了二十多年，但其影響仍可在世界各地觀察到。") +
+    clue("使用 <code>since</code> 當「自從」時要注意兩句的時態：<b>主要子句用現在完成式（<code>have now passed</code>），<code>since</code> 子句用過去簡單式（<code>was published</code>）</b>。") +
+    ops([
+      ["as long as", "6%", "只要。"],
+      ["since", "90%", "自從…以來。"],
+      ["despite the fact that", "3%", "儘管。"],
+      ["whereas", "3%", "然而。"]
+    ], "B") +
+    passage("27. L36 補充例句", [[
+      ["We have been good friends since we met in high school.", "自從我們在高中認識以來，就一直是好朋友。"]
+    ]])
+  ),
+
+  card("L38-練習", ["動詞字彙辨析", "observe 注意到/觀察"], "A",
+    st("練習：The guards failed to [[L38-練習|observe]] who delivered the package.", "警衛沒注意到是誰送來這個包裹的。") +
+    clue("L38：<code>observe</code> vt. 注意到（= notice）；觀察（= watch carefully）。") +
+    ops([
+      ["observe", "—", "注意到（= notice），可接 wh- 名詞子句。"],
+      ["distinguish", "—", "vt./vi. 分辨（事物的差異，不與單一 wh- 子句連用）。"],
+      ["remark", "—", "說、發表評論。"],
+      ["inspect", "—", "vt. 檢查／視察（具體物品或損壞）。"]
+    ], "A") +
+    passage("28. L38 補充例句", [[
+      ["Jack observed a look of anxiety on his brother's face. / Children learn by observing adults.", "傑克注意到他哥哥臉上焦慮的神情。／兒童透過觀察大人來學習。"],
+      ["I sometimes have difficulty distinguishing Spanish from Portuguese. / It's important to distinguish between business and pleasure.", "我有時很難分辨西班牙語和葡萄牙語。／把公事與玩樂區分開來是很重要的。"],
+      ["My father remarked that I looked unhappy. / I got out of the car to inspect the damage.", "我父親說我看起來不太開心。／我下車檢查損壞情況。"]
+    ]])
+  ),
+
+  card("L39", ["慣用搭配", "media outlets 媒體機構/平台"], "A",
+    st("The second example illustrates how companies manipulate the news for their own advantage. On February 23, 2018, a major hypermarket in Taiwan sent an email to several media [[L39|outlets]], exaggerating an upcoming increase in the price of toilet paper.", "第二個例子說明企業如何為了自身利益操弄新聞。2018 年 2 月 23 日，台灣一家大型量販店發送電子郵件給數家媒體機構，誇大即將到來的衛生紙漲價。") +
+    clue("L42：<br>• <code>media</code> (pl.) 所有（傳播）媒體；媒介<br>• <code>medium</code> (sg.) 一種媒體／媒介<br>• <code>a media outlet / platform</code> 一個媒體機構（一個頻道／一份報紙／一個新聞網站等）") +
+    ops([
+      ["outlets", "49%", "<code>media outlets</code> 媒體機構、新聞媒體管道。"],
+      ["relations", "8%", "媒體公關關係。"],
+      ["reports", "43%", "新聞報導（量販店是把信寄給「媒體機構 outlets」，而不是寄給「報導 reports」）。"],
+      ["releases", "0%", "新聞稿為 <code>press releases</code>。"]
+    ], "A") +
+    passage("29. L42 補充例句", [[
+      ["The scandal was widely reported in the national media. / Advertising is a powerful medium. / No other reputable (= respected) media outlets reported the story.", "這起醜聞在全國媒體上被廣泛報導。／廣告是一種強大的媒介。／沒有其他信譽良好的媒體機構報導這則新聞。"]
+    ]])
+  ),
+
+  card("L43", ["副詞與對等結構辨析", "merely = only 僅僅"], "B",
+    st("It was later found that the retailer’s true intention in doing so was [[L43|merely]] to advertise its own toilet paper promotion, but by noon that day, the damage had already been done.", "後來發現，該零售商這麼做的真正意圖僅僅是為了宣傳自家的衛生紙促銷活動，但到了當天中午，傷害已經造成了。") +
+    clue("• <code>in (= when) doing so</code>；<code>do damage to</code> 對…造成傷害。<br>• 若選 <code>(A) not only</code>，<code>not only A but (also) B</code> 要求 A（不定詞 <code>to advertise...</code>）和 B（完整句子 <code>by noon that day, the damage...</code>）結構必須平行對等，且語意也不是「不但為了宣傳而且造成傷害」，而是「原本<b>只是（merely）</b>想宣傳促銷，但傷害卻已經造成了」！") +
+    ops([
+      ["not only", "35%", "A（不定詞）與 B（句子）結構不對等，且語意不合。"],
+      ["merely", "50%", "<code>= only</code>（僅僅、只不過）。"],
+      ["in addition", "2%", "此外。"],
+      ["in consequence", "12%", "因此。"]
+    ], "B")
+  ),
+
+  card("L46", ["慣用片語", "follow suit 紛紛效仿/跟進"], "B",
+    st("Two mainstream media outlets reported on the imminent price hike without fact-checking, and others soon [[L46|followed suit]].", "兩家主流媒體未經查證就報導了即將到來的漲價，而其他媒體也很快紛紛跟進效仿。") +
+    clue("兩家主流媒體率先報導後，其他媒體也「照著做、跟進效仿」，慣用片語為 <code>follow suit</code>（源自橋牌中跟著出同一花色的牌）。") +
+    ops([
+      ["followed their instincts", "4%", "跟隨他們的直覺。"],
+      ["followed suit", "58%", "效仿、跟進照做。"],
+      ["followed the crowd", "26%", "盲從、隨波逐流（多指個人消費者或群眾缺乏主見）。"],
+      ["followed through", "13%", "堅持到底、履行承諾（常搭配 on sth）。"]
+    ], "B") +
+    passage("31. L46 選項補充例句", [[
+      ["(A) When faced with the difficult decision, Jane followed her instincts and chose the unconventional path. / The team members followed their instincts during the brainstorming session, leading to some innovative ideas.", "面對艱難決定時，珍跟隨直覺選擇了非傳統道路。／腦力激盪時團隊成員跟隨直覺，激發出創新點子。"],
+      ["(B) After one company introduced a four-day workweek, several others followed suit to improve work-life balance. / When the new fashion trend emerged, many celebrities and influencers followed suit and incorporated it into their style.", "一家公司推出週休三日後，其他幾家公司紛紛效仿。／新時尚潮流出現時，許多名人和網紅紛紛效仿。"],
+      ["(C) Instead of making an informed decision, he just followed the crowd and ended up regretting his choice. / Many investors followed the crowd and invested in the popular stocks without conducting proper research.", "他沒有做出明智決定，只是盲從大眾，結果後悔不已。／許多投資人隨波逐流，未經適當研究就投資熱門股票。"],
+      ["(D) The company not only made promises but also followed through on its commitment to reduce carbon emissions. / Sarah always follows through on her plans, which is why she has earned the trust of her colleagues.", "這家公司不僅許下承諾，更堅持到底履行減碳承諾。／莎拉總是將計畫貫徹到底，因此贏得同事信任。"]
+    ]])
+  ),
+
+  card("L48", ["恐懼動詞與形容詞用法", "feared that..."], "A",
+    st("The reporting prompted a wave of panic buying among Taiwanese people, many of whom [[L48|feared]] that if they didn’t stock up, they would run out of the precious daily necessity.", "這波報導在台灣民眾間引發了一股搶購潮，其中許多人擔心如果不囤貨，就會用光這項寶貴的日常必需品。") +
+    clue("完整用法對照：<br>• <code>scare / frighten / terrify / horrify</code> vt. 使（某人）受到驚嚇（主詞是嚇人的事物！）<br>• 某人「害怕、擔心」 that 子句：<br>主動動詞：<code>fear that...</code><br>被動分詞／形容詞（<b>前面必須有 be 動詞 were！</b>）：<code>were scared / frightened / afraid that...</code><br>空格前是主詞 <code>many of whom</code>（沒有 were！），故只能選主動動詞 <code>feared</code>！") +
+    ops([
+      ["feared", "37%", "主動動詞 <code>feared that...</code>（擔心、害怕…）。"],
+      ["scared", "22%", "應為被動 <code>were scared that...</code>。"],
+      ["frightened", "4%", "應為被動 <code>were frightened that...</code>。"],
+      ["afraid", "36%", "afraid 是形容詞，前面必須有 be 動詞 <code>were afraid that...</code>！"]
+    ], "A") +
+    passage("32. L48 & 33. L52 課文與補充例句", [[
+      ["(A) As a child, he feared the dark and always kept a night light on in his room. / The hikers feared encountering wild animals during their trek in the dense forest.", "小時候他怕黑，房間裡總是開著夜燈。／登山客在茂密森林健行時擔心遇到野生動物。"],
+      ["(B) The loud noise from the thunderstorm scared the dog, causing it to hide under the bed. / She was scared to watch horror movies because they gave her nightmares.", "雷暴的巨響把狗嚇壞了。／她不敢看恐怖片，因為會讓她做惡夢。"],
+      ["(C) The loud crash of the falling books frightened the students in the library. / The frightened deer darted into the woods to escape from the approaching predator.", "書本掉落的巨響嚇到了圖書館裡的學生。／受驚的鹿衝進樹林逃避逼近的掠食者。"],
+      ["(D) The little girl was afraid of the dark and always asked for a bedtime story before sleeping. / He was afraid to take risks in his career and preferred to stick to his comfort zone.", "小女孩怕黑，睡前總是要求聽床邊故事。／他害怕在事業上冒險，寧願待在舒適圈裡。"],
+      ["33. L52 Even manufacturers were negatively impacted, as their factories had to work overtime to handle the sudden increase in demand.", "連製造商也受到負面衝擊，因為他們的工廠必須加班以應付突然暴增的需求。"]
+    ]])
+  ),
+
+  card("L55", ["本課核心句型：lest 假設語氣", "lest + S + (should) VR"], "A",
+    st("With such significant events in mind, we are reminded that we must resist fake news. Whenever we come across new information, it is important to evaluate its validity lest we [[L55|be]] tricked into mistaking fake news for the truth.", "將這些重大事件謹記在心，這提醒了我們必須抵制假新聞。每當我們接觸到新資訊時，評估其真實性是很重要的，以免我們受騙而誤把假新聞當成事實。") +
+    clue("本課句型：<code>S + V … lest + S + (should) + VR</code>（以免…、唯恐…）。<br>因為省略了助動詞 <code>should</code>，後方不論主詞與時態為何，一律使用<b>原形動詞</b> <code>be</code>！") +
+    ops([
+      ["be", "48%", "省略 should 的原形被動 <code>lest we (should) be tricked...</code>。"],
+      ["are", "17%", "lest 子句中必須用原形動詞 be。"],
+      ["were", "14%", "不可用過去式。"],
+      ["will be", "23%", "不可用 will。"]
+    ], "A") +
+    passage("35. L55 ~ 38. L58 補充例句", [[
+      ["She turned away from the window lest anyone (should) see her.", "她從窗邊轉過身去，以免有人看見她。"],
+      ["36. L55 with sb/sth in mind = considering sb/sth (when doing sth)：Most gardens designed with children in mind are safe but dull. / With these aims in mind, the school operates a broad-based curriculum. (With such horrible events in mind ≒ When we have such horrible events in mind)", "大多數為兒童設計的花園安全但無趣。／懷著這些目標，該校推行廣泛多元的課程。"],
+      ["37. L56 come across 偶然遇見/無意中發現(陌生的人事物)：Beth came across an interesting article on a website the other day.", "貝絲前幾天在網站上偶然發現一篇有趣的文章。"],
+      ["38. L58 be tricked into + V-ing (受騙而去做某事) / talk or persuade sb into (說服…去做) / bluff sb into (虛張聲勢嚇唬某人去做)：According to the news report, an old lady was tricked into giving all her savings to a stranger. / She bluffed the doorman into thinking that she was a reporter.", "根據新聞報導，一位老婦人受騙把所有積蓄都給了一個陌生人。／她唬住門房，讓他以為她是記者。"]
+    ]])
+  ),
+
+  card("L59", ["主詞補語對等性", "is the inclusion of 名詞對稱"], "D",
+    st("One notable feature of authentic news is [[L59|the inclusion of]] the writer’s name, which enables readers to view that writer’s biography and verify his or her credibility.", "真實新聞的一個顯著特徵是包含作者的姓名，這使讀者能夠查看該作者的生平簡介並查證其可信度。") +
+    clue("主詞是名詞片語 <code>One notable feature of authentic news</code>（真實新聞的一項顯著特徵），連綴動詞 <code>is</code> 後方的主詞補語也必須是<b>名詞結構</b>，才能構成「某特徵 ＝ 包含作者姓名這件事」：<br><code>is <b>the inclusion of</b> the writer's name</code> = <code>is <b>the fact that it includes</b> the writer's name</code>。<br>（注意後面第 62 行也是同樣結構：<code>Another characteristic of real news is <b>the citing of</b> multiple primary sources</code>！）") +
+    ops([
+      ["including", "23%", "若寫 <i>One feature is including...</i> 會變成「這個特徵本身包含作者姓名」，而非「這篇新聞包含作者姓名」。"],
+      ["inclusive of", "13%", "同上，主詞是 feature 而非 news，邏輯不通。"],
+      ["included", "13%", "（或 that includes）缺主詞或語態不合。"],
+      ["the inclusion of", "51%", "名詞片語作主詞補語，與主詞 <code>One notable feature</code> 對等。"]
+    ], "D")
+  ),
+
+  card("L62", ["不定代名詞列舉順序", "One ... Another ... Still another"], "D",
+    st("Another characteristic of real news is the citing of multiple primary sources, which demonstrates a high level of authenticity. [[L62|Still another]] feature to look for is where the article has been published, which can indicate its reliability.", "真實新聞的另一個特徵是引用多個第一手消息來源，這展現了高度的真實性。還有另一個要留意的特徵是該文章發表的平台，這可以顯示其可靠度。") +
+    clue("觀察整段列舉「真實新聞特徵」的順序（並未限定總共有幾個特徵）：<br>• 第 1 個（L59）：<code><b>One</b> notable feature...</code><br>• 第 2 個（L62）：<code><b>Another</b> characteristic...</code><br>• 第 3 個（L63）：<code><b>Still another</b> (或 Yet another) feature...</code>（還有另一個…）<br>• 最後一個（L67）：<code><b>Last but not least</b>, a clear sign...</code><br>41. L63：<code>primary</code>（coming or happening before other things）：<code>primary sources of information</code> 第一手資料來源、<code>a primary tumor</code> 初期的腫瘤、<code>primary school</code> 小學。") +
+    ops([
+      ["The other", "25%", "有明確總數（通常為 2 個）時，指剩下的最後那一個，但後文還有第 4 個特徵！"],
+      ["Other", "2%", "<code>Other</code> 後面必須接複數名詞（other features），但空格後是單數 <code>feature</code>。"],
+      ["One another", "2%", "彼此、互相（代名詞）。"],
+      ["Still another", "71%", "（無明確總數時）還有另一個，承接前面的 One ... Another ...。"]
+    ], "D") +
+    passage("40. L62 選項補充例句", [[
+      ["(A) I found two recipes. One of them calls for vanilla extract, and the other suggests using almond essence for a different flavor.", "我找到了兩個食譜。其中一個需要香草精，而另一個則建議使用杏仁精以增添不同風味。"],
+      ["(B) Jane has a collection of classic novels, but she's also interested in exploring other genres like fantasy and sci-fi.", "珍收藏了一些經典小說，但她也有興趣探索奇幻與科幻等其他類型。"],
+      ["(C) The students in our class are very close and often help one another with their studies.", "我們班的學生關係非常密切，經常在課業上互相幫助。"],
+      ["(D) We've tried two restaurants so far, and now let's explore still another that has good reviews. / I thought we had covered all the topics, but the teacher surprised us with still another interesting subject to study.", "我們目前已經試過兩家餐廳了，現在讓我們再試另一家評價不錯的。／我以為我們已經涵蓋所有主題，但老師又帶給我們另一個有趣的學習主題。"]
+    ]])
+  ),
+
+  card("L66", ["直說語氣條件句", "If it has been published..."], "A",
+    st("If it [[L66|has been]] published by a respected media platform, such as the BBC or CNN, it is likely reliable.", "如果這篇文章是由備受推崇的媒體平台（例如 BBC 或 CNN）所發表的，那麼它很可能是可靠的。") +
+    clue("前句才剛說「要看文章發表在哪裡（<code>where the article has been published</code>）」，接著說「如果它是由 BBC 或 CNN 等權威平台所發表的，那就很可能是可靠的」。<br>這是在<b>不知道事實的情況下所做的真實條件判斷（直說語氣，正常時態）</b>，而且主要子句是現在式 <code>it <b>is</b> likely reliable</code>，故 If 子句呼應前句用現在完成被動式 <code>has been published</code>！") +
+    ops([
+      ["has been", "56%", "真實條件句（直說語氣），搭配主要子句現在式 <code>it is likely reliable</code>。"],
+      ["had been", "2%", "過去完成式用於「與過去事實相反的假設」。"],
+      ["were", "40%", "常見誤答！誤以為凡是 If 都要用假設語氣 were，但這不是與事實相反的假設，且主要子句是 <code>it is</code> 而非 <code>it would be</code>！"],
+      ["will be", "2%", "If 條件子句不用未來式，且文章已經發表了。"]
+    ], "A") +
+    passage("42. L66 & 43. L67 補充例句", [[
+      ["不知道事實時，用直說語氣（正常時態）：He will go to the concert if he can get tickets.", "如果他能買到票，他就會去聽演唱會。"],
+      ["知道事實，但與事實相反時，才需用假設語氣：If I had been more careful, I wouldn't have spilled coffee on my laptop.", "如果我當時更小心一點，就不會把咖啡灑在筆電上了。"],
+      ["43. L67 likely (adj. 可能的 / adv. 可能地)：likely 當副詞時通常只搭配 most/very/quite likely (= probably)，如 I would very likely have done the same thing in your situation. 故課文 it is likely reliable 在真實語料中更常見的寫法為 it is likely to be reliable（頻率相差 170 倍）。", "語料庫用法補充。"]
+    ]])
+  ),
+
+  card("L67", ["動詞片語辨析", "appeal to readers' emotions 訴諸情緒"], "A",
+    st("Last but not least, a clear sign of a factual report is objective writing that does not [[L67|appeal to]] readers’ emotions or use deliberately provocative language.", "最後但同樣重要的是，事實報導的一個明確標誌是客觀的寫作，不會訴諸讀者的情緒或使用蓄意煽動挑釁的語言。") +
+    clue("<code>appeal to + N</code> 三大意思：<br>1. 懇求（<i>appealed to the crowd not to panic</i>）<br>2. 吸引（<i>appeals to me</i>）<br>3. <b>訴諸於（藉由…以說服他人）</b>：<code>appeal to readers’ emotions</code>（訴諸讀者的情緒，藉煽動情緒來說服讀者）、<code>appeal to force</code>（訴諸武力）。") +
+    ops([
+      ["appeal to", "38%", "訴諸於（讀者的情緒）。"],
+      ["react to", "29%", "對…做出反應（文章不會對讀者的情緒做出反應）。"],
+      ["refer to", "16%", "參考；提及。"],
+      ["object to", "16%", "反對。"]
+    ], "A") +
+    passage("44. L67 選項補充例句", [[
+      ["Under no circumstances should we appeal to force when dealing with conflicts with others.", "在處理與他人的衝突時，我們在任何情況下都不應訴諸武力。"],
+      ["(A) In the face of diplomatic deadlock, the leaders appealed to mediation to find a peaceful solution to the international conflict. / The classic novel's timeless themes still appeal to readers of all generations.", "面對外交僵局，領袖們訴諸調解以尋求和平解決方案。／這部經典小說永恆的主題仍吸引著各世代讀者。"],
+      ["(B) People react to stress in different ways; some become more focused, while others may feel overwhelmed. / It's important to carefully consider how you react to criticism, as it can impact your personal growth.", "人們對壓力有不同反應。／仔細思考你如何回應批評是很重要的。"],
+      ["(C) In her essay, the author frequently refers to historical events to support her arguments. / During the lecture, the professor mentioned a few books to refer to for further reading.", "在文章中作者經常提及歷史事件以支持論點。／講座中教授提到幾本供進一步參考的書籍。"],
+      ["(D) Some employees object to the new dress code, as they feel it restricts their personal expression. / The community members are likely to object to the construction of a noisy factory in their peaceful neighborhood.", "部分員工反對新的服裝規定。／社區居民很可能會反對在寧靜社區興建吵雜的工廠。"]
+    ]])
+  ),
+
+  card("L70", ["動詞句型搭配", "prevent sb from V-ing (不可用 avoid)"], "B",
+    st("These features can [[L70|prevent]] us from falling for fake news so that we can see the world accurately.", "這些特徵可以防止我們輕信假新聞，讓我們能正確地看待這個世界。") +
+    clue("極重要考點！觀察空格後的結構是 <code>___ us (O) from falling (V-ing)</code>：<br>• <code>prevent / stop / keep + O + from V-ing</code>（防止／阻止某人做某事）<br>• <code>avoid</code> 後面<b>只能接 N 或 V-ing</b>（<code>avoid + N / V-ing</code>），<b>絕對沒有 <code>avoid sb from V-ing</code> 的用法</b>！") +
+    ops([
+      ["avoid", "—", "文法錯誤！avoid 不可接 <code>us from falling</code>（應改為 <i>help us avoid falling</i>）。"],
+      ["prevent", "—", "<code>prevent us from falling for fake news</code>（防止我們受騙相信假新聞）。"],
+      ["restrict", "—", "限制（用法為 <code>restrict sb to N</code>）。"],
+      ["distinguish", "—", "區分、辨別（用法為 <code>distinguish A from B</code>）。"]
+    ], "B") +
+    passage("45. L70 ~ 48. L73 課文與補充例句", [[
+      ["(O) I try to avoid going shopping on Saturdays. / (X) Rubber seals are fitted to avoid the gas from escaping. → (O) Rubber seals are fitted to prevent the gas from escaping.", "我試著避免在週六去購物。／安裝橡皮封嘴是為了防止瓦斯外洩。"],
+      ["(A) To maintain a healthy lifestyle, it's important to avoid consuming excessive sugary foods and drinks. / She decided to avoid rush hour traffic by leaving for work earlier in the morning.", "為了維持健康生活型態，避免攝取過多含糖飲食很重要。／她決定提早出門上班以避開尖峰車潮。"],
+      ["(B) The strong security measures prevented the protesters from entering the restricted area during the event. / Regular exercise and a balanced diet can help prevent many lifestyle-related diseases.", "嚴格的維安措施阻止抗議者在活動期間進入管制區。／規律運動與均衡飲食有助於預防許多文明病。"],
+      ["(C) The new regulations will restrict the use of certain harmful chemicals in manufacturing processes. / To maintain a healthy weight, it's important to restrict your intake of high-calorie foods.", "新法規將限制在製造過程中使用某些有害化學物質。／為了維持健康體重，限制高熱量食物攝取很重要。"],
+      ["(D) The ability to distinguish between reliable and unreliable sources of information is crucial in the digital age. / The artist's unique style of painting easily distinguishes his work from that of his contemporaries.", "在數位時代，區分可靠與不可靠資訊來源的能力至關重要。／這位藝術家獨特的畫風使其作品很容易與同代畫家區別開來。"],
+      ["46. L72 In the current age of news overload, we must all watch out for fake news lest we fall victim to it.", "在當前資訊超載的時代，我們都必須小心防範假新聞，以免成為其受害者。"],
+      ["watch out for 小心防範：When you are walking in the grass, you should watch out for snakes. ／ L73 fall victim/prey to 成為⋯的受害者：It’s reported that many popular tourist attractions have fallen victim to overtourism.", "走在草地上時應小心蛇。／據報導許多熱門景點已成為過度旅遊的受害者。"],
+      ["47. L73 Useful strategies are to think critically about what we are reading and to conduct further research on news stories to check their content [[|before]] accepting them as truth.", "實用的策略是批判性地思考我們所讀的內容，並對新聞報導進行進一步查證以確認內容，然後再（在…之前 before）將其當作事實接受。"],
+      ["48. L73 With due diligence (= When we have due diligence), we can win the war against fake news and help (us) (to) improve society.", "只要具備應有的謹慎查證（due 適當的/應有的；diligence 勤奮/審慎），我們就能打贏這場對抗假新聞的戰爭並協助改善社會。"]
+    ]])
+  )
+].join('');
+
+/* === Part 2: 句型與翻譯練習 === */
+const h2 = '<h2 id="p2">課本句型與翻譯練習 (lest / for fear that / for fear of / in case)</h2>' +
+  passage("句型講義重點整理與填空 (1~6) ＆ 課本句型 (2~6)", [
+    [
+      ["1. … lest + S + (should) VR ｜ 2. … for fear that + S + 助動詞 (限 would/should/might) ｜ 3. … for fear of + 名詞/動名詞 ｜ 4. … in case (that) + 正常子句 (無動詞限制)", "四大「以免／唯恐／以防萬一」句型結構總整理。"],
+      ["填空1：Put on a coat [[|in case (that)]] it gets cold.", "穿件外套以防變冷。（gets 為現在簡單式，故用 in case）"],
+      ["填空2：Amy threw away everything her ex-boyfriend gave her [[|for fear that]] she would feel sad when seeing them.", "艾咪把前男友送她的東西全丟了，深怕看到時會難過。（後接助動詞 would，用 for fear that）"],
+      ["填空3：Helen wrote down what to buy in the supermarket [[|in case (that)]] she forgot.", "海倫寫下在超市要買的東西以防忘記。（forgot 為過去式，用 in case）"],
+      ["填空4：The manager asked us to proofread the document [[|lest]] there be errors.", "經理要求我們校對文件以免有錯。（後接原形 be，用 lest）"],
+      ["填空5：I turned on the light [[|for fear that]] I might fall down the stairs in the dark.", "我把燈打開，深怕在黑暗中摔下樓梯。（後接助動詞 might，用 for fear that）"],
+      ["填空6：Tom slowed down suddenly [[|lest / in case (that)]] he hit the car ahead.", "湯姆突然減速，以免撞上前車。（hit 三態同形，可視為原形配 lest 或過去式配 in case）"]
+    ],
+    [
+      ["課本句型補充：drunk driving 酒駕 (N.) vs. Don’t drink and drive. (V. 酒後不開車)", "詞性與慣用說法比較。"],
+      ["課本2：[[|You should wear a face mask lest droplets spread the virus.]]", "你應該戴口罩，以免飛沫傳播病毒。（-let = 小，如 booklet 小冊子、piglet 小豬）"],
+      ["課本3：[[|If you feel unwell, stay home lest you spread the virus to others.]]", "如果你覺得身體不適，待在家裡以免把病毒傳染給他人。"],
+      ["課本4：[[|Those in quarantine should not go outside lest they be punished.]]", "居家檢疫／隔離者不應外出，以免受罰。（quarantine 傳染病隔離 vs. isolation 與世隔絕）"],
+      ["課本5：[[|People should avoid crowded places lest they come into contact with the virus.]]", "人們應避開擁擠場所，以免接觸到病毒。"],
+      ["課本6：[[|People are advised against spreading fake news lest they be fined.]]", "建議民眾切勿散播假新聞，以免受罰。"]
+    ]
+  ]) + [
+  card("翻譯-1", ["for fear of + V-ing", "以免困在車陣中"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">1. 我們提早出門，以免困在車陣中。(for fear of)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|We left home earlier for fear of getting stuck in traffic / a traffic jam.]]")+'</div></div>' + clue("亦可用 <code>We set out earlier...</code>；介系詞 <code>for fear of</code> 後接動名詞 <code>getting stuck</code>。")),
+  card("翻譯-2", ["lest + S + (should) be p.p.", "以免病患受到打擾"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">2. 建議訪客在醫院裡要輕聲說話，以免病患受到打擾。(lest) (Visitors are...)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Visitors are advised to speak in a low voice / softly in the hospital lest the patients be disturbed / bothered.]]")+'</div></div>' + clue("重要提醒：(X) <code>Visitors are suggested to...</code>（<code>suggest</code> 絕對不可接 <code>to VR</code>，被動也不行！必須用 <code>Visitors are advised to...</code>）。")),
+  card("翻譯-3", ["lest + S + (should) be p.p.", "以免分心"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">3. Chris 讀書前會關掉手機，以免分心。(lest)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Chris turns off his smartphone before he studies (before studying) lest he be distracted.]]")+'</div></div>' + clue("「分心（被分散注意力）」為被動 <code>be distracted</code>，接在 <code>lest</code> 後用原形 <code>be distracted</code>。")),
+  card("翻譯-4", ["lest / for fear that", "就怕老師生氣"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">4. 學生準時繳交作業，就怕老師生氣。(lest)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The students hand in their homework/assignments on time lest the teacher get angry.]]")+'</div></div>' + clue("<code>lest</code> 後接單數主詞 <code>the teacher</code> 時，動詞仍須用原形 <code>get</code>（省略 should）！")),
+  card("翻譯-5", ["for fear that + S + would/should/might + VR", "以免滑倒受傷"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">5. 救生員警告人們不要在水池區奔跑，以免滑倒受傷。(for fear that)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The lifeguard warns people not to run (warns people against running) in the pool area for fear that they would/should/might slip and get hurt/injured.]]")+'</div></div>' + clue("<code>for fear that</code> 子句中必須搭配助動詞 <code>would / should / might + VR</code>。")),
+  card("翻譯-6", ["for fear that vs. for fear of", "就怕吵到哥哥"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">6. Alex 聽音樂會戴上耳機，就怕吵到他哥哥 Luke。(for fear that / for fear of)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>• '+fx("[[|Alex puts on his earphones while listening to music for fear that he would/should/might disturb his brother Luke.]]")+'<br>• '+fx("[[|Alex puts on his earphones while listening to music for fear of disturbing his brother Luke.]]")+'</div></div>' + clue("<code>for fear that</code> 接完整子句（含助動詞）；<code>for fear of</code> 接動名詞 <code>disturbing</code>。"))
+].join('');
+
+document.getElementById('app').innerHTML = h1 + h2;
+const secs=[['p1','課前字彙 & L1~L73 課文講解'],['p2','句型與翻譯練習']];
+document.getElementById('nav').innerHTML=secs.map(s=>'<a href="#'+s[0]+'">'+s[1]+'</a>').join('')+'<button id="tg">全部收合</button>';
+let open=true;
+document.getElementById('tg').onclick=function(){open=!open;document.querySelectorAll('details.q').forEach(d=>d.open=open);this.textContent=open?'全部收合':'全部展開';};
+</script>
+<script src="bookmark.js"></script>
+</body>
+</html>

@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>504 Blackboard</title>
+<style>
+:root{--bg:#faf8f4;--fg:#222;--card:#fff;--line:#e4ded3;--acc:#9a3b2e;--ok:#1f7a4d;--no:#b3261e;--mut:#6b6558;--hl:#fff1c9}
+@media(prefers-color-scheme:dark){:root{--bg:#161512;--fg:#e8e4da;--card:#201f1b;--line:#3a372f;--acc:#e08a78;--ok:#6fcf9a;--no:#f08a82;--mut:#a39d8f;--hl:#4a3f1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+.top{max-width:900px;margin:auto;padding:28px 18px 10px}
+.top h1{margin:0 0 4px;font-size:1.6rem;color:var(--acc)}
+.top p{margin:2px 0;color:var(--mut);font-size:.92rem}
+nav{position:sticky;top:0;z-index:9;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto;padding:8px 12px}
+nav a,nav button{flex:none;padding:5px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--fg);text-decoration:none;font:inherit;font-size:.88rem;cursor:pointer}
+nav a:hover,nav button:hover{border-color:var(--acc);color:var(--acc)}
+main{max-width:900px;margin:auto;padding:0 16px 70px}
+h2{margin:36px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--acc);font-size:1.3rem}
+h3{margin:0 0 8px;font-size:1.05rem;color:var(--acc)}
+.pas,.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.para{margin-bottom:14px}
+.s{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--line)}
+.en{font-family:Georgia,"Times New Roman",serif;font-size:1.02rem}
+.zh{color:var(--mut);font-size:.93rem}
+.note{color:var(--mut);font-size:.85rem;margin:6px 0 0}
+.bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 4px;border-radius:3px;font-weight:600}
+.bl sup{color:var(--acc);margin-right:3px;font-size:.7em}
+.bank{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.92rem;margin-bottom:8px}
+details.q>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+details.q>summary::-webkit-details-marker{display:none}
+.n{background:var(--acc);color:#fff;border-radius:6px;padding:0 10px;font-weight:700;font-size:1.05rem}
+.tag{font-size:.78rem;border:1px solid var(--acc);color:var(--acc);border-radius:99px;padding:0 9px;line-height:1.6}
+.tag.pos{border-color:var(--ok);color:var(--ok)}
+.ans{margin-left:auto;font-weight:700;color:var(--ok)}
+.qb{margin-top:10px}
+.stem{margin-bottom:8px;padding:8px 10px;background:var(--bg);border-radius:6px}
+.clue{margin:8px 0;padding:8px 12px;border-left:4px solid var(--acc);background:var(--bg);border-radius:0 6px 6px 0}
+.clue h4,.qb h4{margin:0 0 2px;font-size:.92rem;color:var(--acc)}
+ul.op{list-style:none;margin:6px 0 0;padding:0}
+ul.op li{padding:7px 10px;margin:5px 0;border-radius:6px;border:1px solid var(--line);font-size:.95rem}
+ul.op li.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 9%,transparent)}
+ul.op li.no{border-color:color-mix(in srgb,var(--no) 45%,transparent)}
+ul.op i{font-style:normal;font-weight:700;font-size:.82rem}
+li.ok i{color:var(--ok)}li.no i{color:var(--no)}
+small{color:var(--mut)}
+footer{max-width:900px;margin:auto;padding:20px 16px 40px;color:var(--mut);font-size:.85rem;line-height:1.6;border-top:1px solid var(--line);margin-top:40px;}
+footer a{color:var(--acc);text-decoration:none;font-weight:bold;}
+footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>504 Blackboard</h1>
+  <p>每題含：考點標籤 → 題幹逐句中英對照 → 解題線索 → 正解與全部誤答分析</p>
+  <p>圖例：<span class="bl">黃底</span> ＝ 正確答案填入處 ｜ <span class="tag">考點</span></p>
+</div>
+<nav id="nav"></nav>
+<main id="app"></main>
+<footer>
+  限定用途教學教材。本詳解為教學輔助，題目版權屬原出版單位。<br>
+  💡 <b>問題回報與建議：</b> Line: etpaul ｜ IG: <a href="https://www.instagram.com/etpaul" target="_blank">@etpaul</a>
+</footer>
+
+<script>
+const L="ABCD";
+const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[([^|\]]*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const SENT={};
+function passage(title,paras,note){
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[([^|\]]+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  return '<section class="pas"><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
+}
+function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
+const clue=t=>'<div class="clue"><h4>解題線索</h4>'+t+'</div>';
+function ops(list,ans,lab){lab=lab||'ABCDEF';return '<ul class="op">'+list.map((o,i)=>{const k=ans.indexOf(lab[i])>=0;return '<li class="'+(k?'ok':'no')+'"><b>'+(lab==='ABCDEF'&&list.length<=4?'('+L[i]+') ':lab==='ABCDEF'?'('+'ABCDEF'[i]+') ':'')+o[0]+'</b>'+(o[1]?' <small>'+o[1]+'</small>':'')+' <i>'+(k?'✔ 正解':'✘ 誤答')+'</i><br>'+o[2]+'</li>';}).join('')+'</ul>';}
+function card(n,tags,ans,body){
+  return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
+}
+
+const st=(en,zh)=>'<div class="stem"><div class="en">'+fx(en)+'</div><div class="zh">'+zh+'</div></div>';
+
+/* === Part 1: 課前字彙 & L1 ~ L66 課文講解 === */
+const h1 = '<h2 id="p1">課前字彙 ＆ L1 ~ L66 課文講解</h2>' +
+  passage("Thinking Ahead 課前字彙與 P90 補充", [[
+    ["字彙表：1. identical (adj. 相同的) ｜ 2. available (adj. 可得到的) ｜ 3. extract (v. 提取) ｜ 4. replicate (v. 複製) ｜ 5. feasible (adj. 可行的) ｜ 6. preference (n. 偏好) ｜ 7. exceed (v. 超過) ｜ 8. accelerating (adj. 加速的)", "課前核心字彙整理。"],
+    ["1. When it comes to sweet food, I have a [[1|preference]] for brownies.", "說到甜食，我偏愛布朗尼。"],
+    ["2. Due to COVID-19, many online free learning resources are [[2|available]] for teachers and students.", "由於新冠肺炎，許多免費的線上學習資源可供師生使用。"],
+    ["3. With the [[|greatly increased / increasing]] population, food consumption is growing at an [[3|accelerating / increasing]] rate.", "隨著大幅增加的人口，糧食消耗正以加速（不斷增加）的速率成長。（講解提醒：increasing 本身即表「正在增加的」，不加 greatly，或改用 greatly increased；at an increasing rate 比 accelerating rate 更自然道地）"],
+    ["4. The government is working on a(n) [[4|feasible]] solution to overtourism.", "政府正在研擬一個解決過度旅遊的可行方案。"],
+    ["5. The money we can spend on this trip should not [[5|exceed]] 5,000 NT dollars because we are on a tight budget.", "我們這趟旅行能花的錢不應超過台幣五千元，因為我們的預算很緊。"],
+    ["P90 紅色表格右下：a call to action 行動呼籲 (a call for sb to take action)：In marketing, your call to action is the part of your advertisement that tells your target audience what they should be doing once they click on your ad and hit your website. The simplest example of a call to action is \"Buy now!\"", "在行銷中，「行動呼籲（CTA）」是廣告中告訴目標受眾點擊廣告進入網站後應該做什麼的部分。最簡單的例子就是「立即購買！」"]
+  ]]) +
+  passage("2. L1 & 3. L2 課文與補充例句", [[
+    ["Can you imagine taking a bite of a steak that was grown in a Petri dish instead of on a farm?", "你能想像咬下一口在培養皿中而非農場裡培育出來的牛排嗎？"],
+    ["image (n. 形象；意象；電腦圖片) vs. imagine (Vt. 想像，不可接 to VR)：He is trying to improve his image. / You can't imagine what a terrible week we had. / I can’t imagine (X) to go → (O) going out on a date with someone like that.", "他正試著改善自己的形象。／你無法想像我們這週過得多慘。／我無法想像跟那樣的人出去約會。"],
+    ["3. L2 instead of 理論上是介系詞，而 rather than 則可當介系詞或連接詞，但實際上許多人亦把 instead of 當連接詞用（連接兩個介系詞片語）：The resignation took effect on Saturday instead of on Sunday.", "辭職於週六生效，而非週日。"]
+  ]]) + [
+  card("L2", ["介系詞 + 關係代名詞", "in which (= and in this process)"], "D",
+    st("It may sound like a scene in a sci-fi movie, but this is already a reality! Many start-ups have begun to develop a special new production process [[L2|in which]] meat is created by taking animal stem cells, transforming them into primitive fibers, and combining these fibers to form muscle tissue.", "這聽起來可能像科幻電影裡的場景，但這已經成為現實！許多新創公司已開始研發一種特殊的新生產製程，在此製程中，肉是藉由取得動物幹細胞、將其轉化為原始纖維，並結合這些纖維形成肌肉組織而製造出來的。") +
+    clue("先行詞為 <code>a special new production process</code>（一種特殊的新生產過程），還原後方子句為 <code>meat is created ... <b>in</b> this production process</code>，故用 <code>in which</code>。") +
+    ops([
+      ["that", "33%", "若用 that + 完整子句，會變成同位語名詞子句，但 process 通常搭配 in which 表「在該過程中」。"],
+      ["by which", "11%", "後方已經有 <code>by taking animal stem cells...</code> 說明方式，故前面用 in which 指「在這個製程中」。"],
+      ["for which", "11%", "介系詞搭配不合。"],
+      ["in which", "43%", "<code>= and in this production process</code>。"]
+    ], "D")
+  ),
+
+  card("L8", ["複合形容詞與字彙", "lab-grown / backed (支持)"], "A, C",
+    st("The final product is known as “[[L8-1|lab-grown]] meat,” and it’s a thought-provoking recent trend that is [[L8-2|backed]] by both Bill Gates and agricultural giant Cargill.", "最終產品被稱為「實驗室培育肉（人造肉）」，這是一股發人深省的近期趨勢，獲得比爾・蓋茲與農業巨擘嘉吉公司（Cargill）雙方的支持。") +
+    clue("• 第 1 空：<code>lab-grown meat = meat (which is) grown in a lab</code>（<code>N-p.p. = p.p. + 介 + N</code>）。<br>• 6. L8：<code>a thought-provoking trend = a trend (which is) provoking thought</code>（<code>N-Ving = Vt-ing + O</code>）。<br>• 第 2 空：這股趨勢受到比爾蓋茲與農業巨頭的「支持、贊助（backed）」。注意：<code>back</code> 當動詞表「支持」，<b>沒有「回到（return）」之意</b>！") +
+    ops([
+      ["(1) lab-grown / (2) raised", "68% / 88%", "(1) lab-grown 正確；(2) 常見誤答 raised（提高；養育；募款；提出），但趨勢（trend）是被「支持（backed）」而非被養育或募集。"],
+      ["(1) lab-growing / (2) ranked", "26% / 6%", "lab-growing = meat which is growing lab（種實驗室的肉？）；ranked 排名。"],
+      ["(1) lab-grew / (2) backed", "3% / 3%", "複合字中不會用過去式 grew；(2) backed（支持）正確！"],
+      ["(1) growing-lab / (2) ruled", "0% / 3%", "複合字中分詞通常在後面；ruled 統治、裁定。"]
+    ], "AC") +
+    passage("5. L8 選項補充例句", [[
+      ["(A) The government aims to raise the minimum wage for workers. / They raised their children with love and care.", "政府旨在提高勞工基本工資。／他們用愛與關懷養育孩子。"],
+      ["(B) The university is ranked among the top institutions in the world. / She ranked highest in her class for academic achievement.", "這所大學名列全球頂尖機構之列。／她的學業成績在班上排名最高。"],
+      ["(C) (X) When he backed home... → (O) When he returned home... / Many people backed the candidate in the election. / The company is backed by a team of experienced investors.", "許多人在選舉中支持這位候選人。／這家公司獲得一群經驗豐富的投資人支持。"],
+      ["(D) Queen Elizabeth II has ruled the United Kingdom for many years. / The court ruled in favor of the plaintiff in the lawsuit.", "伊莉莎白二世女王統治英國多年。／法院在訴訟中作出有利於原告的裁定。"]
+    ]])
+  ),
+
+  card("L11", ["分詞慣用片語", "compared with 相較於"], "C",
+    st("The widespread support for producing meat in this way is due to the fact that it has several substantial advantages [[L11|compared]] with more traditional methods of meat production.", "以這種方式生產肉類之所以獲得廣泛支持，是因為與較傳統的肉類生產方式相比，它具有幾項重大的優勢。") +
+    clue("注意後方搭配的介系詞是 <code>with</code>！表示「與…相比、相較於…」用 <code>compared with / to</code>。") +
+    ops([
+      ["related", "19%", "<code>be related to</code> 與…有關（搭配 to，不搭配 with）。"],
+      ["linked", "0%", "<code>be linked to / with</code> 與…有關聯（語意不合，此處是在比較優劣）。"],
+      ["compared", "77%", "<code>compared to / with</code> 相較於…。"],
+      ["opposed", "2%", "<code>be opposed to = object to = oppose</code> 反對（搭配 to）。"]
+    ], "C") +
+    passage("7. L11 & 8. L13 補充例句", [[
+      ["(A) The new research findings are closely related to the previous studies.", "這些新的研究發現與先前的研究密切相關。"],
+      ["(B) The rise in pollution levels is linked to increased industrial activity. / The suspect is linked with a series of burglaries in the area.", "污染程度上升與工業活動增加有關。／嫌犯與該地區一連串住宅竊盜案有關。"],
+      ["(C) The size of this apartment is small compared to the one we saw last week. / His salary is quite high compared with others in his profession.", "這間公寓的面積與我們上週看的那間相比較小。／他的薪水與同業其他人相比相當高。"],
+      ["(D) Many people are opposed to (= object to = oppose <del>to</del>) the government's new tax policy. / The majority of the board members were opposed to the proposed merger.", "許多人反對政府的新稅收政策。／大多數董事會成員反對擬議的合併案。"],
+      ["8. L13 advantage (事物優點/人事物優勢)  disadvantage；strength  weakness (人或事的優缺點)：Her experience meant that she had a big advantage over her opponent.", "她的經驗意味著她比對手具有很大的優勢。"]
+    ]])
+  ),
+
+  card("L13", ["轉折詞與「忍受」動詞辨析", "therefore / In other words / endure"], "B, A, C",
+    st("First, one could argue that traditional meat production facilities, such as farms or factories, hardly ever have the animals’ best interests at heart. Growing meat in a laboratory [[L13-1|therefore]] helps eliminate the need for slaughterhouses as well as the unethical treatment of these animals. [[L13-2|In other words]], you could rest assured that the lab-grown beef patty on your plate didn’t come from a cow that had to [[L13-3|endure]] physical or mental torment.", "首先，有人可能會認為傳統肉類生產設施（如農場或工廠）幾乎從不把動物的最大利益放在心上。因此，在實驗室培育肉類有助於消除對屠宰場的需求以及對這些動物的不道德對待。換言之，你可以放心，你盤中的人造牛肉餅並不是來自一頭必須長期承受身心折磨的牛。") +
+    clue("• 第 1 空：因為傳統養殖場不顧動物福祉，「因此（therefore）」在實驗室培育肉類有助於消除屠宰場與不人道對待。<br>• 第 2 空：將前句「消除屠宰場與不道德對待」換個具體說法詮釋（「換言之 In other words = That is (to say)」，你盤中的牛肉餅不是來自受折磨的牛）。<br>• 第 3 空：「忍受、承受」辨析：<br>1. <code>endure</code>：長期承受（某種苦難或折磨，可用於肯定句）<br>2. <code>stand = bear</code>：忍受某件不愉快的事（<b>通常只用於否定句或疑問句</b>，如 <i>couldn't stand</i>）<br>3. <code>put up with</code>：勉強忍受、容忍（口語，用於人容忍某人的壞脾氣等）") +
+    ops([
+      ["(1) instead / (2) In other words / (3) stand", "32% / 57% / 11%", "(2) In other words 正確；stand 通常用於否定與疑問句。"],
+      ["(1) therefore / (2) On the other hand / (3) bear", "36% / 11% / 18%", "(1) therefore 正確；bear 同樣多用於否定疑問。"],
+      ["(1) then / (2) In contrast / (3) endure", "28% / 2% / 57%", "(3) endure（承受苦難折磨）正確。"],
+      ["(1) rather / (2) In addition / (3) put up with", "4% / 33% / 14%", "rather 用於否定句後修正；put up with 多指容忍小缺點或脾氣。"]
+    ], "BAC") +
+    passage("9. L13 ~ 11. L21 課文與補充例句", [[
+      ["Their economy has expanded enormously, while ours, by/in contrast, has declined.", "他們的經濟大幅擴張，而我們的經濟相較之下卻衰退了。"],
+      ["Ross couldn't stand the thought of leaving Rachel. / I wonder if I can stand his whining any longer. / She has put up with his temper for years.", "羅斯無法忍受離開瑞秋的想法。／我不知道我還能忍受他的抱怨多久。／她已經忍受他的脾氣好幾年了。"],
+      ["10. L15 hardly ever = scarcely ever = almost never（幾乎從不）：The lonely widow hardly ever leaves the house now that her husband has passed away.", "既然丈夫已經過世，這位孤獨的寡婦幾乎足不出戶。"],
+      ["11. L21 Better still (= better yet 更棒的是  worse still = worse yet 更糟的是), lab-grown meat could help make meat production more sustainable.", "更棒的是，實驗室培育肉有助於使肉類生產更具永續性。"]
+    ]])
+  ),
+
+  card("L23", ["句子主要動詞與主詞一致", "The raising ... takes a heavy toll on"], "A",
+    st("The raising of livestock (that is/are) needed to fulfill the current global demand for meat actually [[L23|takes]] a heavy toll on the environment.", "為了滿足當前全球肉類需求而進行的牲畜飼養，實際上對環境造成了沉重的破壞（使環境付出慘痛代價）。") +
+    clue("結構剖析：<code><b>The raising</b> (S, 單數動名詞) of livestock [(that is/are) needed to fulfill the current global demand for meat (過去分詞片語修飾 livestock)] actually <b>takes</b> (V) a heavy toll on the environment.</code><br>• 13. L25：<code>toll</code> 過路費（<code>a toll-free number</code> 免付費電話） → <code>take a (heavy) toll on...</code> 對…造成嚴重傷害／使…付出沉重代價（例：<i>Years of smoking have taken a heavy toll on his health.</i>）。") +
+    ops([
+      ["takes", "59%", "現在簡單式單數動詞，配合單數主詞 <code>The raising</code>。"],
+      ["took", "13%", "前後文描述當前現況（current global demand），用現在簡單式。"],
+      ["taken", "5%", "過去分詞不能單獨當主要動詞。"],
+      ["taking", "23%", "現在分詞不能單獨當主要動詞。"]
+    ], "A")
+  ),
+
+  card("L25", ["動詞片語辨析", "account for 佔（比例）"], "D",
+    st("According to FAO, it [[L25|accounts for]] nearly 15 percent of greenhouse gas emissions worldwide.", "根據聯合國糧農組織（FAO）的數據，畜牧業佔了全球溫室氣體排放量的將近 15%。") +
+    clue("<code>account for</code> 三大必考意義：<br>(1) 解釋、說明…的原因（<i>How do you account for the accident?</i>）<br>(2) 為…負責；交代清楚去向（<i>account for each book</i>）<br>(3) <b>（數量或比例上）佔…</b>（<i>accounts for nearly 15 percent...</i>）") +
+    ops([
+      ["occupies", "21%", "使用（空間）；佔領（地點）；佔據（時間），不接百分比（%）。"],
+      ["takes up", "5%", "佔去（太多空間或時間，如 <i>takes up space/time</i>）。"],
+      ["works out", "9%", "算出；解決；運動。"],
+      ["accounts for", "64%", "（數量比例）佔…。"]
+    ], "D") +
+    passage("14. L25 補充例句與片語填空練習 (1~5)", [
+      [
+        ["How do you account for the accident? / The librarian has to account for each book in his charge. / Females account for the majority of the students in the class.", "你如何解釋這次事故的原因？／圖書館員必須對所管理的每一本書負責。／女性佔這個班級學生的大多數。"],
+        ["(A) The line is occupied (= busy). / The large sofa occupies most of the space in the living room.", "電話佔線中。／大沙發佔據了客廳大部分空間。"],
+        ["(B) His extensive book collection takes up an entire wall in his study. / The new project will take up a significant amount of our time.", "他龐大的藏書佔據了書房整面牆。／這個新專案將佔去我們相當多的時間。"],
+        ["(C) I need to work out the math problems before the test. / They managed to work out their differences through compromise.", "我必須在考前算出這些數學題。／他們透過妥協設法解決了彼此的分歧。"]
+      ],
+      [
+        ["練習 1：We need to [[|work out]] how we're going to get there.", "我們需要想出（解決）我們要如何去那裡。"],
+        ["練習 2：He decided to get rid of the old books that were [[|taking up]] space in the office.", "他決定處理掉那些在辦公室裡佔空間的舊書。"],
+        ["練習 3：The building was purchased and [[|occupied]] by its new owners last year.", "這棟大樓去年被新屋主買下並進駐使用。"],
+        ["練習 4：Studying [[|occupies / takes up]] most of my time at home.", "讀書佔據了我在家的大部分時間。"],
+        ["練習 5：He said only 200 of the train's 600 passengers had been [[|accounted for]].", "他說火車上 600 名乘客中只有 200 人下落查明（交代清楚）。"]
+      ]
+    ])
+  ),
+
+  passage("15. L26 字根拆解（-mit / -miss = send）與 20 題完整表單練習詳解", [
+    [
+      ["• e- (ex- = out) → emit / emission（送出 → 排放氣體／發出光熱聲音）｜ • ad- (to) → admit / admission（送進去 → 准許進入／承認）｜ • trans- (across) → transmit / transmission（送過去 → 傳送訊號／傳染疾病）｜ • per- (through) → permit / permission（送你通過 → 允許／許可）｜ • sub- (under) → submit / submission（由下往上送 → 提交／呈交）｜ • dis- (away) → dismiss（送走 → 解僱／對…不予理會）｜ • o- (ob- = away) → omit / omission（送走 → 省略／遺漏）｜ • com- (together) → commit / commission / committee（送到一起 → 承諾投入、犯罪／委託、佣金／委員會）", "字根 -mit / -miss (send) 完整家族總整理。"],
+      ["The government has committed (itself) to improving health care. / Like many men, he has problems committing (himself) (to a relationship).", "政府已承諾致力於改善醫療保健。／像許多男人一樣，他對許下感情承諾有困難。"]
+    ],
+    [
+      ["1. Silence is often interpreted as an [[|admission]] of guilt. (31%)", "沉默通常被解釋為承認有罪。"],
+      ["2. The US Open will be [[|transmitted]] live via satellite. (69%)", "美國網球公開賽將透過衛星現場直播（傳送）。"],
+      ["3. The deadline for the [[|submission]] of proposals is May 1st. (86%)", "提交提案的截止日期為 5 月 1 日。"],
+      ["4. Global carbon [[|emissions]] from fossil fuels have significantly increased since 1900. (89%)", "自 1900 年以來，化石燃料的全球碳排放量顯著增加。"],
+      ["5. Employees can be [[|dismissed]] for sending obscene emails. (83%)", "員工可能會因發送猥褻電子郵件而被解僱。"],
+      ["6. Pages should not be copied without the [[|permission]] of the publisher. (70%)", "未經出版商許可，不得複製頁面。"],
+      ["7. Anna wants to get married, but Bob's not sure he wants to [[|commit]]. (70%)", "安娜想結婚，但鮑勃不確定自己是否願意許下承諾。"],
+      ["8. She has been [[|commissioned]] to illustrate a new book by J. K. Rowling, the author of the Harry Potter series. (57%)", "她受委託為《哈利波特》系列作者 J.K. 羅琳的新書繪製插圖。"],
+      ["9. The dealer takes a 20% [[|commission]] on the sales he makes. (70%)", "這位經銷商從他的銷售額中抽取 20% 的佣金。"],
+      ["10. Lisa's name had been [[|omitted]] from the list of honor students. (59%)", "麗莎的名字被從模範生名單中遺漏（刪除）了。"],
+      ["11. The young men tried to enter a nightclub but were refused [[|admission]]. (60%)", "這些年輕人試圖進入一家夜店，但被拒絕入場。"],
+      ["12. Doctors are working to prevent the [[|transmission]] of the virus. (95%)", "醫生們正努力防止病毒的傳播（傳染）。"],
+      ["13. Once we have [[|committed]] to this course of action there is no going back. (31%)", "一旦我們承諾採取這項行動方案，就沒有回頭路了。"],
+      ["14. All applications must be [[|submitted]] by Monday. (77%)", "所有申請表必須在週一前提交。"],
+      ["15. He blinked and [[|emitted]] a long, low whistle. (75%)", "他眨了眨眼，發出一聲又長又低的口哨聲。"],
+      ["16. He had more than the [[|permitted]] level of alcohol in his blood. (57%)", "他血液中的酒精濃度超過了允許的標準。"],
+      ["17. The local council have just set up a [[|committee]] to study recycling. (92%)", "地方議會剛成立了一個委員會來研究回收利用。"],
+      ["18. He just laughed and [[|dismissed]] my proposal as unrealistic. (75%)", "他只是笑了笑，認為我的提議不切實際而不予理會。"],
+      ["19. Only ticket-holders will be [[|admitted]] into the stadium. (62%)", "只有持票者才獲准進入體育場。"],
+      ["20. The [[|omission]] of her name was not a deliberate act. (56%)", "遺漏她的名字並不是故意的行為。"]
+    ]
+  ]),
+
+  card("L27", ["強調句型（分裂句）", "It won't just be ... that ..."], "D",
+    st("Experts estimate that by switching to lab-grown meat, emissions could be lowered by up to 96 percent. In addition, many claim [[L27|it]] won’t just be the environment that benefits.", "專家估計，藉由改用實驗室培育肉，排放量最高可降低 96%。此外，許多人聲稱獲益的將不只是環境而已。") +
+    clue("此題為「強調句型（分裂句）」：<code>many claim (that) <b>it</b> won’t just be the environment <b>that</b> benefits</code>（將原句 <i>Not just the environment will benefit</i> 放入 <code>It is/will be ... that ...</code> 框架中強調）。") +
+    ops([
+      ["that", "13%", "若填 that 則變成連接詞 that 後面少了虛主詞 it！"],
+      ["there", "25%", "不構成強調分裂句。"],
+      ["which", "5%", "不合句型。"],
+      ["it", "57%", "分裂句的虛主詞 <code>it</code>（前面已省略 claim 後的連接詞 that）。"]
+    ], "D") +
+    passage("1. L27 補充例句（benefit 與強調句型）", [[
+      ["A benefits (from B) = B benefits A：Local hotels and businesses benefited from this expansion of tourism. = This expansion of tourism benefited local hotels and businesses.", "當地飯店與商家從這波旅遊擴張中獲益。"],
+      ["強調句型 (A) It is + N + that + 不完整子句：It was math that Tom failed last year.", "湯姆去年被當的是數學（不是英文、物理…）。"],
+      ["強調句型 (B) It is + 介系詞片語/副詞 + that + 完整子句：(X) It was ill health that my father had to retire. → (O) It was because of ill health that my father had to retire.", "我父親是因為健康不佳而退休。（ill health 是名詞，必須加上 because of 成為副詞片語，後面才能接完整子句！）"]
+    ]])
+  ),
+
+  card("L30", ["分詞片語修飾", "(that are) not always found"], "B",
+    st("Scientists can actually make lab-grown meat healthier and more nutritious for humans by adding vitamins and minerals [[L30|not always found in natural meat]].", "科學家實際上可以藉由添加天然肉類中不一定有的維生素與礦物質，讓實驗室培育肉對人類來說更健康且更有營養。") +
+    clue("修飾前面的複數名詞 <code>vitamins and minerals</code>：<br>原句為 <code>(that are) not always found in natural meat</code>，省略關代與 be 動詞後即為 <code>not always found in natural meat</code>。") +
+    ops([
+      ["not always existed in natural meat", "5%", "<code>exist</code> 為不及物動詞（無被動），不可用過去分詞 existed！應改為 <code>not always existing</code> 或 <code>that do not always exist</code>。"],
+      ["not always found in natural meat", "32%", "省略 <code>that are</code> 的過去分詞片語，正確表被動「在天然肉類中不一定被發現／含有的」。"],
+      ["that natural meat not always possesses", "14%", "一般動詞否定必須加助動詞：應改為 <code>that natural meat does not always possess</code>。"],
+      ["that natural meat not always contains", "48%", "常見誤答！同樣漏了助動詞 <code>does</code>（應為 <code>that natural meat does not always contain</code>）！"]
+    ], "B")
+  ),
+
+  card("L34", ["分詞片語與介系詞", "related to 與…有關"], "A",
+    st("However, despite the evident advantages of this forward-thinking method of food production, there are some concerns [[L34|related to]] this meat of tomorrow.", "然而，儘管這種具前瞻性的食品生產方式有明顯的優勢，但仍有一些與這種未來肉品相關的隱憂。") +
+    clue("課文原字為 <code>surrounding</code>（= that surround 圍繞著…的），題目改考同義片語 <code>(that are) related to</code>（與…有關的）。") +
+    ops([
+      ["related to", "36%", "<code>(that are) related to</code> 與…有關的。"],
+      ["surrounded", "21%", "應改為主動現在分詞 <code>surrounding</code>（= that surround）。"],
+      ["associated", "16%", "缺少介系詞 <code>with</code>（應為 <code>associated with</code>）。"],
+      ["considering", "28%", "considering 為「有鑑於、考慮到」；若表「關於」應改用 <code>concerning / regarding</code>！"]
+    ], "A") +
+    passage("5. L37 ~ 7. L39 課文與補充例句", [[
+      ["5. L37 For a start, studies have shown that the development of lab-grown meat could actually have far-reaching negative effects in the long term.", "首先，研究顯示實驗室培育肉的發展，長期來看實際上可能會產生深遠的負面影響。"],
+      ["have a(n) (adj.) effect / influence / impact on...（對…造成影響）：It is becoming clear that technology is having an adverse (= negative/harmful) impact on the environment. (相關用法：have … consequences for 對…造成某種後果)", "越來越清楚的是，科技正在對環境造成負面影響。"],
+      ["6. L39 in the long term = in a long period of time（長期來看） ｜ 7. over the weekend ≒ during the weekend（在週末期間）", "時間介系詞片語整理。"]
+    ]])
+  ),
+
+  card("L39", ["動名詞當子句主詞", "maintaining ... requires ..."], "B",
+    st("While advocates for lab-grown meat say it can help fight climate change, some research suggests that [[L39|maintaining]] the infrastructure of lab-grown cell cultures also requires significant quantities of energy and leads to substantial gas emissions.", "雖然實驗室培育肉的提倡者表示它有助於對抗氣候變遷，但一些研究顯示，維持實驗室細胞培養的基礎設施也需要消耗大量能源，並導致可觀的氣體排放。") +
+    clue("1. 此處的 <code>suggests</code> 意為「顯示（= indicates）」，而非「建議」，故 that 子句不用原形動詞。<br>2. 在 <code>that</code> 子句中，動詞是後面的單數動詞 <code><b>requires</b> ... and <b>leads</b> to ...</code>，因此空格處需要<b>動名詞 <code>maintaining</code></b> 帶領整個片語當 that 子句的「主詞」！") +
+    ops([
+      ["maintain", "14%", "原形動詞不能當主詞（且此處 suggest 為顯示而非建議）。"],
+      ["maintaining", "81%", "動名詞片語 <code>maintaining the infrastructure...</code> 作 that 子句的主詞，搭配單數動詞 requires。"],
+      ["maintains", "3%", "動詞不可當主詞。"],
+      ["maintained", "2%", "過去式或分詞不可當主詞。"]
+    ], "B") +
+    passage("9. L39 ~ 11. L43 課文與補充例句", [[
+      ["9. L39 help (sb) (to) + VR vs. help (sb) with sth：I helped (her) (to) carry her cases up the stairs. / We all help (our mother) with the housework.", "我幫她把箱子搬上樓。／我們都幫媽媽做家事。"],
+      ["10. L40 culture n. (細胞、組織、細菌等的培養／培養物)；agriculture n. 農業 (agro-/agri- = 土、農)；cultivate vt. 培養/種植：Rice is cultivated throughout Taiwan. / I’m trying to cultivate a more relaxed and positive approach to life.", "台灣各地都有種植水稻。／我正試著培養更放鬆且正向的生活態度。"],
+      ["11. L43 Another issue to consider (= that we should consider) is whether this type of artificial meat is actually healthy and safe for humans to consume.", "另一個需要考量的問題是，這種人造肉對人類來說是否真的健康且可安全食用。"]
+    ]])
+  ),
+
+  card("L44", ["保留連接詞之簡化子句", "Although (it is) great in theory"], "A",
+    st("[[L44|Although]] great in theory, lab-grown meat is “unnatural,” or “similar to genetically modified (GM) food.”", "雖然在理論上很棒，但實驗室培育肉是「不自然的」，或者說「類似於基因改造（GM）食品」。") +
+    clue("原句為 <code>Although (lab-grown meat is) great in theory, lab-grown meat is...</code>。<br>注意空格後面緊接著的是<b>形容詞 <code>great</code></b>（<code>in theory</code> 為副詞片語「在理論上」），只有從屬連接詞 <code>Although</code> 可以省略 <code>S + be</code> 後直接保留形容詞補語 <code>great</code>！") +
+    ops([
+      ["Although", "36%", "<code>Although (it is) great in theory</code>。"],
+      ["So", "5%", "語意不合且需搭配 that。"],
+      ["Despite", "56%", "常見陷阱！<code>Despite</code> 是介系詞，後面只能接名詞或 V-ing（若用 Despite 必須加上動名詞 <code>Despite <b>being</b> great in theory</code>）！"],
+      ["No matter", "3%", "後面必須接疑問詞 <code>how</code>（<i>No matter how great...</i>）。"]
+    ], "A")
+  ),
+
+  card("L47", ["原因連接詞", "Since 既然/由於"], "C",
+    st("[[L47|Since]] the latter is sometimes said to induce allergic reactions or even cause more serious health problems like cancer, some people are warning against human-made meat for fear that it might have similar side effects.", "由於後者（基改食品）有時據說會引發過敏反應，甚至導致如癌症等更嚴重的健康問題，因此有些人警告不要食用人造肉，深怕它可能會有類似的副作用。") +
+    clue("前句「基改食品據說會引發過敏甚至癌症」是後句「人們警告不要吃人造肉」的<b>原因</b>，故用 <code>Since</code>（由於、既然）。") +
+    ops([
+      ["While", "44%", "雖然（前後是因果關係而非讓步轉折）。"],
+      ["As far as", "3%", "用於 <code>as far as sb/sth is concerned</code>（就…而言）。"],
+      ["Since", "48%", "由於、因為。"],
+      ["In case", "3%", "以防、萬一。"]
+    ], "C") +
+    passage("13. L47 & 14. L50 補充例句", [[
+      ["(B) As far as my career is concerned, I plan to advance to a managerial position within the next two years. / As far as our vacation is concerned, we're thinking of visiting Europe next summer.", "就我的事業而言，我計畫在未來兩年內晉升管理職。／就我們的度假計畫而言，我們考慮明年夏天去歐洲。"],
+      ["(D) I always carry an umbrella in case it rains. / Keep a spare key in case you lock yourself out of the house.", "我總是帶傘以防下雨。／留一把備用鑰匙，以防把自己鎖在門外。"],
+      ["14. L50 warn (sb) against … 提醒…注意(某危險事物)：Her financial adviser warned her against such a risky investment.", "她的財務顧問警告她不要進行如此高風險的投資。"]
+    ]])
+  ),
+
+  card("L51", ["名詞字彙搭配", "area of concern 關注的面向/領域"], "A",
+    st("One final [[L51|area]] of concern is the actual taste of lab-grown meat.", "最後一個令人關注的面向（問題領域），是實驗室培育肉的實際口感與味道。") +
+    clue("慣用搭配：<code>an area of concern</code>（一個令人關注／擔憂的面向或問題領域）、<code>an area of expertise</code>（專業領域）。") +
+    ops([
+      ["area", "23%", "某個主題、領域、面向（<code>One final area of concern</code>）。"],
+      ["means", "20%", "手段、方法。"],
+      ["sort", "51%", "常見誤答！<code>sort</code> 表「種類」，但「實際的味道（the actual taste）」是一個需要探討的「面向／問題領域（area of concern）」，而非某種種類的擔憂。"],
+      ["range", "5%", "範圍。"]
+    ], "A") +
+    passage("15. L51 選項補充例句", [[
+      ["(A) Environmental conservation is another area of concern that we need to address as a society. / Marketing is not really my area of expertise.", "環境保育是我們社會需要解決的另一個關注領域。／行銷並不是我的專業領域。"],
+      ["(B) Education is often seen as a means to an end, providing individuals with the tools to achieve their career goals.", "教育常被視為達成目的的手段，為個人提供實現職涯目標的工具。"],
+      ["(C) The library has a wide range of books of every sort, from classic literature to modern science fiction.", "圖書館有各種類型的廣泛書籍，從經典文學到現代科幻都有。"],
+      ["(D) The price range for smartphones can vary greatly, from affordable models to high-end devices.", "智慧型手機的價格範圍差異很大，從平價機型到高階設備都有。"]
+    ]])
+  ),
+
+  card("L52", ["lack 詞性與句型辨析", "be lacking in 在…方面有所不足"], "C",
+    st("Without the naturally occurring connective fat, tissue and bones that are present in real meat, lab-grown meat may be somewhat [[L52|lacking]] in taste and texture and thus less appealing to some consumers.", "由於沒有真肉中自然生成的結締脂肪、組織和骨頭，實驗室培育肉在味道和口感方面可能會略顯不足，因此對某些消費者來說較無吸引力。") +
+    clue("必考 <code>lack</code> 三大句型：<br>1. 及物動詞：<code>lack (Vt.) + O.</code>（直接接名詞，<b>不加 in 或 of</b>！如 <i>He lacks courage.</i>）<br>2. 形容詞片語：<code>be lacking (adj.) <b>in</b> + N</code>（在…方面有所不足／缺乏，如 <i>He is lacking in courage.</i>）<br>3. 名詞片語：<code>(the) lack (N.) <b>of</b> + N</code>（…的缺乏，如 <i>The lack of courage makes her shy.</i>）<br>空格前有 <code>may be somewhat</code>，空格後有介系詞 <code>in</code>，且與後方的形容詞 <code>less appealing</code> 平行，故填形容詞 <code>lacking</code>！") +
+    ops([
+      ["lack", "32%", "前面已經有 be 動詞 <code>may be</code>，不可再接原形動詞 lack。"],
+      ["lacks", "7%", "同上，不可接動詞。"],
+      ["lacking", "37%", "構成 <code>be (somewhat) lacking in taste and texture</code>。"],
+      ["lacked", "24%", "lack 作及物動詞時一般不用被動，且不搭配 in。"]
+    ], "C")
+  ),
+
+  card("L56", ["名詞子句連接詞", "how 如何"], "C",
+    st("Therefore, more extensive research is needed to determine [[L56|how]] the flavor and composition of this new meat might be altered to better suit consumers’ tastes.", "因此，需要更廣泛的研究來確定如何改變這種新肉品的風味和成分，以更符合消費者的口味。") +
+    clue("後方子句 <code>the flavor and composition of this new meat might be altered</code> 為完整的被動句（不缺主詞或受詞），語意為研究「如何（how）」改良其風味與成分。") +
+    ops([
+      ["that", "13%", "<code>determine</code>（查明、確定）後接未知的研究問題，不用表示已確定事實的 that。"],
+      ["where", "0%", "語意不合。"],
+      ["how", "56%", "連接副詞（如何）+ 完整子句。"],
+      ["what", "31%", "what 後方必須接不完整子句（缺主詞或受詞）。"]
+    ], "C") +
+    passage("18. L59 課文句子", [[
+      ["Whether we like it or not, lab-grown meat is an innovative product that could have a long-term impact on a global scale.", "無論我們喜不喜歡，實驗室培育肉都是一項可能在全球範圍內產生長期影響的創新產品。"]
+    ]])
+  ),
+
+  card("L61", ["轉折副詞辨析", "nonetheless = however 然而"], "B",
+    st("It might, [[L61|nonetheless]], come at a price. To ensure that future foods are both sustainable and healthy, it is therefore essential for us to conduct more comprehensive research before we jump to any conclusions.", "然而，它可能會伴隨著代價。因此，為了確保未來的食品既永續又健康，在我們妄下任何結論之前，進行更全面的研究對我們來說至關重要。") +
+    clue("前句說人造肉是一項影響全球的創新產品，本句轉折說「然而（nonetheless = however），它可能會付出代價（come at a price）」。<br>20. L63：<code>conduct a survey / an investigation / research / an experiment / an interview</code>（進行調查、研究、實驗、訪談等）：<i>Is it really necessary to conduct experiments on animals?</i> / <i>The interview was conducted in English.</i>") +
+    ops([
+      ["likewise", "16%", "= similarly 同樣地。"],
+      ["nonetheless", "28%", "= however / nevertheless 然而、儘管如此。"],
+      ["accordingly", "24%", "= therefore 因此。"],
+      ["additionally", "32%", "= in addition 此外。"]
+    ], "B")
+  ),
+
+  card("L64", ["主詞補語原形不定詞", "all we can do is (to) VR"], "A",
+    st("For now, all we can do is [[L64|keep]] a close eye on this rapidly growing trend as it takes us further and deeper into the unknown.", "目前，我們所能做的就是密切關注這股快速成長的趨勢，隨著它帶領我們更深入地探索未知領域。") +
+    clue("重要特殊句型：當主詞為 <code>[all / what / the only thing] + S + do/can do</code>（含有實義動詞 <code>do</code>）時，連綴動詞 <code>is / was</code> 後方的主詞補語不定詞通常<b>省略 <code>to</code>，直接用原形動詞 <code>VR</code></b>（寫 <code>(to) VR</code> 皆可，不寫 V-ing）！<br>例：<i>[All (that) / What] you can do is (to) smile and pretend you don’t care.</i><br>• 22. L66：<code>take us deeper into …</code> 使我們更了解、帶我們更深入…<br>• 23. L66：<code>the + adj.</code> = (1) <code>adj. + people</code>（如 <code>the rich = rich people</code>）；(2) 抽象名詞（如 <code>the unknown</code> 未知的領域）。") +
+    ops([
+      ["keep", "37%", "省略 to 的原形不定詞作主詞補語：<code>all we can do is (to) keep...</code>。"],
+      ["keeping", "57%", "常見誤答！在 <code>all we can do is...</code> 句型中，主詞補語用 <code>(to) VR</code> 而非 V-ing。"],
+      ["by keeping", "0%", "介系詞片語不可作此處主詞補語。"],
+      ["that to keep", "6%", "文法錯誤。"]
+    ], "A")
+  )
+].join('');
+
+/* === Part 2: 複合形容詞句型講義與單字卷/課本練習 === */
+const h2 = '<h2 id="p2">句型講義：複合形容詞總整理與實戰測驗 (6~15)</h2>' +
+  passage("複合形容詞結構講義與課本／單字卷參考答案", [
+    [
+      ["1. Warm up：-ed（感到…的，如 heart-broken 感到傷心的） vs. -ing（令人…的，如 heart-breaking 令人傷心的）", "情緒分詞複合字。"],
+      ["2. adj.-Ned（有…特徵的）：egg-headed (書呆子氣的) ｜ air-headed (少根筋的) ｜ pig-headed (頑固的) ｜ fair-skinned (皮膚白皙的) ｜ ginger-haired (紅髮的) ｜ heart-shaped (心形的，如 a necklace with a heart-shaped pendant) ｜ bright-colored (色彩鮮豔的) ｜ long-eared (長耳的，如 a long-eared rabbit / a long-ear rabbit)", "課本與單字卷 adj.-Ned 複合字整理。"],
+      ["3. 句2.1 N-Ving（主動及物 Vt. + O）：a country which loves peace → a peace-loving country ｜ a citizen who abides by the law → a law-abiding citizen", "名詞受詞前置之複合形容詞。"],
+      ["4. 句2.2 adj.-Ving（連綴動詞 + adj.）：a man who looks nervous → a nervous-looking man ｜ flowers which smell nice → nice-smelling / sweet-smelling flowers ｜ suspicious-looking (看起來可疑的)", "連綴動詞複合形容詞。"],
+      ["5. 句2.3 adv.-Ving / adv.-p.p.（不及物動詞或被動）：hardworking (adj. 勤奮的，對照 hard work n. / work hard v.) ｜ a car which moves fast → a fast-moving car ｜ historical impact which reaches far → far-reaching historical impact ｜ a person who means well → a well-meaning person vs. advice which is meant well → well-meant advice ｜ above-mentioned facts (上述事實)", "副詞前置之複合形容詞。"],
+      ["6. 單字卷其他重要複合字：life-saving (救命的) ｜ home-grown (自家種植的/本土的) ｜ much-needed (極為需要的) ｜ world-famous (世界聞名的) ｜ time-consuming (耗時的；注意：英文不說 It's time-wasting，應說 It's a waste of time!) ｜ do away with (= get rid of / stop using 廢除) ｜ monotonous (單調的)", "單字卷核心考點整理。"]
+    ]
+  ]) + [
+  card("句型-6", ["複合形容詞辨析", "far-fetched 牽強的"], "B",
+    st("⑥ To avoid being punished by the teacher, he made up an excuse. But it was so [[句型-6|far-fetched]] that the teacher didn’t believe it.", "為了避免被老師處罰，他編了一個藉口。但這個藉口太牽強了，以至於老師根本不相信。") +
+    clue("區分兩個易混淆的 <code>far-</code> 複合形容詞：<br>• <code>far-fetched</code>：牽強附會的、難以置信的（修飾藉口 excuse 或故事）<br>• <code>far-reaching</code>：影響深遠的（修飾影響 impact / consequences）") +
+    ops([
+      ["far-reached", "—", "無此字。"],
+      ["far-fetched", "—", "牽強的（從很遠的地方硬扯過來的）。"],
+      ["far-fetching", "—", "無此字。"],
+      ["far-reaching", "—", "影響深遠的。"]
+    ], "B")
+  ),
+  card("句型-7", ["複合形容詞辨析", "time-sensitive 具時效性的"], "C",
+    st("7. The urgent and [[句型-7|time-sensitive]] task demanded our immediate focus and effort to ensure its timely completion and success.", "這項緊急且具時效性的任務需要我們立即投入專注與努力，以確保能及時完成並取得成功。") +
+    clue("與 <code>urgent</code>（緊急的）及 <code>timely completion</code>（及時完成）呼應，表示「對時間敏感的、具時效性的（time-sensitive）」。<br>補充例句：<i>Increasingly, both men and women in the professional middle classes are work-rich and time-poor.</i>（專業中產階級越來越工作滿檔而缺乏時間）。") +
+    ops([
+      ["time-tested", "—", "經過時間考驗的、歷久彌新的。"],
+      ["time-saving", "—", "省時的。"],
+      ["time-sensitive", "—", "對時間敏感的、具時效性的。"],
+      ["time-poor", "—", "沒時間的（主詞應為人）。"]
+    ], "C")
+  ),
+  card("句型-8", ["複合形容詞辨析", "snow-covered 被雪覆蓋的"], "B",
+    st("8. The [[句型-8|snow-covered]] landscape looked magical under the moonlight, creating a breathtaking and serene scene.", "被白雪覆蓋的景致在月光下看起來如夢似幻，營造出令人屏息且寧靜的畫面。") +
+    clue("<code>a landscape (which was) covered with snow</code> → <code>a snow-covered landscape</code>。") +
+    ops([
+      ["thought-provoking", "—", "發人深省的。"],
+      ["snow-covered", "—", "被雪覆蓋的。"],
+      ["rain-soaked", "—", "被雨浸濕的（與月光下夢幻寧靜美景較不符）。"],
+      ["heartwarming", "—", "暖心的（通常修飾故事或善舉）。"]
+    ], "B")
+  ),
+  card("句型-9", ["複合形容詞辨析", "hair-raising 令人毛骨悚然/驚險刺激的"], "A",
+    st("9. Riding the roller coaster was a [[句型-9|hair-raising]] experience that thrilled and terrified the students at the amusement park.", "搭乘雲霄飛車是一次令人寒毛直豎（驚險刺激）的體驗，讓遊樂園裡的學生既興奮又恐懼。") +
+    clue("體驗使人的寒毛直豎起來（<code>raise one's hair</code>），屬主動及物的 <code>N-Ving</code>：<code>hair-raising</code>。") +
+    ops([
+      ["hair-raising", "—", "令人毛骨悚然的、驚險刺激的。"],
+      ["hair-raised", "—", "無此用法。"],
+      ["hair-arousing", "—", "無此用法。"],
+      ["hair-aroused", "—", "無此用法。"]
+    ], "A")
+  ),
+  card("句型-10", ["複合形容詞辨析", "jaw-dropping 令人驚掉下巴的"], "B",
+    st("10. The magician's [[句型-10|jaw-dropping]] tricks amazed the audience, leaving them in awe and wonder.", "魔術師令人驚掉下巴的把戲讓觀眾大為驚奇，使他們讚嘆不已。") +
+    clue("令人驚掉下巴的：<code>jaw-dropping</code>。") +
+    ops([
+      ["jaw-drop", "—", "結構錯誤。"],
+      ["jaw-dropping", "—", "令人驚掉下巴的、令人大吃一驚的。"],
+      ["jaw-dropped", "—", "結構錯誤。"],
+      ["dropped-jaw", "—", "順序錯誤。"]
+    ], "B")
+  ),
+  card("句型-11", ["複合形容詞辨析", "stress-relieving 舒壓的"], "C",
+    st("11. Taking a walk in the park is a [[句型-11|stress-relieving]] activity that helps me relax after a long day of studying.", "在公園散步是一項舒壓的活動，幫助我在漫長一天的讀書後放鬆身心。") +
+    clue("<code>an activity that relieves stress (Vt. + O)</code> → <code>a stress-relieving activity</code>。") +
+    ops([
+      ["relief-stressing", "—", "順序顛倒。"],
+      ["relief-stressed", "—", "順序與結構皆錯。"],
+      ["stress-relieving", "—", "舒緩壓力的（舒壓的）。"],
+      ["stress-relieved", "—", "主動消除壓力須用 V-ing。"]
+    ], "C")
+  ),
+  card("句型-12", ["複合形容詞辨析", "record-breaking 破紀錄的"], "D",
+    st("12. The athlete's [[句型-12|record-breaking]] performance in the track and field competition earned him a gold medal.", "這位運動員在田徑比賽中破紀錄的表現為他贏得了一面金牌。") +
+    clue("<code>a performance that broke the record (Vt. + O)</code> → <code>a record-breaking performance</code>。") +
+    ops([
+      ["break-recording", "—", "順序顛倒。"],
+      ["break-recorded", "—", "順序顛倒。"],
+      ["record-broken", "—", "表現「主動打破紀錄」須用 V-ing。"],
+      ["record-breaking", "—", "破紀錄的。"]
+    ], "D")
+  ),
+  card("句型-13", ["複合形容詞辨析", "long-lost 失散/失聯已久的"], "A",
+    st("13. The heartwarming reunion of [[句型-13|long-lost]] friends brought tears of joy to everyone involved.", "失聯已久的朋友們溫馨重逢，讓在場的每個人都流下了喜悅的眼淚。") +
+    clue("失聯／失散已久的：<code>long-lost</code>。") +
+    ops([
+      ["long-lost", "—", "失聯已久的、失散多年的。"],
+      ["long-losing", "—", "結構錯誤。"],
+      ["loss-longing", "—", "結構錯誤。"],
+      ["loss-longed", "—", "結構錯誤。"]
+    ], "A")
+  ),
+  card("句型-14", ["複合形容詞辨析", "crowd-pleasing 討好觀眾的/受大眾歡迎的"], "B",
+    st("14. My school’s talent show featured a variety of [[句型-14|crowd-pleasing]] performances showcasing the students' diverse talents.", "我們學校的才藝表演有各種討好觀眾（深獲觀眾喜愛）的演出，展現學生多元的才華。") +
+    clue("<code>performances that please the crowd (Vt. + O)</code> → <code>crowd-pleasing performances</code>。") +
+    ops([
+      ["crowd-pleased", "—", "表演是主動取悅觀眾，須用 pleasing。"],
+      ["crowd-pleasing", "—", "深獲觀眾喜愛的、討好群眾的。"],
+      ["pleasant-crowded", "—", "結構錯誤。"],
+      ["pleasantly-crowded", "—", "結構錯誤。"]
+    ], "B")
+  ),
+  card("句型-15", ["複合形容詞綜合改錯", "well-behaved 表現乖巧的"], "A",
+    st("15. Choose the correct one: [[句型-15|(A) This well-behaved boy deserves our praise.]]", "選出正確的句子：(A) 這個表現乖巧的男孩值得我們的讚美。") +
+    clue("逐項分析：<br>• (A) <code>well-behaved</code>（表現良好的、乖巧的，慣用過去分詞形）✔<br>• (B) <code>sweet-smelled</code> ✘ → 連綴動詞 smell 用主動 <code>sweet-smelling flowers</code><br>• (C) <code>narrow-mind</code> ✘ → <code>adj.-Ned</code> 須加 ed：<code>narrow-minded people</code>（心胸狹隘的人）<br>• (D) <code>mentioned-above</code> ✘ → 副詞置於過去分詞前：<code>above-mentioned facts</code>（上述事實）") +
+    ops([
+      ["This well-behaved boy deserves our praise.", "—", "完全正確！"],
+      ["He picked me some sweet-smelled flowers to show his love for me.", "—", "應改為 <code>sweet-smelling</code>。"],
+      ["Nobody likes to be with narrow-mind people.", "—", "應改為 <code>narrow-minded</code>。"],
+      ["You have to write your report according to the mentioned-above facts.", "—", "應改為 <code>above-mentioned</code>。"]
+    ], "A")
+  )
+].join('');
+
+document.getElementById('app').innerHTML = h1 + h2;
+const secs=[['p1','課前字彙 & L1~L66 課文講解'],['p2','複合形容詞句型與測驗']];
+document.getElementById('nav').innerHTML=secs.map(s=>'<a href="#'+s[0]+'">'+s[1]+'</a>').join('')+'<button id="tg">全部收合</button>';
+let open=true;
+document.getElementById('tg').onclick=function(){open=!open;document.querySelectorAll('details.q').forEach(d=>d.open=open);this.textContent=open?'全部收合':'全部展開';};
+</script>
+<script src="bookmark.js"></script>
+</body>
+</html>

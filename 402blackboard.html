@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>402 Blackboard</title>
+<style>
+:root{--bg:#faf8f4;--fg:#222;--card:#fff;--line:#e4ded3;--acc:#9a3b2e;--ok:#1f7a4d;--no:#b3261e;--mut:#6b6558;--hl:#fff1c9}
+@media(prefers-color-scheme:dark){:root{--bg:#161512;--fg:#e8e4da;--card:#201f1b;--line:#3a372f;--acc:#e08a78;--ok:#6fcf9a;--no:#f08a82;--mut:#a39d8f;--hl:#4a3f1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+.top{max-width:900px;margin:auto;padding:28px 18px 10px}
+.top h1{margin:0 0 4px;font-size:1.6rem;color:var(--acc)}
+.top p{margin:2px 0;color:var(--mut);font-size:.92rem}
+nav{position:sticky;top:0;z-index:9;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto;padding:8px 12px}
+nav a,nav button{flex:none;padding:5px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--fg);text-decoration:none;font:inherit;font-size:.88rem;cursor:pointer}
+nav a:hover,nav button:hover{border-color:var(--acc);color:var(--acc)}
+main{max-width:900px;margin:auto;padding:0 16px 70px}
+h2{margin:36px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--acc);font-size:1.3rem}
+h3{margin:0 0 8px;font-size:1.05rem;color:var(--acc)}
+.pas,.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.para{margin-bottom:14px}
+.s{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--line)}
+.en{font-family:Georgia,"Times New Roman",serif;font-size:1.02rem}
+.zh{color:var(--mut);font-size:.93rem}
+.note{color:var(--mut);font-size:.85rem;margin:6px 0 0}
+.bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 4px;border-radius:3px;font-weight:600}
+.bl sup{color:var(--acc);margin-right:3px;font-size:.7em}
+.bank{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.92rem;margin-bottom:8px}
+details.q>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+details.q>summary::-webkit-details-marker{display:none}
+.n{background:var(--acc);color:#fff;border-radius:6px;padding:0 10px;font-weight:700;font-size:1.05rem}
+.tag{font-size:.78rem;border:1px solid var(--acc);color:var(--acc);border-radius:99px;padding:0 9px;line-height:1.6}
+.tag.pos{border-color:var(--ok);color:var(--ok)}
+.ans{margin-left:auto;font-weight:700;color:var(--ok)}
+.qb{margin-top:10px}
+.stem{margin-bottom:8px;padding:8px 10px;background:var(--bg);border-radius:6px}
+.clue{margin:8px 0;padding:8px 12px;border-left:4px solid var(--acc);background:var(--bg);border-radius:0 6px 6px 0}
+.clue h4,.qb h4{margin:0 0 2px;font-size:.92rem;color:var(--acc)}
+ul.op{list-style:none;margin:6px 0 0;padding:0}
+ul.op li{padding:7px 10px;margin:5px 0;border-radius:6px;border:1px solid var(--line);font-size:.95rem}
+ul.op li.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 9%,transparent)}
+ul.op li.no{border-color:color-mix(in srgb,var(--no) 45%,transparent)}
+ul.op i{font-style:normal;font-weight:700;font-size:.82rem}
+li.ok i{color:var(--ok)}li.no i{color:var(--no)}
+small{color:var(--mut)}
+footer{max-width:900px;margin:auto;padding:20px 16px 40px;color:var(--mut);font-size:.85rem;line-height:1.6;border-top:1px solid var(--line);margin-top:40px;}
+footer a{color:var(--acc);text-decoration:none;font-weight:bold;}
+footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>402 Blackboard</h1>
+  <p>每題含：考點標籤 → 題幹逐句中英對照 → 解題線索 → 正解與全部誤答分析</p>
+  <p>圖例：<span class="bl">黃底</span> ＝ 正確答案填入處 ｜ <span class="tag">考點</span></p>
+</div>
+<nav id="nav"></nav>
+<main id="app"></main>
+<footer>
+  限定用途教學教材。本詳解為教學輔助，題目版權屬原出版單位。<br>
+  💡 <b>問題回報與建議：</b> Line: etpaul ｜ IG: <a href="https://www.instagram.com/etpaul" target="_blank">@etpaul</a>
+</footer>
+
+<script>
+const L="ABCD";
+const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[([^|\]]*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const SENT={};
+function passage(title,paras,note){
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[([^|\]]+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  return '<section class="pas"><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
+}
+function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
+const clue=t=>'<div class="clue"><h4>解題線索</h4>'+t+'</div>';
+function ops(list,ans,lab){lab=lab||'ABCDEF';return '<ul class="op">'+list.map((o,i)=>{const k=ans.indexOf(lab[i])>=0;return '<li class="'+(k?'ok':'no')+'"><b>'+(lab==='ABCDEF'&&list.length<=4?'('+L[i]+') ':lab==='ABCDEF'?'('+'ABCDEF'[i]+') ':'')+o[0]+'</b>'+(o[1]?' <small>'+o[1]+'</small>':'')+' <i>'+(k?'✔ 正解':'✘ 誤答')+'</i><br>'+o[2]+'</li>';}).join('')+'</ul>';}
+function card(n,tags,ans,body){
+  return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
+}
+
+const st=(en,zh)=>'<div class="stem"><div class="en">'+fx(en)+'</div><div class="zh">'+zh+'</div></div>';
+
+/* === Part 1: L1 ~ L55 依原檔順序完整呈現（含所有非題目句子） === */
+const h1 = '<h2 id="p1">L1 ~ L55 課文講解</h2>' + [
+  passage("1. & 2. L1 課文段落", [[
+    ["Instead of the students going to school, the school reaches them.", "不是學生去上學，而是學校來到他們身邊。"],
+    ["Bangladesh, a country in South Asia, suffers from terrible monsoons every year. Around one third of the country is flooded during the rainy season.", "孟加拉是南亞的一個國家，每年都遭受嚴重的季風雨侵襲。在雨季期間，該國約有三分之一的地區會淹水。"]
+  ]]),
+
+  card("L6", ["平行結構", "cause + O + to VR"], "D",
+    st("These major floods cause roads to get blocked and thousands of schools [[L6|to shut]] their doors for months at a time.", "這些大洪水導致道路受阻，並使數千所學校一次關閉數個月。") +
+    clue("• <code>cause + O</code> 造成；<code>cause + O + to VR</code> 使…（*cause 不可接 that 子句）<br>• <code>These major floods cause [roads (O1)] to get blocked and (cause) [thousands of schools (O2)] to shut their doors for months at a time.</code>") +
+    ops([
+      ["have shut", "51%", "誤把 thousands of schools 當作新子句主詞。"],
+      ["shutting", "8%", "cause 受詞補語須用 to VR。"],
+      ["shuts", "1%", "動詞形式錯誤。"],
+      ["to shut", "40%", "與 <code>to get blocked</code> 平行。"]
+    ], "D") +
+    passage("L6 補充例句", [[
+      ["Heavy traffic is causing delays on the freeway.", "繁忙的交通正在造成高速公路上的延誤。"],
+      ["(X) What caused that you changed your mind? → (O) What caused you to change your mind?", "是什麼促使你改變心意？"]
+    ]])
+  ),
+
+  card("L7", ["授予動詞被動", "deny + access to"], "C",
+    st("As a result, many children are often denied [[L7|access to]] proper schooling.", "因此，許多兒童經常被剝奪接受適當學校教育的機會。") +
+    clue("• L8：<code>access to N</code> 使用…的途徑╱管道╱權利等<br>• <code>deny</code> 不給（授予動詞 → 用法同 give）：<br>主動：<code>deny + sb. + sth. = deny + sth. + to + sb.</code><br>被動：<code>sb. + be denied + sth. = sth. + be denied + to + sb.</code>") +
+    ops([
+      ["to access", "46%", "to access (vt.) 不符 deny 用法。"],
+      ["the access of", "24%", "access (n.) 需搭配 to。"],
+      ["access to", "23%", "正確搭配。"],
+      ["by accessing", "8%", "access (vt.) 指讀取（數位資料），不合語意。"]
+    ], "C") +
+    passage("L7 ~ L8 補充例句", [[
+      ["Access to proper schooling is often denied to many children.", "接受適當學校教育的機會經常被拒絕給予許多兒童。"],
+      ["Only VIP members have access to the swimming pool at this hotel.", "在這家飯店只有 VIP 會員可以使用游泳池。"],
+      ["She can deny her son nothing. = She can deny nothing to her son.", "她對兒子有求必應。"],
+      ["No one should be denied a good education. = A good education should be denied to no one.", "沒有人應該被剝奪良好的教育。"],
+      ["The database allows you to access the sales figures in many ways.", "該資料庫允許你以多種方式讀取銷售數據。"]
+    ]])
+  ),
+
+  card("L9", ["動詞片語辨析", "come up with 想出"], "C",
+    st("Fortunately, an innovative architect named Mohammed Rezwan has [[L9|come up with]] an appropriate and promising solution: boat schools!", "幸運的是，一位名叫穆罕默德・雷茲萬的創新建築師想出了一個恰當且大有可為的解決方案：船屋學校！") +
+    clue("想出（點子、解決方案）用 <code>come up with</code>。") +
+    ops([
+      ["thought of", "—", "想到 (X)；想出 think out (罕用)。"],
+      ["given rise to", "—", "引起。"],
+      ["come up with", "—", "想出（點子）。"],
+      ["held on up", "—", "講解修正為 <code>held on to</code> 抓住。"]
+    ], "C")
+  ),
+
+  card("L12", ["動詞與介系詞搭配", "provide sb with sth"], "D",
+    st("The boat school program was launched in 2002 by Rezwan. Its goal was to [[L12|provide]] elementary school children in Bangladesh with education throughout the year.", "這項船屋學校計畫由雷茲萬於 2002 年發起。其目標是全年為孟加拉的國小學童提供教育。") +
+    clue("• <code>provide sth for sb = provide sb with sth</code> 提供…給…<br>• <code>offer sth to sb = offer sb sth</code><br>• <code>deliver sth to sb</code> 將（貨物）遞送給…<br>• <code>equip sb/sth with sth</code> 使…具備（某裝備、技能）") +
+    ops([
+      ["offer", "11%", "不搭配 with。"],
+      ["deliver", "5%", "遞送貨物，搭配 to。"],
+      ["equip", "5%", "使具備裝備或技能。"],
+      ["provide", "79%", "搭配 <code>provide sb with sth</code>。"]
+    ], "D") +
+    passage("7. L12 & 8. L12 (launch) 補充例句", [[
+      ["The hotel provides a shoe-cleaning service for guests.", "這家飯店為住客提供擦鞋服務。"],
+      ["The project is designed to provide young people with work.", "這項計畫旨在為年輕人提供工作。"],
+      ["They offered him a very good job. = They offered a very good job to him.", "他們提供給他一份非常好的工作。"],
+      ["They set off to deliver supplies to an isolated village.", "他們出發將物資遞送到一個孤立的村莊。"],
+      ["We equip students with the skills they will need once they leave college.", "我們使學生具備離開大學後所需的技能。"],
+      ["launch 開始(計畫)/推出(商品)：The investigation was launched a year ago.", "這項調查是一年前開始的。"],
+      ["The company hopes to launch the new drug by next October.", "該公司希望在明年 10 月之前推出新藥。"]
+    ]])
+  ),
+
+  card("L14", ["代名詞指代", "that = the design"], "C",
+    st("The design of the boats is based on [[L14|that]] of traditional local wooden boats called noka.", "這些船隻的設計是基於當地稱為「諾卡（noka）」的傳統木船設計。") +
+    clue("L15：<code>that = the design</code>。<br><code>N ... that/those + 介片 / 關係子句 / 分詞</code>：前面出現過的名詞，單數用 <code>that</code> 取代，複數用 <code>those</code> 取代（★若前無適當名詞則不可用）。") +
+    ops([
+      ["which", "24%", "關代需引導子句。"],
+      ["what", "11%", "不合此代名詞結構。"],
+      ["that", "19%", "= the design（單數）。"],
+      ["those", "46%", "代替複數名詞時才用 those。"]
+    ], "C")
+  ),
+
+  card("L15-小練習", ["代名詞指代小練習", "those = inflation rates"], "D",
+    st("The inflation rates in the United States this year are significantly higher than [[L15-小練習|those]] recorded in Taiwan.", "美國今年的通貨膨脹率明顯高於台灣所記錄的通膨率。") +
+    clue("代替前文複數名詞 <code>The inflation rates</code>。") +
+    ops([
+      ["what", "—", "→ 應為 <code>what has been</code>。"],
+      ["it has been", "—", "it 要代替誰？前無適當單數名詞。"],
+      ["that", "—", "在此句型中為一般代名詞，故只能代替單數名詞。"],
+      ["those", "—", "(= inflation rates)。"]
+    ], "D")
+  ),
+
+  card("L16", ["度量衡表達", "in width = wide"], "A",
+    st("Each boat is about fifteen meters long and three meters in [[L16|width]].", "每艘船大約十五公尺長、三公尺寬。") +
+    clue("<code>three meters wide = three meters in width</code><br><code>15 meters long / tall / high / deep = 15 meters in length / in height / in depth</code>") +
+    ops([
+      ["width", "65%", "名詞「寬度」。"],
+      ["wide", "26%", "形容詞，前不可有 in。"],
+      ["widening", "0%", "分詞/動名詞。"],
+      ["widen", "9%", "動詞。"]
+    ], "A")
+  ),
+
+  card("L17", ["複合形容詞", "-proof 防…的"], "A",
+    st("On top of the boat is a [[L17|stormproof]] roof held up by arched metal beams. If the roof were not built with such strong materials, the boat would be damaged by heavy monsoon rains.", "船頂是一個由拱形金屬樑柱支撐的防暴風雨屋頂。如果屋頂不是用如此堅固的材料建造，船隻就會被猛烈的季風大雨損壞。") +
+    clue("L18：<code>stormproof = weatherproof</code>；<code>-proof</code> 防…的。") +
+    ops([
+      ["stormproof", "70%", "防暴風雨的。"],
+      ["shockproof", "12%", "防震的。"],
+      ["soundproof", "7%", "隔音的。"],
+      ["bulletproof", "11%", "防彈的。"]
+    ], "A") +
+    passage("11. L18 (-proof 小練習) & 12. L18 (hold sth up) & 13. L20~L22", [[
+      ["a waterproof jacket (防水外套) / a shockproof watch (防震手錶) / a soundproof room (隔音室/錄音室) / a bulletproof vest (防彈背心)", "-proof 常見搭配"],
+      ["小練習試翻譯：an idiot-proof recipe / a childproof container / an inflation-proof investment", "不可能出錯的食譜／防兒童開啟的容器／抗通膨的投資"],
+      ["12. L18 hold sth up = support 支撐：The roof is held up by massive stone pillars.", "屋頂由巨大的石柱支撐著。"],
+      ["13. L20 Inside, the boat school looks just like a regular school. It’s equipped with tables, chairs, a blackboard, electronic equipment, and multimedia resources, including a computer connected to the Internet.", "在內部，船屋學校看起來就像一所普通學校。它配備了桌椅、黑板、電子設備和多媒體資源，包括一台連接網路的電腦。"],
+      ["L22 equipment 為不可數名詞，要數的話需用 a piece/item of，且指的是設備而非工具：A computer is the most important piece of equipment you will buy.", "電腦會是你購買最重要的一件設備。"]
+    ]])
+  ),
+
+  card("L24", ["動詞字彙辨析", "accommodate 容納"], "C",
+    st("All the power needed on the boat is supplied by solar panels installed on the roof. Each boat school can [[L24|accommodate]] as many as thirty students and provide basic education up to the fourth grade.", "船上所需的所有電力均由安裝在屋頂上的太陽能板提供。每間船屋學校最多可容納三十名學生，並提供到四年級的基礎教育。") +
+    clue("表示空間可「容納」多達 30 名學生，用 <code>accommodate</code>。") +
+    ops([
+      ["educate", "8%", "(v.) 教育，培養。"],
+      ["facilitate", "12%", "(v.) 促進，有助於，使容易。"],
+      ["accommodate", "78%", "(v.) 容納，提供…住宿，適應。"],
+      ["integrate", "2%", "(v.) 整合，使結合，使融入。"]
+    ], "C") +
+    passage("14. L24 選項例句 & 15. L26~L27", [[
+      ["Her parents educate her well.", "她的父母把她教育得很好。"],
+      ["Computers facilitate our work. / Music facilitates relaxation.", "電腦使我們的工作變得容易。／音樂有助於放鬆。"],
+      ["The hotel can accommodate 100 guests.", "這飯店可容納 100 位客人。"],
+      ["We integrate theory and practice. / Technology integrates various fields.", "我們將理論和實踐結合起來。／科技整合了各種領域。"],
+      ["15. L26 as many as 表「多達」，後面接「數量 + 複數名詞」：As many as 30,000 tourists flooded onto the small island during the holiday.", "假期間有多達三萬名遊客湧入這座小島。"],
+      ["L27 up to 直到：Up to now, we still don’t know where we should start.", "直到現在，我們仍然不知道該從何處開始。"]
+    ]])
+  ),
+
+  card("L28", ["動詞搭配與不定詞", "wait for + O + to VR"], "A",
+    st("Every morning, six days a week, students wait (at the docks near their muddy villages) for the boat schools [[L28|to sail by and pick them up]].", "每週六天、每天早上，學生們在泥濘村莊附近的碼頭等待船屋學校駛過並接他們上船。") +
+    clue("L27：<code>wait for + O (+ to + VR)</code> 等…做…。<br>不定詞表示「未來／尚未」、「目的」；V-ing 表「正在／反覆發生／持續／已經」。") +
+    ops([
+      ["to sail by and pick them up", "50%", "<code>wait for + O + to VR</code>。"],
+      ["sailing by and picking them up", "30%", "V-ing 表正在或已經，不合等待未來動作之語意。"],
+      ["that sailed by and picked them up", "13%", "經常、每天會發生 → 現在簡單式，不用過去式。"],
+      ["sail by and pick them up", "7%", "缺連接詞。"]
+    ], "A") +
+    passage("17. L27~L28 & 18. L30 & 19. L29 補充例句", [[
+      ["We have been waiting for thirty minutes for the waiter to serve our food.", "我們已經等了三十分鐘等服務生上菜。"],
+      ["I have too many things to do.", "我有太多事情要做。（表「未來／尚未」）"],
+      ["I remember seeing him somewhere. / Do remember to take out the trash.", "我記得在某處見過他。／務必記得去倒垃圾。"],
+      ["18. L30 by adv. 經過：pass by（路過）、run by（跑步經過）、drop by（順道拜訪）", "by 常見片語"],
+      ["19. L29 pick sb. up 載某人（上交通工具） 反 drop sb. off 載某人（到某地點下交通工具）：The taxi driver picked me up in front of my house and dropped me off at the airport.", "計程車司機在我家門前載我上車，並在機場讓我下車。"]
+    ]])
+  ),
+
+  card("L30", ["介系詞片語辨析", "Other than = Aside from"], "B",
+    st("[[L30|Other than]] (Aside from) traditional subjects, students also study environmental topics like biodiversity and water pollution.", "除了傳統學科之外，學生們還學習生物多樣性和水污染等環境議題。") +
+    clue("課文原為 <code>Aside from</code>，選項同義詞為 <code>Other than</code>。") +
+    ops([
+      ["Except for", "52%", "除…外（不包含受詞，表例外，常搭配 all, every, no, any 等字）。"],
+      ["Other than", "23%", "除…外（包含／不包含受詞皆可，= Aside from = Apart from = besides or except）。"],
+      ["Instead of", "7%", "代替、而不是。"],
+      ["Across from", "20%", "在…對面。"]
+    ], "B")
+  ),
+
+  card("L34", ["限定詞用法", "another + 數字 + 複數名詞"], "B",
+    st("Each learning session lasts three hours. When the session is over, the boat takes the students back to their village and then sails on to the next village to pick up [[L34|another]] thirty students for another session.", "每節學習課程持續三小時。課程結束後，船隻會將學生送回村莊，然後繼續航行到下一個村莊，再接另外三十名學生進行下一場課程。") +
+    clue("<code>another + 數字 + 複數名詞</code> = 額外的／另外的…。") +
+    ops([
+      ["other", "17%", "須放數字後（thirty other students）。"],
+      ["another", "48%", "另外的三十名學生。"],
+      ["the other", "23%", "無全體僅兩批之限定。"],
+      ["others", "13%", "代名詞，後不可接 thirty students。"]
+    ], "B") +
+    passage("21. L34 & 22. L34 補充例句", [[
+      ["We'll have to wait another three weeks for the results.", "我們還得再等另外三個星期才能知道結果。"],
+      ["There's still another 300 dollars to pay.", "還有另外三百元要付。"],
+      ["22. L34 on 為副詞，表「繼續」，如 sail on、move on、keep on", "繼續航行、繼續前進、繼續下去。"]
+    ]])
+  ),
+
+  card("L35", ["轉折與連接副詞", "Also = Besides"], "A",
+    st("After school, many students receive low-cost solar lanterns that enable them to study at night. [[L35|Also]], in the evenings, the boat schools project educational films onto their sail cloth, which can be viewed by villagers who live nearby.", "放學後，許多學生會收到低成本的太陽能提燈，讓他們能在晚上讀書。此外，在傍晚時分，船屋學校會將教育影片投影在帆布上，供住在附近的村民觀看。") +
+    clue("• <code>clothes</code> n. [C] 衣服（只用複數）<br>• <code>cloth</code> n. [U] 布料<br>• <code>clothing</code> [U] 衣物總稱<br>• <code>clothe</code> vt. 使…穿衣<br>• <code>dress</code> n. 通常指女性的衣物，若指某年代、某特定功能的衣物則不限男女。") +
+    ops([
+      ["Also", "69%", "= Besides (adv.) 此外。"],
+      ["In contrast", "2%", "形成對比的是。"],
+      ["On the other hand", "10%", "≒ however。"],
+      ["Therefore", "20%", "因此（此句無因果關係）。"]
+    ], "A") +
+    passage("23. L35 & 25. L40 課文與補充例句", [[
+      ["She wore a long red dress.", "她穿著一件紅色長洋裝。"],
+      ["The play was performed in modern dress.", "這齣戲是以現代服裝演出的。"],
+      ["25. L40 The floating classrooms benefit not only children but also adults. They offer on-board training in practical issues like nutrition, health and hygiene, and human rights.", "這些水上教室不僅造福兒童，也造福成人。它們在船上提供營養、健康與衛生以及人權等實用議題的培訓。"]
+    ]])
+  ),
+
+  card("L43", ["複合形容詞", "N-resistant 防…的"], "C",
+    st("Boat schools also teach adults various farming techniques, such as growing [[L43|flood-resistant]] crops.", "船屋學校也教導成人各種農耕技術，例如種植抗洪作物。") +
+    clue("複合形容詞：<code>N-adj. / N-p.p. = adj./p.p. + 介 + N</code><br>• <code>home-made = made at home</code> 自製的<br>• <code>noteworthy = worthy of note</code> 值得注意的<br>• <code>N-resistant</code> 防…的 = <code>resistant to + N</code>（<code>heat-resistant, stain-resistant, fire-resistant, shock-resistant</code>）") +
+    ops([
+      ["flood-resisted", "40%", "<code>N-p.p. = p.p. + 介 + N = resisted by flood</code>。"],
+      ["resistance-flooded", "6%", "<code>= flooded by resistance</code>。"],
+      ["flood-resistant", "49%", "<code>= resistant to flood</code>（抗洪的）。"],
+      ["resisting-flood", "5%", "無此結構。"]
+    ], "C")
+  ),
+
+  card("L45", ["目的不定詞片語", "so as to + VR"], "A",
+    st("Such training makes it (虛O) possible for the villagers to increase productivity (真O) [[L45|so as to ensure]] sufficient food and year-round income.", "這類培訓使村民得以提高生產力，以確保充足的糧食與全年的收入。") +
+    clue("(X) <code>so to VR</code> → (O) <code>so as to + VR</code> 為了…；以便…（否定：<code>so as not to + VR</code>）。<br><code>so as to</code> 和 <code>in order to</code> 都可當「為了」，但 <code>in order to</code> 可置於句首，<code>so as to</code> 不行。") +
+    ops([
+      ["so as to ensure", "59%", "<code>so as to + VR</code>。"],
+      ["so that ensures", "32%", "→ <code>so that</code> 需加完整子句。"],
+      ["so much that ensures", "2%", "→ <code>so … that</code> 需加完整子句。"],
+      ["and so ensure", "6%", "→ <code>and so</code> (adv. = therefore) + 完整子句。"]
+    ], "A") +
+    passage("27. L45 補充例句", [[
+      ["Ben got up at 5:00 a.m. so as to / in order to catch the first train to work.", "班早上五點起床以便趕上第一班火車去上班。"],
+      ["= In order to catch the first train to work, Ben got up at 5:00 a.m.", "為了趕上第一班火車去上班，班早上五點起床。"]
+    ]])
+  ),
+
+  card("L47", ["目的副詞子句", "in order that + 完整子句"], "C",
+    st("The boat schools even offer lessons on financial management [[L47|in order that people may]] better manage their money.", "船屋學校甚至提供理財課程，以便人們能妥善管理自己的金錢。") +
+    clue("注意後方動詞與受詞 <code>manage their money</code> 的主詞是 <code>people</code>，而非 <code>The boat schools</code>。") +
+    ops([
+      ["in order to", "—", "*省略主詞時，通常表示主詞相同 → 變成 boat schools manage their money?"],
+      ["so that", "—", "→ 應為 <code>so that people may</code>。"],
+      ["in order that people may", "—", "<code>in order that + 完整子句 = so that + 完整子句</code>。"],
+      ["and therefore", "—", "+ 完整子句（缺主詞）。"]
+    ], "C")
+  ),
+
+  card("L52", ["與現在事實相反的假設", "If + S + V-ed"], "A",
+    st("The boat school concept has now been adopted by other countries at risk of flooding, including Cambodia, Nigeria, and the Philippines. If these countries [[L52|didn’t have]] such an innovative program, they would not be able to rise above flood waters, overcome geographical barriers, and improve their people’s lives.", "船屋學校的概念現在已被其他面臨洪水風險的國家採用，包括柬埔寨、奈及利亞和菲律賓。如果這些國家沒有這樣創新的計畫，他們就無法克服洪水、跨越地理障礙並改善人民的生活。") +
+    clue("此為與現在事實相反的假設，故用過去式 <code>didn’t have</code>。<br>30. L54：<code>waters</code> 某個區域的水（湖、河、淹水的地區等）。") +
+    ops([
+      ["didn’t have", "63%", "與現在事實相反用過去式。"],
+      ["hadn’t had", "13%", "與過去事實相反才用過去完成式。"],
+      ["don’t have", "19%", "現在式不合假設語氣。"],
+      ["wouldn’t have", "6%", "If 子句不用 would。"]
+    ], "A")
+  ),
+
+  card("L55", ["語氣副詞", "Indeed 的確"], "C",
+    st("[[L55|Indeed]], boat classrooms have created opportunities for high-quality education for both children and adults. By doing so, these schools have provided brighter futures for people living in countries that frequently suffer from severe flooding.", "的確，船屋教室為兒童和成人都創造了接受高品質教育的機會。藉由這麼做，這些學校為生活在經常遭受嚴重水患國家的人們提供了更光明的未來。") +
+    clue("總結肯定船屋學校的貢獻。") +
+    ops([
+      ["On the other hand", "—", "≒ however（≠ besides）。"],
+      ["In consequence", "—", "= therefore。"],
+      ["Indeed", "—", "的確。"],
+      ["Likewise", "—", "同樣地（= In the same way, Similarly）。"]
+    ], "C")
+  )
+].join('');
+
+/* === Part 2: 句型 1 & 句型 2 === */
+const h2 = '<h2 id="p2">句型 1 ＆ 句型 2</h2>' +
+  passage("句型 1 補充例句", [[
+    ["Should it rain, we would call off the hike.", "萬一下雨，我們就會取消健行。"]
+  ]]) + [
+  card("句1-1", ["句型1", "If I were..., I would..."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">1. Mary 有睡眠困擾。如果我是 Mary，我就吃安眠藥了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Mary has sleeping issues. If I were Mary, I would take sleeping pills.]]")+'</div></div>' + clue("補充：<code>Mary has problems/troubles sleeping.</code>")),
+  card("句1-2", ["句型1", "If + S + V-ed, S + could + VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">2. 如果 Gina 有足夠的錢，她就可以買一間自己的公寓了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|If Gina had enough money, she could buy her own apartment.]]")+'</div></div>'),
+  card("句1-3", ["句型1", "be allergic to"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">3. 如果我沒有對動物過敏，我會領養一隻貓。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|If I weren’t allergic to animals, I would adopt a cat.]]")+'</div></div>' + clue("<code>= If I didn’t have an allergy to animals, I would adopt a cat.</code>")),
+  card("句1-4", ["句型1", "If + S + were..., S + might + VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">4. 如果 Tim 是個大學畢業生，他也許會有比較好的工作機會。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|If Tim were a university graduate, he might have better job offers.]]")+'</div></div>' + clue("修正：<code><del>an</del> a university graduate</code>。")),
+  card("句1-5", ["句型1", "If I were you"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">5. 你最好不要對父母說謊。如果我是你，我會據實以告。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|You had better not lie to your parents. If I were you, I would tell them the truth.]]")+'</div></div>')
+].join('') +
+  passage("句型 2（課本 p.46 Part B）觀念與參考答案", [[
+    ["consider/find/feel/think/believe + O + (to be) + OC（把…視為）：Night markets in Taiwan have long been considered (to be) representative of our local culture. 【100學測】", "臺灣的夜市早已被認為足以代表我們的在地文化。"],
+    ["consider/find/feel/think/believe + it + (to be) + OC + to VR/that…（搭配受詞補語 + 虛受詞）", "核心公式"],
+    ["1. It is advisable to wear a mask when you go out during a flu epidemic.", "在流感疫情期間外出時，戴口罩是明智的。"],
+    ["B. It is true that human activity has done great damage to the earth.", "人類活動確實對地球造成了巨大的破壞。"],
+    ["C. Airplanes have made it possible to travel around the world.", "飛機使環遊世界成為可能。"]
+  ]]) + [
+  card("句2-1", ["句型2", "It is difficult for sb to VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">1. 對現代人來說，沒有智慧型手機很難過活。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|It is difficult for modern people to live without smartphones.]]")+'</div></div>' + clue("對照與修正：<code>It's difficult for modern people to live without a smartphone <del>for modern people</del>.</code>")),
+  card("句2-2", ["句型2", "consider/think it impossible..."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">2. 他認為 Covid-19 疫情要在今年底前結束是不可能的。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|He considers it impossible for the Covid-19 pandemic to end by the end of this year.]]")+'</div></div>' + clue("對照與修正：<code>He thinks/considers it impossible that Covid-19 will <del>be ended</del> end by the end of this year. / He thinks (that) it is impossible that the COVID-19 pandemic will end by the end of the year.</code>")),
+  card("句2-3", ["句型2", "make it clear that..."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">3. 他表明清楚他不會再參選 2024 年的總統。(make it clear)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|He made it clear that he wouldn’t run for president in 2024.]]")+'</div></div>'),
+  card("句2-4", ["句型2", "It is a big challenge for sb to VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">4. 搞懂如何使用社交網站對我爺爺來說是很大的挑戰。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|It is a big challenge for my grandfather to figure out how to use social networking websites.]]")+'</div></div>'),
+  card("句2-5", ["句型2", "find it difficult to VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">5. Ryan 覺得要在大都市中維持收支相抵很難。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Ryan finds it difficult to make ends meet in a big city.]]")+'</div></div>')
+].join('');
+
+document.getElementById('app').innerHTML = h1 + h2;
+const secs=[['p1','L1~L55 課文講解'],['p2','句型1 & 句型2']];
+document.getElementById('nav').innerHTML=secs.map(s=>'<a href="#'+s[0]+'">'+s[1]+'</a>').join('')+'<button id="tg">全部收合</button>';
+let open=true;
+document.getElementById('tg').onclick=function(){open=!open;document.querySelectorAll('details.q').forEach(d=>d.open=open);this.textContent=open?'全部收合':'全部展開';};
+</script>
+<script src="bookmark.js"></script>
+</body>
+</html>
