@@ -64,10 +64,10 @@ footer a:hover{text-decoration:underline;}
 
 <script>
 const L="ABCD";
-const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[(\d*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[([^|\]]*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
 const SENT={};
 function passage(title,paras,note){
-  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[(\d+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[([^|\]]+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
   return '<section class="pas"><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
 }
 function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
@@ -77,502 +77,210 @@ function card(n,tags,ans,body){
   return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
 }
 
-let h = '';
-
-// --- 補充段落 / 情境閱讀 ---
-h += '<h2 id="p1">課文與重點解析</h2>';
-
-h += passage("情境閱讀", [
-  [["Every year, more than five million people participate in the Mazu pilgrimage.", "每年，有超過五百萬人參加媽祖遶境。[cite: 9]"]],
-  [["It is no exaggeration to say that this event might just be the world’s largest and wildest birthday party.", "毫不誇張地說，這個活動可能正是世界上最大的、最狂熱的生日派對。[cite: 9]"]],
-  [["The festivities do not end until the participants have celebrated for nine days and journeyed over 300 kilometers in central Taiwan.", "慶祝活動要等到參與者慶祝了九天，並在台灣中部跋涉了三百多公里後才會結束。[cite: 9]"]],
-  [["Undoubtedly, the Mazu pilgrimage is a can’t-miss event for visitors to Taiwan.", "毫無疑問地，媽祖遶境是來台灣的遊客不可錯過的盛事。[cite: 9]"]]
-]);
-
-h += passage("重點解析補充", [
-  [["participate in = take part in = join in = be involved in (參與活動的準備、進行等；參加比賽)。", "join 加入(組織/人)。join 和 join in 亦可用在「已開始的」活動。"],
-   ["attend = go to 上課；參加(只需付出注意力的活動，如 party, concert, wedding, school, class 等)。", "enter = compete in 報名參加(比賽)。[cite: 9]"]],
-  [["undoubtedly = doubtless = without (a) doubt 無疑地 (adv.)。", "There is no doubt that + 完整子句 (… 是毫無疑問的)。(X) undoubtly (X) doubtlessly 這兩個字不存在。[cite: 9]"]],
-  [["can’t-V 複合形容詞：不可…的；不可能…的。例如：a can't-miss event (不可錯過的盛事)。[cite: 9]"]]
-]);
-
-// --- 挑戰題 ---
-h += '<h2 id="p2">挑戰題 (課文內容)</h2>';
-
-h += card('1', ['時態'], 'A',
-  '<div class="stem"><div class="en">The pilgrimage, which honors the sea goddess Mazu, '+fx("[[1|sets]]")+' out from Dajia’s Zhenlan Temple around her birthday, the twenty-third day of the third month on Taiwan’s lunar calendar.</div><div class="zh">這場尊崇海神媽祖的遶境，在台灣農曆三月二十三日她的生日左右，從大甲鎮瀾宮出發。[cite: 9]</div></div>' +
-  clue('不隨時間改變的情況 (每年固定的活動) 用現在簡單式。set out (出發) 無被動式。[cite: 9]') +
-  ops([
-    ['sets', '出發', '現在簡單式[cite: 9]'],
-    ['is set', '', 'set out 無被動式[cite: 9]'],
-    ['setting', '', '導致本句缺主要動詞[cite: 9]'],
-    ['set', '', '主詞為 The pilgrimage 單數，應加 s[cite: 9]']
-  ], 'A')
-);
-
-h += passage("情境閱讀", [
-  [["The exact date and time, which vary from year to year, are determined earlier. During the Lantern Festival, temple authorities cast two half-moon-shaped wooden blocks to decide the actual schedule.", "確切的日期和時間每年都不一樣，會提前決定。在元宵節期間，廟方會擲出兩塊半月形的木筊來決定實際的行程。[cite: 9]"]]
-]);
-
-h += card('2', ['動詞時態'], 'B',
-  '<div class="stem"><div class="en">A few months earlier on the Lantern Festival, temple authorities at Zhenlan Temple in Dajia '+fx("[[2|flipped]]")+' two half-moon-shaped wooden blocks to determine the exact starting date and time of the pilgrimage.</div><div class="zh">幾個月前的元宵節，大甲鎮瀾宮的廟方人員擲了兩塊半月形的木筊，來決定遶境確切的出發日期和時間。[cite: 9]</div></div>' +
-  clue('句首為 A few months earlier，表示過去時間，故動詞使用過去式 flipped。[cite: 9]') +
-  ops([
-    ['flip', '', '現在式[cite: 9]'],
-    ['flipped', '擲', '過去式[cite: 9]'],
-    ['flipping', '', '非主要動詞[cite: 9]'],
-    ['to flip', '', '非主要動詞[cite: 9]']
-  ], 'B')
-);
-
-h += card('3', ['時間副詞', 'ago vs earlier'], 'B',
-  '<div class="stem"><div class="en">Six months '+fx("[[3|ago]]")+', I bought a new car. Six months '+fx("[[4|earlier]]")+', I had started saving for it.</div><div class="zh">六個月前，我買了一輛新車。再早六個月前，我已經開始為此存錢了。[cite: 9]</div></div>' +
-  clue('ago: 從現在起算的一段時間前；earlier: 從前文所提到的過去時間起算的一段時間前。[cite: 9]') +
-  ops([
-    ['ago / ago', '', '[cite: 9]'],
-    ['ago / earlier', '前 / 更早之前', '[cite: 9]'],
-    ['earlier / ago', '', '[cite: 9]'],
-    ['earlier / earlier', '', '[cite: 9]']
-  ], 'B')
-);
-
-h += card('4', ['時間副詞'], 'B',
-  '<div class="stem"><div class="en">Elephants also remember events from the past. When arriving at exactly the same place where a relative died many years '+fx("[[5|earlier]]")+', elephants will pause and silently mourn the lost member of their herd.</div><div class="zh">大象也記得過去的事件。當到達許多年前親屬死亡的完全相同的地方時，大象會停下來，默默地哀悼失去的象群成員。[cite: 9]</div></div>' +
-  clue('從過去事件 (arriving) 起算的多年前，使用 earlier。[cite: 9]') +
-  ops([
-    ['ago', '', '[cite: 9]'],
-    ['earlier', '更早之前', '[cite: 9]'],
-    ['before', '', '[cite: 9]'],
-    ['past', '', '[cite: 9]']
-  ], 'B')
-);
-
-h += card('5', ['數量詞', '大約'], 'A',
-  '<div class="stem"><div class="en">At the chosen time, '+fx("[[6|some]]")+' 200,000 pilgrims set out from Zhenlan Temple on foot and visit more than 100 temples over the course of nine days.</div><div class="zh">在選定的時間，大約二十萬名香客徒步從鎮瀾宮出發，並在九天的行程中參拜了一百多座廟宇。[cite: 9]</div></div>' +
-  clue('some + 數字 + 名詞 = 大約... (= about / approximately / roughly)。[cite: 9]') +
-  ops([
-    ['some', '大約', '= about / approximately[cite: 9]'],
-    ['those', '', '那20萬人(前文並無提到20萬人)[cite: 9]'],
-    ['when', '', '若用when，則整個句子缺乏主要子句[cite: 9]'],
-    ['in which', '', '同上[cite: 9]']
-  ], 'A')
-);
-
-h += passage("情境閱讀", [
-  [["They are accompanied every step of the way by a statue of Mazu, which is carried in a sedan chair.", "她們沿途都有媽祖的神像陪伴，神像被抬在神轎裡。[cite: 9]"]]
-]);
-
-h += card('6', ['倒裝句'], 'D',
-  '<div class="stem"><div class="en">Although the pilgrims’ strength may wane during the long journey, '+fx("[[7|never]]")+' do their passion and dedication fade.</div><div class="zh">雖然香客們的體力在漫長的旅程中可能會衰退，但他們的熱情和虔誠從未消退。[cite: 9]</div></div>' +
-  clue('否定副詞 (never) 放句首，後接倒裝句 (do their passion and dedication fade)。[cite: 9]') +
-  ops([
-    ['in which they', '', '在旅程中他們「做」熱情，而虔誠消退？語意不通[cite: 9]'],
-    ['not until they', '', 'Not until they... did they find... (用法錯誤)[cite: 9]'],
-    ['not only', '', '不只他們的熱情和虔誠減退？語意不通[cite: 9]'],
-    ['never', '從未', '否定副詞倒裝[cite: 9]']
-  ], 'D')
-);
-
-h += card('7', ['介系詞片語'], 'A',
-  '<div class="stem"><div class="en">'+fx("[[8|Apart from being / Besides being]]")+' a chance for people to show their devotion to the goddess, this annual festival is a spectacular and heart-warming event.</div><div class="zh">除了作為讓人們展現對女神虔誠的機會外，這個一年一度的節日也是一場壯觀且溫馨的盛事。[cite: 9]</div></div>' +
-  clue('Besides being = Apart from being = In addition to being (除了是…外，包含在內)。[cite: 9]') +
-  ops([
-    ['Besides being', '除了是...', '包含在內[cite: 9]'],
-    ['Except that', '只不過', '有例外之意，語意不合[cite: 9]'],
-    ['Rather than', '並非', '語意不合[cite: 9]'],
-    ['In spite of', '儘管', '語意不合[cite: 9]']
-  ], 'A')
-);
-
-h += card('8', ['連接詞'], 'B',
-  '<div class="stem"><div class="en">The gathering in front of Zhenlan Temple '+fx("[[9|before]]")+' the pilgrimage begins is a scene like no other.</div><div class="zh">在遶境開始前，鎮瀾宮前聚集的人群是一幅無與倫比的景象。[cite: 9]</div></div>' +
-  clue('before 作為連接詞，引導時間副詞子句 (before the pilgrimage begins)。[cite: 9]') +
-  ops([
-    ['which', '', '[cite: 9]'],
-    ['before', '在...之前', '連接詞[cite: 9]'],
-    ['once', '一旦', '[cite: 9]'],
-    ['for which', '', '[cite: 9]']
-  ], 'B')
-);
-
-h += card('9', ['分詞構句'], 'C',
-  '<div class="stem"><div class="en">When the statue of Mazu finally emerges from the temple in her sedan chair, the crowd surrounds her, '+fx("[[10|excited]]")+' to send her off on her long journey.</div><div class="zh">當媽祖的神像終於乘著神轎從廟裡出來時，群眾圍繞著她，興奮地送她踏上漫長的旅程。[cite: 9]</div></div>' +
-  clue('the crowd surrounds her, (and the crowd is) excited to... 省略主詞與 be 動詞，群眾「感到」興奮，用 excited。[cite: 9]') +
-  ops([
-    ['who excited', '', '應為 who is excited[cite: 9]'],
-    ['exciting', '', '群眾令人興奮？語意錯誤[cite: 9]'],
-    ['excited', '感到興奮', '(and they are) excited[cite: 9]'],
-    ['which is exciting', '', 'which 無適當先行詞[cite: 9]']
-  ], 'C')
-);
-
-h += card('10', ['轉折語'], 'D',
-  '<div class="stem"><div class="en">Some even kneel or lie face down on the pavement to allow the sedan chair to pass over them... '+fx("[[11|Meanwhile]]")+', locals show their hospitality by enthusiastically offering free food, washing facilities, and accommodations to passing pilgrims.</div><div class="zh">有些人甚至跪著或趴在人行道上，讓神轎從他們身上越過... 與此同時，當地人熱情地提供免費食物、盥洗設施和住宿給路過的香客，展現了他們的好客。[cite: 9]</div></div>' +
-  clue('Meanwhile = In the meantime (於此同時)。表示同一時間發生的另一件事。[cite: 9]') +
-  ops([
-    ['Likewise', '同樣地', '[cite: 9]'],
-    ['Above all', '最重要的是', '[cite: 9]'],
-    ['Even better', '更棒的是', '[cite: 9]'],
-    ['Meanwhile', '與此同時', '[cite: 9]']
-  ], 'D')
-);
-
-h += card('11', ['倒裝句'], 'D',
-  '<div class="stem"><div class="en">'+fx("[[12|Rarely can]]")+' such generosity be seen during a religious event. It reflects not only the locals’ dedication to Mazu but also the warmth and humanity that are characteristic of the Taiwanese people.</div><div class="zh">在宗教活動中很少能見到這樣的慷慨。它不僅反映了當地人對媽祖的虔誠，也反映了台灣人特有的溫暖和人情味。[cite: 9]</div></div>' +
-  clue('否定副詞 (Rarely) 放句首，需接倒裝句 (can such generosity be seen)。[cite: 9]') +
-  ops([
-    ['It’s uncommon for + N to VR', '', '不符倒裝結構[cite: 9]'],
-    ['It’s unusual that + S V', '', '不符倒裝結構[cite: 9]'],
-    ['Only occasionally do', '', '被動應為 Only occasionally is such generosity seen[cite: 9]'],
-    ['Rarely can', '很少能', '否定副詞倒裝[cite: 9]']
-  ], 'D')
-);
-
-h += passage("情境閱讀", [
-  [["Over the years, the Mazu pilgrimage has transformed into more than just a religious ritual, and every year it attracts all manner of people—young and old, foreign and Taiwanese.", "這些年來，媽祖遶境已轉變為不僅僅是一種宗教儀式，每年都吸引各式各樣的人——無論老少、外國人和台灣人。[cite: 9]"]],
-  [["UNESCO has even recognized Mazu beliefs and customs by designating them as aspects of a protected living culture.", "聯合國教科文組織甚至將媽祖信仰和習俗認定為受保護的活文化的一部分。[cite: 9]"]],
-  [["For those who are looking to experience Taiwan’s cultural heritage, participating in the Mazu pilgrimage is essential!", "對於那些想要體驗台灣文化遺產的人來說，參加媽祖遶境是必不可少的！[cite: 9]"]]
-]);
-
-
-// --- 綜合練習 (apart from... 用法整理) ---
-h += '<h2 id="p3">講義重點 5 (apart from... 用法整理)</h2>';
-
-h += card('12', ['介系詞'], 'B',
-  '<div class="stem"><div class="en">I think she has many good qualities '+fx("[[13|besides]]")+' being very beautiful.</div><div class="zh">我認為她除了非常美麗之外，還有許多優秀的特質。[cite: 9]</div></div>' +
-  clue('besides 表「除...之外 (包含)」。[cite: 9]') +
-  ops([
-    ['except', '', '不包含[cite: 9]'],
-    ['besides', '除了...還有', '包含[cite: 9]'],
-    ['instead of', '', '取代[cite: 9]'],
-    ['except for', '', '不包含[cite: 9]']
-  ], 'B')
-);
-
-h += card('13', ['介系詞'], 'B',
-  '<div class="stem"><div class="en">Everyone in my family went to the concert '+fx("[[14|except]]")+' my sister, who came down with a bad cold.</div><div class="zh">我家裡除了得了重感冒的妹妹之外，每個人都去聽演唱會了。[cite: 9]</div></div>' +
-  clue('except 表「除了...之外 (不包含)」，用於同類事物的排除。[cite: 9]') +
-  ops([
-    ['but for', '', '要不是[cite: 9]'],
-    ['except', '除了', '不包含[cite: 9]'],
-    ['besides', '', '包含[cite: 9]'],
-    ['and', '', '[cite: 9]']
-  ], 'B')
-);
-
-h += card('14', ['介系詞'], 'A',
-  '<div class="stem"><div class="en">'+fx("[[15|Besides]]")+' Hank, my other friends will come too.</div><div class="zh">除了漢克之外，我的其他朋友也會來。[cite: 9]</div></div>' +
-  clue('包含漢克在內，其他朋友也會來，故用 Besides。[cite: 9]') +
-  ops([
-    ['Besides', '除了...還有', '包含[cite: 9]'],
-    ['Except for', '', '不包含[cite: 9]'],
-    ['Beside', '', '在...旁邊[cite: 9]'],
-    ['In addition', '', '應為 in addition to[cite: 9]']
-  ], 'A')
-);
-
-h += card('15', ['介系詞'], 'B',
-  '<div class="stem"><div class="en">All my friends will come '+fx("[[16|except for]]")+' Hank.</div><div class="zh">除了漢克，我所有的朋友都會來。[cite: 9]</div></div>' +
-  clue('排除漢克 (不包含)，故用 except for。[cite: 9]') +
-  ops([
-    ['besides', '', '包含[cite: 9]'],
-    ['except for', '除...外', '不包含[cite: 9]'],
-    ['beside', '', '[cite: 9]'],
-    ['in addition to', '', '[cite: 9]']
-  ], 'B')
-);
-
-h += card('16', ['介系詞'], 'D',
-  '<div class="stem"><div class="en">The picture is perfect '+fx("[[17|except for]]")+' one spot.</div><div class="zh">這幅畫除了有一個污點之外，其他都很完美。[cite: 9]</div></div>' +
-  clue('除去和非除去的不是同類事物時，只能用 except for 表示「只不過…」。[cite: 9]') +
-  ops([
-    ['Except', '', '[cite: 9]'],
-    ['Besides', '', '[cite: 9]'],
-    ['Except that', '', '需接子句[cite: 9]'],
-    ['Except for', '除了...只不過', '非同類事物排除[cite: 9]']
-  ], 'D')
-);
-
-h += card('17', ['介系詞'], 'C',
-  '<div class="stem"><div class="en">Your composition is perfect '+fx("[[18|except for]]")+' two grammatical mistakes.</div><div class="zh">你的作文除了有兩個文法錯誤之外，其他都很完美。[cite: 9]</div></div>' +
-  clue('非同類事物的排除，使用 except for。[cite: 9]') +
-  ops([
-    ['beside', '', '[cite: 9]'],
-    ['besides', '', '[cite: 9]'],
-    ['except for', '除了...只不過', '非同類事物[cite: 9]'],
-    ['along with', '', '[cite: 9]']
-  ], 'C')
-);
-
-h += card('18', ['介系詞'], 'D',
-  '<div class="stem"><div class="en">He passed all the subjects '+fx("[[19|except]]")+' math, on which he only scored 32.</div><div class="zh">除了數學他只考了32分以外，他所有的科目都及格了。[cite: 9]</div></div>' +
-  clue('math 與 subjects 為同類事物的排除，故用 except。[cite: 9]') +
-  ops([
-    ['including', '', '[cite: 9]'],
-    ['besides', '', '[cite: 9]'],
-    ['without', '', '[cite: 9]'],
-    ['except', '除了', '同類事物的排除[cite: 9]']
-  ], 'D')
-);
-
-h += card('19', ['連接詞'], 'B',
-  '<div class="stem"><div class="en">A man is judged by what he is '+fx("[[20|rather than]]")+' by what he has.</div><div class="zh">評斷一個人是看他的品性，而不是看他擁有的財富。[cite: 9]</div></div>' +
-  clue('rather than 作為連接詞，連接兩個對等的介系詞片語 (by what he is / by what he has)。[cite: 9]') +
-  ops([
-    ['despite', '', '[cite: 9]'],
-    ['rather than', '而不是', '連接詞[cite: 9]'],
-    ['except for', '', '[cite: 9]'],
-    ['as if', '', '[cite: 9]']
-  ], 'B')
-);
-
-h += card('20', ['介系詞'], 'D',
-  '<div class="stem"><div class="en">She also said that she never drank anything '+fx("[[21|except]]")+' white wine, which helps to digest.</div><div class="zh">她還說她除了有助於消化的白酒之外，什麼都不喝。[cite: 9]</div></div>' +
-  clue('nothing / anything 等字常搭配 except (除了...之外)。[cite: 9]') +
-  ops([
-    ['or', '', '[cite: 9]'],
-    ['unless', '', '[cite: 9]'],
-    ['for', '', '[cite: 9]'],
-    ['except', '除了', '搭配 anything[cite: 9]']
-  ], 'D')
-);
-
-h += card('21', ['介系詞'], 'D',
-  '<div class="stem"><div class="en">He reads nothing '+fx("[[22|except]]")+' newspapers.</div><div class="zh">他除了報紙什麼也不讀。[cite: 9]</div></div>' +
-  clue('nothing but / nothing except = only。[cite: 9]') +
-  ops([
-    ['besides', '', '[cite: 9]'],
-    ['unless', '', '[cite: 9]'],
-    ['and', '', '[cite: 9]'],
-    ['except', '除了', '= but[cite: 9]']
-  ], 'D')
-);
-
-h += card('22', ['介系詞片語'], 'C',
-  '<div class="stem"><div class="en">We rode out the Asian economic crisis '+fx("[[23|thanks to]]")+' the wise decisions of the government.</div><div class="zh">多虧了政府的明智決定，我們安然度過了亞洲經濟危機。[cite: 9]</div></div>' +
-  clue('thanks to = 幸虧、由於。[cite: 9]') +
-  ops([
-    ['according to', '', '根據[cite: 9]'],
-    ['in addition to', '', '除此之外[cite: 9]'],
-    ['thanks to', '多虧了', '[cite: 9]'],
-    ['except for', '', '[cite: 9]']
-  ], 'C')
-);
-
-h += card('23', ['介系詞'], 'B',
-  '<div class="stem"><div class="en">'+fx("[[24|Besides]]")+' taking medicines, doing exercise is also a good way to relieve your pressure.</div><div class="zh">除了吃藥之外，做運動也是減輕壓力的好方法。[cite: 9]</div></div>' +
-  clue('包含在內，吃藥和運動都是好方法，故用 Besides。[cite: 9]') +
-  ops([
-    ['Except', '', '[cite: 9]'],
-    ['Besides', '除了...還有', '包含[cite: 9]'],
-    ['Beside', '', '在...旁邊[cite: 9]'],
-    ['Except for', '', '[cite: 9]']
-  ], 'B')
-);
-
-h += card('24', ['介系詞片語'], 'B',
-  '<div class="stem"><div class="en">'+fx("[[25|In addition to]]")+' feeling nervous, the young people were also restless.</div><div class="zh">這些年輕人除了感到緊張之外，還很浮躁不安。[cite: 9]</div></div>' +
-  clue('in addition to (除了...還有)，語意同 besides。[cite: 9]') +
-  ops([
-    ['Instead of', '', '取代[cite: 9]'],
-    ['In addition to', '除了...還有', '[cite: 9]'],
-    ['Not only', '', '若用 Not only 需倒裝：Not only were they feeling nervous, but...[cite: 9]'],
-    ['In spite of', '', '儘管[cite: 9]']
-  ], 'B')
-);
-
-h += card('25', ['舉例片語'], 'B',
-  '<div class="stem"><div class="en">Many Eskimos now use modern conveniences '+fx("[[26|such as]]")+' snowmobiles, cars, televisions, and appliances.</div><div class="zh">許多愛斯基摩人現在使用現代便利設施，例如摩托雪車、汽車、電視和家電。[cite: 9]</div></div>' +
-  clue('such as 用來舉例。[cite: 9]') +
-  ops([
-    ['because of', '', '[cite: 9]'],
-    ['such as', '例如', '[cite: 9]'],
-    ['except for', '', '[cite: 9]'],
-    ['in spite of', '', '[cite: 9]']
-  ], 'B')
-);
-
-h += card('26', ['連接詞 / 介系詞'], 'D',
-  '<div class="stem"><div class="en">Without the instructions, I don\'t know how to operate the new machine, '+fx("[[27|except / other than]]")+' to turn it on.</div><div class="zh">沒有說明書，我不知道如何操作這台新機器，除了打開電源之外。[cite: 9]</div></div>' +
-  clue('except 和 other than 都可當連接詞，連接兩個不定詞 (to operate 和 to turn it on)。[cite: 9]') +
-  ops([
-    ['besides', '', '不能連接不定詞[cite: 9]'],
-    ['in addition', '', '副詞，無法連接[cite: 9]'],
-    ['apart from', '', '只能當介系詞[cite: 9]'],
-    ['except / other than', '除了', '可當連接詞[cite: 9]']
-  ], 'D')
-);
-
-h += card('27', ['介系詞'], 'C',
-  '<div class="stem"><div class="en">To the best of my memory, there is only one person '+fx("[[28|besides]]")+' Smith that knows the answer.</div><div class="zh">就我記憶所及，除了史密斯之外只有一個人知道答案。[cite: 9]</div></div>' +
-  clue('except 通常搭配全面肯/否定的字。若選 except 則表示 Smith 是個例外，但這無意義。用 besides 表「除了Smith還有一個人」。[cite: 9]') +
-  ops([
-    ['except', '', '通常搭配全面肯定/否定[cite: 9]'],
-    ['except for', '', '[cite: 9]'],
-    ['besides', '除了...還有', '包含[cite: 9]'],
-    ['beside', '', '[cite: 9]']
-  ], 'C')
-);
-
-
-// --- 講義重點 6 (否定副詞及 only 引導之倒裝句) ---
-h += '<h2 id="p4">講義重點 6 (否定副詞倒裝)</h2>';
-
-h += card('28', ['倒裝句'], 'D',
-  '<div class="stem"><div class="en">No sooner '+fx("[[29|had]]")+' he hopped in the taxi than the bus arrived.</div><div class="zh">他一跳上計程車，公車就到了。[cite: 9]</div></div>' +
-  clue('No sooner had + S + Vpp... than + S + Vpt (一...就...)。[cite: 9]') +
-  ops([
-    ['when', '', '[cite: 9]'],
-    ['has', '', '[cite: 9]'],
-    ['did', '', '[cite: 9]'],
-    ['had', '過去完成式助動詞', '搭配 p.p. hopped[cite: 9]']
-  ], 'D')
-);
-
-h += card('29', ['連接詞'], 'C',
-  '<div class="stem"><div class="en">'+fx("[[30|No matter]]")+' what your interest is, there are lots of books for you to choose from here.</div><div class="zh">無論你的興趣是什麼，這裡都有許多書供你選擇。[cite: 9]</div></div>' +
-  clue('No matter + 疑問詞 (無論...)，不需倒裝。[cite: 9]') +
-  ops([
-    ['Rarely', '', '[cite: 9]'],
-    ['Not until', '', '[cite: 9]'],
-    ['No matter', '無論', 'No matter what[cite: 9]'],
-    ['Only', '', '[cite: 9]']
-  ], 'C')
-);
-
-h += card('30', ['倒裝句'], 'A',
-  '<div class="stem"><div class="en">'+fx("[[31|Scarcely]]")+' do we walk through the town without meeting someone we know.</div><div class="zh">我們走過這座小鎮時，幾乎不可能遇不到我們認識的人。[cite: 9]</div></div>' +
-  clue('否定副詞 Scarcely 放句首，後接倒裝 do we walk。[cite: 9]') +
-  ops([
-    ['Scarcely', '幾乎不', '= Hardly[cite: 9]'],
-    ['No sooner', '', '搭配 than[cite: 9]'],
-    ['Not until', '', '[cite: 9]'],
-    ['Only', '', '[cite: 9]']
-  ], 'A')
-);
-
-h += card('31', ['倒裝句'], 'C',
-  '<div class="stem"><div class="en">'+fx("[[32|Not until]]")+' he published ten novels was he recognized as a great novelist.</div><div class="zh">直到他出版了十本小說後，他才被公認為是一位偉大的小說家。[cite: 9]</div></div>' +
-  clue('Not until 子句放句首，主要子句需倒裝 (was he recognized)。[cite: 9]') +
-  ops([
-    ['When', '', '[cite: 9]'],
-    ['As soon as', '', '[cite: 9]'],
-    ['Not until', '直到...才', '引導否定副詞子句[cite: 9]'],
-    ['That', '', '[cite: 9]']
-  ], 'C')
-);
-
-h += card('32', ['倒裝句'], 'D',
-  '<div class="stem"><div class="en">Not until a fatal accident happened '+fx("[[33|did people pay attention to traffic rules]]")+'.</div><div class="zh">直到發生了一起致命的事故，人們才開始注意交通規則。[cite: 9]</div></div>' +
-  clue('Not until 子句後，主要子句需倒裝 (助動詞 did 移至主詞前)。[cite: 9]') +
-  ops([
-    ['and people started to...', '', '未倒裝[cite: 9]'],
-    ['that we learned...', '', '應為 It was not until... that...[cite: 9]'],
-    ['the Bush government started...', '', '未倒裝[cite: 9]'],
-    ['did people pay attention...', '倒裝句', '助動詞前移[cite: 9]']
-  ], 'D')
-);
-
-h += card('33', ['倒裝句'], 'A',
-  '<div class="stem"><div class="en">Never before '+fx("[[34|has this city been]]")+' in greater need of modern public transport than it is today.</div><div class="zh">這座城市以前從未像今天這樣如此需要現代化的大眾運輸系統。[cite: 9]</div></div>' +
-  clue('Never before 否定副詞片語放句首，主句需倒裝。表經驗需用現在完成式。[cite: 9]') +
-  ops([
-    ['has this city been', '倒裝+完成式', '[cite: 9]'],
-    ['this city has been', '', '未倒裝[cite: 9]'],
-    ['was this city', '', '時態不符[cite: 9]'],
-    ['this city was', '', '未倒裝且時態不符[cite: 9]']
-  ], 'A')
-);
-
-h += card('34', ['倒裝句'], 'D',
-  '<div class="stem"><div class="en">'+fx("[[35|Little]]")+' did David Wang dream of becoming a famous talk show host at Taiwan\'s best-known English-speaking radio station.</div><div class="zh">David Wang 幾乎沒想過自己會成為台灣最知名的英語廣播電台裡的著名脫口秀主持人。[cite: 9]</div></div>' +
-  clue('Little 作否定副詞放句首，後接倒裝 (did David Wang dream)。[cite: 9]') +
-  ops([
-    ['No doubt', '', '不需倒裝[cite: 9]'],
-    ['With passion', '', '不需倒裝[cite: 9]'],
-    ['No wonder', '', '不需倒裝[cite: 9]'],
-    ['Little', '幾乎不', '否定副詞[cite: 9]']
-  ], 'D')
-);
-
-h += card('35', ['倒裝句'], 'C',
-  '<div class="stem"><div class="en">'+fx("[[36|On no account]]")+' should the house be left unlocked.</div><div class="zh">在任何情況下都不應該讓房子沒鎖。[cite: 9]</div></div>' +
-  clue('On no account = under no circumstances，否定副詞片語放句首需倒裝 (should the house)。[cite: 9]') +
-  ops([
-    ['There is no denying', '', '[cite: 9]'],
-    ['Not to mention', '', '不可放句首[cite: 9]'],
-    ['On no account', '絕不', '= under no circumstances[cite: 9]'],
-    ['Without a doubt', '', '不需倒裝[cite: 9]']
-  ], 'C')
-);
-
-h += card('36', ['連接詞'], 'C',
-  '<div class="stem"><div class="en">The modem legend of the Loch Ness Monster began in 1933 when a local newspaper described how someone encountered the creature in the Scottish lake. '+fx("[[37|As]]")+' the report was widely circulated, reporters and people from Scotland, England and Wales went to the lake with cameras, hoping to catch images of the mysterious monster.</div><div class="zh">現代尼斯湖水怪的傳說始於1933年，當時當地一家報紙描述了某人如何在蘇格蘭湖中遇到這個生物。隨著該報導的廣泛流傳，來自蘇格蘭、英格蘭和威爾斯的記者與民眾帶著相機前往該湖，希望能捕捉到這神祕怪物的影像。[cite: 9]</div></div>' +
-  clue('As 作為連接詞，表「隨著/因為」。[cite: 9]') +
-  ops([
-    ['Although', '雖然', '[cite: 9]'],
-    ['Even if', '即使', '[cite: 9]'],
-    ['As', '隨著/因為', '[cite: 9]'],
-    ['Only when', '', '若放句首主要子句需倒裝[cite: 9]']
-  ], 'C')
-);
-
-h += card('37', ['倒裝句'], 'B',
-  '<div class="stem"><div class="en">Only if sufficient precautions are taken can the damage typhoons cause '+fx("[[38|be reduced]]")+'.</div><div class="zh">只有採取充分的預防措施，颱風造成的損害才能被減少。[cite: 9]</div></div>' +
-  clue('Only if 子句放句首，主要子句需倒裝 (can the damage be reduced)。損害是被減少的，故用被動語態。[cite: 9]') +
-  ops([
-    ['reduce', '', '主動語態不合[cite: 9]'],
-    ['be reduced', '被減少', '被動語態[cite: 9]'],
-    ['to be reduced', '', '助動詞 can 後需接原形動詞[cite: 9]'],
-    ['reduce it', '', '[cite: 9]']
-  ], 'B')
-);
-
-
-// --- 課本句型實例 1 ---
-h += '<h2 id="p5">課本句型實例 1 (倒裝句)</h2>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">1. Jane畢業以後就不常跟她的同學們聯絡了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Seldom has Jane been in touch with her classmates since she graduated.]]")+'[cite: 9]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">2. 這個公司不再販賣受汙染的食品。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|No longer does the company sell contaminated food products.]]")+'[cite: 9]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">3. 我們絕不應該忽視其他人的意見。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Never should we ignore other people’s opinions.]]")+'[cite: 9]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">4. 當地人絲毫不知這座核能發電廠已經關閉。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Little did the locals know that the nuclear power plant had closed.]]")+'[cite: 9]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">5. Mike絕不可能在禮拜五前完成報告。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|On no account can Mike finish/complete his report by Friday.]]")+'[cite: 9]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">6. 很少有菜販能吸引如此多的媒體關注。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Rarely has a vegetable vendor attracted so much media attention.]]")+'[cite: 9]<br><small>(Seldom can/could a vegetable vendor attract so much media attention.)</small></div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">7. Jill不但在醫院擔任志工，而且還時常到偏鄉幫助弱勢。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Not only does Jill work as a volunteer in the hospital, but she also often goes to remote villages to help the disadvantaged.]]")+'[cite: 9]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">8. 直到檢驗報告出爐Mark才被告知罹患了癌症。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Not until the test report came out was Mark told he had cancer.]]")+'[cite: 9]</div></div>';
-
-
-// --- 課本句型實例 2 ---
-h += '<h2 id="p6">課本句型實例 2 (It\'s no exaggeration to say that...)</h2>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">1. 不誇張地說，我結婚的那天是我一生中最快樂的日子。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|It is no exaggeration to say that the day that I got married was the happiest day of my life.]]")+'[cite: 9]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">2. 說Susan是我教過最有天份的學生一點都不為過。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|It is not too much to say that Susan is the most talented student I have taught.]]")+'[cite: 9]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">3. 說紐約是世上最繁忙的城市之一一點也不誇張。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|It is no exaggeration to say that New York City is one of the busiest cities in the world.]]")+'[cite: 9]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">4. 說新冠肺炎是史上最具破壞性的疾病一點也不誇張。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|It is no exaggeration to say that Covid-19 is the most damaging disease of all time.]]")+'[cite: 9]<br><small>(the most destructive disease of all time)</small></div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">5. 說蘋果是世上最賺錢的公司一點也不為過。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|It is not too much to say that Apple is the most profitable company in the world.]]")+'[cite: 9]</div></div>';
-
-
-document.getElementById('app').innerHTML = h;
-
-const secs=[
-  ['p1','課文與重點解析'],
-  ['p2','挑戰題 (課文內容)'],
-  ['p3','重點 5 (apart from)'],
-  ['p4','重點 6 (倒裝句)'],
-  ['p5','句型 1'],
-  ['p6','句型 2']
-];
+const st=(en,zh)=>'<div class="stem"><div class="en">'+fx(en)+'</div><div class="zh">'+zh+'</div></div>';
+
+/* === Part 1: L1 ~ L46 課文講解與非題目句子依序呈現 === */
+const h1 = '<h2 id="p1">L1 ~ L46 課文講解</h2>' +
+  passage("L1 ~ L7 課文段落與重點解析", [
+    [
+      ["【L1】Every year, more than five million people participate in the Mazu pilgrimage.", "每年，有超過五百萬人參加媽祖遶境。"],
+      ["【L2】It is no exaggeration to say that this event might just be the world’s largest and wildest birthday party.", "毫不誇張地說，這個活動可能正是世界上最大、最狂熱的生日派對。"],
+      ["【L4】The festivities do not end until the participants have celebrated for nine days and journeyed over 300 kilometers in central Taiwan.", "慶祝活動要等到參與者慶祝了九天，並在台灣中部跋涉了三百多公里後才會結束。"],
+      ["【L6】Undoubtedly, the Mazu pilgrimage is a can’t-miss event for visitors to Taiwan.", "毫無疑問地，媽祖遶境是來台灣的遊客不可錯過的盛事。"]
+    ],
+    [
+      ["• participate in = take part in = join in = be involved in（參與活動的準備、進行等；參加比賽） vs. join（加入組織或人群）", "• attend = go to（上課；參加只需付出注意力的活動，如 party, concert, wedding, school, class 等） vs. enter = compete in（報名參加比賽）"],
+      ["• undoubtedly = doubtless = without (a) doubt 無疑地 (adv.)；There is no doubt that + 完整子句（…是毫無疑問的）。", "注意：(X) undoubtly 與 (X) doubtlessly 這兩個字在標準英文中不存在！"],
+      ["• can’t-V 複合形容詞：不可…的；不可能…的（例：a can't-miss event 不可錯過的盛事）。", "課文複合形容詞用法。"]
+    ]
+  ]) + [
+  card("L8", ["時態與主要動詞", "sets out 出發"], "A",
+    st("The pilgrimage, which honors the sea goddess Mazu, [[L8|sets]] out from Dajia’s Zhenlan Temple around her birthday, the twenty-third day of the third month on Taiwan’s lunar calendar.", "這場尊崇海神媽祖的遶境，在台灣農曆三月二十三日她的生日左右，從大甲鎮瀾宮出發。") +
+    clue("不隨時間改變的常態情況（每年固定的宗教活動）用現在簡單式。主詞為單數 <code>The pilgrimage</code>，且 <code>set out</code>（出發）為不及物動詞片語，無被動式。") +
+    ops([
+      ["sets", "出發", "現在簡單式單數動詞。"],
+      ["is set", "", "set out 表「出發」時無被動式。"],
+      ["setting", "", "分詞會導致本句缺主要動詞。"],
+      ["set", "", "主詞為單數 The pilgrimage，現在式應加 -s。"]
+    ], "A") +
+    passage("L11 ~ L13 課文段落", [[
+      ["The exact date and time, which vary from year to year, are determined earlier. During the Lantern Festival, temple authorities cast two half-moon-shaped wooden blocks to decide the actual schedule.", "確切的日期和時間每年都不一樣，會提前決定。在元宵節期間，廟方會擲出兩塊半月形的木筊來決定實際的行程。"]
+    ]])
+  ),
+
+  card("L11-補充1", ["動詞時態", "A few months earlier + 過去式"], "B",
+    st("補充題 1：A few months earlier on the Lantern Festival, temple authorities at Zhenlan Temple in Dajia [[L11-補充1|flipped]] two half-moon-shaped wooden blocks to determine the exact starting date and time of the pilgrimage.", "幾個月前的元宵節，大甲鎮瀾宮的廟方人員擲了兩塊半月形的木筊，來決定遶境確切的出發日期和時間。") +
+    clue("句首為特定過去時間 <code>A few months earlier on the Lantern Festival</code>，故主要動詞使用過去式 <code>flipped</code>。") +
+    ops([
+      ["flip", "", "現在式與過去特定時間不合。"],
+      ["flipped", "擲", "過去式主要動詞。"],
+      ["flipping", "", "分詞非主要動詞。"],
+      ["to flip", "", "不定詞非主要動詞。"]
+    ], "B")
+  ),
+
+  card("L11-補充2", ["時間副詞辨析", "ago vs. earlier"], "B",
+    st("補充題 2：Six months [[L11-補充2-1|ago]], I bought a new car. Six months [[L11-補充2-2|earlier]], I had started saving for it.", "六個月前，我買了一輛新車。在那之前六個月，我已經開始為此存錢了。") +
+    clue("• <code>ago</code>：從「現在（說話當下）」往回推算的一段時間前（搭配過去簡單式 <code>bought</code>）。<br>• <code>earlier / before</code>：從「前文提到的某個過去時間點」再往回推算的一段時間前（常搭配過去完成式 <code>had started</code>）。") +
+    ops([
+      ["ago / ago", "", ""],
+      ["ago / earlier", "（距今）前 / （距當時）更早之前", "第一句距今用 ago；第二句距買車當時更早之前用 earlier。"],
+      ["earlier / ago", "", ""],
+      ["earlier / earlier", "", ""]
+    ], "B")
+  ),
+
+  card("L11-補充3", ["時間副詞辨析", "many years earlier"], "B",
+    st("補充題 3：Elephants also remember events from the past. When arriving at exactly the same place where a relative died many years [[L11-補充3|earlier]], elephants will pause and silently mourn the lost member of their herd.", "大象也記得過去的事件。當到達許多年前親屬死亡的完全相同的地方時，大象會停下來，默默地哀悼失去的象群成員。") +
+    clue("從大象「抵達該地（arriving）」那個時間點往回推算的許多年前（而非說話者現在的幾年前），故使用 <code>earlier</code>（或 <code>before</code>）。") +
+    ops([
+      ["ago", "", "ago 是以說話者「現在」為基準點。"],
+      ["earlier", "更早之前", "以抵達當時為基準點的許多年前。"],
+      ["before", "", "（註：原題選項以課本字彙 earlier 為核心正解）。"],
+      ["past", "", ""]
+    ], "B")
+  ),
+
+  card("L14", ["數量修飾詞", "some + 數字 = 大約"], "A",
+    st("At the chosen time, [[L14|some]] 200,000 pilgrims set out from Zhenlan Temple on foot and visit more than 100 temples over the course of nine days.", "在選定的時間，大約二十萬名香客徒步從鎮瀾宮出發，並在九天的行程中參拜了一百多座廟宇。") +
+    clue("<code>some + 數字 + 名詞</code> ＝ <b>大約…</b>（= <code>about / approximately / roughly</code>）。") +
+    ops([
+      ["some", "大約", "<code>some 200,000 pilgrims</code>（大約二十萬名香客）。"],
+      ["those", "", "前文並未提過「那二十萬名香客」。"],
+      ["when", "", "若用 when 則整句缺乏主要子句。"],
+      ["in which", "", "同上，會導致整句無主要子句。"]
+    ], "A") +
+    passage("L16 ~ L17 課文段落", [[
+      ["They are accompanied every step of the way by a statue of Mazu, which is carried in a sedan chair.", "他們沿途每一步都有媽祖神像陪伴，神像被抬在神轎裡。"]
+    ]])
+  ),
+
+  card("L18", ["否定副詞句首倒裝", "never do their passion and dedication fade"], "D",
+    st("Although the pilgrims’ strength may wane during the long journey, [[L18|never]] do their passion and dedication fade.", "雖然香客們的體力在漫長的旅程中可能會衰退，但他們的熱情和虔誠從未消退。") +
+    clue("觀察後半句已經倒裝為 <code><b>do</b> their passion and dedication <b>fade</b></code>！<br>否定副詞 <code>never</code> 放句首時，後方接倒裝句（助動詞 <code>do</code> + 主詞 + 原形動詞 <code>fade</code>）。") +
+    ops([
+      ["in which they", "", "語意與結構皆不通。"],
+      ["not until they", "", "Not until 後需先接從屬子句才接倒裝主句。"],
+      ["not only", "", "變成「不但他們的熱情消退」，與 Although 語意完全相反！"],
+      ["never", "從未", "否定副詞置於主要子句句首觸發倒裝。"]
+    ], "D")
+  ),
+
+  card("L20", ["介系詞片語", "Apart from being / Besides being"], "A",
+    st("[[L20|Apart from being / Besides being]] a chance for people to show their devotion to the goddess, this annual festival is a spectacular and heart-warming event.", "除了作為讓人們展現對女神虔誠的機會外，這個一年一度的節日也是一場壯觀且溫馨的盛事。") +
+    clue("<code>Besides being = Apart from being = Aside from being = In addition to being</code>（除了是…之外，還…，表包含在內）。") +
+    ops([
+      ["Besides being", "除了是...", "包含在內（既是展現虔誠的機會，也是壯觀溫馨的盛事）。"],
+      ["Except that", "只不過", "後接完整子句，且表排除例外。"],
+      ["Rather than", "並非；而不是", "語意不合。"],
+      ["In spite of", "儘管", "語意不合。"]
+    ], "A")
+  ),
+
+  card("L22", ["時間連接詞", "before 在…之前"], "B",
+    st("The gathering in front of Zhenlan Temple [[L22|before]] the pilgrimage begins is a scene like no other.", "在遶境開始前，鎮瀾宮前聚集的人群是一幅無與倫比的景象。") +
+    clue("<code>before the pilgrimage begins</code> 為時間副詞子句，修飾前面的名詞 <code>The gathering</code>（在遶境開始前的聚會人群），整句主要動詞是後面的 <code>is</code>。") +
+    ops([
+      ["which", "", "the pilgrimage begins 為完整子句，不可用關代 which。"],
+      ["before", "在...之前", "連接詞引導時間子句。"],
+      ["once", "一旦", "語意不如「遶境出發前廟前的聚集盛況」精確。"],
+      ["for which", "", "語意不合。"]
+    ], "B")
+  ),
+
+  card("L24", ["形容詞分詞構句", "excited 感到興奮的"], "C",
+    st("When the statue of Mazu finally emerges from the temple in her sedan chair, the crowd surrounds her, [[L24|excited]] to send her off on her long journey.", "當媽祖的神像終於乘著神轎從廟裡出來時，群眾圍繞著她，興奮地送她踏上漫長的旅程。") +
+    clue("<code>the crowd surrounds her, (and the crowd is) excited to send her off...</code>，省略連接詞、主詞與 be 動詞後，因群眾是「感到興奮的」，故用過去分詞／形容詞 <code>excited</code>。") +
+    ops([
+      ["who excited", "", "缺少 be 動詞（應為 who are excited）。"],
+      ["exciting", "", "群眾是「感到興奮」，非「令人興奮」。"],
+      ["excited", "感到興奮的", "形容詞分詞構句補充說明主詞 the crowd 的心情狀態。"],
+      ["which is exciting", "", "語意不合。"]
+    ], "C")
+  ),
+
+  card("L29", ["轉折與同時副詞", "Meanwhile 與此同時"], "D",
+    st("Some even kneel or lie face down on the pavement to allow the sedan chair to pass over them... [[L29|Meanwhile]], locals show their hospitality by enthusiastically offering free food, washing facilities, and accommodations to passing pilgrims.", "有些人甚至跪著或趴在人行道上，讓神轎從他們身上越過（躦轎腳）… 與此同時，當地人熱情地提供免費食物、盥洗設施和住宿給路過的香客，展現了他們的好客。") +
+    clue("<code>Meanwhile = In the meantime</code>（於此同時），表示在香客虔誠遶境的同一時間，沿途當地居民也熱情提供免費飲食與住宿。") +
+    ops([
+      ["Likewise", "同樣地", ""],
+      ["Above all", "最重要的是", ""],
+      ["Even better", "更棒的是", ""],
+      ["Meanwhile", "與此同時", "描述遶境沿途同時進行的另一幅溫馨景象。"]
+    ], "D")
+  ),
+
+  card("L32", ["否定副詞句首倒裝", "Rarely can such generosity be seen"], "D",
+    st("[[L32|Rarely can]] such generosity be seen during a religious event. It reflects not only the locals’ dedication to Mazu but also the warmth and humanity that are characteristic of the Taiwanese people.", "在宗教活動中很少能見到這樣的慷慨。它不僅反映了當地人對媽祖的虔誠，也反映了台灣人特有的溫暖和人情味。") +
+    clue("觀察空格後是 <code>such generosity (S) <b>be seen</b> (原形被動)</code>！<br>這代表句首必定是「否定副詞（<code>Rarely</code>）+ 情態助動詞（<code>can</code>）」的倒裝結構：<code><b>Rarely can</b> such generosity be seen...</code>！") +
+    ops([
+      ["It’s uncommon for", "", "後面應接 to be seen 而非原形 be seen。"],
+      ["It’s unusual that", "", "後面應接 is seen。"],
+      ["Only occasionally do", "", "助動詞 do 後面不能接被動 be seen（應為 is such generosity seen）。"],
+      ["Rarely can", "很少能", "否定副詞 Rarely + 助動詞 can + S + be seen。"]
+    ], "D") +
+    passage("L35 ~ L42 課文結尾段落", [[
+      ["【L35】Over the years, the Mazu pilgrimage has transformed into more than just a religious ritual, and every year it attracts all manner of people—young and old, foreign and Taiwanese.", "這些年來，媽祖遶境已轉變為不僅僅是一種宗教儀式，每年都吸引各式各樣的人——無論老少、外國人和台灣人。"],
+      ["【L38】UNESCO has even recognized Mazu beliefs and customs by designating them as aspects of a protected living culture.", "聯合國教科文組織甚至將媽祖信仰和習俗認定為受保護的非物質活文化遺產的一部分。"],
+      ["【L40】For those who are looking to experience Taiwan’s cultural heritage, participating in the Mazu pilgrimage is essential!", "對於那些想要體驗台灣文化遺產的人來說，參加媽祖遶境是必不可少的！"]
+    ]])
+  )
+].join('');
+
+/* === Part 2: 講義重點 5 (apart from / besides / except / except for) === */
+const h2 = '<h2 id="p2">講義重點 5 (apart from / besides / except / except for 總整理)</h2>' + [
+  card("重點5-1", ["介系詞", "besides 除了…還有（包含）"], "B", st("1. I think she has many good qualities [[重點5-1|besides]] being very beautiful.", "我認為她除了非常美麗之外，還有許多優秀的特質。") + clue("<code>besides</code> 表「除…之外還有（包含在內）」。") + ops([["except","","不包含。"],["besides","除了...還有","包含在內。"],["instead of","","取代。"],["except for","","不包含。"]], "B")),
+  card("重點5-2", ["介系詞", "except 除了（同類排除）"], "B", st("2. Everyone in my family went to the concert [[重點5-2|except]] my sister, who came down with a bad cold.", "我家裡除了得了重感冒的妹妹之外，每個人都去聽演唱會了。") + clue("<code>except</code> 表「除了…之外（不包含）」，常搭配 <code>everyone / all / no one</code> 用於同類事物的排除。") + ops([["but for","","要不是（搭配假設語氣）。"],["except","除了","不包含。"],["besides","","包含。"],["and","",""]], "B")),
+  card("重點5-3", ["介系詞", "Besides 除了…還有"], "A", st("3. [[重點5-3|Besides]] Hank, my other friends will come too.", "除了漢克之外，我的其他朋友也會來。") + clue("句尾有 <code>other friends will come <b>too</b></code>，代表漢克也會來（包含在內），故用 <code>Besides</code>。") + ops([["Besides","除了...還有","包含在內。"],["Except for","","不包含。"],["Beside","","在…旁邊。"],["In addition","","後需加 to 才能接名詞 Hank。"]], "A")),
+  card("重點5-4", ["介系詞", "except for 除了（排除）"], "B", st("4. All my friends will come [[重點5-4|except for]] Hank.", "除了漢克之外，我所有的朋友都會來。") + clue("搭配 <code>All my friends</code> 排除漢克一人（不包含），用 <code>except (for)</code>。") + ops([["besides","","包含。"],["except for","除...外","不包含（排除在外）。"],["beside","","在…旁邊。"],["in addition to","","包含。"]], "B")),
+  card("重點5-5", ["介系詞", "except for 美中不足（非同類排除）"], "D", st("5. The picture is perfect [[重點5-5|except for]] one spot.", "這幅畫除了有一個污點之外，其他都很完美。") + clue("當整體形容詞（<code>perfect</code>）與被扣除的局部瑕疵（<code>one spot</code>）<b>不是同類事物</b>時，表示「美中不足、只不過…」，優先使用 <code>except for</code>！") + ops([["Except","","通常用於同類事物排除。"],["Besides","","包含。"],["Except that","","後需接完整子句。"],["Except for","除了...（只不過）","整體評估中扣除局部小瑕疵。"]], "D")),
+  card("重點5-6", ["介系詞", "except for 美中不足"], "C", st("6. Your composition is perfect [[重點5-6|except for]] two grammatical mistakes.", "你的作文除了有兩個文法錯誤之外，其他都很完美。") + clue("同上，整體完美（<code>perfect</code>）但扣除局部瑕疵（<code>two grammatical mistakes</code>），使用 <code>except for</code>。") + ops([["beside","",""],["besides","",""],["except for","除了...（只不過）","非同類事物之局部排除。"],["along with","","連同。"]], "C")),
+  card("重點5-7", ["介系詞", "except 同類事物排除"], "D", st("7. He passed all the subjects [[重點5-7|except]] math, on which he only scored 32.", "除了數學只考 32 分以外，他所有的科目都及格了。") + clue("<code>math</code> 與 <code>all the subjects</code> 為同類事物的排除，故用 <code>except</code>。") + ops([["including","","包含（邏輯相反）。"],["besides","","包含。"],["without","","沒有。"],["except","除了","同類事物的排除。"]], "D")),
+  card("重點5-8", ["準對等連接詞", "rather than 而不是"], "B", st("8. A man is judged by what he is [[重點5-8|rather than]] by what he has.", "評斷一個人是看他的內在品格，而不是看他擁有的外在財富。") + clue("<code>rather than</code> 連接兩個對等的介系詞片語（<code>by what he is</code> 與 <code>by what he has</code>）。") + ops([["despite","","介系詞後不接 by 子句。"],["rather than","而不是","連接兩個 by 片語。"],["except for","",""],["as if","",""]], "B")),
+  card("重點5-9", ["介系詞", "never ... anything except"], "D", st("9. She also said that she never drank anything [[重點5-9|except]] white wine, which helps to digest.", "她還說她除了有助於消化的白酒之外，什麼都不喝。") + clue("<code>anything / nothing</code> 常搭配 <code>except / but</code>（除了…之外什麼都不…）。") + ops([["or","",""],["unless","","連接詞需接子句。"],["for","",""],["except","除了","搭配 anything。"]], "D")),
+  card("重點5-10", ["介系詞", "nothing except = nothing but"], "D", st("10. He reads nothing [[重點5-10|except]] newspapers.", "他除了報紙什麼也不讀。") + clue("<code>nothing except = nothing but = only</code>。") + ops([["besides","",""],["unless","",""],["and","",""],["except","除了","= but。"]], "D")),
+  card("重點5-11", ["介系詞片語", "thanks to 多虧了"], "C", st("11. We rode out the Asian economic crisis [[重點5-11|thanks to]] the wise decisions of the government.", "多虧了政府的明智決定，我們安然度過了亞洲經濟危機。") + clue("<code>ride out</code> 安然度過（危機或風暴）；<code>thanks to</code> 多虧了、幸虧。") + ops([["according to","","根據。"],["in addition to","","除此之外。"],["thanks to","多虧了","表正面原因。"],["except for","","除…之外。"]], "C")),
+  card("重點5-12", ["介系詞", "Besides 除了…還有"], "B", st("12. [[重點5-12|Besides]] taking medicines, doing exercise is also a good way to relieve your pressure.", "除了吃藥之外，做運動也是減輕壓力的好方法。") + clue("後半句有 <code>is <b>also</b> a good way</code>，代表包含在內，故用 <code>Besides</code>。") + ops([["Except","",""],["Besides","除了...還有","包含在內。"],["Beside","","在…旁邊。"],["Except for","",""]], "B")),
+  card("重點5-13", ["介系詞片語", "In addition to 除了…還有"], "B", st("13. [[重點5-13|In addition to]] feeling nervous, the young people were also restless.", "這些年輕人除了感到緊張之外，還很浮躁不安。") + clue("<code>In addition to + V-ing</code>（除了…之外還…），語意同 <code>Besides</code>。") + ops([["Instead of","","取代。"],["In addition to","除了...還有","後接 V-ing (feeling)。"],["Not only","","若用 Not only 置於句首需接倒裝子句：Not only did they feel nervous...。"],["In spite of","","儘管。"]], "B")),
+  card("重點5-14", ["舉例片語", "such as 例如"], "B", st("14. Many Eskimos now use modern conveniences [[重點5-14|such as]] snowmobiles, cars, televisions, and appliances.", "許多愛斯基摩人現在使用現代便利設施，例如雪地摩托車、汽車、電視和家電。") + ops([["because of","",""],["such as","例如","列舉具體例子。"],["except for","",""],["in spite of","",""]], "B")),
+  card("重點5-15", ["連接不定詞", "except / other than to VR"], "D", st("15. Without the instructions, I don't know how to operate the new machine, [[重點5-15|except / other than]] to turn it on.", "沒有說明書，我不知道如何操作這台新機器，除了打開電源之外。") + clue("<code>except</code> 和 <code>other than</code> 可連接兩個不定詞結構（<code>how to operate...</code> 與 <code>to turn it on</code>）。") + ops([["besides","","介系詞後接 V-ing。"],["in addition","","副詞，無法連接。"],["apart from","","通常接 N / V-ing。"],["except / other than","除了","可接不定詞 to turn it on。"]], "D")),
+  card("重點5-16", ["介系詞", "besides 除了…還有"], "C", st("16. To the best of my memory, there is only one person [[重點5-16|besides]] Smith that knows the answer.", "就我記憶所及，除了史密斯之外，只有一個人知道答案。") + clue("史密斯知道答案，而除了史密斯之外「還有另外一個人」也知道答案（共兩人知道），故用表「包含在內、除…之外還有」的 <code>besides</code>！") + ops([["except","","若用 except 變成史密斯不知道答案，語意不合。"],["except for","",""],["besides","除了...之外（還有）","Smith 知道，且除他之外還有一人知道。"],["beside","","在…旁邊。"]], "C"))
+].join('');
+
+/* === Part 3: 講義重點 6 (否定副詞及 Only 引導之倒裝句) === */
+const h3 = '<h2 id="p3">講義重點 6 (否定副詞及 Only 引導之倒裝句)</h2>' + [
+  card("重點6-1", ["倒裝句", "No sooner had S p.p. than S V-ed"], "D", st("1. No sooner [[重點6-1|had]] he hopped in the taxi than the bus arrived.", "他一跳上計程車，公車就到了。") + clue("<code>No sooner + <b>had</b> + S + p.p. ... than + S + V-ed</code>（一…就…）。") + ops([["when","",""],["has","",""],["did","","後方是過去分詞 hopped，且一…就…固定用過去完成式 had + p.p.。"],["had","過去完成式助動詞","搭配 p.p. (hopped) 與 than。"]], "D")),
+  card("重點6-2", ["讓步連接詞（不倒裝）", "No matter what"], "C", st("2. [[重點6-2|No matter]] what your interest is, there are lots of books for you to choose from here.", "無論你的興趣是什麼，這裡都有許多書供你選擇。") + clue("<code>No matter + 疑問詞 (what)</code> 表「無論…」，引導讓步副詞子句，<b>不需要倒裝</b>！") + ops([["Rarely","",""],["Not until","",""],["No matter","無論","No matter what your interest is。"],["Only","",""]], "C")),
+  card("重點6-3", ["否定副詞倒裝", "Scarcely do we... without..."], "A", st("3. [[重點6-3|Scarcely]] do we walk through the town without meeting someone we know.", "我們走過這座小鎮時，幾乎不可能遇不到我們認識的人（每走過必遇到熟人）。") + clue("否定副詞 <code>Scarcely / Hardly / Seldom / Rarely</code> 放句首，後接現在簡單式倒裝 <code>do we walk...</code>。") + ops([["Scarcely","幾乎不","= Hardly / Seldom，搭配後方 do we walk 倒裝。"],["No sooner","","需搭配 had + S + p.p. ... than。"],["Not until","","後需先接時間或子句。"],["Only","","後需先接副詞片語或子句。"]], "A")),
+  card("重點6-4", ["倒裝句", "Not until + S + V + was + S + p.p."], "C", st("4. [[重點6-4|Not until]] he published ten novels was he recognized as a great novelist.", "直到他出版了十本小說後，他才被公認為是一位偉大的小說家。") + clue("觀察後半句主要子句已倒裝為 <code><b>was he</b> recognized...</code>，故句首為 <code>Not until</code>。") + ops([["When","","主要子句不倒裝。"],["As soon as","","主要子句不倒裝。"],["Not until","直到...才","置於句首時，後方主要子句須倒裝（was he recognized）。"],["That","",""]], "C")),
+  card("重點6-5", ["倒裝句", "Not until ... + did + S + VR"], "D", st("5. Not until a fatal accident happened [[重點6-5|did people pay attention to traffic rules]].", "直到發生了一起致命的事故，人們才開始注意交通規則。") + clue("<code>Not until a fatal accident happened</code> 置於句首，後方主要子句必須倒裝（將助動詞 <code>did</code> 移至主詞 <code>people</code> 之前，動詞還原為原形 <code>pay</code>）。") + ops([["and people started to...","","多了 and 且未倒裝。"],["that we learned...","","句首沒有 It was，不可用 that！"],["the Bush government started...","","未倒裝。"],["did people pay attention to traffic rules","倒裝句","助動詞 did 前移 + 主詞 + 原形動詞。"]], "D")),
+  card("重點6-6", ["倒裝句", "Never before has this city been..."], "A", st("6. Never before [[重點6-6|has this city been]] in greater need of modern public transport than it is today.", "這座城市以前從未像今天這樣如此需要現代化的大眾運輸系統。") + clue("<code>Never before</code>（以前從未…）置於句首，表從過去到現在的經驗用<b>現在完成式且須倒裝</b>：<code>has this city been...</code>。") + ops([["has this city been","倒裝 + 現在完成式","正確倒裝結構。"],["this city has been","","未倒裝。"],["was this city","","Never before 表至今為止的經驗，配現在完成式。"],["this city was","","未倒裝且時態不符。"]], "A")),
+  card("重點6-7", ["否定副詞倒裝", "Little did S dream/know..."], "D", st("7. [[重點6-7|Little]] did David Wang dream of becoming a famous talk show host at Taiwan's best-known English-speaking radio station.", "王大衛絲毫沒想過自己會成為台灣最知名英語廣播電台的著名脫口秀主持人。") + clue("<code>Little</code>（絲毫不、一點也不）作否定副詞放句首（常搭配 <code>know / realize / think / dream / suspect</code>），後接倒裝 <code>did David Wang dream...</code>。") + ops([["No doubt","","不需倒裝。"],["With passion","","不需倒裝。"],["No wonder","","不需倒裝。"],["Little","絲毫不；一點也不","否定副詞置於句首觸發倒裝。"]], "D")),
+  card("重點6-8", ["否定介系詞片語倒裝", "On no account 絕不"], "C", st("8. [[重點6-8|On no account]] should the house be left unlocked.", "在任何情況下都絕不應該讓房子沒鎖。") + clue("<code>On no account = Under no circumstances = In no way = By no means</code>（絕不），置於句首時後方必須倒裝（<code>should the house be left...</code>）。") + ops([["There is no denying","","後接 that 子句且不倒裝。"],["Not to mention","","更不用說，不觸發倒裝。"],["On no account","絕不","= Under no circumstances，觸發倒裝。"],["Without a doubt","","毫無疑問，不需倒裝。"]], "C")),
+  card("重點6-9", ["連接詞判斷（未倒裝）", "As 隨著"], "C", st("9. The modern legend of the Loch Ness Monster began in 1933 when a local newspaper described how someone encountered the creature in the Scottish lake. [[重點6-9|As]] the report was widely circulated, reporters and people from Scotland, England and Wales went to the lake with cameras, hoping to catch images of the mysterious monster.", "現代尼斯湖水怪的傳說始於 1933 年，當時一家地方報紙描述了某人如何在蘇格蘭湖中遇到這個生物。隨著該報導廣泛流傳，來自蘇格蘭、英格蘭和威爾斯的記者與民眾帶著相機前往該湖，希望能捕捉到這神祕怪物的影像。") + clue("觀察後半句主要子句：<code>reporters and people ... <b>went</b> to the lake</code> <b>並沒有倒裝</b>！因此絕對不能選 <code>(D) Only when</code>，應依語意選表「隨著／因為」的 <code>As</code>。") + ops([["Although","雖然","語意相反。"],["Even if","即使","語意相反。"],["As","隨著/因為","引導正常語序的時間/原因子句。"],["Only when","只有當...","若放句首，後方主要子句必須倒裝為 did reporters... go！"]], "C")),
+  card("重點6-10", ["Only if 倒裝與被動", "can the damage ... be reduced"], "B", st("10. Only if sufficient precautions are taken can the damage typhoons cause [[重點6-10|be reduced]].", "只有採取充分的預防措施，颱風造成的損害才能被減少。") + clue("<code>Only if sufficient precautions are taken</code> 置於句首，主要子句已將助動詞 <code>can</code> 移至主詞 <code>the damage (that typhoons cause)</code> 之前，空格接在助動詞 <code>can</code> 對應的原形動詞位置，且「損害（damage）」是「被減少」，故填原形被動 <code>be reduced</code>！") + ops([["reduce","","主動語態錯誤，且缺受詞。"],["be reduced","被減少","助動詞 can + 主詞 + 原形被動 be reduced。"],["to be reduced","","助動詞 can 後不可加 to。"],["reduce it","","主詞就是 the damage，不可重複加受詞 it。"]], "B"))
+].join('');
+
+/* === Part 4: 課本句型實例 1 & 2 === */
+const h4 = '<h2 id="p4">課本句型實例 1 ＆ 句型 2</h2>' + [
+  card("句1-1", ["句型1：否定副詞倒裝", "Seldom has S p.p."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">1. Jane 畢業以後就不常跟她的同學們聯絡了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Seldom has Jane been in touch with her classmates since she graduated.]]")+'</div></div>'),
+  card("句1-2", ["句型1：否定副詞倒裝", "No longer does S VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">2. 這個公司不再販賣受汙染的食品。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|No longer does the company sell contaminated food products.]]")+'</div></div>'),
+  card("句1-3", ["句型1：否定副詞倒裝", "Never should we VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">3. 我們絕不應該忽視其他人的意見。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Never should we ignore other people’s opinions.]]")+'</div></div>'),
+  card("句1-4", ["句型1：否定副詞倒裝", "Little did S know..."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">4. 當地人絲毫不知這座核能發電廠已經關閉。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Little did the locals know that the nuclear power plant had closed (been shut down).]]")+'</div></div>'),
+  card("句1-5", ["句型1：否定副詞倒裝", "On no account can S VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">5. Mike 絕不可能在禮拜五前完成報告。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|On no account can Mike finish/complete his report by Friday.]]")+'</div></div>'),
+  card("句1-6", ["句型1：否定副詞倒裝", "Rarely has / Seldom can..."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">6. 很少有菜販能吸引如此多的媒體關注。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Rarely has a vegetable vendor attracted so much media attention.]]")+'<br><small>（或：'+fx("[[|Seldom can/could a vegetable vendor attract so much media attention.]]")+'）</small></div></div>'),
+  card("句1-7", ["句型1：否定副詞倒裝", "Not only does S VR, but S also..."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">7. Jill 不但在醫院擔任志工，而且還時常到偏鄉幫助弱勢。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Not only does Jill work as a volunteer in the hospital, but she also often goes to remote villages to help the disadvantaged.]]")+'</div></div>'),
+  card("句1-8", ["句型1：否定副詞倒裝", "Not until ... was S p.p."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">8. 直到檢驗報告出爐 Mark 才被告知罹患了癌症。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Not until the test report came out was Mark told (that) he had cancer.]]")+'</div></div>'),
+
+  card("句2-1", ["句型2：It is no exaggeration to say that...", "一點也不誇張"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">1. 不誇張地說，我結婚的那天是我一生中最快樂的日子。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|It is no exaggeration to say that the day (that/when) I got married was the happiest day of my life.]]")+'</div></div>'),
+  card("句2-2", ["句型2：It is not too much to say that...", "一點也不為過"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">2. 說 Susan 是我教過最有天份的學生一點都不為過。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|It is not too much to say that Susan is the most talented student (that) I have ever taught.]]")+'</div></div>'),
+  card("句2-3", ["句型2：It is no exaggeration to say that...", "一點也不誇張"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">3. 說紐約是世上最繁忙的城市之一一點也不誇張。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|It is no exaggeration to say that New York City is one of the busiest cities in the world.]]")+'</div></div>'),
+  card("句2-4", ["句型2：It is no exaggeration to say that...", "一點也不誇張"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">4. 說新冠肺炎是史上最具破壞性的疾病一點也不誇張。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|It is no exaggeration to say that Covid-19 is the most damaging/destructive disease of all time.]]")+'</div></div>'),
+  card("句2-5", ["句型2：It is not too much to say that...", "一點也不為過"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">5. 說蘋果是世上最賺錢的公司一點也不為過。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|It is not too much to say that Apple is the most profitable company in the world.]]")+'</div></div>')
+].join('');
+
+document.getElementById('app').innerHTML = h1 + h2 + h3 + h4;
+const secs=[['p1','L1~L46 課文講解'],['p2','重點5 (apart from/besides/except)'],['p3','重點6 (否定副詞倒裝)'],['p4','句型1 & 句型2']];
 document.getElementById('nav').innerHTML=secs.map(s=>'<a href="#'+s[0]+'">'+s[1]+'</a>').join('')+'<button id="tg">全部收合</button>';
 let open=true;
 document.getElementById('tg').onclick=function(){

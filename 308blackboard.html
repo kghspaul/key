@@ -64,10 +64,10 @@ footer a:hover{text-decoration:underline;}
 
 <script>
 const L="ABCD";
-const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[(\d*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[([^|\]]*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
 const SENT={};
 function passage(title,paras,note){
-  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[(\d+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[([^|\]]+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
   return '<section class="pas"><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
 }
 function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
@@ -77,463 +77,225 @@ function card(n,tags,ans,body){
   return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
 }
 
-let h = '';
+const st=(en,zh)=>'<div class="stem"><div class="en">'+fx(en)+'</div><div class="zh">'+zh+'</div></div>';
 
-// --- 課文挑戰題 ---
-h += '<h2 id="p1">挑戰題 (課文內容)</h2>';
+/* === Part 1: L1 ~ L46 課文講解 === */
+const h1 = '<h2 id="p1">L1 ~ L46 課文講解</h2>' + [
+  card("L1", ["關係代名詞", "數量詞 + of whom"], "C",
+    st("Every year, Thailand sees millions of tourists, [[L1|many of whom]] have a lot of fun riding elephants.", "每年泰國吸引數以百萬計的遊客，其中許多人在騎大象中獲得很多樂趣。") +
+    clue("<code>many of whom = and many of them</code>。在介系詞 <code>of</code> 後，用受格關代 <code>whom</code> 代替先行詞 <code>tourists</code>，引導非限定形容詞子句。") +
+    ops([
+      ["many", "", "缺連接詞（→ and many of them）。"],
+      ["many of them", "", "缺連接詞（→ and many of them）。"],
+      ["many of whom", "", "關代 whom = 連接詞 + 代名詞。"],
+      ["with many of them", "", "with + O + OC，後方應接現在分詞 having... 而非動詞 have。"]
+    ], "C")
+  ),
 
-h += card('1', ['關係代名詞', '數量詞'], 'C',
-  '<div class="stem"><div class="en">Every year, Thailand sees millions of tourists, '+fx("[[1|many of whom]]")+' have a lot of fun riding elephants.</div><div class="zh">每年泰國吸引數以百萬計的遊客，其中許多人在騎大象中獲得很多樂趣。[cite: 7]</div></div>' +
-  clue('many of whom = and many of them。在介系詞 of 後，用受格 whom 代替 tourists，引導形容詞子句。[cite: 7]') +
-  ops([
-    ['many', '', '缺連接詞 (→ and many of them)[cite: 7]'],
-    ['many of them', '', '缺連接詞 (→ and many of them)[cite: 7]'],
-    ['many of whom', '', '關代 whom = 連接詞 + 代名詞[cite: 7]'],
-    ['with many of them', '', 'with + O + OC，此處應接 having... 而非 have[cite: 7]']
-  ], 'C')
-);
+  card("L3", ["存在句型", "there is a dark side to..."], "C",
+    st("However, [[L3|there]] is a dark side to elephant tourism that would horrify many travelers.", "然而，大象旅遊業有一個會讓許多遊客感到恐懼的黑暗面。") +
+    clue("<code>there is a dark side to...</code> 表示「…有黑暗面」（類似 <i>There is more to a person than meets the eye</i>）。") +
+    ops([
+      ["it", "", "若為分裂句，後面需有明顯強調對比，此處為存在句。"],
+      ["what", "", "名詞子句當主詞會導致整句缺主要動詞。"],
+      ["there", "有", "存在句型 there is...。"],
+      ["that", "", "一般代名詞，語意不合。"]
+    ], "C")
+  ),
 
-h += card('2', ['存在句型'], 'C',
-  '<div class="stem"><div class="en">However, '+fx("[[2|there]]")+' is a dark side to elephant tourism that would horrify many travelers.</div><div class="zh">然而，大象旅遊業有一個會讓許多遊客感到恐懼的黑暗面。[cite: 7]</div></div>' +
-  clue('there is a dark side to... 表示「...有黑暗面」。(There is more to a person than meets the eye)[cite: 7]') +
-  ops([
-    ['it', '', '若為分裂句，後面需有明顯強調對比，此處不合[cite: 7]'],
-    ['what', '', '名詞子句當主詞，會導致主要子句缺動詞[cite: 7]'],
-    ['there', '有', '存在句型[cite: 7]'],
-    ['that', '', '一般代名詞，語意不合[cite: 7]']
-  ], 'C')
-);
+  card("L5", ["字彙", "expanded 擴大"], "A",
+    st("Due to high demand in Thailand’s tourism industry, the illegal trade of young elephants has [[L5|expanded]].", "由於泰國旅遊業的高需求，小象的非法交易擴大了。") +
+    ops([
+      ["expanded", "擴展，擴大", "符合非法貿易規模擴大之語意。"],
+      ["developed", "發展，形成", ""],
+      ["existed", "存在", ""],
+      ["intensified", "加強，加劇", "常指衝突、疼痛或程度加劇。"]
+    ], "A")
+  ),
 
-h += card('3', ['字彙', '動詞'], 'A',
-  '<div class="stem"><div class="en">Due to high demand in Thailand’s tourism industry, the illegal trade of young elephants has '+fx("[[3|expanded]]")+'.</div><div class="zh">由於泰國旅遊業的高需求，小象的非法交易擴大了。[cite: 7]</div></div>' +
-  ops([
-    ['expanded', '擴展，擴大', '[cite: 7]'],
-    ['developed', '發展，形成', '[cite: 7]'],
-    ['existed', '存在', '[cite: 7]'],
-    ['intensified', '加強，增強', '[cite: 7]']
-  ], 'A')
-);
+  card("L7", ["字彙", "social creatures 群居生物"], "A",
+    st("Being highly [[L7|social]] creatures in their natural habitat, elephants often travel great distances in herds which are led by females.", "作為自然棲息地中高度群居的生物，大象經常在母象的帶領下成群結隊地長途跋涉。") +
+    ops([
+      ["social", "群居的 / 社交的", "<code>social creatures</code> 群居生物。"],
+      ["socializing", "與...交際", "不及物動詞現在分詞。"],
+      ["socialized", "", "過去分詞。"],
+      ["socialize", "", "原形動詞。"]
+    ], "A")
+  ),
 
-h += card('4', ['字彙', '形容詞'], 'A',
-  '<div class="stem"><div class="en">Being highly '+fx("[[4|social]]")+' creatures in their natural habitat, elephants often travel great distances in herds which are led by females.</div><div class="zh">作為自然棲息地中高度群居的生物，大象經常在母象的帶領下成群結隊地長途跋涉。[cite: 7]</div></div>' +
-  ops([
-    ['social', '群居的 / 社交的', 'social creatures 群居生物[cite: 7]'],
-    ['socializing', '與...交際', 'Vi.[cite: 7]'],
-    ['socialized', '', '[cite: 7]'],
-    ['socialize', '', '動詞[cite: 7]']
-  ], 'A')
-);
+  card("L10", ["介系詞平行結構", "lured away from... and into..."], "C",
+    st("Unfortunately, a number of young wild elephants are lured away from their mothers and [[L10|into]] traps by brutal trappers.", "不幸的是，許多野生小象被殘忍的捕獸者誘離母親並誘入陷阱。") +
+    clue("平行結構：<code>are lured <b>away from</b> their mothers and (lured) <b>into</b> traps</code>（被誘離母親並被誘入陷阱）。") +
+    ops([
+      ["caught", "", "應加介系詞 in：<code>(are) caught in traps</code>。"],
+      ["hidden", "", "應加介系詞 into：<code>into hidden traps</code>。"],
+      ["into", "進入", "<code>(lured) into traps</code>。"],
+      ["fallen", "", "fall 為不及物動詞，不可作被動，且應搭配 into。"]
+    ], "C")
+  ),
 
-h += card('5', ['介系詞'], 'C',
-  '<div class="stem"><div class="en">Unfortunately, a number of young wild elephants are lured away from their mothers and '+fx("[[5|into]]")+' traps by brutal trappers.</div><div class="zh">不幸的是，許多野生小象被殘忍的捕獸者誘離母親並誘入陷阱。[cite: 7]</div></div>' +
-  clue('are lured away from... and (lured) into traps (被誘離...並被誘入...)。[cite: 7]') +
-  ops([
-    ['caught', '', '應為 (are) caught in traps[cite: 7]'],
-    ['hidden', '', '應為 into (hidden) traps[cite: 7]'],
-    ['into', '進入', 'lured into traps[cite: 7]'],
-    ['fallen', '', '應為 falling into traps[cite: 7]']
-  ], 'C')
-);
+  card("L12", ["關係副詞", "That is when..."], "D",
+    st("The elephants that fall victim to the traps are then sold to tour operators. That is [[L12|when]] the real horror begins, as the elephants are often violently abused.", "那些落入陷阱成為受害者的大象接著被賣給旅遊業者。那正是真正的恐怖開始的時候，因為大象經常遭到暴力的虐待。") +
+    clue("<code>That is when... = That is (the time/moment) when + 完整子句</code>（名詞子句／關係副詞子句作主詞補語）。") +
+    ops([
+      ["what", "", "what + 不完整子句（但 the real horror begins 已完整）。"],
+      ["why", "", "語意不合。"],
+      ["how", "", "語意不合。"],
+      ["when", "當...的時候", "後接完整子句 the real horror begins。"]
+    ], "D")
+  ),
 
-h += card('6', ['關係副詞'], 'D',
-  '<div class="stem"><div class="en">The elephants that fall victim to the traps are then sold to tour operators. That is '+fx("[[6|when]]")+' the real horror begins, as the elephants are often violently abused.</div><div class="zh">那些落入陷阱成為受害者的大象接著被賣給旅遊業者。那正是真正的恐怖開始的時候，因為大象經常遭到暴力的虐待。[cite: 7]</div></div>' +
-  clue('That is when... = That is (the time/moment) when + 完整子句 (名詞子句作主詞補語)。[cite: 7]') +
-  ops([
-    ['what', '', 'what + 不完整子句[cite: 7]'],
-    ['why', '', '意思不合理[cite: 7]'],
-    ['how', '', '意思不合理[cite: 7]'],
-    ['when', '當...時', '引導名詞子句[cite: 7]']
-  ], 'D')
-);
+  card("L15", ["轉折語", "Furthermore 此外"], "D",
+    st("These young elephants are confined in very small cages. [[L15|Furthermore]], they are beaten without mercy for days and even struck with sharp nails.", "這些小象被關在非常小的籠子裡。此外，牠們被無情地連續毆打好幾天，甚至被尖銳的釘子刺打。") +
+    clue("前後為遞進補充關係（除了關在小籠子裡，還被無情毆打），故用 <code>Furthermore</code>（此外）。") +
+    ops([
+      ["In other words", "換句話說", ""],
+      ["In contrast", "相比之下", ""],
+      ["On the other hand", "另一方面", "用於前後對立的句子。"],
+      ["Furthermore", "此外", "表遞進補充。"]
+    ], "D")
+  ),
 
-h += card('7', ['轉折語'], 'D',
-  '<div class="stem"><div class="en">These young elephants are confined in very small cages. '+fx("[[7|Furthermore]]")+', they are beaten without mercy for days and even struck with sharp nails.</div><div class="zh">這些小象被關在非常小的籠子裡。此外，牠們被無情地連續毆打好幾天，甚至被尖銳的釘子刺打。[cite: 7]</div></div>' +
-  clue('前後為遞進關係，故用 furthermore (此外)。[cite: 7]') +
-  ops([
-    ['In other words', '換句話說', '[cite: 7]'],
-    ['In contrast', '相比之下', '[cite: 7]'],
-    ['On the other hand', '另一方面', '用於前後對立的句子[cite: 7]'],
-    ['Furthermore', '此外', '表遞進[cite: 7]']
-  ], 'D')
-);
+  card("L18", ["關係代名詞", "both of which"], "B",
+    st("Such psychological torture and physical abuse, [[L18|both of which]] cause extreme suffering, are committed in order to make them obedient to their human trainers.", "這種造成極度痛苦的心理折磨和肉體虐待被實施，是為了讓牠們服從人類訓練員。") +
+    clue("<code>both of which = and both of them</code>。先行詞為 <code>psychological torture and physical abuse</code>（共兩項事物），兩個逗號中間為非限定關係子句。") +
+    ops([
+      ["both of them", "", "缺連接詞。"],
+      ["both of which", "", "關代 which = 連接詞 + 代名詞（指前面兩項事物）。"],
+      ["they both", "", "缺連接詞。"],
+      ["and either", "", "缺 of 且會破壞主詞與後方主要動詞 are committed 的結構。"]
+    ], "B")
+  ),
 
-h += card('8', ['關係代名詞'], 'B',
-  '<div class="stem"><div class="en">Such psychological torture and physical abuse, '+fx("[[8|both of which]]")+' cause extreme suffering, are committed in order to make them obedient to their human trainers.</div><div class="zh">這種造成極度痛苦的心理折磨和肉體虐待被實施，是為了讓牠們服從人類訓練員。[cite: 7]</div></div>' +
-  clue('both of which = and both of them。先行詞為 torture and abuse。[cite: 7]') +
-  ops([
-    ['both of them', '', '缺連接詞[cite: 7]'],
-    ['both of which', '', '關代 which = 連接詞 + 代名詞[cite: 7]'],
-    ['they both', '', '缺連接詞[cite: 7]'],
-    ['and either', '', '應為 and either causes[cite: 7]']
-  ], 'B')
-);
+  card("L21", ["代名詞", "Many of them (獨立句)"], "D",
+    st("Once the elephants are tamed, they are forced into a life of slavery. Many of [[L21|them]] are made to carry people on their backs at tourist attractions and elephant camps.", "一旦大象被馴服，牠們就被迫過著奴役的生活。牠們之中的許多被迫在旅遊景點和大象營地背著人。") +
+    clue("注意！此處兩句中間是<b>句號（<code>.</code>）</b>而非逗號！既然已經斷句成獨立的新句子，就<b>不需要連接詞</b>，直接使用受格代名詞 <code>them</code>！") +
+    ops([
+      ["which", "", "前為句號，本句只有一個動詞 are made，不需連接詞 which。"],
+      ["whom", "", "不需連接詞且指動物。"],
+      ["what", "", "不合文法。"],
+      ["them", "牠們", "獨立句中作介系詞 of 的受詞。"]
+    ], "D")
+  ),
 
-h += card('9', ['代名詞'], 'D',
-  '<div class="stem"><div class="en">Once the elephants are tamed, they are forced into a life of slavery. Many of '+fx("[[9|them]]")+' are made to carry people on their backs at tourist attractions and elephant camps.</div><div class="zh">一旦大象被馴服，牠們就被迫過著奴役的生活。牠們之中的許多被迫在旅遊景點和大象營地背著人。[cite: 7]</div></div>' +
-  clue('此處兩句有句號分隔，不需連接詞，直接使用代名詞 them。[cite: 7]') +
-  ops([
-    ['which', '', '本句不需連接詞[cite: 7]'],
-    ['whom', '', '本句不需連接詞[cite: 7]'],
-    ['what', '', '本句不需連接詞[cite: 7]'],
-    ['them', '牠們', '作介系詞 of 的受詞[cite: 7]']
-  ], 'D')
-);
+  card("L24", ["字彙搭配", "vulnerable to 易受…傷害的"], "D",
+    st("Since an elephant’s spine is [[L24|vulnerable]] to pressure from above, carrying heavy tourists for hours every day can lead to painful, permanent back injuries.", "由於大象的脊椎容易受到來自上方的壓力傷害，每天背負沉重的遊客好幾個小時會導致痛苦且永久的背部損傷。") +
+    clue("雖然四個選項字義都與脆弱有關，但只有 <code>vulnerable</code> 固定搭配介系詞 <code><b>to</b></code>（<code>be vulnerable to...</code> 易受…傷害的）！") +
+    ops([
+      ["softened", "軟化的", "不搭配 to。"],
+      ["fragile", "脆弱的", "不搭配 to。"],
+      ["delicate", "精緻的；柔弱的", "不搭配 to。"],
+      ["vulnerable", "易受...傷害的", "固定搭配 <code>vulnerable to</code>。"]
+    ], "D")
+  ),
 
-h += card('10', ['字彙搭配'], 'D',
-  '<div class="stem"><div class="en">Since an elephant’s spine is '+fx("[[10|vulnerable]]")+' to pressure from above, carrying heavy tourists for hours every day can lead to painful, permanent back injuries.</div><div class="zh">由於大象的脊椎容易受到來自上方的壓力傷害，每天背負沉重的遊客好幾個小時會導致痛苦且永久的背部損傷。[cite: 7]</div></div>' +
-  clue('所有選項皆可修飾 spine，但只有 vulnerable 可與 "to" 搭配 (vulnerable to 易受...傷害的)。[cite: 7]') +
-  ops([
-    ['softened', '軟化的', '不搭配 to[cite: 7]'],
-    ['fragile', '脆弱的', '不搭配 to[cite: 7]'],
-    ['delicate', '精緻的；柔弱的', '不搭配 to[cite: 7]'],
-    ['vulnerable', '易受...傷害的', 'vulnerable to[cite: 7]']
-  ], 'D')
-);
+  card("L25", ["動名詞當主詞", "carrying ... can lead to ..."], "C",
+    st("Since an elephant’s spine is vulnerable to pressure from above, [[L25|carrying]] heavy tourists for hours every day can lead to painful, permanent back injuries.", "由於大象的脊椎容易受到來自上方的壓力傷害，每天背負沉重的遊客好幾個小時會導致痛苦且永久的背部損傷。") +
+    clue("前半句為 <code>Since</code> 引導的副詞子句，逗號後為主要子句，動詞為 <code>can lead to</code>，需要動名詞片語 <code>carrying heavy tourists...</code> 作為主要子句的主詞。") +
+    ops([
+      ["which carries", "", "多連接詞與動詞，導致主要子句缺主詞。"],
+      ["which is carried", "", "同上。"],
+      ["carrying", "背負", "動名詞片語作主要子句主詞。"],
+      ["and carry", "", "從屬子句與主要子句之間不可加對等連接詞 and。"]
+    ], "C")
+  ),
 
-h += card('11', ['動名詞當主詞'], 'C',
-  '<div class="stem"><div class="en">Since an elephant’s spine is vulnerable to pressure from above, '+fx("[[11|carrying]]")+' heavy tourists for hours every day can lead to painful, permanent back injuries.</div><div class="zh">由於大象的脊椎容易受到來自上方的壓力傷害，每天背負沉重的遊客好幾個小時會導致痛苦且永久的背部損傷。[cite: 7]</div></div>' +
-  clue('逗號後為主要子句，動名詞 carrying 作為子句主詞。[cite: 7]') +
-  ops([
-    ['which carries', '', '多連接詞、多動詞[cite: 7]'],
-    ['which is carried', '', '同上[cite: 7]'],
-    ['carrying', '背負', '動名詞作主詞[cite: 7]'],
-    ['and carry', '', '多連接詞[cite: 7]']
-  ], 'C')
-);
+  card("L27", ["非限定關係代名詞", ", which 代替前文整句話"], "D",
+    st("What’s more, they are denied an adequate amount of food and water, [[L27|which]] further contributes to their exhaustion.", "更重要的是，牠們被拒絕給予充足的食物和水，這進一步導致了牠們的疲憊。") +
+    clue("<code>, which</code> 指代前面整句話「牠們沒有獲得充足的食物與水（<code>= and that</code>）」，並作單數動詞 <code>contributes</code> 的主詞。") +
+    ops([
+      ["thus", "因此", "副詞，缺少連接詞與主詞（應為 <i>thus further contributing</i>）。"],
+      ["so that", "以便", "後需接完整子句（缺主詞）。"],
+      ["and", "", "缺主詞（應為 <i>and this/that</i>）。"],
+      ["which", "這件事", "非限定關代代替前方整句話，並作 contributes 的主詞。"]
+    ], "D")
+  ),
 
-h += card('12', ['關係代名詞'], 'D',
-  '<div class="stem"><div class="en">What’s more, they are denied an adequate amount of food and water, '+fx("[[12|which]]")+' further contributes to their exhaustion.</div><div class="zh">更重要的是，牠們被拒絕給予充足的食物和水，這進一步導致了牠們的疲憊。[cite: 7]</div></div>' +
-  clue('which 指前面整句話 (= and that)。[cite: 7]') +
-  ops([
-    ['thus', '因此', '少連接詞[cite: 7]'],
-    ['so that', '以便', '需加完整子句，語意不合[cite: 7]'],
-    ['and', '', '應為 and that[cite: 7]'],
-    ['which', '這', '代替前方整句話[cite: 7]']
-  ], 'D')
-);
+  card("L30", ["假設語氣", "It is (high) time that + S + V-ed"], "C",
+    st("Supply never comes without demand, and it is time [[L30|that we dealt]] with the roots of this problem.", "沒有需求就沒有供給，我們是時候處理這個問題的根源了。") +
+    clue("核心句型：<code>It is (high / about) time that + S + V-ed (過去式動詞)</code>（早該是做…的時候了），that 子句中動詞必須用<b>過去式</b>，表與現在事實相反的假設語氣（若用不定詞則是 <code>It is time (for us) to deal with...</code>）。") +
+    ops([
+      ["to have dealt", "", "若用不定詞應為現在式 <code>to deal</code>。"],
+      ["to be dealt", "", "我們是主動處理問題，應為 <code>(for us) to deal</code>。"],
+      ["that we dealt", "", "<code>It is time that + S + V-ed</code> 假設語氣過去式。"],
+      ["that we will deal", "", "不可用未來式 will deal。"]
+    ], "C")
+  ),
 
-h += card('13', ['假設語氣'], 'C',
-  '<div class="stem"><div class="en">Supply never comes without demand, and it is time '+fx("[[13|that we dealt]]")+' with the roots of this problem.</div><div class="zh">沒有需求就沒有供給，我們是時候處理這個問題的根源了。[cite: 7]</div></div>' +
-  clue('It is (high) time that + S + Ved (該是做...的時候了)。that 子句時態用過去式，表與現在事實相反的假設語氣。[cite: 7]') +
-  ops([
-    ['to have dealt', '', '應為 to deal[cite: 7]'],
-    ['to be dealt', '', '應為 to deal[cite: 7]'],
-    ['that we dealt', '', '假設語氣過去式[cite: 7]'],
-    ['that we will deal', '', '應為 dealt[cite: 7]']
-  ], 'C')
-);
+  card("L32", ["祈使句強調", "do + VR 務必…"], "B",
+    st("When you visit Thailand, [[L32|do avoid]] companies profiting from elephant tourism.", "當你造訪泰國時，務必避開從大象旅遊中獲利的公司。") +
+    clue("前半句為 <code>When</code> 時間副詞子句，逗號後為主要子句（祈使句），在原形動詞前加上助動詞 <code>do</code>（<code>do avoid</code>）表示強烈語氣「務必要避開」！") +
+    ops([
+      ["which avoids", "", "會導致整句話只有從屬子句，缺乏主要子句。"],
+      ["do avoid", "務必避開", "祈使句加助動詞 do 表強調。"],
+      ["to avoid", "", "不定詞不能作主要子句動詞。"],
+      ["in which avoid", "", "缺主要子句動詞。"]
+    ], "B")
+  ),
 
-h += card('14', ['祈使句強週'], 'B',
-  '<div class="stem"><div class="en">When you visit Thailand, '+fx("[[14|do avoid]]")+' companies profiting from elephant tourism.</div><div class="zh">當你拜訪泰國時，務必避開從大象旅遊中獲利的公司。[cite: 7]</div></div>' +
-  clue('逗號後需有主要子句。do + VR 表強調(務必要做)。[cite: 7]') +
-  ops([
-    ['which avoids', '', '整個句子只有副詞子句和形容詞子句，缺主要子句[cite: 7]'],
-    ['do avoid', '務必避開', '祈使句加 do 表強調[cite: 7]'],
-    ['to avoid', '', '缺主要子句/缺動詞[cite: 7]'],
-    ['in which avoid', '', '同上[cite: 7]']
-  ], 'B')
-);
+  card("L34", ["介系詞", "As an alternative 作為替代方案"], "A",
+    st("[[L34|As]] an alternative, visit one of Thailand’s three national parks where wild elephants roam free.", "作為替代方案，可以參觀泰國三個能讓野生大象自由漫步的國家公園之一。") +
+    clue("<code>As an alternative</code>（作為替代方案），逗號後接祈使句動詞 <code>visit...</code>。") +
+    ops([
+      ["As", "作為", "介系詞構成 <code>As an alternative</code>。"],
+      ["Try", "", "若用動詞 Try，逗號後的動詞 visit 就缺連接詞。"],
+      ["Here’s", "", "同上，會造成兩個句子無連接詞。"],
+      ["With", "", "語意不合。"]
+    ], "A") +
+    passage("L36 ~ L38 課文結尾段落", [[
+      ["There, you can take pleasure in seeing these complex, intelligent animals as they happily go about their lives in peace.", "在那裡，你可以從看著這些複雜、聰明的動物平靜而快樂地過日子中獲得樂趣。"]
+    ]])
+  )
+].join('');
 
-h += card('15', ['介系詞'], 'A',
-  '<div class="stem"><div class="en">'+fx("[[15|As]]")+' an alternative, visit one of Thailand’s three national parks where wild elephants roam free.</div><div class="zh">作為替代方案，可以參觀泰國三個能讓野生大象自由漫步的國家公園之一。[cite: 7]</div></div>' +
-  ops([
-    ['As', '作為', '[cite: 7]'],
-    ['Try', '', '缺連接詞[cite: 7]'],
-    ['Here’s', '', '缺連接詞[cite: 7]'],
-    ['With', '', '無意義[cite: 7]']
-  ], 'A')
-);
+/* === Part 2: 綜合文法題 - 基本題 (B1~B10) & 進階題 (A1~A12) === */
+const h2 = '<h2 id="p2">綜合文法題 - 基本題 (B1~B10) ＆ 進階題 (A1~A12)</h2>' +
+  passage("各種子句題型解題黃金法則", [[
+    ["1. 動詞與連接詞數量公式：每 2 個動詞需 1 個連接詞（含對等連接詞、從屬連接詞、關係詞、疑問詞），3 個動詞需 2 個連接詞，依此類推。", "先數動詞與連接詞數量，可瞬間秒殺缺連接詞或多連接詞的選項！"],
+    ["2. 關係代名詞（who / whom / which / what）後接「不完整子句（缺主詞、受詞或補語）」：which / who / whom 前面有先行詞名詞；what (= the thing that) 前面沒有先行詞名詞。", "區分 which 與 what 的關鍵。"],
+    ["3. that + 不完整子句 ＝ 形容詞子句（關係子句，不可置於逗號或介系詞後）；that + 完整子句 ＝ 名詞子句（當主詞、受詞、補語或同位語）。", "that 的雙重身分。"],
+    ["4. 關係副詞（where / when / why）與「介系詞 + which/whom」後面必接「完整子句」！", "判斷選 which 還是 in/of/to which 的鐵則。"]
+  ]]) + [
+  card("B1", ["綜合關代", "many of which"], "D", st("B1. Whenever we need answers to the questions of life, we can always refer to the wise lines of poems, [[B1|many of which have become]] proverbs: \"Good fences make good neighbors,\" \"To err is human, to forgive, divine,\" \"What's done cannot be undone,\" to name but a few.", "每當我們需要解答人生問題時，總能參考那些已經成為諺語的智慧詩句：「好籬笆造就好鄰居」、「人非聖賢，孰能無過」、「覆水難收」，僅舉幾例。") + ops([["many of those","","缺連接詞與動詞。"],["many of them","","缺連接詞与動詞。"],["many of what have become","","已有先行詞 lines of poems，不可用 what。"],["many of which have become","","= and many of these lines have become。"]], "D")),
+  card("B2", ["複合關代", "what happened"], "A", st("B2. She only gave me a vague description of [[B2|what]] happened here yesterday. I still don't have a clear picture.", "她只對昨天這裡發生的事給了個模糊的描述。我仍然沒有一個清晰的概念。") + ops([["what","","= the thing(s) which/that，當介系詞 of 的受詞並作 happened 的主詞。"],["of which","","介+關代不可當主詞，且與前面的 of 重複。"],["things","","缺少關代 that/which。"],["that","","介系詞 of 後不可直接接 that。"]], "A")),
+  card("B3", ["數量詞 + 關代", "only seven of which"], "D", st("B3. Emily Dickinson wrote thousands of poems, [[B3|only seven of which]] were published in her lifetime.", "艾蜜莉・狄金生寫了數千首詩，其中只有七首在她生前出版。") + ops([["only seven of them","","缺連接詞。"],["and only seven of which","","多了連接詞 and（and 與 which 重複）。"],["only a few (of them)","","缺連接詞。"],["only seven of which","","= and only seven of them。"]], "D")),
+  card("B4", ["數量詞 + 關代", "most of which"], "C", st("B4. When he was very young, Stephen King discovered a box of his father's books, [[B4|most of which]] were horror novels. After reading them, King was hooked on the genre.", "史蒂芬・金小時候發現了他父親的一箱書，其中大部分是恐怖小說。讀完後，金就迷上了這個類型。") + ops([["most (of them)","","缺連接詞。"],["mostly","","副詞，缺連接詞與主詞。"],["most of which","","= and most of them。"],["most of them","","缺連接詞。"]], "C")),
+  card("B5", ["關係代名詞與插入語", "which (I think) you might be interested in"], "A", st("B5. There is a program specifically meant for teenagers, [[B5|which]] I think you might be interested in.", "有一個專為青少年設計的節目，我想你可能會感興趣。") + clue("<code>I think</code> 為插入語，暫時遮住後即可發現句尾介系詞 <code>in</code> 缺受詞（<code>you might be interested in the program</code>），故用 <code>which</code>。") + ops([["which","","代替單數先行詞 a program，作句尾 in 的受詞。"],["some of whom","","先行詞為單數事物 program。"],["some of which","","單一節目不用 some of。"],["one of what","","錯誤用法。"]], "A")),
+  card("B6", ["介系詞 + 複合關代", "of what must be done"], "C", st("B6. Environmentalists around the world are working together to raise awareness [[B6|of what]] must be done to save our environment.", "世界各地的環保人士正攜手合作，以提升人們對拯救環境必須採取何種行動的意識。") + clue("<code>raise awareness of + what (= the things that) must be done...</code>。") + ops([["in which","","後接完整子句，但 must be done 缺主詞。"],["of things","","少了關代 that。"],["of what","","of + 複合關代名詞子句。"],["that","","若 that 為關代代指 awareness，變成意識必須被做，語意不通。"]], "C")),
+  card("B7", ["獨立分詞構句", "some of them + V-ing"], "A", st("B7. Many scientists, some of [[B7|them]] using Albert Einstein's Theory of Relativity as a basis for their arguments, have published theories on the possibility of time travel.", "許多科學家發表了關於時間旅行可能性的理論，其中一些人將愛因斯坦的相對論作為其論點的基礎。") + clue("關鍵看後面的 <code><b>using</b></code> 是現在分詞，而非具備時態的動詞！<br>• 若後面是分詞 <code>using</code>：不需連接詞，選代名詞 <code>them</code> 構成獨立分詞構句（<code>some of them using...</code>）！<br>• 若選關代 <code>whom</code>：後面必須是具備時態的動詞（<code>some of whom used / are using...</code>）！") + ops([["them","","搭配分詞 using 構成獨立分詞構句。"],["whom","","後面是分詞 using 而非動詞，不可用連接詞 whom。"],["those","","不合結構。"],["which","","科學家為人，且後方為分詞。"]], "A")),
+  card("B8", ["非限定關係代名詞", ", which 指代前文整件事"], "D", st("B8. The chicken virus was found in Hong Kong in 1997. Though bird flu viruses usually do not infect humans, this one did, killing six of 18 people who got it, [[B8|which]] was a very high death rate for an infectious disease.", "禽流感病毒於 1997 年在香港被發現。雖然禽流感病毒通常不感染人類，但這次卻感染了，並造成 18 名感染者中的 6 人死亡，這對於傳染病來說是極高的致死率。") + clue("<code>, which</code> 指代前面「18 名感染者中有 6 人死亡」整件事實。") + ops([["some of what","","不合語意。"],["some of which","","動詞是單數 was，且指代整件事。"],["what","","逗號後不接 what 修飾前句。"],["which","","指代前一句話的事實。"]], "D")),
+  card("B9", ["數量詞 + 關代", "of which only ten (= only ten of which)"], "B", st("B9. In 1995, the International Shark Attack File recorded 59 shark attacks worldwide, [[B9|of which]] only ten resulted in fatalities.", "1995 年，國際鯊魚攻擊檔案記錄了全球 59 起鯊魚攻擊事件，其中只有 10 起導致死亡。") + clue("<code>of which only ten resulted... = only ten of which resulted...</code>（= and only ten of them resulted...）。") + ops([["where","","attacks 不是地點。"],["of which","","構成 of which only ten...。"],["that","","逗號後不可用 that。"],["so that","","語意不合。"]], "B")),
+  card("B10", ["所屬關係代名詞", "of which the industrial waste"], "D", st("B10. Each year, in total, we produce more than 20 million tons of garbage, [[B10|of which]] the industrial waste accounts for 60 percent.", "每年我們總共製造超過 2000 萬噸垃圾，其中工業廢棄物佔了百分之 60。") + clue("<code>the industrial waste of which (= of the 20 million tons of garbage) accounts for 60 percent</code>，將 <code>of which</code> 移至子句句首。") + ops([["where","",""],["what","",""],["for which","",""],["of which","","= of the 20 million tons of garbage。"]], "D")),
 
-h += passage("補充段落 / 延伸閱讀", [
-  [["There, you can take pleasure in seeing these complex, intelligent animals as they happily go about their lives in peace.", "在那裡，你可以從看著這些複雜、聰明的動物平靜而快樂地過日子中獲得樂趣。[cite: 8]"]]
-]);
+  card("A1", ["對等連接詞與主要動詞", "but today ... makes"], "D", st("A1. For yesterday is but a dream, and tomorrow is only a vision, but today, (when it is) well lived, [[A1|makes]] every yesterday a dream of happiness, and every tomorrow a vision of hope.", "因為昨天不過是一場夢，明天只是個幻影；但是今天若好好度過，就能使每個昨天成為快樂的夢，使每個明天成為希望的幻影。") + clue("對等連接詞 <code>but</code> 後方的主詞是單數的 <code>today</code>，兩個逗號中間的 <code>, (when it is) well lived,</code> 為簡化的時間分詞片語，因此空格需要填 <code>today</code> 的單數現在式主要動詞 <code>makes</code>！") + ops([["which makes","","多了連接詞 which，導致主詞 today 無主要動詞。"],["when making","","缺主要動詞。"],["made","","前後文皆為現在簡單式（is ... is ...）。"],["makes","使...","主詞 today 的主要動詞（make + O + OC）。"]], "D")),
+  card("A2", ["介系詞 + 關代", "of which our solar system is a small part"], "B", st("A2. Scientists previously believed that the whole universe consisted of the Milky Way, the belt of stars [[A2|of which]] our solar system is just a small part. It was Hubble who discovered that the Milky Way was only one of countless similar galaxies.", "科學家以前認為整個宇宙由銀河系組成，而我們的太陽系只是這條星帶的一小部分。是哈伯發現銀河系只是無數類似星系中的一個。") + clue("還原後方子句：<code>our solar system is just a small part <b>of</b> the belt of stars (the Milky Way)</code>，將介系詞 <code>of</code> 移至關代前即為 <code>of which</code>。") + ops([["where","","搭配 a small part 須用介系詞 of 而非 in/where。"],["of which","","a small part of which。"],["that","","缺介系詞 of。"],["what","","前已有先行詞 the belt of stars。"]], "B")),
+  card("A3", ["獨立分詞構句", "many of them stolen"], "B", st("A3. St. Mark's Basilica, a spectacular church in Venice, is decorated with priceless treasures, many of [[A3|them]] stolen from other countries when medieval Venice was a leading sea power.", "聖馬可大教堂是一座位於威尼斯的壯麗教堂，裝飾著無價的珍寶，其中許多是在中世紀威尼斯作為主要海上強權時從其他國家掠奪來的。") + clue("注意空格後面是過去分詞 <code><b>stolen</b></code>（省略了 <code>were</code>，並非完整動詞）！<br>• 因為沒有完整動詞 <code>were</code>，不能選連接詞 <code>which</code>，必須選代名詞 <code>them</code> 構成獨立分詞構句 <code>many of them (being) stolen...</code>！") + ops([["which","","後面是分詞 stolen 而非完整動詞 were stolen，不可用 which！"],["them","","獨立分詞構句 many of them (being) stolen。"],["what was","","不合結構。"],["those were","","缺連接詞。"]], "B")),
+  card("A4", ["介系詞 + 關代", "a job at which"], "D", st("A4. Tom is looking for a job [[A4|at which]] he will be able to fulfill himself. He hopes he can develop his abilities to the full.", "湯姆正在找一份能讓他實現自我的工作。他希望他能充分發揮自己的能力。") + clue("「在某份工作上實現自我」介系詞搭配 <code><b>at</b> a job</code>，故用 <code>at which</code>。") + ops([["of which","","語意不合。"],["of what","","前已有先行詞 a job。"],["that","","後方 he will be able to fulfill himself 已完整，不可用關代 that。"],["at which","","= and at this job。"]], "D")),
+  card("A5", ["介系詞 + 複合關代", "the opposite of what..."], "C", st("A5. There are some people who just can't make up their own mind. They frequently ask the advice of their friends and then do quite the opposite [[A5|of what]] their friends have suggested.", "有些人就是無法自己下決定。他們經常徵求朋友的建議，然後做與朋友所建議的完全相反的事情。") + clue("<code>the opposite <b>of</b> + N</code>（與…相反的事物），而「朋友所建議的事」為 <code>what (= the thing that) their friends have suggested</code>。") + ops([["for which","","suggest 缺受詞且 the opposite 搭配 of。"],["after what","","語意不通。"],["of what","","= of the thing that their friends have suggested。"],["of which","","後方 suggested 缺受詞，且前無指代建議內容的先行詞。"]], "C")),
+  card("A6", ["獨立分詞構句", "each representing"], "B", st("A6. Scientists at Macquarie University in Australia found that chickens actually chat during mealtimes. They have a vocabulary of some 20 sounds, [[A6|each]] representing a different kind of food.", "澳洲麥覺理大學的科學家發現雞在吃飯時實際上會聊天。牠們有大約 20 種聲音的詞彙量，每一種都代表不同種類的食物。") + clue("空格後面是現在分詞 <code><b>representing</b></code>（非完整動詞 represents）！因此不需連接詞，直接填代名詞 <code>each</code> 構成獨立分詞構句 <code>, each representing...</code>（= <code>, and each represents...</code> = <code>, each of which represents...</code>）。") + ops([["and they all","","有了連接詞 and，後方就必須是完整動詞 represent 而非分詞 representing。"],["each","","獨立分詞構句 each representing...。"],["which","","有了關代 which，後方就必須是完整動詞 represent。"],["each of which","","有了關代 which，後方就必須是完整動詞 represents。"]], "B")),
+  card("A7", ["最高級 + of which", "the best of which"], "A", st("A7. Nie Xiaoqian is probably the most famous Chinese ghost tale, and has been turned into numerous films, the best of [[A7|which]] is the kung fu horror-comedy A Chinese Ghost Story, by Tsui Hark.", "《聶小倩》可能是最著名的中國鬼故事，並被翻拍成無數電影，其中最棒的就是徐克執導的功夫恐怖喜劇《倩女幽魂》。") + clue("後方有完整動詞 <code>is</code>，且兩句以逗號連接無連接詞，故選關代 <code>which</code>（指代 numerous films）。") + ops([["which","","the best of which is...。"],["them","","缺連接詞。"],["what","","前有先行詞 films，且 of 後不接 what 指特定群體之一。"],["those","","缺連接詞。"]], "A")),
+  card("A8", ["獨立分詞構句", "each of them trying"], "C", st("A8. When the two sisters first started, they are said to have been in keen competition, [[A8|each of them trying]] to attract more readers than the other.", "當這兩姊妹剛起步時，據說她們處於激烈的競爭中，兩人都試圖吸引比對方更多的讀者。") + clue("逐一檢查時態與單複數：<br>• (A) <code>each of whom tries</code>：過去的事情，時態應為過去式 <code>tried</code>（✘）<br>• (B) <code>and each of them were trying</code>：<code>each</code> 為單數主詞，應配單數 <code>was trying</code>（✘）<br>• (C) <code>each of them trying</code>：無連接詞 + 代名詞 them + 現在分詞 trying，標準獨立分詞構句（✔）<br>• (D) <code>each of whom trying</code>：用了連接詞 whom 卻沒有完整動詞（✘）") + ops([["each of whom tries","","時態與過去背景不合（應為 tried）。"],["and each of them were trying","","each 為單數，應接 was trying。"],["each of them trying","","標準獨立分詞構句（= and each of them was trying）。"],["each of whom trying","","用了關代 whom 卻無完整動詞。"]], "C")),
+  card("A9", ["省略 being 之獨立分詞構句", "many of them (being) N"], "D", st("A9. In a flea market, you'll find aisles lined with odds and ends, many of [[A9|them]] comic books, shoes, garden tools, and just about anything you can think of.", "在跳蚤市場，你會發現走道旁擺滿了各種零碎小東西，其中許多是漫畫書、鞋子、園藝工具，以及幾乎任何你能想到的東西。") + clue("注意空格後面只有名詞 <code>comic books, shoes...</code>，<b>沒有動詞 <code>are</code></b>！<br>原句為 <code>, and many of them are comic books...</code>，轉為獨立分詞構句 <code>, many of them (being) comic books...</code> 後省略了 <code>being</code>，故只能填代名詞 <code>them</code>！") + ops([["which being","","關代 which 後必須接完整動詞 are，不可接分詞 being。"],["them are","","缺少連接詞 and。"],["which","","後面沒有動詞 are！"],["them","代名詞","many of them (being) comic books... 獨立分詞構句。"]], "D")),
+  card("A10", ["複合關係代名詞", "in what today is America"], "A", st("A10. Before the United States became a country, there were 13 colonies in [[A10|what]] today is America, all of them belonging to Great Britain.", "在美國建國之前，在今天稱為美國的地方有 13 個殖民地，全部隸屬於英國。") + clue("<code>in what today is America = in the place/land that is America today</code>（在今日是美國的那塊土地上）。") + ops([["what","","複合關代作 in 的受詞並當 is 的主詞。"],["which","","前無先行詞，且缺主詞。"],["whose","","後無被修飾的名詞。"],["that","","介系詞 in 後不接 that 且缺主詞。"]], "A")),
+  card("A11", ["平行名詞子句", "say (that)... and that..."], "D", st("A11. Some people say that aliens have kept an eye on what happens on Earth, and are responsible for quite a few legends, and [[A11|that]] the ancient Greek and Roman gods were in fact \"space people\" living here.", "有些人說外星人一直關注地球上發生的事，並且是許多傳說的源頭，而且（說）古希臘和羅馬神話中的神其實是住在這的「太空人」。") + clue("當一個動詞（<code>say</code>）後面連接兩個平行的受詞名詞子句時：第一個 <code>that</code> 可省略，但<b>第二個 <code>and that + 完整子句</code> 中的 <code>that</code> 絕對不可省略</b>（以免與主要子句混淆）！") + ops([["what","","後方子句已完整。"],["some of which","","語意與結構皆不合。"],["so","","語意不合。"],["that","連接第二個名詞子句","say that S1 + V1... and that S2 + V2...。"]], "D")),
+  card("A12", ["非限定關係副詞子句動詞", "when John Wesley Powell ... led"], "C", st("A12. Though it took millions of years for the Colorado River to create the Grand Canyon, which runs almost 350 kilometers in length, 8 to 25 kilometers in width, and 1900 meters deep, it was not on any map until 1869, when John Wesley Powell, a geologist, [[A12|led]] a team down the treacherous Colorado River and discovered its secrets.", "雖然科羅拉多河花了數百萬年才創造出長近 350 公里、寬 8 到 25 公里、深 1900 公尺的大峽谷，但直到 1869 年它才出現在任何地圖上，那年地質學家約翰・韋斯利・鮑威爾帶領一支隊伍沿著危險的科羅拉多河而下，並發現了它的秘密。") + clue("在 <code>when</code> 引導的關係副詞子句中，主詞是 <code>John Wesley Powell (, a geologist,)</code>，後面需要與 <code>and discovered</code> 平行對稱的過去式主要動詞 <code>led</code>（帶領）！") + ops([["who was led","","多了關代 who 且主動變被動。"],["leading","","分詞不能當 when 子句的主要動詞。"],["led","帶領","過去式動詞，與後方的 and discovered 平行。"],["with whom","","缺動詞。"]], "C"))
+].join('');
 
+/* === Part 3: 課本句型實例 1 & 2 === */
+const h3 = '<h2 id="p3">課本句型實例 1 ＆ 句型 2</h2>' + [
+  card("句1-1", ["句型1：數量詞 + of which", "part of which"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">1. 敵人轟炸 (bomb) 了這個城市，城市的一部分已被全毀。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The enemy bombed the city, part of which had been totally destroyed.]]")+'</div></div>'),
+  card("句1-2", ["句型1：數量詞 + of which", "only one of which"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">2. Andy 申請了六間大學，只有一間錄取 (accept) 他。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Andy applied to six universities, only one of which accepted him.]]")+'</div></div>'),
+  card("句1-3", ["句型1：數量詞 + of which", "the majority of which"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">3. 台灣有很多便利商店，絕大部分 (majority) 都設有自動提款機 (ATM)。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|There are many convenience stores (in Taiwan), the majority of which are equipped with an ATM.]]")+'</div></div>'),
+  card("句1-4", ["句型1：數量詞 + of which", "many of which"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">4. 每年有數百起的交通事故，其中許多是酒駕引起的。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|There are hundreds of traffic accidents every year, many of which are caused by drunk driving.]]")+'</div></div>'),
+  card("句1-5", ["句型1：數量詞 + of which", "ten of which"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">5. 這間飯店有 60 間房間，其中 10 間已經為殘障人士改建 (adapt)。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The hotel has sixty rooms, ten of which have been adapted for the disabled (visitors).]]")+'</div></div>'),
 
-// --- 綜合文法題 (基本題) ---
-h += '<h2 id="p2">綜合文法題 - 基本題 (各種子句題型解析)</h2>';
-h += passage("重點觀念提示", [
-  [["每 2 個動詞需 1 個連接詞，3 個動詞需 2 個連接詞，依此類推。[cite: 7]"]],
-  [["what / which / who / whom + 不完整子句(缺主詞、受詞或補語)。what 前通常沒有名詞，which 前通常有名詞。[cite: 7]"]],
-  [["that + 不完整子句 = 關係子句/形容詞子句；that + 完整子句 = 名詞子句(當主/受/補/同位語)。[cite: 7]"]],
-  [["關係副詞 (where / when / why / how) 後必接完整子句。[cite: 7]"]],
-  [["介系詞 + which/whom → 後接完整子句。[cite: 7]"]]
-]);
+  card("句2-1", ["句型2：It is (about/high) time that + V-ed", "learned table manners"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">1. 該是 Tina 學習餐桌禮儀的時候了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|It is about/high time that Tina learned table manners.]]")+'</div></div>'),
+  card("句2-2", ["句型2：It is high time that + V-ed", "stepped out ... and tried"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">2. 早該是你踏出舒適圈、嘗試新事物的時候了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|It is high time that you stepped out of your comfort zone and tried new things.]]")+'</div></div>'),
+  card("句2-3", ["句型2：It is high time that + V-ed", "did something to solve"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">3. 政府早該做點事來解決市區的交通問題。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|It is high time that the government did something to solve the downtown traffic problems.]]")+'</div></div>')
+].join('');
 
-h += card('B1', ['綜合關代'], 'D',
-  '<div class="stem"><div class="en">Whenever we need answers to the questions of life, we can always refer to the wise lines of poems, '+fx("[[B1|many of which have become]]")+' proverbs: "Good fences make good neighbors," "To err is human, to forgive, divine," "What\'s done cannot be undone," to name but a few.</div><div class="zh">每當我們需要解答人生問題時，總能參考那些已經成為諺語的智慧詩句：「好籬笆造就好鄰居」、「人非聖賢，孰能無過」、「覆水難收」，僅舉幾例。[cite: 7]</div></div>' +
-  ops([
-    ['many of those', '', '缺連接詞[cite: 7]'],
-    ['many of them', '', '缺連接詞[cite: 7]'],
-    ['many of what have become', '', 'what 子句為名詞子句，會導致主要子句缺動詞[cite: 7]'],
-    ['many of which have become', '', '= and many of these lines[cite: 7]']
-  ], 'D')
-);
-
-h += card('B2', ['綜合關代'], 'A',
-  '<div class="stem"><div class="en">She only gave me a vague description of '+fx("[[B2|what]]")+' happened here yesterday. I still don\'t have a clear picture.</div><div class="zh">她只對昨天這裡發生的事給了個模糊的描述。我仍然沒有一個清晰的概念。[cite: 7]</div></div>' +
-  ops([
-    ['what', '', '= the thing(s) which/that[cite: 7]'],
-    ['of which', '', '介+關代=關副，不可當主詞[cite: 7]'],
-    ['things', '', '應為 things that/which[cite: 7]'],
-    ['that', '', '應為 the thing that[cite: 7]']
-  ], 'A')
-);
-
-h += card('B3', ['綜合關代'], 'D',
-  '<div class="stem"><div class="en">Emily Dickinson wrote thousands of poems, '+fx("[[B3|only seven of which]]")+' were published in her lifetime.</div><div class="zh">Emily Dickinson 寫了數千首詩，其中只有七首在她生前出版。[cite: 7]</div></div>' +
-  ops([
-    ['only seven of them', '', '缺連接詞[cite: 7]'],
-    ['and only seven of which', '', '多連接詞[cite: 7]'],
-    ['only a few (of them)', '', '缺連接詞[cite: 7]'],
-    ['only seven of which', '', '[cite: 7]']
-  ], 'D')
-);
-
-h += card('B4', ['綜合關代'], 'C',
-  '<div class="stem"><div class="en">When he was very young, Stephen King discovered a box of his father\'s books, '+fx("[[B4|most of which]]")+' were horror novels. After reading them, King was hooked on the genre.</div><div class="zh">Stephen King 小時候發現了他父親的一箱書，其中大部分是恐怖小說。讀完後，King 就迷上了這個類型。[cite: 7]</div></div>' +
-  ops([
-    ['most (of them)', '', '缺連接詞[cite: 7]'],
-    ['mostly', '', '缺連接詞、缺主詞[cite: 7]'],
-    ['most of which', '', '[cite: 7]'],
-    ['most of them', '', '缺連接詞[cite: 7]']
-  ], 'C')
-);
-
-h += card('B5', ['關係代名詞', '插入語'], 'A',
-  '<div class="stem"><div class="en">There is a program specifically meant for teenagers, '+fx("[[B5|which]]")+' I think you might be interested in.</div><div class="zh">有一個專為青少年設計的節目，我想你可能會感興趣。[cite: 7]</div></div>' +
-  clue('I think 可視為插入語，省略後即可發現 which 是 in 的受詞。(= you might be interested in the program)[cite: 7]') +
-  ops([
-    ['which', '', '代替前面的 program[cite: 7]'],
-    ['some of whom', '', '不合語意[cite: 7]'],
-    ['some of which', '', '不合語意[cite: 7]'],
-    ['one of what', '', '錯誤用法[cite: 7]']
-  ], 'A')
-);
-
-h += card('B6', ['介系詞 + 名詞子句'], 'C',
-  '<div class="stem"><div class="en">Environmentalists around the world are working together to raise awareness '+fx("[[B6|of what]]")+' must be done to save our environment.</div><div class="zh">世界各地的環保人士正攜手合作，以提升人們對拯救環境必須採取何種行動的意識。[cite: 7]</div></div>' +
-  clue('what = the thing(s) that。raise awareness of the thing(s) that must be done...[cite: 7]') +
-  ops([
-    ['in which', '', '關係副詞[cite: 7]'],
-    ['of things', '', '少 that[cite: 7]'],
-    ['of what', '', 'of + 名詞子句[cite: 7]'],
-    ['that', '', 'that = awareness，語意變成 "必須採取意識來拯救環境"，不合理[cite: 7]']
-  ], 'C')
-);
-
-h += card('B7', ['代名詞與分詞構句'], 'A',
-  '<div class="stem"><div class="en">Many scientists, some of '+fx("[[B7|them]]")+' using Albert Einstein\'s Theory of Relativity as a basis for their arguments, have published theories on the possibility of time travel.</div><div class="zh">許多科學家發表了關於時間旅行可能性的理論，其中一些人將愛因斯坦的相對論作為其論點的基礎。[cite: 7]</div></div>' +
-  clue('some of them using... 為獨立分詞構句 (= and some of them are using)。若用 whom，則後面需有動詞 (used)。[cite: 7]') +
-  ops([
-    ['them', '', '→ and some of them are using[cite: 7]'],
-    ['whom', '', '→ some of whom used[cite: 7]'],
-    ['those', '', '錯誤[cite: 7]'],
-    ['which', '', '代指科學家應為人[cite: 7]']
-  ], 'A')
-);
-
-h += card('B8', ['關係代名詞'], 'D',
-  '<div class="stem"><div class="en">The chicken virus was found in Hong Kong in 1997. Though bird flu viruses usually do not infect humans, this one did, killing six of 18 people who got it, '+fx("[[B8|which]]")+' was a very high death rate for an infectious disease.</div><div class="zh">禽流感病毒於1997年在香港被發現。雖然禽流感病毒通常不感染人類，但這次卻感染了，並殺死了18名感染者中的6人，這對於傳染病來說是極高的致死率。[cite: 7]</div></div>' +
-  clue('which 關代用來指代前面整句話「18人死6人這件事」。[cite: 7]') +
-  ops([
-    ['some of what', '', '不合語意[cite: 7]'],
-    ['some of which', '', '前無適當的事物名詞[cite: 7]'],
-    ['what', '', '不合語意[cite: 7]'],
-    ['which', '', '指代前一句話的事實[cite: 7]']
-  ], 'D')
-);
-
-h += card('B9', ['數量詞 + 關代'], 'B',
-  '<div class="stem"><div class="en">In 1995, the International Shark Attack File recorded 59 shark attacks worldwide, '+fx("[[B9|of which]]")+' only ten resulted in fatalities.</div><div class="zh">1995年，國際鯊魚攻擊檔案記錄了全球 59 起鯊魚攻擊事件，其中只有 10 起導致死亡。[cite: 7]</div></div>' +
-  clue('only ten of which resulted = and only ten of them resulted。[cite: 7]') +
-  ops([
-    ['where', '', '關係副詞不能加數量詞[cite: 7]'],
-    ['of which', '', 'only ten of which...[cite: 7]'],
-    ['that', '', 'that 前不可有逗點[cite: 7]'],
-    ['so that', '', '語意不合[cite: 7]']
-  ], 'B')
-);
-
-h += card('B10', ['數量詞 + 關代'], 'D',
-  '<div class="stem"><div class="en">Each year, in total, we produce more than 20 million tons of garbage, '+fx("[[B10|of which]]")+' the industrial waste accounts for 60 percent.</div><div class="zh">每年我們總共製造超過 2000 萬噸垃圾，其中工業廢棄物佔了百分之 60。[cite: 7]</div></div>' +
-  clue('the industrial waste of which (= of the 20 million tons of garbage) accounts for 60 percent。[cite: 7]') +
-  ops([
-    ['where', '', '[cite: 7]'],
-    ['what', '', '不完整子句[cite: 7]'],
-    ['for which', '', '[cite: 7]'],
-    ['of which', '', '[cite: 7]']
-  ], 'D')
-);
-
-
-// --- 綜合文法題 (進階題) ---
-h += '<h2 id="p3">綜合文法題 - 進階題</h2>';
-
-h += card('A1', ['使役動詞'], 'D',
-  '<div class="stem"><div class="en">For yesterday is but a dream, and tomorrow is only a vision, but today, (when it is) well lived, '+fx("[[A1|makes]]")+' every yesterday a dream of happiness, and every tomorrow a vision of hope.</div><div class="zh">因為昨天不過是一場夢，明天只是個幻影；但是今天若過得好，就能使每個昨天成為快樂的夢，使每個明天成為希望的幻影。[cite: 7]</div></div>' +
-  clue('句首 for, and, but 為對等連接詞。這句話中的 but 連接了 today 這個主詞，因此需要一個主要動詞 makes (makes + O + OC)。[cite: 7]') +
-  ops([
-    ['which makes', '', '多1連接詞[cite: 7]'],
-    ['when making', '', '多1連接詞[cite: 7]'],
-    ['made', '', '時態不對[cite: 7]'],
-    ['makes', '使...', '因有2連接詞，故需第3個主要動詞[cite: 7]']
-  ], 'D')
-);
-
-h += card('A2', ['介系詞 + 關代'], 'B',
-  '<div class="stem"><div class="en">Scientists previously believed that the whole universe consisted of the Milky Way, the belt of stars '+fx("[[A2|of which]]")+' our solar system is just a small part. It was Hubble who discovered that the Milky Way was only one of countless similar galaxies.</div><div class="zh">科學家以前認為整個宇宙由銀河系組成，而我們的太陽系只是這條星帶的一小部分。是哈伯發現銀河系只是無數類似星系中的一個。[cite: 7]</div></div>' +
-  clue('our solar system is just a small part of the Milky Way. 將 of 移至關代 which (代替 the belt of stars) 之前，變成 of which。[cite: 7]') +
-  ops([
-    ['where', '', 'plays a small part (X)[cite: 7]'],
-    ['of which', '', 'of which + 完整子句[cite: 7]'],
-    ['that', '', '介系詞後不可加 that[cite: 7]'],
-    ['what', '', '不合文法[cite: 7]']
-  ], 'B')
-);
-
-h += card('A3', ['代名詞與分詞構句'], 'B',
-  '<div class="stem"><div class="en">St. Mark\'s Basilica, a spectacular church in Venice, is decorated with priceless treasures, many of '+fx("[[A3|them]]")+' stolen from other countries when medieval Venice was a leading sea power.</div><div class="zh">聖馬可大教堂是一座位於威尼斯的壯麗教堂，裝飾著無價的珍寶，其中許多是在中世紀威尼斯作為主要海上強權時從其他國家偷來的。[cite: 7]</div></div>' +
-  clue('many of them (being) stolen 為獨立分詞構句 (= and many of them were stolen)。若用 which，後方需有動詞 were。[cite: 7]') +
-  ops([
-    ['which', '', '→ which were[cite: 7]'],
-    ['them', '', '= and many of them were stolen[cite: 7]'],
-    ['what was', '', '名詞子句[cite: 7]'],
-    ['those were', '', '缺連接詞[cite: 7]']
-  ], 'B')
-);
-
-h += card('A4', ['介系詞 + 關代'], 'D',
-  '<div class="stem"><div class="en">Tom is looking for a job '+fx("[[A4|at which]]")+' he will be able to fulfill himself. He hopes he can develop his abilities to the full.</div><div class="zh">湯姆正在找一份能讓他實現自我的工作。他希望他能充分發揮自己的能力。[cite: 7]</div></div>' +
-  clue('at a/the job (在工作上)。at which = and at this job。[cite: 7]') +
-  ops([
-    ['of which', '', 'fulfill himself of the job? 不合邏輯[cite: 7]'],
-    ['of what', '', '不合文法[cite: 7]'],
-    ['that', '', 'that+完子=名詞子句，當 job 的同位語？不合理[cite: 7]'],
-    ['at which', '', '在...工作上[cite: 7]']
-  ], 'D')
-);
-
-h += card('A5', ['介系詞 + 名詞子句'], 'C',
-  '<div class="stem"><div class="en">There are some people who just can\'t make up their own mind. They frequently ask the advice of their friends and then do quite the opposite '+fx("[[A5|of what]]")+' their friends have suggested.</div><div class="zh">有些人就是無法自己下決定。他們經常徵求朋友的建議，然後做與朋友建議完全相反的事情。[cite: 7]</div></div>' +
-  clue('the opposite of + N (與...相反的人事物)。what = the thing(s) that/which。[cite: 7]') +
-  ops([
-    ['for which', '', 'suggest 是及物動詞缺受詞[cite: 7]'],
-    ['after what', '', '語意不通[cite: 7]'],
-    ['of what', '', '= of the thing that their friends have suggested[cite: 7]'],
-    ['of which', '', 'of which + 完整子句 (但此處缺受詞)[cite: 7]']
-  ], 'C')
-);
-
-h += card('A6', ['分詞構句'], 'B',
-  '<div class="stem"><div class="en">Scientists at Macquarie University in Australia found that chickens actually chat during mealtimes. They have a vocabulary of some 20 sounds, '+fx("[[A6|each]]")+' representing a different kind of food.</div><div class="zh">澳洲麥覺理大學的科學家發現雞在吃飯時實際上會聊天。牠們有大約 20 種聲音的詞彙量，每一種都代表不同種類的食物。[cite: 7]</div></div>' +
-  clue('each representing... 為分詞構句 (= and each sound represents)。[cite: 7]') +
-  ops([
-    ['and they all', '', '多連接詞[cite: 7]'],
-    ['each', '', '= and each is representing[cite: 7]'],
-    ['which', '', '應為 which represent (因為 which 代替 some 20 sounds)[cite: 7]'],
-    ['each of which + represents', '', '這也是獨立分詞構句用法[cite: 7]']
-  ], 'B')
-);
-
-h += card('A7', ['關代'], 'A',
-  '<div class="stem"><div class="en">Nie Xiaoqian is probably the most famous Chinese ghost tale, and has been turned into numerous films, the best of '+fx("[[A7|which]]")+' is the kung fu horror-comedy A Chinese Ghost Story, by Tsui Hark.</div><div class="zh">《聶小倩》可能是最著名的中國鬼故事，並被翻拍成無數電影，其中最棒的就是徐克執導的功夫恐怖喜劇《倩女幽魂》。[cite: 7]</div></div>' +
-  clue('the best of which 指代前面的 numerous films。[cite: 7]') +
-  ops([
-    ['which', '', '關代[cite: 7]'],
-    ['them', '', '缺連接詞[cite: 7]'],
-    ['what', '', '語意不合理[cite: 7]'],
-    ['those', '', '缺連接詞[cite: 7]']
-  ], 'A')
-);
-
-h += card('A8', ['分詞構句'], 'C',
-  '<div class="stem"><div class="en">When the two sisters first started, they are said to have been in keen competition, '+fx("[[A8|each of them trying]]")+' to attract more readers than the other.</div><div class="zh">當這兩姊妹剛起步時，據說她們處於激烈的競爭中，兩人都試圖吸引比對方更多的讀者。[cite: 7]</div></div>' +
-  clue('each of them trying... 為獨立分詞構句 (= and each of them was trying)。[cite: 7]') +
-  ops([
-    ['each of whom tries', '', '時態應為 tried[cite: 7]'],
-    ['and each of them were trying', '', 'each 視為單數，應接 was trying[cite: 7]'],
-    ['each of them trying', '', '= and each of them was trying[cite: 7]'],
-    ['each of whom trying', '', '應為 tried[cite: 7]']
-  ], 'C')
-);
-
-h += card('A9', ['獨立分詞構句'], 'D',
-  '<div class="stem"><div class="en">In a flea market, you\'ll find aisles lined with odds and ends, many of '+fx("[[A9|them]]")+' comic books, shoes, garden tools, and just about anything you can think of.</div><div class="zh">在跳蚤市場，你會發現走道旁擺滿了各種零碎小東西，其中許多是漫畫書、鞋子、園藝工具，以及幾乎任何你能想到的東西。[cite: 7]</div></div>' +
-  clue('此題為獨立分詞構句，省略了 being。many of them (being) comic books。在沒有連接詞 and 的情況下只能選代名詞 them。[cite: 7]') +
-  ops([
-    ['which being', '', '應為 which are[cite: 7]'],
-    ['them are', '', '缺連接詞 (→ and many of them are)[cite: 7]'],
-    ['which', '', '應為 which are[cite: 7]'],
-    ['them', '代名詞', '搭配省略的 being 形成獨立分詞構句[cite: 7]']
-  ], 'D')
-);
-
-h += card('A10', ['名詞子句'], 'A',
-  '<div class="stem"><div class="en">Before the United States became a country, there were 13 colonies in '+fx("[[A10|what]]")+' today is America, all of them belonging to Great Britain.</div><div class="zh">在美國建國之前，在今天稱為美國的地方有 13 個殖民地，全部隸屬於英國。[cite: 7]</div></div>' +
-  clue('what = the thing that / the country that，引導名詞子句當 in 的受詞。[cite: 7]') +
-  ops([
-    ['what', '', '引導名詞子句[cite: 7]'],
-    ['which', '', '介系詞+關代=關副 → 應引導完子，但 today is America 缺主詞補語[cite: 7]'],
-    ['whose', '', '錯誤[cite: 7]'],
-    ['that', '', 'that 前不可有介/逗[cite: 7]']
-  ], 'A')
-);
-
-h += card('A11', ['名詞子句'], 'D',
-  '<div class="stem"><div class="en">Some people say that aliens have kept an eye on what happens on Earth, and are responsible for quite a few legends, and '+fx("[[A11|that]]")+' the ancient Greek and Roman gods were in fact "space people" living here.</div><div class="zh">有些人說外星人一直關注地球上發生的事，並且是許多傳說的源頭，而且古希臘和羅馬神話中的神其實是住在這的「太空人」。[cite: 7]</div></div>' +
-  clue('此處 and 連接兩個 that 子句 (名詞子句當 say 的受詞)。第二個 that 子句不可省略。[cite: 7]') +
-  ops([
-    ['what', '', '不完整子句[cite: 7]'],
-    ['some of which', '', '不完整子句[cite: 7]'],
-    ['so', '', '錯誤[cite: 7]'],
-    ['that', '連接兩個名詞子句', '[cite: 7]']
-  ], 'D')
-);
-
-h += card('A12', ['動詞與關副'], 'C',
-  '<div class="stem"><div class="en">Though it took millions of years for the Colorado River to create the Grand Canyon, which runs almost 350 kilometers in length, 8 to 25 kilometers in width, and 1900 meters deep, it was not on any map until 1869, when John Wesley Powell, a geologist, '+fx("[[A12|led]]")+' a team down the treacherous Colorado River and discovered its secrets.</div><div class="zh">雖然科羅拉多河花了數百萬年才創造出長近 350 公里、寬 8 到 25 公里、深 1900 公尺的大峽谷，但直到 1869 年它才出現在任何地圖上，那年地質學家約翰·韋斯利·鮑威爾帶領一支隊伍沿著危險的科羅拉多河而下，並發現了它的秘密。[cite: 7]</div></div>' +
-  clue('when 為關係副詞 (= and in that year)。後面 John Wesley Powell 是主詞，需要主要動詞 led。[cite: 7]') +
-  ops([
-    ['who was led', '', '被動語態不合[cite: 7]'],
-    ['leading', '', '缺主要動詞[cite: 7]'],
-    ['led', '帶領', '過去式動詞[cite: 7]'],
-    ['with whom', '', '不合文法[cite: 7]']
-  ], 'C')
-);
-
-
-// --- 課本句型 1 ---
-h += '<h2 id="p4">課本句型實例 1 (N + 介 + which/whom)</h2>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">1. 敵人轟炸(bomb)了這個城市，城市的一部分已被全毀。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|The enemy bombed the city, part of which had been totally destroyed.]]")+'[cite: 7]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">2. Andy 申請了六間大學，只有一間錄取(accept)他。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Andy applied to six universities, only one of which accepted him.]]")+'[cite: 7]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">3. 台灣有很多便利商店，絕大部分(majority)都設有自動提款機(ATM)。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|There are many convenience stores (in Taiwan), the majority of which are equipped with an ATM.]]")+'[cite: 7]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">4. 每年有數百起的交通事故，其中許多是酒駕引起的。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|There are hundreds of traffic accidents every year, many of which are caused by drunk driving.]]")+'[cite: 7]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">5. 這間飯店有60間房間，其中10間已經為殘障人士改建(adapt)。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|The hotel has sixty rooms, ten of which have been adapted for the disabled visitors.]]")+'[cite: 7]</div></div>';
-
-
-// --- 課本句型 2 ---
-h += '<h2 id="p5">課本句型實例 2 (It is high time that)</h2>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">1. 該是Tina學習餐桌禮儀的時候了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|It is about time that Tina learned table manners.]]")+'[cite: 7]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">2. 早該是你踏出舒適圈、嘗試新事物的時候了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|It is high time that you stepped out of your comfort zone and tried new things.]]")+'[cite: 7]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">3. 政府早該做點事來解決市區的交通問題。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|It is high time that the government did something to solve the downtown traffic problems.]]")+'[cite: 7]</div></div>';
-
-document.getElementById('app').innerHTML = h;
-
-const secs=[
-  ['p1','挑戰題 (課文內容)'],
-  ['p2','綜合文法 (基本題)'],
-  ['p3','綜合文法 (進階題)'],
-  ['p4','句型 1'],
-  ['p5','句型 2']
-];
+document.getElementById('app').innerHTML = h1 + h2 + h3;
+const secs=[['p1','L1~L46 課文講解'],['p2','綜合文法題 (基本 & 進階)'],['p3','句型1 & 句型2']];
 document.getElementById('nav').innerHTML=secs.map(s=>'<a href="#'+s[0]+'">'+s[1]+'</a>').join('')+'<button id="tg">全部收合</button>';
 let open=true;
 document.getElementById('tg').onclick=function(){

@@ -64,10 +64,10 @@ footer a:hover{text-decoration:underline;}
 
 <script>
 const L="ABCD";
-const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[(\d*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[([^|\]]*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
 const SENT={};
 function passage(title,paras,note){
-  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[(\d+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[([^|\]]+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
   return '<section class="pas"><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
 }
 function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
@@ -77,216 +77,203 @@ function card(n,tags,ans,body){
   return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
 }
 
-let h = '';
+const st=(en,zh)=>'<div class="stem"><div class="en">'+fx(en)+'</div><div class="zh">'+zh+'</div></div>';
 
-// --- 挑戰題 1 ---
-h += '<h2 id="p1">挑戰題 1</h2>';
-h += card('1', ['文法', '間接問句'], 'D',
-  '<div class="stem"><div class="en">Have you ever thought about '+fx("[[1|what it would be like]]")+' to have a deceased loved one return and accompany you to a holiday celebration?</div><div class="zh">你是否曾想過，讓一位已故的摯愛回來陪伴你慶祝節日會是什麼樣子？</div></div>' +
-  clue('間接問句：不需倒裝（疑問詞 + S + V）；what 當名詞，how 當副詞。此處需受詞。') +
-  ops([
-    ['how would it be like', '', '需要倒裝，且 like 後需接名詞 (what)'],
-    ['what would it be like', '', '需要倒裝'],
-    ['how it would be like', '', 'like 是介系詞，受詞必為名詞，故用 what'],
-    ['what it would be like', '', 'what 為 N，作為 like 的受詞；間接問句不倒裝']
-  ], 'D')
-);
+/* === Part 1: L1 ~ L46 課文講解與非題目句子依序呈現 === */
+const h1 = '<h2 id="p1">L1 ~ L46 課文講解</h2>' + [
+  card("L1", ["文法", "間接問句 what it would be like"], "D",
+    st("Have you ever thought about [[L1|what it would be like]] to have a deceased loved one return and accompany you to a holiday celebration?", "你是否曾想過，讓一位已故的摯愛回來陪伴你慶祝節日會是什麼樣子？") +
+    clue("間接問句：不需倒裝（疑問詞 + S + V）；<code>what</code> 當名詞，<code>how</code> 當副詞。此處介系詞 <code>like</code> 後需接名詞受詞，故用 <code>what</code>。") +
+    ops([
+      ["how would it be like", "", "間接問句不可倒裝，且 like 後需接名詞 (what)。"],
+      ["what would it be like", "", "間接問句不可倒裝。"],
+      ["how it would be like", "", "like 是介系詞，受詞必為名詞，故用 what。"],
+      ["what it would be like", "", "what 為名詞作為 like 的受詞；間接問句不倒裝。"]
+    ], "D") +
+    passage("L1 使役動詞用法補充", [[
+      ["You had better have your air conditioner fixed because it is leaking.", "你最好把冷氣修一修，因為它在漏水。(have + O + p.p.)"],
+      ["He's always got the stereo playing full blast.", "他總是把音響開到最大聲。(have + O + V-ing)"]
+    ]])
+  ),
 
-h += passage("使役動詞用法補充", [
-  [["You had better have your air conditioner fixed because it is leaking.", "你最好把冷氣修一修，因為它在漏水。(have + O + p.p.)"]],
-  [["He's always got the stereo playing full blast.", "他總是把音響開到最大聲。(have + O + Ving)"]]
-]);
+  card("L4", ["文法", "非限定關係副詞 , where"], "C",
+    st("The idea may scare you to death or at least make your hair stand on end, but this is the essential concept behind the Day of the Dead in Mexico[[L4|, where]] people celebrate death with joy and humor rather than mourn it with sorrow.", "這個想法可能會把你嚇死，或至少讓你毛骨悚然，但這就是墨西哥亡靈節背後的核心概念，在那裡人們帶著歡樂與幽默慶祝死亡，而不是悲傷地哀悼它。") +
+    clue("獨一無二的專有名詞（<code>Mexico</code>）後方補充說明，需用非限定的關係副詞（<code>, where</code>）。") +
+    ops([
+      ["which", "", "非限定子句需有逗點，且後方為完整子句。"],
+      ["where", "", "非限定子句需有逗點。"],
+      [", where", "連接詞 + 地方副詞", "用以修飾先行詞 Mexico，後接完整子句。"],
+      [", which", "", "後須接不完整子句。"]
+    ], "C")
+  ),
 
-h += card('2', ['文法', '關係子句'], 'C',
-  '<div class="stem"><div class="en">The idea may scare you to death or at least make your hair stand on end, but this is the essential concept behind the Day of the Dead in Mexico '+fx("[[2|, where]]")+' people celebrate death with joy and humor rather than mourn it with sorrow.</div><div class="zh">這個想法可能會把你嚇死，或至少讓你毛骨悚然，但這就是墨西哥亡靈節背後的核心概念，在那裡人們帶著歡樂與幽默慶祝死亡，而不是悲傷地哀悼它。</div></div>' +
-  clue('獨一無二的專有名詞 (Mexico) 後方補充說明，需用非限定的關係副詞 ( , where )') +
-  ops([
-    ['which', '', '非限定子句需有逗點'],
-    ['where', '', '非限定子句需有逗點'],
-    [', where', '連接詞 + 地方副詞', '用以修飾先行詞 Mexico，後接完整子句'],
-    [', which', '', '後須接不完整子句']
-  ], 'C')
-);
+  card("L8", ["文法", "不定詞完成式 to have originated"], "A",
+    st("The Day of the Dead is thought [[L8|to have originated]] centuries ago with the Aztecs.", "亡靈節被認為是幾個世紀前源自阿茲特克人。") +
+    clue("<code>to have + p.p.</code> 表示這個動作發生的時間比主要子句（<code>is thought</code>）中的動詞更早。<code>originate</code>（起源）為不及物動詞，無被動式。") +
+    ops([
+      ["to have originated", "", "表示過去（centuries ago）已發生的動作。"],
+      ["to originate", "", "時態不符（centuries ago 為過去時間）。"],
+      ["to be originated", "", "語態錯誤（originate 主動即可，無被動）。"],
+      ["to have been originated", "", "語態錯誤。"]
+    ], "A")
+  ),
 
-// --- 挑戰題 2 ---
-h += '<h2 id="p2">挑戰題 2</h2>';
-h += card('3', ['文法', '不定詞時態'], 'A',
-  '<div class="stem"><div class="en">The Day of the Dead is thought '+fx("[[3|to have originated]]")+' centuries ago with the Aztecs.</div><div class="zh">亡靈節被認為是幾個世紀前源自阿茲特克人。</div></div>' +
-  clue('to have pp 表示這個動作發生的時間比主要子句 (is thought) 中的動詞早。originate (起源) 為不及物動詞。') +
-  ops([
-    ['to have originated', '', '表示過去已發生的動作'],
-    ['to originate', '', '時態不符 (centuries ago)'],
-    ['to be originated', '', '語態錯誤 (originate 主動即可)'],
-    ['to have been originated', '', '語態錯誤']
-  ], 'A')
-);
+  card("L10", ["文法", "關係副詞 when"], "D",
+    st("Traditionally, deceased children are honored on Nov. 1, while Nov. 2 is the day [[L10|when]] departed adults are the main focus.", "傳統上，死去的兒童會在 11 月 1 日受到尊崇，而 11 月 2 日則是主要關注逝去成人的日子。") +
+    clue("<code>when = on which</code>（介系詞 + 關代）修飾先行詞 <code>the day</code>，後接完整子句。") +
+    ops([
+      ["which", "", "which 後需接不完整子句（需改為 on which）。"],
+      ["in which", "", "特定日子搭配的介系詞應為 on which。"],
+      ["that", "", "正式書面中搭配完整子句表時間用 when。"],
+      ["when", "", "關係副詞 = and on this day。"]
+    ], "D")
+  ),
 
-h += card('4', ['文法', '關係副詞'], 'D',
-  '<div class="stem"><div class="en">Traditionally, deceased children are honored on Nov. 1, while Nov. 2 is the day '+fx("[[4|when]]")+' departed adults are the main focus.</div><div class="zh">傳統上，死去的兒童會在 11 月 1 日受到尊崇，而 11 月 2 日則是主要關注逝去成人的日子。</div></div>' +
-  clue('when = on which (介系詞 + 關代) 修飾先行詞 the day，後接完整子句') +
-  ops([
-    ['which', '', 'which 後需接不完整子句 (需改為 on which)'],
-    ['in which', '', '時間搭配應為 on which'],
-    ['that', '', '介系詞 on 不可直接省略改用 that'],
-    ['when', '', '關副 = and + on this day']
-  ], 'D')
-);
+  card("L12", ["詞義解析", "living vs. alive"], "B",
+    st("During these 48 hours, the souls of the dead are believed to return to earth to visit their [[L12|living]] family members.", "在這 48 小時內，人們相信死者的靈魂會重返人間，探望他們在世的家人。") +
+    clue("修飾後方的名詞 <code>family members</code>，需用可置於名詞前的形容詞 <code>living</code>（活著的、在世的）。") +
+    ops([
+      ["alive", "活著的", "敘述性形容詞，不能放在名詞前修飾。"],
+      ["living", "活著的", "可放在名詞前修飾（living family members 在世的家人）。"],
+      ["live", "現場的/活的", "通常用在動物（live animals）或現場直播節目上。"],
+      ["lived", "被居住", "不合語意。"]
+    ], "B")
+  ),
 
-h += card('5', ['詞義解析'], 'B',
-  '<div class="stem"><div class="en">During these 48 hours, the souls of the dead are believed to return to earth to visit their '+fx("[[5|living]]")+' family members.</div><div class="zh">在這 48 小時內，人們相信死者的靈魂會重返人間，探望他們在世的家人。</div></div>' +
-  ops([
-    ['alive', '活著的', '不能放在名詞前修飾'],
-    ['living', '活著的', '可放名詞前修飾'],
-    ['live', '現場的/活的', '通常用在動物或廣播節目上'],
-    ['lived', '被居住', '不合語意']
-  ], 'B')
-);
+  card("L14", ["代名詞", "those (people) they have lost"], "C",
+    st("Instead of fearing the spirits of [[L14|those]] they have lost, Mexicans anticipate their arrival and prepare for it.", "墨西哥人非但不害怕失去親人的靈魂，反而期待他們的到來並為此做準備。") +
+    clue("<code>those they have lost = those (people) (that/whom) they have lost</code>（他們所失去的那些親人）。") +
+    ops([
+      ["which", "", "缺先行詞。"],
+      ["what", "", "= the thing which（他們失去之物的靈魂？語意不合）。"],
+      ["those", "那些人", "代名詞指代過世的親人們，後接省略關代的關係子句 they have lost。"],
+      ["that", "", "單數代名詞，且不接形容詞子句指人。"]
+    ], "C")
+  ),
 
-h += card('6', ['代名詞'], 'C',
-  '<div class="stem"><div class="en">Instead of fearing the spirits of '+fx("[[6|those]]")+' they have lost, Mexicans anticipate their arrival and prepare for it.</div><div class="zh">墨西哥人非但不害怕失去親人的靈魂，反而期待他們的到來並為此做準備。</div></div>' +
-  clue('those they have lost = those (people) (that/whom) they have lost') +
-  ops([
-    ['which', '', '缺先行詞'],
-    ['what', '', '= the thing which (他們失去之物的靈魂？語意不合)'],
-    ['those', '那些人', ''],
-    ['that', '', 'that 前不可有介系詞 of']
-  ], 'C')
-);
+  card("L14-補充", ["單字小測驗", "loss 失去親人"], "C",
+    st("補充題：(At a funeral) My condolences. (請節哀) = I’m sorry for your [[L14-補充|loss]].", "（在葬禮上）請節哀順變。＝ 對於您痛失親人我深感遺憾。") +
+    clue("所有格 <code>your</code> 後方需接名詞 <code>loss</code>（= the death of someone）。") +
+    ops([
+      ["lose", "Vi./Vt.", "原形動詞。"],
+      ["lost", "p.t./p.p.", "過去式／過去分詞。"],
+      ["loss", "n.", "名詞（喪親之痛）。"],
+      ["losing", "V-ing", "慣用語固定為 I'm sorry for your loss。"]
+    ], "C")
+  ),
 
-h += card('7', ['單字', '小測驗'], 'C',
-  '<div class="stem"><div class="en">(At a funeral) My condolences. (請節哀) = I’m sorry for your '+fx("[[7|loss]]")+'.</div><div class="zh">對於您的失去 (親人過世) 我感到很遺憾。</div></div>' +
-  ops([
-    ['lose', 'Vi./Vt.', '動詞'],
-    ['lost', 'p.t./p.p.', '過去式/過去分詞'],
-    ['loss', 'n.', '= the death of someone'],
-    ['', '', '']
-  ], 'C')
-);
+  card("L17", ["分詞修飾", "decorated 被裝飾過的"], "B",
+    st("These include marigolds, candles, “the bread of the dead,” and [[L17|decorated]] sugar skulls with the names of departed family members written on their foreheads.", "這些包括金盞花、蠟燭、「亡靈麵包」，以及額頭上寫著已故家人名字的「裝飾過的」骷髏頭糖。") +
+    clue("骷髏頭糖（sugar skulls）是「被裝飾過的」，故用過去分詞 <code>decorated</code> 作形容詞修飾。") +
+    ops([
+      ["decorate", "vt. 裝飾", "原形動詞不可直接修飾名詞。"],
+      ["decorated", "adj. 被裝飾過的", "過去分詞作為形容詞修飾 sugar skulls。"],
+      ["decorating", "", "現在分詞表主動，語態不合。"],
+      ["decoration", "n. 裝飾", "詞性不合。"]
+    ], "B")
+  ),
 
-h += card('8', ['分詞構飾'], 'B',
-  '<div class="stem"><div class="en">These include marigolds, candles, “the bread of the dead,” and '+fx("[[8|decorated]]")+' sugar skulls with the names of departed family members written on their foreheads.</div><div class="zh">這些包括金盞花、蠟燭、「死者麵包」，以及額頭上寫著已故家人名字的「裝飾過的」糖骷髏。</div></div>' +
-  ops([
-    ['decorate', 'vt. 裝飾', ''],
-    ['decorated', 'adj. 被裝飾過的', '作為形容詞修飾 sugar skulls'],
-    ['decorating', '', '無特殊意義'],
-    ['decoration', 'n. 裝飾', '詞性不合']
-  ], 'B')
-);
+  card("L20", ["保留連接詞之簡化子句", "while (they were) alive"], "B",
+    st("On the altars, they place photographs of their deceased loved ones as well as beverages and dishes that those family members had a preference for [[L20|while]] alive.", "在祭壇上，他們放置已故親人的照片，以及那些家人「生前」偏好的飲料和菜餚。") +
+    clue("<code>while alive = while (they were) alive</code>（當他們還活著的時候／生前），主詞相同時省略 <code>they were</code>，保留連接詞 <code>while</code> 與形容詞補語 <code>alive</code>。") +
+    ops([
+      ["what’s", "", "what’s alive = 活著的東西，語意與結構皆錯。"],
+      ["while", "當...時", "主詞相同時省略 they were，構成 while alive。"],
+      ["they are", "", "介系詞 for 的受詞是關係代名詞 that，後面不能無連接詞直接接子句 they are alive。"],
+      ["being", "", "had a preference for 已有受詞 that（代指 beverages and dishes），不能再接 being alive 當受詞。"]
+    ], "B")
+  ),
 
-// --- 挑戰題 3 ---
-h += '<h2 id="p3">挑戰題 3</h2>';
-h += card('9', ['分詞構句'], 'B',
-  '<div class="stem"><div class="en">On the altars, they place photographs of their deceased loved ones as well as beverages and dishes that those family members had a preference for '+fx("[[9|while]]")+' alive.</div><div class="zh">在祭壇上，他們放置已故親人的照片，以及那些家人「生前」偏好的飲料和菜餚。</div></div>' +
-  clue('while alive 為分詞構句 = while (they were) alive') +
-  ops([
-    ['what’s', '', 'what’s alive = 活著的東西'],
-    ['while', '當...時', '主詞相同時省略 (they are)'],
-    ['they are', '', 'for 為介系詞，其後不能直接有動詞'],
-    ['being', '', 'had a preference for 已有受詞 that，不能再加 N']
-  ], 'B')
-);
+  card("L24", ["非限定關係副詞", ", where"], "D",
+    st("After this warm reception for the souls at home, it is usually late in the evening, and families head to the cemetery, [[L24|where]] they decorate the graves of their loved ones and light one candle for each dead person.", "在家中為靈魂舉行這場溫馨的接待後，通常已是深夜，家人們會前往墓園，在那裡裝飾親人的墳墓，並為每位死者點燃一根蠟燭。") +
+    clue("<code>where = in/at which</code>，修飾前面的地方名詞 <code>the cemetery</code>（墓園），後接完整子句。") +
+    ops([
+      ["which", "", "後需接不完整子句。"],
+      ["while", "", "語意不合。"],
+      ["whereas", "", "語意不合。"],
+      ["where", "", "關係副詞修飾地方 the cemetery，後接完整子句。"]
+    ], "D")
+  ),
 
-h += card('10', ['關係副詞'], 'D',
-  '<div class="stem"><div class="en">After this warm reception for the souls at home, it is usually late in the evening, and families head to the cemetery, '+fx("[[10|where]]")+' they decorate the graves of their loved ones and light one candle for each dead person.</div><div class="zh">在家中為靈魂舉行這場溫馨的接待後，通常已是深夜，家人們會前往墓地，在那裡裝飾親人的墳墓，並為每位死者點燃一根蠟燭。</div></div>' +
-  clue('where = in which，修飾 the cemetery，後接完整子句') +
-  ops([
-    ['which', '', '後需接不完整子句'],
-    ['while', '', '語意不合'],
-    ['whereas', '', '語意不合'],
-    ['where', '', '關係副詞修飾地方']
-  ], 'D')
-);
+  card("L24-補充", ["非限定關係代名詞", ", which 代替前文整件事"], "A",
+    st("補充題：They agreed to install a new pedestrian gate to the cemetery, [[L24-補充|which]] they have done.", "他們同意在墓園安裝一道新的行人門，而這件事他們已經完成了。") +
+    clue("<code>which</code> 代替前面整句話「同意安裝新行人門」這件事，並在後方子句中作為 <code>have done</code> 的受詞（不完整子句）。") +
+    ops([
+      ["which", "", "關代當 have done 的受詞，後方子句缺受詞。"],
+      ["where", "", "關係副詞後需接完整子句，但 done 缺受詞。"],
+      ["in which", "", "同上，後需接完整子句。"],
+      ["when", "", "同上，後需接完整子句。"]
+    ], "A")
+  ),
 
-h += card('11', ['關係代名詞'], 'A',
-  '<div class="stem"><div class="en">They agreed to install a new pedestrian gate to the cemetery, '+fx("[[11|which]]")+' they have done.</div><div class="zh">他們同意在墓地安裝一個新的行人登機門，這件事他們已經完成了。</div></div>' +
-  clue('which 代替前面整句話的事實，作為 have done 的受詞 (不完整子句)') +
-  ops([
-    ['which', '', '關代當受詞，後方子句不完整'],
-    ['where', '', '關副後需接完整子句'],
-    ['in which', '', '同上'],
-    ['when', '', '同上']
-  ], 'A')
-);
+  card("L27", ["形容詞分詞構句與主詞", "Cheerful and merry, they..."], "D",
+    st("Cheerful and merry, [[L27|they]] feast with the sacred souls and pray till dawn...", "歡樂愉快的他們與神聖的靈魂一起享用盛宴，並祈禱到黎明…") +
+    clue("原句為 <code>(As they are) Cheerful and merry, they feast...</code>，省略連接詞、主詞與 be 動詞後留下形容詞補語，逗號後為主要子句，需填代名詞主詞 <code>they</code>。") +
+    ops([
+      ["who", "", "缺先行詞且會導致整句無主要子句主詞。"],
+      ["those", "", "語意不合。"],
+      ["which", "", "缺先行詞。"],
+      ["they", "", "代名詞作主要子句主詞。"]
+    ], "D")
+  ),
 
-h += card('12', ['代名詞 / 分詞構句'], 'D',
-  '<div class="stem"><div class="en">Cheerful and merry, '+fx("[[12|they]]")+' feast with the sacred souls and pray till dawn...</div><div class="zh">歡樂愉快的他們與神聖的靈魂一起享用盛宴，並祈禱到黎明...</div></div>' +
-  clue('(As they were) Cheerful and merry, they... 主詞相同時可省略') +
-  ops([
-    ['who', '', '缺先行詞'],
-    ['those', '', '語意不合'],
-    ['which', '', '缺先行詞'],
-    ['they', '', '代名詞作主詞']
-  ], 'D')
-);
+  card("L30", ["代名詞與主要動詞", "These include"], "C",
+    st("Throughout the festival, colorful, cartoon-like representations of the dead can be seen everywhere. [[L30|These include]] skeleton and skull cookies, candies, flags, and toys.", "在整個節日期間，到處都可以看到色彩鮮豔、卡通般的死者形象代表物。這些包括骷髏和頭骨形狀的餅乾、糖果、旗幟和玩具。") +
+    clue("<code>These</code> 指代前句的複數名詞 <code>representations</code>，且這是一個獨立的新句子，必須有複數主要動詞 <code>include</code>。") +
+    ops([
+      ["It includes", "", "前句 representations 為複數，不可用單數 It。"],
+      ["That includes", "", "單數，與複數先行詞不合。"],
+      ["These include", "", "複數代名詞主詞對應複數動詞 include。"],
+      ["Including", "", "分詞／介系詞，會導致該句缺乏主詞與主要動詞。"]
+    ], "C")
+  ),
 
-// --- 挑戰題 4 ---
-h += '<h2 id="p4">挑戰題 4</h2>';
-h += card('13', ['代名詞'], 'C',
-  '<div class="stem"><div class="en">Throughout the festival, colorful, cartoon-like representations of the dead can be seen everywhere. '+fx("[[13|These include]]")+' skeleton and skull cookies, candies, flags, and toys.</div><div class="zh">在整個節日期間，到處都可以看到色彩鮮豔、卡通般的死者代表物。這些包括骷髏和頭骨餅乾、糖果、旗幟和玩具。</div></div>' +
-  clue('These 指代前面的 representations (複數名詞)') +
-  ops([
-    ['It includes', '', '單數，錯誤'],
-    ['That includes', '', '單數，錯誤'],
-    ['These include', '', '複數代名詞對應複數動詞'],
-    ['Including', '', '會導致該句缺乏主要動詞']
-  ], 'C')
-);
+  card("L32", ["不定詞表目的", "to resemble"], "A",
+    st("Many people also dress up in skeleton costumes, paint their faces [[L32|to resemble]] skulls, and participate in performances and street parades.", "許多人還會穿上骷髏服裝，把臉畫得像頭骨一樣，並參加表演和街頭遊行。") +
+    clue("把臉塗上顏料是「為了看起來像（<code>to resemble</code>）」骷髏頭，用不定詞表目的。") +
+    ops([
+      ["to resemble", "", "畫臉是「為了」像骷髏頭（不定詞表目的）。"],
+      ["resembling", "", "現在分詞無法表達「畫成…的結果／目的」。"],
+      ["that resemble", "", "他們原本的臉並不像骷髏頭，是畫了之後才像。"],
+      ["resembled", "", "resemble（像…）沒有被動語態。"]
+    ], "A")
+  ),
 
-h += card('14', ['不定詞表目的'], 'A',
-  '<div class="stem"><div class="en">Many people also dress up in skeleton costumes, paint their faces '+fx("[[14|to resemble]]")+' skulls, and participate in performances and street parades.</div><div class="zh">許多人還會穿上骷髏服裝，把臉畫得像頭骨，並參加表演和街頭遊行。</div></div>' +
-  ops([
-    ['to resemble', '', '畫臉是「為了」像骷髏頭 (表目的)'],
-    ['resembling', '', '分詞構句語意不通'],
-    ['that resemble', '', '同上'],
-    ['resembled', '', '語態不合']
-  ], 'A')
-);
+  card("L35", ["轉折副詞", "Instead 相反地/取而代之地"], "D",
+    st("While doing so, Mexicans aren’t mocking death. [[L35|Instead]], they are recognizing it as an inevitable part of the natural cycle and would rather embrace it than ignore it.", "在這樣做的同時，墨西哥人並不是在嘲笑死亡。相反地，他們將其視為自然循環中不可避免的一部分，寧願擁抱它也不願忽視它。") +
+    clue("前句為否定句（<code>aren't mocking death</code> 並不是在嘲笑死亡），後句提出正面的實際作為（而是將其視為自然循環的一部分），標準搭配為 <code>Instead</code>（相反地、取而代之地）。") +
+    ops([
+      ["On the other hand", "", "另一方面（用於並列對比兩面，而非一否一肯的修正）。"],
+      ["In other words", "", "換句話說。"],
+      ["In contrast", "", "形成對比的是（用於兩個不同主體的對比）。"],
+      ["Instead", "相反地；取而代之地", "常接在否定句之後，引出實際做的事。"]
+    ], "D")
+  ),
 
-h += card('15', ['轉折語'], 'D',
-  '<div class="stem"><div class="en">While doing so, Mexicans aren’t mocking death. '+fx("[[15|Instead]]")+', they are recognizing it as an inevitable part of the natural cycle and would rather embrace it than ignore it.</div><div class="zh">在這樣做的同時，墨西哥人並不是在嘲笑死亡。相反地，他們將其視為自然循環中不可避免的一部分，寧願擁抱它也不願忽視它。</div></div>' +
-  ops([
-    ['On the other hand', '', '另一方面'],
-    ['In other words', '', '換句話說'],
-    ['In contrast', '', '形成對比的是'],
-    ['Instead', '取而代之地', '通常前接否定句，後接肯定句']
-  ], 'D')
-);
+  card("L38", ["動詞字彙", "celebrating 讚揚/歌頌"], "A",
+    st("By inviting the dead to return and sharing the pleasures of life with them, Mexicans are [[L38|celebrating]] the cycle of life itself.", "藉由邀請死者回歸並與他們分享生活的樂趣，墨西哥人正在讚揚（慶祝）生命本身的循環。") +
+    clue("呼應第一段 <code>celebrate death with joy and humor</code>，此處指「讚揚、歌頌、慶祝（celebrating）」生命的循環。") +
+    ops([
+      ["celebrating", "讚揚，歌頌，慶祝", "符合全文核心主旨。"],
+      ["completing", "完成", "語意不合。"],
+      ["repeating", "重複", "語意不合。"],
+      ["devoting", "將…獻給", "需搭配 devote ... to ...。"]
+    ], "A")
+  )
+].join('');
 
-h += card('16', ['字彙'], 'A',
-  '<div class="stem"><div class="en">By inviting the dead to return and sharing the pleasures of life with them, Mexicans are '+fx("[[16|celebrating]]")+' the cycle of life itself.</div><div class="zh">藉由邀請死者回歸並與他們分享生活的樂趣，墨西哥人正在讚揚生命本身的循環。</div></div>' +
-  ops([
-    ['celebrating', '讚揚，歌頌', ''],
-    ['completing', '完成', ''],
-    ['repeating', '重覆', ''],
-    ['devoting', '將…獻給', '']
-  ], 'A')
-);
+/* === Part 2: 課本句型實例 === */
+const h2 = '<h2 id="p2">課本句型實例 (is said/believed to... & would rather... than...)</h2>' + [
+  card("句型-1", ["句型1：be said to be V-ing", "進行式表即將發生之未來"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">1. 據說泰勒絲下個月將發行她的新專輯。(Taylor Swift is said...)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Taylor Swift is said to be releasing her new album next month.]]")+'</div></div>' + clue("進行式不定詞 <code>to be releasing</code> 可用來表示近期計畫好的未來動作。")),
+  card("句型-2", ["句型1：be believed to have p.p.", "過去已發生動作"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">2. 據信銀行搶匪們已經捲款潛逃。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The bank robbers are believed to have run away / left with the money.]]")+'</div></div>' + clue("「已經捲款潛逃」發生在「據信（are believed）」之前，故用完成式不定詞 <code>to have run away</code>。")),
+  card("句型-3", ["句型1：be said to have p.p.", "originate in/from"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">3. 據說病毒是起源於一個生物實驗室。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The virus is said to have originated in/from a biology lab.]]")+'</div></div>' + clue("<code>originate</code> 為不及物動詞（無被動），過去已起源用 <code>to have originated in/from</code>。")),
+  card("句型-4", ["句型1：be reported to be equipped with", "被動不定詞"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">4. 據報導這家公司的新車將配備 (equip) 有自動駕駛系統。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The company’s new car is reported to be equipped with an automated driving system.]]")+'</div></div>' + clue("「配備有…」為 <code>be equipped with</code>。")),
+  card("句型-5", ["句型2：would rather VR than VR", "寧願…也不願…"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">5. Uma 寧可獨自一人也不要被打擾。(would)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Uma would rather be (left) alone than (be) disturbed/bothered.]]")+'</div></div>' + clue("<code>would rather + VR1 + than + VR2</code>。")),
+  card("句型-6", ["句型2：prefer to VR rather than VR", "寧願…也不願…"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">6. Henry 寧可單身也不要結婚。(prefer)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Henry prefers to be/remain/stay single rather than be/get married.]]")+'</div></div>' + clue("<code>prefer to VR1 rather than VR2</code>。"))
+].join('');
 
-
-// --- 課本句型實例 ---
-h += '<h2 id="p5">課本句型實例</h2>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">1. Taylor Swift is said to be releasing her new album next month. (進行式可表未來)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Taylor Swift is said to be releasing her new album next month.]]")+'</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">2. 據信銀行搶匪們已經捲款潛逃。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|The bank robbers are believed to have run away / left with the money.]]")+'</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">3. 據說病毒是起源於一個生物實驗室。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|The virus is said to have originated in/from a biology lab.]]")+'</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">4. 據報導這家公司的新車將配備(equip)有自動駕駛系統。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|The company’s new car is reported to be equipped with an automated driving system.]]")+'</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">5. Uma寧可獨自一人也不要被打擾。(would)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Uma would rather be (left) alone than (be) disturbed/bothered.]]")+'</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">6. Henry寧可單身也不要結婚。(prefer)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Henry prefers to be/remain/stay single rather than be/get married.]]")+'</div></div>';
-
-document.getElementById('app').innerHTML = h;
-
-const secs=[
-  ['p1','挑戰題 1'],
-  ['p2','挑戰題 2'],
-  ['p3','挑戰題 3'],
-  ['p4','挑戰題 4'],
-  ['p5','課本句型實例']
-];
+document.getElementById('app').innerHTML = h1 + h2;
+const secs=[['p1','L1~L46 課文講解'],['p2','課本句型實例']];
 document.getElementById('nav').innerHTML=secs.map(s=>'<a href="#'+s[0]+'">'+s[1]+'</a>').join('')+'<button id="tg">全部收合</button>';
 let open=true;
 document.getElementById('tg').onclick=function(){

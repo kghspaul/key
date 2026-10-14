@@ -64,10 +64,10 @@ footer a:hover{text-decoration:underline;}
 
 <script>
 const L="ABCD";
-const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[(\d*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[([^|\]]*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
 const SENT={};
 function passage(title,paras,note){
-  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[(\d+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[([^|\]]+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
   return '<section class="pas"><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
 }
 function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
@@ -77,484 +77,194 @@ function card(n,tags,ans,body){
   return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
 }
 
-let h = '';
-
-// --- 挑戰題 1 ---
-h += '<h2 id="p1">挑戰題 1</h2>';
-
-h += card('1', ['文法', '名詞子句同位語'], 'C',
-  '<div class="stem"><div class="en">The theory '+fx("[[1|that]]")+' spoken words account for only about seven percent of communication involving emotions may surprise many people.</div><div class="zh">口語只佔涉及情感溝通約百分之七的理論，可能會讓許多人感到驚訝。[cite: 6]</div></div>' +
-  clue('that + 完整子句時為名詞子句，在此當 theory 的同位語。[cite: 6]') +
-  ops([
-    ['which', '', 'which + 不完整子句[cite: 6]'],
-    ['in which', '', 'in which + 完整子句 = and in this theory，語意不合理[cite: 6]'],
-    ['that', '引導名詞子句', '作同位語，後接完整子句[cite: 6]'],
-    ['what', '', 'what + 不完整子句[cite: 6]']
-  ], 'C')
-);
-
-h += card('2', ['字彙', '字根字首'], 'B',
-  '<div class="stem"><div class="en">This was first '+fx("[[2|proposed]]")+' by Dr. Albert Mehrabian, a famous psychology professor.</div><div class="zh">這首先是由著名的心理學教授 Albert Mehrabian 博士所提出的。[cite: 6]</div></div>' +
-  clue('字根 –pos / -pon / -posit = put。pro- = forward (提出/提議)。[cite: 6]') +
-  ops([
-    ['composed', '作曲；組成', '= put together (把人事物放一起)[cite: 6]'],
-    ['proposed', '提出；提議', '= put … forward (把…放到前面)[cite: 6]'],
-    ['imposed', '強加於', '= put … on … (將不好的事物強加在…上)[cite: 6]'],
-    ['disposed', '處理掉', '= put … away (賣掉、送人、丟掉)[cite: 6]']
-  ], 'B')
-);
-
-h += card('3', ['代名詞'], 'A',
-  '<div class="stem"><div class="en">According to his studies, we achieve about 55% of our emotional communication with our bodies, for '+fx("[[3|they]]")+' typically demonstrate our true feelings and what we’re actually thinking.</div><div class="zh">根據他的研究，我們約有 55% 的情感溝通是透過身體達成的，因為它們通常展現出我們真實的感受和我們實際在想什麼。[cite: 6]</div></div>' +
-  clue('for 在此為連接詞表「因為」(前面須加逗號)。they 代替前面的 our bodies。[cite: 6]') +
-  ops([
-    ['they', '它們', '= our bodies[cite: 6]'],
-    ['which', '', '介 + 關代 + 完整子句 (但此處已經有連接詞 for)[cite: 6]'],
-    ['those', '', '需加介片或關係子句[cite: 6]'],
-    ['what', '', '當主詞時視為第三人稱單數  demonstrates[cite: 6]']
-  ], 'A')
-);
-
-h += passage("情境閱讀", [
-  [["Therefore, understanding people’s body language is an important ability to help us better interpret others’ messages.", "因此，了解人們的肢體語言是幫助我們更好解讀他人訊息的重要能力。[cite: 6]"]]
-]);
-
-// --- 挑戰題 2 ---
-h += '<h2 id="p2">挑戰題 2</h2>';
-
-h += card('4', ['介系詞片語'], 'B',
-  '<div class="stem"><div class="en">Being able to read body language well is helpful '+fx("[[4|in determining]]")+' whether or not someone is telling the truth.</div><div class="zh">能夠讀懂肢體語言，在判斷某人是否說實話時很有幫助。[cite: 6]</div></div>' +
-  clue('in + V-ing = when + V-ing (在做…時)。[cite: 6]') +
-  ops([
-    ['that it determines', '', '它判斷？它決定？不合邏輯[cite: 6]'],
-    ['in determining', '在判斷...時', '= when (we are) determining[cite: 6]'],
-    ['to determine', '', 'helpful 後較常搭配 in + V-ing[cite: 6]'],
-    ['which determines', '', 'which 指代不明[cite: 6]']
-  ], 'B')
-);
-
-h += passage("情境閱讀", [
-  [["When people are lying, there are usually three telltale signs: making stiff body movements, touching or scratching themselves, and making eye movements.", "當人們說謊時，通常有三個明顯的跡象：僵硬的身體動作、觸摸或抓撓自己，以及眼球的轉動。(telltale signs = obvious signs)[cite: 6]"]],
-  [["Typically, liars exhibit fewer arm and hand gestures. When they do make such gestures, their movements are usually stiff, and their hands tend to stay close to the body rather than move in an outward direction.", "通常，說謊者表現出較少的手臂和手勢。當他們確實做出這類手勢時，動作通常是僵硬的，而且他們的手傾向於貼近身體，而不是向外移動。[cite: 6]"]]
-]);
-
-h += card('5', ['慣用語', '忍不住'], 'B',
-  '<div class="stem"><div class="en">Moreover, liars often '+fx("[[5|can’t help but]]")+' touch or scratch their faces, their necks, or behind their ears.</div><div class="zh">此外，說謊者往往會忍不住觸摸或抓撓他們的臉、脖子，或耳後。[cite: 6]</div></div>' +
-  clue('can\'t help but + VR (忍不住；不得不)。[cite: 6]') +
-  ops([
-    ['can’t help', '', '應接 V-ing[cite: 6]'],
-    ['can’t help but', '忍不住', '後接原形動詞 touch/scratch[cite: 6]'],
-    ['have no choice but', '', '應接 to VR (have no choice but to)[cite: 6]'],
-    ['can’t resist', '', '應接 V-ing[cite: 6]']
-  ], 'B')
-);
-
-// --- 講義重點 1 ---
-h += '<h2 id="p3">講義重點 1 (介系詞片語)</h2>';
-
-h += passage("句型提示", [
-  [["They sometimes rub their eyes without being conscious of it as well.", "他們有時也會揉眼睛而不自覺 / 而沒有察覺。[cite: 6]"]],
-  [["They sometimes rub their eyes instead of looking into yours.", "他們有時會揉眼睛而不是直視你的眼睛。[cite: 6]"]]
-]);
-
-h += card('6', ['介系詞'], 'C',
-  '<div class="stem"><div class="en">'+fx("[[6|Due to]]")+' bad management, the company sustained great losses in business.</div><div class="zh">由於管理不善，該公司在業務上蒙受了巨大損失。[cite: 6]</div></div>' +
-  ops([
-    ['Instead of', '不是...而是...', '[cite: 6]'],
-    ['Without', '沒有', '[cite: 6]'],
-    ['Due to', '由於', '引導原因[cite: 6]'],
-    ['In regard to', '關於', '= regarding = about[cite: 6]']
-  ], 'C')
-);
-
-h += card('7', ['介系詞'], 'D',
-  '<div class="stem"><div class="en">One cannot be creative '+fx("[[7|without]]")+' being out there and alone...</div><div class="zh">一個人在不跳脫常規且獨處的情況下是無法發揮創造力的...[cite: 6]</div></div>' +
-  ops([
-    ['instead of', '不是...而是', '[cite: 6]'],
-    ['apart from', '除...外', '[cite: 6]'],
-    ['besides', '除...外 (包含)', '[cite: 6]'],
-    ['without', '在不...的情況下', '而不...[cite: 6]']
-  ], 'D')
-);
-
-h += card('8', ['介系詞'], 'D',
-  '<div class="stem"><div class="en">Our habit of relying on intuition '+fx("[[8|instead of]]")+' instructions may cause catastrophic consequences.</div><div class="zh">我們依賴直覺而非指示的習慣可能會導致災難性的後果。[cite: 6]</div></div>' +
-  ops([
-    ['but rather', '', '[cite: 6]'],
-    ['other than', '', '[cite: 6]'],
-    ['without', '', '[cite: 6]'],
-    ['instead of', '而非', '取代[cite: 6]']
-  ], 'D')
-);
-
-h += card('9', ['介系詞'], 'A',
-  '<div class="stem"><div class="en">Experts predict that more people will live in rural settings, with technology enabling them to do almost anything they like '+fx("[[9|without]]")+' leaving their homes.</div><div class="zh">專家預測將有更多人居住在鄉村環境中，科技使他們能夠在「不」離開家的情況下做幾乎任何他們想做的事。[cite: 6]</div></div>' +
-  ops([
-    ['without', '在不...的情況下', '[cite: 6]'],
-    ['by', '', '[cite: 6]'],
-    ['while', '', '[cite: 6]'],
-    ['instead of', '', '[cite: 6]']
-  ], 'A')
-);
-
-h += card('10', ['介系詞 / 連接詞'], 'D',
-  '<div class="stem"><div class="en">Some schools encourage students to keep their books in school lockers '+fx("[[10|rather than]]")+' (to) carry them around.</div><div class="zh">有些學校鼓勵學生把書留在學校的置物櫃，而不是帶著它們到處走。[cite: 6]</div></div>' +
-  ops([
-    ['instead', 'adv.', '[cite: 6]'],
-    ['instead of', '', '應接 N / Ving[cite: 6]'],
-    ['without', '', '[cite: 6]'],
-    ['rather than', '而不是', '連接詞，後可接原形動詞或不定詞[cite: 6]']
-  ], 'D')
-);
-
-// --- 課文挑戰題 (L22-L26) ---
-h += '<h2 id="p4">課文與講義重點 2 (轉折語)</h2>';
-h += passage("情境閱讀", [
-  [["Whether people are telling falsehoods (or not) can also be detected by observing how their eyes move as they speak.", "人們是否在說謊（falsehoods = lies）也可以透過觀察他們說話時眼睛如何移動來偵測。[cite: 6]"]]
-]);
-
-h += card('11', ['轉折語'], 'A',
-  '<div class="stem"><div class="en">When right-handed people say true things, their eyes move to their left. '+fx("[[11|In contrast]]")+', when they are lying or being “creative” with the truth, their eyes tend to drift toward their right.</div><div class="zh">當右撇子說實話時，他們的眼睛會向左移。相比之下，當他們在說謊或對真相「發揮創意」時，他們的眼睛往往會向右飄。[cite: 6]</div></div>' +
-  clue('in/by contrast 用在不同的人事物之間的對比（說實話 vs. 說謊）。on the contrary 用於前後相同的人事物。[cite: 6]') +
-  ops([
-    ['In contrast', '相比之下', '用於不同事物對比[cite: 6]'],
-    ['On the contrary', '相反地', '用於前後相同人事物的更正[cite: 6]'],
-    ['Rather', '取而代之地', '= Instead (adv)[cite: 6]'],
-    ['To be sure', '的確', '= Indeed[cite: 6]']
-  ], 'A')
-);
-
-h += card('12', ['轉折語'], 'C',
-  '<div class="stem"><div class="en">Good listeners are inclined to accept or tolerate rather than to judge and criticize. Therefore, they have fewer enemies than other people. '+fx("[[12|In fact]]")+', they are probably the most loved of people.</div><div class="zh">好的傾聽者傾向於接受或包容，而不是評判和批評。因此，他們的敵人比其他人少。事實上，他們可能是最受喜愛的人。[cite: 6]</div></div>' +
-  clue('in fact 的兩個意思：加強語氣 & 更正事實。此處為加強語氣。[cite: 6]') +
-  ops([
-    ['In contrast', '', '[cite: 6]'],
-    ['In particular', '', '[cite: 6]'],
-    ['In fact', '事實上', '加強語氣[cite: 6]'],
-    ['In other words', '', '[cite: 6]']
-  ], 'C')
-);
-
-h += card('13', ['轉折語'], 'B',
-  '<div class="stem"><div class="en">The petrol scooter, as its name suggests, uses gas as fuel. '+fx("[[13|By contrast]]")+', the electric scooter runs on electric energy stored in the battery, thus producing less air pollution.</div><div class="zh">正如其名，汽油機車使用汽油作為燃料。相比之下，電動機車依賴儲存在電池中的電能運行，從而產生較少的空氣污染。[cite: 6]</div></div>' +
-  clue('兩種不同事物 (petrol scooter 與 electric scooter) 的對比，使用 by contrast。[cite: 6]') +
-  ops([
-    ['On the contrary', '', '[cite: 6]'],
-    ['By contrast', '相比之下', '[cite: 6]'],
-    ['In addition', '', '[cite: 6]'],
-    ['Likewise', '同樣地', '= in the same way[cite: 6]']
-  ], 'B')
-);
-
-h += card('14', ['轉折語'], 'C',
-  '<div class="stem"><div class="en">Carla: Have you two been fighting? Frasier: '+fx("[[14|On the contrary]]")+'. Cam and I are here to announce the cessation of all hostilities between us.</div><div class="zh">Carla: 你們兩個在打架嗎？ Frasier: 恰恰相反。Cam 和我是來宣布我們之間所有敵意的停止。[cite: 6]</div></div>' +
-  clue('對先前提問的直接更正/反駁，使用 on the contrary。[cite: 6]') +
-  ops([
-    ['In contrast', '', '[cite: 6]'],
-    ['In other words', '', '[cite: 6]'],
-    ['On the contrary', '恰恰相反', '[cite: 6]'],
-    ['To the contrary', '', '[cite: 6]']
-  ], 'C')
-);
-
-h += card('15', ['轉折語'], 'D',
-  '<div class="stem"><div class="en">Research has proven that weather plays a part in our moods... '+fx("[[15|Accordingly]]")+', many people believe that bad weather can reduce productivity and efficiency.</div><div class="zh">研究證明天氣會影響我們的情緒... 因此，許多人認為惡劣的天氣會降低生產力和效率。[cite: 6]</div></div>' +
-  clue('accordingly = therefore = thus (adv) 因此。[cite: 6]') +
-  ops([
-    ['At most', '最多', '[cite: 6]'],
-    ['In contrast', '對比', '[cite: 6]'],
-    ['Literally', '真的；照字面地', '[cite: 6]'],
-    ['Accordingly', '因此', '[cite: 6]']
-  ], 'D')
-);
-
-h += card('16', ['轉折語'], 'D',
-  '<div class="stem"><div class="en">The eastern dragon, for example, is a benevolent creature that controls bodies of water and represents good fortune. '+fx("[[16|As such]]")+', people born in the Year of the Dragon are said to be healthy, wealthy, and wise.</div><div class="zh">例如，東方龍是一種控制水域並代表好運的仁慈生物。正因如此（作為這樣代表好運的生物），據說在龍年出生的人健康、富有且聰明。[cite: 6]</div></div>' +
-  clue('as such = as such a creature (作為這樣的生物)。[cite: 6]') +
-  ops([
-    ['On the other hand', '另一方面', '≒ however[cite: 6]'],
-    ['(Ever) since', '從那時起', '[cite: 6]'],
-    ['In contrast', '對比', '[cite: 6]'],
-    ['As such', '正因如此', '作為這樣的人事物[cite: 6]']
-  ], 'D')
-);
-
-h += card('17', ['轉折語'], 'A',
-  '<div class="stem"><div class="en">Good writers do not always write explicitly; '+fx("[[17|on the contrary]]")+', they often express what they really mean in an indirect way.</div><div class="zh">優秀的作家並不總是寫得很直白；相反地，他們經常以間接的方式表達他們真正的意思。[cite: 6]</div></div>' +
-  clue('用來更正/反駁前半句的說法 (do not always write explicitly)，故用 on the contrary。[cite: 6]') +
-  ops([
-    ['on the contrary', '相反地', '[cite: 6]'],
-    ['namely', '也就是說', '= in other words[cite: 6]'],
-    ['in a way', '某種程度上', '[cite: 6]'],
-    ['in contrast', '相比之下', '[cite: 6]']
-  ], 'A')
-);
-
-h += card('18', ['轉折語'], 'C',
-  '<div class="stem"><div class="en">He vowed to protect this place from noise pollution. However, '+fx("[[18|before long]]")+', navy airplanes started practicing in the skies above and the quietest spot was quiet no more.</div><div class="zh">他誓言保護這個地方免受噪音污染。然而，不久之後，海軍飛機開始在上方天空演習，這最安靜的地方就不再安靜了。[cite: 6]</div></div>' +
-  ops([
-    ['on the contrary', '相反地', '[cite: 6]'],
-    ['to achieve this goal', '為了達成這目標', '[cite: 6]'],
-    ['before long', '不久之後', '[cite: 6]'],
-    ['to be exact', '更精確地說', '[cite: 6]']
-  ], 'C')
-);
-
-h += card('19', ['轉折語'], 'A',
-  '<div class="stem"><div class="en">The individualistic orientation of the US culture stresses personal choice in matters of the heart. '+fx("[[19|In contrast]]")+', many traditional societies throughout the world reject individual choice and romance as a basis for marriage.</div><div class="zh">美國文化的個人主義傾向強調在感情事務上的個人選擇。相比之下，世界上許多傳統社會拒絕將個人選擇和浪漫作為婚姻的基礎。[cite: 6]</div></div>' +
-  clue('美國文化與傳統社會的不同事物對比，使用 in contrast。[cite: 6]') +
-  ops([
-    ['In contrast', '相比之下', '[cite: 6]'],
-    ['In other words', '換句話說', '[cite: 6]'],
-    ['In consequence', '因此', '= as a consequence[cite: 6]'],
-    ['In conclusion', '總之', '= in sum[cite: 6]']
-  ], 'A')
-);
-
-h += card('20', ['片語'], 'A',
-  '<div class="stem"><div class="en">Space is where our future is... Most people would think that '+fx("[[20|aside from]]")+' comets and stars there is little else out there.</div><div class="zh">太空是我們的未來所在... 大多數人會認為，除了彗星和星星之外，那裡幾乎沒有其他東西存在。[cite: 6]</div></div>' +
-  ops([
-    ['aside from', '除了...之外', '= apart from = other than[cite: 6]'],
-    ['rather than', '而不是', '[cite: 6]'],
-    ['regardless of', '不論/儘管', '[cite: 6]'],
-    ['in contrast to', '與...相比', '[cite: 6]']
-  ], 'A')
-);
-
-// --- 課文挑戰題 3 (L28-L30) ---
-h += '<h2 id="p5">課文挑戰題 3與講義重點 4 (介系詞+關代)</h2>';
-
-h += passage("情境閱讀", [
-  [["The reverse is true for left-handed people.", "對於左撇子而言，情況正好相反。[cite: 6]"]]
-]);
-
-h += card('21', ['字彙'], 'A',
-  '<div class="stem"><div class="en">Another significant type of '+fx("[[21|telling]]")+' body language is connected to love.</div><div class="zh">另一種重要的、能顯露內心活動的肢體語言與愛有關。[cite: 6]</div></div>' +
-  clue('telling (adj.) 顯露內心活動的；顯示真相的。[cite: 6]') +
-  ops([
-    ['telling', '顯露真相的', 'adj.[cite: 6]'],
-    ['speaking', '', '[cite: 6]'],
-    ['saying', '', '[cite: 6]'],
-    ['talking', '', '[cite: 6]']
-  ], 'A')
-);
-
-h += card('22', ['介系詞 + 關代'], 'A',
-  '<div class="stem"><div class="en">In the case of romantic feelings, people’s bodies subconsciously provide an indication for someone '+fx("[[22|to whom]]")+' they are attracted.</div><div class="zh">在浪漫感情的情況下，人們的身體會下意識地為他們受到吸引的對象提供暗示。[cite: 6]</div></div>' +
-  clue('關鍵字為 attracted  be attracted to 受到…的吸引。[cite: 6]') +
-  ops([
-    ['to whom', '', 'be attracted to someone[cite: 6]'],
-    ['between whom', '', '[cite: 6]'],
-    ['on whom', '', '[cite: 6]'],
-    ['with whom', '', '[cite: 6]']
-  ], 'A')
-);
-
-h += card('23', ['介系詞 + 關代'], 'D',
-  '<div class="stem"><div class="en">Understanding people’s body language is an important ability '+fx("[[23|on which]]")+' we all rely to interact with one another.</div><div class="zh">了解人們的肢體語言是我們互相交流所依賴的一項重要能力。[cite: 6]</div></div>' +
-  clue('關鍵字：rely  rely on 依賴。[cite: 6]') +
-  ops([
-    ['to which', '', '[cite: 6]'],
-    ['in which', '', '[cite: 6]'],
-    ['with which', '', '[cite: 6]'],
-    ['on which', '', 'rely on[cite: 6]']
-  ], 'D')
-);
-
-h += card('24', ['代名詞'], 'A',
-  '<div class="stem"><div class="en">The clay pot is a cultural treasure, '+fx("[[24|one that]]")+' symbolizes the origins of the tribes\' ancestors.</div><div class="zh">這個陶罐是一件文化珍寶，象徵著部落祖先的起源。[cite: 6]</div></div>' +
-  clue('one 可用來取代前面出現過的可數名詞 (a cultural treasure)。[cite: 6]') +
-  ops([
-    ['one that', '', 'one 代替 a cultural treasure，that 作為主詞[cite: 6]'],
-    ['that', '', 'that 前不可有逗點[cite: 6]'],
-    ['on which', '', '後接完整子句，但此處缺主詞 symbolizes[cite: 6]'],
-    ['through which', '', '同上[cite: 6]']
-  ], 'A')
-);
-
-h += card('25', ['介系詞 + 關代'], 'C',
-  '<div class="stem"><div class="en">There in the window at White\'s Toy Store was the shiny new bike '+fx("[[25|on which]]")+' Matthew had set his heart.</div><div class="zh">懷特玩具店的櫥窗裡放著那輛閃亮的新自行車，那是馬修一心想得到的。[cite: 6]</div></div>' +
-  clue('set one’s heart on sth 希望得到/追求。[cite: 6]') +
-  ops([
-    ['what', '', 'what +不完整子句[cite: 6]'],
-    ['which', '', 'which + 不完整子句[cite: 6]'],
-    ['on which', '', 'set his heart on the bike[cite: 6]'],
-    ['that', '', 'that + 完整子句 = 名詞子句[cite: 6]']
-  ], 'C')
-);
-
-h += card('26', ['關係副詞替換'], 'C',
-  '<div class="stem"><div class="en">April 1 is the day '+fx("[[26|upon which]]")+' we are reminded of what we are on the other three hundred and sixty-four (days).</div><div class="zh">四月一日這天提醒了我們，在其他三百六十四天裡我們是什麼樣子。[cite: 6]</div></div>' +
-  clue('與日子有關的名詞通常用 on / upon (on my birthday / upon which)。[cite: 6]') +
-  ops([
-    ['that', '', '[cite: 6]'],
-    ['which', '', '[cite: 6]'],
-    ['upon which', '', 'on = upon[cite: 6]'],
-    ['for which', '', '[cite: 6]']
-  ], 'C')
-);
-
-h += card('27', ['關係代名詞'], 'B',
-  '<div class="stem"><div class="en">Tom was down because he broke up with his girlfriend, '+fx("[[27|whom]]")+' he had been dating for one year.</div><div class="zh">湯姆很沮喪，因為他和他約會了一年的女友分手了。[cite: 6]</div></div>' +
-  clue('date sb (與...約會) 作為及物動詞 (Vt.) 缺受詞，故用 whom。[cite: 6]') +
-  ops([
-    ['that', '', '[cite: 6]'],
-    ['whom', '', 'he had been dating whom[cite: 6]'],
-    ['with whom', '', '若用 go on a date with sb 則可，但 dating 是 Vt.[cite: 6]'],
-    ['what', '', '[cite: 6]']
-  ], 'B') // NOTE: 講義中標註 B 才是正確用法。
-);
-
-h += card('28', ['介系詞 + 關代'], 'D',
-  '<div class="stem"><div class="en">We try not to help a child with a task '+fx("[[28|at which]]")+' he feels (that) he can succeed.</div><div class="zh">我們盡量不幫助孩子完成他覺得自己能成功的任務。[cite: 6]</div></div>' +
-  clue('at a task (在任務上)。[cite: 6]') +
-  ops([
-    ['unless', '', '不合理[cite: 6]'],
-    ['until', '', '不合理[cite: 6]'],
-    ['which', '', 'which + 不完整子句[cite: 6]'],
-    ['at which', '', 'at which + 完整子句[cite: 6]']
-  ], 'D')
-);
-
-h += card('29', ['介系詞 + 關代'], 'D',
-  '<div class="stem"><div class="en">They grade and report on the quality of products, customer service, and environment of the stores '+fx("[[29|to which]]")+' they are assigned.</div><div class="zh">他們針對被指派前往的店家的產品品質、客戶服務和環境進行評分和報告。[cite: 6]</div></div>' +
-  clue('be assigned to 被指派到...[cite: 6]') +
-  ops([
-    ['in that', '', '[cite: 6]'],
-    ['with which', '', '[cite: 6]'],
-    ['for that', '', '[cite: 6]'],
-    ['to which', '', 'assigned to[cite: 6]']
-  ], 'D')
-);
-
-h += card('30', ['介系詞 + 疑問詞'], 'D',
-  '<div class="stem"><div class="en">The value of a violin depends on a number of factors. Some of these elements include when and '+fx("[[30|by whom]]")+' the violin was made.</div><div class="zh">小提琴的價值取決於許多因素。其中一些要素包括小提琴是何時製造的，以及由誰製造的。[cite: 6]</div></div>' +
-  clue('by whom the violin was made (間接問句)。被動語態的行為者用 by。[cite: 6]') +
-  ops([
-    ['what', '', 'be made of (用某種材料製成)，此處不合[cite: 6]'],
-    ['of which', '', 'which 需要先行詞，但 what 不用[cite: 6]'],
-    ['of whom', '', '[cite: 6]'],
-    ['by whom', '', '介系詞 + 關代 + 完整子句 (間接問句)[cite: 6]']
-  ], 'D')
-);
-
-h += card('31', ['強調句型'], 'C',
-  '<div class="stem"><div class="en">It was also during this year '+fx("[[31|that]]")+' Gorbachev and Bush held the first summit to mark the end of the Cold War.</div><div class="zh">戈巴契夫和布希也是在這一年舉行了首屆高峰會，標誌著冷戰的結束。[cite: 6]</div></div>' +
-  clue('強調句型/分裂句：it is + adv. + that + 完整子句。[cite: 6]') +
-  ops([
-    ['which', '', '[cite: 6]'],
-    ['in which', '', '[cite: 6]'],
-    ['that', '分裂句', 'It was ... that ...[cite: 6]'],
-    ['in that', '', '因為[cite: 6]']
-  ], 'C')
-);
-
-h += card('32', ['介系詞 + 關代'], 'A',
-  '<div class="stem"><div class="en">The only job '+fx("[[32|for which]]")+' no women is qualified or can be qualified is sperm donor.</div><div class="zh">唯一沒有女性具備資格或可能具備資格的工作是精子捐贈者。[cite: 6]</div></div>' +
-  clue('be qualified for 符合…資格。[cite: 6]') +
-  ops([
-    ['for which', '', 'qualified for[cite: 6]'],
-    ['that', '', '[cite: 6]'],
-    ['what', '', '[cite: 6]'],
-    ['on which', '', '[cite: 6]']
-  ], 'A')
-);
-
-h += card('33', ['關代 / 關副'], 'B',
-  '<div class="stem"><div class="en">September 21, 1999 is a day '+fx("[[33|that]]")+' the people of Taiwan will never forget. It is the day '+fx("[[34|when]]")+' the island was struck by its worst earthquake in 100 years.</div><div class="zh">1999 年 9 月 21 日是台灣人民永遠不會忘記的一天。這是該島遭受百年來最嚴重地震襲擊的一天。[cite: 6]</div></div>' +
-  clue('第一個空格：forget 少受詞故用關代 that。第二個空格：the island was struck... 為完整子句，故用關副 when。[cite: 6]') +
-  ops([
-    ['when', '', '第 2 題正解 (關副 + 完整子句)[cite: 6]'],
-    ['that', '', '第 1 題正解 (關代受詞)[cite: 6]'],
-    ['where', '', '[cite: 6]'],
-    ['at which', '', '[cite: 6]']
-  ], 'B') // 這裡為了卡片顯示，以第一題選項為主。
-);
-
-// --- 課文挑戰題 4 (L32-L49) ---
-h += '<h2 id="p6">課文挑戰題 4</h2>';
-
-h += card('34', ['介系詞'], 'C',
-  '<div class="stem"><div class="en">Under the circumstances, their eyes do most of the “talking.” Initially, they may glance at a person from a distance and '+fx("[[34|for]]")+' just slightly longer than normal.</div><div class="zh">在這些情況下，他們的眼睛負責大部分的「交談」。最初，他們可能會從遠處瞥一個人，且停留時間比平常稍久一點。[cite: 6]</div></div>' +
-  clue('“and” 的前後詞性要對等：from a distance 和 for just slightly longer than normal。for 表持續一段時間。[cite: 6]') +
-  ops([
-    ['continuously', '', '無法與 just slightly longer 組合[cite: 6]'],
-    ['lasting', '', '無 lasting 可修飾的名詞[cite: 6]'],
-    ['for', '持續', '對稱 from a distance[cite: 6]'],
-    ['until', '', '意思不合理[cite: 6]']
-  ], 'C')
-);
-
-h += passage("情境閱讀與片語", [
-  [["Afterward, they may look away and finally rest their eyes on him or her again for an even longer period.", "之後，他們可能會移開視線，最後再次將目光停留在對方身上更長的時間。(rest one's eyes on 把視線停留在...)[cite: 6]"]],
-  [["Furthermore, they automatically track or repeat his or her actions without knowing it. If he or she sits back, they will follow suit. If that person takes a sip of water, they will probably do the same.", "此外，他們會不自覺地自動追蹤或重複對方的動作。如果對方靠後坐，他們也會照做。如果那個人喝了一口水，他們可能也會跟著做。[cite: 6]"]],
-  [["Aside from copying behavior, they often can’t help pointing their feet and shoulders toward the one they adore or standing closer to the object of their affection than to others.", "除了模仿行為之外，他們往往會忍不住將腳和肩膀指向他們愛慕的人，或者站得離他們愛慕的對象比離其他人更近。(the object of one's affection 某人愛慕的對象)[cite: 6]"]],
-  [["All of the previously mentioned points reveal the idea that one of the best methods for interpreting people’s thoughts and emotions is to pay attention to their body language.", "所有前面提到的觀點揭示了一個想法：解讀人們想法和情感最好的方法之一，就是注意他們的肢體語言。[cite: 6]"]]
-]);
-
-h += card('35', ['介系詞'], 'C',
-  '<div class="stem"><div class="en">By understanding the signals that people send out '+fx("[[35|by / with]]")+' their body language, we may interact in a more meaningful way with our fellow human beings. Best of all, we can do it without even saying a single word!</div><div class="zh">藉由了解人們透過肢體語言發出的訊號，我們可以更有意義地與我們的人類同胞互動。最棒的是，我們甚至不用說一個字就能做到！[cite: 6]</div></div>' +
-  clue('講義提及：by + Ving (表方法) / by + N (通訊/交通工具) / with + N (表其它工具 ≒ using)。此處考題選 by (或 with)。[cite: 6]') +
-  ops([
-    ['in', '', '[cite: 6]'],
-    ['with', '使用', 'with + N (工具)[cite: 6]'],
-    ['by', '藉由', '[cite: 6]'],
-    ['from', '', '[cite: 6]']
-  ], 'C')
-);
-
-// --- 課本句型 1 ---
-h += '<h2 id="p7">課本句型 1 (the belief/news/fact... that)</h2>';
-h += passage("句型提示", [
-  [["the belief/news/fact... that + 完整子句 (同位語子句)。", "that 作關代時，引導形容詞子句，後接不完整子句。[cite: 6]"]]
-]);
-
-h += '<div class="stem"><div class="zh" style="color:inherit">1. 我們支持兩性應享有平等權利的想法。(the idea)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|We support the idea that the two sexes should share equal rights.]]")+'[cite: 6]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">2. Alice 瘦了30 公斤的事實讓大家都很驚訝。(the fact)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|The fact that Alice has lost 30 kilograms surprised everybody.]]")+'[cite: 6]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">3. 很少有人會質疑抽菸會導致肺癌的理論。(the theory)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Very few people would question the theory that smoking causes lung cancer.]]")+'[cite: 6]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">4. 溫室效應加劇的事實難以被忽略。(the fact)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|The fact that greenhouse effect has worsened is hard to ignore.]]")+'[cite: 6]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">5. 可能獨自死在雪地裡的想法讓她恐懼。(the thought)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|The thought that she might die alone in the snow terrified her.]]")+'[cite: 6]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">6. 村民們漸漸失去救難隊會來幫他們的希望。(the hope)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|The villagers gradually lost (the) hope that a rescue team would come to their aid.]]")+'[cite: 6]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">7. 我們班上每個人都同意舉辦耶誕派對的提案。(the proposal)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Everyone in our class agreed to the proposal that we hold a Christmas party.]]")+'[cite: 6]</div></div>';
-
-
-// --- 課本句型 2 ---
-h += '<h2 id="p8">課本句型 2 (忍不住；不得不)</h2>';
-h += passage("句型提示", [
-  [["I couldn't help but laugh. 不得不…；忍不住…", "= I couldn't but laugh. / = I couldn't help laughing. / = I had no choice but to leave.[cite: 6]"]]
-]);
-
-h += '<div class="stem"><div class="zh" style="color:inherit">1. 因為昨夜熬夜，Jill 忍不住在公車上打瞌睡。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Jill couldn’t help dozing off / couldn’t (help) but doze off on the bus because she stayed up late last night.]]")+'[cite: 6]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">2. 一看到那隻大老鼠，Lydia 忍不住大聲尖叫。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Upon seeing the huge rat, Lydia couldn’t help screaming / couldn’t (help) but scream out loud.]]")+'[cite: 6]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">3. 聽著老師單調的聲音，Ray 忍不住在課堂上睡著了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Listening to the teacher’s monotonous voice, Ray couldn’t help falling asleep / couldn’t (help) but fall asleep in class.]]")+'[cite: 6]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">4. 雖然他們現在生活很幸福，Fiona 總忍不住想像沒 Shrek 的生活。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Though they live a happy life now, Fiona can’t help imagining / can’t (help) but imagine life without Shrek.]]")+'[cite: 6]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">5. 當那位運動員終於抵達終點時，觀眾忍不住歡呼起來。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|When the athlete finally reached the finish line, the spectators couldn’t help cheering / couldn’t (help) but cheer.]]")+'[cite: 6]</div></div>';
-
-h += '<div class="stem"><div class="zh" style="color:inherit">6. 被學生霸凌了一整年，那位老師不得不辭去教職。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Having been bullied by students for one year, the teacher couldn’t help resigning / couldn’t help (but) resign from the teaching post.]]")+'[cite: 6]</div></div>';
-
-
-document.getElementById('app').innerHTML = h;
-
-const secs=[
-  ['p1','挑戰題 1'],
-  ['p2','挑戰題 2'],
-  ['p3','講義重點 1'],
-  ['p4','講義重點 2'],
-  ['p5','講義重點 4'],
-  ['p6','挑戰題 4'],
-  ['p7','句型 1'],
-  ['p8','句型 2']
-];
+const st=(en,zh)=>'<div class="stem"><div class="en">'+fx(en)+'</div><div class="zh">'+zh+'</div></div>';
+
+/* === Part 1: L1 ~ L18 課文講解與情境閱讀 === */
+const h1 = '<h2 id="p1">L1 ~ L18 課文講解</h2>' + [
+  card("L1", ["文法", "名詞子句同位語 that"], "C",
+    st("The theory [[L1|that]] spoken words account for only about seven percent of communication involving emotions may surprise many people.", "口語只佔涉及情感溝通約百分之七的理論，可能會讓許多人感到驚訝。") +
+    clue("<code>that + 完整子句</code> 為名詞子句，在此當 <code>The theory</code> 的同位語（說明該理論的內容）。") +
+    ops([
+      ["which", "", "which + 不完整子句。"],
+      ["in which", "", "in which + 完整子句 = and in this theory，但此處是說明理論本身是什麼，故用同位語 that。"],
+      ["that", "引導名詞子句", "作同位語，後接完整子句。"],
+      ["what", "", "what + 不完整子句且前無先行詞。"]
+    ], "C")
+  ),
+
+  card("L3", ["字彙", "字根 -pos / -pon = put"], "B",
+    st("This was first [[L3|proposed]] by Dr. Albert Mehrabian, a famous psychology professor.", "這首先是由著名的心理學教授 Albert Mehrabian 博士所提出的。") +
+    clue("字根 <code>-pos / -pon / -posit = put</code>；字首 <code>pro- = forward</code>（向前放 → 提出／提議）。") +
+    ops([
+      ["composed", "作曲；組成", "= put together（把人事物放一起）。"],
+      ["proposed", "提出；提議", "= put … forward（把理論或計畫放到前面提出）。"],
+      ["imposed", "強加於", "= put … on …（將不好的事物或稅金強加在…上）。"],
+      ["disposed", "處理掉", "= put … away（賣掉、送人、丟掉，常搭配 of）。"]
+    ], "B")
+  ),
+
+  card("L5", ["代名詞", "they 代替 our bodies"], "A",
+    st("According to his studies, we achieve about 55% of our emotional communication with our bodies, for [[L5|they]] typically demonstrate our true feelings and what we’re actually thinking.", "根據他的研究，我們約有 55% 的情感溝通是透過身體達成的，因為它們通常展現出我們真實的感受和我們實際在想什麼。") +
+    clue("<code>for</code> 在此為對等連接詞表「因為」（前面須加逗號）。後面子句已有連接詞 <code>for</code>，只需填入一般代名詞主詞 <code>they</code> 代替前面的複數名詞 <code>our bodies</code>。") +
+    ops([
+      ["they", "它們", "= our bodies。"],
+      ["which", "", "前面已經有連接詞 for，不可再用關係代名詞 which。"],
+      ["those", "", "those 作代名詞時後面需加介片或關係子句修飾。"],
+      ["what", "", "what 當主詞時視為單數（動詞應為 demonstrates），且語意不合。"]
+    ], "A") +
+    passage("L7 ~ L8 課文段落", [[
+      ["Therefore, understanding people’s body language is an important ability to help us better interpret others’ messages.", "因此，了解人們的肢體語言是幫助我們更好解讀他人訊息的重要能力。"]
+    ]])
+  ),
+
+  card("L9", ["介系詞片語", "helpful in + V-ing"], "B",
+    st("Being able to read body language well is helpful [[L9|in determining]] whether or not someone is telling the truth.", "能夠讀懂肢體語言，在判斷某人是否說實話時很有幫助。") +
+    clue("<code>in + V-ing = when (we are) + V-ing</code>（在做…方面／在做…的時候）：<code>be helpful in determining...</code>。") +
+    ops([
+      ["that it determines", "", "語意與結構皆不合邏輯。"],
+      ["in determining", "在判斷...時", "= when (we are) determining。"],
+      ["to determine", "", "helpful 後表「在某方面有幫助」慣用 in + V-ing。"],
+      ["which determines", "", "which 指代不明。"]
+    ], "B") +
+    passage("L11 ~ L16 課文段落", [[
+      ["【L11】When people are lying, there are usually three telltale signs: making stiff body movements, touching or scratching themselves, and making eye movements.", "當人們說謊時，通常有三個明顯的跡象（telltale signs = obvious signs）：僵硬的身體動作、觸摸或抓撓自己，以及眼球的轉動。"],
+      ["【L13】Typically, liars exhibit fewer arm and hand gestures. When they do make such gestures, their movements are usually stiff, and their hands tend to stay close to the body rather than move in an outward direction.", "通常，說謊者表現出較少的手臂和手部動作。當他們確實做出這類手勢時，動作通常是僵硬的，而且他們的手傾向於貼近身體，而不是向外移動。"]
+    ]])
+  ),
+
+  card("L17", ["慣用語", "can't help but + VR 忍不住"], "B",
+    st("Moreover, liars often [[L17|can’t help but]] touch or scratch their faces, their necks, or behind their ears.", "此外，說謊者往往會忍不住觸摸或抓撓他們的臉、脖子或耳後。") +
+    clue("觀察空格後是原形動詞 <code>touch or scratch</code>！<br>• <code>can't (help) but + VR</code><br>• <code>can't help + V-ing</code><br>• <code>have no choice but + to VR</code>") +
+    ops([
+      ["can’t help", "", "後面應接動名詞 V-ing（touching or scratching）。"],
+      ["can’t help but", "忍不住", "後接原形動詞 touch or scratch。"],
+      ["have no choice but", "", "後面應接帶 to 不定詞（have no choice but to touch）。"],
+      ["can’t resist", "", "後面應接動名詞 V-ing。"]
+    ], "B")
+  )
+].join('');
+
+/* === Part 2: 講義重點 1 (介系詞片語) === */
+const h2 = '<h2 id="p2">講義重點 1 (L19~L20 介系詞片語與延伸練習)</h2>' +
+  passage("L19 ~ L20 課文句型提示", [[
+    ["They sometimes rub their eyes without being conscious of it as well.", "他們有時也會揉眼睛而不自覺／而沒有察覺。"],
+    ["They sometimes rub their eyes instead of looking into yours.", "他們有時會揉眼睛而不是直視你的眼睛。"]
+  ]]) + [
+  card("重點1-1", ["介系詞", "Due to 由於"], "C", st("1. [[重點1-1|Due to]] bad management, the company sustained great losses in business.", "由於管理不善，該公司在業務上蒙受了巨大損失。") + ops([["Instead of","不是...而是...",""],["Without","沒有",""],["Due to","由於","引導原因名詞片語。"],["In regard to","關於","= regarding = about。"]], "C")),
+  card("重點1-2", ["介系詞", "without 在不…的情況下"], "D", st("2. One cannot be creative [[重點1-2|without]] being out there and alone...", "一個人在不跳脫常規且獨處的情況下是無法發揮創造力的…") + ops([["instead of","不是...而是",""],["apart from","除...外",""],["besides","除...外 (包含)",""],["without","在不...的情況下","cannot ... without ...（沒有…就無法…）。"]], "D")),
+  card("重點1-3", ["介系詞", "instead of 而非"], "D", st("3. Our habit of relying on intuition [[重點1-3|instead of]] instructions may cause catastrophic consequences.", "我們依賴直覺而非指示的習慣可能會導致災難性的後果。") + ops([["but rather","","需搭配 not... but rather...。"],["other than","","除了。"],["without","","沒有。"],["instead of","而非","取代。"]], "D")),
+  card("重點1-4", ["介系詞", "without 而不…"], "A", st("4. Experts predict that more people will live in rural settings, with technology enabling them to do almost anything they like [[重點1-4|without]] leaving their homes.", "專家預測將有更多人居住在鄉村環境中，科技使他們能夠在「不」離開家的情況下做幾乎任何他們想做的事。") + ops([["without","在不...的情況下","不必離開家。"],["by","","藉由。"],["while","","當…時。"],["instead of","","而不是。"]], "A")),
+  card("重點1-5", ["連接詞", "rather than + (to) VR"], "D", st("5. Some schools encourage students to keep their books in school lockers [[重點1-5|rather than]] (to) carry them around.", "有些學校鼓勵學生把書留在學校的置物櫃，而不是帶著它們到處走。") + ops([["instead","adv.","副詞不能連接兩個動詞結構。"],["instead of","","介系詞後應接 N / V-ing（carrying）。"],["without","","介系詞後應接 V-ing。"],["rather than","而不是","準對等連接詞，後可接與前面對稱的原形動詞或不定詞 (to) carry。"]], "D"))
+].join('');
+
+/* === Part 3: L22~L26 課文與講義重點 2 (轉折語) === */
+const h3 = '<h2 id="p3">L22 ~ L26 課文與講義重點 2 (轉折語辨析)</h2>' +
+  passage("L22 課文段落", [[
+    ["Whether people are telling falsehoods (or not) can also be detected by observing how their eyes move as they speak.", "人們是否在說謊（falsehoods = lies）也可以透過觀察他們說話時眼睛如何移動來偵測。"]
+  ]]) + [
+  card("L24", ["轉折語", "In contrast 相比之下"], "A",
+    st("When right-handed people say true things, their eyes move to their left. [[L24|In contrast]], when they are lying or being “creative” with the truth, their eyes tend to drift toward their right.", "當右撇子說實話時，他們的眼睛會向左移。相比之下，當他們在說謊或對真相「發揮創意」時，他們的眼睛往往會向右飄。") +
+    clue("<code>in / by contrast</code> 用在不同的人事物或兩種不同情況之間的對比（說實話眼睛往左 vs. 說謊眼睛往右）；<code>on the contrary</code> 則用於反駁／更正前一句對同一件事的否定說法。") +
+    ops([
+      ["In contrast", "相比之下", "用於不同情況或事物的對比。"],
+      ["On the contrary", "恰恰相反", "用於反駁前句的否定說法。"],
+      ["Rather", "更確切地說；相反地", "= Instead (adv.)，常接在否定句後。"],
+      ["To be sure", "誠然；的確", "後常接 but 作讓步。"]
+    ], "A")
+  ),
+  card("重點2-1", ["轉折語", "In fact 事實上（加強語氣）"], "C", st("1. Good listeners are inclined to accept or tolerate rather than to judge and criticize. Therefore, they have fewer enemies than other people. [[重點2-1|In fact]], they are probably the most loved of people.", "好的傾聽者傾向於接受或包容，而不是評判和批評。因此，他們的敵人比其他人少。事實上，他們可能是最受喜愛的人。") + clue("<code>in fact</code> 的兩個功能：加強遞進語氣 ＆ 更正事實。此處由「敵人較少」進一步加強為「其實是最受喜愛的人」。") + ops([["In contrast","",""],["In particular","",""],["In fact","事實上","加強語氣。"],["In other words","",""]], "C")),
+  card("重點2-2", ["轉折語", "By contrast 相比之下"], "B", st("2. The petrol scooter, as its name suggests, uses gas as fuel. [[重點2-2|By contrast]], the electric scooter runs on electric energy stored in the battery, thus producing less air pollution.", "正如其名，汽油機車使用汽油作為燃料。相比之下，電動機車依賴儲存在電池中的電能運行，從而產生較少的空氣污染。") + clue("兩種不同事物（<code>petrol scooter</code> 與 <code>electric scooter</code>）的對比，使用 <code>By contrast</code>。") + ops([["On the contrary","",""],["By contrast","相比之下","對比兩不同主體。"],["In addition","",""],["Likewise","同樣地","= in the same way。"]], "B")),
+  card("重點2-3", ["轉折語", "On the contrary 恰恰相反"], "C", st("3. Carla: Have you two been fighting? Frasier: [[重點2-3|On the contrary]]. Cam and I are here to announce the cessation of all hostilities between us.", "Carla：你們兩個在打架嗎？ Frasier：恰恰相反。Cam 和我是來宣布停止我們之間的所有敵意的。") + clue("對先前提問「在打架嗎？」的直接反駁與更正，使用 <code>On the contrary</code>。") + ops([["In contrast","",""],["In other words","",""],["On the contrary","恰恰相反","直接反駁對方猜測。"],["To the contrary","","常作後位修飾（evidence to the contrary）。"]], "C")),
+  card("重點2-4", ["轉折語", "Accordingly 因此"], "D", st("4. Research has proven that weather plays a part in our moods... [[重點2-4|Accordingly]], many people believe that bad weather can reduce productivity and efficiency.", "研究證明天氣會影響我們的情緒… 因此，許多人認為惡劣的天氣會降低生產力和效率。") + clue("<code>accordingly = therefore = thus</code> (adv.) 因此。") + ops([["At most","最多",""],["In contrast","對比",""],["Literally","照字面地",""],["Accordingly","因此","表因果推論。"]], "D")),
+  card("重點2-5", ["轉折語", "As such 正因如此"], "D", st("5. The eastern dragon, for example, is a benevolent creature that controls bodies of water and represents good fortune. [[重點2-5|As such]], people born in the Year of the Dragon are said to be healthy, wealthy, and wise.", "例如，東方龍是一種控制水域並代表好運的仁慈生物。正因如此（作為這樣代表好運的生物），據說在龍年出生的人健康、富有且聰明。") + clue("<code>as such = as such a creature</code>（作為這樣的人事物；正因如此）。") + ops([["On the other hand","另一方面","≒ however。"],["(Ever) since","從那時起",""],["In contrast","對比",""],["As such","正因如此","承接前句身分或特質。"]], "D")),
+  card("重點2-6", ["轉折語", "on the contrary 相反地"], "A", st("6. Good writers do not always write explicitly; [[重點2-6|on the contrary]], they often express what they really mean in an indirect way.", "優秀的作家並不總是寫得很直白；相反地，他們經常以間接的方式表達他們真正的意思。") + clue("用來更正／反駁前半句的否定說法（<code>do not always write explicitly</code>），故用 <code>on the contrary</code>。") + ops([["on the contrary","相反地","前否定、後更正。"],["namely","也就是說","= in other words。"],["in a way","某種程度上",""],["in contrast","相比之下",""]], "A")),
+  card("重點2-7", ["時間片語", "before long 不久之後"], "C", st("7. He vowed to protect this place from noise pollution. However, [[重點2-7|before long]], navy airplanes started practicing in the skies above and the quietest spot was quiet no more.", "他誓言保護這個地方免受噪音污染。然而，不久之後，海軍飛機開始在上方天空演習，這個最安靜的地方就不再安靜了。") + ops([["on the contrary","相反地",""],["to achieve this goal","為了達成這目標",""],["before long","不久之後","= soon。"],["to be exact","更精確地說",""]], "C")),
+  card("重點2-8", ["轉折語", "In contrast 相比之下"], "A", st("8. The individualistic orientation of the US culture stresses personal choice in matters of the heart. [[重點2-8|In contrast]], many traditional societies throughout the world reject individual choice and romance as a basis for marriage.", "美國文化的個人主義傾向強調在感情事務上的個人選擇。相比之下，世界上許多傳統社會拒絕將個人選擇和浪漫作為婚姻的基礎。") + clue("美國文化與傳統社會的兩方對比，使用 <code>In contrast</code>。") + ops([["In contrast","相比之下",""],["In other words","換句話說",""],["In consequence","因此","= as a consequence。"],["In conclusion","總之","= in sum。"]], "A")),
+  card("重點2-9", ["介系詞片語", "aside from 除了…之外"], "A", st("9. Space is where our future is... Most people would think that [[重點2-9|aside from]] comets and stars there is little else out there.", "太空是我們的未來所在… 大多數人會認為，除了彗星和星星之外，那裡幾乎沒有其他東西存在。") + ops([["aside from","除了...之外","= apart from = other than。"],["rather than","而不是",""],["regardless of","不論/儘管",""],["in contrast to","與...相比",""]], "A"))
+].join('');
+
+/* === Part 4: L26~L49 課文與講義重點 4 (介系詞 + 關代) === */
+const h4 = '<h2 id="p4">L26 ~ L49 課文與講義重點 4 (介系詞 + 關代)</h2>' +
+  passage("L26 課文段落", [[
+    ["The reverse is true for left-handed people.", "對於左撇子而言，情況正好相反。"]
+  ]]) + [
+  card("L27", ["字彙", "telling 顯露真相的/洩漏內心的"], "A",
+    st("Another significant type of [[L27|telling]] body language is connected to love.", "另一種重要的、能顯露內心活動的肢體語言與愛有關。") +
+    clue("<code>telling</code> (adj.) 顯露內心活動的；顯示真相的；說明問題的（如 <i>a telling detail / sign</i>）。") +
+    ops([["telling","顯露真相的","adj."],["speaking","",""],["saying","",""],["talking","",""]], "A")
+  ),
+  card("L28", ["介系詞 + 關代", "to whom (be attracted to)"], "A",
+    st("In the case of romantic feelings, people’s bodies subconsciously provide an indication for someone [[L28|to whom]] they are attracted.", "在浪漫感情的情況下，人們的身體會下意識地為他們受到吸引的對象提供暗示。") +
+    clue("關鍵字為 <code>attracted</code> → <code>be attracted <b>to</b> someone</code>（受到某人的吸引），將介系詞移至關代前即為 <code>to whom</code>。") +
+    ops([["to whom","","be attracted to someone。"],["between whom","",""],["on whom","",""],["with whom","",""]], "A")
+  ),
+  card("重點4-1", ["介系詞 + 關代", "on which (rely on)"], "D", st("1. Understanding people’s body language is an important ability [[重點4-1|on which]] we all rely to interact with one another.", "了解人們的肢體語言是我們互相交流所依賴的一項重要能力。") + clue("關鍵字：<code>rely</code> → <code>rely <b>on</b> an ability</code>。") + ops([["to which","",""],["in which","",""],["with which","",""],["on which","","rely on。"]], "D")),
+  card("重點4-2", ["同位語代名詞 + 關代", "one that"], "A", st("2. The clay pot is a cultural treasure, [[重點4-2|one that]] symbolizes the origins of the tribes' ancestors.", "這個陶罐是一件文化珍寶，象徵著部落祖先的起源。") + clue("<code>one</code> 用來取代前面出現過的可數單數名詞（<code>a cultural treasure</code>）作同位語，後接關係代名詞主詞 <code>that</code> 修飾 <code>one</code>。") + ops([["one that","","one 代替 a cultural treasure，that 作 symbolizes 的主詞。"],["that","","that 前不可有逗點。"],["on which","","介+關代後須接完整子句，但此處 symbolizes 缺主詞。"],["through which","","同上，缺主詞。"]], "A")),
+  card("重點4-3", ["介系詞 + 關代", "on which (set one's heart on)"], "C", st("3. There in the window at White's Toy Store was the shiny new bike [[重點4-3|on which]] Matthew had set his heart.", "懷特玩具店的櫥窗裡放著那輛閃亮的新自行車，那是馬修一心想得到的。") + clue("片語：<code>set one’s heart <b>on</b> sth</code>（一心渴望得到／追求某物）。") + ops([["what","","前已有先行詞 bike。"],["which","","後方的 Matthew had set his heart 結構完整，缺介系詞 on。"],["on which","","set his heart on the bike。"],["that","","缺介系詞 on。"]], "C")),
+  card("重點4-4", ["介系詞 + 關代", "upon which (= on which)"], "C", st("4. April 1 is the day [[重點4-4|upon which]] we are reminded of what we are on the other three hundred and sixty-four (days).", "四月一日這天提醒了我們，在其他三百六十四天裡我們是什麼樣子。") + clue("與「日子（the day）」搭配的介系詞為 <code>on / upon</code>（<code>upon which = on which = when</code>）。") + ops([["that","",""],["which","","後接完整子句缺介系詞。"],["upon which","","on = upon，後接完整子句。"],["for which","",""]], "C")),
+  card("重點4-5", ["關係代名詞受格", "whom (date 為及物動詞)"], "B", st("5. Tom was down because he broke up with his girlfriend, [[重點4-5|whom]] he had been dating for one year.", "湯姆很沮喪，因為他和他交往了一年的女友分手了。") + clue("注意：<code>date sb</code>（與某人約會／交往）中的 <code>date</code> 是<b>及物動詞（Vt.）</b>，直接接人當受詞（不加 with！），且前面有逗號，故用受格關代 <code>whom</code>！") + ops([["that","","逗號後不可用 that。"],["whom","","date 為及物動詞，whom 直接作 dating 的受詞。"],["with whom","","陷阱！date sb 不加 with（若說 go on a date with sb 才有 with）。"],["what","",""]], "B")),
+  card("重點4-6", ["介系詞 + 關代", "at which (succeed at a task)"], "D", st("6. We try not to help a child with a task [[重點4-6|at which]] he feels (that) he can succeed.", "我們盡量不幫助孩子完成他覺得自己能成功的任務。") + clue("<code>succeed <b>at</b> a task</code>（在某項任務上成功）。") + ops([["unless","","不合理。"],["until","","不合理。"],["which","","後為完整子句，缺介系詞。"],["at which","","succeed at the task。"]], "D")),
+  card("重點4-7", ["介系詞 + 關代", "to which (be assigned to)"], "D", st("7. They grade and report on the quality of products, customer service, and environment of the stores [[重點4-7|to which]] they are assigned.", "他們針對被指派前往的店家的產品品質、客戶服務和環境進行評分和報告。") + clue("<code>be assigned <b>to</b> the stores</code>（被指派到那些店家）。") + ops([["in that","","因為。"],["with which","",""],["for that","",""],["to which","","be assigned to。"]], "D")),
+  card("重點4-8", ["介系詞 + 疑問詞", "by whom (被誰製造)"], "D", st("8. The value of a violin depends on a number of factors. Some of these elements include when and [[重點4-8|by whom]] the violin was made.", "小提琴的價值取決於許多因素。其中一些要素包括小提琴是何時製造的，以及由誰製造的。") + clue("<code>when and by whom the violin was made</code>（間接問句：何時以及由誰所製造的）。") + ops([["what","",""],["of which","",""],["of whom","",""],["by whom","","被動語態的製造者用 by whom。"]], "D")),
+  card("重點4-9", ["強調分裂句", "It was ... that ..."], "C", st("9. It was also during this year [[重點4-9|that]] Gorbachev and Bush held the first summit to mark the end of the Cold War.", "戈巴契夫和布希也是在這一年舉行了首屆高峰會，標誌著冷戰的結束。") + clue("強調句型／分裂句：<code>It was + 時間副詞片語 (during this year) + <b>that</b> + 完整子句</code>。") + ops([["which","",""],["in which","","前面已是介系詞片語 during this year，不可再用 in which。"],["that","分裂句","It was ... that ...。"],["in that","","因為。"]], "C")),
+  card("重點4-10", ["介系詞 + 關代", "for which (be qualified for)"], "A", st("10. The only job [[重點4-10|for which]] no woman is qualified or can be qualified is sperm donor.", "唯一沒有女性具備資格或可能具備資格的工作是精子捐贈者。") + clue("<code>be qualified <b>for</b> a job</code>（符合某工作的資格）。") + ops([["for which","","qualified for the job。"],["that","","缺介系詞 for。"],["what","",""],["on which","",""]], "A")),
+  card("重點4-11", ["關代受詞 vs. 關係副詞", "that (受詞) / when (關副)"], "B, A", st("11. September 21, 1999 is a day [[重點4-11-1|that]] the people of Taiwan will never forget. It is the day [[重點4-11-2|when]] the island was struck by its worst earthquake in 100 years.", "1999 年 9 月 21 日是台灣人民永遠不會忘記的一天。這是該島遭受百年來最嚴重地震襲擊的一天。") + clue("• 第 1 空：及物動詞 <code>forget</code> 缺受詞，故用關係代名詞 <code>that / which</code>。<br>• 第 2 空：後方 <code>the island was struck...</code> 為完整被動子句，故用關係副詞 <code>when</code>（= on which）。") + ops([["(1) when / (2) that","","兩格順序顛倒。"],["(1) that / (2) when","","(1) forget 缺受詞用關代 that；(2) 子句完整用關副 when。"],["(1) where / (2) at which","",""],["(1) at which / (2) where","",""]], "B")),
+
+  card("L30", ["介系詞平行結構", "from a distance and for..."], "C",
+    st("Under the circumstances, their eyes do most of the “talking.” Initially, they may glance at a person from a distance and [[L30|for]] just slightly longer than normal.", "在這些情況下，他們的眼睛負責大部分的「交談」。最初，他們可能會從遠處瞥一個人，且停留時間比平常稍久一點。") +
+    clue("對等連接詞 <code>and</code> 的前後結構要對稱：<code><b>from</b> a distance</code>（介系詞片語表空間距離）和 <code><b>for</b> just slightly longer than normal</code>（介系詞 <code>for</code> + 時間長度，表持續一段時間）。") +
+    ops([
+      ["continuously", "", "副詞無法直接與名詞／比較級時長 just slightly longer 組合。"],
+      ["lasting", "", "無可修飾的名詞。"],
+      ["for", "持續（時間）", "介系詞片語與前面的 from a distance 對稱。"],
+      ["until", "", "直到（語意不合）。"]
+    ], "C") +
+    passage("L32 ~ L44 課文段落與片語", [[
+      ["【L32】Afterward, they may look away and finally rest their eyes on him or her again for an even longer period.", "之後，他們可能會移開視線，最後再次將目光停留在對方身上更長的時間。（rest one's eyes on 把視線停留在…）"],
+      ["【L34】Furthermore, they automatically track or repeat his or her actions without knowing it. If he or she sits back, they will follow suit. If that person takes a sip of water, they will probably do the same.", "此外，他們會不自覺地自動追蹤或重複對方的動作。如果對方往後靠坐，他們也會照做（follow suit）。如果那個人喝了一口水，他們可能也會跟著做。"],
+      ["【L38】Aside from copying behavior, they often can’t help pointing their feet and shoulders toward the one they adore or standing closer to the object of their affection than to others.", "除了模仿行為之外，他們往往會忍不住將腳和肩膀朝向他們愛慕的人，或者站得離他們愛慕的對象（the object of their affection）比離其他人更近。"],
+      ["【L42】All of the previously mentioned points reveal the idea that one of the best methods for interpreting people’s thoughts and emotions is to pay attention to their body language.", "所有前面提到的觀點揭示了一個想法：解讀人們想法和情感最好的方法之一，就是注意他們的肢體語言。"]
+    ]])
+  ),
+
+  card("L45", ["介系詞搭配", "with / by their body language"], "B, C",
+    st("By understanding the signals that people send out [[L45|with / by]] their body language, we may interact in a more meaningful way with our fellow human beings. Best of all, we can do it without even saying a single word!", "藉由了解人們透過肢體語言發出的訊號，我們可以更有意義地與我們的人類同胞互動。最棒的是，我們甚至不用說一個字就能做到！") +
+    clue("課文原句為 <code>send out <b>with</b> their body language</code>（使用肢體語言發出訊號，<code>with + 工具</code> ≒ using）；考題亦可能考 <code>by</code>（藉由）。") +
+    ops([
+      ["in", "", "用於語言（in English）。"],
+      ["with", "使用", "課文原字，with + 工具（≒ using their body language）。"],
+      ["by", "藉由", "表方式。"],
+      ["from", "", "從…。"]
+    ], "BC")
+  )
+].join('');
+
+/* === Part 5: 課本句型 1 & 句型 2 === */
+const h5 = '<h2 id="p5">課本句型 1 ＆ 句型 2</h2>' +
+  passage("課本句型 1 觀念提示 (同位語名詞子句 the belief/news/fact/idea... that)", [[
+    ["抽象名詞（the belief / news / fact / idea / theory / thought / hope / proposal）+ that + 完整子句（同位語名詞子句，說明該名詞的具體內容）。", "比較：若 that 為關係代名詞引導形容詞子句，後面則是接「不完整子句（缺主詞或受詞）」。"]
+  ]]) + [
+  card("句1-1", ["句型1：同位語 that", "the idea that..."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">1. 我們支持兩性應享有平等權利的想法。(the idea)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|We support the idea that the two sexes should share equal rights.]]")+'</div></div>'),
+  card("句1-2", ["句型1：同位語 that", "The fact that..."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">2. Alice 瘦了 30 公斤的事實讓大家都很驚訝。(the fact)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The fact that Alice has lost 30 kilograms surprised everybody.]]")+'</div></div>'),
+  card("句1-3", ["句型1：同位語 that", "the theory that..."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">3. 很少有人會質疑抽菸會導致肺癌的理論。(the theory)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Very few people would question the theory that smoking causes lung cancer.]]")+'</div></div>'),
+  card("句1-4", ["句型1：同位語 that", "The fact that..."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">4. 溫室效應加劇的事實難以被忽略。(the fact)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The fact that the greenhouse effect has worsened is hard to ignore.]]")+'</div></div>'),
+  card("句1-5", ["句型1：同位語 that", "The thought that..."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">5. 可能獨自死在雪地裡的想法讓她恐懼。(the thought)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The thought that she might die alone in the snow terrified her.]]")+'</div></div>'),
+  card("句1-6", ["句型1：同位語 that", "the hope that..."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">6. 村民們漸漸失去救難隊會來幫他們的希望。(the hope)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The villagers gradually lost (the) hope that a rescue team would come to their aid.]]")+'</div></div>'),
+  card("句1-7", ["句型1：同位語 that", "the proposal that..."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">7. 我們班上每個人都同意舉辦耶誕派對的提案。(the proposal)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Everyone in our class agreed to the proposal that we (should) hold a Christmas party.]]")+'</div></div>')
+].join('') +
+  passage("課本句型 2 觀念提示 (忍不住；不得不)", [[
+    ["I couldn't help but + VR（原形動詞） = I couldn't but + VR", "= I couldn't help + V-ing（動名詞） = I had no choice but + to VR（不定詞）。"]
+  ]]) + [
+  card("句2-1", ["句型2", "couldn't help V-ing / couldn't help but VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">1. 因為昨夜熬夜，Jill 忍不住在公車上打瞌睡。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Jill couldn’t help dozing off / couldn’t (help) but doze off on the bus because she stayed up late last night.]]")+'</div></div>'),
+  card("句2-2", ["句型2", "couldn't help V-ing / couldn't help but VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">2. 一看到那隻大老鼠，Lydia 忍不住大聲尖叫。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Upon seeing the huge rat, Lydia couldn’t help screaming / couldn’t (help) but scream out loud.]]")+'</div></div>'),
+  card("句2-3", ["句型2", "couldn't help V-ing / couldn't help but VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">3. 聽著老師單調的聲音，Ray 忍不住在課堂上睡著了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Listening to the teacher’s monotonous voice, Ray couldn’t help falling asleep / couldn’t (help) but fall asleep in class.]]")+'</div></div>'),
+  card("句2-4", ["句型2", "can't help V-ing / can't help but VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">4. 雖然他們現在生活很幸福，Fiona 總忍不住想像沒 Shrek 的生活。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Though they live a happy life now, Fiona can’t help imagining / can’t (help) but imagine life without Shrek.]]")+'</div></div>'),
+  card("句2-5", ["句型2", "couldn't help V-ing / couldn't help but VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">5. 當那位運動員終於抵達終點時，觀眾忍不住歡呼起來。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|When the athlete finally reached the finish line, the spectators couldn’t help cheering / couldn’t (help) but cheer.]]")+'</div></div>'),
+  card("句2-6", ["句型2", "couldn't help V-ing / couldn't help but VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">6. 被學生霸凌了一整年，那位老師不得不辭去教職。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Having been bullied by students for one year, the teacher couldn’t help resigning / couldn’t (help) but resign from the teaching post.]]")+'</div></div>')
+].join('');
+
+document.getElementById('app').innerHTML = h1 + h2 + h3 + h4 + h5;
+const secs=[['p1','L1~L18 課文講解'],['p2','重點1 (介片)'],['p3','L22~L26 & 重點2 (轉折語)'],['p4','L26~L49 & 重點4 (介+關代)'],['p5','句型1 & 句型2']];
 document.getElementById('nav').innerHTML=secs.map(s=>'<a href="#'+s[0]+'">'+s[1]+'</a>').join('')+'<button id="tg">全部收合</button>';
 let open=true;
 document.getElementById('tg').onclick=function(){
