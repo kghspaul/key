@@ -76,18 +76,23 @@ function card(n,tags,ans,body){
 // === 各大題資料與渲染邏輯 ===
 const st=(en,zh)=>'<div class="stem"><div class="en">'+fx(en)+'</div><div class="zh">'+zh+'</div></div>';
 
+function bankOps(bank,lab,ans,okText,noMap){
+  return ops(bank.map((b,i)=>{
+    const c=lab[i];
+    return ['('+c+') '+b[0],b[1],c===ans?okText:noMap[c]];
+  }),ans,lab);
+}
+
 const SECS=[
   {id:'sec-l',t:'卷一：聽力測驗 (L1–L12)'},
   {id:'sec-rv',t:'卷一：閱讀詞彙 (R1–R5)'},
   {id:'sec-rc',t:'卷一：綜合測驗 (R6–R12)'},
   {id:'sec-rr',t:'卷一：閱讀測驗 (R13–R15)'},
   {id:'sec-rt',t:'卷一：中譯英 (R16–R17)'},
-  {id:'sec-v1',t:'卷二：洞洞卷文意字彙 (V1–V10)'},
-  {id:'sec-v2',t:'卷二：洞洞卷詞類變化 (V11–V15)'},
-  {id:'sec-c1',t:'卷二：克漏字 (一) 巨石陣 (V16–V20)'},
-  {id:'sec-c2',t:'卷二：克漏字 (二) 咖啡因與小睡 (V21–V25)'},
-  {id:'sec-wf',t:'卷二：文意選填 變色龍 (V26–V35)'},
-  {id:'sec-tr',t:'卷二：洞洞卷中譯英 (V36–V39)'}
+  {id:'sec-u8',t:'洞洞卷 U8：儲物症 (1–9)'},
+  {id:'sec-u9',t:'洞洞卷 U9：能量飲料 (10–23)'},
+  {id:'sec-u10',t:'洞洞卷 U10：馬拉松訓練 (24–35)'},
+  {id:'sec-u11',t:'洞洞卷 U11：動物界紀錄保持者 (36–50)'}
 ];
 
 document.getElementById('nav').innerHTML=SECS.map(s=>'<a href="#'+s.id+'">'+s.t+'</a>').join('');
@@ -95,14 +100,14 @@ document.getElementById('nav').innerHTML=SECS.map(s=>'<a href="#'+s.id+'">'+s.t+
 let H='';
 
 // ==================== 卷一：聽力測驗 ====================
-H+='<h2 id="sec-l">第一部分：聽力測驗 (Listening Comprehension)</h2>';
+H+='<h2 id="sec-l">卷一 第一部分：聽力測驗 (Listening Comprehension)</h2>';
 
 H+=passage('一、看圖辨義（第 L1–L2 題共用情境圖）',[
   [['[Image Description] A male staff member wearing an ID badge bursts through the classroom door shouting, "There’s a fire!" while the female teacher at the podium stops teaching in shock and the students turn around to look at him.','【圖片情境】一名配戴識別證的男性教職員衝進教室門口大喊：「失火了！」，講台上的女老師驚訝地停下授課，台下學生們也紛紛轉頭看向門口。']]
 ]);
 
 H+=card('L1',['考點：圖片情境與核心動詞 disrupt 辨析','詞性需求：完整敘述句'],'D',
-  st('What can we see in the picture? → [[L1|Someone has just disrupted the class.]]','我們在圖片中可以看到什麼？ → 某人剛剛打斷了課堂。')+
+  st('What can we see in the picture? → [[101|Someone has just disrupted the class.]]','我們在圖片中可以看到什麼？ → 某人剛剛打斷了課堂。')+
   clue('圖中原本正在上課的老師手拿課本停下動作，學生也轉頭看向衝進門大喊「There’s a fire!」的男子，顯示課堂進行被突發狀況「中斷、打亂（disrupted）」。')+
   ops([
     ['The teacher is giving instructions.','老師正在下達指示。','語意不符：講台上的老師一臉錯愕看著門口，說話的人是衝進來的男士而非老師。<br><b>何時才對：</b>Before the chemistry experiment began, the teacher was giving safety instructions to the class.'],
@@ -113,7 +118,7 @@ H+=card('L1',['考點：圖片情境與核心動詞 disrupt 辨析','詞性需�
 );
 
 H+=card('L2',['考點：看圖推論與緊急事件字彙','詞性需求：完整敘述句'],'A',
-  st('What do we know from the picture? → [[L2|An emergency is happening.]]','我們從圖片中可以得知什麼？ → 一場緊急狀況正在發生。')+
+  st('What do we know from the picture? → [[102|An emergency is happening.]]','我們從圖片中可以得知什麼？ → 一場緊急狀況正在發生。')+
   clue('對話框明確寫出驚嘆句 <code>"There’s a fire!"</code>（失火了！），且通報者神情焦急，直接對應名詞 <code>emergency</code>（緊急情況）。')+
   ops([
     ['An emergency is happening.','一場緊急狀況正在發生。','正確：火災（fire）屬於典型的緊急危難事件（emergency）。'],
@@ -128,7 +133,7 @@ H+=passage('一、看圖辨義（第 L3 題情境圖）',[
 ]);
 
 H+=card('L3',['考點：圖片細節與同義字轉換 (over 500 years old = antique)','詞性需求：完整敘述句'],'C',
-  st('What do we know about the woman? → [[L3|She is showing a man an antique vase.]]','關於這位女子，我們知道什麼？ → 她正在向一名男子展示一個古董花瓶。')+
+  st('What do we know about the woman? → [[103|She is showing a man an antique vase.]]','關於這位女子，我們知道什麼？ → 她正在向一名男子展示一個古董花瓶。')+
   clue('女子說話內容 <code>"It’s over 500 years old."</code>（它超過五百年歷史了）直接對應形容詞/名詞 <code>antique</code>（古董的；古董），且她雙手張開正在向身旁男子介紹展示（showing）。')+
   ops([
     ['She is purchasing a valuable vase.','她正在購買一個貴重花瓶。','語意不符：女子戴著專業手套向男子解說花瓶歷史，身分應為展示人員或鑑定師，且圖中無金錢交易動作。<br><b>何時才對：</b>She is at the checkout counter purchasing a valuable vase with her credit card.'],
@@ -139,7 +144,7 @@ H+=card('L3',['考點：圖片細節與同義字轉換 (over 500 years old = ant
 );
 
 H+=card('L4',['考點：聽力對答與動詞 plunge 語意理解','詞性需求：疑問回應句'],'D',
-  st('Nicole plunged into the pool with her shirt on. → [[L4|Really? Why did she jump in?]]','妮可穿著襯衫就縱身跳進游泳池裡了。 → 真的嗎？她為什麼跳進去？')+
+  st('Nicole plunged into the pool with her shirt on. → [[104|Really? Why did she jump in?]]','妮可穿著襯衫就縱身跳進游泳池裡了。 → 真的嗎？她為什麼跳進去？')+
   clue('題幹關鍵片語動詞 <code>plunged into the pool</code> 意為「縱身跳進泳池」，對應 (D) 的同義動作 <code>jump in</code>，且因為她「穿著襯衫（with her shirt on）」跳水很反常，追問原因最合邏輯。')+
   ops([
     ['I know. She’s taking a few pictures.','我知道。她正在拍幾張照片。','語意矛盾：人已經跳進泳池水裡了，不可能還在岸邊拍照。<br><b>何時才對：</b>Nicole is standing by the pool with her camera. → I know. She’s taking a few pictures.'],
@@ -150,7 +155,7 @@ H+=card('L4',['考點：聽力對答與動詞 plunge 語意理解','詞性需求
 );
 
 H+=card('L5',['考點：聽力對答與 astonishing comeback 語意推論','詞性需求：感嘆回應句'],'A',
-  st('The other team made an astonishing comeback at the end. → [[L5|I know! I can’t believe they won!]]','另一隊在最後關頭上演了驚人的逆轉勝。 → 我知道！我真不敢相信他們贏了！')+
+  st('The other team made an astonishing comeback at the end. → [[105|I know! I can’t believe they won!]]','另一隊在最後關頭上演了驚人的逆轉勝。 → 我知道！我真不敢相信他們贏了！')+
   clue('名詞搭配 <code>made an astonishing comeback</code> 意為「達成驚人的逆轉／反敗為勝」，既然後來居上逆轉成功，代表最後贏得比賽（they won），且 <code>I can’t believe</code> 呼應 <code>astonishing</code>（令人驚訝的）。')+
   ops([
     ['I know! I can’t believe they won!','我知道！我真不敢相信他們贏了！','正確：上演驚人逆轉（astonishing comeback）即表示最終獲勝且令人難以置信。'],
@@ -161,7 +166,7 @@ H+=card('L5',['考點：聽力對答與 astonishing comeback 語意推論','詞�
 );
 
 H+=card('L6',['考點：聽力對答與動詞 sustain 語意推論','詞性需求：因果回應句'],'B',
-  st('Milly and Pam worked hard to sustain their friendship. → [[L6|Yes. That’s why they’re still friends.]]','米莉和潘努力維繫她們的友誼。 → 是啊。這就是為什麼她們現在依然是朋友。')+
+  st('Milly and Pam worked hard to sustain their friendship. → [[106|Yes. That’s why they’re still friends.]]','米莉和潘努力維繫她們的友誼。 → 是啊。這就是為什麼她們現在依然是朋友。')+
   clue('及物動詞 <code>sustain</code> 意為「維持、維繫（使長久持續）」。努力維持友誼的結果，自然是「現在依然是朋友（still friends）」。')+
   ops([
     ['I know. They have lost all contact.','我知道。她們已經完全失去聯絡了。','語意相反：努力維繫友誼不會導致斷絕聯絡（lost all contact）。<br><b>何時才對：</b>Milly and Pam moved to different countries and stopped texting. → I know. They have lost all contact.'],
@@ -183,7 +188,7 @@ H+=passage('三、簡短對話（第 L7 題聽力稿）',[
 ]);
 
 H+=card('L7',['考點：簡短對話細節與同義詞轉換 (beverage cart = somewhere to buy drinks)','詞性需求：名詞片語'],'C',
-  st('Q: What is the man going to go look for? → [[L7|Somewhere to buy drinks.]]','問：這名男子要去尋找什麼？ → 買飲料的地方。')+
+  st('Q: What is the man going to go look for? → [[107|Somewhere to buy drinks.]]','問：這名男子要去尋找什麼？ → 買飲料的地方。')+
   clue('男士明確表示 <code>I’m going to grab us some sodas</code>（要去買汽水），並提到前面有 <code>a beverage cart</code>（飲料推車）。<code>beverage</code> 與 <code>sodas</code> 即對應選項中的 <code>drinks</code>。')+
   ops([
     ['Their seat section.','他們的座位區。','細節錯誤：他們已經在自己的座位區裡了，男士說的是飲料推車在隔壁區（one section over from ours）。<br><b>何時才對：</b>They just entered the stadium and are checking their tickets to find their seat section.'],
@@ -205,7 +210,7 @@ H+=passage('三、簡短對話（第 L8 題聽力稿）',[
 ]);
 
 H+=card('L8',['考點：簡短對話細節與同義字轉換 (cautious = careful)','詞性需求：祈使句／完整子句'],'D',
-  st('Q: What is the man saying to the woman? → [[L8|Be careful near the cliffs.]]','問：男子對女子說了什麼？ → 靠近懸崖時要小心。')+
+  st('Q: What is the man saying to the woman? → [[108|Be careful near the cliffs.]]','問：男子對女子說了什麼？ → 靠近懸崖時要小心。')+
   clue('男士在對話中叮嚀：<code>Just be cautious when you walk near the cliffs.</code> 形容詞 <code>cautious</code>（謹慎的、小心的）直接等於選項中的 <code>careful</code>。')+
   ops([
     ['Trust her friends.','相信她的朋友們。','張冠李戴：男士說的是 <code>Trust me</code>（相信我），而非叫她相信朋友。<br><b>何時才對：</b>He told her to trust her friends because they are all experienced hikers.'],
@@ -227,7 +232,7 @@ H+=passage('三、簡短對話（第 L9 題聽力稿）',[
 ]);
 
 H+=card('L9',['考點：簡短對話推論與形容詞 fragile 定義','詞性需求：完整敘述句'],'A',
-  st('Q: What can we assume about the vase? → [[L9|It can break easily.]]','問：關於這個花瓶，我們可以推論出什麼？ → 它很容易破掉。')+
+  st('Q: What can we assume about the vase? → [[109|It can break easily.]]','問：關於這個花瓶，我們可以推論出什麼？ → 它很容易破掉。')+
   clue('女子形容該水晶花瓶 <code>It’s really fragile</code>。形容詞 <code>fragile</code> 的核心定義就是「易碎的、脆弱的」，直接對應 <code>It can break easily</code>。')+
   ops([
     ['It can break easily.','它很容易破掉。','正確：<code>break easily</code> 為形容詞 <code>fragile</code>（易碎的）的標準英文釋義。'],
@@ -249,7 +254,7 @@ H+=passage('四、長篇聽解（第 L10–L12 題聽力稿）',[
 ]);
 
 H+=card('L10',['考點：長篇聽解細節擷取 (famous for)','詞性需求：名詞片語'],'C',
-  st('What is the *Brookesia nana* famous for? → [[L10|Its extremely small size.]]','奈米變色龍以什麼聞名？ → 牠極度微小的體型。')+
+  st('What is the *Brookesia nana* famous for? → [[110|Its extremely small size.]]','奈米變色龍以什麼聞名？ → 牠極度微小的體型。')+
   clue('聽力稿第 2 句明確指出：<code>It was discovered in Madagascar and is famous for its extremely tiny size.</code> 其中 <code>extremely tiny size</code> 等同於選項 (C) <code>extremely small size</code>。')+
   ops([
     ['Its ability to hunt at night.','牠在夜間狩獵的能力。','無中生有：短文僅提到用長舌捕食（a long tongue for catching food），未提及夜間狩獵。<br><b>何時才對：</b>The owl is famous for its keen eyesight and its ability to hunt at night.'],
@@ -260,7 +265,7 @@ H+=card('L10',['考點：長篇聽解細節擷取 (famous for)','詞性需求：
 );
 
 H+=card('L11',['考點：長篇聽解排除法 (NOT mentioned)','詞性需求：名詞子句'],'B',
-  st('Which of the following is NOT mentioned about the *Brookesia nana*? → [[L11|What it catches for food.]]','關於奈米變色龍，下列何者「未被提及」？ → 牠捕捉什麼作為食物。')+
+  st('Which of the following is NOT mentioned about the *Brookesia nana*? → [[111|What it catches for food.]]','關於奈米變色龍，下列何者「未被提及」？ → 牠捕捉什麼作為食物。')+
   clue('逐一比對聽力稿：(A) <code>also known as the nano-chameleon</code>（別名）；(C) <code>discovered in Madagascar</code>（發現地）；(D) <code>lives in forests</code>（棲息地）。針對食物，原文只說 <code>a long tongue for catching food</code>，並未說明牠具體捕捉哪種獵物（what it catches）。')+
   ops([
     ['What it is also called.','牠的別稱是什麼。','文中有提：第 1 句 <code>also known as the nano-chameleon</code>。<br><b>何時才對：</b>若短文只給拉丁學名而未提供俗稱時。'],
@@ -271,7 +276,7 @@ H+=card('L11',['考點：長篇聽解排除法 (NOT mentioned)','詞性需求：
 );
 
 H+=card('L12',['考點：長篇聽解細節真偽辨析 (independently)','詞性需求：完整敘述句'],'B',
-  st('Which of the following statements is TRUE about the *Brookesia nana*? → [[L12|Each of its eyes can move in different directions.]]','關於奈米變色龍，下列哪一項敘述為「真」？ → 牠的每一隻眼睛可以朝不同方向轉動。')+
+  st('Which of the following statements is TRUE about the *Brookesia nana*? → [[112|Each of its eyes can move in different directions.]]','關於奈米變色龍，下列哪一項敘述為「真」？ → 牠的每一隻眼睛可以朝不同方向轉動。')+
   clue('聽力稿第 4 句指出牠有 <code>eyes that can move independently</code>（能各自獨立轉動的眼睛），亦即兩眼能分別朝不同方向移動。')+
   ops([
     ['It has a long tongue that is not found in other chameleons.','牠擁有其他變色龍沒有的長舌頭。','與原文相反：第 4 句開頭為 <code>Like other chameleons...</code>（就像其他變色龍一樣，牠有長舌頭），並非獨有。<br><b>何時才對：</b>Unlike other lizards, this species has a unique horn that is not found in its relatives.'],
@@ -281,11 +286,11 @@ H+=card('L12',['考點：長篇聽解細節真偽辨析 (independently)','詞性
   ],'B')
 );
 
-// ==================== 卷一：閱讀理解能力測驗 ====================
-H+='<h2 id="sec-rv">第二部分：閱讀理解能力測驗 — 一、詞彙 (R1–R5)</h2>';
+// ==================== 卷一：閱讀理解能力測驗 詞彙 ====================
+H+='<h2 id="sec-rv">卷一 第二部分：閱讀理解能力測驗 — 一、詞彙 (R1–R5)</h2>';
 
 H+=card('R1',['考點：天文觀測名詞字彙與語境搭配','詞性需求：單數可數名詞'],'C',
-  st('The moon may appear bright and smooth from a distance, but you can see its countless craters when you observe it through a [[R1|telescope]].','從遠處看，月球可能顯得明亮而平滑，但當你透過望遠鏡觀測它時，就能看見它無數的隕石坑。')+
+  st('The moon may appear bright and smooth from a distance, but you can see its countless craters when you observe it through a [[201|telescope]].','從遠處看，月球可能顯得明亮而平滑，但當你透過望遠鏡觀測它時，就能看見它無數的隕石坑。')+
   clue('前半句提到「從遠處看月球（from a distance）」，後半句動詞搭配 <code>observe it through a ___</code>（透過……觀測它）並看見月球表面的「無數隕石坑（countless craters）」，能用來遠距觀測天體的儀器唯有 <code>telescope</code>（望遠鏡）。')+
   ops([
     ['cushion','n. 靠墊；坐墊','語意不符：靠墊是家具用品，無法用來觀測月球隕石坑。<br><b>何時才對：</b>She placed a soft <b>cushion</b> behind her back while reading on the sofa.'],
@@ -296,18 +301,18 @@ H+=card('R1',['考點：天文觀測名詞字彙與語境搭配','詞性需求�
 );
 
 H+=card('R2',['考點：形容詞片語搭配 be hooked on','詞性需求：形容詞（過去分詞轉形容詞）'],'B',
-  st('Nancy is totally [[R2|hooked]] on this TV series. She can binge-watch it for twelve hours in a row, and repeatedly rewatch certain episodes.','南茜完全迷上了這部電視劇。她可以連續瘋狂追劇十二個小時，並反覆重看某些集數。')+
+  st('Nancy is totally [[202|hooked]] on this TV series. She can binge-watch it for twelve hours in a row, and repeatedly rewatch certain episodes.','南茜完全迷上了這部電視劇。她可以連續瘋狂追劇十二個小時，並反覆重看某些集數。')+
   clue('空格後接介系詞 <code>on</code>，且後句說明她「連續追劇 12 小時（binge-watch it for twelve hours in a row）並反覆重看」，構成固定慣用語 <code>be hooked on + N</code>（對……著迷／上癮）。')+
   ops([
     ['fragile','adj. 易碎的；脆弱的','語意與搭配錯誤：不與 <code>on</code> 搭配表著迷。<br><b>何時才對：</b>Be careful with that glass ornament because it is extremely <b>fragile</b>.'],
     ['hooked','adj. 著迷的；上癮的','正確：<code>be hooked on...</code> 表「被……鉤住、深深迷上……」，符合瘋狂追劇的語境。'],
-    ['cautious','adj. 謹慎的；小心的','搭配與語意錯誤：常搭配 <code>cautious about</code>，且與瘋狂追劇語意無關。<br><b>何時才對：</b>Drivers must be extra <b>cautious</b> when driving in heavy rain.'],
+    ['cautious','adj. 謹慎的；小心的','搭配與語意錯誤：常搭配 <code>cautious about/with</code>，且與瘋狂追劇語意無關。<br><b>何時才對：</b>Drivers must be extra <b>cautious</b> when driving in heavy rain.'],
     ['consistent','adj. 一致的；始終如一的','搭配錯誤：常搭配 <code>consistent with</code>（與……一致）或 <code>consistent in</code>。<br><b>何時才對：</b>Her testimony was completely <b>consistent</b> with the security camera footage.']
   ],'B')
 );
 
 H+=card('R3',['考點：名詞搭配 personality trait','詞性需求：單數可數名詞'],'A',
-  st('Being a good listener is a valuable personality [[R3|trait]]. It can help you communicate well and build good relationships with others.','做一個好的傾聽者是一項寶貴的人格特質。它能幫助你良好溝通並與他人建立良好關係。')+
+  st('Being a good listener is a valuable personality [[203|trait]]. It can help you communicate well and build good relationships with others.','做一個好的傾聽者是一項寶貴的人格特質。它能幫助你良好溝通並與他人建立良好關係。')+
   clue('主詞 <code>Being a good listener</code>（善於傾聽）屬於個人的性格屬性，與名詞修飾語 <code>personality</code> 構成高頻搭配詞 <code>personality trait</code>（人格特質）。')+
   ops([
     ['trait','n. 特徵；特質','正確：<code>a valuable personality trait</code> 指「寶貴的人格特質」。'],
@@ -318,7 +323,7 @@ H+=card('R3',['考點：名詞搭配 personality trait','詞性需求：單數�
 );
 
 H+=card('R4',['考點：動詞片語搭配 distinguish A from B','詞性需求：原形及物動詞'],'D',
-  st('In the age of information explosion, it’s essential to learn to [[R4|distinguish]] real information from fake news.','在資訊爆炸的時代，學會分辨真實資訊與假新聞是至關重要的。')+
+  st('In the age of information explosion, it’s essential to learn to [[204|distinguish]] real information from fake news.','在資訊爆炸的時代，學會分辨真實資訊與假新聞是至關重要的。')+
   clue('受詞結構為 <code>___ real information from fake news</code>（將真實資訊與假新聞……），符合標準動詞搭配 <code>distinguish A from B</code>（區分／辨別 A 與 B）。')+
   ops([
     ['plunge','v. 驟降；縱身跳入','搭配與語意不符：常接 <code>into</code>，無法表達辨別真偽。<br><b>何時才對：</b>Temperatures are expected to <b>plunge</b> below freezing tonight.'],
@@ -329,7 +334,7 @@ H+=card('R4',['考點：動詞片語搭配 distinguish A from B','詞性需求�
 );
 
 H+=card('R5',['考點：運動生理名詞搭配 extreme fatigue','詞性需求：不可數名詞'],'B',
-  st('The day after the marathon, I could barely get out of bed because of extreme [[R5|fatigue]] and muscle soreness.','馬拉松比賽隔天，因為極度疲勞與肌肉痠痛，我幾乎無法下床。')+
+  st('The day after the marathon, I could barely get out of bed because of extreme [[205|fatigue]] and muscle soreness.','馬拉松比賽隔天，因為極度疲勞與肌肉痠痛，我幾乎無法下床。')+
   clue('時間背景為「跑完馬拉松隔天（The day after the marathon）」，結果為「幾乎起不了床（could barely get out of bed）」，且與 <code>muscle soreness</code>（肌肉痠痛）並列的生理狀態即為 <code>fatigue</code>（疲勞、勞累）。')+
   ops([
     ['stall','n. 攤位；隔間','語意不符：攤位與跑完馬拉松的身體狀況無關。<br><b>何時才對：</b>We bought some fresh strawberries from a fruit <b>stall</b> at the market.'],
@@ -340,30 +345,30 @@ H+=card('R5',['考點：運動生理名詞搭配 extreme fatigue','詞性需求�
 );
 
 // ==================== 卷一：綜合測驗 ====================
-H+='<h2 id="sec-rc">第二部分：閱讀理解能力測驗 — 二、綜合測驗 (R6–R12)</h2>';
+H+='<h2 id="sec-rc">卷一 第二部分：閱讀理解能力測驗 — 二、綜合測驗 (R6–R12)</h2>';
 
-H+=passage('綜合測驗全文：能量飲料的隱憂 (Units 9)',[
+H+=passage('綜合測驗全文：能量飲料的隱憂 (Unit 9)',[
   [
     ['Think twice before you grab an energy drink.','在你隨手拿起身邊的能量飲料之前，請三思。'],
-    ['Many teenagers depend on them to get through late-night study sessions, as they seem like the perfect solution [[6|to]] tiredness.','許多青少年依賴它們來熬過深夜的讀書時光，因為它們看起來像是解決疲勞的完美方案。'],
+    ['Many teenagers depend on them to get through late-night study sessions, as they seem like the perfect solution [[206|to]] tiredness.','許多青少年依賴它們來熬過深夜的讀書時光，因為它們看起來像是解決疲勞的完美方案。'],
     ['However, they can have negative effects on the body.','然而，它們可能會對身體產生負面影響。'],
     ['These brightly colored drinks usually contain high amounts of caffeine, guarana, and sugar.','這些色彩鮮豔的飲料通常含有大量的咖啡因、瓜拿納與糖分。'],
-    ['These [[7|ingredients]] are designed to stimulate the central nervous system.','這些成分旨在刺激中樞神經系統。'],
-    ['As a result, they trigger a temporary release of adrenaline, [[8|making]] you feel more alert and energetic.','因此，它們會觸發腎上腺素的暫時釋放，使你感到更加清醒且精力充沛。'],
-    ['[[9|At the same time]], they can increase your heart rate and blood pressure.','與此同時，它們也會使你的心率與血壓升高。']
+    ['These [[207|ingredients]] are designed to stimulate the central nervous system.','這些成分旨在刺激中樞神經系統。'],
+    ['As a result, they trigger a temporary release of adrenaline, [[208|making]] you feel more alert and energetic.','因此，它們會觸發腎上腺素的暫時釋放，使你感到更加清醒且精力充沛。'],
+    ['[[209|At the same time]], they can increase your heart rate and blood pressure.','與此同時，它們也會使你的心率與血壓升高。']
   ],
   [
     ['The real catch is the inevitable crash.','真正的隱憂在於隨之而來、無可避免的精力崩潰。'],
-    ['After the caffeine and sugar [[10|wear off]], people often feel more tired, anxious, or irritable than before.','在咖啡因與糖分的作用消退之後，人們往往會比之前感到更加疲倦、焦慮或易怒。'],
-    ['Regularly [[11|relying on]] energy drinks can also disturb the body’s natural energy cycle and reduce sleep quality.','經常依賴能量飲料也會打亂身體自然的能量週期並降低睡眠品質。'],
-    ['Because teenagers are still developing physically and mentally, these effects are especially worth [[12|paying]] attention to.','由於青少年的身心仍在發育中，這些影響特別值得密切注意。'],
+    ['After the caffeine and sugar [[210|wear off]], people often feel more tired, anxious, or irritable than before.','在咖啡因與糖分的作用消退之後，人們往往會比之前感到更加疲倦、焦慮或易怒。'],
+    ['Regularly [[211|relying on]] energy drinks can also disturb the body’s natural energy cycle and reduce sleep quality.','經常依賴能量飲料也會打亂身體自然的能量週期並降低睡眠品質。'],
+    ['Because teenagers are still developing physically and mentally, these effects are especially worth [[212|paying]] attention to.','由於青少年的身心仍在發育中，這些影響特別值得密切注意。'],
     ['The short-term benefits energy drinks provide may come with significant long-term costs.','能量飲料所提供的短期效益，可能會伴隨著巨大的長期代價。']
   ]
 ]);
 
 H+=card('R6',['考點：名詞與介系詞固定搭配 solution to','詞性需求：介系詞'],'A',
-  stem('6')+
-  clue('空格前為核心名詞 <code>solution</code>（解決方法），空格後為問題名詞 <code>tiredness</code>（疲勞）。英文中「……的解決方案／解答」固定搭配方向介系詞 <code>to</code>（如 <code>the solution to the problem</code>、<code>the key to success</code>、<code>the answer to the question</code>）。')+
+  stem('206')+
+  clue('空格前為核心名詞 <code>solution</code>（解決方法），空格後為問題名詞 <code>tiredness</code>（疲勞）。英文中「……的解決方案／解答」固定搭配方向介系詞 <code>to</code>（如 <code>the solution to the problem</code>、<code>the key to success</code>）。')+
   ops([
     ['to','prep. 對於；向','正確：<code>the solution to tiredness</code> 為標準搭配，表「針對疲勞的解決之道」。'],
     ['on','prep. 在……之上；關於','搭配錯誤：若前面是 <code>effect</code> 或 <code>impact</code> 才接 <code>on</code>。<br><b>何時才對：</b>Lack of sleep can have a serious impact <b>on</b> your academic performance.'],
@@ -373,7 +378,7 @@ H+=card('R6',['考點：名詞與介系詞固定搭配 solution to','詞性需�
 );
 
 H+=card('R7',['考點：上下文指代與名詞字彙辨析','詞性需求：複數可數名詞'],'D',
-  stem('7')+
+  stem('207')+
   clue('前一句列舉能量飲料中含有 <code>high amounts of caffeine, guarana, and sugar</code>（大量的咖啡因、瓜拿納和糖），本句以指示形容詞 <code>These ___</code> 統稱上述三種添加於食品飲料中的物質，故選 <code>ingredients</code>（成分、原料）。')+
   ops([
     ['viruses','n. 病毒','語意不符：咖啡因與糖不是傳染病病毒。<br><b>何時才對：</b>Washing your hands frequently helps protect you from cold <b>viruses</b>.'],
@@ -384,7 +389,7 @@ H+=card('R7',['考點：上下文指代與名詞字彙辨析','詞性需求：�
 );
 
 H+=card('R8',['考點：結果分詞構句（現在分詞表主動結果）','詞性需求：現在分詞 (V-ing)'],'B',
-  stem('8')+
+  stem('208')+
   clue('逗號前 <code>they trigger a temporary release of adrenaline</code> 已是具備主詞與動詞的完整子句，逗號後無連接詞，故須使用現在分詞 <code>making</code> 形成分詞構句（可還原為關係子句 <code>, which makes you feel...</code>），表前面事件自然造成的結果。')+
   ops([
     ['made','v. 過去式／過去分詞','文法錯誤：無對等連接詞不可直接放過去式動詞；若視為過去分詞則表被動，但後面還有受詞 <code>you</code>，主動被動矛盾。<br><b>何時才對：</b>The promise <b>made</b> by the manager was never kept.'],
@@ -395,18 +400,18 @@ H+=card('R8',['考點：結果分詞構句（現在分詞表主動結果）','�
 );
 
 H+=card('R9',['考點：轉折與並列轉承語辨析','詞性需求：副詞片語（轉承語）'],'D',
-  stem('9')+
+  stem('209')+
   clue('前句說明能量飲料帶來的提神效果（<code>feel more alert and energetic</code>），本句指出它們也會帶來的生理副作用（<code>increase your heart rate and blood pressure</code>）。兩者是在喝下飲料後「同時發生」的伴隨效應，故選 <code>At the same time</code>（與此同時）。')+
   ops([
     ['To sum up','總結來說','語意不符：此處位於第一段末尾補充說明生理反應，並非總結全文論點。<br><b>何時才對：</b><b>To sum up</b>, regular exercise and a balanced diet are the keys to good health.'],
     ['In other words','換句話說','邏輯不符：「心跳血壓升高」與前句「覺得清醒有精神」是不同的生理現象，並非同義換句話說。<br><b>何時才對：</b>He was asked to leave the company; <b>in other words</b>, he was fired.'],
-    ['On the one hand','一方面','結構不符：<code>On the one hand</code> 用於引出對比的第一面（常置於前句並與後句的 <code>On the other hand</code> 搭配），不可單獨放在第二句句首承接前文。<br><b>何時才對：</b><b>On the one hand</b>, the job pays well; on the other hand, the hours are terrible.'],
+    ['On the one hand','一方面','結構不符：<code>On the one hand</code> 用於引出對比的第一面（常與後句的 <code>On the other hand</code> 搭配），不可單獨放在第二句句首承接前文。<br><b>何時才對：</b><b>On the one hand</b>, the job pays well; on the other hand, the hours are terrible.'],
     ['At the same time','與此同時；同時','正確：表示提神作用發生的同時，也會伴隨心率與血壓上升。']
   ],'D')
 );
 
 H+=card('R10',['考點：片語動詞辨析（藥效／作用消退）','詞性需求：複數現在式不及物片語動詞'],'C',
-  stem('10')+
+  stem('210')+
   clue('主詞為 <code>the caffeine and sugar</code>（咖啡因與糖分），後句指出人們會感到「比之前更累、更焦慮（feel more tired, anxious... than before）」，代表提神成分的藥效或刺激作用已經「逐漸消退、失效」，對應片語動詞 <code>wear off</code>。')+
   ops([
     ['step in','介入；插手干預','語意不符：通常指人介入調停糾紛或接手工作。<br><b>何時才對：</b>When the two players started fighting, the referee had to <b>step in</b> immediately.'],
@@ -417,7 +422,7 @@ H+=card('R10',['考點：片語動詞辨析（藥效／作用消退）','詞性�
 );
 
 H+=card('R11',['考點：動名詞片語作主詞與片語動詞語意','詞性需求：動名詞片語 (V-ing + prep.)'],'A',
-  stem('11')+
+  stem('211')+
   clue('本句以動名詞片語 <code>Regularly ___ energy drinks</code> 作主詞，且首段第 2 句已出現同義線索 <code>Many teenagers depend on them</code>。與 <code>depend on</code> 同義、表「依賴、仰賴」的片語即為 <code>rely on</code>。')+
   ops([
     ['relying on','依賴；仰賴','正確：<code>Regularly relying on energy drinks</code>（經常依賴能量飲料）作主詞，呼應首段的 <code>depend on</code>。'],
@@ -428,10 +433,10 @@ H+=card('R11',['考點：動名詞片語作主詞與片語動詞語意','詞性�
 );
 
 H+=card('R12',['考點：形容詞 worth 的特殊動名詞句型','詞性需求：動名詞 (V-ing)'],'B',
-  stem('12')+
-  clue('空格前為關鍵字 <code>worth</code>（值得……的）。在英文文法中，<code>worth</code> 具有類似介系詞的特性，後面必須直接接「名詞」或「主動形式的動名詞 <code>V-ing</code>」（主動形式表被動意義）：<code>These effects are worth paying attention to.</code>（注意結尾介系詞 <code>to</code> 的受詞即為主詞 <code>these effects</code>）。')+
+  stem('212')+
+  clue('空格前為關鍵字 <code>worth</code>（值得……的）。在英文文法中，<code>worth</code> 後面必須直接接「名詞」或「主動形式的動名詞 <code>V-ing</code>」（主動形式表被動意義）：<code>These effects are worth paying attention to.</code>')+
   ops([
-    ['to pay','不定詞','文法錯誤：<code>be worth</code> 後面絕對不可接不定詞 <code>to V</code>（唯有 <code>be worthy of V-ing / to be V-en</code> 才可用不定詞被動）。<br><b>何時才對：</b>You need <b>to pay</b> close attention to what the instructor is saying.'],
+    ['to pay','不定詞','文法錯誤：<code>be worth</code> 後面絕對不可接不定詞 <code>to V</code>。<br><b>何時才對：</b>You need <b>to pay</b> close attention to what the instructor is saying.'],
     ['paying','動名詞','正確：符合固定句型 <code>be worth + V-ing</code>（值得被……）。'],
     ['for paying','prep. + V-ing','文法錯誤：<code>worth</code> 本身已可直接帶動名詞受詞，中間不可多加介系詞 <code>for</code>。<br><b>何時才對：</b>Thank you <b>for paying</b> attention to this important safety announcement.'],
     ['that we pay','that 子句','文法錯誤：<code>worth</code> 後面不可接 <code>that</code> 名詞子句。<br><b>何時才對：</b>It is essential <b>that we pay</b> attention to teenagers’ mental health.']
@@ -439,7 +444,7 @@ H+=card('R12',['考點：形容詞 worth 的特殊動名詞句型','詞性需求
 );
 
 // ==================== 卷一：閱讀測驗 ====================
-H+='<h2 id="sec-rr">第二部分：閱讀理解能力測驗 — 三、閱讀測驗 (R13–R15)</h2>';
+H+='<h2 id="sec-rr">卷一 第二部分：閱讀理解能力測驗 — 三、閱讀測驗 (R13–R15)</h2>';
 
 H+=passage('閱讀測驗全文：儲物症相關電視節目探討 (Unit 8)',[
   [
@@ -466,18 +471,18 @@ H+=passage('閱讀測驗全文：儲物症相關電視節目探討 (Unit 8)',[
 ]);
 
 H+=card('R13',['考點：文章主旨歸納 (Main Idea)','詞性需求：名詞片語'],'C',
-  st('What does the passage mainly introduce? → [[R13|TV shows that address a specific mental problem.]]','本文主要介紹什麼？ → 探討某種特定心理問題的電視節目。')+
-  clue('首段第 1 句開宗明義點出主題：<code>Hoarding has been the focus of several television programs in both the UK and the US</code>，第 3 句指出 <code>hoarding disorder is a recognized mental health condition</code>，第 2、3、4 段皆在介紹英美探討儲物症的電視節目及其正面影響，故 (C) 完全契合全文主旨。')+
+  st('What does the passage mainly introduce? → [[213|TV shows that address a specific mental problem.]]','本文主要介紹什麼？ → 探討某種特定心理問題的電視節目。')+
+  clue('首段第 1 句點出主題：<code>Hoarding has been the focus of several television programs in both the UK and the US</code>，第 3 句指出 <code>hoarding disorder is a recognized mental health condition</code>，第 2、3、4 段皆在介紹英美探討儲物症的電視節目及其影響，故 (C) 完全契合全文主旨。')+
   ops([
-    ['A mental disease that cannot be cured.','一種無法治癒的心理疾病。','與原文矛盾：末段提到 <code>the recovery process</code> 與 <code>successful treatment requires patience, therapy...</code>，顯示儲物症是可以透過長期治療康復的，並非絕症。<br><b>何時才對：</b>當文章專門探討某種目前醫學尚無解方之罕見退化性疾病時。'],
-    ['Some TV programs that provide fake content.','一些提供造假內容的電視節目。','無中生有：文中稱這些節目為 <code>documentaries and reality series</code>，且末句肯定它們 <code>increase public awareness and reduce misunderstandings</code>，並未批評其造假。<br><b>何時才對：</b>當文章揭露某些實境秀透過劇本造假欺騙觀眾時。'],
+    ['A mental disease that cannot be cured.','一種無法治癒的心理疾病。','與原文矛盾：末段提到 <code>the recovery process</code> 與 <code>successful treatment requires patience, therapy...</code>，顯示儲物症是可以透過長期治療改善的。<br><b>何時才對：</b>當文章專門探討某種目前醫學尚無解方之罕見退化性疾病時。'],
+    ['Some TV programs that provide fake content.','一些提供造假內容的電視節目。','無中生有：文中稱這些節目為 <code>documentaries and reality series</code>，且末句肯定它們 <code>increase public awareness and reduce misunderstandings</code>。<br><b>何時才對：</b>當文章揭露某些實境秀透過劇本造假欺騙觀眾時。'],
     ['TV shows that address a specific mental problem.','探討某種特定心理問題的電視節目。','正確：<code>TV shows</code> 對應各段介紹的英美節目，<code>a specific mental problem</code> 對應 <code>hoarding disorder</code>。'],
     ['A group of people who have suffered from cancer.','一群罹患癌症的人們。','完全無關：本文探討的是 <code>hoarding disorder</code>（儲物症），全文未提及癌症（cancer）。<br><b>何時才對：</b>當醫療報導介紹癌症病友互助團體的抗癌歷程時。']
   ],'C')
 );
 
 H+=card('R14',['考點：細節真偽比對 (NOT true)','詞性需求：完整敘述句'],'B',
-  st('Based on the passage, what is NOT true about the TV shows introduced in the passage? → [[R14|Hoarding: Buried Alive blames the hoarders for their ruined lives.]]','根據本文，關於文中所介紹的電視節目，下列何者「不正確」？ → 《囤積狂：活埋》將毀掉的生活歸咎於儲物症患者。')+
+  st('Based on the passage, what is NOT true about the TV shows introduced in the passage? → [[214|Hoarding: Buried Alive blames the hoarders for their ruined lives.]]','根據本文，關於文中所介紹的電視節目，下列何者「不正確」？ → 《囤積狂：活埋》將毀掉的生活歸咎於儲物症患者。')+
   clue('第二段末句指出：<code>Hoarding: Buried Alive, focuses on the emotional struggles behind excessive collecting and the impact it has on families and relationships.</code> 節目是同理並探討患者背後的情感掙扎與家庭影響，且末段強調這些節目「減少大眾誤解（reduce misunderstandings）」，絕非責怪（blames）患者。')+
   ops([
     ['It has been more than fifteen years since *Hoarders* first aired.','距離《儲物狂》首播已經超過十五年了。','符合事實：第二段首句提到 <code>Hoarders, which first aired in 2009</code>，以考卷年份 2026 年計算（2026 - 2009 = 17 年），確實超過 15 年。<br><b>何時才對：</b>本題選 NOT true，故正確敘述不選。'],
@@ -490,15 +495,15 @@ H+=card('R14',['考點：細節真偽比對 (NOT true)','詞性需求：完整�
 H+=passage('第 R15 題：閱讀摘要填空題幹',[
   [
     ['Hoarding is a recognized mental health condition.','儲物症是一種公認的心理健康疾病。'],
-    ['Hoarders fill their homes with overwhelming amounts of [[151|possessions]], making everyday life difficult and even dangerous.','儲物症患者將家中塞滿數量驚人的物品，使日常生活變得困難甚至危險。'],
-    ['Reality shows on the issue may demonstrate dramatic [[152|transformations]] after their homes are cleaned up, but it is only part of the solution.','關於此議題的實境節目可能會展示房屋清理後戲劇性的改造，但這只是解決方案的一部分。'],
-    ['They need [[153|psychological]] support and long-term therapy to address the roots of the problem.','他們需要心理支持與長期治療來處理問題的根源。'],
-    ['With such support, they may avoid hoarding again and achieve a full [[154|recovery]].','有了這樣的支持，他們才可能避免再次囤積，並達成完全的康復。']
+    ['Hoarders fill their homes with overwhelming amounts of [[2151|possessions]], making everyday life difficult and even dangerous.','儲物症患者將家中塞滿數量驚人的物品，使日常生活變得困難甚至危險。'],
+    ['Reality shows on the issue may demonstrate dramatic [[2152|transformations]] after their homes are cleaned up, but it is only part of the solution.','關於此議題的實境節目可能會展示房屋清理後戲劇性的改造，但這只是解決方案的一部分。'],
+    ['They need [[2153|psychological]] support and long-term therapy to address the roots of the problem.','他們需要心理支持與長期治療來處理問題的根源。'],
+    ['With such support, they may avoid hoarding again and achieve a full [[2154|recovery]].','有了這樣的支持，他們才可能避免再次囤積，並達成完全的康復。']
   ]
 ]);
 
 H+=card('R15',['考點：閱讀摘要資訊擷取與詞性定位','詞性需求：(1)複數名詞 (2)複數名詞 (3)形容詞 (4)單數名詞'],'(1) possessions (2) transformations (3) psychological (4) recovery',
-  stem('151')+stem('152')+stem('153')+stem('154')+
+  stem('2151')+stem('2152')+stem('2153')+stem('2154')+
   clue('本題要求直接從文章中找出對應單字填入摘要：<br>'+
     '• <b>第 (1) 格：</b>對應第一段第 2 句 <code>filled with overwhelming amounts of <b>possessions</b></code>，介系詞 <code>of</code> 後接複數名詞 <code>possessions</code>（所有物、物品）。<br>'+
     '• <b>第 (2) 格：</b>對應第四段第 1 句 <code>include dramatic before-and-after <b>transformations</b></code>，形容詞 <code>dramatic</code> 後接複數名詞 <code>transformations</code>（轉變、改造）。<br>'+
@@ -513,7 +518,7 @@ H+=card('R15',['考點：閱讀摘要資訊擷取與詞性定位','詞性需求�
 );
 
 // ==================== 卷一：中譯英 ====================
-H+='<h2 id="sec-rt">第二部分：閱讀理解能力測驗 — 四、中譯英 (R16–R17)</h2>';
+H+='<h2 id="sec-rt">卷一 第二部分：閱讀理解能力測驗 — 四、中譯英 (R16–R17)</h2>';
 
 H+=card('R16',['考點：數量詞 large amounts of ＋ end up V-ing 句型','詞性需求：完整對等連接詞複合句'],'Many foods today contain large amounts of sugar and fat, so people usually end up consuming more calories than they need.',
   '<div class="stem"><div class="zh" style="color:inherit">16. 現在很多食物含有大量糖和脂肪，所以人們常常最後攝取了比所需更多的熱量。(3%) (U9)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx('[[|Many foods today contain large amounts of sugar and fat, so people usually end up consuming more calories than they need.]]')+'</div></div>'+
@@ -528,353 +533,543 @@ H+=card('R17',['考點：否定主詞 no other + 單數名詞 ＋ 原級比較 a
     '2. <b>「沒有其他地方像……一樣……」：</b>題目強制規定使用原級比較 <code>…as…as…</code> 來表達最高級概念，結構為 <code>no other + 單數名詞 (place) + is as + adj. (convenient and safe) + as + 比較對象 (Taiwan)</code>。')
 );
 
-// ==================== 卷二：洞洞卷 文意字彙 ====================
-H+='<h2 id="sec-v1">卷二：隨堂洞洞卷 — 一、文意字彙 (V1–V10)</h2>';
+// ==================== 卷二：洞洞卷 U8 ====================
+H+='<h2 id="sec-u8">卷二：10w3 隨堂洞洞卷 — Unit 8 儲物症與收集的區別 (1–9)</h2>';
 
-const V1_DATA=[
-  ['V1',['考點：金融貿易名詞搭配 export commodities','詞性需求：複數可數名詞'],'commodities',
-    'Coffee and crude oil are important export [[V1|commodities]] for the country’s economy.','咖啡和原油是該國經濟的重要出口商品（大宗物資）。',
-    '主詞 <code>Coffee and crude oil</code>（咖啡與原油）屬於國際貿易中的初級原料與大宗商品，且與名詞修飾語 <code>export</code>（出口）搭配，故填複數名詞 <code>commodities</code>（原形 <code>commodity</code>）。'],
-  ['V2',['考點：名詞與介系詞搭配 recognition for','詞性需求：不可數名詞'],'recognition',
-    'Tony received [[V2|recognition]] for his hard work when the principal praised him in front of the whole school.','當校長在全校師生面前讚揚東尼時，他的辛勤付出獲得了認可（表揚）。',
-    '從時間子句 <code>when the principal praised him in front of the whole school</code>（校長在全校面前表揚他）可知，他的努力獲得了公開的「認可、讚賞」，構成搭配詞 <code>receive recognition for...</code>。'],
-  ['V3',['考點：片語搭配 at one’s own pace','詞性需求：單數名詞'],'pace',
-    'To truly enjoy a museum, you should walk through it at your own [[V3|pace]] rather than rushing from room to room.','要真正享受博物館之旅，你應該按照自己的步調漫步其中，而不是匆忙地從一個展間趕往另一個展間。',
-    '對比結構 <code>rather than rushing from room to room</code>（而不是匆忙趕場）提示前面應為「按照自己的步調／速度」，固定成語為 <code>at one’s own pace</code>。'],
-  ['V4',['考點：及物動詞與工具介系詞搭配 estimate... with a ruler','詞性需求：原形及物動詞'],'estimate',
-    'It is hard to [[V4|estimate]] the size of the box with just a ruler.','僅憑一把尺很難估算這個箱子的大小。',
-    '受詞為 <code>the size of the box</code>（箱子的尺寸），結合 <code>It is hard to ___ ... with just a ruler</code>（只用一把尺很難……），填入原形及物動詞 <code>estimate</code>（估計、估算）。'],
-  ['V5',['考點：飲食與營養及物動詞 consume','詞性需求：過去式及物動詞'],'consumed',
-    'Looking to lose weight, Eva only [[V5|consumed]] salads and water for dinner last week.','為了減重，伊娃上週晚餐只攝取（吃）了沙拉和水。',
-    '分詞構句 <code>Looking to lose weight</code>（為了減肥）與受詞 <code>salads and water for dinner</code> 提示動詞為「吃喝、攝取（consume）」，且句尾時間副詞 <code>last week</code> 為過去時間，故須變化為過去式 <code>consumed</code>。'],
-  ['V6',['考點：生理特徵與名詞搭配 facial features','詞性需求：複數可數名詞'],'features',
-    'Even though they are twins, they have very different facial [[V6|features]].','儘管他們是雙胞胎，他們卻有著非常不同的臉部特徵（五官）。',
-    '讓步子句 <code>Even though they are twins</code>（雖然是雙胞胎）與形容詞 <code>facial</code>（臉部的）構成固定搭配 <code>facial features</code>（臉部特徵、五官）。'],
-  ['V7',['考點：交通時刻表名詞搭配 departures and arrivals','詞性需求：複數可數名詞'],'departures',
-    'The train station screen shows all the [[V7|departures]] and arrivals for the day.','火車站的螢幕顯示了當天所有的發車（離站）與到站班次。',
-    '場景為 <code>The train station screen</code>（火車站螢幕），且對等連接詞 <code>and</code> 後方為反義對應字 <code>arrivals</code>（到站班次，複數），故前方必填其對應複數名詞 <code>departures</code>（發車／離站班次）。'],
-  ['V8',['考點：及物動詞語意與計畫受詞 disrupt our plans','詞性需求：原形及物動詞'],'disrupt',
-    'The sudden rain didn’t [[V8|disrupt]] our plans; we simply moved the picnic indoors.','這場突如其來的雨並沒有打亂我們的計畫；我們只是把野餐改到室內舉行而已。',
-    '分號後說明 <code>we simply moved the picnic indoors</code>（我們只是把野餐移到室內），代表突然下雨並未「中斷、打亂」計畫，助動詞 <code>didn’t</code> 後接原形動詞 <code>disrupt</code>。'],
-  ['V9',['考點：商業名詞搭配 launch a campaign','詞性需求：單數可數名詞'],'campaign',
-    'The company launched a new [[V9|campaign]] to promote its latest product on social media.','該公司發起了一場新的宣傳活動，在社群媒體上推廣其最新產品。',
-    '動詞 <code>launched</code>（發起、展開）與目的不定詞 <code>to promote its latest product</code>（推廣最新產品）構成典型商業行銷搭配 <code>launch a (marketing/advertising) campaign</code>（發起宣傳活動）。'],
-  ['V10',['考點：生態演化形容詞 evolutionary advantage','詞性需求：形容詞'],'evolutionary',
-    'A giraffe’s long neck gives it an [[V10|evolutionary]] advantage because it can reach leaves high in the trees.','長頸鹿的長脖子賦予牠演化上的優勢，因為牠能吃到高處樹上的葉子。',
-    '冠詞 <code>an</code>（母音開頭）與名詞 <code>advantage</code>（優勢）之間需填形容詞；後句解釋長頸鹿長脖子能吃到高處樹葉的生存適應機制，故填 <code>evolution</code> 的形容詞形 <code>evolutionary</code>（演化的）。']
-];
-
-V1_DATA.forEach(q=>{
-  H+=card(q[0],q[1],q[2],st(q[3],q[4])+clue(q[5]));
-});
-
-// ==================== 卷二：洞洞卷 詞類變化 ====================
-H+='<h2 id="sec-v2">卷二：隨堂洞洞卷 — 二、詞類變化 (V11–V15)</h2>';
-
-H+=card('V11',['考點：代名詞受詞後之反身代名詞（強調用法）','詞性需求：主詞／受詞同格強調（此題解答為 them）'],'them',
-  st('Waiters in this restaurant are trained to serve the guests [[V11|them]] politely and efficiently. *(they)*','這家餐廳的服務生都受過訓練，能夠禮貌且高效率地服務顧客們。')+
-  clue('本題提示字為代名詞 <code>they</code>。動詞 <code>serve</code> 後已有受詞 <code>the guests</code>，考卷標準解答填入受格 <code>them</code>。'),
-);
-
-H+=card('V12',['考點：be動詞後接形容詞表心理狀態','詞性需求：形容詞'],'anxious',
-  st('All of the students were [[V12|anxious]] about the results of the final exam. *(anxiety)*','所有的學生都對期末考的成績結果感到焦慮不安。')+
-  clue('連綴動詞 <code>were</code> 後、介系詞 <code>about</code> 前需填形容詞作主詞補語，構成固定片語 <code>be anxious about...</code>（對……感到焦慮）。將名詞 <code>anxiety</code> 去 <code>-iety</code> 改為形容詞字尾 <code>-ious</code> → <code>anxious</code>。')
-);
-
-H+=card('V13',['考點：名詞轉形容詞修飾可數名詞','詞性需求：形容詞'],'miraculous',
-  st('The doctor said the patient’s quick recovery was nothing short of a [[V13|miraculous]] event. *(miracle)*','醫生說這名病患的迅速康復簡直是一場奇蹟般的事件。')+
-  clue('不定冠詞 <code>a</code> 與單數名詞 <code>event</code>（事件）之間必須填入形容詞作修飾語。將名詞 <code>miracle</code>（奇蹟）變化為形容詞 <code>miraculous</code>（奇蹟般的）。片語 <code>nothing short of</code> 意為「簡直就是、無異於」。')
-);
-
-H+=card('V14',['考點：使役動詞 make + O + OC (形容詞) 結構','詞性需求：形容詞'],'irritable',
-  st('Lack of sleep can make people [[V14|irritable]] and quick to lose their temper. *(irritate)*','睡眠不足會使人變得暴躁易怒且很容易發脾氣。')+
-  clue('動詞結構為 <code>make + 受詞 (people) + 受詞補語</code>，且對等連接詞 <code>and</code> 後方為形容詞片語 <code>quick to lose their temper</code>（容易發脾氣的），故將及物動詞 <code>irritate</code>（激怒、使煩躁）轉為形容人性格情緒狀態的形容詞 <code>irritable</code>（易怒的、暴躁的）。')
-);
-
-H+=card('V15',['考點：單數主詞與一般動詞現在簡單式第三人稱單數','詞性需求：第三人稱單數現在式及物動詞'],'sustains',
-  st('Regular funding from the government [[V15|sustains]] the animal shelter throughout the year. *(sustain)*','來自政府的定期經費支撐（維持）了這間動物收容所全年的運作。')+
-  clue('本句主詞核心字為不可數動名詞 <code>Regular funding</code>（定期的資金／經費），視為第三人稱單數；且句尾時間副詞 <code>throughout the year</code> 表常態事實，故將原形動詞 <code>sustain</code> 加上 <code>-s</code> 成為 <code>sustains</code>。')
-);
-
-// ==================== 卷二：克漏字 (一) ====================
-H+='<h2 id="sec-c1">卷二：隨堂洞洞卷 — 三、克漏字 (一) 巨石陣的建造之謎 (V16–V20)</h2>';
-
-H+=passage('克漏字 (一) 全文：巨石陣 (Stonehenge) (Unit 8)',[
-  [
-    ['Stonehenge is one of the world’s most famous prehistoric monuments.','巨石陣是世界上最著名的史前遺跡之一。'],
-    ['Located in England, it is made up of massive stones [[16|arranged]] in circular patterns.','它位於英格蘭，由排列成圓形圖案的巨大石塊所組成。'],
-    ['For centuries, historians and scientists have debated how ancient people transported and raised these heavy rocks [[17|without]] modern machinery.','數個世紀以來，歷史學家與科學家一直在爭論古人是如何在沒有現代機械的情況下運輸並豎立這些沉重巨石的。'],
-    ['Some stones came from areas far away, [[18|making]] the achievement even more impressive.','有些石塊來自遙遠的地區，這使得這項成就更加令人讚嘆。'],
-    ['Recent research has offered new clues about the origins of the stones and the techniques [[19|used to build]] the site.','近期的研究針對這些石塊的來源以及用來建造該遺址的技術提供了新的線索。'],
-    ['Many experts believe Stonehenge was used for ceremonies, astronomical observations, or seasonal gatherings.','許多專家相信巨石陣曾被用於舉行宗教儀式、天文觀測或季節性聚會。'],
-    ['[[20|Despite]] decades of study, parts of its purpose and construction remain a mystery today.','儘管經過數十年的研究，它的部分用途與建造方式至今仍是個謎。']
-  ]
-]);
-
-H+=card('V16',['考點：關代省略之過去分詞後位修飾（被動）','詞性需求：過去分詞 (V-en)'],'B',
-  stem('16')+
-  clue('主要子句 <code>it is made up of massive stones</code> 結構已完整，空格後修飾前面的名詞 <code>massive stones</code>（巨石）。因為石頭是「被古人排列」成圓形圖案，由關係子句 <code>which are arranged in circular patterns</code> 省略 <code>which are</code> 後保留過去分詞 <code>arranged</code>。')+
-  ops([
-    ['arrange','v. 原形動詞','文法錯誤：同一個簡單句中不可在沒有連接詞的情況下出現第二個真動詞。<br><b>何時才對：</b>Workers helped <b>arrange</b> the chairs in circular patterns before the ceremony.'],
-    ['arranged','v. 過去分詞','正確：表被動關係的後位分詞修飾語，等同於 <code>which are arranged</code>。'],
-    ['arranging','v. 現在分詞','語態錯誤：現在分詞表主動，但石頭本身不會自己排列東西，且後面無受詞。<br><b>何時才對：</b>The florist spent the whole morning <b>arranging</b> flowers in circular patterns.'],
-    ['to arrange','不定詞','語意與結構不符：此處描述巨石陣目前呈現的靜態外觀結構，而非未來目的。<br><b>何時才對：</b>It took hundreds of laborers several years <b>to arrange</b> these massive stones.']
-  ],'B')
-);
-
-H+=card('V17',['考點：介系詞邏輯語意辨析','詞性需求：介系詞'],'C',
-  stem('17')+
-  clue('主詞為 <code>ancient people</code>（古人），動作是「搬運並立起這些沉重巨石（transported and raised these heavy rocks）」，名詞受詞為 <code>modern machinery</code>（現代機械）。古人時代自然「沒有」現代重型機械，故選否定介系詞 <code>without</code>，這也是為何科學家爭論數百年之久的原因。')+
-  ops([
-    ['under','prep. 在……之下','語意不符：<code>under modern machinery</code>（在現代機械下方）不合常理。<br><b>何時才對：</b>The ancient ruins were discovered buried deep <b>under</b> the ground.'],
-    ['beyond','prep. 超越；在……那邊','語意不符：不與機械工具搭配表使用與否。<br><b>何時才對：</b>How they moved the stones was <b>beyond</b> our imagination.'],
-    ['without','prep. 沒有；在缺乏……的情況下','正確：<code>without modern machinery</code>（在沒有現代機械的情況下）凸顯史前工程的不可思議。'],
-    ['through','prep. 透過；穿過','時代矛盾：史前古人不可能「透過（through）」現代機械來搬運巨石。<br><b>何時才對：</b>Modern engineers lifted the heavy bridge sections <b>through</b> hydraulic machinery.']
-  ],'C')
-);
-
-H+=card('V18',['考點：結果分詞構句（修飾前面整件事）','詞性需求：現在分詞 (V-ing)'],'C',
-  stem('18')+
-  clue('逗號前 <code>Some stones came from areas far away</code> 為完整子句，逗號後無連接詞，表示「有些石頭甚至來自遙遠地區」這整件事，自然造成了「使這項成就更令人驚嘆」的結果。整件事作主詞主動發出 <code>make</code> 的動作（<code>, which made the achievement...</code>），簡化為分詞構句必用現在分詞 <code>making</code>。')+
-  ops([
-    ['make','v. 原形動詞','文法錯誤：逗號不能直接連接兩個無連接詞的動詞。<br><b>何時才對：</b>Long-distance transport and precise placement <b>make</b> the achievement impressive.'],
-    ['made','v. 過去式／過去分詞','文法錯誤：缺連接詞不可用過去式；後接 <code>the achievement (O) + impressive (OC)</code> 為五號主動句型，不可用過去分詞。<br><b>何時才對：</b>This monument <b>made</b> of giant bluestones still amazes tourists today.'],
-    ['making','v. 現在分詞','正確：代替 <code>, which made</code> 的結果分詞構句，後接 <code>O + OC</code>。'],
-    ['to make','不定詞','語意不符：石頭來自遠方是客觀事實造成的結果，而非石頭為了讓成就更驚人而特地從遠方跑來。<br><b>何時才對：</b>Ancient builders worked together <b>to make</b> the monument last forever.']
-  ],'C')
-);
-
-H+=card('V19',['考點：過去分詞後位修飾與 be used to V / V-ing 辨析','詞性需求：過去分詞片語 (used to + 原形動詞)'],'A',
-  stem('19')+
-  clue('先行詞為無生命名詞 <code>the techniques</code>（技術），技術是「被用來建造（which were used to build）」該遺址的：省略關代與 be 動詞後為 <code>used to build</code>。切勿誤選 <code>used to building</code>（<code>be used to V-ing</code> 意為「習慣於……」，主詞必須是有生命的人或動物，技術不會有習慣）。')+
-  ops([
-    ['used to build','被用來建造……','正確：由 <code>(which were) used to build the site</code> 簡化而來，<code>to build</code> 為表目的的不定詞。'],
-    ['using to build','主動分詞（語態錯誤）','語態錯誤：<code>techniques</code>（技術）是被人類使用（used），不能用主動現在分詞 <code>using</code>。<br><b>何時才對：</b>Scientists <b>using</b> radar technology to scan the ground found more buried stones.'],
-    ['used to building','習慣於建造（語意錯誤）','片語誤用：<code>(be) used to + V-ing</code> 意為「習慣於……」，無生命的 <code>techniques</code> 不可能「習慣於」蓋建築。<br><b>何時才對：</b>The experienced stonemasons were <b>used to building</b> structures in harsh weather.'],
-    ['were used to build','完整被動動詞（結構錯誤）','文法錯誤：前半句已有主要動詞 <code>has offered</code>，若直接接 <code>were used</code> 則缺少關係代名詞 <code>that/which</code>。<br><b>何時才對：</b>The techniques <b>that were used to build</b> the site remain impressive.']
-  ],'A')
-);
-
-H+=card('V20',['考點：讓步介系詞與連接詞的文法區別','詞性需求：讓步介系詞'],'B',
-  stem('20')+
-  clue('空格後面為單純的名詞片語 <code>decades of study</code>（數十年的研究），沒有動詞！後面主要子句說「部分用途與建造方式至今仍是謎（remain a mystery today）」，前後形成「儘管研究多年，卻仍未解開」的讓步關係。後接名詞片語的讓步介系詞為 <code>Despite</code>（＝ <code>In spite of</code>）。')+
-  ops([
-    ['Because','conj. 因為','詞性與語意皆錯：<code>Because</code> 是從屬連接詞，後面必須接完整子句（S + V），不能只接名詞片語 <code>decades of study</code>；且語意並非因果關係。<br><b>何時才對：</b><b>Because</b> researchers studied the site for decades, many new clues were found.'],
-    ['Despite','prep. 儘管','正確：<code>Despite</code> 為介系詞，直接接名詞片語 <code>decades of study</code> 表讓步。'],
-    ['Unless','conj. 除非','詞性與語意皆錯：<code>Unless</code> 為條件連接詞，後面必須接子句（S + V）。<br><b>何時才對：</b>The mystery will remain unsolved <b>unless</b> new historical records are discovered.'],
-    ['During','prep. 在……期間','語意不合：若選 <code>During decades of study</code>（在數十年的研究期間），與句尾時間副詞 <code>remain a mystery today</code>（至今仍是謎）邏輯不搭，無法呈現轉折感。<br><b>何時才對：</b>Many ancient tools were dug up <b>during</b> decades of archaeological study.']
-  ],'B')
-);
-
-// ==================== 卷二：克漏字 (二) ====================
-H+='<h2 id="sec-c2">卷二：隨堂洞洞卷 — 三、克漏字 (二) 咖啡因與小睡 (V21–V25)</h2>';
-
-H+=passage('克漏字 (二) 全文：咖啡因與小睡的提神比較 (Unit 9)',[
-  [
-    ['Many students struggle to stay awake during afternoon classes.','許多學生在下午的課堂中努力維持清醒。'],
-    ['Some turn to coffee or energy drinks, hoping the caffeine will [[21|boost]] their focus.','有些人會轉而求助於咖啡或能量飲料，希望咖啡因能提升他們的專注力。'],
-    ['While these drinks can work quickly, the effect often doesn’t last long and may [[22|lead to]] a sudden drop in energy later.','雖然這些飲品能迅速見效，但效果往往不持久，且稍後可能會導致精力的驟降。'],
-    ['Health experts suggest taking a short nap [[23|instead]].','健康專家建議改為小睡片刻。'],
-    ['Even a 15-minute rest can refresh the brain and improve memory [[24|more effectively]] than another cup of coffee.','即使是十五分鐘的休息，也能比再喝一杯咖啡更有效地讓大腦恢復精神並增進記憶力。'],
-    ['Developing healthy sleep habits at night is still the best way to avoid daytime tiredness [[25|in the long run]].','從長遠來看，養成良好的夜間睡眠習慣仍然是避免白天疲勞的最佳方式。']
-  ]
-]);
-
-H+=card('V21',['考點：及物動詞與專注力搭配 boost focus','詞性需求：原形及物動詞'],'B',
-  stem('21')+
-  clue('前句說明學生想維持清醒（stay awake）而喝咖啡或能量飲料，期望其中的咖啡因能「提升、增強」他們的專注力（<code>___ their focus</code>），正向動詞選 <code>boost</code>。')+
-  ops([
-    ['reduce','v. 減少；降低','語意相反：喝咖啡是為了提升專注力，而非降低專注力。<br><b>何時才對：</b>Turning off phone notifications can <b>reduce</b> distractions while studying.'],
-    ['boost','v. 提升；促進；增強','正確：<code>boost their focus</code> 指「提升他們的專注力」。'],
-    ['ignore','v. 忽視；不理會','語意不符：咖啡因不會「忽視」專注力。<br><b>何時才對：</b>You shouldn’t <b>ignore</b> the warning signs of extreme sleep deprivation.'],
-    ['damage','v. 損害；破壞','語意矛盾：學生喝能量飲料的「主觀希望（hoping）」是提神，不會希望破壞自己的專注力。<br><b>何時才對：</b>Drinking too much alcohol can permanently <b>damage</b> your liver.']
-  ],'B')
-);
-
-H+=card('V22',['考點：因果片語動詞辨析 lead to','詞性需求：原形片語動詞'],'A',
-  stem('22')+
-  clue('主詞為咖啡因飲料的短暫效果，受詞為 <code>a sudden drop in energy later</code>（稍後精力的突然暴跌，即結果）。前因後果的關係須用 <code>lead to</code>（導致、引起）。特別注意 (B) <code>result from</code> 後面接的是「原因」而非「結果」。')+
-  ops([
-    ['lead to','導致；引起（後接結果）','正確：<code>may lead to a sudden drop in energy</code>（可能導致精力驟降），同 <code>result in</code>。'],
-    ['result from','起因於……（後接原因）','因果顛倒：<code>result from</code> 後面必須接原因，但「精力驟降」是喝能量飲料產生的結果。<br><b>何時才對：</b>His sudden drop in energy <b>resulted from</b> the caffeine wearing off.'],
-    ['recover from','從……中康復／恢復','語意不符：主詞是提神飲料的效果，不會從精力下降中康復。<br><b>何時才對：</b>It took him a whole weekend to <b>recover from</b> the exhausting week.'],
-    ['consist of','由……組成','語意不符：此處談論生理副作用，而非成分組成。<br><b>何時才對：</b>Most energy drinks <b>consist of</b> water, sugar, and high doses of caffeine.']
-  ],'A')
-);
-
-H+=card('V23',['考點：句尾轉折副詞 instead 用法','詞性需求：副詞'],'D',
-  stem('23')+
-  clue('前兩句指出喝咖啡或能量飲料有「效果短暫、隨後精力暴跌」的缺點，本句提出專家的替代方案：<code>taking a short nap ___</code>（改為小睡一下）。置於句尾表「作為替代、反而、改為……」的單字副詞唯有 <code>instead</code>（注意：若在名詞前才用複合介系詞 <code>instead of</code>）。')+
-  ops([
-    ['either','adv. 也（用於否定句尾）','文法不符：<code>either</code> 作「也」解時僅能用於否定句句尾，本句為肯定句。<br><b>何時才對：</b>Coffee didn’t keep him awake, and energy drinks didn’t work, <b>either</b>.'],
-    ['overall','adv. 整體而言','語意不符：此處是提供替代喝咖啡的建議，而非對前文做總體評估。<br><b>何時才對：</b>There were a few minor mistakes, but <b>overall</b> your presentation was great.'],
-    ['besides','adv. 此外；況且','位置與語意不符：<code>besides</code> 通常置於句首補充額外理由，不表「取代前項方案」。<br><b>何時才對：</b>I don’t want to drink coffee late at night; <b>besides</b>, it’s too expensive.'],
-    ['instead','adv. 反而；作為替代；改為','正確：置於句尾，表示不喝咖啡而「改採小睡片刻」。']
-  ],'D')
-);
-
-H+=card('V24',['考點：副詞比較級修飾一般動詞','詞性需求：副詞比較級 (more + adv.)'],'C',
-  stem('24')+
-  clue('其一，空格後面有明確的比較級標記 <code>than another cup of coffee</code>，故必須使用比較級（排除 A、B）；其二，空格是用來修飾前面的及物動詞片語 <code>refresh the brain and improve memory</code>（如何刷新大腦並改善記憶？→「更有效地」改善），修飾動詞必須用副詞比較級 <code>more effectively</code>，而非形容詞 <code>more effective</code>。')+
-  ops([
-    ['effective','adj. 有效的（原級）','詞性與級別皆錯：後有 <code>than</code> 需用比較級，且修飾動詞不可用形容詞。<br><b>何時才對：</b>Taking a short power nap is an <b>effective</b> way to refresh your mind.'],
-    ['effectively','adv. 有效地（原級）','級別錯誤：後面緊接 <code>than another cup of coffee</code>，不能只用原級。<br><b>何時才對：</b>A 15-minute nap can <b>effectively</b> restore your mental alertness.'],
-    ['more effectively','adv. 更有效地（比較級）','正確：副詞比較級修飾動詞 <code>refresh... and improve...</code>，並呼應後方的 <code>than</code>。'],
-    ['more effective','adj. 更有效的（比較級）','詞性錯誤：形容詞比較級只能修飾名詞或作連綴動詞（如 <code>be / become</code>）的補語，不能修飾一般動作動詞 <code>improve</code>。<br><b>何時才對：</b>A 15-minute rest is <b>more effective</b> than another cup of coffee.']
-  ],'C')
-);
-
-H+=card('V25',['考點：時間與觀點慣用介系詞片語辨析','詞性需求：副詞性介系詞片語'],'B',
-  stem('25')+
-  clue('前句討論下午小睡 15 分鐘的短期急救法，本句拉高視野總結：「養成良好的夜間睡眠習慣（Developing healthy sleep habits at night）才是避免白天疲勞的最佳方式」，這顯然是「從長遠來看、長期而言」的治本之道，對應慣用語 <code>in the long run</code>。')+
-  ops([
-    ['at first sight','乍看之下；一見鍾情','語意不符：養成睡眠習慣是長期累積的效果，不是第一眼看到的事物。<br><b>何時才對：</b>They fell in love <b>at first sight</b> when they met at the party.'],
-    ['in the long run','從長遠來看；終究','正確：與前文的短期提神法（咖啡因、午睡）對比，強調夜間良好睡眠習慣的長期根本效益。'],
-    ['by accident','偶然；意外地','語意不符：養成健康睡眠習慣需要刻意維持，不是意外發生的。<br><b>何時才對：</b>I deleted the important document <b>by accident</b> while cleaning up my desktop.'],
-    ['on purpose','故意地；蓄意地','語意不符：不搭配「避免疲勞的最佳方式」。<br><b>何時才對：</b>He left his phone at home <b>on purpose</b> so nobody could bother him.']
-  ],'B')
-);
-
-// ==================== 卷二：文意選填 ====================
-H+='<h2 id="sec-wf">卷二：隨堂洞洞卷 — 四、文意選填：變色龍的奧秘 (V26–V35)</h2>';
-
-H+='<div class="pas"><div class="bank"><b>選項字庫（10 選 10）：</b>'+
-  '<span>(A) prey <small>n. 獵物</small></span>'+
-  '<span>(B) fragile <small>adj. 脆弱的</small></span>'+
-  '<span>(C) astonished <small>adj. 感到驚訝的</small></span>'+
-  '<span>(D) independently <small>adv. 獨立地</small></span>'+
-  '<span>(E) traits <small>n. 特徵（複數）</small></span>'+
-  '<span>(F) plunges <small>v. 猛衝／疾刺（三單）</small></span>'+
-  '<span>(G) cautious <small>adj. 謹慎的</small></span>'+
-  '<span>(H) surroundings <small>n. 周遭環境</small></span>'+
-  '<span>(I) distinguish <small>v. 辨別（原形）</small></span>'+
-  '<span>(J) hooked <small>adj. 著迷的</small></span>'+
+H+='<div class="pas"><div class="bank"><b>U8 頂部選項字庫（第 1、4、8、9 題共用）：</b>'+
+  '<span>(A) typically <small>adv. 通常、典型地</small></span>'+
+  '<span>(B) drive <small>v. 驅使、迫使</small></span>'+
+  '<span>(C) takes <small>v. 需要、花費（三單）</small></span>'+
+  '<span>(D) seemingly <small>adv. 看似、表面上</small></span>'+
 '</div></div>';
 
-H+=passage('文意選填全文：變色龍 (Chameleons) (Units 8–11)',[
+H+=passage('Unit 8 全文：儲物症 (Hoarding Disorder)',[
   [
-    ['Chameleons are among the most fascinating reptiles in the animal kingdom.','變色龍是動物界中最迷人的爬蟲類動物之一。'],
-    ['Many wildlife lovers quickly become [[26|hooked]] on learning about these unusual creatures.','許多野生動物愛好者很快就迷上了研究這些不同尋常的生物。'],
-    ['People are often [[27|astonished]] by their ability to change skin color, which helps them communicate and regulate body temperature as well as blend into their [[28|surroundings]].','人們往往對牠們改變膚色的能力感到驚訝，這項能力除了幫助牠們融入周遭環境外，也能協助牠們溝通與調節體溫。'],
-    ['This skill makes it hard for predators to [[29|distinguish]] a chameleon from the leaves and branches around it.','這項技能使得掠食者很難將變色龍與牠周圍的樹葉和樹枝區分開來。']
+    ['Do you have a friend or family member who [[1|seemingly]] can’t throw anything away?','你是否有一位看似什麼東西都捨不得丟掉的朋友或家人？'],
+    ['Is their home filling up with item after item, year after year, so that even moving around in it is becoming a danger?','他們的家是否年復一年塞滿了一件又一件的物品，以至於連在屋內走動都變成一種危險？'],
+    ['If so, it may be a sign of a hoarding disorder.','如果是這樣，這可能是「儲物症（囤積症）」的徵兆。']
   ],
   [
-    ['Besides color changes, chameleons have several unique physical [[30|traits]].','除了改變顏色之外，變色龍還擁有幾項獨特的身體特徵。'],
-    ['For example, their eyes can move [[31|independently]], allowing them to look in two directions at once.','舉例來說，牠們的眼睛可以各自獨立轉動，讓牠們能同時朝兩個方向觀看。'],
-    ['When hunting, a chameleon stays very still and remains [[32|cautious]] as it watches an insect.','在狩獵時，變色龍在注視昆蟲的過程中會保持非常靜止且維持謹慎小心。'],
-    ['Then, in a split second, its long tongue [[33|plunges]] forward to catch the [[34|prey]].','接著，在一瞬間，牠的長舌頭會猛然向前疾刺以捕捉獵物。'],
-    ['Despite their tough appearance, many small chameleon species are actually quite [[35|fragile]] and sensitive to changes in their habitat, so protecting forest environments is vital for their survival.','儘管外表看起來強悍，許多小型變色龍物種實際上相當脆弱，且對棲息地的變化十分敏感，因此保護森林環境對牠們的生存至關重要。']
+    ['It’s important to [[2|distinguish]] hoarding [[200|from]] simple collecting.','將「儲物症」與單純的「收集」區分開來是很重要的。'],
+    ['Collectors usually focus on specific objects—often objects of value such as trading cards, [[3|antiques]], or old books.','收藏家通常專注於特定的物品——往往是有價值的物品，例如集換式卡牌、骨董或古書。'],
+    ['Although they may own many items, their collections are [[4|typically]] highly organized.','儘管他們可能擁有許多物品，但他們的收藏品通常都整理得井然有序。'],
+    ['Hoarders, on the other hand, simply struggle with throwing anything away.','另一方面，儲物症患者則純粹是對於丟棄任何東西都感到掙扎困難。'],
+    ['Old newspapers, stationery, tissue packets, and broken cups keep piling up[[5|, which]] often leads to a dangerous level of clutter.','舊報紙、文具、面紙包和破杯子不斷堆積，這往往會導致危險程度的雜亂。']
+  ],
+  [
+    ['It is thought that around 2.5 percent of people suffer from hoarding disorder and [[6|that]] it tends to get worse with age.','據認為約有 2.5% 的人患有儲物症，而且這種情況往往會隨著年齡增長而惡化。'],
+    ['Treatment can be challenging, as hoarders often feel comforted when surrounded by their [[7|possessions]].','治療可能深具挑戰性，因為儲物症患者在被自己的個人物品包圍時，往往會感到安心慰藉。'],
+    ['However, targeted therapy can help a hoarder recognize the thought patterns that [[8|drive]] the behavior and begin to control it.','然而，針對性的心理治療能幫助患者認清驅使這種行為的思維模式，並開始加以控制。'],
+    ['It [[9|takes]] patience and a lot of support, but people with hoarding disorder can be shown that it’s possible to let things go.','這需要耐心與大量的支持，但我們可以讓儲物症患者看見「放手（斷捨離）」是有可能的。']
   ]
 ]);
 
-const WF_BANK=[
-  ['prey','n. 獵物（不可數名詞）'],
-  ['fragile','adj. 脆弱的；易碎的'],
-  ['astonished','adj. （人）感到驚訝的'],
-  ['independently','adv. 獨立地；各自地'],
-  ['traits','n. 特徵；特質（複數名詞）'],
-  ['plunges','v. 猛衝；縱身投入（第三人稱單數現在式動詞）'],
-  ['cautious','adj. 謹慎的；小心的'],
-  ['surroundings','n. 周遭環境（恆用複數名詞）'],
-  ['distinguish','v. 辨別；區分（原形及物動詞）'],
-  ['hooked','adj. 著迷的；上癮的']
+const U8_BANK=[
+  ['typically','adv. 通常；典型地'],
+  ['drive','v. 驅使；推動（複數現在式動詞）'],
+  ['takes','v. 需要；耗費（第三人稱單數現在式動詞）'],
+  ['seemingly','adv. 看似；表面上']
 ];
 
-function wfOps(ansChar,correctReason,wrongReasons){
-  const labs='ABCDEFGHIJ';
-  return ops(WF_BANK.map((b,i)=>{
-    const ch=labs[i];
-    return [b[0],b[1],ch===ansChar?correctReason:wrongReasons[ch]];
-  }),ansChar,labs);
-}
-
-const WF_DEFAULT_WRONG={
-  A:'詞性或語意不符：<code>prey</code> 為不可數名詞「獵物」，僅能作主詞或受詞指被捕食的動物。<br><b>何時才對：</b>The eagle swooped down from the sky to snatch its <b>prey</b>.',
-  B:'詞性或語意不符：<code>fragile</code> 為形容詞「脆弱的、易碎的」，需描述容易受傷或損壞的人事物。<br><b>何時才對：</b>Coral reefs are <b>fragile</b> ecosystems that are easily damaged by pollution.',
-  C:'詞性或語意不符：<code>astonished</code> 為情緒分詞形容詞「（人）感到驚訝的」，常搭配 <code>be astonished by/at</code>。<br><b>何時才對：</b>Scientists were <b>astonished</b> by how tiny the newly discovered reptile was.',
-  D:'詞性不符：<code>independently</code> 為副詞「各自獨立地」，僅能修飾一般動詞。<br><b>何時才對：</b>The two departments operate <b>independently</b> of each other.',
-  E:'詞性或語意不符：<code>traits</code> 為複數名詞「特徵、特質」，常搭配 <code>physical/personality traits</code>。<br><b>何時才對：</b>A long sticky tongue is one of the chameleon’s most famous <b>traits</b>.',
-  F:'詞性不符：<code>plunges</code> 為第三人稱單數現在式動詞「猛衝、跳入」，前面必須有單數主詞。<br><b>何時才對：</b>The kingfisher <b>plunges</b> into the river to catch a small fish.',
-  G:'詞性或語意不符：<code>cautious</code> 為形容詞「謹慎的、小心的」，描述行事警覺的狀態。<br><b>何時才對：</b>Wild animals are naturally <b>cautious</b> when approaching a water hole.',
-  H:'詞性或語意不符：<code>surroundings</code> 為複數名詞「周遭環境」，常作介系詞受詞（如 <code>blend into their surroundings</code>）。<br><b>何時才對：</b>Arctic foxes have white fur that helps them blend into their snowy <b>surroundings</b>.',
-  I:'詞性不符：<code>distinguish</code> 為原形及物動詞「區分、辨別」，常搭配 <code>distinguish A from B</code>。<br><b>何時才對：</b>Colorblind people sometimes find it hard to <b>distinguish</b> red from green.',
-  J:'詞性或搭配不符：<code>hooked</code> 為形容詞「著迷的」，必須搭配介系詞 <code>on</code>（<code>become/be hooked on</code>）。<br><b>何時才對：</b>My little brother became <b>hooked</b> on dinosaur documentaries at age five.'
+const U8_WRONG={
+  A:'詞性或語意不符：<code>typically</code> 為頻率／狀態副詞「通常、典型地」，用於描述一般常態慣例。<br><b>何時才對：</b>Collectors <b>typically</b> organize their items neatly on shelves.',
+  B:'詞性不符：<code>drive</code> 為複數及物動詞「驅使、推動」，後面必須直接接名詞受詞。<br><b>何時才對：</b>Deep emotional insecurities often <b>drive</b> people to hoard objects.',
+  C:'詞性不符：<code>takes</code> 為第三人稱單數及物動詞「需要、耗費」，常以虛主詞或事為主詞（<code>It takes + 時間/耐心</code>）。<br><b>何時才對：</b>It <b>takes</b> great courage to admit that you need psychological help.',
+  D:'詞性或語意不符：<code>seemingly</code> 為副詞「看似、表面上」，強調從外人旁觀角度看來似乎如此。<br><b>何時才對：</b>He remained <b>seemingly</b> calm despite the chaos around him.'
 };
 
-const WF_QUESTIONS=[
-  ['V26',['考點：連綴動詞 become + hooked on 固定搭配','詞性需求：形容詞'],'J',
-    '26',
-    '連綴動詞 <code>become</code> 後接形容詞作主詞補語，且空格後方緊接關鍵介系詞 <code>on learning about...</code>，唯有 <code>(J) hooked</code> 能構成固定片語 <code>become hooked on + V-ing</code>（迷上……）。',
-    '正確：<code>become hooked on learning...</code> 意為「迷上研究這些奇特生物」。'],
-  ['V27',['考點：情緒過去分詞 be astonished by','詞性需求：形容詞（過去分詞）'],'C',
-    '27',
-    '主詞為 <code>People</code>（人），結構為 <code>are often ___ by their ability to change skin color</code>（對牠們變換膚色的能力感到……）。修飾「人感到驚訝」並搭配介系詞 <code>by</code>，應選過去分詞形容詞 <code>(C) astonished</code>。',
-    '正確：<code>People are often astonished by...</code>（人們常對……感到驚訝）。'],
-  ['V28',['考點：所有格後接名詞與搭配詞 blend into surroundings','詞性需求：名詞'],'H',
-    '28',
-    '所有格 <code>their</code> 後面必須接名詞，且動詞片語 <code>blend into their ___</code>（融入牠們的……）是動物偽裝保護色的標準搭配，故填入 <code>(H) surroundings</code>（周遭環境）。',
-    '正確：<code>blend into their surroundings</code> 指「融入牠們的周遭環境」。'],
-  ['V29',['考點：不定詞 to V 與片語搭配 distinguish A from B','詞性需求：原形及物動詞'],'I',
-    '29',
-    '虛受詞句型 <code>makes it hard for predators to ___</code> 中，不定詞 <code>to</code> 後面缺「原形動詞」；且後方結構為 <code>a chameleon from the leaves and branches</code>，完全吻合 <code>distinguish A from B</code>（將 A 與 B 區分開來），故選 <code>(I) distinguish</code>。',
-    '正確：<code>to distinguish a chameleon from the leaves...</code>（把變色龍與周圍樹葉區分開來）。'],
-  ['V30',['考點：形容詞後接複數名詞 physical traits','詞性需求：複數可數名詞'],'E',
-    '30',
-    '數量詞 <code>several</code>（數個）與形容詞 <code>unique physical</code>（獨特的身體……）後面必須接「複數可數名詞」；後文舉例說明牠們獨立轉動的眼睛與長舌頭，這些都是變色龍的「身體特徵」，故選 <code>(E) traits</code>。',
-    '正確：<code>several unique physical traits</code>（幾項獨特的身體特徵）。'],
-  ['V31',['考點：副詞修飾不及物動詞 move independently','詞性需求：副詞'],'D',
-    '31',
-    '主詞與動詞 <code>their eyes can move</code> 結構已完整，空格用來修飾動詞 <code>move</code>，故必填「副詞」；且後半句 <code>allowing them to look in two directions at once</code>（使牠們能同時看兩個方向）直接解釋兩隻眼睛能「各自獨立地」移動，故選 <code>(D) independently</code>。',
-    '正確：副詞 <code>independently</code> 修飾動詞 <code>move</code>，呼應後文同時看兩個方向。'],
-  ['V32',['考點：連綴動詞 remain + 形容詞補語','詞性需求：形容詞'],'G',
-    '32',
-    '連綴動詞 <code>remains</code>（維持、保持）後面需接形容詞作主詞補語，且與前方的 <code>stays very still</code>（保持非常靜止）並列描述狩獵盯著獵物時的警覺狀態，故選形容詞 <code>(G) cautious</code>（謹慎小心的）。',
-    '正確：<code>remains cautious</code>（保持謹慎小心），符合狩獵時不驚動獵物的習性。'],
-  ['V33',['考點：單數主詞與不及物動作動詞 plunges forward','詞性需求：第三人稱單數現在式動詞'],'F',
-    '33',
-    '本句主詞為單數名詞 <code>its long tongue</code>（牠的長舌頭），後面為方向副詞 <code>forward</code> 與目的不定詞 <code>to catch...</code>，全句缺少主要「第三人稱單數現在式動詞」。描述變色龍舌頭在瞬間（in a split second）「猛然向前疾刺／衝出」，選 <code>(F) plunges</code>。',
-    '正確：<code>its long tongue plunges forward</code>（牠的長舌頭猛然向前刺出）。'],
-  ['V34',['考點：定冠詞後接名詞與狩獵搭配 catch the prey','詞性需求：名詞'],'A',
-    '34',
-    '及物動詞與定冠詞 <code>to catch the ___</code> 後面必須接名詞作受詞。前句提到變色龍正盯著一隻昆蟲（watches an insect）進行狩獵（When hunting），舌頭射出要捕捉的對象即為「獵物」，故選 <code>(A) prey</code>。',
-    '正確：<code>to catch the prey</code>（以捕捉獵物），指代前句的 <code>an insect</code>。'],
-  ['V35',['考點：讓步對比（tough vs. fragile）與形容詞補語','詞性需求：形容詞'],'B',
-    '35',
-    '句首讓步介系詞片語 <code>Despite their tough appearance</code>（儘管牠們外表看起來強悍）與副詞 <code>quite ___</code> 及對等形容詞 <code>and sensitive to changes in their habitat</code>（對棲息地變化很敏感）形成強烈對比。與 <code>tough</code>（強悍堅韌的）相反、且與 <code>sensitive</code> 並列的形容詞即為 <code>(B) fragile</code>（脆弱的）。',
-    '正確：<code>quite fragile</code>（相當脆弱）與句首的 <code>tough appearance</code> 形成轉折對比。']
+H+=card('1',['考點：副詞修飾助動詞片語與語境辨析','詞性需求：副詞'],'D (seemingly)',
+  stem('1')+
+  clue('關係子句 <code>who ___ can’t throw anything away</code> 結構完整，空格位於助動詞 <code>can’t</code> 之前，需填「副詞」。首句從親友旁觀者的角度觀察對方「看似、彷彿什麼東西都丟不掉」，且第 3 句接著說 <code>it may be a sign of...</code>（這可能是……的徵兆），故選表外在表象的副詞 <code>(D) seemingly</code>。')+
+  bankOps(U8_BANK,'ABCD','D','正確：<code>who seemingly can’t throw anything away</code> 指「表面上看來似乎什麼都捨不得丟的人」。',U8_WRONG)
+);
+
+H+=card('2',['考點：字首字尾提示拼字 ＋ 固定搭配 distinguish A from B','詞性需求：原形及物動詞 ＋ 介系詞'],'distinguish / (介) from',
+  stem('2')+
+  clue('題幹給予中文與字首字尾提示「<code>區分 d___h hoarding + 2.介 simple collecting</code>」。英文中「將 A 與 B 區分／辨別開來」的固定句型為 <code>distinguish A from B</code>，故第一格填原形動詞 <code>distinguish</code>，第二格介系詞填 <code>from</code>。')
+);
+
+H+=card('3',['考點：字首字尾提示拼字與對等名詞複數','詞性需求：複數可數名詞'],'antiques',
+  stem('3')+
+  clue('題幹給予提示「<code>[骨董 a___es]</code>」，且位於舉例片語 <code>such as trading cards, ___, or old books</code> 中，與前後複數名詞 <code>trading cards</code>、<code>old books</code> 對等並列，故填入複數可數名詞 <code>antiques</code>（骨董、古玩）。')
+);
+
+H+=card('4',['考點：副詞修飾分詞形容詞與前後文對比','詞性需求：副詞'],'A (typically)',
+  stem('4')+
+  clue('空格位於 be 動詞 <code>are</code> 與副詞＋過去分詞 <code>highly organized</code>（高度井然有序的）之間，需填副詞。前句已有 <code>Collectors usually focus on...</code>，本句延續說明收藏家的收藏品「通常、一般而言」都整理得很有條理，以與下句 <code>Hoarders, on the other hand...</code> 對比，故選 <code>(A) typically</code>。')+
+  bankOps(U8_BANK,'ABCD','A','正確：<code>are typically highly organized</code>（通常都整理得非常有條理）。',U8_WRONG)
+);
+
+H+=card('5',['考點：非限定關係子句 , which 指代前面整件事','詞性需求：逗號 ＋ 關係代名詞'],'B (, which)',
+  stem('5')+
+  clue('前半句 <code>Old newspapers, stationery, tissue packets, and broken cups keep piling up</code> 為完整子句，後半句動詞為第三人稱單數 <code>often leads to a dangerous level of clutter</code>。能代表「前面整句話（雜物不斷堆積這件事）」並作後面子句單數主詞的結構，唯有「逗號 ＋ 關係代名詞 <code>, which</code>」。')+
+  ops([
+    [', where','關係副詞','文法錯誤：<code>where</code> 是關係副詞，後面必須接具備主詞的完整子句（S + V），不能直接當主詞接動詞 <code>leads to</code>。<br><b>何時才對：</b>Items keep piling up in the living room<b>, where</b> there is barely any space to walk.'],
+    [', which','非限定關係代名詞','正確：<code>, which</code> 先行詞為前面整個主要子句，視為單數，後接單數動詞 <code>leads to</code>。'],
+    ['that','關係代名詞','文法錯誤：其一，關係代名詞 <code>that</code> 不能指代「前面整個子句」；其二，若無逗號且先行詞是前面的複數名詞 <code>broken cups</code>，動詞應為複數 <code>lead</code> 而非單數 <code>leads</code>。<br><b>何時才對：</b>This is a mental health condition <b>that</b> often leads to a dangerous level of clutter.']
+  ],'B')
+);
+
+H+=card('6',['考點：對等連接詞 and 連接第二個名詞子句時 that 不可省略','詞性需求：名詞子句連接詞 that'],'C (that)',
+  stem('6')+
+  clue('句首為被動報導句型 <code>It is thought that + 子句 1 ... and ___ + 子句 2</code>。當動詞或形容詞後接兩個由 <code>and</code> 對等連接的受詞／真主詞名詞子句時，第二個名詞子句開頭的連接詞 <code>that</code> 絕對不可省略（以免讀者誤判對等範圍），且後面子句 <code>it tends to get worse with age</code> 結構與語意皆完整，不缺疑問詞，故選 <code>(C) that</code>。')+
+  ops([
+    ['how','如何；多麼','語意不符：此處是陳述「它往往隨年齡惡化」這項客觀事實，而非詢問惡化的方式或程度。<br><b>何時才對：</b>Psychologists are studying <b>how</b> hoarding disorder develops in early adulthood.'],
+    ['what','什麼（複合關代）','文法錯誤：<code>what</code> 在名詞子句中必須充當主詞、受詞或補語，但後方子句 <code>it tends to get worse with age</code> 結構已完全飽滿，不缺名詞成分。<br><b>何時才對：</b>Many people don’t understand <b>what</b> causes hoarders to keep broken items.'],
+    ['that','名詞子句連接詞（無義）','正確：與前方的 <code>It is thought that...</code> 對等並列第二個事實子句。']
+  ],'C')
+);
+
+H+=card('7',['考點：字首字尾提示拼字與所有格後接複數名詞','詞性需求：複數可數名詞'],'possessions',
+  stem('7')+
+  clue('題幹給予提示「<code>[個人物品 p___ns]</code>」，且位於所有格 <code>their</code> 之後，指儲物症患者所擁有的各種財物、所有物，故填入複數名詞 <code>possessions</code>。')
+);
+
+H+=card('8',['考點：關係子句複數及物動詞與搭配詞 drive the behavior','詞性需求：複數現在式及物動詞'],'B (drive)',
+  stem('8')+
+  clue('關係代名詞 <code>that</code> 的先行詞為複數名詞 <code>the thought patterns</code>（思維模式），空格後直接接名詞受詞 <code>the behavior</code>（這種囤積行為）。思維模式在背後「驅使、推動」了外顯行為，且主詞為複數，故選原形／複數及物動詞 <code>(B) drive</code>。')+
+  bankOps(U8_BANK,'ABCD','B','正確：<code>the thought patterns that drive the behavior</code>（驅使該行為的思維模式）。',U8_WRONG)
+);
+
+H+=card('9',['考點：主詞 It 表「需要／耗費」之動詞搭配 It takes...','詞性需求：第三人稱單數現在式及物動詞'],'C (takes)',
+  stem('9')+
+  clue('主詞為第三人稱單數代名詞 <code>It</code>（指治療並克服儲物症這件事），受詞為 <code>patience and a lot of support</code>（耐心與大量的支持）。英文表達「某事需要花費時間、耐心、勇氣或努力」固定使用 <code>It takes + N</code>，故選單數動詞 <code>(C) takes</code>。')+
+  bankOps(U8_BANK,'ABCD','C','正確：<code>It takes patience and a lot of support</code>（這需要耐心與大量的支持）。',U8_WRONG)
+);
+
+// ==================== 卷二：洞洞卷 U9 ====================
+H+='<h2 id="sec-u9">卷二：10w3 隨堂洞洞卷 — Unit 9 能量飲料的真相 (10–23)</h2>';
+
+H+='<div class="pas"><div class="bank"><b>U9 頂部選項字庫（第 10、13、14、15、17、20、21、22、23 題共用）：</b>'+
+  '<span>(A) get through <small>phr. 熬過、度過</small></span>'+
+  '<span>(B) hit with <small>phr. 受到……衝擊</small></span>'+
+  '<span>(C) worth <small>adj. 值得……的</small></span>'+
+  '<span>(D) wear off <small>phr. （藥效等）消退</small></span>'+
+  '<span>(E) catch <small>n. 隱憂、陷阱</small></span>'+
+  '<span>(F) temporary <small>adj. 暫時的、短暫的</small></span>'+
+  '<span>(G) come with <small>phr. 伴隨著……</small></span>'+
+  '<span>(H) stimulate <small>v. 刺激、促進</small></span>'+
+  '<span>(J) cautious <small>adj. 謹慎的、小心的</small></span>'+
+'</div></div>';
+
+H+=passage('Unit 9 全文：能量飲料的短暫提神與長期代價',[
+  [
+    ['Pop open a cold energy drink, and you’re instantly [[10|hit with]] a sweet, bubbly rush that promises to help you through a late-night study session.','打開一罐冰涼的能量飲料，你瞬間就會感受到一股甜美、充滿氣泡的衝擊感，彷彿保證能幫你熬過深夜的讀書時光。'],
+    ['For many teenagers, these brightly colored [[11|beverages]] seem like the perfect solution to [[12|fatigue]].','對許多青少年來說，這些色彩鮮豔的飲料看起來像是解決疲勞的完美方案。'],
+    ['But what are their actual effects on your body?','但它們對你的身體究竟有什麼實際影響呢？']
+  ],
+  [
+    ['Energy drinks typically contain high levels of caffeine along with guarana and sugar, ingredients that [[13|stimulate]] the central nervous system.','能量飲料通常含有高濃度的咖啡因以及瓜拿納和糖分，這些成分會刺激中樞神經系統。'],
+    ['They can thus trigger a [[14|temporary]] release of adrenaline, making you feel more alert and energetic.','因此，它們能觸發腎上腺素的暫時釋放，使你感到更加清醒且精力充沛。'],
+    ['At the same time, your heart beats faster and your blood pressure may rise.','與此同時，你的心跳會加速，血壓也可能會上升。']
+  ],
+  [
+    ['The real [[15|catch]] is the [[16|inevitable]] crash.','真正的隱憂在於那無可避免的精力崩潰。'],
+    ['Once the caffeine and sugar [[17|wear off]], you may end up [[18|feeling]] more tired, anxious, or irritable than before.','一旦咖啡因與糖分的作用消退，你最終可能會比之前感到更加疲倦、焦慮或易怒。'],
+    ['Over time, relying on energy drinks can [[19|disrupt]] the body’s natural energy cycle and make it harder to get quality sleep.','久而久之，依賴能量飲料會擾亂身體自然的能量週期，並使人更難獲得高品質的睡眠。'],
+    ['Among teenagers, whose bodies and brains are still developing, these effects are especially [[20|worth]] paying attention to.','在身體與大腦仍在發育的青少年族群中，這些影響特別值得密切注意。'],
+    ['Health experts generally advise young people to be [[21|cautious]] with caffeine and avoid depending on energy drinks to [[22|get through]] the day.','健康專家通常建議年輕人對咖啡因保持謹慎，並避免依賴能量飲料來撐過一整天。'],
+    ['Because the truth is, those quick boosts can [[23|come with]] significant long-term costs.','因為事實是，那些快速的提神效果可能會伴隨著巨大的長期代價。']
+  ]
+]);
+
+const U9_BANK=[
+  ['get through','phr. 熬過；度過；撐過'],
+  ['hit with','phr. （被動）受到……衝擊／襲擊'],
+  ['worth','adj. 值得……的（後接 V-ing）'],
+  ['wear off','phr. （藥效、刺激感等）逐漸消退'],
+  ['catch','n. 隱藏的困難；圈套；隱憂'],
+  ['temporary','adj. 暫時的；短暫的'],
+  ['come with','phr. 伴隨著；附帶……'],
+  ['stimulate','v. 刺激；使興奮（複數現在式動詞）'],
+  ['cautious','adj. 謹慎的；小心的']
 ];
 
-WF_QUESTIONS.forEach(q=>{
-  H+=card(q[0],q[1],q[2],stem(q[3])+clue(q[4])+wfOps(q[2],q[5],WF_DEFAULT_WRONG));
-});
+const U9_LAB='ABCDEFGHJ';
 
-// ==================== 卷二：洞洞卷 中譯英 ====================
-H+='<h2 id="sec-tr">卷二：隨堂洞洞卷 — 五、中譯英 (V36–V39)</h2>';
+const U9_WRONG={
+  A:'詞性或語意不符：<code>get through</code> 為及物片語動詞「熬過、撐過（困難時期或漫長的一天）」。<br><b>何時才對：</b>A cup of hot tea helped her <b>get through</b> the cold morning.',
+  B:'結構或語意不符：<code>(be) hit with</code> 為被動片語「突然感受到／遭受……的衝擊」。<br><b>何時才對：</b>As soon as he stepped outside, he was <b>hit with</b> a wave of intense heat.',
+  C:'文法搭配不符：<code>worth</code> 為特殊形容詞「值得……的」，後面必須緊接動名詞 <code>V-ing</code> 或名詞。<br><b>何時才對：</b>This documentary on teenage health is definitely <b>worth</b> watching.',
+  D:'詞性或語意不符：<code>wear off</code> 為不及物片語動詞「（藥效、酒精、咖啡因作用）消退」，後面不可接受詞。<br><b>何時才對：</b>The numbness from the dental injection will <b>wear off</b> in two hours.',
+  E:'詞性不符：<code>catch</code> 在此作單數名詞「隱憂、隱藏的問題（the real catch）」。<br><b>何時才對：</b>The apartment is cheap and spacious, so what’s the <b>catch</b>?',
+  F:'詞性不符：<code>temporary</code> 為形容詞「暫時的、短暫的」，僅能修飾名詞或作補語。<br><b>何時才對：</b>Painkillers only provide <b>temporary</b> relief rather than a permanent cure.',
+  G:'詞性或語意不符：<code>come with</code> 為片語動詞「伴隨著、附帶（代價、風險或配件）」。<br><b>何時才對：</b>High-return investments always <b>come with</b> high financial risks.',
+  H:'詞性或語意不符：<code>stimulate</code> 為及物動詞「刺激、活絡（神經、經濟等）」。<br><b>何時才對：</b>Bright blue light from phone screens can <b>stimulate</b> your brain at night.',
+  J:'詞性或搭配不符：<code>cautious</code> 為形容詞「謹慎小心的」，常搭配 <code>be cautious with/about</code>。<br><b>何時才對：</b>Consumers should be <b>cautious</b> with products that promise instant weight loss.'
+};
 
-H+=card('V36',['考點：動詞片語 rely on ＋ 疑問詞 + to V 名詞片語','詞性需求：動名詞 V-ing 與原形動詞'],'relying on / figure out',
-  '<div class="stem"><div class="zh" style="color:inherit">36. 與其依賴他人，他決定自己弄清楚如何修理這台腳踏車。</div><div class="en" style="margin-top:6px"><b>題幹與參考譯文：</b>'+fx('Instead of [[361|relying on]] others, he decided to [[362|figure out]] how to fix the bicycle by himself.')+'</div></div>'+
-  clue('1. <b>第一格：</b>複合介系詞 <code>Instead of</code>（與其……／代替……）後面必須接「動名詞 <code>V-ing</code>」，「依賴他人」譯為 <code>relying on others</code>（或 <code>depending on</code>，本週核心片語為 <code>rely on</code>）。<br>'+
-    '2. <b>第二格：</b><code>decided to</code> 後接原形動詞片語，「弄清楚、想出」對應本週核心片語 <code>figure out</code>，後接名詞片語 <code>how to fix the bicycle</code> 作受詞。')
+H+=card('10',['考點：被動語態與瞬間感官衝擊片語 be hit with','詞性需求：過去分詞片語 (V-en + prep.)'],'B (hit with)',
+  stem('10')+
+  clue('空格前為 <code>you’re instantly ___</code>（你瞬間被……），空格後為名詞片語 <code>a sweet, bubbly rush</code>（一股甜美、充滿氣泡的衝擊快感）。構成被動結構 <code>be hit with + N</code>，生動描述喝下第一口能量飲料時味覺與感官瞬間受到的強烈刺激。')+
+  bankOps(U9_BANK,U9_LAB,'B','正確：<code>you’re instantly hit with a sweet, bubbly rush</code>（你瞬間感受到一股甜美氣泡感的衝擊）。',U9_WRONG)
 );
 
-H+=card('V37',['考點：時間連接詞 Once ＋ 藥效消退片語 wear off','詞性需求：連接詞與現在簡單式片語動詞'],'Once / wears off',
-  '<div class="stem"><div class="zh" style="color:inherit">37. 一旦止痛藥的藥效退去，傷口的疼痛可能會再次出現。</div><div class="en" style="margin-top:6px"><b>題幹與參考譯文：</b>'+fx('[[371|Once]] the painkiller [[372|wears off]], the pain in the wound may return.')+'</div></div>'+
-  clue('1. <b>第一格：</b>置於句首連接時間／條件副詞子句，表「一旦……」，填入從屬連接詞 <code>Once</code>。<br>'+
-    '2. <b>第二格：</b>在 <code>Once</code> 引導的時間副詞子句中，須以「現在簡單式代替未來式」；主詞 <code>the painkiller</code>（止痛藥）為第三人稱單數，故「藥效消退」的片語動詞 <code>wear off</code> 必須加上 <code>-s</code> 成為 <code>wears off</code>。')
+H+=card('11',['考點：字首字尾提示拼字與複數指示形容詞搭配','詞性需求：複數可數名詞'],'beverages',
+  stem('11')+
+  clue('題幹給予提示「<code>[飲料 b___ges]</code>」，且前方有複數指示形容詞 <code>these brightly colored ___</code>（指代前句的 <code>energy drink</code>），故填入複數可數名詞 <code>beverages</code>。')
 );
 
-H+=card('V38',['考點：情緒反應片語 burst out V-ing (burst out laughing)','詞性需求：完整過去式句子'],'Wait, let me tell you the end of the story! When everyone heard the joke, they all burst out laughing.',
-  '<div class="stem"><div class="zh" style="color:inherit">38. 等等，讓我告訴你故事的結局！當大家聽到這個笑話時，他們全都突然大笑起來。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx('[[|Wait, let me tell you the end of the story! When everyone heard the joke, they all burst out laughing.]]')+'</div></div>'+
-  clue('1. <b>「讓我告訴你故事的結局」：</b>使役祈使句 <code>let me tell you the end of the story</code>。<br>'+
-    '2. <b>「當大家聽到這個笑話時」：</b>過去式時間副詞子句 <code>When everyone heard the joke,</code>。<br>'+
-    '3. <b>「突然大笑起來」：</b>核心慣用片語 <code>burst out laughing</code>（＝ <code>burst into laughter</code>）。注意動詞 <code>burst</code> 的三態同形（<code>burst - burst - burst</code>），此處描述過去事件，過去式仍為 <code>burst</code>。')
+H+=card('12',['考點：字首字尾提示拼字與介系詞後受詞','詞性需求：不可數名詞'],'fatigue',
+  stem('12')+
+  clue('題幹給予提示「<code>[疲勞 f___e]</code>」，位於 <code>the perfect solution to ___</code>（解決……的完美方案）介系詞 <code>to</code> 之後作受詞，填入不可數名詞 <code>fatigue</code>（疲勞、勞累）。')
 );
 
-H+=card('V39',['考點：名詞片語 a flood of + N ＋ 結果片語 end up V-ing','詞性需求：完整過去式對等複合句'],'The store received a flood of orders after the sale began, so many customers ended up waiting for weeks.',
-  '<div class="stem"><div class="zh" style="color:inherit">39. 這家店在特賣開始後收到如潮水般湧來的訂單，所以許多顧客最後等了好幾個星期。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx('[[|The store received a flood of orders after the sale began, so many customers ended up waiting for weeks.]]')+'</div></div>'+
-  clue('1. <b>「如潮水般湧來的訂單」：</b>量詞片語 <code>a flood of orders</code>（<code>a flood of + 名詞</code> 形容大量湧入的人事物）。<br>'+
-    '2. <b>「在特賣開始後」：</b>時間副詞子句 <code>after the sale began</code>。<br>'+
-    '3. <b>「最後等了好幾個星期」：</b>過去式結果片語 <code>ended up + V-ing</code> → <code>ended up waiting for weeks</code>。')
+H+=card('13',['考點：關係子句動詞與生理搭配 stimulate the central nervous system','詞性需求：複數現在式及物動詞'],'H (stimulate)',
+  stem('13')+
+  clue('關係代名詞 <code>that</code> 的先行詞為複數名詞 <code>ingredients</code>（成分：咖啡因、瓜拿納與糖），受詞為 <code>the central nervous system</code>（中樞神經系統）。提神成分的作用正是「刺激」中樞神經系統，故選複數及物動詞 <code>(H) stimulate</code>。')+
+  bankOps(U9_BANK,U9_LAB,'H','正確：<code>ingredients that stimulate the central nervous system</code>（刺激中樞神經系統的成分）。',U9_WRONG)
+);
+
+H+=card('14',['考點：冠詞與名詞間之形容詞修飾語','詞性需求：形容詞'],'F (temporary)',
+  stem('14')+
+  clue('空格位於不定冠詞 <code>a</code> 與單數名詞 <code>release of adrenaline</code>（腎上腺素的釋放）之間，必須填入「形容詞」。後文第 3 段指出咖啡因很快就會消退並引發精力崩潰，可見這種腎上腺素釋放只是「暫時的、短暫的」，故選 <code>(F) temporary</code>。')+
+  bankOps(U9_BANK,U9_LAB,'F','正確：<code>trigger a temporary release of adrenaline</code>（觸發暫時性的腎上腺素釋放）。',U9_WRONG)
+);
+
+H+=card('15',['考點：慣用名詞搭配 The real catch（真正的隱憂／陷阱）','詞性需求：單數名詞'],'E (catch)',
+  stem('15')+
+  clue('空格位於定冠詞與形容詞 <code>The real ___</code> 之後、單數 be 動詞 <code>is</code> 之前，需填「單數名詞」作主詞。前段講述能量飲料讓人清醒的優點，本段轉折指出背後伴隨無可避免的精力崩潰（crash），構成英文經典慣用語 <code>The real catch is...</code>（真正的問題／隱憂／背後的陷阱在於……），故選 <code>(E) catch</code>。')+
+  bankOps(U9_BANK,U9_LAB,'E','正確：名詞 <code>catch</code> 指「表面好處背後隱藏的缺點或代價」。',U9_WRONG)
+);
+
+H+=card('16',['考點：字首字尾提示拼字與形容詞修飾名詞','詞性需求：形容詞'],'inevitable',
+  stem('16')+
+  clue('題幹給予提示「<code>[無可避免 i___e]</code>」，位於定冠詞 <code>the</code> 與名詞 <code>crash</code>（精力崩潰）之間，填入形容詞 <code>inevitable</code>（無可避免的、必然發生的）。')
+);
+
+H+=card('17',['考點：時間副詞子句動詞片語 wear off（藥效消退）','詞性需求：複數現在式不及物片語動詞'],'D (wear off)',
+  stem('17')+
+  clue('連接詞 <code>Once</code>（一旦）引導的時間副詞子句中，主詞為複數 <code>the caffeine and sugar</code>，後面無受詞；且主要子句說「你最後可能會比之前更累（more tired... than before）」，代表咖啡因與糖分的提神效果已經「逐漸消退」，故選不及物片語動詞 <code>(D) wear off</code>。')+
+  bankOps(U9_BANK,U9_LAB,'D','正確：<code>Once the caffeine and sugar wear off</code>（一旦咖啡因與糖分的作用消退）。',U9_WRONG)
+);
+
+H+=card('18',['考點：片語動詞 end up + V-ing 固定搭配','詞性需求：動名詞／現在分詞 (V-ing)'],'B (feeling)',
+  stem('18')+
+  clue('空格前方為高頻核心片語 <code>end up</code>（最終處於……狀態；結果變成……）。在英文文法中，<code>end up</code> 後面若接動詞，必須使用動名詞／現在分詞 <code>V-ing</code>，故選 <code>(B) feeling</code>。')+
+  ops([
+    ['feel','原形動詞','文法錯誤：<code>end up</code> 後面不可直接接原形動詞。<br><b>何時才對：</b>Drinking too much coffee can make you <b>feel</b> anxious and jittery.'],
+    ['feeling','現在分詞／動名詞','正確：符合固定句型 <code>end up + V-ing</code>（最終覺得……）。'],
+    ['to feel','不定詞','文法錯誤：<code>end up</code> 不接不定詞 <code>to V</code>。<br><b>何時才對：</b>He started <b>to feel</b> exhausted as soon as the energy drink wore off.']
+  ],'B')
+);
+
+H+=card('19',['考點：字首字尾提示拼字與助動詞後原形及物動詞','詞性需求：原形及物動詞'],'disrupt',
+  stem('19')+
+  clue('題幹給予提示「<code>[擾亂 d___t]</code>」，位於助動詞 <code>can</code> 之後、受詞 <code>the body’s natural energy cycle</code>（身體自然的能量週期）之前，故填原形及物動詞 <code>disrupt</code>（擾亂、打亂）。')
+);
+
+H+=card('20',['考點：特殊形容詞 worth + V-ing 結構','詞性需求：形容詞 worth'],'C (worth)',
+  stem('20')+
+  clue('空格位於 <code>are especially ___</code> 之後，且後方緊接動名詞片語 <code>paying attention to</code>。在字庫中唯一能構成 <code>be ___ + V-ing</code>（值得被……）的字即為形容詞 <code>(C) worth</code>。')+
+  bankOps(U9_BANK,U9_LAB,'C','正確：<code>are especially worth paying attention to</code>（特別值得密切注意）。',U9_WRONG)
+);
+
+H+=card('21',['考點：形容詞搭配 be cautious with（對……保持謹慎）','詞性需求：形容詞'],'J (cautious)',
+  stem('21')+
+  clue('不定詞 <code>to be ___ with caffeine</code> 需要形容詞作補語，且後接介系詞 <code>with</code>。健康專家建議年輕人對咖啡因攝取要「謹慎小心」，對應 <code>(J) cautious</code>（<code>be cautious with...</code>）。')+
+  bankOps(U9_BANK,U9_LAB,'J','正確：<code>advise young people to be cautious with caffeine</code>（建議年輕人對咖啡因保持謹慎）。',U9_WRONG)
+);
+
+H+=card('22',['考點：不定詞後片語動詞與首段呼應 get through the day','詞性需求：原形及物片語動詞'],'A (get through)',
+  stem('22')+
+  clue('目的不定詞 <code>to ___ the day</code> 缺原形及物動詞片語，且首段第 1 句已出現提示 <code>help you through a late-night study session</code>。避免依賴能量飲料來「熬過、撐過」一整天，選 <code>(A) get through</code>。')+
+  bankOps(U9_BANK,U9_LAB,'A','正確：<code>to get through the day</code>（撐過／度過一整天）。',U9_WRONG)
+);
+
+H+=card('23',['考點：助動詞後接片語動詞 come with + 代價','詞性需求：原形及物片語動詞'],'G (come with)',
+  stem('23')+
+  clue('助動詞 <code>can</code> 後缺原形及物動詞片語，主詞為 <code>those quick boosts</code>（那些快速的提神效果），受詞為 <code>significant long-term costs</code>（巨大的長期代價）。表示「短期好處會伴隨著長期代價」，選 <code>(G) come with</code>。')+
+  bankOps(U9_BANK,U9_LAB,'G','正確：<code>can come with significant long-term costs</code>（可能會伴隨著巨大的長期代價）。',U9_WRONG)
+);
+
+// ==================== 卷二：洞洞卷 U10 ====================
+H+='<h2 id="sec-u10">卷二：10w3 隨堂洞洞卷 — Unit 10 丹尼爾的馬拉松訓練 (24–35)</h2>';
+
+H+='<div class="pas"><div class="bank"><b>U10 頂部選項字庫（第 25、26、28、29、30 題共用）：</b>'+
+  '<span>(A) wipe away <small>phr. 擦去、拭去</small></span>'+
+  '<span>(B) tag along <small>phr. 跟隨、同行</small></span>'+
+  '<span>(C) hydrated <small>adj. 保持水分充足的</small></span>'+
+  '<span>(D) keep up <small>phr. 跟上（速度／進度）</small></span>'+
+  '<span>(E) stick to <small>phr. 堅持、遵守（計畫）</small></span>'+
+'</div></div>';
+
+H+=passage('Unit 10 全文：馬拉松訓練與耐力養成',[
+  [
+    ['When Daniel signed up for his first [[24|marathon]], he thought he was ready for anything.','當丹尼爾報名參加他的第一場馬拉松時，他以為自己已經做好萬全準備了。'],
+    ['However, he soon discovered that preparing for a race required much more than enthusiasm.','然而，他很快就發現，準備一場比賽需要的遠不止是熱情而已。'],
+    ['His friend Mia, an experienced runner, offered to help him [[25|stick to]] a training schedule.','他的朋友米婭是一位經驗豐富的跑者，主動提出要幫他堅持執行訓練時間表。'],
+    ['"I’ve been running for a month or so without missing a session," she explained.','「我已經持續跑步一個月左右，沒有錯過任何一次訓練，」她解釋道。'],
+    ['"You’re welcome to [[26|tag along]] for my next workout. You could definitely [[27|use]] some professional guidance!"','「歡迎你下次運動訓練時跟我們一起去。你絕對需要（用得上）一些專業指導！」'],
+    ['She suggested a towel to [[28|wipe away]] sweat and emphasized the importance of drinking water to stay [[29|hydrated]].','她建議帶條毛巾來擦汗，並強調喝水以保持身體水分充足的重要性。']
+  ],
+  [
+    ['During their first long-distance run, Daniel tried to [[30|keep up]] with Mia by running too fast.','在他們第一次長跑期間，丹尼爾試圖透過跑得太快來跟上米婭的速度。'],
+    ['Within minutes, he was out of breath and could [[31|barely]] maintain his pace.','才過幾分鐘，他就上氣不接下氣，幾乎無法維持自己的步調。'],
+    ['Frustrated, he attempted to sprint toward the next checkpoint, only to find himself completely [[32|exhausted]] shortly afterward.','在挫敗之下，他試圖朝下一個檢查點全力衝刺，結果卻在不久後發現自己徹底筋疲力盡。'],
+    ['"Building endurance takes time. You have to be [[33|consistent]] rather than push yourself too hard every day," Mia advised.','「建立耐力需要時間。你必須持之以恆，而不是每天把自己逼得太緊，」米婭建議道。']
+  ],
+  [
+    ['Daniel had learned that the hard way.','丹尼爾歷經苦頭才學到這個教訓。'],
+    ['Even though he felt disappointed, he realized that completing each training was [[34|rewarding]] in itself.','儘管他感到失望，但他體認到完成每一次訓練本身就是很有成就感的。'],
+    ['Surprisingly, he soon became [[35|hooked]] on running.','令人驚訝的是，他很快就迷上了跑步。'],
+    ['Instead of viewing training as a burden, he began to enjoy the challenge of improving little by little.','他不再將訓練視為一種負擔，而是開始享受一點一滴進步的挑戰。']
+  ]
+]);
+
+const U10_BANK=[
+  ['wipe away','phr. 擦去；抹去（汗水、眼淚）'],
+  ['tag along','phr. 跟隨；跟著一起去（不及物片語）'],
+  ['hydrated','adj. 保持水分充足的（常搭配 stay/keep hydrated）'],
+  ['keep up','phr. 跟上；並駕齊驅（常搭配 keep up with）'],
+  ['stick to','phr. 堅持；信守（計畫、時間表、原則）']
+];
+
+const U10_WRONG={
+  A:'語意或搭配不符：<code>wipe away</code> 為及物片語「擦掉、拭去」，受詞須為汗水（sweat）、眼淚（tears）或灰塵。<br><b>何時才對：</b>She used a tissue to <b>wipe away</b> the tears on her cheeks.',
+  B:'文法或語意不符：<code>tag along</code> 為不及物片語動詞「跟著去、當跟班」，後面不可直接接名詞受詞。<br><b>何時才對：</b>Mind if I <b>tag along</b> when you go to the night market tonight?',
+  C:'詞性不符：<code>hydrated</code> 為形容詞「水分充足的」，僅能接在連綴動詞（如 <code>stay/keep/remain</code>）之後作補語。<br><b>何時才對：</b>Runners must drink fluids regularly to stay <b>hydrated</b> in summer.',
+  D:'語意或結構不符：<code>keep up</code> 表「跟上進度或速度」，若接對象必須搭配介系詞 <code>with</code>（<code>keep up with sb</code>）。<br><b>何時才對：</b>Walk slower, please! I can’t <b>keep up</b> with you.',
+  E:'語意或結構不符：<code>stick to</code> 為及物片語動詞「堅持、按表操課」，後面必須直接接計畫、飲食或原則作受詞。<br><b>何時才對：</b>If you want to lose weight, you must <b>stick to</b> a low-carb diet.'
+};
+
+H+=card('24',['考點：字首字尾提示拼字與運動賽事名詞','詞性需求：單數可數名詞'],'marathon',
+  stem('24')+
+  clue('題幹給予提示「<code>[馬拉松 m___n]</code>」，且後文圍繞長跑訓練（long-distance run, building endurance）展開，故填入單數名詞 <code>marathon</code>。')
+);
+
+H+=card('25',['考點：help sb + 原形動詞片語與搭配詞 stick to a schedule','詞性需求：原形及物片語動詞'],'E (stick to)',
+  stem('25')+
+  clue('結構為 <code>help him ___ a training schedule</code>（幫助他……訓練時間表），且下句米婭說自己「跑了一個月從未缺席任何一次訓練（without missing a session）」，證明她懂得如何「堅持、貫徹」訓練計畫，故選 <code>(E) stick to</code>。')+
+  bankOps(U10_BANK,'ABCDE','E','正確：<code>stick to a training schedule</code> 指「堅持遵守訓練時間表」。',U10_WRONG)
+);
+
+H+=card('26',['考點：不及物片語動詞 tag along（跟著一起去）','詞性需求：原形不及物片語動詞'],'B (tag along)',
+  stem('26')+
+  clue('句型為邀請句 <code>You’re welcome to ___ for my next workout</code>（歡迎你在我下次訓練時……）。空格後直接接介系詞 <code>for</code>，需填不及物片語動詞；米婭邀請丹尼爾「跟著一起去」參加她下次的訓練，故選 <code>(B) tag along</code>。')+
+  bankOps(U10_BANK,'ABCDE','B','正確：<code>tag along for my next workout</code>（下次訓練跟著我一起去）。',U10_WRONG)
+);
+
+H+=card('27',['考點：慣用口語句型 could use + N（很需要／用得上……）','詞性需求：原形及物動詞'],'A (use)',
+  stem('27')+
+  clue('受詞為 <code>some professional guidance</code>（一些專業指導），主詞 <code>You</code> 是初學者丹尼爾（接受指導的人，而非給予指導的人）。英文口語中 <code>You could (definitely) use + N</code> 意為「你（絕對）很需要／用得上某事物（＝ You would benefit from having it）」，故選 <code>(A) use</code>。')+
+  ops([
+    ['use','用得上；需要（與 could 連用）','正確：<code>You could definitely use some professional guidance!</code>（你絕對很需要一些專業指導！）。'],
+    ['give','給予','主客顛倒：丹尼爾是沒經驗的菜鳥，是他需要別人給他指導，而非他去 <code>give</code> 別人專業指導。<br><b>何時才對：</b>As an experienced coach, Mia can definitely <b>give</b> you some professional guidance.'],
+    ['prepare','準備','語意不符：接受指導的學員不會去「準備專業指導」。<br><b>何時才對：</b>The coach helped him <b>prepare</b> for the upcoming marathon.']
+  ],'A')
+);
+
+H+=card('28',['考點：不定詞後接片語動詞 wipe away sweat','詞性需求：原形及物片語動詞'],'A (wipe away)',
+  stem('28')+
+  clue('名詞 <code>a towel</code>（毛巾）後接不定詞片語 <code>to ___ sweat</code>（用來……汗水），毛巾的功能自然是「擦拭掉、擦去」汗水，故選 <code>(A) wipe away</code>。')+
+  bankOps(U10_BANK,'ABCDE','A','正確：<code>a towel to wipe away sweat</code>（用來擦汗的毛巾）。',U10_WRONG)
+);
+
+H+=card('29',['考點：連綴動詞 stay + 形容詞補語 stay hydrated','詞性需求：形容詞'],'C (hydrated)',
+  stem('29')+
+  clue('前面提到 <code>the importance of drinking water to stay ___</code>（喝水以保持……的重要性）。連綴動詞 <code>stay</code> 後需接形容詞補語，喝水的目的即是保持身體「水分充足的」，故選 <code>(C) hydrated</code>。')+
+  bankOps(U10_BANK,'ABCDE','C','正確：<code>drinking water to stay hydrated</code>（喝水以保持水分充足）。',U10_WRONG)
+);
+
+H+=card('30',['考點：片語動詞搭配 keep up with sb（跟上某人的速度）','詞性需求：原形片語動詞'],'D (keep up)',
+  stem('30')+
+  clue('空格後緊接介系詞與人名 <code>with Mia</code>，且手段為 <code>by running too fast</code>（藉由跑得太快）。為了「跟上」經驗豐富的米婭，構成固定三字片語 <code>keep up with sb</code>，故選 <code>(D) keep up</code>。')+
+  bankOps(U10_BANK,'ABCDE','D','正確：<code>tried to keep up with Mia</code>（試圖跟上米婭的速度）。',U10_WRONG)
+);
+
+H+=card('31',['考點：準否定副詞 barely 與前後文因果呼應','詞性需求：副詞'],'B (barely)',
+  stem('31')+
+  clue('前半句說 <code>Within minutes, he was out of breath</code>（才幾分鐘他就上氣不接下氣／喘不過氣），既然已經喘不過氣，結果自然是「幾乎無法、勉強才能」維持步調（<code>could ___ maintain his pace</code>），故選準否定副詞 <code>(B) barely</code>。')+
+  ops([
+    ['absolutely','絕對地；完全地','語意相反：都已經喘不過氣了（out of breath），不可能還「完全能維持步調」。<br><b>何時才對：</b>You are <b>absolutely</b> right about the importance of warming up.'],
+    ['barely','幾乎不；勉強才','正確：<code>could barely maintain his pace</code>（幾乎無法維持他的配速）。'],
+    ['similarly','同樣地；類似地','語意不符：此處描述體力不支的程度，並非與另一件事作類比。<br><b>何時才對：</b>Mia stretches before every run; <b>similarly</b>, she cools down afterward.']
+  ],'B')
+);
+
+H+=card('32',['考點：字首字尾提示拼字與 find oneself + OC (過去分詞形容詞)','詞性需求：形容詞（過去分詞）'],'exhausted',
+  stem('32')+
+  clue('題幹給予提示「<code>[筋疲力盡的 e___ted]</code>」，位於結果不定詞句型 <code>only to find himself completely ___</code> 中作受詞補語，修飾人（himself）感到徹底精疲力竭，故填入 <code>exhausted</code>。')
+);
+
+H+=card('33',['考點：字首字尾提示拼字與對比結構 rather than','詞性需求：形容詞'],'consistent',
+  stem('33')+
+  clue('題幹給予提示「<code>[持續一貫的 c___t]</code>」，前句說 <code>Building endurance takes time</code>（建立耐力需要時間），後方對比 <code>rather than push yourself too hard every day</code>（而不是每天把自己逼太緊），故應保持「穩定一致的、持之以恆的」，填入形容詞 <code>consistent</code>。')
+);
+
+H+=card('34',['考點：字首字尾提示拼字與動名詞主詞之形容詞補語','詞性需求：形容詞（現在分詞轉形容詞）'],'rewarding',
+  stem('34')+
+  clue('題幹給予提示「<code>[有成就感的 r___ding]</code>」，主詞為動名詞片語 <code>completing each training</code>（完成每一次訓練這件事），修飾事物「令人滿足的、有回報的、有成就感的」，填入形容詞 <code>rewarding</code>。')
+);
+
+H+=card('35',['考點：字首字尾提示拼字與 become hooked on 固定搭配','詞性需求：形容詞'],'hooked',
+  stem('35')+
+  clue('題幹給予提示「<code>[入迷的 h___ked]</code>」，且後方緊接介系詞 <code>on running</code>，構成固定片語 <code>become hooked on + N/V-ing</code>（迷上……），故填入 <code>hooked</code>。')
+);
+
+// ==================== 卷二：洞洞卷 U11 ====================
+H+='<h2 id="sec-u11">卷二：10w3 隨堂洞洞卷 — Unit 11 動物界的紀錄保持者 (36–50)</h2>';
+
+H+='<div class="pas"><div class="bank"><b>U11 頂部選項字庫（第 37、39、40、41、43、45、47、48、50 題共用）：</b>'+
+  '<span>(A) incredible <small>adj. 驚人的、不可思議的</small></span>'+
+  '<span>(B) stand out <small>phr. 脫穎而出、顯眼突出</small></span>'+
+  '<span>(C) relative to <small>phr. 相對於……</small></span>'+
+  '<span>(D) mainly <small>adv. 主要地</small></span>'+
+  '<span>(E) appears <small>v. 看起來、顯得（三單）</small></span>'+
+  '<span>(F) surpassed <small>v. 被超越（過去分詞）</small></span>'+
+  '<span>(G) pulling <small>v. 收起、拉回（現在分詞）</small></span>'+
+  '<span>(H) claims <small>v. 奪得、宣稱擁有（三單）</small></span>'+
+  '<span>(J) roughly <small>adv. 大約、粗略地</small></span>'+
+'</div></div>';
+
+H+=passage('Unit 11 全文：動物界的極限紀錄保持者',[
+  [
+    ['The animal kingdom is the result of billions of years of [[36|evolution]], which has produced creatures with an astonishing variety of abilities and adaptations.','動物界是數十億年演化的結果，這孕育出了擁有驚人多樣能力與適應機制的生物。'],
+    ['Among them are record-holders that [[37|stand out]] for their size, speed, strength, or other remarkable [[38|traits]].','在牠們之中，有些紀錄保持者因其體型、速度、力量或其他非凡的特徵而脫穎而出。'],
+    ['From giant whales to tiny beetles, these animals show how amazing life on Earth can be.','從巨大的鯨魚到微小的甲蟲，這些動物展現了地球上的生命可以多麼令人驚嘆。']
+  ],
+  [
+    ['*The Largest Animal Ever* — No other creature is as large as the blue whale.','【有史以來最大的動物】—— 沒有其他生物像藍鯨一樣巨大。'],
+    ['It can grow to about 30 meters long and weigh around 200 tons—the largest animal to have ever lived.','牠可以長到約 30 公尺長、重達約 200 公噸——是有史以來存在過最大的動物。'],
+    ['Its heart is [[39|roughly]] the size of a small car, and it must consume several tons of krill each day to support its body.','牠的心臟大約有一輛小汽車那麼大，而且每天必須攝取數公噸的磷蝦來支撐身體。'],
+    ['Despite its massive size, the blue whale survives [[40|mainly]] on these tiny creatures.','儘管體型龐大，藍鯨卻主要靠這些微小的生物維生。']
+  ],
+  [
+    ['*The Fastest Animal of All* — The peregrine falcon holds the record for speed.','【速度最快的動物】—— 遊隼保持著速度的紀錄。'],
+    ['During a hunting dive, it can reach speeds of more than 380 kilometers per hour.','在狩獵俯衝時，牠的時速可達 380 公里以上。'],
+    ['This means it is far faster than the cheetah, the fastest land animal.','這意味著牠遠比陸地上最快的動物——獵豹還要快。'],
+    ['By [[41|pulling]] in its wings and streamlining its body, the falcon becomes a living missile as it [[42|plunges]] toward its prey.','藉由收攏雙翼並使身體呈現流線型，遊隼在朝獵物俯衝時會化身為一枚活體飛彈。'],
+    ['This adaptation makes it one of nature’s most effective hunters.','這項適應機制使牠成為自然界最有效率的獵食者之一。']
+  ],
+  [
+    ['*The Strongest Animal for Its Size* — When strength is measured [[43|relative to]] body weight, the dung beetle is the undisputed champion.','【相對於體型最強壯的動物】—— 當力量是相對於體重來衡量時，糞金龜是當之無愧的冠軍。'],
+    ['Some [[44|species]] can pull more than 1,000 times their own weight.','某些物種能拉動超過自身體重一千倍的重量。'],
+    ['For comparison, that would be like a person pulling six city buses at once.','打個比方，那就像是一個人同時拉動六輛市區公車。'],
+    ['This [[45|incredible]] strength helps dung beetles transport food across surprisingly long distances.','這種不可思議的力量幫助糞金龜將食物運送跨越驚人的長距離。']
+  ],
+  [
+    ['*The Oldest Living Vertebrate* — The Greenland shark is believed to be the longest-lived vertebrate on Earth.','【最長壽的現存脊椎動物】—— 小頭睡鯊（格陵蘭鯊）被認為是地球上最長壽的脊椎動物。'],
+    ['Scientists estimate that some individuals can live over 500 years, which means some sharks alive today could have been swimming in the Arctic Ocean before the invention of the [[46|telescope]].','科學家估計有些個體能活超過 500 年，這意味著今天還活著的某些鯊魚，在望遠鏡發明之前就已經在北極海裡游泳了。'],
+    ['However, even these remarkable lifespans are [[47|surpassed]] by those of some invertebrates.','然而，即使是如此驚人的壽命，也被某些無脊椎動物的壽命所超越。'],
+    ['For example, the giant volcano sponge, a type of deep-sea sponge, is estimated to live for up to 15,000 years!','舉例來說，一種名為「巨型火山海綿」的深海海綿，估計壽命可長達一萬五千年！']
+  ],
+  [
+    ['*The Most Venomous Animal* — The box jellyfish [[48|claims]] the title of the world’s most venomous animal.','【最毒的動物】—— 箱形水母奪下了世界最毒動物的頭銜。'],
+    ['Found in tropical waters, it has tentacles covered with stinging cells that release powerful toxins.','牠分布於熱帶海域，觸手上布滿了會釋放強效毒素的刺絲胞。'],
+    ['In [[49|severe]] cases, these toxins can cause death within minutes.','在嚴重的情況下，這些毒素可在數分鐘內致死。'],
+    ['Although it [[50|appears]] fragile, the box jellyfish is one of the ocean’s deadliest creatures.','儘管牠外表看起來脆弱，箱形水母卻是海洋中最致命的生物之一。']
+  ]
+]);
+
+const U11_BANK=[
+  ['incredible','adj. 驚人的；不可思議的'],
+  ['stand out','phr. 脫穎而出；顯眼突出（複數現在式動詞）'],
+  ['relative to','phr. 相對於……；與……相比'],
+  ['mainly','adv. 主要地；大部分'],
+  ['appears','v. 顯得；看起來（第三人稱單數連綴動詞）'],
+  ['surpassed','v. 被超越；被勝過（過去分詞）'],
+  ['pulling','v. 拉；收攏（現在分詞／動名詞）'],
+  ['claims','v. 奪得（頭銜／紀錄）；宣稱擁有（三單及物動詞）'],
+  ['roughly','adv. 大約；粗略地']
+];
+
+const U11_LAB='ABCDEFGHJ';
+
+const U11_WRONG={
+  A:'詞性不符：<code>incredible</code> 為形容詞「驚人的、不可思議的」，僅能修飾名詞或作補語。<br><b>何時才對：</b>The peregrine falcon dives at an <b>incredible</b> speed.',
+  B:'詞性或結構不符：<code>stand out</code> 為複數不及物片語動詞「脫穎而出、突出」，常搭配 <code>stand out for...</code>。<br><b>何時才對：</b>Giraffes easily <b>stand out</b> on the savanna because of their height.',
+  C:'結構或語意不符：<code>relative to</code> 為形容詞／介系詞片語「相對於……（比例關係）」，後須接名詞。<br><b>何時才對：</b>The ant has a huge brain <b>relative to</b> its tiny body size.',
+  D:'詞性或語意不符：<code>mainly</code> 為副詞「主要地」，常用於修飾介系詞片語或動詞（如 <code>survive mainly on</code>）。<br><b>何時才對：</b>Giant pandas feed <b>mainly</b> on bamboo shoots and leaves.',
+  E:'詞性或結構不符：<code>appears</code> 為第三人稱單數連綴動詞「看起來、顯得」，後面必須接形容詞或名詞補語。<br><b>何時才對：</b>The water <b>appears</b> calm on the surface, but the current is strong.',
+  F:'詞性或語態不符：<code>surpassed</code> 為過去分詞「被超越」，常與 <code>be 動詞 + by</code> 構成被動語態。<br><b>何時才對：</b>His old world record was finally <b>surpassed</b> by a younger athlete.',
+  G:'詞性不符：<code>pulling</code> 為動名詞／現在分詞，須置於介系詞（如 <code>by</code>）之後並搭配 <code>in</code>（收攏）。<br><b>何時才對：</b>The cat crouched low, <b>pulling</b> its ears back before pouncing.',
+  H:'詞性或搭配不符：<code>claims</code> 為第三人稱單數及物動詞「奪下、贏得（頭銜、冠軍、性命）」。<br><b>何時才對：</b>The defending champion once again <b>claims</b> the gold medal.',
+  J:'詞性或語意不符：<code>roughly</code> 為副詞「大約、概略地（＝ approximately）」，用於修飾數量或尺寸。<br><b>何時才對：</b>The island is <b>roughly</b> the size of Kaohsiung City.'
+};
+
+H+=card('36',['考點：字首字尾提示拼字與 billions of years of 搭配','詞性需求：不可數名詞'],'evolution',
+  stem('36')+
+  clue('題幹給予提示「<code>[演化 e___n]</code>」，且前面有 <code>billions of years of ___</code>（數十億年的……）並產出具備各種適應能力（adaptations）的生物，故填入名詞 <code>evolution</code>。')
+);
+
+H+=card('37',['考點：關係子句動詞片語 stand out for（因……而脫穎而出）','詞性需求：複數現在式不及物片語動詞'],'B (stand out)',
+  stem('37')+
+  clue('關係代名詞 <code>that</code> 的先行詞為複數名詞 <code>record-holders</code>（紀錄保持者們），後方接原因介系詞片語 <code>for their size, speed, strength...</code>。這些紀錄保持者因體型、速度或力量而「表現突出、脫穎而出」，構成固定搭配 <code>stand out for...</code>，故選 <code>(B) stand out</code>。')+
+  bankOps(U11_BANK,U11_LAB,'B','正確：<code>record-holders that stand out for their size...</code>（因體型等而脫穎而出的紀錄保持者）。',U11_WRONG)
+);
+
+H+=card('38',['考點：字首字尾提示拼字與複數名詞並列','詞性需求：複數可數名詞'],'traits',
+  stem('38')+
+  clue('題幹給予提示「<code>[特徵 t___ts]</code>」，與前方的 <code>size, speed, strength</code> 並列，且有 <code>other remarkable ___</code> 修飾，故填入複數可數名詞 <code>traits</code>。')
+);
+
+H+=card('39',['考點：副詞修飾名詞片語 roughly the size of...（大約……的大小）','詞性需求：副詞'],'J (roughly)',
+  stem('39')+
+  clue('前句連續使用概數詞 <code>about 30 meters long</code> 與 <code>around 200 tons</code>，本句描述藍鯨的心臟「大約／差不多」有一輛小汽車那麼大（<code>Its heart is ___ the size of a small car</code>）。英文中副詞 <code>roughly</code>（＝ <code>about / approximately</code>）可直接修飾表尺寸倍數的名詞片語 <code>the size of...</code>，故選 <code>(J) roughly</code>。')+
+  bankOps(U11_BANK,U11_LAB,'J','正確：<code>is roughly the size of a small car</code>（大約有一輛小汽車的大小）。',U11_WRONG)
+);
+
+H+=card('40',['考點：副詞修飾介系詞片語 survive mainly on（主要靠……維生）','詞性需求：副詞'],'D (mainly)',
+  stem('40')+
+  clue('主詞與動詞 <code>the blue whale survives</code> 與介系詞片語 <code>on these tiny creatures</code> 之間缺「副詞」，表示藍鯨雖然體型巨大，卻「主要地」靠吃微小的磷蝦維生（<code>survives ___ on...</code>），故選 <code>(D) mainly</code>。')+
+  bankOps(U11_BANK,U11_LAB,'D','正確：<code>survives mainly on these tiny creatures</code>（主要靠這些微小生物維生）。',U11_WRONG)
+);
+
+H+=card('41',['考點：介系詞 By + V-ing 對等結構與片語 pull in wings','詞性需求：動名詞 (V-ing)'],'G (pulling)',
+  stem('41')+
+  clue('句首方法介系詞 <code>By ___ in its wings and streamlining its body</code> 中，介系詞 <code>By</code> 後面必須接動名詞 <code>V-ing</code>，且與對等連接詞 <code>and</code> 後方的動名詞 <code>streamlining</code> 對稱。遊隼俯衝時會「收攏、往內縮」雙翼以減少空氣阻力，構成片語 <code>pull in its wings</code>，故選 <code>(G) pulling</code>。')+
+  bankOps(U11_BANK,U11_LAB,'G','正確：<code>By pulling in its wings</code>（藉由收攏牠的翅膀）。',U11_WRONG)
+);
+
+H+=card('42',['考點：字首字尾提示拼字與單數主詞動作動詞 plunges toward','詞性需求：第三人稱單數現在式不及物動詞'],'plunges',
+  stem('42')+
+  clue('題幹給予提示「<code>[俯衝 p___ges]</code>」，時間副詞子句主詞為單數 <code>it</code>（指遊隼），描述牠從高空高速「俯衝、猛衝」向獵物（<code>toward its prey</code>），故填入第三人稱單數現在式動詞 <code>plunges</code>。')
+);
+
+H+=card('43',['考點：比例衡量片語 relative to（相對於……）','詞性需求：介系詞性形容詞片語'],'C (relative to)',
+  stem('43')+
+  clue('小標題已提示 <code>The Strongest Animal for Its Size</code>（就其體型而言最強壯的動物），句中 <code>When strength is measured ___ body weight</code> 指「當力量是相對於體重（按體重比例）來衡量時」，對應固定片語 <code>(C) relative to</code>。')+
+  bankOps(U11_BANK,U11_LAB,'C','正確：<code>measured relative to body weight</code>（相對於體重來衡量時）。',U11_WRONG)
+);
+
+H+=card('44',['考點：字首字尾提示拼字與單複數同形名詞 species','詞性需求：複數可數名詞（單複數同形）'],'species',
+  stem('44')+
+  clue('題幹給予提示「<code>[物種 s___s]</code>」，<code>Some ___</code> 指糞金龜中的「某些物種」，填入單複數同形的名詞 <code>species</code>。')
+);
+
+H+=card('45',['考點：指示形容詞與名詞間之形容詞修飾語','詞性需求：形容詞'],'A (incredible)',
+  stem('45')+
+  clue('空格位於單數指示形容詞 <code>This</code> 與不可數名詞 <code>strength</code>（力量）之間，必填入「形容詞」。前兩句提到能拉動自身體重 1,000 倍（相當於一人拉動六輛公車），總結這種「驚人的、不可思議的」力量，故選 <code>(A) incredible</code>。')+
+  bankOps(U11_BANK,U11_LAB,'A','正確：<code>This incredible strength</code>（這種不可思議的力量）。',U11_WRONG)
+);
+
+H+=card('46',['考點：字首字尾提示拼字與科學史實名詞 telescope','詞性需求：單數可數名詞'],'telescope',
+  stem('46')+
+  clue('題幹給予提示「<code>[望遠鏡 t___e]</code>」，活過 500 年的格陵蘭鯊（西元 1520 年代以前出生）在 17 世紀初「望遠鏡（<code>the invention of the telescope</code>）」發明前就已在北極海游動，故填入 <code>telescope</code>。')
+);
+
+H+=card('47',['考點：被動語態 are + V-en + by 與轉折比較','詞性需求：過去分詞 (V-en)'],'F (surpassed)',
+  stem('47')+
+  clue('句首有轉折詞 <code>However</code>，結構為典型被動語態 <code>even these remarkable lifespans are ___ by those of some invertebrates</code>（甚至這些驚人的 500 年壽命，也被某些無脊椎動物的壽命所……）。後句舉例深海巨型火山海綿能活 15,000 年，遠遠「超越、勝過」格陵蘭鯊的 500 年，故選過去分詞 <code>(F) surpassed</code>。')+
+  bankOps(U11_BANK,U11_LAB,'F','正確：<code>are surpassed by...</code>（被……所超越）。',U11_WRONG)
+);
+
+H+=card('48',['考點：單數主詞及物動詞搭配 claim the title of（奪下……的頭銜）','詞性需求：第三人稱單數現在式及物動詞'],'H (claims)',
+  stem('48')+
+  clue('主詞為第三人稱單數 <code>The box jellyfish</code>（箱形水母），後面緊接名詞受詞 <code>the title of the world’s most venomous animal</code>（世界最毒動物的頭銜）。英文中「奪得／贏得／宣稱擁有……的頭銜或寶座」慣用及物動詞搭配 <code>claim the title of...</code>，故選單數動詞 <code>(H) claims</code>。')+
+  bankOps(U11_BANK,U11_LAB,'H','正確：<code>claims the title of...</code>（奪下／擁有……的頭銜）。',U11_WRONG)
+);
+
+H+=card('49',['考點：字首字尾提示拼字與醫療傷亡搭配 in severe cases','詞性需求：形容詞'],'severe',
+  stem('49')+
+  clue('題幹給予提示「<code>[嚴重的 s___e]</code>」，且後句說明毒素會在幾分鐘內導致死亡（<code>cause death within minutes</code>），構成固定搭配 <code>In severe cases</code>（在嚴重的情況下），故填入形容詞 <code>severe</code>。')
+);
+
+H+=card('50',['考點：讓步子句連綴動詞 appears + 形容詞補語 fragile','詞性需求：第三人稱單數連綴動詞'],'E (appears)',
+  stem('50')+
+  clue('讓步從屬連接詞 <code>Although</code> 引導的子句中，主詞為第三人稱單數 <code>it</code>（箱形水母），空格後方為「形容詞」<code>fragile</code>（脆弱的）。中間缺少能接形容詞作主詞補語的「第三人稱單數連綴動詞」，表示雖然牠外表「看起來、顯得」脆弱，卻極度致命，故選 <code>(E) appears</code>。')+
+  bankOps(U11_BANK,U11_LAB,'E','正確：<code>Although it appears fragile</code>（儘管牠看起來很脆弱）。',U11_WRONG)
 );
 
 document.getElementById('app').innerHTML=H;
