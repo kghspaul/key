@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>304 Blackboard</title>
+<title>304 Blackboard 3</title>
 <style>
 :root{--bg:#faf8f4;--fg:#222;--card:#fff;--line:#e4ded3;--acc:#9a3b2e;--ok:#1f7a4d;--no:#b3261e;--mut:#6b6558;--hl:#fff1c9}
 @media(prefers-color-scheme:dark){:root{--bg:#161512;--fg:#e8e4da;--card:#201f1b;--line:#3a372f;--acc:#e08a78;--ok:#6fcf9a;--no:#f08a82;--mut:#a39d8f;--hl:#4a3f1c}}
@@ -51,7 +51,7 @@ footer a:hover{text-decoration:underline;}
 </head>
 <body>
 <div class="top">
-  <h1>304 Blackboard</h1>
+  <h1>304 Blackboard 3</h1>
   <p>每題含：考點標籤 → 題幹逐句中英對照 → 解題線索 → 正解與全部誤答分析</p>
   <p>圖例：<span class="bl">黃底</span> ＝ 正確答案填入處 ｜ <span class="tag">考點</span></p>
 </div>
@@ -76,285 +76,416 @@ function ops(list,ans,lab){lab=lab||'ABCDEF';return '<ul class="op">'+list.map((
 function card(n,tags,ans,body){
   return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
 }
-
 const st=(en,zh)=>'<div class="stem"><div class="en">'+fx(en)+'</div><div class="zh">'+zh+'</div></div>';
 
-/* === Part 1: L1 ~ L51 課文講解與補充例句依序呈現 === */
-const h1 = '<h2 id="p1">L1 ~ L51 課文講解 (The Day of the Dead)</h2>' + [
-  card("L1", ["間接問句", "what vs. how"], "D",
-    st("Have you ever thought about [[L1|what it would be like]] to have a deceased loved one return and accompany you to a holiday celebration?", "你是否曾想過，讓一位已故的摯愛回來陪伴你慶祝節日會是什麼樣子？") +
-    clue("• <b>本題考點 1（what 與 how 的差別）</b>：<code>what</code> 為名詞（N.），而 <code>how</code> 為副詞（adv.）。此處介系詞 <code>like</code> 後方需要受詞（受詞必為名詞），故用 <code>what</code>。<br>• <b>本題考點 2（間接問句）</b>：<code>what it would be like...</code> 為間接問句（當名詞子句），作 <code>thought about</code> 的受詞。<br>『間接問句』需注意 3 點：<br>1) <b>不需要倒裝！</b> → 疑問詞 + S + V<br>2) 當名詞子句，作主／受／補語用（可用 if/whether 或任何疑問詞）<br>3) 時態需配合主要子句") +
-    ops([
-      ["how would it be like", "10%", "間接問句不倒裝，且介系詞 like 缺名詞受詞 what。"],
-      ["what would it be like", "9%", "間接問句不需要倒裝（應為 what it would be like）。"],
-      ["how it would be like", "36%", "like 是介系詞，受詞必為名詞，不可用副詞 how。"],
-      ["what it would be like", "44%", "what 當 like 的受詞，且維持「疑問詞 + S + V」不倒裝語序。"]
-    ], "D") +
-    passage("1. L1 & 2. L2 補充例句與使役動詞練習", [[
-      ["I don’t know what (O) to do. (do 之後需要受詞，受詞必為 N，故用 what) vs. I don’t know how (adv.) to do my English homework. (不缺 S/O 時，才可用副詞，故用 how)", "what 與 how 的基本差別。"],
-      ["一般問句：What is your name? / Do you want another beer? → 間接問句：I asked her what her name was. / I asked her if/whether she wanted another beer.", "間接問句當受詞用，不倒裝且時態配合主要子句。"],
-      ["常見錯誤 1：(X) She told me <del>how</del> her freshman year was like. → (O) [[|She told me what her freshman year was like.]]", "她告訴我她的大一生活是什麼樣子。"],
-      ["常見錯誤 2：(X) Jessica is wondering how <del>can she</del> improve her English before she goes to England. → (O) [[|Jessica is wondering how she can improve her English before she goes to England.]]", "潔西卡想知道在去英國之前，她可以如何增進自己的英文。"],
-      ["2. L2 have 當使役動詞三種用法：(1) have + O + VR (使…做)：He had his dog fetch the paper. ｜ (2) have + O + V-ing (使…反覆/持續做)：He had his dog fetching the ball in the park. ｜ (3) have + O + p.p. (使…被…)：He had his dog locked in the house.", "使役動詞 have 的三種受詞補語。"],
-      ["L2 練習 1：You had better have your air conditioner [[|fixed]] (fix) because it is leaking.", "你最好請人把冷氣修一修，因為它在漏水。"],
-      ["L2 練習 2：He's always had/got the stereo [[|playing]] (play) (at) full blast (= loudly).", "他總是把音響開到最大聲一直播。"]
-    ]])
-  ),
+let h1 = '';
+h1 += '<h2 id="p1">304 Blackboard 3 內容詳解</h2>';
 
-  card("L4", ["非限定關係子句", ", where + 完整子句"], "C",
-    st("The idea may scare you to death or at least make your hair stand on end, but this is the essential concept behind the Day of the Dead in Mexico[[L4|, where]] people celebrate death with joy and humor rather than mourn it with sorrow.", "這個想法可能會把你嚇死，或至少讓你毛骨悚然，但這就是墨西哥亡靈節背後的核心概念，在那裡人們帶著歡樂與幽默慶祝死亡，而不是悲傷地哀悼它。") +
-    clue("L6：<code>, where ... sorrow</code> 為非限定形容詞子句，用以修飾先行詞 <code>Mexico</code>。<br>下列情況要用非限定的關係子句或分詞（前需加逗點）：<br>(1) <b>獨一無二</b>（常為專有名詞，但不限於專有名詞）<br>(2) <b>補充資訊</b>（用來補充額外訊息，而非限定前面的名詞）") +
-    ops([
-      ["which", "7%", "缺逗點，且後方為完整子句。"],
-      ["where", "7%", "先行詞 Mexico 為專有名詞，前需加逗點。"],
-      [", where", "58%", "非限定關係副詞 + 完整子句，修飾先行詞 Mexico。"],
-      [", which", "29%", "which 後須接不完整子句（少 S/O/C）。"]
-    ], "C") +
-    passage("3. L6 ~ 7. L9 課文與補充例句", [[
-      ["(1) 獨一無二：Our new car, which we bought last month, seats five people.", "我們的新車，上個月買的，是五人座的。（我們只有一輛新車 → 獨一無二）"],
-      ["(2) 補充資訊（非限定）：I was fascinated by the girl, who was so friendly and charming.", "我為那女孩著迷，（補充說明：因為）她親切又迷人。（who = because she）"],
-      ["比較（限定子句）：I was fascinated by the girl who was so friendly and charming. As for the other girls, I found them proud and stupid.", "我為之著迷的是親切又迷人的那位女孩（而非其他女孩）。至於其他女孩，我覺得她們高傲又愚蠢。"],
-      ["4. L6 celebrate death with joy and humor 以…來慶祝／讚揚／歌頌", "課文片語註解。"],
-      ["5. L7 On this joyous occasion, family members gather for a reunion in honor of those who have moved on to the afterlife.", "在這個歡樂的場合，家人們齊聚一堂團圓，以紀念那些已經前往來世的親人。"],
-      ["L7 辨析：be reunited（通常指失散已久的人重聚） vs. reunion（因工作、居住地不同而不常見面的人重聚，如同學會、過節家人團圓）：The children were finally reunited with their families. / The band will reunite for this show only. / a family reunion (家人團圓) / a high-school reunion (高中同學會)", "因此課文 gather for a reunion 不可隨意改為 are reunited！"],
-      ["6. L7 on … occasion 在…場合／時候：I've seen Jana with them on several occasions.", "我有好幾次場合看過珍娜跟他們在一起。"],
-      ["7. L9 those who = people who 那些…的人", "課文代名詞用法。"]
-    ]])
-  ),
+h1 += card("挑戰題1", ["間接問句", "what與how用法"], "D",
+  st("Have you ever thought about [[挑戰題1|what it would be like]] to have a deceased loved one return and accompany you to a holiday celebration?", "你是否曾經想過，如果有已故的親人回來陪伴你過節，那會是什麼樣子？") +
+  clue(`本題考點1：<br>
+what與how的差別：what 為N，而how 為 adv。<br>
+例 I don’t know what to do. O<br>
+說明：do之後需要受詞，受詞必為N，故用what。<br>
+I don’t know how to do my English homework. adv.<br>
+說明：不缺S/O時，才可用副詞，故用how。<br><br>
+本題考點2：<br>
+what it would be like...為間接問句(當名詞子句)，作thought about的受詞。<br><br>
+『間接問句』(亦即疑問詞所引導的名詞子句)需注意3點：<br>
+1) 不需要倒裝！ 🡺 疑問詞 + S + V<br>
+2) 當名詞子句，做主/受/補語用(可用if/whether或任何疑問詞)<br>
+3) 時態需配合主要子句<br>
+一般問句： What is your name? / Do you want another beer?<br>
+間接問句： I asked her what her name was. / I asked her if/whether she wanted another beer.<br>
+名詞子句當受詞用`) +
+  ops([
+    ["how would it be like", "10%", "how為副詞不可作like的受詞，且間接問句不倒裝"],
+    ["what would it be like", "9%", "間接問句不倒裝"],
+    ["how it would be like", "36%", "how為副詞不可作like的受詞"],
+    ["what it would be like", "44%", ""]
+  ], "D")
+);
 
-  card("L10", ["不定詞完成式", "to have originated"], "A",
-    st("The Day of the Dead is thought [[L10|to have originated]] centuries ago with the Aztecs.", "亡靈節被認為是幾個世紀前源自阿茲特克人。") +
-    clue("• <code>to have + p.p.</code> 表示這個動作發生的時間比主要子句中的動詞（<code>is thought</code>）更早（發生在 <code>centuries ago</code>）。<br>• <code>originate in + 某地</code>（起源於某地）；<code>originate from/with + sb/sth</code>（來自某人、某物），為主動不及物動詞，無被動式。") +
-    ops([
-      ["to have originated", "48%", "表示發生在過去（centuries ago）的動作。"],
-      ["to originate", "7%", "未表達比 is thought 更早發生的過去時間。"],
-      ["to be originated", "26%", "originate 為不及物動詞，無被動語態。"],
-      ["to have been originated", "20%", "originate 無被動語態。"]
-    ], "A") +
-    passage("8. L10 & 9. L11~L12 課文與補充例句", [[
-      ["I seem to have lost my English textbook. / He is said to have been a successful businessman.", "我似乎把英文課本弄丟了。／據說他以前曾是一位成功的商人。"],
-      ["The style of architecture originated in ancient Greece. = The style of architecture originated from/with the ancient Greeks.", "這種建築風格起源於古希臘（古希臘人）。"],
-      ["9. L11 Nowadays, it is celebrated passionately throughout Mexico on November 1 and 2.", "現今，每年 11 月 1 日和 2 日，墨西哥全國各地都會熱情地慶祝這個節日。"],
-      ["L12 throughout + 地方（遍及某處） vs. throughout + 時間（整個時期）：African swine fever spread throughout Asia except for Taiwan and Japan. / We are open every weekend throughout the year.", "非洲豬瘟傳遍了除台灣與日本以外的亞洲各地。／我們全年每個週末都有營業。"]
-    ]])
-  ),
+h1 += passage("補充：錯誤訂正", [[
+  ["(X) She told me [[|how]] her freshman year was like.", "她告訴我她的大一生活是什麼樣子。"],
+  ["(O) She told me [[|what]] her freshman year was like.", ""]
+], [
+  ["(X) Jessica is wondering how [[|can she]] improve her English before she goes to England.", "Jessica想知道去英國前該如何改善英文。"],
+  ["(O) Jessica is wondering how [[|she can]] improve her English before she goes to England.", ""]
+]]);
 
-  card("L13", ["關係副詞", "the day when (= on which)"], "D",
-    st("Traditionally, deceased children are honored on Nov. 1, while Nov. 2 is the day [[L13|when]] departed adults are the main focus.", "傳統上，死去的兒童會在 11 月 1 日受到尊崇，而 11 月 2 日則是主要關注逝去成人的日子。") +
-    clue("<code>when</code>（關係副詞）= 連接詞 + 時間副詞（<code>and + on this day</code>）= 介系詞 + 關代（<code>on + which</code>），引導形容詞子句修飾先行詞 <code>the day</code>。") +
-    ops([
-      ["which", "11%", "which + 不完整子句（若用 which 需改為 on which + 完整子句）。"],
-      ["in which", "15%", "搭配 the day 介系詞應為 on which。"],
-      ["that", "19%", "正式用法中應使用 on which 或 when。"],
-      ["when", "55%", "關係副詞（= on which），後接完整子句。"]
-    ], "D") +
-    passage("10. L13 ~ L14 補充例句", [[
-      ["L13 honor vt. = show respect for 向…表達敬意：He was honored for his bravery.", "他因表現英勇而受到表彰。"],
-      ["L13 deceased = departed = dead（已故的、逝去的）", "同義字整理。"],
-      ["L14 while 為連接詞，在本句的意思為「而」，表前後對比：Frank enjoys milk chocolate, while Matt prefers dark chocolate.", "法蘭克喜歡牛奶巧克力，而麥特偏愛黑巧克力。"]
-    ]])
-  ),
+h1 += card("L2", ["使役動詞用法"], "N/A",
+  st("have 當使役動詞有下面三種用法：<br>have + O + VR (使…做)<br>He had his dog fetch the paper.<br><br>have + O + Ving (使…反覆做)<br>He had his dog fetching the ball in the park.<br><br>have + O + p.p. (使…被…)<br>He had his dog locked in the house.", "have 當使役動詞的用法")
+);
 
-  card("L15", ["易混淆形容詞", "living vs. alive / live"], "B",
-    st("During these 48 hours, the souls of the dead are believed to return to earth to visit their [[L15|living]] family members.", "在這 48 小時內，人們相信死者的靈魂會重返人間，探望他們在世的家人。") +
-    clue("• <code>alive</code> adj. 活著的（不能放名詞前）<br>• <code>living</code> adj. 活著的、在世的（可放名詞前）<br>• <code>live</code> adj./adv. 現場演出的；adj. 活的（只用於名詞前，且通常用在動物上）<br>• <code>the + adj. = adj. + people</code>：<code>the dead = dead people</code>、<code>the rich = rich people</code>。") +
-    ops([
-      ["alive", "30%", "不能放在名詞 family members 之前（例：<i>My grandparents are still alive.</i>）。"],
-      ["living", "65%", "可放在名詞前修飾（<code>living family members</code> 在世的家人）。"],
-      ["live", "1%", "指現場直播（<i>a live radio show</i>）或活體動物（<i>experiments on live animals</i>）。"],
-      ["lived", "3%", "被居住，不合語意。"]
-    ], "B")
-  ),
+h1 += passage("L2 練習解答", [[
+  ["You had better have your air conditioner [[|fixed]] because it is leaking.", "你最好找人把冷氣修好，因為它在漏水。"],
+  ["He's always got the stereo [[|playing]] full blast (= loudly).", "他總是把音響開到最大聲。"]
+]]);
 
-  card("L17", ["代名詞", "those they have lost"], "C",
-    st("Instead of fearing the spirits of [[L17|those]] they have lost, Mexicans anticipate their arrival and prepare for it.", "墨西哥人非但不害怕失去親人的靈魂，反而期待他們的到來並為此做準備。") +
-    clue("<code>those they have lost = those (people) (that/whom) they have lost</code>（他們死去的家人）。") +
-    ops([
-      ["which", "15%", "缺先行詞。"],
-      ["what", "27%", "what = the thing which（the spirits of what they have lost → 他們失去之物的靈魂？不合語意）。"],
-      ["those", "51%", "代名詞指那些逝去的親人們。"],
-      ["that", "7%", "that 前不可有介系詞 of，且不指複數的人。"]
-    ], "C")
-  ),
+h1 += card("L4", ["關係副詞", "非限定用法"], "C",
+  st("The idea may scare you to death or at least make your hair stand on end, but this is the essential concept behind the Day of the Dead in Mexico[[, where| ]]people celebrate death with joy and humor rather than mourn it with sorrow.", "這個想法可能會把你嚇死，或者至少讓你毛骨悚然，但這正是墨西哥亡靈節背後的核心概念，在那裡，人們用歡樂和幽默來慶祝死亡，而不是用悲傷來哀悼它。") +
+  clue(`L6 , where ... sorrow = 非限定形容詞子句，用以修飾先行詞Mexico<br><br>
+下列情況要用非限定的關係子句或分詞 (前需加逗點)：<br>
+(1) 獨一無二(常為專有名詞，但並不限於專有名詞)<br>
+Our new car, which we bought last month, seats five people. (我們只有一輛新車 → 獨一無二)<br><br>
+(2) 補充資訊(此時關係子句是用來補充額外訊息，而非用來限定前面的名詞)<br>
+I was fascinated by the girl, who was so friendly and charming. (非限定子句)<br>
+關代 = 連接詞 + N 🡺 此句中 who = because she<br><br>
+比較：<br>
+I was fascinated by the girl who was so friendly and charming. As for the other girls, I found them proud and stupid. (限定子句)`) +
+  ops([
+    ["which", "7%", "which後需接不完整子句"],
+    ["where", "7%", "無逗點，無法作為非限定補充修飾獨一無二的地名Mexico"],
+    [", where", "58%", "後接完整子句，且為非限定用法"],
+    [", which", "29%", "which後需接不完整子句"]
+  ], "C")
+);
 
-  card("L17-小測驗", ["字彙詞性辨析", "loss 喪親之痛"], "C",
-    st("13. 小測驗：(At a funeral) My condolences. (請節哀) = I’m sorry for your [[L17-小測驗|loss]].", "（在葬禮上）請節哀順變。＝ 對於您痛失親人我深感遺憾。") +
-    clue("<code>loss</code> n. = the death of someone（例：<i>She must be feeling very lonely after the loss (= death) of her husband.</i>）。") +
-    ops([
-      ["lose", "—", "Vi./Vt. 原形動詞。"],
-      ["lost", "—", "p.t. / p.p. 過去式或過去分詞。"],
-      ["loss", "—", "n. 名詞（失去親人）。"]
-    ], "C")
-  ),
+h1 += passage("L6 補充", [[
+  ["celebrate death with joy and humor", "以歡樂和幽默來慶祝/讚揚/歌頌死亡"]
+]]);
 
-  card("L19", ["分詞修飾與附帶狀況", "decorated / with + O + OC"], "B, D",
-    st("Days or even weeks in advance, they purchase necessary items and foods in local markets. These include marigolds, candles, “the bread of the dead,” and [[L19-1|decorated]] sugar skulls [[L19-2|with]] the names of departed family members written on their foreheads.", "在幾天甚至幾週前，他們會在當地市場採購必要的物品和食物。這些包括金盞花、蠟燭、「亡靈麵包」，以及額頭上寫著已故家人名字的裝飾糖骷髏。") +
-    clue("• <b>第 1 空（L20 邏輯排列 N1, N2, N3, and N4）</b>：<code>decorated</code> (adj. 被裝飾過的) 修飾名詞 <code>sugar skulls</code>。<br>• <b>第 2 空（本句另一重點）</b>：<code>with + O (the names of departed family members) + OC (written on their foreheads)</code> 表附帶狀況（額頭上寫著已故家人的名字）。<br>• <b>15. L22 混合題題型</b>：What does the author mean by \"their\" in the previous question? → Answer: <code>(decorated) sugar skulls’</code>。<br>• <b>17. L23 課文段落</b>：<i>They also tidy and restore the graves and cemeteries where their family members are buried.</i>（where 引導形容詞子句，修飾 graves and cemeteries）。") +
-    ops([
-      ["(1) decorate / (2) which", "25% / —", "(1) 若填動詞變成 these decorate；(2) 後方 written 為分詞而非完整動詞。"],
-      ["(1) decorated / (2) whose", "62% / —", "(1) decorated（被裝飾過的）正確；(2) names 前已有定冠詞 the，不可用 whose。"],
-      ["(1) decorating / (2) on which", "12% / —", "主動分詞語意不合；on which 後需接完整子句。"],
-      ["(1) decoration / (2) with", "1% / —", "(1) 名詞詞性不合；(2) with + O + OC 正確！"]
-    ], "BD") +
-    passage("19. L25 課文段落", [[
-      ["On the Day of the Dead, families assemble colorful altars in their homes to welcome returning spirits.", "在亡靈節當天，家家戶戶會在家中組裝色彩繽紛的祭壇，以迎接歸來的靈魂。"]
-    ]])
-  ),
+h1 += card("L7", ["詞彙辨析: reunite vs reunion"], "N/A",
+  st("On this joyous occasion, family members gather for a reunion in honor of those who have moved on to the afterlife.", "在這個歡樂的場合，家人團聚在一起，向那些已故進入來世的人致敬。") +
+  clue(`請問本句裡的 gather for a reunion是否可改成 are reunited？<br>
+reunite / reunion並非只有詞性不同，意義也有出入：<br>
+be reunited 通常指失散已久的人重聚<br>
+The children were finally reunited with their families.<br>
+The band will reunite for this show only.<br><br>
+reunion 則只是因工作、居住地不同，而不常見面的人重聚(同學會、家人團圓)<br>
+a family reunion 家人團圓(過節等)<br>
+a high-school reunion 高中同學會`)
+);
 
-  card("L26", ["保留連接詞之分詞構句", "while (they were) alive"], "B",
-    st("On the altars, they place photographs of their deceased loved ones as well as beverages and dishes that those family members had a preference for [[L26|while]] alive.", "在祭壇上，他們放置已故親人的照片，以及那些家人「生前」偏好的飲料和菜餚。") +
-    clue("<code>while alive</code> 為分詞構句（簡化子句）= <code>while (they were) alive</code>。<br>*主詞相同時可省略「連接詞 + 主詞 + be」；連接詞在語意有需要時可選擇保留（★此原則請用於閱讀理解，不建議用於寫作）。") +
-    ops([
-      ["what’s", "10%", "what’s alive → 活著的東西（語意不合）。"],
-      ["while", "41%", "<code>while (they were) alive</code>（生前、還活著的時候）。"],
-      ["they are", "3%", "for 為介系詞（受詞為關代 that），其後不能無連接詞直接接子句。"],
-      ["being", "46%", "had a preference for 已有受詞 that（代指 beverages and dishes），不能再加動名詞當受詞！"]
-    ], "B") +
-    passage("21. L27 & 22. L28 (as well as) 補充例句", [[
-      ["21. L27 loved ones ≒ 至親好友", "課文片語註解。"],
-      ["22. L28 as well as 五大重點：(1) 連接詞性對等的字或片語；(2) 通常只用在肯定句；(3) 不可用來連接完整句子：He was kind as well as sensible. / They sell books as well as newspapers.", "他既明智又仁慈。／他們販售報紙以及書籍。"],
-      ["(4) 動詞需配合 as well as「前面」的名詞（與 not only... but also... 相反！）：Tom as well as his parents is a big fan of the band.", "湯姆以及他的父母都是該樂團的忠實粉絲。（動詞配合 Tom 用單數 is）"],
-      ["(5) 連接動詞時，第 2 個動詞需改為動名詞 (V-ing)：The organization gives help to people in need, as well as raising money for local charities.", "該組織除了為當地慈善機構募款外，也幫助有需要的人。"]
-    ]])
-  ),
+h1 += passage("L7 / L9 補充", [[
+  ["on … occasion", "在…場合/時候"],
+  ["I've seen Jana with them on several occasions.", "我曾在幾個場合看到Jana和他們在一起。"],
+  ["those who = people who", "那些…的人"]
+]]);
 
-  card("L31", ["非限定關係副詞", ", where (= in which)"], "D",
-    st("After this warm reception for the souls at home, it is usually late in the evening, and families head to the cemetery, [[L31|where]] they decorate the graves of their loved ones and light one candle for each dead person.", "在家中為靈魂舉行這場溫馨的接待後，通常已是深夜，家人們會前往墓園，在那裡裝飾親人的墳墓，並為每位死者點燃一根蠟燭。") +
-    clue("• <code>where = in which</code>，修飾先行詞 <code>the cemetery</code>，後方為完整子句。<br>• 24. L31：<code>family</code> 指「家庭」時可數；指「家人」時為集合名詞（美式英文視為單數 <i>His family has always supported him</i>，英式英文視為複數 <i>have</i>）；若指個別家人則用可數的 <code>family member(s)</code>。") +
-    ops([
-      ["which", "19%", "後需接不完整子句。"],
-      ["while", "5%", "語意不合。"],
-      ["whereas", "1%", "語意不合。"],
-      ["where", "75%", "關係副詞（= in which）+ 完整子句。"]
-    ], "D")
-  ),
+h1 += card("L10", ["不定詞完成式", "被動語態"], "A",
+  st("The Day of the Dead is thought [[L10|to have originated]] centuries ago with the Aztecs.", "亡靈節被認為起源於幾個世紀前的阿茲特克人。") +
+  clue(`to have pp 表示這個動作發生的時間比主要子句中的動詞早<br>
+I seem to have lost my English textbook.<br>
+He is said to have been a successful businessman.<br><br>
+originate in some place 起源於(某地)<br>
+originate from/with sb 來自(某人、某物)<br>
+The style of architecture originated in ancient Greece.<br>
+= The style of architecture originated from/with the ancient Greeks.`) +
+  ops([
+    ["to have originated", "48%", "起源為發生在過去的動作，且originate為不及物動詞不需被動"],
+    ["to originate", "7%", "未表達出發生在主要子句動詞之前的過去時間"],
+    ["to be originated", "26%", "originate不需被動態"],
+    ["to have been originated", "20%", "originate不需被動態"]
+  ], "A")
+);
 
-  card("L31-挑戰3-3", ["which vs. where 比較", ", which + 不完整子句"], "A",
-    st("挑戰題 3-3：They agreed to install a new pedestrian gate to the cemetery, [[L31-挑戰3-3|which]] they have done.", "他們同意在墓園安裝一道新的行人專用門，而這件事他們已經完成了。") +
-    clue("<b>which vs. where 終極比較：</b><br>• <code>which + 不完整子句</code>（少主詞、受詞或補語）：which 為關係代名詞，在此代替前面「安裝新行人門」整件事，作後方及物動詞 <code>have done</code> 的受詞。<br>• <code>where + 完整子句</code>：where 為關係副詞，不可當主詞、受詞或補語。") +
-    ops([
-      ["which", "60%", "關係代名詞作 have done 的受詞。"],
-      ["where", "18%", "關係副詞後需接完整子句，但 done 缺受詞。"],
-      ["in which", "17%", "同上，後需接完整子句。"],
-      ["when", "6%", "同上，後需接完整子句。"]
-    ], "A")
-  ),
+h1 += passage("L11-L12 補充", [[
+  ["Nowadays, it is celebrated passionately throughout Mexico on November 1 and 2.", "如今，在11月1日和2日，整個墨西哥都在熱烈慶祝它。"],
+  ["throughout Mexico", "墨西哥各處"],
+  ["throughout + 地方", "遍及某處"],
+  ["throughout + 時間", "整個時期"],
+  ["African swine fever spread throughout Asia except for Taiwan and Japan.", "非洲豬瘟蔓延整個亞洲，除了台灣和日本。"],
+  ["We are open every weekend throughout the year.", "我們全年每個週末都營業。"]
+]]);
 
-  card("L33", ["形容詞分詞構句與主詞", "Cheerful and merry, they..."], "D",
-    st("Cheerful and merry, [[L33|they]] feast with the sacred souls and pray till dawn, transforming the normally horrifying graveyard into a venue of joy and celebration for the entire night.", "歡樂愉快的他們與神聖的靈魂一起享用盛宴並祈禱到黎明，將平時令人毛骨悚然的墓地整夜轉變為充滿歡樂與慶祝的場所。") +
-    clue("原句為 <code>(As they were) Cheerful and merry, <b>they</b> feast with the sacred souls...</code>，主詞相同時省略「連接詞 + 主詞 + be」，逗號後為主要子句，需填代名詞主詞 <code>they</code>。") +
-    ops([
-      ["who", "10%", "缺先行詞（關代前需有名詞當其先行詞），且會使整句無主要子句主詞。"],
-      ["those", "10%", "語意不合。"],
-      ["which", "21%", "缺先行詞。"],
-      ["they", "59%", "代名詞作主要子句的主詞。"]
-    ], "D") +
-    passage("25. L34 補充例句", [[
-      ["L34 till = until (連/介，但 till 較常用在口語)：The Flora Expo will last till/until the end of this month. (介) / The children played in the park till/until it was really dark. (連)", "花博將持續到本月底。／孩子們在公園玩到天色全黑。"],
-      ["L34 transform A into B = turn A into B 將 A 轉變成 B", "課文片語註解。"]
-    ]])
-  ),
+h1 += card("L13", ["關係副詞", "時間先行詞"], "D",
+  st("Traditionally, deceased children are honored on Nov. 1, while Nov. 2 is the day [[L13|when]] departed adults are the main focus.", "傳統上，已故的兒童在11月1日受到紀念，而11月2日則是紀念已故成人的日子。") +
+  clue(`when departed … focus 🡺 關係副詞引導的形容詞子句，用以修飾先行詞the day<br>
+when (關副) = 連接詞 + 時間副詞 = and + on this day = 介 + 關代 = on + which<br><br>
+L13 honor vt. = show respect for 向…表達敬意<br>
+He was honored for his bravery. 他因表現英勇而受到表彰<br><br>
+L13 deceased = departed = dead<br><br>
+L14 while為連接詞，在本句的意思為「而」，表對比。<br>
+Frank enjoys milk chocolate, while Matt prefers dark chocolate.`) +
+  ops([
+    ["which", "11%", "which後需接不完整子句，應改為on which"],
+    ["in which", "15%", "介系詞錯誤，應為on which"],
+    ["that", "19%", "作為關係副詞時，that前不可加介系詞，且不如when明確"],
+    ["when", "55%", "關係副詞，引導完整子句修飾時間名詞the day"]
+  ], "D")
+);
 
-  card("L38", ["代名詞與 include 用法", "These include"], "C",
-    st("Throughout the festival, colorful, cartoon-like representations of the dead can be seen everywhere. [[L38|These include]] skeleton and skull cookies, candies, flags, and toys.", "在整個節日期間，到處都可以看到色彩鮮豔、卡通般的死者形象代表物。這些包括骷髏和頭骨形狀的餅乾、糖果、旗幟和玩具。") +
-    clue("<code>These</code> 指代前句的複數名詞 <code>representations of the dead</code>，且本句為獨立句子，需要主要動詞 <code>include</code>。") +
-    ops([
-      ["It includes", "18%", "單數 It 會變成指代 the festival，但餅乾與玩具是「死者形象代表物（representations）」而非節日。"],
-      ["That includes", "13%", "單數代名詞與複數先行詞 representations 不合。"],
-      ["These include", "41%", "複數代名詞主詞 + 複數主要動詞 include。"],
-      ["Including", "29%", "分詞／介系詞不可獨立成句，會導致本句缺主詞與動詞！"]
-    ], "C") +
-    passage("27. ~ 29. L37~L38 補充例句", [[
-      ["include 四種句型轉換：The price is $25.50, and it includes postage and packing. = ..., including (= which includes) postage and packing. = ..., inclusive of postage and packing. = ..., postage and packing included.", "注意：including / inclusive of / … included 的部分皆不可獨立自成一句！（(X) The price is $25.50. Including postage and packing.）"],
-      ["28. L37 名詞 + -like = 像…一樣的（如 cartoon-like 像卡通一樣的）：Human-like spirits are said to have lived in this cave two thousand years ago.", "據說兩千年前曾有像人類一樣的精靈住在这个洞穴裡。"],
-      ["29. L38 representation 代表物、象徵（畫像、雕像、模型等）：This statue is a representation of Prometheus. / The dove in the picture is a representation of peace.", "這座雕像是普羅米修斯的畫像（雕像代表）。／畫中的鴿子是和平的象徵。"]
-    ]])
-  ),
+h1 += card("L15", ["字彙選擇: alive/living/live", "the + adj."], "B",
+  st("During these 48 hours, the souls of the dead are believed to return to earth to visit their [[L15|living]] family members.", "在這48小時內，死者的靈魂被認為會返回人間探望他們在世的家人。") +
+  clue(`L15 the + adj. = adj. + people<br>
+the dead = dead people<br>
+the rich = rich people`) +
+  ops([
+    ["alive", "30%", "adj. 活著的 (不能放名詞前) 例：My grandparents are still alive."],
+    ["living", "65%", "adj. 活著的，可放名詞前修飾"],
+    ["live", "1%", "adj. / adv. 現場演出的 (如 a live radio show) 或 活的 (只用於名詞前，且通常用在動物上 例：Protesters want to stop experiments on live animals.)"],
+    ["lived", "3%", "被居住"]
+  ], "B")
+);
 
-  card("L40", ["不定詞表目的", "to resemble"], "A",
-    st("Many people also dress up in skeleton costumes, paint their faces [[L40|to resemble]] skulls, and participate in performances and street parades.", "許多人還會穿上骷髏服裝，把臉畫得像頭骨一樣，並參加表演和街頭遊行。") +
-    clue("畫臉的目的是「為了看起來像（<code>to resemble</code>）」骷髏頭。") +
-    ops([
-      ["to resemble", "60%", "不定詞表目的（畫臉是為了像骷髏頭）。"],
-      ["resembling", "23%", "變成修飾 faces（畫他們原本就像骷髏頭的臉？語意不合理）。"],
-      ["that resemble", "14%", "同上，語意不合理。"],
-      ["resembled", "3%", "resemble 無被動語態。"]
-    ], "A")
-  ),
+h1 += card("L17", ["指示代名詞 those", "關係代名詞"], "C",
+  st("Instead of fearing the spirits of [[L17|those]] they have lost, Mexicans anticipate their arrival and prepare for it.", "墨西哥人非但不害怕他們失去的親人的靈魂，反而期盼他們的到來並為此做準備。") +
+  clue(`those they have lost = those (people) (that/whom) they have lost 他們死去的家人`) +
+  ops([
+    ["which", "15%", "缺先行詞"],
+    ["what", "27%", "= the thing which，the spirits of what they have lost 🡺 他們失去之物的靈魂？語意不通"],
+    ["those", "51%", "代表 those people"],
+    ["that", "7%", "that前不可有介系詞"]
+  ], "C")
+);
 
-  card("L43", ["轉折副詞辨析", "Instead 取而代之地/相反地"], "D",
-    st("While doing so, Mexicans aren’t mocking death. [[L43|Instead]], they are recognizing it as an inevitable part of the natural cycle and would rather embrace it than ignore it.", "在這樣做的同時，墨西哥人並不是在嘲笑死亡。相反地，他們將其視為自然循環中不可避免的一部分，寧願擁抱它也不願忽視它。") +
-    clue("• 32. L42：<code>While doing so = While (they are) doing so</code>（<code>so</code> 取代前段穿骷髏裝、把臉畫得像頭骨並參加遊行等舉動）。<br>• 前句為否定句（<code>aren't mocking death</code> 並不是在嘲笑死亡），後句為肯定句說明實際態度，標準轉折副詞為 <code>Instead</code>（相反地、取而代之地）。<br>• 33. L44 本課句型 2：<code>would rather + VR1 + than + VR2 = would + VR1 + rather than + VR2</code>（寧可…也不願…，前後都需用原形動詞！例：<i>I would rather die than apologize to Helen. = I would die rather than apologize to Helen.</i>）。") +
-    ops([
-      ["On the other hand", "16%", "另一方面（≒ However）。"],
-      ["In other words", "3%", "換句話說。"],
-      ["In contrast", "6%", "形成對比的是（用來比較兩個不同主體在某方面的差異，如 <i>She prefers to walk; in contrast, her friend always drives.</i>）。"],
-      ["Instead", "75%", "相反地、取而代之地（通常前接否定句，後接肯定句）。"]
-    ], "D")
-  ),
+h1 += card("L17-補充", ["字彙測驗: loss"], "C",
+  st("(At a funeral) My condolences. (請節哀) = I’m sorry for your [[L17-補充|loss]].", "（在葬禮上）請節哀。 = 對你的失去我感到很遺憾。") +
+  clue("") +
+  ops([
+    ["lose", "", "Vi./Vt. 動詞"],
+    ["lost", "", "p.t. / p.p. 動詞過去式或過去分詞"],
+    ["loss", "", "n. = the death of someone 名詞 例：She must be feeling very lonely after the loss (=death) of her husband."]
+  ], "C")
+);
 
-  card("L45", ["動詞字彙辨析", "celebrating 讚揚/歌頌"], "A",
-    st("By inviting the dead to return and sharing the pleasures of life with them, Mexicans are [[L45|celebrating]] the cycle of life itself.", "藉由邀請死者回歸並與他們分享生活的樂趣，墨西哥人正在讚揚（歌頌）生命本身的循環。") +
-    clue("L47：<code>celebrate</code> = to express admiration or approval for something or someone（讚揚、歌頌、慶祝）。") +
-    ops([
-      ["celebrating", "76%", "讚揚，歌頌（<code>celebrating the cycle of life itself</code>）。"],
-      ["completing", "14%", "完成。"],
-      ["repeating", "9%", "重複。"],
-      ["devoting", "2%", "將…奉獻給（需搭配 <i>devote ... to ...</i>，如 <i>He devoted his life to charity.</i>）。"]
-    ], "A") +
-    passage("34. L47 ~ 36. L49 課文與補充例句", [[
-      ["His work celebrates the energy and enthusiasm of the young. / Valentine’s Day is a day to celebrate love and show appreciation for those in your life who have been there for you.", "他的作品歌頌年輕人的活力與熱情。／情人節是歌頌愛並向生命中陪伴你的人表達感謝的日子。"],
-      ["35. L45 the + adj. = adj. + people：the dead = dead people ｜ the rich = rich people", "重點複習。"],
-      ["36. L48 The Mexican Day of the Dead is an annual national event that brings together living hosts and non-living guests of honor.", "墨西哥亡靈節是一年一度的全國性盛事，將活著的東道主與逝去的貴賓凝聚在一起。"],
-      ["L49 guest of honor = most important guest（主賓、最重要的貴賓）：The actress was the guest of honor at the launch (新產品發表會).", "這位女演員是新產品發表會上的主賓。"]
-    ]])
-  ),
+h1 += card("L19", ["分詞作形容詞", "with + O + OC"], "B",
+  st("These include marigolds, candles, “the bread of the dead,” and [[L19|decorated]] sugar skulls with the names of departed family members written on their foreheads.", "這些包括萬壽菊、蠟燭、「亡靈麵包」，以及裝飾過的糖骷髏，上面寫著已故家人的名字。") +
+  clue(`邏輯排列： N1, N2, N3, and N4<br>
+These include marigolds, candles, “the bread of the dead,” and decorated sugar skulls with the names of departed family members written on their foreheads.<br><br>
+本句另一重點：with + O + OC<br>
+These include marigolds, candles, “the bread of the dead,” and decorated sugar skulls with(介) the names of departed family members(O) written(OC) on their foreheads.`) +
+  ops([
+    ["decorate", "25%", "vt. 裝飾 (動詞原形不符語法)"],
+    ["decorated", "62%", "adj. 被裝飾過的"],
+    ["decorating", "12%", "現在分詞，語意不合"],
+    ["decoration", "1%", "n. 裝飾 (語意不合)"]
+  ], "B")
+);
 
-  card("L50", ["await vs. wait for", "long-awaited 備受期待的"], "B",
-    st("Hopefully, this tradition will never die out, since it helps people accept a fact of life that awaits us all. If we cannot escape death, why not celebrate it?<br><br>補充考題：The long-[[L50|awaited]] sequel to James Cameron's <i>Avatar</i> is officially titled, “The Way of Water”.", "希望這項傳統永遠不會消失，因為它幫助人們接受一個等待著我們所有人的生命事實（死亡）。如果我們無法逃避死亡，何不慶祝它呢？<br><br>補充考題：詹姆士・卡麥隆《阿凡達》備受期待已久的續集正式定名為《水之道》。") +
-    clue("L51 核心字辨：<br>• <code><b>await</b></code>（<b>及物動詞 Vt.</b>）＝ <code><b>wait for</b></code>（不及物動詞 + 介系詞）等待。<br>• 在補充題中，「續集（sequel）」是「被粉絲長久等待的（<code>that is long awaited by fans</code>）」，只有及物動詞 <code>await</code> 可以轉為過去分詞表被動：<code>The long-awaited sequel</code>！") +
-    ops([
-      ["waited", "16%", "wait 為不及物動詞（需加 for），不能單獨用過去分詞 waited 表「被等待的」。"],
-      ["awaited", "28%", "await 為及物動詞，過去分詞 <code>(long-)awaited</code> 表「被長久等待／期待的」。"],
-      ["awaiting", "30%", "續集是「被等待」，而非主動等待別人。"],
-      ["waiting", "27%", "主動分詞語態錯誤。"]
-    ], "B") +
-    passage("37. L51 補充例句", [[
-      ["He's anxiously awaiting <del>for</del> his test results. = He’s anxiously waiting for his test results.", "他正焦急地等待著他的考試結果。（await 為及物動詞，後面絕對不可加 for！）"]
-    ]])
-  )
-].join('');
+h1 += passage("L22 混合題", [[
+  ["What does the author mean by \"their\" in the previous question?", "前一題中作者的 \"their\" 是什麼意思？"],
+  ["Answer: L18: (decorated) sugar skulls’", "答案：裝飾過的糖骷髏的"]
+]]);
 
-/* === Part 2: 課本句型 1 (1~8) & 句型 2 (1~5) 完整收錄 === */
-const h2 = '<h2 id="p2">課本句型 1 ＆ 句型 2 完整練習</h2>' +
-  passage("課本句型 1 基礎例句 (1~4) ＆ 句型 2 公式總整理", [[
-    ["句型1 例1：[[|Taylor Swift is said to be releasing her new album next month.]]", "據說泰勒絲下個月將發行她的新專輯。（進行式不定詞 to be V-ing 可表近期計畫好的未來）"],
-    ["句型1 例2：[[|The Black Death is believed to have killed 5 million people.]]", "據信黑死病曾奪走五百萬人的性命。（過去已發生用 to have + p.p.）"],
-    ["句型1 例3：[[|Over two thousand people are reported to have been infected with the disease.]]", "據報導已有超過兩千人感染該疾病。（過去被感染用完成被動式 to have been + p.p.）"],
-    ["句型1 例4：[[|The typhoon is said to have dumped huge amounts of rain on our country’s coastal cities.]]", "據說該颱風在我國沿海城市降下了豪雨。（huge amounts of = a huge amount of 大量的）"],
-    ["句型2 四大「寧可…而不要…」公式：1. would rather + VR1 + than + VR2 ｜ 2. would + VR1 + rather than + VR2 ｜ 3. prefer + to VR1 + rather than + (to) VR2 ｜ 4. prefer + V1-ing/N1 + to + V2-ing/N2", "特別注意 prefer 搭配 rather than（接原形/不定詞）與搭配介系詞 to（接 N/V-ing）的差異！"]
-  ]]) + [
-  card("句1-5", ["句型1", "is believed to VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">5. 人們相信擁有均衡的飲食可以幫助你保持健康。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Having a balanced diet is believed to help you stay/keep healthy.]]")+'</div></div>' + clue("動名詞片語 <code>Having a balanced diet</code> 當主詞視為單數，搭配單數動詞 <code>is believed to help...</code>。")),
-  card("句1-6", ["句型1", "are believed to have p.p."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">6. 據信銀行搶匪們已經捲款潛逃。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The bank robbers are believed to have [run away / left] with the money.]]")+'</div></div>' + clue("「已經捲款潛逃」發生在過去，用完成式不定詞 <code>to have run away / left</code>。")),
-  card("句1-7", ["句型1", "is said to have originated"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">7. 據說病毒是起源於一個生物實驗室。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The virus is said to have originated in/from a biology lab.]]")+'</div></div>' + clue("<code>originate</code> 為不及物動詞無被動，過去已起源用 <code>to have originated in/from</code>。")),
-  card("句1-8", ["句型1", "is reported to be equipped with"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">8. 據報導這家公司的新車將配備 (equip) 有自動駕駛系統。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The company’s new car is reported to be equipped with an automated driving system.]]")+'</div></div>' + clue("「配備有…」為被動片語 <code>be equipped with</code>。")),
+h1 += passage("L23 補充", [[
+  ["They also tidy and restore the graves and cemeteries where their family members are buried.", "他們還清理並修復了埋葬家人的墳墓和墓地。"],
+  ["*where 引導形容詞子句，修飾 graves and cemeteries", ""]
+]]);
 
-  card("句2-1", ["句型2", "would rather VR1 than VR2"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">1. Uma 寧可獨自一人也不要被打擾。(would)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Uma would rather be (left) alone than (be) disturbed/bothered.]]")+'</div></div>'),
-  card("句2-2", ["句型2", "would rather VR1 than VR2"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">2. Ed 寧可搭公車上學也不要走路（上學）。(would)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Ed would rather take a bus to school than walk to school.]]")+'<br><small>= '+fx("[[|Ed would rather go to school by bus than (go to school) on foot.]]")+'</small></div></div>'),
-  card("句2-3", ["句型2", "would rather VR1 than VR2"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">3. Tracy 寧可看小說也不要看 YouTube 影片。(would)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Tracy would rather read a novel than watch YouTube videos.]]")+'</div></div>'),
-  card("句2-4", ["句型2", "prefer to VR1 rather than VR2 / prefer V-ing to V-ing"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">4. Henry 寧可單身也不要結婚。(prefer)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Henry prefers to be/remain/stay single rather than be/get married.]]")+'<br><small>= '+fx("[[|Henry prefers being/remaining/staying single to being/getting married.]]")+'</small></div></div>'),
-  card("句2-5", ["句型2", "prefer to VR1 rather than VR2 / prefer N1/V-ing to N2/V-ing"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">5. 我寧可喝奶茶也不要喝咖啡。(prefer)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|I prefer to drink milk tea rather than (drink) coffee.]]")+'<br><small>= '+fx("[[|I prefer (drinking) milk tea to (drinking) coffee.]]")+'</small></div></div>')
-].join('');
+h1 += passage("L25 補充", [[
+  ["On the Day of the Dead, families assemble colorful altars in their homes to welcome returning spirits.", "在亡靈節這天，家人會在家中搭建色彩繽紛的祭壇來迎接歸來的靈魂。"]
+]]);
 
-document.getElementById('app').innerHTML = h1 + h2;
-const secs=[['p1','L1~L51 課文講解'],['p2','句型1 & 句型2']];
+h1 += card("L26", ["分詞構句"], "B",
+  st("On the altars, they place photographs of their deceased loved ones as well as beverages and dishes that those family members had a preference for [[L26|while]] alive.", "在祭壇上，他們放置了已故親人的照片，以及那些家人在世時偏好的飲料和菜餚。") +
+  clue(`while alive為分詞構句 = while (they were) alive<br>
+*主詞相同時可省略 “連接詞+主詞+be”<br>
+*連接詞在語意有需要時可選擇保留<br>
+★此原則請用於閱讀理解，不建議用於寫作<br><br>
+L27 loved ones ≒ 至親好友<br><br>
+L28 as well as 重點：<br>
+1. 用在連接詞性對等的字或片語<br>
+2. 通常只用在肯定句<br>
+3. 不可用來連接句子。<br>
+He was kind as well as sensible.<br>
+They sell books as well as newspapers.<br>
+4. 動詞需配合as well as前的名詞<br>
+Tom as well as his parents is a big fan of the band.<br>
+5. 連接動詞時，第2個動詞需改為動名詞<br>
+The organization gives help to people in need, as well as raising money for local charities.`) +
+  ops([
+    ["what’s", "10%", "what's alive 🡺 活著的東西，語意不合"],
+    ["while", "41%", "連接詞保留，省略了 they were"],
+    ["they are", "3%", "for為介系詞，其後不能直接接子句"],
+    ["being", "46%", "had a preference for已有受詞that，不能再加N"]
+  ], "B")
+);
+
+h1 += card("挑戰題3-2", ["關係副詞 vs 介系詞+關係代名詞"], "D",
+  st("After this warm reception for the souls at home, it is usually late in the evening, and families head to the cemetery, [[挑戰題3-2|where]] they decorate the graves of their loved ones and light one candle for each dead person.", "在家裡熱情地接待了靈魂之後，通常已經是深夜了，家人們前往墓地，在那裡他們裝飾親人的墳墓並為每位死者點燃一根蠟燭。") +
+  clue(`where = in which`) +
+  ops([
+    ["which", "19%", "which後需接不完整子句"],
+    ["while", "5%", "語意不合"],
+    ["whereas", "1%", "語意不合"],
+    ["where", "75%", "關係副詞，引導完整子句修飾cemetery"]
+  ], "D")
+);
+
+h1 += card("挑戰題3-3", ["關係代名詞 which 用法"], "A",
+  st("They agreed to install a new pedestrian gate to the cemetery, [[挑戰題3-3|which]] they have done.", "他們同意在墓地安裝一個新的行人通道門，這件事他們已經完成了。") +
+  clue(`which vs. where<br>
+which + 不完整子句 (少主詞、受詞或補語)<br>
+*which 為關係代名詞 🡺 代名詞可當主詞、受詞或補語 🡺 故which後必少主詞、受詞或補語 🡺 不完整子句<br><br>
+where + 完整子句<br>
+* where 為關係副詞 🡺 副詞不可當主詞、受詞或補語 🡺 故where後不會少主詞、受詞或補語 🡺 完整子句`) +
+  ops([
+    ["which", "60%", "代替前面的整個事件(install a new pedestrian gate)，作為done的受詞"],
+    ["where", "18%", "where後需為完整子句，此處done缺受詞"],
+    ["in which", "17%", "不需介系詞"],
+    ["when", "6%", "語意不合"]
+  ], "A")
+);
+
+h1 += passage("L31 補充", [[
+  ["family n. 家庭 (可數) / 家人 (不可數)", "家人 不可數 (美國用單數動詞，英國用複數動詞)<br>family member 家人 (可數)"],
+  ["His family has always supported him. (美式)", ""],
+  ["His family have always supported him. (英式)", ""]
+]]);
+
+h1 += card("L33", ["代名詞與分詞構句"], "D",
+  st("Cheerful and merry, [[L33|they]] feast with the sacred souls and pray till dawn, transforming the normally horrifying graveyard into a venue of joy and celebration for the entire night.", "他們興高采烈地與神聖的靈魂共度盛宴並祈禱至黎明，將原本可怕的墓地在整夜變成了充滿歡樂與慶祝的場所。") +
+  clue(`(As they were) Cheerful and merry, ____ feast with the sacred souls and pray till dawn.<br>
+*主詞相同時可省略 “連接詞+主詞+be”<br><br>
+L34 till = until (連/介) 但till較常用在口語<br>
+The Flora Expo（花博）will last till/until the end of this month. (介)<br>
+The children played in the park till/until it was really dark. (連)<br><br>
+L34 transform A into B 將A變成B = turn A into B`) +
+  ops([
+    ["who", "10%", "缺先行詞 (關代前需有名詞當其先行詞)"],
+    ["those", "10%", "語意不合"],
+    ["which", "21%", "缺先行詞 (關代前需有名詞當其先行詞)"],
+    ["they", "59%", "作主詞"]
+  ], "D")
+);
+
+h1 += card("L38", ["指示代名詞", "include用法"], "C",
+  st("Throughout the festival, colorful, cartoon-like representations of the dead can be seen everywhere. [[L38|These include]] skeleton and skull cookies, candies, flags, and toys.", "在整個節日期間，到處可見色彩繽紛、卡通般的死亡象徵物。這些包括骷髏和頭骨餅乾、糖果、旗幟和玩具。") +
+  clue(`These 🡺 representations of the dead<br><br>
+include用法整理：<br>
+The price is $25.50, and it includes postage and packing.<br>
+= The price is $25.50, including (=which includes) postage and packing.<br>
+= The price is $25.50, inclusive of postage and packing.<br>
+= The price is $25.50, and postage and packing are included.<br>
+★ and和are最好都省略，此處只是解釋此句型如何得來。<br>
+including / inclusive of / … included 的部分皆不可獨立為一句。<br>
+(X) The price is $25.50. Including postage and packing.`) +
+  ops([
+    ["It includes", "18%", "It 會指代單數的 festival，不合語意"],
+    ["That includes", "13%", "That 會指代單數的 festival，不合語意"],
+    ["These include", "41%", "These 指代複數的 representations"],
+    ["Including", "29%", "導致本句缺主要動詞"]
+  ], "C")
+);
+
+h1 += passage("L37-L38 補充", [[
+  ["cartoon-like adj. 像卡通一樣的", "名詞後加-like = 像…一樣的"],
+  ["Human-like spirits are said to have lived in this cave two thousand years ago.", "據說兩千年前有像人一樣的靈魂住在这个洞穴裡。"],
+  ["representation 代表物(畫像、雕像、模型等)", ""],
+  ["This statue is a representation of Prometheus.", "這座雕像是普羅米修斯的代表作。"],
+  ["The dove in the picture is a representation of peace.", "圖中的鴿子是和平的象徵。"]
+]]);
+
+h1 += card("L40", ["不定詞表目的"], "A",
+  st("Many people also dress up in skeleton costumes, paint their faces [[L40|to resemble]] skulls, and participate in performances and street parades.", "許多人還會穿上骷髏服裝，把臉畫得像骷髏頭一樣，並參加表演和街頭遊行。") +
+  clue(``) +
+  ops([
+    ["to resemble", "60%", "表目的：畫臉是為了像骷髏頭"],
+    ["resembling", "23%", "畫他們像骷髏頭的臉？語意和結構不佳"],
+    ["that resemble", "14%", "同上"],
+    ["resembled", "3%", "被與…相似？"]
+  ], "A")
+);
+
+h1 += card("L43", ["轉折語", "Instead用法"], "D",
+  st("While doing so, Mexicans aren’t mocking death. [[L43|Instead]], they are recognizing it as an inevitable part of the natural cycle and would rather embrace it than ignore it.", "在這樣做的時候，墨西哥人並不是在嘲笑死亡。相反地，他們將其視為自然循環中不可避免的一部分，並且寧願擁抱它也不願忽視它。") +
+  clue(`in/by contrast adv. 形成對比的是 (用來比較兩者在某方面的差異)<br>
+She prefers to walk; in contrast, her friend always drives.<br>
+The birth rate for older women has declined, but, in/by contrast, births to teenage mothers have increased.<br><br>
+L42 While doing so, = While (they are) doing so<br>
+*主詞相同時可省略 “連接詞+主詞+be”<br>
+*連接詞在語意有需要時可選擇保留<br><br>
+L44 would rather V1 than V2 (本課句2)<br>
+would rather + VR1 + than + VR2 寧可…也不願…<br>
+*注意前後都需用原形動詞 = would VR1 rather than VR2<br>
+例 I would rather die than apologize to Helen. = I would die rather than apologize to Helen.`) +
+  ops([
+    ["On the other hand", "16%", "≒ However，用於陳述事情的另一方面"],
+    ["In other words", "3%", "換句話說，不符語意"],
+    ["In contrast", "6%", "形成對比的是"],
+    ["Instead", "75%", "取而代之地(通常前否定句，後肯定句)"]
+  ], "D")
+);
+
+h1 += card("L47", ["字彙測驗: celebrate", "動名詞片語作受詞"], "A",
+  st("By inviting the dead to return and sharing the pleasures of life with them, Mexicans are [[L47|celebrating]] the cycle of life itself.", "透過邀請死者回歸並與他們分享生活的樂趣，墨西哥人正在讚揚生命本身的循環。") +
+  clue(`L45 the + adj. = adj. + people<br>the dead = dead people / the rich = rich people`) +
+  ops([
+    ["celebrating", "76%", "celebrate = to express admiration or approval for something or someone 讚揚，歌頌<br>His work celebrates the energy and enthusiasm of the young.<br>Valentine’s Day is a day to celebrate love..."],
+    ["completing", "14%", "完成"],
+    ["repeating", "9%", "重覆"],
+    ["devoting", "2%", "將…獻給 (He devoted his life to charity.)"]
+  ], "A")
+);
+
+h1 += passage("L48-L49 補充", [[
+  ["The Mexican Day of the Dead is an annual national event that brings together living hosts and non-living guests of honor.", "墨西哥亡靈節是一年一度的全國性活動，將活著的主人和非活著的貴賓聚集在一起。"],
+  ["guest of honor = most important guest", ""],
+  ["The actress was the guest of honor at the launch.", "這位女演員是產品發表會上的貴賓。"]
+]]);
+
+h1 += passage("L50 補充", [[
+  ["Hopefully, this tradition will never die out, since it helps people accept a fact of life that awaits us all. If we cannot escape death, why not celebrate it?", "希望這個傳統永遠不會消亡，因為它幫助人們接受一個等待著我們所有人的生活事實。如果我們無法逃避死亡，為什麼不慶祝它呢？"]
+]]);
+
+
+h1 += card("獨立題", ["分詞作形容詞: awaited"], "B",
+  st("The long [[獨立題|awaited]] sequel to James Cameron's *Avatar(阿瓦達)* is officially titled, “The Way of Water”.", "期待已久的詹姆斯卡麥隆《阿瓦達》續集正式定名為《水之道》。") +
+  clue(`The long awaited sequel = The sequel (that is) long awaited (by fans)<br><br>
+L51 await = wait for 等待 (await為及物動詞，wait為不及物動詞)<br>
+He's anxiously awaiting his test results.<br>
+He’s anxiously waiting for his test results.`) +
+  ops([
+    ["waited", "16%", "wait為不及物，通常不能直接作被動分詞修飾名詞"],
+    ["awaited", "28%", "期待已久的"],
+    ["awaiting", "30%", "正在等待的，語意不合"],
+    ["waiting", "27%", "正在等待的，語意不合"]
+  ], "B")
+);
+
+
+h1 += '<h2 id="p2">課本句型實例</h2>';
+
+h1 += card("句1-1", ["句型1：S is said to V"], "Taylor Swift is said to be releasing her new album next month.",
+  '<div class="stem"><div class="zh" style="color:inherit">1. 據說Taylor Swift下個月會發行新專輯。（進行式可表未來）</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Taylor Swift is said to be releasing her new album next month.]]")+'</div></div>' + clue("進行式可表未來")
+);
+h1 += card("句1-2", ["句型1：S is believed to have p.p."], "The Black Death is believed to have killed 5 million people.",
+  '<div class="stem"><div class="zh" style="color:inherit">2. 據信黑死病已經殺死了500萬人。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The Black Death is believed to have killed 5 million people.]]")+'</div></div>' + clue("")
+);
+h1 += card("句1-3", ["句型1：S are reported to have been p.p."], "Over two thousand people are reported to have been infected with the disease.",
+  '<div class="stem"><div class="zh" style="color:inherit">3. 據報導超過兩千人已經感染了這種疾病。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Over two thousand people are reported to have been infected with the disease.]]")+'</div></div>' + clue("")
+);
+h1 += card("句1-4", ["句型1：S is said to have p.p."], "The typhoon is said to have dumped huge amounts of rain on our country’s coastal cities.",
+  '<div class="stem"><div class="zh" style="color:inherit">4. 據說颱風在我們國家的沿海城市傾瀉了大量的雨水。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The typhoon is said to have dumped huge amounts of rain on our country’s coastal cities.]]")+'</div></div>' + clue("huge amounts of = a huge amount of")
+);
+h1 += card("句1-5", ["句型1：S is believed to V"], "Having a balanced diet is believed to help you stay/keep healthy.",
+  '<div class="stem"><div class="zh" style="color:inherit">5. 人們相信擁有均衡的飲食可以幫助你保持健康。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Having a balanced diet is believed to help you stay/keep healthy.]]")+'</div></div>' + clue("")
+);
+h1 += card("句1-6", ["句型1：S are believed to have p.p."], "The bank robbers are believed to have [run away / left] with the money.",
+  '<div class="stem"><div class="zh" style="color:inherit">6. 據信銀行搶匪們已經捲款潛逃。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The bank robbers are believed to have run away with the money.]]")+'</div></div>' + clue("")
+);
+h1 += card("句1-7", ["句型1：S is said to have p.p."], "The virus is said to have originated in/from a biology lab.",
+  '<div class="stem"><div class="zh" style="color:inherit">7. 據說病毒是起源於一個生物實驗室。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The virus is said to have originated in/from a biology lab.]]")+'</div></div>' + clue("")
+);
+h1 += card("句1-8", ["句型1：S is reported to be p.p."], "The company’s new car is reported to be equipped with an automated driving system.",
+  '<div class="stem"><div class="zh" style="color:inherit">8. 據報導這家公司的新車將配備(equip)有自動駕駛系統。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The company’s new car is reported to be equipped with an automated driving system.]]")+'</div></div>' + clue("")
+);
+
+h1 += card("句2-1", ["句型2：would rather V1 than V2"], "Uma would rather be (left) alone than (be) disturbed/bothered.",
+  '<div class="stem"><div class="zh" style="color:inherit">1. Uma寧可獨自一人也不要被打擾。(would)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Uma would rather be (left) alone than (be) disturbed/bothered.]]")+'</div></div>' + clue(`would rather V1 than V2<br>would V1 rather than V2<br>prefer to V1 rather than (to) V2<br>prefer V1-ing/N1 to V2-ing/N2`)
+);
+h1 += card("句2-2", ["句型2：would rather V1 than V2"], "Ed would rather take a bus to school than walk to school.",
+  '<div class="stem"><div class="zh" style="color:inherit">2. Ed寧可搭公車上學也不要走路(上學)。(would)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Ed would rather take a bus to school than walk to school.]]")+'<br><br><b>同義改寫：</b>'+fx("[[|Ed would rather go to school by bus than (go to school) on foot.]]")+'</div></div>' + clue("")
+);
+h1 += card("句2-3", ["句型2：would rather V1 than V2"], "Tracy would rather read a novel than watch YouTube videos.",
+  '<div class="stem"><div class="zh" style="color:inherit">3. Tracy寧可看小說也不要看YouTube影片。(would)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Tracy would rather read a novel than watch YouTube videos.]]")+'</div></div>' + clue("")
+);
+h1 += card("句2-4", ["句型2：prefer to V1 rather than V2"], "Henry prefers to be/remain/stay single rather than be/get married.",
+  '<div class="stem"><div class="zh" style="color:inherit">4. Henry寧可單身也不要結婚。(prefer)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Henry prefers to be/remain/stay single rather than be/get married.]]")+'<br><br><b>同義改寫：</b>'+fx("[[|Henry prefers being/remaining/staying single to being/getting married.]]")+'</div></div>' + clue("")
+);
+h1 += card("句2-5", ["句型2：prefer to V1 rather than V2"], "I prefer to drink milk tea rather than (drink) coffee.",
+  '<div class="stem"><div class="zh" style="color:inherit">5. 我寧可喝奶茶也不要喝咖啡。(prefer)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|I prefer to drink milk tea rather than (drink) coffee.]]")+'<br><br><b>同義改寫：</b>'+fx("[[|I prefer (drinking) milk tea to (drinking) coffee.]]")+'</div></div>' + clue("")
+);
+
+
+document.getElementById('app').innerHTML = h1;
+const secs=[['p1','課文講解'],['p2','課本句型練習']];
 document.getElementById('nav').innerHTML=secs.map(s=>'<a href="#'+s[0]+'">'+s[1]+'</a>').join('')+'<button id="tg">全部收合</button>';
 let open=true;
-document.getElementById('tg').onclick=function(){
-  open=!open;
-  document.querySelectorAll('details.q').forEach(d=>d.open=open);
-  this.textContent=open?'全部收合':'全部展開';
-};
+document.getElementById('tg').onclick=function(){open=!open;document.querySelectorAll('details.q').forEach(d=>d.open=open);this.textContent=open?'全部收合':'全部展開';};
 </script>
 <script src="bookmark.js"></script>
 </body>
