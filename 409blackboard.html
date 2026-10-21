@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+html_content = r"""<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
@@ -76,303 +76,401 @@ function ops(list,ans,lab){lab=lab||'ABCDEF';return '<ul class="op">'+list.map((
 function card(n,tags,ans,body){
   return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
 }
-
 const st=(en,zh)=>'<div class="stem"><div class="en">'+fx(en)+'</div><div class="zh">'+zh+'</div></div>';
 
-/* === Part 1: p.221 The Green Book & L1 ~ L60 課文講解 === */
-const h1 = '<h2 id="p1">p.221 The Green Book ＆ L1 ~ L60 課文講解</h2>' + [
-  card("p221-1", ["形容詞字彙辨析", "handy 方便好用的"], "C",
-    st("Below is the introduction to a travel guide first published in the United States in 1936: This book is intended to provide useful information that will keep you from running into difficulties and make your trip more enjoyable. This guide provides a list of hotels, restaurants, gas stations, shops, and tourist spots that welcome black travelers. You will find it [[p221-1|handy]] on your travels around the country.", "以下是 1936 年首次在美國出版的一本旅遊指南的簡介：本書旨在提供實用的資訊，避免您遇上麻煩，並讓您的旅途更加愉快。本指南提供歡迎黑人旅客的飯店、餐廳、加油站、商店和旅遊景點清單。您在全國各地旅行時會發現它非常方便好用。") +
-    clue("這本《綠皮書（The Green Book）》提供黑人友善店家的清單，在全國旅行時會發現它非常「方便好用（handy）」。") +
-    ops([
-      ["tasty", "13%", "美味的（修飾食物，it 指的是這本旅遊指南 this book！）。"],
-      ["trendy", "9%", "時髦的。"],
-      ["handy", "57%", "方便的、實用的（<code>find it handy</code> 覺得它很方便實用）。"],
-      ["cozy", "21%", "溫馨舒適的（通常修飾空間或房間）。"]
-    ], "C")
-  ),
+let h = '';
 
-  card("p221-2", ["形容詞字彙", "fellow 同伴的/同類的"], "D",
-    st("Each year, a new list will be made as some places move or go out of business. There are also many places that are not included in this guide. If you know of any, send in their names and addresses, so that the information can be shared with your [[p221-2|fellow]] travelers.", "每年我們都會製作新清單，因為有些店家會搬遷或倒閉。還有許多地方並未收錄在本指南中。如果您知道任何這類地點，請寄來它們的名稱和地址，以便將資訊分享給您的黑人旅客同胞。") +
-    clue("<code>your + fellow + 複數名詞</code> 表示「和你同樣身分的人（夥伴、同胞）」，如 <code>my fellow students</code>（我的同學們）、<code>my fellow Taiwanese</code>（我的台灣同胞）。此處指其他同樣在旅行的黑人同胞（<code>your fellow travelers</code>）。") +
-    ops([
-      ["frequent", "0%", "頻繁的（內文未強調旅行頻率）。"],
-      ["adventurous", "16%", "愛冒險的（黑人旅客是為了安全找住宿，並非為了冒險）。"],
-      ["weary", "4%", "疲憊的。"],
-      ["fellow", "80%", "同伴的、同處境的（<code>your fellow travelers</code> 你的旅伴／同胞旅客們）。"]
-    ], "D")
-  ),
+h += '<h2 id="p1">P221 & L1 ~ L60 課文講解</h2>';
 
-  card("p221-3", ["存在倒裝句", "there will come a day"], "D",
-    st("We believe there will [[p221-3|come]] a day when this guide will not have to be published—when we as a race will have equal rights and be able to go anywhere we please without trouble.", "我們相信終有一天，這本指南將不再需要出版——屆時我們作為一個種族將享有平等權利，並能夠隨心所欲地前往任何地方而不受刁難。") +
-    clue("「短前長後」原則：原句為 <code>We believe [a day when this guide will not have to be published...] <b>will come</b>.</code>，因修飾 <code>a day</code> 的關係子句太長，改用 <code>there + Vi (will come) + S (a day...)</code> 的存在句型。<br>補充：<code>anywhere we please</code> = <code>anywhere we want</code>（任何我們想去的地方）。") +
-    ops([
-      ["celebrate", "4%", "慶祝（及物動詞，不構成 there will celebrate a day）。"],
-      ["seize", "7%", "抓住（seize the day 主詞應為人）。"],
-      ["enjoy", "0%", "享受（及物動詞）。"],
-      ["come", "89%", "<code>there will come a day when...</code>（終有一天會到來）。"]
-    ], "D")
-  ),
+h += passage("請先進入挑戰題1", [
+  [["P221", ""]],
+  [["Introducing “The Green Book”", "Below is the introduction to a travel guide first published in the United States in 1936:"]]
+]);
 
-  card("p221-4", ["時間介系詞片語", "until then 在那之前"], "A",
-    st("But [[p221-4|until then]], we shall continue to publish this book every year for your convenience and safety.", "但在那一天到來之前，為了您的便利與安全，我們將繼續每年出版這本書。") +
-    clue("前句說「相信平等的那一天終會到來」，本句說「但在那一天到來之前（<code>until then = before then</code>），我們將繼續每年出版這本書」（持續出版到那一天為止）。") +
-    ops([
-      ["until then", "37%", "在那之前、直到那時為止（搭配持續性動作 <code>continue to publish</code>）。"],
-      ["not until then", "30%", "常見誤答！若用 <code>not until then</code> 會變成「直到平等那一天到來，我們才要開始繼續出版這本書」，語意完全相反！"],
-      ["it is until then", "4%", "缺 that 且語意不合。"],
-      ["it is not until then", "30%", "語意相反且缺 that。"]
-    ], "A")
-  ),
+h += card("挑戰題1", ["字彙測驗", "handy"], "C",
+  st("This book is intended to provide useful information that will keep you from running into difficulties and make your trip more enjoyable. This guide provides a list of hotels, restaurants, gas stations, shops, and tourist spots that welcome black travelers. You will find it [[挑戰題1|handy]] on your travels around the country.", "這本書旨在提供實用的資訊，使您免於遭遇困難並讓旅途更愉快。本指南提供歡迎黑人旅客的飯店、餐廳、加油站、商店和旅遊景點的清單。您在全國各地旅行時會發現它很方便。") +
+  clue('') +
+  ops([
+    ["tasty", "13%", "adj. 好吃的"],
+    ["trendy", "9%", "adj. 時髦的"],
+    ["handy", "57%", "adj. 方便的"],
+    ["cozy", "21%", "adj. 舒適的"]
+  ], "C")
+);
 
-  card("L1", ["慣用句型", "do nothing but + VR"], "A",
-    st("“Remember it’s a sin to kill a mockingbird,” Atticus said, believing that mockingbirds were harmless and did nothing but [[L1|sing]] their hearts out for people to enjoy.", "「記住，殺死一隻反舌鳥是一種罪過，」亞提克斯說道，他認為反舌鳥是無害的，什麼壞事也不做，只是盡情歌唱供人們欣賞。") +
-    clue("重要語法規則：在 <code>do / does / did nothing but (except)...</code> 結構中，若前面有 <code>do</code> 的變化形，<code>but</code> 後面直接接<b>原形動詞（VR）</b>！（例：<i>He did nothing but cry.</i>）<br>補充：<code>play / work / sing one's heart out</code>（全力打球／工作／盡情歌唱）；而 <code>eat one's heart out</code> 則是「為得不到的人事物而傷心欲絕」！") +
-    ops([
-      ["sing", "26%", "前面有 <code>did nothing but</code>，後接原形動詞 <code>sing</code>。"],
-      ["sang", "26%", "did nothing but 後接原形動詞，不接過去式。"],
-      ["sung", "0%", "過去分詞不可直接置於 but 後。"],
-      ["singing", "48%", "常見誤答！除非前面是 <code>doing nothing but + V-ing</code>，否則只要前面是 <code>do/does/did nothing but</code>，後面一律用原形動詞！"]
-    ], "A")
-  ),
+h += card("P221-2", ["字彙搭配", "fellow"], "D",
+  st("Each year, a new list will be made as some places move or go out of business. There are also many places that are not included in this guide. If you know of any, send in their names and addresses, so that the information can be shared with your [[P221-2|fellow]] travelers.", "每年都會製作新清單，因為有些地方會搬遷或倒閉。本指南未收錄的地方還有很多。如果您知道任何地方，請寄來它們的名字和地址，以便與您的同胞旅客分享資訊。") +
+  clue('your + fellow + 名詞 = 和你同為(某身份的)人：my fellow students（和我一樣是學生的人） my fellow Taiwanese（和我一樣是台灣人的人）<br>Line 1, paragraph 3: go out of business = go under 倒閉. Thousands of companies went under during the recession.') +
+  ops([
+    ["frequent", "0%", "（頻繁的） → 指「經常旅行的人」，但上下文未強調「頻率」"],
+    ["adventurous", "16%", "（愛冒險的） → 偏離主題，與「共享資訊」無關"],
+    ["weary", "4%", "（疲憊的） → 可形容旅行者，但與文意不符"],
+    ["fellow", "80%", "（同伴的、同類的）"]
+  ], "D")
+);
 
-  card("L3", ["地方副詞倒裝", "there lived + 長主詞"], "D",
-    st("In the town of Maycomb, Alabama, in the 1930s, [[L3|there]] lived a little girl, Scout Finch, her older brother, Jem, and their widowed father, Atticus.", "在 1930 年代的阿拉巴馬州梅岡鎮，住著一個小女孩絲考特・芬奇、她的哥哥傑姆，以及他們喪偶的父親亞提克斯。") +
-    clue("句首 <code>In the town of Maycomb, Alabama, in the 1930s,</code> 全是地方與時間副詞，整句話只有唯一一個動詞 <code>lived</code>，不需要任何連接詞！因為主詞 <code>a little girl, Scout Finch, her older brother, Jem, and their widowed father, Atticus</code> 太長，故使用 <code>there lived + S</code> 倒裝。") +
-    ops([
-      ["when", "3%", "有連接詞功能，會導致整句沒有主要子句。"],
-      ["where", "61%", "超高誤答率！看到地點就選 where，卻沒發現整句只有一個動詞 <code>lived</code>，若填 where 會導致整句話沒有主要子句！"],
-      ["which", "13%", "同樣具有連接詞功能，不合單一動詞句子結構。"],
-      ["there", "23%", "引導存在倒裝句 <code>there lived + S</code>，構成完整主要子句。"]
-    ], "D")
-  ),
+h += card("P221-3", ["倒裝句型", "there will come a day"], "D",
+  st("We believe there will [[P221-3|come]] a day when this guide will not have to be published—when we as a race will have equal rights and be able to go anywhere we please without trouble.", "我們相信終有一天這本指南將不再需要出版——到那時，我們作為一個種族將擁有平等的權利，並且能隨心所欲地去任何地方而不會遇到麻煩。") +
+  clue('L1, paragraph 4: We believe there will come a day when this guide will not have to be published—when we as a race will have equal rights and be able to go anywhere we please without trouble. = We believe a day when … trouble will come.<br>L3, paragraph 4: what(ever)/where(ever)/when(ever) etc. someone pleases = what(ever)/wher(ever)/when(ever) etc. someone wants. She does what she pleases. You can spend the money however you please. With the Explorer pass, you can get on and off the bus as you please. (任意)') +
+  ops([
+    ["celebrate", "4%", ""],
+    ["seize", "7%", ""],
+    ["enjoy", "0%", ""],
+    ["come", "89%", ""]
+  ], "D")
+);
 
-  card("L6", ["句子主要動詞", "S, 同位語, + V"], "C",
-    st("Their father, a well-respected lawyer in the community, [[L6|taught]] them to be empathetic and just.", "他們的父親是社區裡備受尊敬的律師，教導他們要有同理心且公正。") +
-    clue("結構剖析：<code>Their father (S), [a well-respected lawyer in the community (同位語)], ___ (V) them to be empathetic and just.</code><br>兩個逗號中間只是名詞同位語，整句話還沒有主要動詞！配合故事過去式基調，填入過去式動詞 <code>taught</code>。") +
-    ops([
-      ["teaches", "6%", "現在式與全文過去式背景不合。"],
-      ["teaching", "43%", "常見誤答！分詞不能單獨當整句話的主要動詞！"],
-      ["taught", "46%", "過去式動詞，作主詞 <code>Their father</code> 的主要動詞。"],
-      ["having taught", "6%", "分詞不能當主要動詞。"]
-    ], "C")
-  ),
+h += card("P221-4", ["介系詞片語", "until then"], "A",
+  st("But [[P221-4|until then]], we shall continue to publish this book every year for your convenience and safety.", "但在那之前，為了您的便利和安全，我們將每年繼續出版這本書。") +
+  clue('') +
+  ops([
+    ["until then", "37%", "= before then"],
+    ["not until then", "30%", "shall we continue…"],
+    ["it is until then", "4%", "… that"],
+    ["it is not until then", "30%", "… that"]
+  ], "A")
+);
 
-  card("L8", ["介系詞 + 動名詞與副詞修飾", "accused of sexually assaulting"], "C",
-    st("When Scout was in second grade, Atticus was appointed to defend Tom Robinson, a black man accused of [[L8|sexually assaulting]] Mayella Ewell. Mayella Ewell came from Maycomb’s poorest white family, and her father was a widowed drunkard who wasted all his money on alcohol instead of food for his hungry children.", "當絲考特讀二年級時，亞提克斯被指派為湯姆・羅賓森辯護，這名黑人男子被指控性侵梅耶拉・尤爾。梅耶拉來自梅岡鎮最窮的白人家庭，她的父親是個喪偶的酒鬼，把所有的錢都浪費在買酒上，而不是買食物給飢餓的孩子。") +
-    clue("1. <code>accuse sb of + N / V-ing</code>（指控某人犯某事，<code>of</code> 為介系詞）。<br>2. 後方直接有受詞 <code>Mayella Ewell</code>（人），故必須用及物動名詞 <code>assaulting</code>（攻擊、侵犯）才能接這個受詞，並用副詞 <code>sexually</code> 修飾動名詞，即 <code>sexually assaulting Mayella Ewell</code>。") +
-    ops([
-      ["sexual assault", "25%", "<code>sexual assault</code> 是名詞「性侵罪」，後面不能直接加人名 <code>Mayella Ewell</code> 當受詞！"],
-      ["sexually assault", "8%", "介系詞 of 後面不可接原形動詞。"],
-      ["sexually assaulting", "58%", "副詞 <code>sexually</code> + 動名詞 <code>assaulting</code> + 受詞 <code>Mayella Ewell</code>。"],
-      ["sexually assaulted", "8%", "湯姆是被指控「主動性侵」對方，且介系詞 of 後用 V-ing。"]
-    ], "C")
-  ),
+h += passage("請先進入挑戰題2", [
+  [["請先進入挑戰題2", ""]]
+]);
 
-  card("L13", ["轉折副詞片語", "That said 話雖如此/然而"], "C",
-    st("All the other people in Maycomb despised the Ewells. [[L13|That said]], when people found out that Atticus was the man assigned to serve as the defense lawyer in this sexual assault case, they were on the Ewells’ side.", "梅岡鎮上的其他所有人都鄙視尤爾一家人。話雖如此（然而），當人們發現亞提克斯就是被指派在這起性侵案中擔任辯護律師的人時，他們卻站在尤爾一家那邊。") +
-    clue("前句說鎮上所有人都鄙視尤爾一家，後句卻說當亞提克斯為黑人辯護時，大家還是站在白人尤爾一家那邊。前後為強烈的「然而、儘管如此」轉折：<br><code>That said = Even so = However = Nevertheless = Despite that</code>（話雖如此、然而）。") +
-    ops([
-      ["Rather", "46%", "常見誤答！<code>Rather</code>（相反地、更確切地說）通常用於推翻並修正前一句的否定說法（如 <i>He didn't rely on evidence. Rather, he believed...</i>），但鎮民確實鄙視尤爾一家，只是在種族偏見下仍偏袒白人，故用表讓步轉折的 <code>That said / Even so</code>。"],
-      ["Consequently", "21%", "因此（因果邏輯相反）。"],
-      ["That said", "11%", "話雖如此、然而（= Even so / However）。"],
-      ["Without doubt", "21%", "毫無疑問地（語意不合）。"]
-    ], "C")
-  ),
+h += card("L1", ["句型", "did nothing but + VR"], "A",
+  st("“Remember it’s a sin to kill a mockingbird,” Atticus said, believing that mockingbirds were harmless and did nothing but [[L1|sing]] their hearts out for people to enjoy.", "「記住，殺死仿聲鳥是一種罪，」Atticus 說，他相信仿聲鳥是無害的，什麼都沒做，只是盡情地為人們唱歌享受。") +
+  clue('*mockingbird 反舌鳥，在此書中象徵無辜的人<br>L3 do/does/did nothing but + VR 什麼都沒做只(做了) 例 He did nothing but cry. (but = except) doing nothing but + Ving 例 He spent the whole day doing nothing but watching TV.<br>L2 自 Atticus said, believing that… 分詞構句 = Atticus said, and (he) believed that.... 因動詞believed為主動，故寫為分詞構句時使用現在分詞') +
+  ops([
+    ["sing", "26%", ""],
+    ["sang", "26%", ""],
+    ["sung", "0%", ""],
+    ["singing", "48%", ""]
+  ], "A")
+);
 
-  card("L16", ["非限定關係代名詞", ", which 代替前文整件事"], "C",
-    st("The Finches faced criticism from the community and even their own relatives. People called Atticus [[L16|a “nigger-lover,” which]] angered Jem and Scout.", "芬奇一家面臨來自社區甚至自己親戚的批評。人們稱亞提克斯為「愛黑鬼的人」，這件事讓傑姆和絲考特非常生氣。") +
-    clue("讓傑姆和絲考特生氣的是「人們叫亞提克斯『愛黑鬼的人』」<b>前面整件事</b>！<br>當關係代名詞指代前面整個子句／整件事時，必須使用 <code>, which</code>（前面一定要加逗號，且不可用 that！）。") +
-    ops([
-      ["a “nigger-lover” that", "5%", "無逗號，且 that 不能指代前面整件事。"],
-      ["a “nigger-lover” which", "16%", "指代前面整件事時，which 前面必須加上逗號！"],
-      ["a “nigger-lover,” which", "78%", "非限定用法 <code>, which</code>，指代前面整句話並當 <code>angered</code> 的主詞。"],
-      ["a “nigger-lover,” it", "0%", "無連接詞，造成逗號連接兩句。"]
-    ], "C")
-  ),
+h += card("L3", ["片語", "sing one's heart out"], "C",
+  st("“They [[L3|sang]] their hearts out and deserves the win over us,” Coach Gellar said to the media.", "「他們全力以赴地唱歌，並且贏過我們是實至名歸的，」Gellar 教練對媒體說。") +
+  clue('play / work / sing one’s heart out 全力打球/工作/歌唱<br>eat one’s heart out 為了得不到的人/事物而傷心. I\'m not going to mope* at home, eating my heart out for some man. *mope vi. 自怨自艾 = pity oneself') +
+  ops([
+    ["played", "7%", ""],
+    ["worked", "13%", ""],
+    ["sang", "68%", ""],
+    ["ate", "13%", ""]
+  ], "C")
+);
 
-  card("L18", ["介系詞片語辨析", "regardless of 不論"], "D",
-    st("Atticus comforted them, telling them a lawyer should stand up for the rights of people [[L18|regardless of]] their skin color, and he encouraged them to hold their heads up and keep their fists down.", "亞提克斯安慰他們，告訴他們律師應該挺身捍衛人們的權利，不論其膚色為何，並鼓勵他們抬頭挺胸、放下拳頭（不要動粗）。") +
-    clue("律師應該挺身捍衛人們的權利，「不論（regardless of）」他們的膚色為何。") +
-    ops([
-      ["in regard to", "—", "關於（= regarding / about）。"],
-      ["regarding", "—", "關於。"],
-      ["with kind regards", "—", "信末祝福語「謹致問候、敬上」。"],
-      ["regardless of", "—", "不論、不管。"]
-    ], "D")
-  ),
+h += card("L5", ["地方副詞倒裝", "there lived"], "D",
+  st("In the town of Maycomb, Alabama, in the 1930s, [[L5|there]] lived a little girl, Scout Finch, her older brother, Jem, and their widowed father, Atticus.", "在 1930 年代阿拉巴馬州的 Maycomb 鎮，住著一個小女孩 Scout Finch、她的哥哥 Jem 和他們喪偶的父親 Atticus。") +
+  clue('句型：地adv. + Vi. / be + S 用此句型常是為了「短前長後」原則(主詞太長故後移)<br>In the town of Maycomb, Alabama, in the 1930s,(時間副詞 地方副詞) there(地方副詞) lived(唯一動詞) a little girl, Scout Finch, her older brother, Jem, and their widowed father, Atticus.(主詞)<br>= A little girl, Scout Finch, her older brother, Jem, and their widowed father, Atticus, lived (there) in the town of Maycomb, Alabama in the 1930s.<br>解題關鍵：因為本句只有唯一動詞lived，不需連接詞。故有連接詞功能的where/when/which都可直接刪去') +
+  ops([
+    ["when", "3%", ""],
+    ["where", "61%", ""],
+    ["which", "13%", ""],
+    ["there", "23%", ""]
+  ], "D")
+);
 
-  card("L21", ["不定詞表目的", "slipped in to watch"], "B",
-    st("On the day of the trial, the courthouse was packed, and Jem and Scout secretly slipped in [[L21|to watch]].", "在審判當天，法院擠滿了人，傑姆和絲考特偷偷溜進去觀看。") +
-    clue("傑姆和絲考特偷偷溜進去（<code>slipped in</code>，in 為副詞），目的是「為了觀看審判（<code>to watch = in order to watch</code>）」。") +
-    ops([
-      ["and watch", "5%", "若用 and 連接平行動作，必須用過去式 <code>and watched</code>。"],
-      ["to watch", "61%", "不定詞表目的「溜進去觀看」。"],
-      ["by watching", "16%", "「藉由觀看而溜進去」，邏輯顛倒。"],
-      ["watching", "18%", "溜進去是為了看，用不定詞表目的最精確。"]
-    ], "B")
-  ),
+h += card("L7", ["動詞時態", "taught"], "C",
+  st("Their father, a well-respected lawyer in the community, [[L7|taught]] them to be empathetic and just.", "他們的父親是社區裡一位備受尊敬的律師，教導他們要有同理心且公正。") +
+  clue('L7 自 well-respected是結構為「adv.-p.p.」的複合形容詞，在這裡也可將其改寫為關係子句：a lawyer who/that was well respected in the community *其他類似用法還有well-known、well-educated等。*若是ly結尾的副詞，則與後面的p.p.之間不需再加連字號。<br>L7 just adj. 公正的；公道的 (morally right) justice n. 正義；司法 justify vt. 證明…是正當的；將…合理化. How can we justify spending so much money on arms軍火? You can\'t justify neglecting your wife and children.') +
+  ops([
+    ["teaches", "6%", ""],
+    ["teaching", "43%", ""],
+    ["taught", "46%", ""],
+    ["having taught", "6%", ""]
+  ], "C")
+);
 
-  card("L22", ["過去完成式", "had asked (先發生)"], "C",
-    st("The Ewells’ story was that Mayella [[L22|had asked]] Tom to come over to fix something. While there, Tom beat and sexually assaulted Mayella until Mr. Ewell came home, scaring Tom off.", "尤爾一家的說法是，梅耶拉曾請湯姆過來修理東西。湯姆在那裡時毆打並性侵了梅耶拉，直到尤爾先生回家才把湯姆嚇跑。") +
-    clue("梅耶拉「請湯姆過來」發生在「審判當天陳述（The Ewells' story was...）」以及「毆打事件（beat and assaulted）」<b>之前</b>，屬於「過去的過去」，故用過去完成式 <code>had asked</code>。") +
-    ops([
-      ["has asked", "4%", "現在完成式與過去式基調不合。"],
-      ["was asking", "10%", "過去進行式不合先後順序。"],
-      ["had asked", "68%", "過去完成式，表在過去某時間點之前已發生的動作。"],
-      ["would ask", "19%", "過去未來式，語意不合。"]
-    ], "C")
-  ),
+h += passage("L9", [
+  [["-path = feeling", "em- = en- = in/into<br>empathy 把自己放進別人的感受裡 → n. 同理心 / empathetic adj.<br>sym- = same / sympathetic adj. 同情的 / sympathy n. 同情<br>a- = without / apathy → without interest, enthusiasm, or responsiveness. 冷漠<br>tele- = distance / telepathy → 心電感應<br>anti- = against / antipathy → 反感"]]
+]);
 
-  card("L25", ["慣用語搭配", "version of the story 說法版本"], "B",
-    st("However, Tom’s version of the [[L25|story]] was that Mayella came on to him and kissed him, and he pushed her away.", "然而，湯姆的說法版本則是梅耶拉主動勾引並親吻他，而他把她推開了。") +
-    clue("前句為 <code>The Ewells’ <b>story</b> was that...</code>（尤爾一家的說法是…），本句對比湯姆這一方的「說法版本（<code>Tom’s version of the story</code>）」。<br>補充：<code>come on to sb</code>（對某人調情、主動勾引某人）。") +
-    ops([
-      ["truth", "36%", "真相只有一個，不會有「湯姆版本的真相（version of the truth）」。"],
-      ["story", "43%", "<code>one's version of the story / events</code>（某人對事情經過的說法版本），呼應前句的 The Ewells' story。"],
-      ["history", "1%", "歷史。"],
-      ["reality", "20%", "現實（同 truth，現實不會因人而有不同版本）。"]
-    ], "B") +
-    passage("L27 ~ L28 課文段落", [[
-      ["At just that moment, Mr. Ewell arrived home and flew into a rage. Mr. Ewell yelled at Mayella, and he ran away out of fear.", "就在那一刻，尤爾先生回到家並勃然大怒。尤爾先生對梅耶拉大吼大叫，而湯姆則因為害怕而逃跑了。"]
-    ]])
-  ),
+h += passage("L10 引導式翻譯：", [
+  [["在我高二時，我加入了辯論社團以提升我的公眾演講技巧(不限一字)", "When I was a junior / in my junior year in high school, I joined the debate club to improve my public speaking skills."]],
+  [["國高中小的各種年級寫法", "高一/高二/高三學生 a freshman / a junior / a senior in high school<br>在我高一/高二/高三那年 in my freshman/junior/senior year in high school ≒ when I was a freshman/junior/senior year(X) in high school<br>升上高一/高二/高三 become a freshman/junior/senior in high school<br>在我小五時 when I was in fifth grade / when I was a fifth grader"]]
+]);
 
-  card("L31", ["對過去事實的肯定推測", "must have been p.p."], "B",
-    st("After hearing both sides’ testimonies, the sheriff of Maycomb pointed out that Mayella’s bruises were on the right side of her face. Upon hearing this, the audience in the courtroom realized that her injuries [[L31|must have been]] caused by somebody left-handed.", "在聽完雙方的證詞後，梅岡鎮的警長指出梅耶拉的瘀傷在她臉部的右側。一聽到這點，法庭上的觀眾意識到她的傷勢必定是由左撇子的人所造成的。") +
-    clue("本課核心句型 1：對<b>過去已發生事情</b>的強烈肯定推測（「當時必定是被左撇子打傷的」），使用 <code>must have + p.p.</code>，被動語態為 <code>must have been caused</code>。") +
-    ops([
-      ["should have been", "13%", "表「過去本應該…（但實際上沒有）」，語意不合。"],
-      ["must have been", "76%", "對過去事實的強烈肯定推測「當時必定是…」。"],
-      ["could be", "4%", "非對過去事實的完成式推測。"],
-      ["might be", "7%", "語氣太弱且未用完成式表過去。"]
-    ], "B")
-  ),
+h += card("L10", ["介系詞 + V-ing", "accused of sexually assaulting"], "C",
+  st("When Scout was in second grade, Atticus was appointed to defend Tom Robinson, a black man accused of [[L10|sexually assaulting]] Mayella Ewell. Mayella Ewell came from Maycomb’s poorest white family, and her father was a widowed drunkard who wasted all his money on alcohol instead of food for his hungry children.", "當 Scout 讀小學二年級時，Atticus 被指派為 Tom Robinson 辯護，Tom 是一個被指控性侵 Mayella Ewell 的黑人。Mayella Ewell 來自 Maycomb 最窮的白人家庭，她的父親是個喪偶的酒鬼，把所有的錢都浪費在酒上，而不是買食物給他飢餓的孩子們。") +
+  clue('sexual assault n. (法律用語)強暴罪 / sexually assault sb (法律用語)強暴某人 / rape vt. / n. 強暴(日常用語)<br>L11 … a black man (who was) accused of… accuse sb of V-ing/N 指控…做了某壞事 (不一定進入司法程序) The media often accuses politicians of dishonesty during election campaigns. 媒體常常指責政治人物在選舉期間不誠實。<br>charge sb with + 罪名 (法)控告(司法程序) The company owner was charged with tax evasion by the authorities. 公司老闆被當局以逃稅罪名起訴。<br>L14 waste/spend time/money on N / doing sth. 例 More money should be spent on education. 例 Stacey spends all her free time on(X) painting.<br>L14 … who wasted all his money on alcohol instead of food for his hungry children. 這句話聽起來有沒有哪裡怪怪的？比較：☹ … who wasted all his money on alcohol instead of (wasting all his money on) food for his hungry children. 🤷‍♂️ / ☺ … who spent all his money on alcohol instead of (spending the money on) food for his hungry children.') +
+  ops([
+    ["sexual assault", "25%", ""],
+    ["sexually assault", "8%", ""],
+    ["sexually assaulting", "58%", ""],
+    ["sexually assaulted", "8%", ""]
+  ], "C")
+);
 
-  card("L33", ["分詞構句指代前文", ", meaning (which meant)"], "D",
-    st("They also noticed that Tom’s left arm had been injured in an accident, [[L33|meaning]] he must have been innocent of giving Mayella her bruises.", "他們也注意到湯姆的左臂曾在一次意外中受傷，這意味著他對於造成梅耶拉臉上的瘀傷必定是無辜的。") +
-    clue("逗號前為完整子句，且後面沒有連接詞 <code>and</code>，故將非限定關係子句 <code>, which meant (that)...</code> 簡化為現在分詞構句 <code>, meaning (that)...</code>。") +
-    ops([
-      ["meant", "20%", "「某事意味著…」為主動（mean），不可用過去分詞 meant。"],
-      ["and meant", "30%", "若用 and meant，主詞會變成前面的 Tom's left arm（手臂意味著…），而非整件事！"],
-      ["which meaning", "10%", "保留關代 which 時後面必須是動詞 meant 而非分詞。"],
-      ["meaning", "40%", "由 <code>, which meant</code> 簡化而來的現在分詞構句。"]
-    ], "D")
-  ),
+h += card("L16", ["轉折副詞", "That said"], "C",
+  st("All the other people in Maycomb despised the Ewells. [[L16|That said]], when people found out that Atticus was the man assigned to serve as the defense lawyer in this sexual assault case, they were on the Ewells’ side.", "Maycomb 裡所有其他人都鄙視 Ewells 一家。話雖如此，當人們發現 Atticus 被指派擔任這起性侵案的辯護律師時，他們卻站在 Ewells 一家那邊。") +
+  clue('even so = however / nonetheless / nevertheless = in spite of that = despite that = that said 以上全部視為副詞，表「然而」<br>The economy is struggling. That said, house prices rose slightly last month.<br>that said 可以這樣理解：= Although(X) that was(X) said *前後主詞不同時，可只省略連接詞和be動詞 *通常不會這樣寫喔 → Although that was said<br>L17 自 serve as表「擔任」，後接某種身分或職稱。 Being able to speak English and Japanese fluently, Phoebe served as an interpreter (口譯員) at the conference.') +
+  ops([
+    ["Rather", "46%", ""],
+    ["Consequently", "21%", ""],
+    ["That said", "11%", ""],
+    ["Without doubt", "21%", ""]
+  ], "C")
+);
 
-  card("L36", ["過去推測與被動語態", "could only have been done"], "C",
-    st("Meanwhile, Atticus asked Mr. Ewell to write his name. To the audience’s surprise, he instinctively used his left hand. Therefore, the injuries [[L36|could only have been done]] by Mr. Ewell himself, and the Ewells must have been lying to protect Mayella’s reputation.", "與此同時，亞提克斯要求尤爾先生寫下自己的名字。令觀眾驚訝的是，他本能地使用了左手。因此，那些傷勢只可能是尤爾先生自己造成的，而尤爾一家必定是為了維護梅耶拉的名聲而在說謊。") +
-    clue("主詞是 <code>the injuries</code>（傷勢），傷勢是「在過去被造成的（<code>do/inflict injuries</code>）」，結合對過去的唯一可能性推論，使用被動完成式 <code>could only have been done by Mr. Ewell himself</code>。") +
-    ops([
-      ["could only have done", "21%", "主動語態錯誤，傷勢（the injuries）不會主動去做某事！"],
-      ["must only be done", "12%", "未用完成式表過去，且 must 一般不配 only。"],
-      ["could only have been done", "56%", "對過去事實的唯一可能推論 + 被動語態。"],
-      ["should have been done", "11%", "變成「這些傷勢本來應該由尤爾先生自己來打」，語意荒謬！"]
-    ], "C")
-  ),
+h += card("L21", ["非限定關係代名詞", "which angered"], "C",
+  st("The Finches faced criticism from the community and even their own relatives. People called Atticus [[L21|a “nigger-lover,” which]] angered Jem and Scout.", "Finch 一家面臨來自社區甚至他們自己親戚的批評。人們稱 Atticus 為「愛黑鬼的人」，這件事激怒了 Jem 和 Scout。") +
+  clue('*此處的which angered Jem and Scout為非限定用法 *當which指前述某件事或情況時，必須在前面加逗號') +
+  ops([
+    ["a “nigger-lover” that", "5%", "= (B)"],
+    ["a “nigger-lover” which", "16%", ""],
+    ["a “nigger-lover,” which", "78%", ""],
+    ["a “nigger-lover,” it", "0%", "少連接詞"]
+  ], "C")
+);
 
-  card("L40", ["受詞補語被動句型", "be found guilty 被判有罪"], "C",
-    st("Despite the strong evidence, Tom was [[L40|found]] guilty by the all-white jury and sent to prison.", "儘管有強力的證據，湯姆仍被全由白人組成的陪審團判定有罪並送進監獄。") +
-    clue("法律慣用句型：主動 <code>The jury found sb guilty / innocent</code>（陪審團判定某人有罪／無罪） → 被動 <code>sb was found guilty / innocent (by the jury)</code>。") +
-    ops([
-      ["accused", "16%", "<code>accuse</code> 必須搭配介系詞 <code>of + N</code>（be accused of a crime），不能直接接形容詞 guilty！"],
-      ["charged", "10%", "<code>charge</code>（起訴）必須搭配 <code>with + N</code>（be charged with murder）。"],
-      ["found", "63%", "<code>was found guilty</code>（被判定有罪）。"],
-      ["sentenced", "11%", "<code>sentence</code>（判刑）必須搭配 <code>to + 刑罰</code>（be sentenced to death / prison）。"]
-    ], "C")
-  ),
+h += card("L22", ["介系詞", "regardless of"], "D",
+  st("Atticus comforted them, telling them a lawyer should stand up for the rights of people [[L22|regardless of]] their skin color, and he encouraged them to hold their heads up and keep their fists down.", "Atticus 安慰他們，告訴他們律師應該挺身維護人們的權利，不論他們的膚色為何，他並鼓勵他們抬起頭來，放下拳頭。") +
+  clue('*rights 權利 human rights / civil rights 人/民權<br>(A) in/with regard to (關於) = regarding = about. In regard to your question about the project deadline, we have decided to extend it by one week.<br>(B) regarding (關於) The teacher had a meeting with the parents regarding the student\'s performance in class.<br>(C) (with) best/kind regards (敬上，祝福) I would like to thank you for your assistance with the project. (With) kind regards, John<br>(D) regardless of (不論，無論) The school provides equal opportunities for all students, regardless of their academic abilities.') +
+  ops([
+    ["in regard to", "0%", ""],
+    ["regarding", "0%", ""],
+    ["with kind regards", "0%", ""],
+    ["regardless of", "0%", ""]
+  ], "D")
+);
 
-  card("L41-1", ["名詞 vs. 形容詞詞性辨析", "Feeling despair (n.)"], "A",
-    st("Feeling [[L41-1|despair]] for his future in a [[L41-2|white-dominated]] legal system, Tom tried to escape from prison but was shot to death.", "在白人主導的司法體系中對自己的未來感到絕望，湯姆試圖越獄，卻遭射殺身亡。") +
-    clue("注意後面搭配的介系詞是 <code>for his future</code>！<br>• <code>despair</code> 是名詞或動詞（<b>不是形容詞</b>！），此處 <code>Feeling despair for...</code> 中 <code>despair</code> 為不可數名詞當 <code>Feeling</code> 的受詞（對…感到絕望）。<br>• <code>desperate</code>（adj. 絕望的；不顧一切的）若表渴望某物才搭配 for，此處指心灰意冷的絕望感。") +
-    ops([
-      ["despair", "32%", "不可數名詞「絕望」，構成 <code>feeling despair for his future</code>。"],
-      ["desperate", "48%", "常見誤答！<code>desperate for sth</code> 意為「極度渴望得到某物（如 <i>desperate for money</i>）」，而非對未來感到絕望灰心！"],
-      ["despaired", "16%", "despair 為不及物動詞（<code>despair of</code>），沒有被動分詞 despaired。"],
-      ["despairing", "4%", "despairing 搭配介系詞 <code>of</code> 而非 for。"]
-    ], "A")
-  ),
+h += card("L26", ["不定詞表目的", "to watch"], "B",
+  st("On the day of the trial, the courthouse was packed, and Jem and Scout secretly slipped in [[L26|to watch]].", "在審判當天，法院擠滿了人，Jem 和 Scout 偷偷溜進去觀看。") +
+  clue('in (adv.) = inside / to watch = in order to watch<br>(D) watching = when/although/because they were watching 當他們在觀看時溜進去 / 雖然… / 因為… *分詞構句通常是省略某個從屬連接詞 *凡是引導的子句不可獨立者皆為從屬連接詞 *引導的子句可獨立者，為對等連接詞 *對等連接詞只有7個(口訣：fanboys)，其它皆為從屬連接詞<br>L26 自 be (jam-)packed (with …) 擠滿(…)；塞滿(…) The place was jam-packed with tourists.') +
+  ops([
+    ["and watch", "5%", "→ and watched"],
+    ["to watch", "61%", ""],
+    ["by watching", "16%", "藉著觀看而溜進去？"],
+    ["watching", "18%", ""]
+  ], "B")
+);
 
-  card("L41-2", ["複合形容詞", "white-dominated 由白人主導的"], "B",
-    st("Feeling [[L41-1|despair]] for his future in a [[L41-2|white-dominated]] legal system, Tom tried to escape from prison but was shot to death.", "在白人主導的司法體系中對自己的未來感到絕望，湯姆試圖越獄，卻遭射殺身亡。") +
-    clue("<code>a white-dominated legal system</code> = <code>a legal system (which was) dominated by white people</code>（由白人主宰／主導的司法體系），屬於 <code>N-p.p.</code> 複合形容詞。") +
-    ops([
-      ["white-dominating", "29%", "變成「主宰白人的司法體系」，語意顛倒。"],
-      ["white-dominated", "65%", "由白人所主導的（dominated by whites）。"],
-      ["dominating-white", "4%", "順序與結構皆錯。"],
-      ["dominated-white", "2%", "順序顛倒。"]
-    ], "B") +
-    passage("L43 ~ L48 課文段落", [[
-      ["【L43】Jem and Scout, who had watched the entire trial, had had high hopes that Tom would be found innocent. They were devastated by the injustice of Tom’s heartbreaking fate.", "看完全程審判的傑姆和絲考特，原本對湯姆獲判無罪抱持高度期望。他們對湯姆令人心碎的命運之不公感到悲痛欲絕。"],
-      ["【L46】Atticus explained that most people make sensible and moral decisions in everyday life, but when race is involved, they tend to be swayed by the person’s skin color, turning into someone unrecognizable.", "亞提克斯解釋說，大多數人在日常生活中會做出理智且合乎道德的決定，但當涉及種族問題時，他們往往會受一個人的膚色左右，變成讓人認不出來的另一個人。"]
-    ]])
-  ),
+h += card("挑戰題 (L27)", ["過去完成式", "had asked"], "C",
+  st("The Ewells’ story was that Mayella [[挑戰題|had asked]] Tom to come over to fix something. While there, Tom beat and sexually assaulted Mayella until Mr. Ewell came home, scaring Tom off.", "Ewells 一家的說法是 Mayella 曾經請 Tom 過來修理東西。在那裡的時候，Tom 毆打並性侵了 Mayella，直到 Ewell 先生回家把 Tom 嚇跑。") +
+  clue('這裡用過去完成式had asked是因為此動作比下一句的Tom beat and sexually assaulted Mayella更早發生。<br>L29 自 While there = While he was there<br>L29 beat, beat, beaten<br>L30 scaring Tom off = which scared Tom off which 指前面的陳述(Mr. Ewell came home)') +
+  ops([
+    ["asking", "50%", ""],
+    ["has asked", "3%", ""],
+    ["had asked", "43%", ""],
+    ["could have asked", "3%", ""]
+  ], "C")
+);
 
-  card("L50", ["不及物動詞無被動", "remained 依然存在"], "C",
-    st("Nevertheless, for Maycomb, a glimmer of hope [[L50|remained]].", "儘管如此，對梅岡鎮而言，一絲希望依然存在。") +
-    clue("<code>remain</code>（留存、依然存在）為<b>不及物動詞（Vi.），絕對沒有被動式</b>！主詞為 <code>a glimmer of hope</code>，配合過去式基調直接填過去式 <code>remained</code>。") +
-    ops([
-      ["was remained", "28%", "常見陷阱！<code>remain</code> 沒有被動語態！"],
-      ["remaining", "10%", "分詞不能單獨當句子的主要動詞。"],
-      ["remained", "58%", "過去式不及物動詞，構成 <code>a glimmer of hope remained</code>。"],
-      ["to remain", "4%", "不定詞不能當主要動詞。"]
-    ], "C")
-  ),
+h += card("L31", ["名詞字彙", "story"], "B",
+  st("However, Tom’s version of the [[L31|story]] was that Mayella came on to him and kissed him, and he pushed her away.", "然而，Tom 版本的說法是 Mayella 對他暗送秋波並吻了他，而他把她推開。") +
+  clue('*come on to sb勾引<br>story 對事情經過的描述(真真假假都有可能) an account of something that has happened, usually one that people tell each other, and which may not be true. Her parents did not believe her story. He was having an affair with Julie, or so the story goes (=people are saying this). She gave me her version of what had happened, but it would be interesting to hear his half/side of the story (= the events as described by him).<br>L32 At just that moment, Mr. Ewell arrived home and flew into a rage. Mr. Ewell yelled at Mayella, and he ran away out of fear.<br>L34 out of 出於；因為 = because of. Out of curiosity, John opened the envelope and read the letter addressed to his wife.') +
+  ops([
+    ["report", "10%", "報告"],
+    ["story", "75%", ""],
+    ["rumor", "7%", "謠言"],
+    ["crime", "8%", "犯罪"]
+  ], "B")
+);
 
-  card("L51", ["花費動詞搭配", "spent + 時間 + V-ing"], "A",
-    st("Atticus noted that the jury had [[L51|spent]] a few hours deliberating the verdict.", "亞提克斯指出，陪審團花了幾個小時商議裁決。") +
-    clue("主詞是「人（the jury 陪審團）」，受詞是時間 <code>a few hours</code>，後面接著動名詞 <code>deliberating the verdict</code>（商議裁決），符合 <code>人 + spend + 時間 + (in) V-ing</code> 的句型！") +
-    ops([
-      ["spent", "82%", "<code>had spent a few hours deliberating...</code>。"],
-      ["taken", "14%", "take 的搭配是 <code>It took the jury a few hours to deliberate...</code>。"],
-      ["cost", "4%", "cost 用於花費金錢且主詞為事物。"],
-      ["lasted", "0%", "last（持續）的主詞應為會議或審判，且不接 V-ing。"]
-    ], "A") +
-    passage("L52 ~ L55 課文段落", [[
-      ["This was an encouraging sign because usually a jury would require only a few minutes to find a black person guilty. This delay in the verdict meant that at least one member of the jury must have believed in Tom’s innocence.", "這是一個令人鼓舞的跡象，因為通常陪審團只需要幾分鐘就會判定一個黑人有罪。裁決的延遲意味著陪審團中至少有一名成員必定相信湯姆的清白。"]
-    ]])
-  ),
+h += passage("請先進入挑戰題3", [
+  [["請先進入挑戰題3", ""]]
+]);
 
-  card("L56", ["被動句型搭配", "be considered (to be) a victory"], "D",
-    st("Therefore, although the guilty verdict could not really be [[L56|considered]] a victory, the delay definitely represented progress and positive change.", "因此，雖然有罪的裁決不能真正被視為一場勝利，但這次的延遲確實代表了進步與正向的改變。") +
-    clue("空格後直接接名詞 <code>a victory</code>（沒有 <code>as</code>！），在表「被視為…」的動詞中，只有 <code>be considered (to be) + N</code> 不需要加 <code>as</code>！") +
-    ops([
-      ["regarded", "15%", "必須加 <code>as</code>（be regarded as）。"],
-      ["viewed", "12%", "必須加 <code>as</code>（be viewed as）。"],
-      ["seen", "8%", "必須加 <code>as</code>（be seen as）。"],
-      ["considered", "65%", "<code>be considered (to be) a victory</code>。"]
-    ], "D")
-  )
-].join('');
+h += card("L36", ["過去推測", "must have been"], "C",
+  st("After hearing both sides’ testimonies, the sheriff of Maycomb pointed out that Mayella’s bruises were on the right side of her face. Upon hearing this, the audience in the courtroom realized that her injuries [[L36|must have been]] caused by somebody left-handed.", "在聽完雙方的證詞後，Maycomb 的警長指出 Mayella 的瘀傷在她臉的右側。一聽到這點，法庭裡的觀眾意識到她的傷一定是由左撇子造成的。") +
+  clue('L36 -test 【字根】證明 → 考試 = 證明實力 / contest (con- = together → 聚在一起證明實力) → 比賽 / protest (pro- = forward → 站出來證明別人不對) →抗議 / testify 作證 / testimony 證辭<br>L38 Upon/On + N/V-ing, S + V... 一… 就... = as soon as + 完整子句, S + V.... Upon seeing her, I knew there was something wrong. → As soon as I saw her, I knew there was something wrong.<br>L40 left-handed是結構為「adj.-Ned」的複合形容詞。類似的複合形容詞：absent-minded 心不在焉的；迷糊的 / short-sighted 目光短淺的；(英)近視的 / nearsighted (美)近視的') +
+  ops([
+    ["would have been", "9%", "與過反(本來是). He would have been happier if he had followed his heart."],
+    ["should have been", "25%", "與過反(過去該做卻沒做). They should have been here by now, but they must have gotten stuck in traffic. 他們本應該現在已經到了，但是他們可能被堵在車陣中了。"],
+    ["must have been", "66%", "過去推測(一定…吧). They must have been relieved when they found out the test was postponed. 當他們得知考試延期時，他們一定感到鬆了口氣。"],
+    ["will have been", "0%", "未來完成(到了某時間將已…). By next year, they will have been married for 10 years."]
+  ], "C")
+);
 
-/* === Part 2: 課本句型與翻譯練習 === */
-const h2 = '<h2 id="p2">課本句型與翻譯練習</h2>' +
-  passage("句型 1（助動詞 + have p.p. 對過去的推測與責備）與 句型 2（do nothing but VR）觀念整理", [[
-    ["1. must have + p.p.：對過去事實的強烈肯定推測（「當時必定已經…」）", "例：Her injuries must have been caused by somebody left-handed."],
-    ["2. may / might / could have + p.p.：對過去事實的可能性推測（「當時可能已經…」；could have p.p. 亦可表「過去本可以做卻沒做」）", "例：He might have missed the train."],
-    ["3. can't / couldn't have + p.p.：對過去事實的強烈否定推測（「當時絕不可能…」）", "例：Tom couldn't have beaten Mayella with his injured left arm."],
-    ["4. should (not) / ought (not) to have + p.p.：對過去未實現之事的責備或後悔（「當時本（不）應該做卻（沒）做」）", "例：You should have told me the truth earlier."],
-    ["句型 2：nothing but / cannot help but / cannot choose but + VR（原形動詞） vs. cannot help + V-ing（動名詞）", "表「只做…／不得不…／忍不住…」的核心句型。"]
-  ]]) + [
-  card("句1-練1", ["句型1：翻譯", "must have + p.p."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">1. 地面是濕的。昨晚必定下過雨。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|The ground is wet. It must have rained last night.]]")+'</div></div>' + clue("根據現在地面是濕的證據，強烈肯定推測「昨晚必定下過雨」，用 <code>must have rained</code>。")),
-  card("句1-練2", ["句型1：翻譯", "should have + p.p."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">2. 我考試不及格。我昨晚應該更用功讀書的。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|I failed the exam. I should have studied harder last night.]]")+'</div></div>' + clue("對過去沒用功讀書感到後悔，用 <code>should have studied</code>。")),
-  card("句1-練3", ["句型1：翻譯", "should not have + p.p."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">3. 你昨天不應該對你媽媽說謊的。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|You shouldn’t have lied to your mother yesterday.]]")+'</div></div>' + clue("過去做了不該做的事，用 <code>shouldn't have + p.p.</code>。")),
-  card("句1-練4", ["句型1：翻譯", "couldn't have + p.p."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">4. 那不可能是真的！你一定是在開玩笑。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|That couldn’t have been true! You must be kidding.]]")+'</div></div>' + clue("對過去事情的強烈否定推測用 <code>couldn't / can't have been</code>。")),
-  card("句2-練1", ["句型2：翻譯", "did nothing but + VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">1. 他整個週末什麼都沒做，只是玩線上遊戲。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|He did nothing but play online games all weekend.]]")+'</div></div>' + clue("前面有 <code>did</code>，故 <code>nothing but</code> 後接原形動詞 <code>play</code>。")),
-  card("句2-練2", ["句型2：翻譯", "cannot help but + VR / cannot help + V-ing"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">2. 每當我聽到這首歌，我忍不住就會想起我的初戀。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Whenever I hear this song, I cannot help but think of my first love.]]")+'<br>（= '+fx("[[|... I cannot help thinking of my first love.]]")+'<br>= '+fx("[[|... I have no choice but to think of my first love.]]")+'）</div></div>' + clue("三大「忍不住／不得不」句型比較：<br>• <code>cannot (help / choose) but + VR</code><br>• <code>cannot help + V-ing</code><br>• <code>have no choice but + to VR</code>"))
-].join('');
+h += card("L40", ["分詞構句", "meaning"], "A",
+  st("They also noticed that Tom’s left arm had been injured in an accident, [[L40|meaning]] he must have been innocent of giving Mayella her bruises.", "他們也注意到 Tom 的左臂在一次意外中受傷了，這意味著他不可能是造成 Mayella 瘀傷的人。") +
+  clue('which meant = meaning = and this meant.<br>L42 innocent清白的；單純的 cf. naïve 天真的 ≒ stupid. Her naïve kindness made her trust people too easily.<br>be innocent of sth 沒犯某罪；沒做某壞事 【反】be guilty of sth. She is innocent of any wrongdoing. 她沒做錯什麼事') +
+  ops([
+    ["meaning", "26%", ""],
+    ["meant", "10%", ""],
+    ["meaningfully", "1%", ""],
+    ["which means", "63%", "時態不對 → which meant"]
+  ], "A")
+);
 
-document.getElementById('app').innerHTML = h1 + h2;
-const secs=[['p1','p.221 & L1~L60 課文講解'],['p2','句型1 & 句型2']];
+h += card("L43", ["過去推測", "could only have been done"], "C",
+  st("Meanwhile, Atticus asked Mr. Ewell to write his name. To the audience’s surprise, he instinctively used his left hand. Therefore, the injuries [[L43|could only have been done]] by Mr. Ewell himself, and the Ewells must have been lying to protect Mayella’s reputation.", "同時，Atticus 請 Ewell 先生寫下他的名字。令觀眾驚訝的是，他本能地使用了左手。因此，這些傷只可能是 Ewell 先生自己造成的，而 Ewells 一家一定在說謊以保護 Mayella 的名聲。") +
+  clue('L43 to one’s surprise 令某人驚訝的是 / (much) to one’s + excitement, embarrassment, satisfaction, etc. 令…感到(非常)…的是 (Much) to David’s satisfaction, his daughter looks stunning in the dress he bought for her.') +
+  ops([
+    ["should only have been done", "42%", "與過反(過去該被但他沒做) Important repairs should only have been done by certified technicians. 重要的維修工作本應該只能由認證技術人員進行。"],
+    ["would only have been done", "21%", "與過反(本來只會被) The project would only have been done if everyone had worked as a team. 這個專案本來就只有在大家合作的情況下才會完成。"],
+    ["could only have been done", "33%", "過去推測(只有可能被…吧) The masterpiece could only have been painted by a skilled artist. 這件傑作只有可能是一位熟練的藝術家繪製。"],
+    ["will only have been done", "3%", "未來完成(將會已被) By the end of the month, the renovations will only have been done on the first floor. 到月底時，只有一樓的翻新工作將被完成。"]
+  ], "C")
+);
+
+h += card("L48-1", ["動詞字彙", "found"], "A",
+  st("Despite the strong evidence, Tom was [[L48-1|found]] guilty by the all-white jury and sent to prison.", "儘管有強烈的證據，Tom 還是被全白人的陪審團判決有罪並送入監獄。") +
+  clue('find sb guilty/innocent (陪審團)判…有罪/無罪<br>請問這句話是什麼意思：How do you find him? / find + O + OC 覺得…是… How(OC) do you find him(O)? 你覺得他是個怎樣的人？ / I find him(O) honest and sincere(OC).<br>那這句話怎麼說：你是怎麼找到他的？ How did you find him?<br>L49 the all-white jury 完全由白人組成的陪審團. an all-day seminar 全日的研討會 / an all-girl school / an all-wool coat') +
+  ops([
+    ["found", "29%", ""],
+    ["sentenced", "20%", "vt. (法官)判決 He was sentenced to life imprisonment."],
+    ["charged", "17%", ""],
+    ["accused", "34%", ""]
+  ], "A")
+);
+
+h += card("L49-2", ["形容詞字彙", "desperate"], "B",
+  st("Feeling [[L49-2|desperate]] for his future in a white-dominated legal system, Tom tried to escape from prison but was shot to death.", "對在一個白人主導的法律系統中的未來感到絕望而不顧一切，Tom 試圖逃獄，但被開槍射死。") +
+  clue('feel + N / feel + adj. 都可表示「感到…」<br>*解題關鍵：desperate (X) 感到絕望的 (O) 因為感到絕望而不顧一切的. I had no money left and was desperate. Time was running out and we were getting desperate.<br>L51 to death 至死；極度 The man was severely injured and almost bled to death. The conference lasted for three hours, and we were all bored to death.<br>「笑死」怎麼說？ 笑死 = 開懷大笑 He\'s one of the few writers who can make me laugh out loud. 笑死 = 笑個不停 When I told him what had happened he laughed his head off. (網路聊天時)笑死 = 好好笑 lmao = laugh my *** off. You’re killing me. 我快被你笑死了 cf. My back is killing me. 我的背快痛死了') +
+  ops([
+    ["despair", "69%", "n."],
+    ["desperate", "15%", "be desperate for = be eager for 渴望得到. The team is desperate for a win. I was desperate for a cup of coffee."],
+    ["deadly", "0%", "致命的"],
+    ["depressing", "15%", "令人沮喪的 (depressed 感到沮喪的)"]
+  ], "B")
+);
+
+h += card("L50-3", ["複合形容詞", "white-dominated"], "A",
+  st("Feeling desperate for his future in a [[L50-3|white-dominated]] legal system, Tom tried to escape from prison but was shot to death.", "對在一個白人主導的法律系統中的未來感到絕望而不顧一切，Tom 試圖逃獄，但被開槍射死。") +
+  clue('a white-dominated legal system = a legal system (which is) dominated by white (people) (N-p.p. = p.p. + 介 + N)') +
+  ops([
+    ["white-dominated", "73%", ""],
+    ["white-dominating", "22%", ""],
+    ["white-domination", "5%", ""],
+    ["dominating-white", "0%", ""]
+  ], "A")
+);
+
+h += passage("L51-L54", [
+  [["Jem and Scout, who had watched the entire trial, had had high hopes that Tom would be found innocent.", ""]],
+  [["They were devastated by the injustice of Tom’s heartbreaking fate. = They were heartbroken by the injustice of Tom’s heartbreaking fate.", "感到極傷心的 令人極傷心的"]],
+  [["devastated = very shocked and upset = shattered", "*不要再說sad 或 sorrowful囉，而且sorrowful根本不能形容人. She was utterly devastated when her husband died. With a sorrowful sigh she folded the letter and put it away. (X) She felt lonely and sorrowful. (O) She felt lonely and depressed."]]
+]);
+
+h += passage("L56", [
+  [["Atticus explained that most people make sensible and moral decisions in everyday life, but when race is involved, they tend to be swayed by the person’s skin color, turning into someone unrecognizable.", ""]],
+  [["every day adv 每天 / everyday = daily adj 日常的；每日的", "I read daily newspaper every day. 我每天都看日報。"]],
+  [["involve ≒ include 涉及", "The accident involved three cars. = Three cars were involved in the accident. He told us a story involving life on a farm."]]
+]);
+
+h += passage("作文應用：", [
+  [["Most people make sensible and moral decisions in everyday life, but when money is involved, they tend to be swayed by ____, turning into someone unrecognizable.", "📌 greed 📌 self-interest 📌 the lure of profit 利益的誘惑"]],
+  [["Most people make sensible and moral decisions in everyday life, but when love is involved, they tend to be swayed by ____, turning into someone unrecognizable.", "✏️ blind passion ✏️ obsession 執念 (sunk cost) ✏️ the illusion of perfection 把對象想得太完美"]],
+  [["Most people make sensible and moral decisions in everyday life, but when politics is involved, they tend to be swayed by ____, turning into someone unrecognizable.", "✅ stupid fake news ✅ weaponized disinformation / misinformation 刻意製造的假訊息 錯誤訊息 ✅ the outrage-industrial complex（憤怒工業複合體）"]]
+]);
+
+h += card("L59-1", ["動詞字彙", "remained"], "A",
+  st("Nevertheless, for Maycomb, a glimmer of hope [[L59-1|remained]]. Atticus noted that the jury had spent a few hours deliberating the verdict.", "然而，對 Maycomb 來說，仍有一絲希望留存。Atticus 注意到陪審團花了幾個小時商議裁決。") +
+  clue('(A) remain Vi. 繼續存在/被留下來；依然是. Little of the original building remains. (= is left) The score is tied, with fifteen minutes remaining. (= left)<br>*表示「維持」的動詞分連綴動詞和及物動詞兩大類<br>連綴動詞：remain + S.C. (adj. / N ) 依然(是) / 維持(是) / 保持(是). She remained calm. 她保持(是)冷靜(的) (加上「是」仍合理就是連綴動詞). The victim\'s identity remains a mystery. 受害者的身份依然是個謎<br>及物動詞：sustain / maintain + O (N.) 維持 (= make sth continue) / retain / maintain + O (N.) 保持 (keep sth). The TV show has retained/maintained its popularity for many years. 這個節目多年來一直維持是(X)其受歡迎度 (加上「是」不合理就是一般動詞). He found it difficult to sustain/maintain relationships with women. 他覺得很難和女人維持是(X)感情.<br>* sustain, maintain, retain 在表示「維持」、或「保持」的情況下，有時是可以通用的，所以不會考這兩個意思的字辨，不必太糾結') +
+  ops([
+    ["remained", "72%", ""],
+    ["maintained", "12%", ""],
+    ["retained", "7%", ""],
+    ["sustained", "9%", ""]
+  ], "A")
+);
+
+h += card("L59-2", ["動詞搭配", "spent"], "C",
+  st("Nevertheless, for Maycomb, a glimmer of hope remained. Atticus noted that the jury had [[L59-2|spent]] a few hours deliberating the verdict.", "然而，對 Maycomb 來說，仍有一絲希望留存。Atticus 注意到陪審團花了幾個小時商議裁決。") +
+  clue('人 spend 錢/時間 Ving / on sth (I spend 2 hours on(X) [reading / on the book].)<br>事 cost 錢 (The book cost me NT$80.)<br>事 take (sb) 時間 (to VR)<br>* take的用法表示「做某事花了…多久時間」(焦點在事)，而非某人花多久時間做某事(spend)(焦點在人)。It took me 2 days to find him. 找他花了我兩天的時間。') +
+  ops([
+    ["cost", "4%", ""],
+    ["taken", "42%", ""],
+    ["spent", "54%", ""],
+    ["used", "0%", ""]
+  ], "C")
+);
+
+h += passage("L62", [
+  [["This was an encouraging sign because usually a jury would require only a few minutes to find a black person guilty. This delay in the verdict meant that at least one member of the jury must have believed in Tom’s innocence.", "這是一個令人鼓舞的跡象，因為通常陪審團只需要幾分鐘就會判定一個黑人有罪。判決的延遲意味著陪審團中至少有一名成員一定相信了 Tom 的清白。"]],
+  [["believe in sb/sth + that(X) (不可接that子句) 信任 / 對…有信心 / 相信…的存在 / 認為…是好的", "The people want a President they can believe in. Do you believe in God? She doesn’t believe in marriage."]],
+  [["believe sb 相信(某人沒說謊)", "I believed him, even though his story sounded unlikely."]],
+  [["believe (that) + 完整子句 相信(某件事)", "I don’t believe (that) he is only 15 years old."]]
+]);
+
+h += card("L66", ["動詞片語", "considered"], "D",
+  st("Therefore, although the guilty verdict could not really be [[L66|considered]] a victory, the delay definitely represented progress and positive change.", "因此，雖然有罪判決不能真正被視為勝利，但延遲絕對代表了進步和積極的改變。") +
+  clue('consider + O + (to be) + OC 把…視為 / consider + N / Ving 考慮(要做某事)<br>Liz was considered (to be) an excellent teacher. as(X) / We are considering going to Japan.<br>think of/look (up)on/see/view/regard/take O + as + OC 將…視為… I want you to think of this as your home.<br>臺灣的夜市早已被認為足以代表我們的在地文化。【100學測】Night markets in Taiwan have long been [thought of / looked upon / regarded / viewed / seen] as [representative / representation] of our local culture.<br>refer to … as … 指的是「稱…為…」 Marcia referred to him as a dear friend.') +
+  ops([
+    ["regarded", "8%", "+ as"],
+    ["looked on", "2%", "+ as"],
+    ["referred to", "28%", "+ as"],
+    ["considered", "62%", ""]
+  ], "D")
+);
+
+h += '<h2 id="p2">句型 1 過去推測句型</h2>';
+
+h += passage("句型1課本參考答案", [
+  [["Practice A", "2. A thief must have broken into the house.<br>3. She must/may/might/could be waiting for her boyfriend … he must be late<br>4. A big test must/may/might/could be around the corner.<br>5. Their grandparents must/may/might have passed away.<br>6. Something valuable must/may/might/could have been buried underground."]],
+  [["Practice B", "2. must have been so surprised<br>3. could have created<br>4. could/might have been<br>5. might/could/may have been able to<br>6. must/may/might/could have built"]]
+]);
+
+h += card("句1-1", ["過去推測"], "must have been",
+  '<div class="stem"><div class="zh" style="color:inherit">1. 他一定已經遲到了吧，因為我剛看到他匆忙跑過去。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|He must have been late because I just saw him rushing by/past.]]")+'</div></div>' + clue('He must be(X) have been late because I saw him run over there(X) in a hurry. running past/by. rushing by. (X) … run away 跑走/逃走')
+);
+
+h += card("句1-2", ["過去推測"], "must be",
+  '<div class="stem"><div class="zh" style="color:inherit">2. 小男孩正狼吞虎嚥地吃（wolf down）晚餐，他一定餓壞了吧。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|The little boy is wolfing down his dinner. He must be starving.]]")+'</div></div>' + clue('The boy is wolfing down the dinner. He must be starved / starving.')
+);
+
+h += card("句1-3", ["過去推測"], "must have won",
+  '<div class="stem"><div class="zh" style="color:inherit">3. Gary辭了工作又買了豪宅和一輛跑車，他一定是中了樂透吧。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Gary quit his job and bought a big house and a sports car. He must have won the lottery.]]")+'</div></div>' + clue('Gary quit his job and bought a mansion/big house/fancy apartment and a sports car. He must have won the lottery.')
+);
+
+h += card("句1-4", ["過去推測"], "might have gone",
+  '<div class="stem"><div class="zh" style="color:inherit">4. 上週我多次打電話給史密斯一家，但沒人接電話。他們可能去度假了吧。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|I called the Smiths many times last week, but no one answered the phone. They might have gone on a vacation.]]")+'</div></div>' + clue('I called the Smiths family(X) many times last week but no one answered (the phone), they must(X) might have been(X) gone on a(X) vacation.')
+);
+
+h += card("句1-5", ["現在推測進行"], "may be preparing",
+  '<div class="stem"><div class="zh" style="color:inherit">5. 最近Tina日以繼夜在練琴。她可能在準備比賽吧。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Recently Tina has been practicing the piano day and night. She may be preparing for a contest.]]")+'</div></div>' + clue('Recently Tina has been practicing the piano day and night. She might prepare(X) be preparing for a competition/contest.')
+);
+
+h += card("句1-6", ["過去推測"], "might have forgotten",
+  '<div class="stem"><div class="zh" style="color:inherit">6. Wilson先生在這所學校任教已有二十多年。他可能已忘記他的一些學生了吧。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Mr. Wilson has taught at this school for over twenty years. He might have forgotten some of his students.]]")+'</div></div>' + clue('Mr.Wilson has been teaching for more than twenty years(X) in the school for more than twenty years. He may have forgotten some of his students.')
+);
+
+h += '<h2 id="p3">句型 2 分詞片語後位修飾</h2>';
+
+h += card("句2-1", ["分詞片語"], "The girl wearing a red scarf is my friend from work.",
+  '<div class="stem"><div class="zh" style="color:inherit">1. 戴紅色圍巾的女孩是我同事。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|The girl wearing a red scarf is my friend from work.]]")+'</div></div>' + clue('The girl wearing a red scarf is one of my colleagues / my friend from work. colleague 文職同事 coworker 勞工同事 with the red scarf不一定戴著')
+);
+
+h += card("句2-2", ["分詞片語"], "The teacher asked us to write an essay [made up/consisting/comprised/composed] of ten sentences.",
+  '<div class="stem"><div class="zh" style="color:inherit">2. 老師要求我們寫一篇由十個句子組成的文章。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|The teacher asked us to write an essay [made up/consisting/comprised/composed] of ten sentences.]]")+'</div></div>' + clue('The teacher asked us to write an article composed of ten sentences. essay consisting of ten sentences. = made up of / comprised of')
+);
+
+h += card("句2-3", ["分詞片語"], "The girl kidnapped last week escaped on her own.",
+  '<div class="stem"><div class="zh" style="color:inherit">3. 上週被綁架的小女孩自己逃出來了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|The girl kidnapped last week escaped on her own.]]")+'</div></div>' + clue('The girl kidnapped last week escaped on her own / (by) herself.')
+);
+
+h += card("句2-4", ["分詞片語"], "Many characters created by this writer have many secrets.",
+  '<div class="stem"><div class="zh" style="color:inherit">4. 這位作家所創作的許多角色都有許多祕密。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Many characters created by this writer have many secrets.]]")+'</div></div>' + clue('Many characters created by this writer (X)author(X)作者have lots of secrets.')
+);
+
+h += card("句2-5", ["分詞片語"], "The buildings damaged by the typhoon have been repaired.",
+  '<div class="stem"><div class="zh" style="color:inherit">5. 被颱風破壞的建築物已經被修復了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|The buildings damaged by the typhoon have been repaired.]]")+'</div></div>' + clue('The building(s) damaged by the typhoon have/has been restored/repaired. (X) ruin / destroy 摧毀')
+);
+
+h += card("句2-6", ["分詞片語"], "The old man guarding the gate disappeared mysteriously.",
+  '<div class="stem"><div class="zh" style="color:inherit">6. 看守大門的老先生離奇地（mysteriously）消失了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|The old man guarding the gate disappeared mysteriously.]]")+'</div></div>' + clue('The old man guarding the gate disappeared mysteriously.')
+);
+
+
+document.getElementById('app').innerHTML = h;
+
+const secs=[
+  ['p1','Thinking Ahead & 課文講解'],
+  ['p2','句型 1 過去推測句型'],
+  ['p3','句型 2 分詞片語後位修飾']
+];
 document.getElementById('nav').innerHTML=secs.map(s=>'<a href="#'+s[0]+'">'+s[1]+'</a>').join('')+'<button id="tg">全部收合</button>';
 let open=true;
-document.getElementById('tg').onclick=function(){open=!open;document.querySelectorAll('details.q').forEach(d=>d.open=open);this.textContent=open?'全部收合':'全部展開';};
+document.getElementById('tg').onclick=function(){
+  open=!open;
+  document.querySelectorAll('details.q').forEach(d=>d.open=open);
+  this.textContent=open?'全部收合':'全部展開';
+};
 </script>
 <script src="bookmark.js"></script>
 </body>
 </html>
-```!]
+"""
 
----
-
-請隨時上傳接下來的 **501–506** 檔案！
+with open("409 Blackboard 2.html", "w", encoding="utf-8") as f:
+    f.write(html_content)
+print("File written: 409 Blackboard 2.html")
