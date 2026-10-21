@@ -75,10 +75,52 @@ footer a:hover{text-decoration:underline;}
 const L="ABCD";
 const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[(\d*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
 const SENT={
-  '1': ["Ruth keeps [[|artificial]] flowers in her house, as she often sneezes when she smells real ones.", "Ruth 在家裡放人造花，因為她聞到真花時經常會打噴嚏。"]
+  '1': ["Ruth keeps [[|artificial]] flowers in her house, as she often sneezes when she smells real ones.", "Ruth 在家裡放人造花，因為她聞到真花時經常會打噴嚏。"],
+  '2': ["What John needs before the speech contest is [[|constructive]] criticism to let him know how he can improve.", "約翰在演講比賽前需要的是建設性的批評，讓他知道該如何改進。"],
+  '3': ["We have to pay [[|additional]] fees if our baggage is over our weight allowance.", "如果我們的行李超過重量限制，我們必須支付額外的費用。"],
+  '4': ["As John was leaving the store, he didn't have to open the door for himself because it was [[|automatic]].", "當約翰離開商店時，他不必自己開門，因為門是自動的。"],
+  '5': ["Try to [[|take advantage of]] the school library, as it is a great source of useful information.", "盡量利用學校圖書館，因為它是一個很好的有用資訊來源。"],
+  '6': ["The hike into the woods turned [[|bloody]] when the boys were attacked by two bears.", "當男孩們遭到兩隻熊攻擊時，進入樹林的遠足變得血腥起來。"],
+  '7': ["Under no [[|circumstances]] should government employees take bribes.", "在任何情況下，政府公務員都不應收受賄賂。"],
+  '8': ["Teresa mourned the [[|accidental]] death of her pet dog, which was hit by a car.", "特蕾莎為她被車撞死的寵物狗的意外死亡而哀悼。"],
+  '9': ["After hours of negotiation, the leaders finally came to a(n) [[|acceptable]] agreement.", "經過數小時的談判，領導人們終於達成了一個可接受的協議。"],
+  '10': ["This formal language [[|complicates]] your message; why don't you just keep it simple?", "這種正式的語言使你的訊息複雜化了；你為什麼不保持簡單呢？"],
+  
+  '2-1': ["The company's lawyers sent a letter telling the store to [[|cease]] selling t-shirts with its characters on them.", "該公司的律師發信要求該商店停止銷售印有其角色的 T 恤。"],
+  '2-2': ["The sandwich my mom made me [[|consists]] of some lettuce and a slice of tomato between two slices of bread.", "我媽媽給我做的三明治是由兩片麵包中間夾著一些生菜和一片番茄所組成的。"],
+  '2-3': ["The [[|constant]] sound of cars honking their horns wakes Jerry up every morning.", "汽車不斷按喇叭的聲音每天早上把傑瑞吵醒。"],
+  '2-4': ["Tom made a(n) [[|accurate]] pass to his teammate, who scored a goal.", "湯姆向隊友傳了一個準確的球，隊友進球得分了。"],
+  '2-5': ["It is rather [[|chilly]] outside, so make sure you wear a coat when you go to the store.", "外面相當寒冷，所以去商店時一定要穿外套。"],
+
+  '4-1': ["You shouldn't play soccer on the [[|concrete]], because if you fall, you will get hurt.", "你不應該在混凝土上踢足球，因為如果你摔倒了，你會受傷的。"],
+  '4-2': ["The campers do not have an [[|adequate]] supply of food, so they will need to find some more.", "露營者沒有充足的食物供應，所以他們需要再找一些。"],
+  '4-3': ["During last month's earthquake, several buildings [[|collapsed]] and had to be rebuilt.", "在上個月的地震中，幾棟建築物倒塌了，必須重建。"],
+  '4-4': ["It's important that we all contribute for the [[|benefit]] of the group.", "重要的是我們都要為團隊的利益做出貢獻。"],
+  '4-5': ["The child's smiling face [[|contrasts]] with the bad mood he was in before his mom bought him that toy.", "孩子微笑的臉與他媽媽給他買那個玩具之前的壞心情形成了對比。"]
 };
+
+const cloze_paras = [
+  [
+    ["On a foggy morning, a shuttle bus filled with passengers was running on a winding mountain road.", "在一個有霧的早晨，一輛載滿乘客的接駁巴士正行駛在蜿蜒的山路上。"],
+    ["Most drivers would be extra cautious.", "大多數司機都會格外小心。"],
+    ["However, [[3-1|contrary]] to most people's expectations, this driver wasn't paying attention.", "然而，與大多數人的預期相反，這位司機並沒有專心。"],
+    ["He failed to notice a speeding truck approaching from the opposite direction.", "他沒有注意到一輛超速行駛的卡車從對面方向駛來。"],
+    ["Within seconds, a terrible accident occurred.", "幾秒鐘之內，發生了一場可怕的事故。"],
+    ["The impact was so powerful that the bus was knocked off the road, falling into the deep valley.", "撞擊力道如此之大，以至於巴士被撞出了道路，掉進了深谷。"],
+    ["Many passengers were thrown out of the bus and were [[3-2|crushed]] by the heavy vehicle.", "許多乘客被拋出巴士，被沉重的車輛壓碎/壓扁。"]
+  ],
+  [
+    ["Rescue teams soon arrived, and a(n) [[3-3|alternative]] route was quickly set up for the traffic.", "救援隊很快到達，並迅速為交通設置了一條替代路線。"],
+    ["As the rescue teams climbed down the valley, the passengers' family members reached the scene.", "當救援隊爬下山谷時，乘客的家屬趕到了現場。"],
+    ["They had hope, but it was soon [[3-4|confirmed]] that most had lost their lives.", "他們抱有希望，但很快就證實大多數人已經喪生。"],
+    ["Though the travel agency was willing to take full responsibility, the survivors had to deal with harsh truths independently.", "雖然旅行社願意承擔全部責任，但倖存者必須獨立面對殘酷的事實。"],
+    ["They had to live with a(n) [[3-5|continual]] fear of travel for the rest of their lives.", "他們的餘生都不得不生活在對旅行的持續恐懼中。"],
+    ["Plus, they had to deal with the pain of losing their closed ones.", "此外，他們還必須應對失去親人的痛苦。"]
+  ]
+];
+
 function passage(title,paras,note){
-  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[(\d+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[(\d+-\d+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
   return '<section class="pas"><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
 }
 function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
@@ -89,6 +131,10 @@ function card(n,tags,ans,body){
 }
 
 const html = [];
+
+// ==============================
+// Section I
+// ==============================
 html.push('<h2 id="p1">I. Multiple Choice: 40%</h2>');
 
 html.push(card('1', ['考點：字彙語意', '詞性需求：形容詞'], 'B', 
@@ -97,14 +143,282 @@ html.push(card('1', ['考點：字彙語意', '詞性需求：形容詞'], 'B',
   ops([
     ['ambiguous', '含糊不清的', '<b>何時才對：</b>用於描述語意不清、模稜兩可的情況，例如 ambiguous instructions。'],
     ['artificial', '人造的', '符合語意，與後方的 real 形成對比。'],
-    ['consequent', '隨之發生的', '<b>何時才對：</b>用於描述結果或連帶發生的事物，例如 consequent problems。'],
+    ['consequent', '因...而產生的 / 隨之發生的', '<b>何時才對：</b>用於描述結果或連帶發生的事物，例如 consequent problems。'],
     ['apparent', '明顯的', '<b>何時才對：</b>用於描述容易看出的事實，例如 for no apparent reason。']
   ], 'B')
 ));
 
+html.push(card('2', ['考點：字彙語意', '詞性需求：形容詞'], 'A', 
+  stem('2') + 
+  clue('句尾的 <b>to let him know how he can improve</b> (讓他知道如何改進) 說明了他需要的批評類型。能幫助人改進的批評就是「建設性的」(constructive) 批評。') + 
+  ops([
+    ['constructive', '建設性的', '符合語意，constructive criticism (建設性批評) 為常見搭配詞。'],
+    ['mechanical', '機械的', '<b>何時才對：</b>描述機器相關或呆板的行為，例如 mechanical engineers。'],
+    ['historic', '歷史上著名的 / 具歷史意義的', '<b>何時才對：</b>描述在歷史上重要的事件，例如 a historic victory。'],
+    ['coarse', '粗糙的', '<b>何時才對：</b>描述表面粗糙或言詞粗俗，例如 coarse sand。']
+  ], 'A')
+));
+
+html.push(card('3', ['考點：字彙語意', '詞性需求：形容詞'], 'A', 
+  stem('3') + 
+  clue('關鍵字為 <b>over our weight allowance</b> (超過重量限制)。行李超重時，航空公司會收取「額外的」(additional) 費用。') + 
+  ops([
+    ['additional', '附加的 / 額外的', '符合語意，填入後表示「額外費用」。'],
+    ['absolute', '完全的 / 絕對的', '<b>何時才對：</b>描述不受限制或絕對的情況，例如 absolute silence。'],
+    ['acceptable', '可接受的', '<b>何時才對：</b>描述達標或可以被接受的事物，例如 an acceptable offer。'],
+    ['accurate', '精確的', '<b>何時才對：</b>描述資訊或測量無誤，例如 accurate information。']
+  ], 'A')
+));
+
+html.push(card('4', ['考點：字彙語意', '詞性需求：形容詞'], 'C', 
+  stem('4') + 
+  clue('前半句提到 <b>he didn\'t have to open the door for himself</b> (他不必自己開門)，這表示門不需要人力去開，因此門是「自動的」(automatic)。') + 
+  ops([
+    ['chilly', '寒冷的', '<b>何時才對：</b>描述天氣或態度冷淡，例如 a chilly morning。'],
+    ['appropriate', '合宜的', '<b>何時才對：</b>描述適合特定場合的行為或服裝，例如 appropriate clothes。'],
+    ['automatic', '自動的', '符合語意，指機器或裝置自動運作。'],
+    ['bare', '赤裸的', '<b>何時才對：</b>描述未覆蓋的狀態，例如 bare feet。']
+  ], 'C')
+));
+
+html.push(card('5', ['考點：片語語意', '詞性需求：動詞片語'], 'A', 
+  stem('5') + 
+  clue('後方說明學校圖書館是 <b>a great source of useful information</b> (有用資訊的極佳來源)。既然是好資源，就應該要「利用」(take advantage of) 它。') + 
+  ops([
+    ['take advantage of', '利用', '符合語意，表示善用資源或機會。'],
+    ['be bound hand and foot', '陷入困境 / 束手無策', '<b>何時才對：</b>用於描述被束縛、無法自由行動或做決定的狀態。'],
+    ['be appropriate for', '對...合適的', '<b>何時才對：</b>用於描述某物適合某人或場合。'],
+    ['crack down on', '嚴加取締', '<b>何時才對：</b>用於描述執法單位嚴厲打擊非法行為，例如 crack down on crime。']
+  ], 'A')
+));
+
+html.push(card('6', ['考點：字彙語意', '詞性需求：形容詞'], 'D', 
+  stem('6') + 
+  clue('關鍵字為 <b>attacked by two bears</b> (被兩隻熊攻擊)。被猛獸攻擊通常會造成流血受傷，因此情況變得「血腥的」(bloody)。') + 
+  ops([
+    ['colorful', '色彩鮮豔的', '<b>何時才對：</b>描述顏色豐富或生動，例如 a colorful painting。'],
+    ['circular', '圓形的', '<b>何時才對：</b>描述形狀，例如 a circular track。'],
+    ['coarse', '粗糙的', '<b>何時才對：</b>描述質地不平滑或粗魯，例如 coarse fabric。'],
+    ['bloody', '血腥的', '符合語意，描述涉及流血或暴力的情況。']
+  ], 'D')
+));
+
+html.push(card('7', ['考點：搭配詞與倒裝句型', '詞性需求：名詞'], 'C', 
+  stem('7') + 
+  clue('這裡測驗的是固定片語 <b>under no circumstances</b> (絕不 / 在任何情況下都不)，放在句首時，後面的句子要倒裝 (should government employees...)。') + 
+  ops([
+    ['cease', '停止 (動詞)', '<b>何時才對：</b>作為動詞使用，例如 cease firing。此處介系詞後需接名詞。'],
+    ['chill', '寒氣 (名詞)', '<b>何時才對：</b>指寒冷的感覺，例如 feel a chill。不符合片語搭配。'],
+    ['circumstances', '情況 (名詞)', '符合語意，與 under no 搭配形成片語 under no circumstances。'],
+    ['advantages', '優點 (名詞)', '<b>何時才對：</b>指有利的條件，例如 the advantages of living in a city。不符合片語搭配。']
+  ], 'C')
+));
+
+html.push(card('8', ['考點：字彙語意', '詞性需求：形容詞'], 'D', 
+  stem('8') + 
+  clue('後面的關係子句 <b>which was hit by a car</b> (被車撞到) 解釋了狗的死因。這是一場車禍，屬於「意外的」(accidental) 死亡。') + 
+  ops([
+    ['apparent', '顯然的', '<b>何時才對：</b>描述事情很明顯，例如 It became apparent that...。'],
+    ['automatic', '自動的', '<b>何時才對：</b>描述無須人力操作的裝置。'],
+    ['appropriate', '合宜的', '<b>何時才對：</b>描述得體的行為。'],
+    ['accidental', '意外的', '符合語意，指非故意的突發事件。']
+  ], 'D')
+));
+
+html.push(card('9', ['考點：字彙語意', '詞性需求：形容詞'], 'A', 
+  stem('9') + 
+  clue('前面提到 <b>After hours of negotiation</b> (經過數小時的談判)，談判的最終目的通常是達成雙方都能「接受的」(acceptable) 協議 (agreement)。') + 
+  ops([
+    ['acceptable', '可接受的', '符合語意，表示雙方滿意的結果。'],
+    ['artificial', '人造的', '<b>何時才對：</b>描述非天然產生的事物。'],
+    ['chilly', '寒冷的', '<b>何時才對：</b>描述氣溫或冷淡的態度。'],
+    ['circular', '圓形的', '<b>何時才對：</b>描述形狀。']
+  ], 'A')
+));
+
+html.push(card('10', ['考點：字彙語意', '詞性需求：動詞'], 'D', 
+  stem('10') + 
+  clue('分號後面的句子說 <b>why don\'t you just keep it simple?</b> (為什麼你不保持簡單呢？)，這暗示前面的行為與「簡單」相反，正式用語讓訊息變得「複雜化」(complicates) 了。') + 
+  ops([
+    ['achieves', '達成', '<b>何時才對：</b>用於表示成功完成目標，例如 achieve a goal。'],
+    ['bares', '露出', '<b>何時才對：</b>表示揭露或使...暴露，例如 bare one\'s teeth。'],
+    ['chills', '使冷卻', '<b>何時才對：</b>表示使變冷或使感到恐懼。'],
+    ['complicates', '使複雜化', '符合語意，與後方的 simple 形成對比。']
+  ], 'D')
+));
+
+// ==============================
+// Section II
+// ==============================
+html.push('<h2 id="p2">II. Complete each sentence with the correct word: 20%</h2>');
+html.push('<div class="bank"><b>選項：</b> <span class="tag">A) accurate</span> <span class="tag">B) constant</span> <span class="tag">C) cease</span> <span class="tag">D) consists</span> <span class="tag">E) chilly</span></div>');
+
+html.push(card('1', ['考點：字彙填空', '詞性需求：動詞'], 'C', 
+  stem('2-1') + 
+  clue('律師發信給商店，要求他們對印有版權角色的 T 恤採取行動，通常是要求「停止」(cease) 販售。') + 
+  ops([
+    ['accurate', '準確的', '形容詞，不合詞性需求。'],
+    ['constant', '不斷的', '形容詞，不合詞性需求。'],
+    ['cease', '停止', '符合語意，cease + V-ing 表示停止做某事。'],
+    ['consists', '由...所組成', '動詞，但通常接 of，且語意不合。'],
+    ['chilly', '寒冷的', '形容詞，不合詞性需求。']
+  ], 'C', 'ABCDE')
+));
+
+html.push(card('2', ['考點：字彙填空', '詞性需求：動詞'], 'D', 
+  stem('2-2') + 
+  clue('空格後方接著介系詞 <b>of</b>，並列出三明治的成分（生菜、番茄、麵包），這符合片語 consist of (由...組成) 的用法。') + 
+  ops([
+    ['accurate', '準確的', '形容詞，不合。'],
+    ['constant', '不斷的', '形容詞，不合。'],
+    ['cease', '停止', '語意與結構皆不合。'],
+    ['consists', '由...所組成', '符合語意與搭配詞結構 (consists of)。'],
+    ['chilly', '寒冷的', '形容詞，不合。']
+  ], 'D', 'ABCDE')
+));
+
+html.push(card('3', ['考點：字彙填空', '詞性需求：形容詞'], 'B', 
+  stem('2-3') + 
+  clue('空格用來修飾 <b>sound of cars honking</b> (汽車按喇叭聲)，且這個聲音「每天早上把傑瑞吵醒」，表示這是一種持續、「不斷的」(constant) 噪音干擾。') + 
+  ops([
+    ['accurate', '準確的', '用於形容聲音不合理。'],
+    ['constant', '不斷的', '符合語意，修飾聲音持續不斷。'],
+    ['cease', '停止', '動詞，不合詞性。'],
+    ['consists', '由...所組成', '動詞，不合詞性。'],
+    ['chilly', '寒冷的', '無法用來修飾聲音。']
+  ], 'B', 'ABCDE')
+));
+
+html.push(card('4', ['考點：字彙填空', '詞性需求：形容詞'], 'A', 
+  stem('2-4') + 
+  clue('後半句提到隊友 <b>scored a goal</b> (進球得分了)，這表示湯姆傳的球必須是非常「準確的」(accurate) 才能促成得分。') + 
+  ops([
+    ['accurate', '準確的', '符合語意，修飾傳球 (pass) 精準到位。'],
+    ['constant', '不斷的', '語意不合。'],
+    ['cease', '停止', '動詞，不合詞性。'],
+    ['consists', '由...所組成', '動詞，不合詞性。'],
+    ['chilly', '寒冷的', '無法修飾傳球動作。']
+  ], 'A', 'ABCDE')
+));
+
+html.push(card('5', ['考點：字彙填空', '詞性需求：形容詞'], 'E', 
+  stem('2-5') + 
+  clue('後半句提醒 <b>make sure you wear a coat</b> (確保你要穿外套)，代表外面的天氣溫度很低，所以是「寒冷的」(chilly)。') + 
+  ops([
+    ['accurate', '準確的', '語意不合。'],
+    ['constant', '不斷的', '語意不合。'],
+    ['cease', '停止', '動詞，不合詞性。'],
+    ['consists', '由...所組成', '動詞，不合詞性。'],
+    ['chilly', '寒冷的', '符合語意，描述天氣。']
+  ], 'E', 'ABCDE')
+));
+
+// ==============================
+// Section III
+// ==============================
+html.push('<h2 id="p3">III. Cloze: 20%</h2>');
+html.push('<div class="bank"><b>選項：</b> <span class="tag">A) continual</span> <span class="tag">B) confirmed</span> <span class="tag">C) contrary</span> <span class="tag">D) alternative</span> <span class="tag">E) crushed</span></div>');
+html.push(passage('綜合測驗篇章', cloze_paras));
+
+html.push(card('3-1', ['考點：片語搭配', '詞性需求：形容詞'], 'C', 
+  stem('3-1') + 
+  clue('前一句說大多數司機會很小心，這句用 However 轉折，且後方有介系詞 to，形成片語 <b>contrary to...</b> (與...相反)，表示司機的行為「與大多數人的預期相反」。') + 
+  ops([
+    ['continual', '頻繁的', '不搭配 to 片語。'],
+    ['confirmed', '證實', '語意不合。'],
+    ['contrary', '相反的', '符合語意與搭配詞結構 (contrary to expectations)。'],
+    ['alternative', '可替代的', '語意不合。'],
+    ['crushed', '壓扁', '語意與結構皆不合。']
+  ], 'C', 'ABCDE')
+));
+
+html.push(card('3-2', ['考點：字彙語意', '詞性需求：過去分詞 (被動語態)'], 'E', 
+  stem('3-2') + 
+  clue('乘客被拋出車外，並且被 <b>the heavy vehicle</b> (沉重的車輛) 壓在下面，所以是被「壓碎/壓扁」(crushed)。') + 
+  ops([
+    ['continual', '頻繁的', '形容詞，不合。'],
+    ['confirmed', '證實', '語意不合。'],
+    ['contrary', '相反的', '形容詞，不合。'],
+    ['alternative', '可替代的', '形容詞，不合。'],
+    ['crushed', '壓扁', '符合語意，填入後形成被動語態 (were crushed)。']
+  ], 'E', 'ABCDE')
+));
+
+html.push(card('3-3', ['考點：字彙語意', '詞性需求：形容詞'], 'D', 
+  stem('3-3') + 
+  clue('發生嚴重車禍後，原本的道路受阻，救援隊與交通單位必須為車流設置一條「替代的」(alternative) 路線 (route)。') + 
+  ops([
+    ['continual', '頻繁的', '語意不合。'],
+    ['confirmed', '證實', '不合詞性與語意。'],
+    ['contrary', '相反的', '語意不合。'],
+    ['alternative', '可替代的', '符合語意，修飾 route。'],
+    ['crushed', '壓扁', '不合詞性。']
+  ], 'D', 'ABCDE')
+));
+
+html.push(card('3-4', ['考點：句型結構 (It is + V-p.p. + that)', '詞性需求：過去分詞'], 'B', 
+  stem('3-4') + 
+  clue('家屬原本抱有希望，但後面的子句說大多數人已喪生，這是一個被「證實」(confirmed) 的殘酷事實。句型為 It was soon confirmed that... (很快就被證實...)。') + 
+  ops([
+    ['continual', '頻繁的', '形容詞，不合。'],
+    ['confirmed', '證實', '符合語意與被動句型。'],
+    ['contrary', '相反的', '形容詞，不合。'],
+    ['alternative', '可替代的', '形容詞，不合。'],
+    ['crushed', '壓扁', '語意不合。']
+  ], 'B', 'ABCDE')
+));
+
+html.push(card('3-5', ['考點：字彙語意', '詞性需求：形容詞'], 'A', 
+  stem('3-5') + 
+  clue('經歷如此可怕的車禍後，倖存者在餘生中都會面臨對旅行「持續不斷的 / 頻繁的」(continual) 恐懼 (fear)。') + 
+  ops([
+    ['continual', '頻繁的 / 持續的', '符合語意，修飾心理狀態的持續。'],
+    ['confirmed', '證實', '語意不合。'],
+    ['contrary', '相反的', '語意不合。'],
+    ['alternative', '可替代的', '語意不合。'],
+    ['crushed', '壓扁', '語意不合。']
+  ], 'A', 'ABCDE')
+));
+
+// ==============================
+// Section IV
+// ==============================
+html.push('<h2 id="p4">IV. Read the sentences and fill in each blank: 20%</h2>');
+
+html.push(card('4-1', ['考點：字彙拼寫', '詞性需求：名詞'], 'concrete', 
+  stem('4-1') + 
+  clue('提示字母為 c 開頭、e 結尾。不能在那裡踢球，因為跌倒會受傷，這表示地面很硬，最合理的字是「混凝土」(concrete)。') + 
+  '<div class="clue"><h4>拼字解析</h4><b>concrete</b> (n.) 混凝土</div>'
+));
+
+html.push(card('4-2', ['考點：字彙拼寫', '詞性需求：形容詞'], 'adequate', 
+  stem('4-2') + 
+  clue('提示字母為 a 開頭、e 結尾。露營者沒有「充足的」(adequate) 食物供應 (supply)，所以他們需要再找一些。') + 
+  '<div class="clue"><h4>拼字解析</h4><b>adequate</b> (adj.) 足夠的；合乎需求的</div>'
+));
+
+html.push(card('4-3', ['考點：字彙拼寫', '詞性需求：動詞 (過去式)'], 'collapsed', 
+  stem('4-3') + 
+  clue('提示字母為 c 開頭，字尾是 -sed。上個月地震期間，幾棟建築物「倒塌了」(collapsed) 並且必須重建。注意時態為過去式。') + 
+  '<div class="clue"><h4>拼字解析</h4><b>collapse</b> (v.) 倒塌 (過去式加 d 變為 collapsed)</div>'
+));
+
+html.push(card('4-4', ['考點：字彙拼寫', '詞性需求：名詞'], 'benefit', 
+  stem('4-4') + 
+  clue('提示字母為 b 開頭，字尾為 t。為了團隊的「利益 / 好處」(benefit) 做出貢獻是很重要的。搭配詞為 for the benefit of...。') + 
+  '<div class="clue"><h4>拼字解析</h4><b>benefit</b> (n.) 利益；好處</div>'
+));
+
+html.push(card('4-5', ['考點：字彙拼寫', '詞性需求：動詞 (第三人稱單數)'], 'contrasts', 
+  stem('4-5') + 
+  clue('提示字母為 c 開頭，字尾為 ts。孩子現在的笑臉與他之前的壞心情形成了「對比」(contrasts)。主詞為單數，動詞需加 s。搭配介系詞 with。') + 
+  '<div class="clue"><h4>拼字解析</h4><b>contrast</b> (v.) 對比；形成對照 (單數動詞加 s 變為 contrasts)</div>'
+));
+
+
 document.getElementById('app').innerHTML = html.join('');
 
-const secs=[['p1','I. Multiple Choice: 40%']];
+const secs=[['p1','I. Multiple Choice'], ['p2','II. Complete each sentence'], ['p3','III. Cloze'], ['p4','IV. Read the sentences']];
 document.getElementById('nav').innerHTML=secs.map(s=>'<a href="#'+s[0]+'">'+s[1]+'</a>').join('')+'<button id="tg">全部收合</button><a href="review.html" class="review-btn" target="_blank">📚 前往總複習</a>';
 let open=true;
 document.getElementById('tg').onclick=function(){
