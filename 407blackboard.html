@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>407 Blackboard</title>
+<style>
+:root{--bg:#faf8f4;--fg:#222;--card:#fff;--line:#e4ded3;--acc:#9a3b2e;--ok:#1f7a4d;--no:#b3261e;--mut:#6b6558;--hl:#fff1c9}
+@media(prefers-color-scheme:dark){:root{--bg:#161512;--fg:#e8e4da;--card:#201f1b;--line:#3a372f;--acc:#e08a78;--ok:#6fcf9a;--no:#f08a82;--mut:#a39d8f;--hl:#4a3f1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+.top{max-width:900px;margin:auto;padding:28px 18px 10px}
+.top h1{margin:0 0 4px;font-size:1.6rem;color:var(--acc)}
+.top p{margin:2px 0;color:var(--mut);font-size:.92rem}
+nav{position:sticky;top:0;z-index:9;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto;padding:8px 12px}
+nav a,nav button{flex:none;padding:5px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--fg);text-decoration:none;font:inherit;font-size:.88rem;cursor:pointer}
+nav a:hover,nav button:hover{border-color:var(--acc);color:var(--acc)}
+main{max-width:900px;margin:auto;padding:0 16px 70px}
+h2{margin:36px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--acc);font-size:1.3rem}
+h3{margin:0 0 8px;font-size:1.05rem;color:var(--acc)}
+.pas,.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.para{margin-bottom:14px}
+.s{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--line)}
+.en{font-family:Georgia,"Times New Roman",serif;font-size:1.02rem}
+.zh{color:var(--mut);font-size:.93rem}
+.note{color:var(--mut);font-size:.85rem;margin:6px 0 0}
+.bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 4px;border-radius:3px;font-weight:600}
+.bl sup{color:var(--acc);margin-right:3px;font-size:.7em}
+.bank{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.92rem;margin-bottom:8px}
+details.q>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+details.q>summary::-webkit-details-marker{display:none}
+.n{background:var(--acc);color:#fff;border-radius:6px;padding:0 10px;font-weight:700;font-size:1.05rem}
+.tag{font-size:.78rem;border:1px solid var(--acc);color:var(--acc);border-radius:99px;padding:0 9px;line-height:1.6}
+.tag.pos{border-color:var(--ok);color:var(--ok)}
+.ans{margin-left:auto;font-weight:700;color:var(--ok)}
+.qb{margin-top:10px}
+.stem{margin-bottom:8px;padding:8px 10px;background:var(--bg);border-radius:6px}
+.clue{margin:8px 0;padding:8px 12px;border-left:4px solid var(--acc);background:var(--bg);border-radius:0 6px 6px 0}
+.clue h4,.qb h4{margin:0 0 2px;font-size:.92rem;color:var(--acc)}
+ul.op{list-style:none;margin:6px 0 0;padding:0}
+ul.op li{padding:7px 10px;margin:5px 0;border-radius:6px;border:1px solid var(--line);font-size:.95rem}
+ul.op li.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 9%,transparent)}
+ul.op li.no{border-color:color-mix(in srgb,var(--no) 45%,transparent)}
+ul.op i{font-style:normal;font-weight:700;font-size:.82rem}
+li.ok i{color:var(--ok)}li.no i{color:var(--no)}
+small{color:var(--mut)}
+footer{max-width:900px;margin:auto;padding:20px 16px 40px;color:var(--mut);font-size:.85rem;line-height:1.6;border-top:1px solid var(--line);margin-top:40px;}
+footer a{color:var(--acc);text-decoration:none;font-weight:bold;}
+footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>407 Blackboard</h1>
+  <p>每題含：考點標籤 → 題幹逐句中英對照 → 解題線索 → 正解與全部誤答分析</p>
+  <p>圖例：<span class="bl">黃底</span> ＝ 正確答案填入處 ｜ <span class="tag">考點</span></p>
+</div>
+<nav id="nav"></nav>
+<main id="app"></main>
+<footer>
+  限定用途教學教材。本詳解為教學輔助，題目版權屬原出版單位。<br>
+  💡 <b>問題回報與建議：</b> Line: etpaul ｜ IG: <a href="https://www.instagram.com/etpaul" target="_blank">@etpaul</a>
+</footer>
+
+<script>
+const L="ABCD";
+const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[([^|\]]*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const SENT={};
+function passage(title,paras,note){
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[([^|\]]+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  return '<section class="pas"><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
+}
+function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
+const clue=t=>'<div class="clue"><h4>解題線索</h4>'+t+'</div>';
+function ops(list,ans,lab){lab=lab||'ABCDEF';return '<ul class="op">'+list.map((o,i)=>{const k=ans.indexOf(lab[i])>=0;return '<li class="'+(k?'ok':'no')+'"><b>'+(lab==='ABCDEF'&&list.length<=4?'('+L[i]+') ':lab==='ABCDEF'?'('+'ABCDEF'[i]+') ':'')+o[0]+'</b>'+(o[1]?' <small>'+o[1]+'</small>':'')+' <i>'+(k?'✔ 正解':'✘ 誤答')+'</i><br>'+o[2]+'</li>';}).join('')+'</ul>';}
+function card(n,tags,ans,body){
+  return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
+}
+const st=(en,zh)=>'<div class="stem"><div class="en">'+fx(en)+'&lt;/div&gt;&lt;div class=&quot;zh&quot;&gt;'+zh+'&lt;/div&gt;&lt;/div&gt;';
+
+let h = '';
+
+h += '<h2 id="p1">課文與重點解析</h2>';
+
+h += card("挑戰題1", ["複合形容詞", "N-adj. / N-p.p."], "B",
+  '<div class="stem"><div class="en">Iceland is a small island nation known for its breathtaking landscapes, boiling mud pools, and stunning views of the northern lights. But how many people know that this country, with fewer than 400,000 people, is also home to the world’s most '+fx("[[挑戰題1|gender-balanced]]")+' society?</div><div class="zh">冰島是一個以令人嘆為觀止的風景、沸騰的泥漿池和迷人的北極光景色而聞名的小島國。但是有多少人知道，這個人口不到四十萬的國家，也是世界上性別最平權（均衡）社會的所在地？</div></div>' +
+  clue('gender-balanced society = society (which is) balanced between genders<br>N-p.p. = p.p. + 介 + N / N-adj. = adj. + 介 + N<br>balanced adj. 均衡的；平衡的<br>be balanced between 在…之間是保持平衡的<br>① To achieve greatness, one must be balanced between ambition that drives us forward and contentment that allows us to appreciate the journey.<br>balance (Vi.) between 在…之間取得平衡 = strike a balance (N.) between<br>② Don’t let stress overwhelm you; strike a balance between studying hard and making time for things that light up your soul.<br>例句參考翻譯<br>①要達到卓越，我們必須在推動我們前進的雄心與讓我們欣賞旅程的滿足感之間取得平衡。<br>②別讓壓力擊垮你，在認真讀書與留時間給讓心靈發光的事物之間找到平衡吧！') +
+  ops([
+    ["gender-balancing", "34%", ""],
+    ["gender-balanced", "62%", ""],
+    ["balance-gendered", "2%", ""],
+    ["balancing-gender", "1%", ""]
+  ], "B")
+);
+
+h += passage("L1-補充", [
+  [["be known for 以⋯⋯聞名 = be famous/well-known/noted/celebrated/renowned for", "Germany is known for advanced technology.<br>*known for...lights為形容詞子句which is known for...lights簡化而來的過去分詞片語，修飾a small island nation。"]]
+]);
+
+h += passage("L4-補充", [
+  [["be home to 是…的所在地", "The village is home to a well-known World Heritage Site."]]
+]);
+
+h += card("L5", ["介系詞", "for + 一段時間"], "C",
+  '<div class="stem"><div class="en">'+fx("[[L5|For]]")+' the last decade, Iceland has ranked number one on the World Economic Forum\'s Global Gender Gap Index.</div><div class="zh">過去十年來，冰島在世界經濟論壇的「全球性別差距指數」中一直排名第一。</div></div>' +
+  clue('for + (the last/past) + 一段時間 (常與完成式連用)，表「過去一段時間以來」。此處用現在完成式表示冰島在全球性別差距指數上排名第一是10年來「一直持續的狀態」。<br>Smartphones have advanced at a stunning pace for the past few years.<br>be ranked/rank number one, two, etc. 排行第…<br>ranked vi. / vt. 排名') +
+  ops([
+    ["Within", "24%", ""],
+    ["By", "20%", ""],
+    ["For", "52%", ""],
+    ["Upon", "4%", ""]
+  ], "C")
+);
+
+h += passage("數據素養與批判性思考", [
+  [["Taiwan ranked 27th in 2025 World Happiness Report.", "排名27，你覺得台灣人算是快樂的嗎？"]],
+  [["Taiwan ranked 27th in 2025 World Happiness Report. This made it the third-happiest place in Asia ...", "猜猜看亞洲最快樂的兩個國家是？"]],
+  [["Taiwan ranked 27th in 2025 World Happiness Report. This made it the third-happiest place in Asia, following Israel at No. 8 and the United Arab Emirates at No. 21.", "看到這個數據你想到的是……？"]],
+  [["Taiwan ranked 27th in 2025 World Happiness Report. This made it the third-happiest place in Asia, coming first in East Asia, surpassing Singapore, Japan, South Korea and China.", "再重想一次，你覺得台灣人算是快樂的嗎？"]],
+  [["數據素養：同樣的數據可以有多種解讀方式，關鍵在於提供什麼樣的背景和比較基準。", "批判性思考：學習質疑資料的呈現方式，思考「作者的意圖是中立，還是想帶風向？」<br>排名27，台灣根本是鬼島，活在這裡太痛苦了😫<br>東亞排名第一，勝過新、日、韓、中，台灣人真的好幸福😍"]]
+]);
+
+h += card("挑戰題", ["關係副詞"], "C",
+  '<div class="stem"><div class="en">The path to equality began on October 24, 1975, '+fx("[[挑戰題|when]]")+' 90% of the female population participated in the “Women’s Day Off” to protest against wage inequality and other gender-related social injustices.</div><div class="zh">通往平權的道路始於 1975 年 10 月 24 日，在這一天，90% 的女性人口參與了「女性休假日」，以抗議薪資不平等和其他與性別相關的社會不公。</div></div>' +
+  clue('when (X) 當… (O) 而在這一天 = on which = and/because on this day<br>*關係副詞when引導形容詞子句<br>*補充說明在October 24, 1975這一天發生的事<br>*October 24, 1975是特定時間，故使用非限定用法(須加逗號)') +
+  ops([
+    ["while", "10%", "而/雖然"],
+    ["in which", "15%", "→ on which"],
+    ["when", "62%", ""],
+    ["as", "13%", "因為/當"]
+  ], "C")
+);
+
+h += passage("L10-補充", [
+  [["protest against 抗議", "The strikers are protesting against an unreasonable pay cut."]],
+  [["想想看 gender-related social injustices 可以怎麼改寫：", "gender-related injustices = injustices which are related to gender (N-p.p. = p.p. + 介 + N)"]]
+]);
+
+h += card("L11", ["片語辨析", "instead of"], "D",
+  '<div class="stem"><div class="en">That day, '+fx("[[L11|instead of]]")+' going to work, cooking meals, looking after children, or doing domestic chores, Icelandic women hoping for change took to the streets in protest.</div><div class="zh">那一天，渴望改變的冰島女性沒有去上班、煮飯、照顧孩子或做家事，而是走上街頭抗議。</div></div>' +
+  clue('L13自 hoping for change = who hoped for change (修飾Icelandic women)<br>L14 in protest (at/against…) 為了抗議(…) / 以表達(對…的)抗議。She resigned in protest against the company\'s unfair policies.<br>in + N 常指「作為(某種應對方式)」：in response (to …) 作為(對…的)回應 / in reply (to …) 作為(對…的)回覆 / in return (for …) 作為(對…的)回報 / in exchange (for …) 作為(對…的)交換') +
+  ops([
+    ["other than", "5%", "= besides / except"],
+    ["in addition to", "23%", "= besides (包含)"],
+    ["except for", "7%", "≒ except (不包含)"],
+    ["instead of", "65%", "沒做…而做…"]
+  ], "D")
+);
+
+h += card("L14", ["動詞片語", "go on strike 罷工"], "B",
+  '<div class="stem"><div class="en">With the majority of women '+fx("[[L14|going on strike]]")+', the country fell into complete chaos.</div><div class="zh">隨著大多數女性罷工，整個國家陷入了完全的混亂。</div></div>' +
+  clue('*with + O + OC用來補充額外的資訊，可放句首或句尾<br>*受詞補語可以是V-ing、p.p.、形容詞、介系詞片語。Please do not talk with your mouth full of food.') +
+  ops([
+    ["going out of business", "17%", "(倒閉) = go under. The small bookstore is going out of business due to the competition from online retailers."],
+    ["going on strike", "74%", "(罷工) The factory workers went on strike to protest against the company's decision to cut their wages."],
+    ["going with the flow", "3%", "(順其自然/順應時勢) I don't like to make plans. I prefer to just go with the flow and see what happens."],
+    ["going beyond expectations", "6%", "(超出預期) The new employee's performance has gone beyond expectations and he has already been promoted to a higher position."]
+  ], "B")
+);
+
+h += passage("L15-補充", [
+  [["be in + N 處於某狀態 / fall into + N 變成某狀態", "be in chaos (處於混亂狀態) The situation was in chaos after the earthquake struck the city.<br>fall into chaos (陷入混亂)(變成混亂狀態) The company fell into chaos after the CEO suddenly resigned.<br>fall into debt (陷入債務) After losing his job, he fell into debt and struggled to make ends meet.<br>be in debt (處於負債狀態) He had been in debt for years and couldn't afford to pay off all his loans.<br>fall into despair (陷入絕望) After failing the exam for the third time, she fell into despair and thought about giving up.<br>be in despair (感到絕望)(處於絕望狀態) She was in despair after her husband passed away and didn't know how to go on with her life."]]
+]);
+
+h += card("L16", ["介系詞", "without"], "B",
+  '<div class="stem"><div class="en">Banks and factories came to a standstill as many of their employees were women, flights were grounded because there was no one to provide service, and '+fx("[[L16|without]]")+' actresses, theaters had to cancel performances.</div><div class="zh">銀行和工廠因為許多員工是女性而陷入停擺，航班因為沒有人提供服務而停飛，而且因為沒有女演員，劇院也不得不取消演出。</div></div>' +
+  clue('stand still 保持靜止的 (vi. + SC (adj.)) / still adj. 靜止不動的<br>come to a standstill Vi. = come to a stop Vi. 停止運作或移動. The car suddenly came to a stop when the traffic light turned red. → bring O to a standstill (Vt.) = bring O to a stop (Vt.) 使…停止運作或移動. The heavy snow brought the city to a standstill, causing traffic chaos.<br>come to an end Vi. 結束 → bring O to an end (Vt.) 使…結束<br>come to light 為人所知(被發現) → bring ... to light 使…為人所知(發現). New evidence came to light during the investigation. The journalist brought the scandal to light.<br>come to terms 達成協議 → bring ... to terms 使…接受協議. They finally came to terms after months of arguing. After a long struggle, we brought them to terms.') +
+  ops([
+    ["as a result of", "15%", "= because"],
+    ["without", "78%", "= 連接詞 + 沒有 → 因為沒有/如果沒有…"],
+    ["apart from", "6%", "除…之外"],
+    ["in spite of", "2%", "儘管"]
+  ], "B")
+);
+
+h += passage("L17-補充", [
+  [["ground vt. 使…停飛；使…禁足", "All planes were grounded because of the fierce typhoon. 所有的飛機都因為強烈颱風而停飛。<br>I got home at 2 am and Dad grounded me on the spot. 我在凌晨2點回到家，爸爸當場就將我禁足。"]]
+]);
+
+h += card("L19", ["分詞", "striking"], "A",
+  '<div class="stem"><div class="en">Additionally, mothers '+fx("[[L19|striking]]")+' all day long simply left children in the care of their husbands.</div><div class="zh">此外，整天罷工的母親們乾脆把孩子留給丈夫照顧。</div></div>' +
+  clue('mothers striking = who struck(Vi.) 罷工 = who went on strike(N.)<br>strike, struck, struck/stricken<br>be stricken by/with 經歷某壞事(戰爭/天災/悲傷/疾病等) tip: 被非物理力量打擊. He was stricken with grief when he heard the news of his brother\'s death. The town was stricken by a terrible famine that lasted for years. She was stricken with a rare disease that left her paralyzed.<br>struck p.p. (被以物理力量)打擊. Several cars were struck by falling trees. The worker was struck by a falling object and injured his leg. The building was struck by lightning and caught on fire.<br>L20 leave + O + OC (adj. / Ving / p.p. / 介片) (1) 使…(承受不好的結果) (2) 使…(維持原狀態). The explosion has left one worker dead and (left) four (workers) injured. I\'ll just leave the engine running while I go in. Don\'t leave your toys lying around.<br>in the care of 由…照顧、保管. He left his valuables in the care of one of his friends. Grandma\'s old recipe book, now in my care, isn\'t just about cooking—it\'s about keeping our family\'s love alive.') +
+  ops([
+    ["striking", "51%", ""],
+    ["struck", "18%", "p.p. 被打擊"],
+    ["stricken", "3%", "p.p. 被打擊"],
+    ["gone on strike", "28%", "→ going on strike"]
+  ], "A")
+);
+
+h += card("L21", ["複合形容詞"], "A",
+  '<div class="stem"><div class="en">Since the mainly '+fx("[[L21|female-run]]")+' schools and nurseries were closed, fathers were thus forced to take their children with them to work.</div><div class="zh">由於主要由女性經營運作的學校和托兒所都關門了，父親們因此被迫帶著孩子去上班。</div></div>' +
+  clue('female-run schools = schools (which are) run by females (N-p.p. = p.p.+介+N).<br>國營的 government-run / state-run') +
+  ops([
+    ["female-run", "55%", "由女性經營管理的. The organization hosts a yearly conference to support female-run startups."],
+    ["female-focused", "13%", "以女性為中心的 = focused on females. The film festival showcases female-focused films made by women directors."],
+    ["female-owned", "19%", "被女性擁有的(老闆是女性的) = owned by females. The bookstore is one of the few female-owned and (female-)operated=female-run businesses in the area."],
+    ["female-friendly", "13%", "對女性友善的 = friendly to females. The company offers a female-friendly policy that provides support for working mothers."]
+  ], "A")
+);
+
+h += card("L23", ["字彙選擇", "entertained"], "C",
+  '<div class="stem"><div class="en">Some men bought candy and colored pencils in a desperate effort to keep their children '+fx("[[L23|entertained]]")+', while others offered rewards to their older kids to have them take care of the younger ones.</div><div class="zh">有些男人買了糖果和彩色鉛筆，拼命想讓孩子們保持開心不吵鬧，而其他人則提供獎勵給較大的孩子，要他們照顧年幼的弟妹。</div></div>' +
+  clue('*entertain 指的是「招待客人」或「使…開心」。★ entertain沒有下列意思：從事休閒活動(engage in leisure activities) / 放鬆(relax)。<br>你平時的娛樂是什麼？(X) What’s your usual entertainment? cf. entertainment n. 娛樂(為了使人愉悅而做的表演). (O) What do you usually do for fun? 較正經八百的說法：(O) What are your usual hobbies / leisure activities?<br>while others/some offered rewards... others = other men 還有些男人… (表示還有男人有第三種、第四種作法) / the others = 剩下的所有男人都…(這樣做)<br>in an effort to = in an attempt to = in order to try to 為了試著<br>desperate adj. 絕望到什麼都願意做的. Feeling desperate for acceptance, she started to behave in ways that went against her own values, hoping to fit in with the popular crowd.') +
+  ops([
+    ["nourished", "20%", "(滋養) My grandmother always told me that a good breakfast nourished the soul as well as the body."],
+    ["challenged", "5%", "(挑戰) Life often challenges us in ways we don’t expect, but that’s how we grow stronger."],
+    ["entertained", "63%", "The magician entertained the audience with his amazing tricks and illusions. I usually do the cooking when we entertain."],
+    ["stimulated", "11%", "(刺激) Reading a good book always stimulates my imagination and creativity."]
+  ], "C")
+);
+
+h += card("挑戰題2", ["詞性判斷"], "A",
+  '<div class="stem"><div class="en">This protest paralyzed the entire nation. However, if it had not been for this protest, public opinion would not have changed and '+fx("[[挑戰題2|support]]")+' for gender equality would not have grown.</div><div class="zh">這場抗議癱瘓了整個國家。然而，要不是有這場抗議，輿論就不會改變，對性別平權的支持也不會成長。</div></div>' +
+  clue('public opinion(S3) would not have changed(V3) and(連2) support(S4) for gender equality would not have grown(V4).') +
+  ops([
+    ["support", "20%", "n."],
+    ["supports", "7%", ""],
+    ["supported", "69%", "cf. I support for gender equality. (support Vt. 不需介系詞)"],
+    ["supporting", "4%", "*有名詞可用時，不能用Ving當名詞 (support n. / v.)"]
+  ], "A")
+);
+
+h += card("L30", ["關係副詞"], "C",
+  '<div class="stem"><div class="en">One year later, Iceland established the Gender Equality Council and passed the Gender Equality Act, banning gender discrimination in the workplace and in schools. Then, in 1980, an even bigger triumph was achieved '+fx("[[L30|when]]")+' Iceland elected the world’s first female president of a democratic country.</div><div class="zh">一年後，冰島成立了性別平等委員會並通過了《性別平等法》，禁止職場和學校中的性別歧視。接著在 1980 年，當冰島選出世界上第一位民主國家的女總統時，取得了更大的勝利。</div></div>' +
+  clue('when (關副) = 連 + 時間副詞 = because in that year (1980)<br>*此句因「短前長後」原則而移動，原句長這樣：Then, in 1980, when Iceland elected the world\'s first female president of a democratic country, an even bigger triumph was achieved.') +
+  ops([
+    ["while", "18%", ""],
+    ["whereas", "5%", ""],
+    ["when", "71%", ""],
+    ["so that", "7%", ""]
+  ], "C")
+);
+
+h += card("L36", ["介系詞"], "D",
+  '<div class="stem"><div class="en">However, '+fx("[[L36|despite]]")+' all the progress the country had made, the fight for gender equality was not yet over.</div><div class="zh">然而，儘管這個國家已經取得了這一切進步，性別平權的奮鬥尚未結束。</div></div>' +
+  clue('despite(介) + all the progress (N) (that) the country had made (關子/形子)') +
+  ops([
+    ["even", "6%", "(adv.) → even though the country had made all the progress"],
+    ["even though", "39%", "(conj.) 改法同上"],
+    ["without", "4%", "語意不合"],
+    ["despite", "51%", ""]
+  ], "D")
+);
+
+h += card("L37", ["複合關係代名詞"], "C",
+  '<div class="stem"><div class="en">In 2005, Iceland’s pay gap showed that women were, on average, still being paid only 64.15% '+fx("[[L37|of what]]")+' men earned.</div><div class="zh">2005 年，冰島的薪資差距顯示，女性平均而言仍只領到男性所賺取薪資的 64.15%。</div></div>' +
+  clue('only 64.15%(量詞) of what men earned.(名詞子句)<br>*what = the thing that/which → … only 64.15% of the money (that) men earned<br>L38 on average 平均來說 adv. On average, high school students in Taiwan sleep around six hours a day, which is much less than required.') +
+  ops([
+    ["in which", "7%", "→ in which = and in 64.15% → … only 64.15% and in this 64.15% men earned???"],
+    ["of which", "63%", "→ of which = and of 64.15% → … only 64.15% and of this 64.15% men earned???"],
+    ["of what", "19%", ""],
+    ["that", "11%", "→ that = and 64.15% (關代 = 連 + N) → … only 64.15% and 64.15% men earned???"]
+  ], "C")
+);
+
+h += card("挑戰題 (L39)", ["分詞片語"], "A",
+  '<div class="stem"><div class="en">So on the thirtieth anniversary of the Women’s Day Off, women organized another strike. They left work at 2:08 p.m.—the exact time at which they started working for free '+fx("[[挑戰題|compared]]")+' with men.</div><div class="zh">因此在「女性休假日」三十週年那天，女性發起了另一場罷工。她們在下午 2 點 08 分下班——與男性相比，這正是她們開始做白工（無酬工作）的確切時間。</div></div>' +
+  clue('compared with men = (when they are) compared with men.<br>compared to / with sth (被)與...相比；相較於… = in comparison to/with. Compared to/with the pressure to fit in, embracing your unique quirks is what truly makes you shine. 相較於融入群體的壓力，擁抱你獨特的怪才是真正讓你閃耀的原因.<br>in comparison to/with (與...相比) In comparison to/with holding onto resentment, forgiveness can free up your heart and mind for more positive energy.<br>compare A to B (把A比喻作B) She compared the experience of falling in love to riding a roller coaster.') +
+  ops([
+    ["compared", "26%", ""],
+    ["to compare", "19%", ""],
+    ["comparing", "48%", ""],
+    ["by comparing", "7%", ""]
+  ], "A")
+);
+
+h += card("L43", ["時間副詞片語"], "A",
+  '<div class="stem"><div class="en">In 2016, women in Iceland again left work early, '+fx("[[L43|this time]]")+' at 2:38 p.m. — the exact time at which they started working for free compared with men.</div><div class="zh">2016 年，冰島女性再次提早下班，這一次是在下午 2 點 38 分——與男性相比她們開始做白工的確切時間。</div></div>' +
+  clue('= In 2016, women in Iceland again left work early, and this time women in Iceland again left work at 2:38 p.m.<br>L42 *at which = and at that time = and at 2:38 p.m. = when') +
+  ops([
+    ["this time", "29%", "(adv. 這一次) Maybe this time, reaching out to a friend when you're feeling down will make all the difference. You don't have to carry burdens alone. (或許這次，當你感到沮喪時，向朋友伸出援手會讓造成很大的不同。你不必獨自承受重擔。)"],
+    ["by the time", "45%", "(conj. 到...的時候) By the time you find your true passion, all the exploring and trying new things will have been worth it."],
+    ["in the meantime", "10%", "(adv. 於此同時；在這段時間中) You may be trying hard to figure out what you want to be, but in the meantime, focus on being the best version of yourself."],
+    ["in due time", "16%", "(adv. 在適當的時間) Don't rush your journey. You will find your place and your people in due time. Trust the unfolding of your own story. (不要急於求成。你遲早會找到屬於你的位置和志同道合的人。要相信屬於你自己的故事會慢慢展開。)"]
+  ], "A")
+);
+
+h += card("挑戰題 (L44)", ["不定詞作補語"], "A",
+  '<div class="stem"><div class="en">This was '+fx("[[挑戰題|to remind]]")+' people that the average woman still earned just 70.42% of the salary usually given to men.</div><div class="zh">這麼做是為了提醒人們，一般女性仍然只賺取通常給予男性薪資的 70.42%。</div></div>' +
+  clue('*be meant to VR 為了<br>This was (meant) to remind people that...<br>be 和 to VR 中間的字常會省略：will = be (going/about) to / can = be (able) to / may = be (likely) to / should = be (supposed) to / must = be (obliged) to') +
+  ops([
+    ["to remind", "33%", ""],
+    ["reminding", "39%", "這件事正在提醒人們…??"],
+    ["a reminder of", "21%", "這件事讓我們想起人們?? The ruined school serves as a reminder of the 921 earthquake."],
+    ["reminded", "6%", "這件事被提醒人們"]
+  ], "A")
+);
+
+h += card("L47", ["要命建堅用法"], "D",
+  '<div class="stem"><div class="en">Finally, Iceland decided to get tough on inequality. In 2018, it became the first country to legally demand that men and women '+fx("[[L47|be paid]]")+' equally.</div><div class="zh">最後，冰島決定強硬對抗不平等。2018 年，它成為第一個在法律上要求男女同工同酬的國家。</div></div>' +
+  clue('demand n. 需求 vt. 要求<br>要命建堅用法：*後接that子句，動詞用原形：demand that S (should) VR<br>*demand不可接to VR<br>(X) He demanded her to leave.<br>(O) He demanded that she (should) leave.') +
+  ops([
+    ["pay for", "5%", ""],
+    ["to be paid", "33%", ""],
+    ["to pay", "5%", ""],
+    ["be paid", "57%", ""]
+  ], "D")
+);
+
+h += card("L49", ["要命建堅用法"], "D",
+  '<div class="stem"><div class="en">The revolutionary new law required that companies with at least twenty-five employees '+fx("[[L49|obtain]]")+' a certificate proving that they were following national equal pay policies; otherwise, they would face heavy fines.</div><div class="zh">這項革命性的新法律規定，擁有至少二十五名員工的公司必須取得證明其遵守國家同工同酬政策的證書；否則將面臨巨額罰款。</div></div>' +
+  clue('demand that + S (+ should) + VR 要求⋯做⋯ (要命建堅)<br>The manager demanded that everyone in the department propose a marketing plan for the product within a week.') +
+  ops([
+    ["to obtain", "19%", ""],
+    ["obtaining", "26%", ""],
+    ["be obtained", "13%", ""],
+    ["obtain", "43%", ""]
+  ], "D")
+);
+
+h += card("L53", ["轉折語"], "B",
+  '<div class="stem"><div class="en">'+fx("[[L53|Today]]")+', this Nordic wonderland has some of the world’s strictest laws on workplace equality. Despite having achieved so much, the country continues to take bold steps to eliminate gender discrimination and become a fairer society where every person is treated equally.</div><div class="zh">如今，這個北歐仙境擁有世界上最嚴格的職場平權法律。儘管已經取得了如此多的成就，該國仍繼續採取大膽的步伐來消除性別歧視，並成為一個每個人都受到平等對待的更公平社會。</div></div>' +
+  clue('') +
+  ops([
+    ["Instead", "2%", ""],
+    ["Today", "71%", ""],
+    ["Consequently", "20%", ""],
+    ["Likewise", "6%", ""]
+  ], "B")
+);
+
+h += card("L58", ["與現在事實相反的假設語氣"], "B",
+  '<div class="stem"><div class="en">'+fx("[[L58|Were it not for]]")+' Iceland’s marvelous efforts in this regard, the rest of the world would not have such a wonderful role model to follow.</div><div class="zh">要不是冰島在這方面付出了非凡的努力，世界其他國家現在就不會有這麼棒的榜樣可以效法了。</div></div>' +
+  clue('But for Iceland\'s marvelous efforts in this regard, = If it were not for = Were it not for = Without... the rest of the world would not have such a wonderful role model to follow.') +
+  ops([
+    ["If it had not been for", "51%", ""],
+    ["Were it not for", "14%", ""],
+    ["If it were not", "18%", ""],
+    ["If there had not been", "18%", ""]
+  ], "B")
+);
+
+h += '<h2 id="p2">句型 1: go + adj / make the impossible possible / If it were not for</h2>';
+
+h += passage("句型 1 重點補充 (P181-182)", [
+  [["go + adj. 處於沒有某物或某事未做的狀態", "go barefoot/naked/topless etc.: We both love going barefoot on the beach.<br>go unseen/unheard etc.: Most of their hard work seems to have gone unnoticed.<br>The Western powers could not allow such an act of terrorism to go unpunished."]],
+  [["make the impossible possible", "make + O + OC<br>the + adj. = N → the impossible = impossible things"]],
+  [["championship n. 冠軍賽；冠軍頭銜", "title n. 冠軍頭銜. He is eager to win the world heavyweight title."]]
+]);
+
+h += card("課本句型 Practice A-2", ["Practice A"], "參考譯文",
+  '<div class="stem"><div class="zh" style="color:inherit">2. 要不是Vicky頭痛，她今晚就可以去Joanne的生日派對。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|(If it) were it not for her headache, Vicky could go to Joanne’s birthday party this evening.]]")+'</div></div>'
+);
+
+h += card("課本句型 Practice A-3", ["Practice A"], "參考譯文",
+  '<div class="stem"><div class="zh" style="color:inherit">3. 要不是Andy的大力推薦，我們現在就不會在這家餐廳用餐了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|(But for) Andy’s strong recommendation, we wouldn’t be dining in this restaurant now.]]")+'</div></div>'
+);
+
+h += card("課本句型 Practice A-4", ["Practice A"], "參考譯文",
+  '<div class="stem"><div class="zh" style="color:inherit">4. 要不是Peter粗心大意，他本來可以正確回答所有的問題。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|(If it) had not been for his carelessness, Peter could have answered all of the questions correctly.]]")+'</div></div>'
+);
+
+h += card("課本句型 Practice A-5", ["Practice A"], "參考譯文",
+  '<div class="stem"><div class="zh" style="color:inherit">5. 要不是Steve違規停車，他的車就不會被拖走了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|(If it) had not been for his parking violation, Steve’s car wouldn’t have been towed away.]]")+'</div></div>'
+);
+
+h += card("課本句型 Practice A-6", ["Practice A"], "參考譯文",
+  '<div class="stem"><div class="zh" style="color:inherit">6. 要不是有她最好朋友的陪伴，Ashley不可能熬過一段重度憂鬱的時期。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|(Without) the company of her best friend, Ashley couldn’t have made it through a period of great depression.]]")+'</div></div>'
+);
+
+h += card("課本句型 Practice B-2", ["Practice B"], "參考譯文",
+  '<div class="stem"><div class="zh" style="color:inherit">2. 要不是我們求勝的強烈渴望，我們撐不過那艱苦的訓練。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|If it had not been for our strong desire to win, we wouldn’t have survived the tough training.]]")+'</div></div>'
+);
+
+h += card("課本句型 Practice B-3", ["Practice B"], "參考譯文",
+  '<div class="stem"><div class="zh" style="color:inherit">3. 要不是Josh的三分球，我們的球隊就輸了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|But for Josh’s three-point shot, our team would have lost.]]")+'</div></div>'
+);
+
+h += card("課本句型 Practice B-4", ["Practice B"], "參考譯文",
+  '<div class="stem"><div class="zh" style="color:inherit">4. 要不是絕佳的團隊合作，我們現在就不會在這裡慶祝我們第一個冠軍頭銜。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Without great teamwork, we wouldn’t be celebrating our first championship title now.]]")+'</div></div>'
+);
+
+h += card("課本句型 Practice B-5", ["Practice B"], "參考譯文",
+  '<div class="stem"><div class="zh" style="color:inherit">5. 要不是因為這場比賽，我不會注意到你的潛力。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|If it had not been for this competition, I wouldn’t have noticed your potential.]]")+'</div></div>'
+);
+
+h += card("課本句型 Practice B-6", ["Practice B"], "參考譯文",
+  '<div class="stem"><div class="zh" style="color:inherit">6. 要不是他們對我有信心，我不可能有今天的成就。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|But for their faith in me, I couldn’t be what I am today.]]")+'</div></div>'
+);
+
+h += card("講義翻譯 1", ["If"], "參考譯文",
+  '<div class="stem"><div class="zh" style="color:inherit">1. 要不是他的英文很爛，Steve就會跟那些外國人說話。(If....)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|If it were not for his poor English, Steve would talk to those foreigners.]]")+'<br><small>If it had not been for his bad English, Steve would have talked to those foreigners.</small></div></div>'
+);
+
+h += card("講義翻譯 2", ["But for"], "參考譯文",
+  '<div class="stem"><div class="zh" style="color:inherit">2. 要不是她缺乏經驗，Alice以前就可以申請這份工作。(But for....)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|But for her lack of experience, Alice would have applied for this job before.]]")+'</div></div>'
+);
+
+h += card("講義翻譯 3", ["If"], "參考譯文",
+  '<div class="stem"><div class="zh" style="color:inherit">3. 要不是有獎學金，Eric 當時就無法從大學畢業。(If...)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|If it had not been for the scholarship, Eric couldn't have graduated from college then.]]")+'</div></div>'
+);
+
+h += card("講義翻譯 4", ["Without"], "參考譯文",
+  '<div class="stem"><div class="zh" style="color:inherit">4. 要不是有她老師的鼓勵，我姊去年可能不會參加交換學生計畫。(Without)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Without her teacher's encouragement, my sister might not have participated in the student exchange program last year.]]")+'</div></div>'
+);
+
+h += card("講義翻譯 5", ["If"], "參考譯文",
+  '<div class="stem"><div class="zh" style="color:inherit">5. 要不是有他的手機，Uncle Smith就會忘記他應該要做的事。(If...)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|If it were not for his phone, Uncle Smith would forget what he should do.]]")+'</div></div>'
+);
+
+h += card("講義翻譯 6", ["But for"], "參考譯文",
+  '<div class="stem"><div class="zh" style="color:inherit">6. 要不是她不間斷的練習，Linda不可能這麼短時間精通西班牙語。(But for)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|But for her constant/consistent/continuous practice, Linda couldn't have mastered Spanish in such a short time.]]")+'</div></div>'
+);
+
+h += card("講義翻譯 7", ["But for"], "參考譯文",
+  '<div class="stem"><div class="zh" style="color:inherit">7. 若非2005的尾牙，Thomas可能不會認識他的老婆。(But for...)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|But for the year-end banquet in 2005, Thomas might not have met his wife.]]")+'</div></div>'
+);
+
+h += card("講義翻譯 8", ["If"], "參考譯文",
+  '<div class="stem"><div class="zh" style="color:inherit">8. 要不是有水壩，河邊有許多房子現在都淹水了。(If...)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|If it were not for the dam, many houses by the river would be flooded now.]]")+'</div></div>'
+);
+
+h += card("講義翻譯 9", ["Without"], "參考譯文",
+  '<div class="stem"><div class="zh" style="color:inherit">9. 要不是這個誤會，Judy跟我現在還是朋友。(Without...)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Without this misunderstanding, Judy and I would still be friends now.]]")+'</div></div>'
+);
+
+h += card("講義翻譯 10", ["If"], "參考譯文",
+  '<div class="stem"><div class="zh" style="color:inherit">10. 要不是全球暖化，海平面不會上升這麼快。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|If it were not for global warming, the sea level wouldn't [rise / be rising] so fast.]]")+'</div></div>'
+);
+
+h += card("講義翻譯 11", ["If"], "參考譯文",
+  '<div class="stem"><div class="zh" style="color:inherit">11. 要不是這麼高溫，我也不會汗流浹背。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|If it were not for the high temperature, I would not sweat so much. (I wouldn't be so sweaty. / I wouldn’t be sweating like a pig.)]]")+'</div></div>'
+);
+
+h += card("講義翻譯 12", ["If"], "參考譯文",
+  '<div class="stem"><div class="zh" style="color:inherit">12. 要不是她父母反對，Jessica早就嫁給那傢伙。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|If it had not been for her parents’ disapproval, she would have married that guy.]]")+'</div></div>'
+);
+
+h += passage("字辨", [
+  [["opposition: 對政策、制度、法律等國家、社會議題的反對；反對黨/在野黨", "There was a great deal of opposition to the war."]],
+  [["objection: 反對的陳述或理由", "I would like to put forward several objections to this proposal."]],
+  [["disapproval: 不認同；不贊成；反對", "Although they said nothing, she could sense their disapproval of her suggestion."]],
+  [["disagreement: 意見不合；爭吵", "We've had a few disagreements, but we're still good friends."]]
+]);
+
+h += '<h2 id="p3">句型 2 關係副詞 (限定與非限定用法)</h2>';
+
+h += passage("關係副詞：限定用法與非限定用法", [
+  [["N where/when… (無逗點)關係副詞之限定用法 / N, where/when… (有逗點)關係副詞之非限定用法", "說明:屬形容詞子句的一種，其語用功能主要是藉由關係副詞來界定或補述某地方或時刻"]],
+  [["限定用法", "★ 用來「明確指出」前面名詞的特定時間或地點。 ★ 不用逗號是因為所提供的資訊是主要子句很重要的一部分。 ★ 先翻關係子句，再翻前面的名詞(先行詞)<br>The house where I grew up has been sold. 我長大的那間房子已經被賣掉了。<br>I remember the day when we graduated. 我記得我們畢業的那一天。"]],
+  [["非限定用法", "★ 提供額外資訊或補充說明，而非用來限定或識別該名詞。 ★ 加逗號是因為該資訊是附加的，刪除亦不影響句意的完整性 ★ 用在專有名詞、獨一無二的情況、或補充細節 ★ 翻成2個獨立句子<br>專有用詞：Paris, where the Eiffel Tower stands, is a beautiful city. 巴黎是個美麗的城市，那裡有艾菲爾鐵塔<br>獨一無二：My hometown, where everyone knows each other, has a population of 5,000. 我的家鄉人口有5,000人，那裡的人們彼此都認識<br>補充細節：The library, where I often study, closes at 9 PM. 那圖書館晚上9點關門，我經常在那裡讀書<br>獨一無二：Last summer, when we traveled to Japan, was unforgettable.<br>獨一無二：2020, when the pandemic began, was a difficult year.<br>補充細節：Midnight, when the celebration begins, is only hours away."]]
+]);
+
+h += card("A-1", ["where"], "where", '<div class="stem"><div class="zh" style="color:inherit">1. 大多數孩子住在他們學習的學校附近。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>Most children live near the school '+fx("[[|where]]")+' they study.</div></div>');
+h += card("A-2", ["where"], "where", '<div class="stem"><div class="zh" style="color:inherit">2. 中央公園是一個人們可以放鬆並享受陽光的地方。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>Central Park is a place '+fx("[[|where]]")+' people can relax and enjoy the sunshine.</div></div>');
+h += card("A-3", ["when"], "when", '<div class="stem"><div class="zh" style="color:inherit">3. 十九世紀是大英帝國成為世界最強大國家的時代。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>The nineteenth century was the time '+fx("[[|when]]")+' the British Empire became the strongest world power.</div></div>');
+h += card("A-4", [", where"], ", where", '<div class="stem"><div class="zh" style="color:inherit">4. Dora 喜歡在麥當勞吃東西，在那裡她可以享用美味的漢堡和酥脆的薯條。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>Dora likes to eat at McDonald’s'+fx("[[|, where]]")+' she can enjoy delicious burgers and crispy fries.</div></div>');
+h += card("A-5", [", when"], ", when", '<div class="stem"><div class="zh" style="color:inherit">5. Richard 午夜回到家，那時候他的妻子和小孩都睡著了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>Richard came home at midnight'+fx("[[|, when]]")+' his wife and kids were asleep.</div></div>');
+
+h += card("B-1", ["where"], "where", '<div class="stem"><div class="zh" style="color:inherit">1. 愛迪生賣了他出生的那棟房子。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>Edison sold the house '+fx("[[|where]]")+' he was born.</div></div>' + clue('不加逗點→Edison賣了他出生的房子'));
+h += card("B-2", [", when"], ", when", '<div class="stem"><div class="zh" style="color:inherit">2. 你可以在七點打給我，那時我已經醒了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>You can call me at seven o\'clock'+fx("[[|, when]]")+' I will be awake.</div></div>' + clue('(X) 不加逗點→你可以在我已醒來的七點打給我<br>加逗點(獨立翻譯) →你可以在七點打給我，(因為)那時我已清醒<br>*when = 連 + 時間副詞 = because at that time'));
+h += card("B-3", ["when"], "when", '<div class="stem"><div class="zh" style="color:inherit">3. 我永遠不會忘記我在倫敦和Helen待了好幾天的那些日子。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>I will never forget those(the) days '+fx("[[|when]]")+' I stayed with Helen in London.</div></div>');
+h += card("B-4", [", where"], ", where", '<div class="stem"><div class="zh" style="color:inherit">4. 你可以參觀羅浮宮，畫作《蒙娜麗莎》就收藏在那裡。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>You can visit the Louvre Museum'+fx("[[|, where]]")+' the painting Mona Lisa is housed.</div></div>' + clue('*where = 連 + 地方副詞 = because the … is housed there'));
+h += card("B-5", [", where"], ", where", '<div class="stem"><div class="zh" style="color:inherit">5. 貨架之間的區域被稱為走道，購物者可以在那裡行走。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>The areas between the shelves are called aisles'+fx("[[|, where]]")+' shoppers can walk.</div></div>');
+
+
+document.getElementById('app').innerHTML = h;
+
+const secs=[
+  ['p1','課前與課文講解'],
+  ['p2','句型 1 假設語氣'],
+  ['p3','句型 2 關係副詞']
+];
+document.getElementById('nav').innerHTML=secs.map(s=>'<a href="#'+s[0]+'">'+s[1]+'</a>').join('')+'<button id="tg">全部收合</button>';
+let open=true;
+document.getElementById('tg').onclick=function(){
+  open=!open;
+  document.querySelectorAll('details.q').forEach(d=>d.open=open);
+  this.textContent=open?'全部收合':'全部展開';
+};
+</script>
+<script src="bookmark.js"></script>
+</body>
+</html>

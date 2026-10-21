@@ -76,192 +76,353 @@ function ops(list,ans,lab){lab=lab||'ABCDEF';return '<ul class="op">'+list.map((
 function card(n,tags,ans,body){
   return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
 }
-
 const st=(en,zh)=>'<div class="stem"><div class="en">'+fx(en)+'</div><div class="zh">'+zh+'</div></div>';
 
-/* === Part 1: Thinking Ahead & L1 ~ L54 課文講解 === */
-const h1 = '<h2 id="p1">Thinking Ahead ＆ L1 ~ L54 課文講解</h2>' +
-  passage("Thinking Ahead 課前字彙與暖身練習", [[
-    ["字彙表：1. concentration camp (n. 集中營) ｜ 2. survive (v. 倖存) ｜ 3. document (v. 記錄) ｜ 4. break out (phr. 爆發) ｜ 5. bunker (n. 地堡；掩蔽處) ｜ 6. translate (v. 翻譯) ｜ 7. original (n. 原版) ｜ 8. majority (n. 多數)", "課前核心字彙整理。"],
-    ["1. In the book Clara’s War, Clara [[|documented]] what happened to her during World War II.", "在《克拉拉的戰爭》一書中，克拉拉記錄了二戰期間發生在她身上的事。"],
-    ["2. The [[|majority]] of students and teachers are against attending school during the summer vacation.", "大多數的師生都反對在暑假期間上學。"],
-    ["3. Mandy used the app to help her [[|translate]] Chinese into English.", "曼蒂使用這個應用程式幫她把中文翻譯成英文。"],
-    ["4. During World War II, the Nazis set up [[|concentration camps]], where many Jews were sent.", "在二戰期間，納粹設立了集中營，許多猶太人被送往那裡。"],
-    ["5. Medical masks were in great demand globally after COVID-19 [[|broke out]].", "在新冠肺炎爆發後，全球對醫療口罩的需求大增。"],
-    ["暖身中翻英：在多年努力後，我終於擁有了我夢想的房子。 → [[|After years of hard work, I finally have my dream home.]]", "使用介系詞片語 After years of hard work 比動名詞子句更道地精煉。"]
-  ]]) + [
-  card("L2", ["受詞補語移位", "tear open + 長受詞"], "A",
-    st("It was the early morning of October 20, 1943, and eleven German Gestapo agents had just burst through the front door of a Polish woman’s apartment. They searched her home from top to bottom, tearing [[L2|open]] every pillow and mattress.", "那是 1943 年 10 月 20 日的清晨，十一名德國蓋世太保特務剛剛衝破一位波蘭女子公寓的前門。他們徹頭徹尾地搜查她的家，撕開每一個枕頭和床墊。") +
-    clue("原句型為 <code>rip / pull / tear + sth (O) + open (OC, adj. 打開的)</code>（將…撕開）。<br>因為受詞 <code>every pillow and mattress</code> 較長，依「短前長後」原則將形容詞補語 <code>open</code> 移至受詞前面：<code>tearing open (OC) every pillow and mattress (O)</code>（類似 <i>She flipped open Chris's diary.</i>）。") +
-    ops([
-      ["open", "36%", "形容詞作受詞補語，因受詞較長而前置。"],
-      ["to open", "39%", "tear 本身已包含撕開的結果狀態，不搭配不定詞 to open。"],
-      ["opened", "15%", "表「開著的」狀態補語用形容詞 open，不用過去分詞 opened。"],
-      ["openly", "9%", "副詞表「公然地、坦率地」（如 <i>talked openly</i>），語意不合。"]
-    ], "A") +
-    passage("L2 補充例句", [[
-      ["search N (for N) 搜查某處（以尋找…） vs. search for N 費力尋找某物：They searched the whole area (for the suspect). / We looked/searched high and low for Sandy but couldn't find her.", "他們搜查了整個區域（以尋找嫌犯）。／我們到處（high and low）尋找珊蒂，但都找不到她。"]
-    ]])
-  ),
+let h = '';
 
-  card("L4", ["與過去事實相反的假設", "If + S + had p.p., S + would have p.p."], "A",
-    st("If they had entered just seconds earlier, they [[L4|would have found]] the precious list before the woman slipped it to her friend.", "如果他們早幾秒鐘進入，就會在這名女子把珍貴的名單塞給朋友之前發現它了。") +
-    clue("觀察 If 子句動詞為過去完成式 <code>If they <b>had entered</b> just seconds earlier</code>，表示「與過去事實相反的假設」，主要子句需用 <code>would / could / might + have + p.p.</code>。") +
-    ops([
-      ["would have found", "73%", "與過去事實相反，正確搭配 <code>had entered</code>。"],
-      ["could find", "15%", "助動詞過去式 + 原形動詞用於「與現在事實相反」。"],
-      ["must have found", "6%", "表「對過去事實的強烈肯定推測（一定已經發現了）」，但事實上特務並沒有發現名單！"],
-      ["might find", "6%", "用於與現在事實相反。"]
-    ], "A")
-  ),
+h += '<h2 id="p1">Thinking Ahead ＆ L1 ~ L56 課文講解</h2>';
 
-  card("L6", ["對等連接與邏輯", "gave up (searching) and arrested"], "D",
-    st("After three hours of searching, they gave up [[L6|and arrested]] the woman. Knowing the list was safe, she breathed a sigh of relief.", "經過三個小時的搜索後，他們放棄了（搜索）並逮捕了這名女子。知道名單安全無虞，她鬆了一口氣。") +
-    clue("蓋世太保搜查了三小時找不到名單，所以「放棄（搜索），並且逮捕了這名女子」：<code>they gave up (searching) and (they) arrested the woman</code>。") +
-    ops([
-      ["to arrest", "38%", "變成「為了逮捕女人而放棄搜索」，邏輯不通。"],
-      ["when arresting", "6%", "「在逮捕女人時放棄」，語意不通。"],
-      ["by arresting", "6%", "「藉由逮捕女人來放棄」，語意不通。"],
-      ["and arrested", "50%", "對等連接兩個過去式動詞 <code>gave up ... and arrested ...</code>。"]
-    ], "D")
-  ),
+h += passage("Thinking Ahead 課前字彙與暖身練習", [
+  [["字彙表：1. concentration camp (n. 集中營) ｜ 2. survive (v. 倖存) ｜ 3. document (v. 記錄) ｜ 4. break out (phr. 爆發) ｜ 5. bunker (n. 地堡；掩蔽處) ｜ 6. translate (v. 翻譯) ｜ 7. original (n. 原版) ｜ 8. majority (n. 多數)", ""]],
+  [["1. In the book Clara’s War, Clara [[|documented]] what happened to her during World War II.", "在《克拉拉的戰爭》一書中，克拉拉記錄了二戰期間發生在她身上的事。"]],
+  [["2. The [[|majority]] of students and teachers are against attending school during the summer vacation.", "大多數的師生都反對在暑假期間上學。"]],
+  [["3. Mandy used the app to help her [[|translate]] Chinese into English.", "曼蒂使用這個應用程式幫她把中文翻譯成英文。"]],
+  [["4. During World War II, the Nazis set up [[|concentration camps]], where many Jews were sent.", "在二戰期間，納粹設立了集中營，許多猶太人被送往那裡。"]],
+  [["5. Medical masks were in great demand globally after COVID-19 [[|broke out]].", "在新冠肺炎爆發後，全球對醫療口罩的需求大增。"]],
+  [["暖身中翻英：在多年努力後，我終於擁有了我夢想的房子。 → [[|After years of hard work, I finally have my dream home.]]", "☹ After working hard for years, …"]]
+]);
 
-  card("L9", ["慣用搭配", "seize / take control of"], "C",
-    st("The young lady was Irena Sendler, a compassionate social worker who lived in Warsaw, Poland. During World War II, the Nazis [[L9|seized]] control of this city and announced the establishment of the Warsaw Ghetto.", "這位年輕女子是伊蕾娜・森德勒（Irena Sendler），一位住在波蘭華沙、富有同情心的社工。在第二次世界大戰期間，納粹奪取了這座城市的控制權，並宣布建立華沙猶太區。") +
-    clue("納粹在二戰期間「奪取／控制了」華沙這座城市並建立猶太區。<br>• 得到／奪取控制權：<code>take / seize control of</code><br>• 失去控制權：<code>lose control of</code>") +
-    ops([
-      ["lost", "27%", "失去控制權（若失去控制權就無法建立華沙猶太區了，與文意相反）。"],
-      ["made", "15%", "不與 control of 搭配。"],
-      ["seized", "50%", "<code>seized control of</code>（奪取了…的控制權）。"],
-      ["remained", "9%", "維持（不構成 remained control of）。"]
-    ], "C") +
-    passage("L8 補充例句", [[
-      ["英文地名寫法（由小到大，以逗號隔開）：Warsaw, Poland / Qianjin, Kaohsiung, Taiwan", "波蘭華沙 ／ 台灣高雄市前金區。"]
-    ]])
-  ),
+h += card("挑戰題1", ["受詞補語移位", "tear open + 長受詞"], "A",
+  st("It was the early morning of October 20, 1943, and eleven German Gestapo agents had just burst through the front door of a Polish woman’s apartment. They searched her home from top to bottom, tearing [[挑戰題1|open]] every pillow and mattress.", "那是 1943 年 10 月 20 日的清晨，十一名德國蓋世太保特務剛剛衝破一位波蘭女子公寓的前門。他們徹頭徹尾地搜查她的家，撕開每一個枕頭和床墊。") +
+  clue("原句型為 rip/pull/tear + sth(O) + open(OC, adj. 打開的) (將…撕開)。因為受詞 every pillow and mattress 較長，依「短前長後」原則將形容詞補語 open 移至受詞前面：tearing open(OC) every pillow and mattress(O) (類似 She flipped open Chris's diary.)") +
+  ops([
+    ["open", "36%", "adj. 打開的"],
+    ["to open", "39%", "為了打開"],
+    ["opened", "15%", "被打開的"],
+    ["openly", "9%", "adv. 率直地/開誠佈公地/公然地 (Sarah talked openly about her problems. / He was openly critical of his colleagues.)"]
+  ], "A")
+);
 
-  card("L11", ["動詞字彙與語態", "be herded into 被驅趕進"], "B",
-    st("Over 400,000 Jews were [[L11|herded]] into this area, and thousands of them were dying from starvation and disease every month.", "超過四十萬名猶太人被像牲畜般驅趕進這個區域，每個月都有數千人死於飢餓和疾病。") +
-    clue("注意空格前是 <code>were ___ into this area</code>（被動語態）！<br>• <code>herd</code> (vt.)：原意為放牧、驅趕（牛羊牲畜），此處用被動 <code>were herded into</code> 形容納粹像驅趕牲畜一樣把四十萬猶太人強行趕進猶太區。<br>• <code>flood / swarm / flock</code> 當動詞表「大批湧入、成群移動」時皆為<b>不及物動詞（Vi.）</b>，主動即表成群移動，不可用被動語態！") +
-    ops([
-      ["flooded", "17%", "flood 表人群湧入時為不及物動詞（如 <i>Refugees are flooding across the border.</i>）。"],
-      ["herded", "40%", "及物動詞被動 <code>were herded into</code>（被驅趕進…）。"],
-      ["swarmed", "3%", "不及物動詞（一大群昆蟲或人湧入）。"],
-      ["flocked", "40%", "常見誤答！<code>flock</code>（成群前往，如 <i>Tourists flock to the town</i>）為不及物動詞，且帶有自願聚集之意，不可用被動！"]
-    ], "B") +
-    passage("L12 ~ L20 課文段落與補充例句", [[
-      ["die of / die from 死於（現代英文基本上可通用）：My grandfather died from/of cancer. / The woman finally died from/of old age.", "我祖父死於癌症。／那名婦人最終因年邁而去世。"],
-      ["【L13】Horrified by these shocking conditions, Irena decided to join an underground resistance group and began helping to bring in food and medicine to the Jews secretly.", "對這些令人震驚的處境感到恐懼，伊蕾娜決定加入地下反抗組織，並開始秘密協助將食物和藥品帶進來給猶太人。"],
-      ["【L16】However, she soon realized this would not be enough, as the ghetto was sealed and the Nazis had already started sending Jews to death camps.", "然而，她很快就意識到這樣還不夠，因為猶太區遭到封鎖，而且納粹已經開始將猶太人送往死亡集中營。"],
-      ["【L19】Determined to help, Irena recruited her friends and colleagues for a risky mission: sneaking Jewish children out of the ghetto.", "伊蕾娜決心提供幫助，她招募了朋友和同事執行一項冒險的任務：將猶太兒童偷偷帶出猶太區。"],
-      ["determine (vt. 判定、決定因素) vs. determined (adj. 堅決的) vs. determining (adj. 決定性的)：Investigators are still trying to determine the cause of the fire. / She was determined to win. / Cost was the determining factor.", "調查人員仍在試圖判定起火原因。／她決心要贏。／成本是決定性的因素。"]
-    ]])
-  ),
+h += passage("L1-補充", [
+  [["20th = twentieth", ""]]
+]);
 
-  card("L21", ["動詞片語辨析", "manage to VR 設法成功做到"], "C",
-    st("To enter the isolated area, they [[L21|managed]] to obtain official passes.", "為了進入這個被封鎖隔離的區域，他們設法取得了官方通行證。") +
-    clue("後文緊接著說 <code>Once inside, they faced an even bigger challenge...</code>（一旦進入內部…），證明他們「已經成功取得通行證並進去了」！<br>• <code>manage to VR</code>：（經過一番努力後）設法成功做到<br>• <code>try / attempt / strive to VR</code>：試著／努力去做（但不知道有沒有成功）") +
-    ops([
-      ["tried", "39%", "只表「試圖去做」，未交代是否成功拿到通行證。"],
-      ["attempted", "30%", "只表「企圖去做」，未表成功。"],
-      ["managed", "27%", "<code>managed to obtain</code>（設法成功取得了官方通行證）。"],
-      ["strove", "3%", "<code>strive - strove - striven</code> 表「努力奮鬥」，不強調已成功取得。"]
-    ], "C")
-  ),
+h += passage("L3-補充", [
+  [["search N (for N) = 搜查/搜索…(以尋找…)", "例 They searched the whole area (for the suspect)."]],
+  [["search for N = (仔細而費力地)尋找(失蹤人口、罪犯、線索等)", "例 They are searching (the forest) for the missing child."]],
+  [["look for 指任何情況的尋找，一般情況用 look for 就好", "補充 可搭配 “high and low” 表「到處」尋找 例 We looked/searched high and low for Sandy but couldn't find her."]]
+]);
 
-  card("L21-牛刀", ["牛刀小試", "manage / attempt / try / strive"], "綜合填空",
-    '<div class="stem"><div class="en">1. How do you '+fx("[[|manage]]")+' to stay so slim?<br>2. Few people knew that she had once '+fx("[[|attempted]]")+' suicide.<br>3. I '+fx("[[|tried]]")+' everything to lose weight with no success.<br>4. The teacher constantly '+fx("[[|strives]]")+' for excellence in his teaching.</div><div class="zh">1. 你是如何成功保持這麼苗條的？ ／ 2. 很少人知道她曾經企圖自殺（未遂）。 ／ 3. 我試過各種方法減肥但都沒成功。 ／ 4. 這位老師在教學上不斷力求卓越。</div></div>' +
-    clue("• <code>manage to VR</code>：成功做到<br>• <code>attempt suicide</code>：企圖自殺（因為還活著，所以不能用 managed！）<br>• <code>try everything ... with no success</code>：試盡一切卻沒成功<br>• <code>strive for excellence</code>：力求卓越") +
-    passage("L22 ~ L30 課文段落與補充例句", [[
-      ["【L22】Once inside, they faced an even bigger challenge: convincing Jewish parents to hand their children over to strangers.", "一旦進入內部，他們面臨更大的挑戰：說服猶太父母將孩子交給陌生人。"],
-      ["某人面臨問題的 3 種寫法：They are facing a difficult choice. = A difficult choice is facing them. = They are faced with a difficult choice.", "他們正面臨一個艱難的抉擇。"],
-      ["【L24】In the end, many parents made the heart-wrenching decision in hopes that their children could survive even if they themselves couldn’t.", "最後，許多父母做出了令人心碎的決定，希望即使自己無法活下來，孩子們也能倖存。"],
-      ["【L27】Hidden in everything from suitcases to flour sacks, the children were smuggled out in various ways. One ambulance driver even hid babies under stretchers and trained his dog to bark in order to drown out their cries. Irena and the other courageous people were risking their own lives.", "孩子們被藏在從行李箱到麵粉袋等各種物品中，以不同方式偷運出去。一名救護車司機甚至將嬰兒藏在擔架下，並訓練他的狗吠叫以蓋過嬰兒的哭聲。伊蕾娜和其他勇敢的人們正冒著生命危險。"],
-      ["fid- (= trust 信任) 字根家族：confident (有信心的) ｜ confidential (機密的) ｜ fidelity (忠貞) ｜ infidel / infidelity (感情不忠的／不忠)：The secret agent managed to sneak a few confidential documents out of the country.", "特務設法將幾份機密文件偷偷帶出國。"]
-    ]])
-  ),
+h += card("L5", ["與過去事實相反的假設", "If + S + had p.p., S + would have p.p."], "A",
+  st("If they had entered just seconds earlier, they [[L5|would have found]] the precious list before the woman slipped it to her friend.", "如果他們早幾秒鐘進入，就會在這名女子把珍貴的名單塞給朋友之前發現它了。") +
+  clue("had entered … would have found … 假設語氣與過去事實相反。") +
+  ops([
+    ["would have found", "73%", ""],
+    ["could find", "15%", "與現在事實相反"],
+    ["must have found", "6%", "一定…吧 (推測句型)"],
+    ["might find", "6%", "與現在事實相反"]
+  ], "A")
+);
 
-  card("L31", ["萬一假設倒裝", "Should + S + VR"], "A",
-    st("[[L31|Should]] they be caught, these compassionate smugglers and their families would certainly face execution.", "萬一他們被捕，這些富有同情心的偷運者及其家人肯定會面臨處決。") +
-    clue("觀察空格後的動詞是原形被動 <code>___ they <b>be</b> caught</code>！<br>唯有助動詞 <code>Should</code> 置於句首倒裝（原句為 <code>If they should be caught</code>），後方的動詞才會用原形 <code>be caught</code>。") +
-    ops([
-      ["Should", "6%", "<code>If they should be caught</code> 省略 If 並將 <code>Should</code> 移至句首倒裝，後接原形 <code>be caught</code>。"],
-      ["Once", "70%", "極高誤答率！若用 <code>Once</code>，後面必須是過去式 <code>Once they <b>were</b> caught</code> 或分詞 <code>Once caught</code>，絕對不可能接原形 <code>they be caught</code>！"],
-      ["In the event of", "9%", "介系詞片語，後只能接名詞（如 <i>In the event of their capture/arrest</i>）。"],
-      ["In case", "15%", "連接詞不倒裝，且不會直接構成 <code>In case they be caught</code>。"]
-    ], "A")
-  ),
+h += card("L7", ["對等連接與邏輯", "gave up (searching) and arrested"], "D",
+  st("After three hours of searching, they gave up [[L7|and arrested]] the woman. Knowing the list was safe, she breathed a sigh of relief.", "經過三個小時的搜索後，他們放棄了（搜索）並逮捕了這名女子。知道名單安全無虞，她鬆了一口氣。") +
+  clue("they gave up (searching) and (they) arrested the woman.") +
+  ops([
+    ["to arrest", "38%", "為了逮捕女人而放棄？"],
+    ["when arresting", "6%", "在逮捕女人時放棄？"],
+    ["by arresting", "6%", "藉著逮捕女人而放棄？"],
+    ["and arrested", "50%", "放棄(尋找清單)並逮捕女人"]
+  ], "D")
+);
 
-  card("L33", ["形容詞片語", "complete with 附有/齊備"], "C",
-    st("After successfully escaping, the children were given new identities, [[L33|complete]] with fake birth documents and family records.", "成功逃脫後，孩子們獲得了新的身分，還附有偽造的出生證明和家庭紀錄。") +
-    clue("片語 <code>(which were) complete with + N</code>（≒ <code>including / inclusive of</code>）表示「附有…、連同…一應俱全」（例：<i>The book, complete with 3 DVDs, costs $35.</i>）。") +
-    ops([
-      ["filled", "43%", "<code>filled with</code> 表空間上「裝滿、塞滿（如 <i>filled with tourists</i>）」，新身分（identities）是抽象概念，不能說「塞滿了文件」。"],
-      ["packed", "15%", "<code>packed with</code> 同樣表「擠滿了…」。"],
-      ["complete", "17%", "<code>complete with...</code>（附有…、配備齊全）。"],
-      ["inclusive", "25%", "<code>inclusive</code> 必須搭配介系詞 <code>of</code>（<code>inclusive of</code>），不可搭配 with！"]
-    ], "C") +
-    passage("L35 課文段落", [[
-      ["Some were taken in by kind and brave Polish families, while others were sent to orphanages or convents.", "有些孩子被善良勇敢的波蘭家庭收留，而其他人則被送到孤兒院或修道院。"]
-    ]])
-  ),
 
-  card("L38", ["句子主要動詞", "included vs. including"], "D",
-    st("Irena hoped that after the war the children could be reunited with their parents, so she kept detailed records. Her list [[L38|included]] each child’s real name, his or her new identity, location, and parents’ names.", "伊蕾娜希望戰後孩子們能與父母團聚，因此她保留了詳細的紀錄。她的名單包含了每個孩子的真實姓名、新身分、所在地以及父母的姓名。") +
-    clue("檢查句子結構：<code>Her list (S) ___ (V) each child’s real name, his or her new identity, location, and parents’ names (O).</code><br>整句話還沒有動詞，且全文敘述過去事件，故空格需填入過去式及物動詞 <code>included</code>！") +
-    ops([
-      ["inclusive of", "0%", "形容詞片語，缺 be 動詞（應為 <i>was inclusive of</i>）。"],
-      ["includes", "27%", "現在式與前後文過去式時態（hoped, kept）不合。"],
-      ["including", "12%", "介系詞/分詞不能單獨當句子的主要動詞。"],
-      ["included", "62%", "過去式及物動詞，構成完整句子。"]
-    ], "D") +
-    passage("L38 補充例句", [[
-      ["include 的 4 種句型轉換：The price is $25.50, and it includes postage and packing. = ..., including postage and packing. = ..., inclusive of postage and packing. = ..., postage and packing included.", "價格為 25.50 美元，包含郵資與包裝費。（注意：後半部皆不可單獨成句！）"]
-    ]])
-  ),
+h += card("L12", ["慣用搭配", "seize / take control of"], "C",
+  st("The young lady was Irena Sendler, a compassionate social worker who lived in Warsaw, Poland. During World War II, the Nazis [[L12|seized]] control of this city and announced the establishment of the Warsaw Ghetto.", "這位年輕女子是伊蕾娜・森德勒（Irena Sendler），一位住在波蘭華沙、富有同情心的社工。在第二次世界大戰期間，納粹奪取了這座城市的控制權，並宣布建立華沙猶太區。") +
+  clue("take/seize control of 得到/搶到…的支配權 【反】lose control of<br>Students are encouraged to take control of their own learning, rather than just depending on the teacher.") +
+  ops([
+    ["lost", "27%", ""],
+    ["made", "15%", ""],
+    ["seized", "50%", ""],
+    ["remained", "9%", ""]
+  ], "C")
+);
 
-  card("L40", ["介系詞片語辨析", "at the height of 在…高峰期"], "D",
-    st("Unfortunately, [[L40|at the height of]] this rescue operation, Irena was arrested for her underground work.", "不幸的是，在這場救援行動的最高峰期，伊蕾娜因從事地下工作而被捕。") +
-    clue("<code>at the height of...</code> 表示「在…的巔峰／最高潮時期」（抽象頂點，如 <i>retire at the height of his career</i>）。此處指在這場救援行動進行得最如火如荼的高峰期，伊蕾娜不幸被捕。") +
-    ops([
-      ["in light of", "19%", "鑑於、考慮到（如 <i>In light of the recent increase in crime...</i>）。"],
-      ["by means of", "26%", "藉由…手段（伊蕾娜不是「藉由」救援行動被捕，而是因為地下工作在行動高峰期被捕）。"],
-      ["from the beginning of", "22%", "從…一開始（若一開始就被捕，就無法救出 2,500 名兒童了）。"],
-      ["at the height of", "33%", "在…的高峰期／最盛期。"]
-    ], "D") +
-    passage("L42 ~ L54 課文段落與補充例句", [[
-      ["【L42】Despite being brutally tortured, she refused to reveal any information. She chose to sacrifice her own life instead of putting the lives of others at risk.", "儘管遭受殘酷折磨，她仍拒絕透露任何資訊。她選擇犧牲自己的生命，也不願讓其他人的生命陷入危險。（Despite being brutally tortured... = Although she was brutally tortured...）"],
-      ["【L45】Eventually, Irena was rescued by her friends and continued to work to save Jewish children while living in hiding.", "最終，伊蕾娜被朋友救出，並在躲藏度日的同時繼續致力於拯救猶太兒童。（be in hiding 處於躲藏狀態 ／ go into hiding 開始躲藏 ／ come out of hiding 結束躲藏）"],
-      ["【L47】If Irena and her friends had not helped, over 2,000 children would have ended up in the death camps.", "如果當時伊蕾娜和她的朋友沒有伸出援手，超過兩千名兒童最終就會被送進死亡集中營。（end up + V-ing / prep. 最後落得…下場：If you don’t quit gambling, you will end up losing all your money.）"],
-      ["【L49】To this day, Irena Sendler is still remembered for her selfless acts during the Holocaust.", "直到今天，伊蕾娜・森德勒仍因她在大屠殺期間的無私行為而為人銘記。"],
-      ["「行為」字彙大辨析：act [C]（單次具體行為，如 an act of great courage）｜ action [U/C]（採取行動 take action；所作所為 actions）｜ conduct [U]（道德或職業操守行為）｜ behavior [U]（整體習慣表現）｜ demeanor [U]（外在舉止儀態）｜ deed [C]（做好事或壞事 good deeds）", "各類「行為」名詞的精確語境區分。"],
-      ["【L51】While she never admitted it, she was a true hero who risked her life to save others, and her story of bravery and compassion continues to inspire people all over the world.", "雖然她從未承認過，但她是一位冒著生命危險拯救他人的真正英雄，她勇敢與慈悲的故事持續激勵著全世界的人們。"]
-    ]])
-  )
-].join('');
 
-/* === Part 2: 課本句型與翻譯練習 === */
-const h2 = '<h2 id="p2">課本句型與翻譯練習</h2>' + [
-  card("句1-1~4", ["句型1：改寫句子", "If + S + had p.p., S + would/could/might + have p.p."], "參考解答", '<div class="stem"><div class="en">1. I didn’t finish the project because I didn’t have enough time.<br>→ '+fx("[[|If I had had enough time, I would have finished the project.]]")+'<br><br>2. As Dad forgot to bring the key, we got locked out.<br>→ '+fx("[[|If Dad hadn’t forgotten to bring the key, we wouldn’t have gotten locked out.]]")+'<br>（或：'+fx("[[|If Dad had remembered to bring the key, we wouldn't have gotten locked out.]]")+'）<br><br>3. Janet didn’t cite the source of information and was thus accused of plagiarism.<br>→ '+fx("[[|If Janet had cited the source of information, she wouldn’t have been accused of plagiarism.]]")+'<br><br>4. We took a taxi. Therefore, we could get to the airport on time.<br>→ '+fx("[[|If we hadn’t taken a taxi, we couldn’t have gotten to the airport on time.]]")+'</div><div class="zh">課本句型 1（與過去事實相反之假設語氣）第 1~4 題改寫練習。</div></div>' + clue("將過去事實改為相反假設：肯定改否定、否定改肯定；條件句用 <code>had (not) + p.p.</code>，結果句用 <code>would/could/might (not) + have + p.p.</code>。")),
-  card("句1-5", ["句型1：翻譯", "與過去事實相反"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">5. 如果當時 John 沒有愛上另一個女人，Linda 可能就不會和他分手了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|If John hadn’t fallen in love with another woman (at that time), Linda might not have broken up with him.]]")+'</div></div>' + clue("「愛上…」為 <code>fall - fell - fallen in love with</code>；「與…分手」為 <code>break - broke - broken up with</code>。")),
-  card("句1-6", ["句型1：翻譯", "fly into a rage 勃然大怒"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">6. 如果當時 Patrick 記得他們的結婚紀念日，Anne 就不會大發雷霆 (rage) 了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|If Patrick had remembered their (wedding) anniversary, Anne wouldn’t have flown into a rage.]]")+'</div></div>' + clue("「大發雷霆、勃然大怒」為 <code>fly into a rage</code>（三態：<code>fly - flew - flown</code>）。")),
-  card("句1-7", ["句型1：翻譯", "be struck by lightning 被閃電擊中"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">7. 如果 Barry Allen 沒被閃電擊中，他就不會變成閃電俠 (the Flash) 了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|If Barry Allen hadn’t been struck/hit by lightning, he wouldn’t have become the Flash.]]")+'</div></div>' + clue("注意拼字：「閃電」是 <code>lightning</code>（中間沒有 e！lightening 是「變亮、減輕」）。")),
-  card("句1-8", ["句型1：翻譯", "be grounded 被禁足"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">8. 如果 Hayley 考試沒有作弊，她就不會被禁足 (ground) 了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|If Hayley hadn’t cheated in/on the exam, she wouldn’t have been grounded.]]")+'</div></div>' + clue("「被禁足」為被動語態 <code>wouldn't have been grounded</code>。")),
-  card("句1-9", ["句型1：翻譯", "混合時間假設語氣（過去條件＋現在結果）"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">9. 如果 Carrie 當時進了醫學院，她現在可能是個醫生了。※ 注意此句的時態變化！</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|If Carrie had entered medical school then, she might be a doctor now.]]")+'</div></div>' + clue("重要考點！前半句「當時（then）進醫學院」與<b>過去</b>事實相反，用 <code>had entered</code>；後半句「現在（now）可能是醫生」與<b>現在</b>事實相反，用 <code>might be a doctor now</code>！")),
-  card("句2-1~4", ["句型2：分詞構句合併", "p.p. / Adj. / Having p.p."], "參考解答", '<div class="stem"><div class="en">1. Hsinchu Zoo was built in 1936. Hsinchu Zoo is Taiwan’s oldest zoo.<br>→ '+fx("[[|Built in 1936, Hsinchu Zoo is Taiwan’s oldest zoo.]]")+'<br><br>2. Janet didn’t look up from her book. She was completely immersed in her reading.<br>→ '+fx("[[|Janet didn’t look up from her book, completely immersed in her reading.]]")+'<br><br>3. The traveler was hungry and exhausted. He was desperate to find a place to stay for the night.<br>→ '+fx("[[|(Being) Hungry and exhausted, the traveler was desperate to find a place to stay for the night.]]")+'<br><br>4. Bryan had prepared well before the final exam. Bryan was confident that he could ace it.<br>→ '+fx("[[|Having prepared well before the final exam, Bryan was confident that he could ace it.]]")+'</div><div class="zh">課本句型 2（分詞構句）第 1~4 題合併練習。</div></div>' + clue("• 被動省略 Being 留 <code>p.p.</code>（Built / immersed）<br>• 形容詞補語省略 Being 留 <code>Adj.</code>（Hungry and exhausted）<br>• 先發生的過去完成式改為 <code>Having + p.p.</code>（Having prepared）")),
-  card("句2-5", ["句型2：翻譯", "主動分詞構句 V-ing"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">5. Clara 在台上深呼吸，思考著該如何開始她的演講。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Clara took a deep breath on the stage, thinking about how to begin/start her speech.]]")+'</div></div>' + clue("亦可將前句改為分詞構句：<code>Taking a deep breath on the stage, Clara thought about how to start her speech.</code>")),
-  card("句2-6", ["句型2：翻譯", "結果分詞構句"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">6. 強震上週侵襲印尼 (Indonesia)，毀了許多建築物並導致數百人死亡。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|A powerful earthquake hit Indonesia last week, destroying many buildings and leaving hundreds of people dead.]]")+'</div></div>' + clue("後半句亦可用 <code>and killing hundreds of people</code>。")),
-  card("句2-7", ["句型2：翻譯", "形容詞分詞構句"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">7. 睿智又幽默，那位老師很受學生喜愛。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|(Being) Wise and humorous, the teacher is very popular with students.]]")+'</div></div>' + clue("<code>(Being) + adj., S + V</code>，句首的 Being 通常省略。")),
-  card("句2-8", ["句型2：翻譯", "完成式分詞構句 Having + p.p."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">8. 因為 Andrew 已經在法國住了十年，所以他會講流利的法語。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Having lived in France for ten years, Andrew can speak fluent French.]]")+'</div></div>' + clue("「已經住了十年」為持續至今的完成動作，分詞構句用 <code>Having lived...</code>；句尾亦可用 <code>speak French fluently</code>。")),
-  card("句2-9", ["句型2：翻譯", "被動分詞構句 p.p."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">9. Nicole 被推銷員說服，買了一堆她不需要的化妝品 (cosmetics)。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Persuaded by the salesperson, Nicole bought lots of cosmetics that she didn’t need.]]")+'</div></div>' + clue("Nicole 是「被說服」，省略 <code>Because she was</code> 後保留過去分詞 <code>Persuaded</code>。")),
-  card("句2-10", ["句型2：翻譯", "否定分詞構句 Not + p.p./adj."], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">10. 老師對我的作文不滿意，要我重寫一次。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Not satisfied with my composition, the teacher asked me to rewrite it.]]")+'</div></div>' + clue("原句為 <code>Because the teacher was not satisfied...</code>，省略連接詞、主詞與 was 後，否定詞 <code>Not</code> 直接置於句首。"))
-].join('');
+h += passage("L11-補充", [
+  [["英文地名寫法：由小到大，中間以逗點隔開", "Kaohsiung, Taiwan / Qianjin, Kaohsiung(, Taiwan) 高雄市前金區"]]
+]);
 
-document.getElementById('app').innerHTML = h1 + h2;
-const secs=[['p1','L1~L54 課文講解'],['p2','句型1 & 句型2']];
+h += card("L14", ["動詞字彙與語態", "be herded into 被驅趕進"], "B",
+  st("Over 400,000 Jews were [[L14|herded]] into this area, and thousands of them were dying from starvation and disease every month.", "超過四十萬名猶太人被像牲畜般驅趕進這個區域，每個月都有數千人死於飢餓和疾病。") +
+  clue("herd n. 一群相同的動物 (herds of elephants) / herd vt. 驅趕(牛羊、人群等) I started backpacking after I grew tired of being herded around with a lot of tourists.<br>flood / swarm / flock Vi. = move in large numbers 成群往某方向移動 ( + in / into / to / across / through / around, etc.)<br>swarm n. 一大群蜜蜂或昆蟲 / flock n. 一群鳥類. Refugees are still flooding across the border. Tourists flock to the town to see its medieval buildings.") +
+  ops([
+    ["flooded", "17%", ""],
+    ["herded", "40%", ""],
+    ["swarmed", "3%", ""],
+    ["flocked", "40%", ""]
+  ], "B")
+);
+
+h += passage("L15", [
+  [["die of / die from 死於(現代用法基本上of / from可通用)", "My grandfather died from/of cancer. / The woman finally died from/of old age."]]
+]);
+
+h += passage("L17", [
+  [["Horrified by these shocking conditions, Irena decided to join an underground resistance group and began helping to bring in food and medicine to the Jews secretly.", "對這些令人震驚的處境感到恐懼，伊蕾娜決定加入地下反抗組織，並開始秘密協助將食物和藥品帶進來給猶太人。"]]
+]);
+
+h += passage("L18", [
+  [["bring in food and medicine to the Jews = bring food and medicine in to the Jews", "in = adv. / bring sth in (to …) 將…帶進來(給…)"]],
+  [["However, she soon realized this would not be enough, as the ghetto was sealed and the Nazis had already started sending Jews to death camps.", "然而，她很快就意識到這樣還不夠，因為猶太區遭到封鎖，而且納粹已經開始將猶太人送往死亡集中營。"]]
+]);
+
+h += passage("L19", [
+  [["as (conj.) 因為", ""]]
+]);
+
+h += passage("L22", [
+  [["Determined to help, Irena recruited her friends and colleagues for a risky mission: sneaking Jewish children out of the ghetto.", "伊蕾娜決心提供幫助，她招募了朋友和同事執行一項冒險的任務：將猶太兒童偷偷帶出猶太區。"]],
+  [["determine vt. 判定；A決定B (B直接受A的影響)", "Investigators are still trying to determine the cause of the fire. Our prices are determined by the market. *determine較少用在「決定去做」→ He decided to give up."]],
+  [["determined adj. 有決心的", "She was determined to win."]],
+  [["determining adj. 決定性的", "Cost was the determining factor."]]
+]);
+
+h += passage("L23", [
+  [["sneak/smuggle … out of … 將…偷偷帶出", "The secret agent managed to sneak a few confidential documents out of the country."]],
+  [["fid- = trust", "confident adj. 有信心的 / fidelity n. 忠貞 / infidel adj. (感情中)不忠的 / infidelity n. (感情中) 的不忠"]]
+]);
+
+h += card("L24", ["動詞片語辨析", "manage to VR 設法成功做到"], "C",
+  st("To enter the isolated area, they [[L24|managed]] to obtain official passes.", "為了進入這個被封鎖隔離的區域，他們設法取得了官方通行證。") +
+  clue("manage to VR (努力之後)成功地做到<br>try to VR 試著去做 (有沒有、會不會成功都不知道)<br>strive 努力(試著做) = try very hard (三態：strive, strove, striven)<br>attempt 試著去做 = try") +
+  ops([
+    ["tried", "39%", ""],
+    ["attempted", "30%", ""],
+    ["managed", "27%", ""],
+    ["strove", "3%", ""]
+  ], "C")
+);
+
+h += passage("L24-補充", [
+  [["*牛刀小試(答案不重覆)*", "How do you manage to stay so slim? (*stay + SC = remain + SC 維持)<br>Few people knew that she had once attempted suicide. (*attempt sth 試著做 / * try sth/Ving 試試看效果如何/是否喜歡… The cake tastes great--you have to try it. Try rebooting your phone.)<br>I tried everything to lose weight with no success. (*try everything to = try very hard to)<br>The teacher constantly strives for excellence in his teaching. (*strive for 試著得到 / *strive to VR 努力去做… He strove/tried hard to express himself in English.)"]],
+  [["isolated p.p. / adj. 被隔絕的；被孤立的；被封鎖的", "That tribe lives in an isolated region and seldom comes into contact with people outside."]]
+]);
+
+h += passage("L25", [
+  [["pass n. 通行許可", "a backstage pass / a boarding pass / a 3-day pass"]],
+  [["Once inside, they faced an even bigger challenge: convincing Jewish parents to hand their children over to strangers.", "一旦進入內部，他們面臨更大的挑戰：說服猶太父母將孩子交給陌生人。"]],
+  [["once conj. 一旦", "Once (they were) inside… *once 引導的子句用現在式代替未來式 / Once you start to smoke, it will gradually do damage to your body."]],
+  [["sb faces a problem = a problem faces sb = sb is faced with a problem 某人面臨某問題", "They are facing a difficult choice. = A difficult choice is facing them. = They are faced with a difficult choice."]]
+]);
+
+h += passage("L27", [
+  [["hand A (over) to B 把A交給B", "The robbers finally gave up resistance and handed their weapons over to the police."]]
+]);
+
+h += passage("L28", [
+  [["In the end, many parents made the heart-wrenching decision in hopes that their children could survive even if they themselves couldn’t.", "最後，許多父母做出了令人心碎的決定，希望即使自己無法活下來，孩子們也能倖存。"]],
+  [["in hopes that (較古老，現代英文少見)(字典查無) = in the hope that (較常用)", "He asked her again in the hope that he could persuade her to come."]]
+]);
+
+h += passage("L31", [
+  [["Hidden in everything from suitcases to flour sacks, the children were smuggled out in various ways. One ambulance driver even hid babies under stretchers and trained his dog to bark in order to drown out their cries. Irena and the other courageous people were risking their own lives.", "孩子們被藏在從行李箱到麵粉袋等各種物品中，以不同方式偷運出去。一名救護車司機甚至將嬰兒藏在擔架下，並訓練他的狗吠叫以蓋過嬰兒的哭聲。伊蕾娜和其他勇敢的人們正冒著生命危險。"]]
+]);
+
+h += card("L36", ["萬一假設倒裝", "Should + S + VR"], "A",
+  st("[[L36|Should]] they be caught, these compassionate smugglers and their families would certainly face execution.", "萬一他們被捕，這些富有同情心的偷運者及其家人肯定會面臨處決。") +
+  clue("Once/If (they were) caught, these compassionate smugglers and their families would certainly face execution. once = if 連接詞若省略，則意思不清楚。Once / If caught = If they should be caught,(萬一) = Should they be caught, = Upon/On arrest/capture, = In the event of their capture/arrest,") +
+  ops([
+    ["Should", "6%", ""],
+    ["Once", "70%", ""],
+    ["In the event of", "9%", ""],
+    ["In case", "15%", ""]
+  ], "A")
+);
+
+h += card("L38", ["形容詞片語", "complete with 附有/齊備"], "C",
+  st("After successfully escaping, the children were given new identities, [[L38|complete]] with fake birth documents and family records.", "成功逃脫後，孩子們獲得了新的身分，還附有偽造的出生證明和家庭紀錄。") +
+  clue("complete adj. 可用來表示強調 He's a complete idiot. She's the complete opposite of me. <br>complete adj. with 有(包含)… ≒ including ≒ inclusive of. The book, (which is) complete with 3 DVD’s, costs $35. <br>come complete with ≒ include. All our machines come complete with our three-year service guarantee. The report comes complete with (= includes) diagrams and color photographs.") +
+  ops([
+    ["filled", "43%", "充滿？ The island was packed/filled with tourists in summer."],
+    ["packed", "15%", "充滿？"],
+    ["complete", "17%", "(which were) complete"],
+    ["inclusive", "25%", "→ inclusive with(X) inclusive of(O)"]
+  ], "C")
+);
+
+h += passage("L40", [
+  [["Some were taken in by kind and brave Polish families, while others were sent to orphanages or convents.", "有些孩子被善良勇敢的波蘭家庭收留，而其他人則被送到孤兒院或修道院。"]],
+  [["while 用來表示兩者之間的對比(而…)，或雖然", "例 Schools in the north tend to be better equipped, while those in the south are relatively poor. 例 While there was no conclusive evidence, most people thought he was guilty."]]
+]);
+
+h += card("L42", ["句子主要動詞", "included vs. including"], "D",
+  st("Irena hoped that after the war the children could be reunited with their parents, so she kept detailed records. Her list [[L42|included]] each child’s real name, his or her new identity, location, and parents’ names.", "伊蕾娜希望戰後孩子們能與父母團聚，因此她保留了詳細的紀錄。她的名單包含了每個孩子的真實姓名、新身分、所在地以及父母的姓名。") +
+  clue("Her list(S) included(Vt.) each child’s real name(O1), his or her new identity(O2), location(O3), and parents’ names(O4).") +
+  ops([
+    ["inclusive of", "0%", ""],
+    ["includes", "27%", ""],
+    ["including", "12%", ""],
+    ["included", "62%", ""]
+  ], "D")
+);
+
+h += passage("L42-補充", [
+  [["include用法整理：The price is $25.50, and it includes postage and packing. = The price is $25.50, (and it is) including (=which includes) postage and packing. = The price is $25.50, (which is) inclusive of postage and packing. = The price is $25.50, postage and packing included.", "★ and和are最好都省略，此處只是解釋此句型如何得來。注意 including / inclusive of / … included 的部分皆不可獨立為一句。(X) The price is $25.50. Including postage and packing."]]
+]);
+
+h += card("L46", ["介系詞片語辨析", "at the height of 在…高峰期"], "D",
+  st("Unfortunately, [[L46|at the height of]] this rescue operation, Irena was arrested for her underground work.", "不幸的是，在這場救援行動的最高峰期，伊蕾娜因從事地下工作而被捕。") +
+  clue("at the height of 在…高峰期、在…的頂點(抽象頂點，非實際高點) Many employees are surprised that the CEO has decided to retire at the height of his career. 許多員工對CEO決定在其職業生涯的巔峰時期退休感到驚訝 / At the height of the concert, the lead singer brought the audience to their feet. 在音樂會的高潮時，主唱使觀眾站了起來。") +
+  ops([
+    ["in light of", "19%", "考慮到特定的事實或情況 In light of the recent increase in crime, the city is implementing new safety measures."],
+    ["by means of", "26%", "通過使用特定的方法或系統 The company was able to expand its business by means of a successful marketing campaign."],
+    ["from the beginning of", "22%", "自某件事情開始 From the beginning of her career, she has been passionate about helping others."],
+    ["at the height of", "33%", ""]
+  ], "D")
+);
+
+h += passage("L47", [
+  [["Despite being brutally tortured, she refused to reveal any information. She chose to sacrifice her own life instead of putting the lives of others at risk.", "儘管遭受殘酷折磨，她仍拒絕透露任何資訊。她選擇犧牲自己的生命，也不願讓其他人的生命陷入危險。"]],
+  [["despite prep. 雖然；儘管 = in spite of", "despite是介系詞，後面要接名詞或動名詞片語，而非完整的子句. Despite the heavy rain, Edward went out to search for his dog. （接名詞片語） = Although it was raining heavily, Edward went out to search for his dog. （接子句）"]],
+  [["試用although改寫：", "Despite being brutally tortured… = Although (she was) (being) brutally tortured… = Although she was brutally tortured…"]]
+]);
+
+h += passage("L49", [
+  [["put … at risk = put … in danger = endanger 使…陷入危險", "If you insist on driving on the icy road at night, you’re putting your own life at risk."]]
+]);
+
+h += passage("L50", [
+  [["Eventually, Irena was rescued by her friends and continued to work to save Jewish children while living in hiding.", "最終，伊蕾娜被朋友救出，並在躲藏度日的同時繼續致力於拯救猶太兒童。"]]
+]);
+
+h += passage("L51", [
+  [["work to = strive to = try very hard to", ""]]
+]);
+
+h += passage("L52", [
+  [["be in hiding 處於躲起來的狀態", "go into hiding 開始躲藏 / come out of hiding 結束躲藏. He went into hiding in 1973."]],
+  [["If Irena and her friends had not helped, over 2,000 children would have ended up in the death camps.", "如果當時伊蕾娜和她的朋友沒有伸出援手，超過兩千名兒童最終就會被送進死亡集中營。"]]
+]);
+
+h += passage("L53", [
+  [["end up + V-ing / p.p. / adj. / (as) N / prep.... 結果成為⋯；最後變得⋯ 表示令人意外的結果或下場", "If you don’t quit gambling, you will end up losing all your money. Most of the plastic waste that people have thrown away ends up in the ocean."]]
+]);
+
+h += passage("L54", [
+  [["To this day, Irena Sendler is still remembered for her selfless acts during the Holocaust.", "直到今天，伊蕾娜・森德勒仍因她在大屠殺期間的無私行為而為人銘記。"]],
+  [["act (某次)行為 可數名詞", "Saving the boys from the river was an act of great courage."]],
+  [["action 行動[U]；某人所做的事pl. 可數或不可數名詞", "We must take responsibility for our own actions. / The government should take action to solve the problem."]],
+  [["conduct (道德/法律/規則方面的)行為 不可數名詞", "The president’s conduct is being investigated."]],
+  [["behavior (整體的、習慣性的)行為 不可數名詞", "His behavior in school is beginning to improve."]],
+  [["demeanor n. 舉止；儀態 不可數名詞", "There was nothing in his demeanor that suggested he was anxious."]],
+  [["deed n. 非常好或非常壞的行為", "He was rewarded for his good deeds."]]
+]);
+
+h += passage("L55", [
+  [["While she never admitted it, she was a true hero who risked her life to save others, and her story of bravery and compassion continues to inspire people all over the world.", "雖然她從未承認過，但她是一位冒著生命危險拯救他人的真正英雄，她勇敢與慈悲的故事持續激勵著全世界的人們。"]]
+]);
+
+h += passage("L56", [
+  [["inspire vt. to make someone feel that they want to do something and can do it 激勵，鼓舞(使人有雄心壯志)", "His confident leadership inspired his followers. After her trip to Venezuela, she felt inspired to learn Spanish."]]
+]);
+
+// --- 課本句型實例 1 ---
+h += '<h2 id="p2">句型1 If + S + had p.p., S + would/could/might/should + have p.p.</h2>';
+
+h += card("句1-1", ["句型1"], "If I had had enough time, I would have finished the project.",
+  '<div class="stem"><div class="zh" style="color:inherit">1. I didn’t finish the project because I didn’t have enough time.</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|If I had had enough time, I would have finished the project.]]")+'</div></div>'
+);
+
+h += card("句1-2", ["句型1"], "If Dad had remembered to bring the key, we wouldn't have gotten locked out.",
+  '<div class="stem"><div class="zh" style="color:inherit">2. As Dad forgot to bring the key, we got locked out.</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|If Dad hadn’t forgotten (had remembered) to bring the key, we wouldn’t have gotten locked out.]]")+'</div></div>'
+);
+
+h += card("句1-3", ["句型1"], "If Janet had cited the source of information, she wouldn’t have been accused of plagiarism.",
+  '<div class="stem"><div class="zh" style="color:inherit">3. Janet didn’t cite the source of information and was thus accused of plagiarism(剽竊).</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|If Janet had cited the source of information, she wouldn’t have been accused of plagiarism.]]")+'</div></div>'
+);
+
+h += card("句1-4", ["句型1"], "If we hadn’t taken a taxi, we couldn’t have gotten to the airport on time.",
+  '<div class="stem"><div class="zh" style="color:inherit">4. We took a taxi. Therefore, we could get to the airport on time.</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|If we hadn’t taken a taxi, we couldn’t have got(gotten) to the airport on time.]]")+'</div></div>'
+);
+
+h += card("句1-5", ["句型1"], "If John hadn't fallen in love with another woman at that time, Linda might not have broken up with him.",
+  '<div class="stem"><div class="zh" style="color:inherit">5. 如果當時John沒有愛上另一個女人，Linda可能就不會和他分手了</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|If John hadn't fallen in love with another woman at that time, Linda might not have broken up with him.]]")+'</div></div>'
+);
+
+h += card("句1-6", ["句型1"], "If Patrick had remembered their wedding anniversary then, Anne wouldn’t have flown into a rage.",
+  '<div class="stem"><div class="zh" style="color:inherit">6. 如果當時Patrick記得他們的結婚紀念日，Anne就不會大發雷霆(rage)了</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|If Patrick had remembered their wedding anniversary then, Anne wouldn’t have flown into a rage.]]")+'</div></div>' + clue('fly, flew, flown')
+);
+
+h += card("句1-7", ["句型1"], "If Barry Allen hadn't been hit by lightning, he wouldn't have become the Flash.",
+  '<div class="stem"><div class="zh" style="color:inherit">7. 如果Barry Allen沒被閃電擊中，他就不會變成閃電俠(the Flash)了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|If Barry Allen hadn't been hit (struck) by lightning, he wouldn't have become the Flash.]]")+'</div></div>' + clue('If Barry Allen hadn\'t been hit by light(X)e(X)ning, he wouldn\'t have become the Flash.')
+);
+
+h += card("句1-8", ["句型1"], "If Hayley hadn't cheated in/on the exam, she wouldn't have been grounded.",
+  '<div class="stem"><div class="zh" style="color:inherit">8. 如果Hayley考試沒有作弊，她就不會被禁足(ground)了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|If Hayley hadn't cheated in/on the exam, she wouldn't have been grounded.]]")+'</div></div>'
+);
+
+h += card("句1-9", ["句型1"], "If Carrie had entered medical school then, she might be a doctor now.",
+  '<div class="stem"><div class="zh" style="color:inherit">9. 如果Carrie當時進了醫學院，她現在可能是個醫生了。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|If Carrie had entered medical school then, she might be a doctor now.]]")+'</div></div>' + clue('※ 注意此句的時態變化！')
+);
+
+// --- 課本句型實例 2 ---
+h += '<h2 id="p3">句型2 分詞構句</h2>';
+
+h += card("句2-1", ["句型2"], "Built in 1936, Hsinchu Zoo is Taiwan’s oldest zoo.",
+  '<div class="stem"><div class="zh" style="color:inherit">1. Hsinchu Zoo was built in 1936. Hsinchu Zoo is Taiwan’s oldest zoo.</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Built in 1936, Hsinchu Zoo is Taiwan’s oldest zoo.]]")+'</div></div>'
+);
+
+h += card("句2-2", ["句型2"], "Janet didn’t look up from her book, completely immersed in her reading.",
+  '<div class="stem"><div class="zh" style="color:inherit">2. Janet didn’t look up from her book. She was completely immersed in her reading.</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Janet didn’t look up from her book, completely immersed in her reading.]]")+'</div></div>' + clue('Janet didn’t look up from her book, because(X) she(X) was(X) completely immersed in her reading. *be immersed in 沉浸於…')
+);
+
+h += card("句2-3", ["句型2"], "(Being) hungry and exhausted, the traveler was desperate to find a place to stay for the night.",
+  '<div class="stem"><div class="zh" style="color:inherit">3. The traveler was hungry and exhausted. He was desperate to find a place to stay for the night.</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|(Being) hungry and exhausted, the traveler was desperate to find a place to stay for the night.]]")+'</div></div>'
+);
+
+h += card("句2-4", ["句型2"], "Having prepared well before the final exam, Bryan was confident that he could ace it.",
+  '<div class="stem"><div class="zh" style="color:inherit">4. Bryan had prepared well before the final exam. Bryan was confident that he could ace it.</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Having prepared well before the final exam, Bryan was confident that he could ace it.]]")+'</div></div>'
+);
+
+h += card("句2-5", ["句型2"], "Clara took a deep breath on the stage, thinking about how to start her speech.",
+  '<div class="stem"><div class="zh" style="color:inherit">5. Clara在台上深呼吸，思考著該如何開始她的演講。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Clara took a deep breath on the stage, thinking about how to begin her speech.]]")+'</div></div>' + clue('= Taking a deep breath on the stage, Clara thought about … how to start her speech.')
+);
+
+h += card("句2-6", ["句型2"], "A powerful earthquake hit Indonesia last week, destroying many buildings and leaving hundreds of people dead.",
+  '<div class="stem"><div class="zh" style="color:inherit">6. 強震上週侵襲印尼(Indonesia)，毀了許多建築物並導致數百人死亡</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|A powerful earthquake hit Indonesia last week, destroying many buildings and leaving hundreds of people dead.]]")+'</div></div>' + clue('killing hundreds of people.')
+);
+
+h += card("句2-7", ["句型2"], "(Being) Wise and humorous, that teacher is very popular with students.",
+  '<div class="stem"><div class="zh" style="color:inherit">7. 睿智又幽默，那位老師很受學生喜愛。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|(Being) Wise and humorous, that/the teacher is very popular with students.]]")+'</div></div>'
+);
+
+h += card("句2-8", ["句型2"], "Having lived in France for ten years, Andrew can speak French fluently.",
+  '<div class="stem"><div class="zh" style="color:inherit">8. 因為Andrew已經在法國住了十年，所以他會講流利的法語。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Having lived in France for ten years, Andrew can speak French fluently (fluent French).]]")+'</div></div>'
+);
+
+h += card("句2-9", ["句型2"], "Persuaded by the salesman, Nicole bought a lot of cosmetics that she didn’t need.",
+  '<div class="stem"><div class="zh" style="color:inherit">9. Nicole被推銷員說服，買了一堆她不需要的化妝品(cosmetics)。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Persuaded by the salesman (salesperson), Nicole bought a lot of (lots of) cosmetics that she didn’t need.]]")+'</div></div>'
+);
+
+h += card("句2-10", ["句型2"], "Not satisfied with my composition, the teacher asked me to write again.",
+  '<div class="stem"><div class="zh" style="color:inherit">10. 老師對我的作文不滿意，要我重寫一次。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Not satisfied with my composition, the teacher asked me to write again (rewrite it).]]")+'</div></div>'
+);
+
+
+document.getElementById('app').innerHTML = h;
+
+const secs=[
+  ['p1','課文與重點解析'],
+  ['p2','句型 1'],
+  ['p3','句型 2']
+];
 document.getElementById('nav').innerHTML=secs.map(s=>'<a href="#'+s[0]+'">'+s[1]+'</a>').join('')+'<button id="tg">全部收合</button>';
 let open=true;
-document.getElementById('tg').onclick=function(){open=!open;document.querySelectorAll('details.q').forEach(d=>d.open=open);this.textContent=open?'全部收合':'全部展開';};
+document.getElementById('tg').onclick=function(){
+  open=!open;
+  document.querySelectorAll('details.q').forEach(d=>d.open=open);
+  this.textContent=open?'全部收合':'全部展開';
+};
 </script>
 <script src="bookmark.js"></script>
 </body>

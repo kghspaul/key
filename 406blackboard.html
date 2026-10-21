@@ -76,242 +76,348 @@ function ops(list,ans,lab){lab=lab||'ABCDEF';return '<ul class="op">'+list.map((
 function card(n,tags,ans,body){
   return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
 }
-
 const st=(en,zh)=>'<div class="stem"><div class="en">'+fx(en)+'</div><div class="zh">'+zh+'</div></div>';
 
-/* === Part 1: Thinking Ahead & L1 ~ L54 課文講解 === */
-const h1 = '<h2 id="p1">Thinking Ahead ＆ L1 ~ L54 課文講解</h2>' +
-  passage("Thinking Ahead 課前字彙與填空練習", [[
-    ["字彙表：1. keep up with (phr. 趕上) ｜ 2. vehicle (n. 車輛) ｜ 3. manage (v. 設法做到) ｜ 4. rearrange (v. 重新安排) ｜ 5. illiterate (adj. 文盲的) ｜ 6. intricate (adj. 錯綜複雜的) ｜ 7. accuracy (n. 準確) ｜ 8. abandon (v. 放棄) ｜ 9. enthusiasm (n. 熱誠) ｜ 10. endurance (n. 耐力)", "課前核心字彙整理。"],
-    ["1. The [[|intricate]] plot of the novel was so interesting that I forgot to cook dinner.", "這部小說錯綜複雜的情節太有趣了，以至於我忘了煮晚餐。"],
-    ["2. Watch out for [[|vehicles]] while walking across the road.", "過馬路時要當心車輛。"],
-    ["3. Due to the flight delay, we had to [[|rearrange]] our trip, and we also had to let the hotel know we would be late.", "由於班機延誤，我們必須重新安排行程，也必須通知飯店我們會晚到。"],
-    ["4. In spite of a traffic jam, I [[|managed]] to get there on time. Luckily, I was even three minutes early.", "儘管塞車，我還是設法準時趕到那裡。幸運的是，我甚至還提早了三分鐘。"],
-    ["5. Susan shows [[|enthusiasm]] for politics. Her ambition is to be a mayor.", "蘇珊對政治展現出熱忱。她的抱負是成為一名市長。"]
-  ]]) + [
-  card("L1", ["動詞字彙搭配", "execute transactions 執行交易"], "B",
-    st("Imagine a modern enterprise that [[L1|executes]] around 400,000 transactions daily with an error rate of merely one in sixteen million.", "想像一家現代企業，每天執行約四十萬筆交易，而失誤率僅為一千六百萬分之一。") +
-    clue("受詞為 <code>around 400,000 transactions</code>（約四十萬筆交易／業務處理），表示「執行、完成（交易或計畫）」搭配 <code>executes</code>。") +
-    ops([
-      ["operates", "36%", "經營、操作（受詞通常為機器、伺服器或企業本身，如 <i>operates several servers</i>，不搭配 transactions）。"],
-      ["executes", "38%", "執行、實行（如 <i>executes the plan / transactions</i>）。"],
-      ["transfers", "7%", "轉移、調動（如 <i>transfers employees to other branches</i>）。"],
-      ["manufactures", "20%", "製造、生產（受詞為工廠產品，如 <i>manufactures high-quality products</i>）。"]
-    ], "B") +
-    passage("L2 ~ L4 課文段落與補充例句", [[
-      ["X in Y = X out of Y（比例表達法）：One out of five page views in the US occurs on Facebook. / One in five women in Seoul have gone under the knife.", "在美國，五分之一的頁面瀏覽量發生在臉書上。／首爾每五名女性就有一人曾接受整形手術（go under the knife 動刀／手術）。"],
-      ["【L3】You might expect only highly advanced computers to be capable of such levels of accuracy, but actually, only simple tools like bicycles and colored pens are used.", "你可能會以為只有高度先進的電腦才有能力達到如此的準確度，但事實上，他們只使用了腳踏車和彩色筆等簡單工具。"]
-    ]])
-  ),
+let h = '';
 
-  card("L5", ["表部分與全體之介系詞", "Of ..., 85% are..."], "A",
-    st("Furthermore, [[L5|of]] this enterprise’s 5,000 employees, 85% are illiterate! What company could this possibly be?", "此外，在這家企業的五千名員工中，有 85% 是文盲！這究竟會是什麼樣的公司呢？") +
-    clue("原句為 <code>85% <b>of</b> this enterprise's 5,000 employees are illiterate!</code>，為了強調母體數量，將 <code>Of this enterprise's 5,000 employees</code> 移至句首，表「在這家企業的五千名員工之中」。") +
-    ops([
-      ["of", "39%", "表「在…之中（從整體中取出部分比例）」。"],
-      ["despite", "13%", "儘管（若用 despite 會變成「儘管這五千名員工，85%是文盲」，語意不通）。"],
-      ["beyond", "25%", "超越、在…之外。"],
-      ["with", "23%", "有、伴隨（不構成比例包含關係）。"]
-    ], "A")
-  ),
+h += '<h2 id="p1">Thinking Ahead ＆ 課文講解</h2>';
 
-  card("L7", ["分詞片語修飾", "situated in 座落於"], "D",
-    st("It’s the Nutan Mumbai Tiffin Box Suppliers Association, a home-cooked lunch delivery organization [[L7|situated]] in Mumbai, India.", "它是「孟買努坦便當盒供應商協會」，一個位於印度孟買的家常午餐外送組織。") +
-    clue("<code>situate / locate</code> 為及物動詞「使…位於…」，表「座落於某地」需用被動 <code>be situated / located + prep.</code>。此處由關係子句 <code>(which/that is) situated in Mumbai</code> 簡化為過去分詞 <code>situated</code>。") +
-    ops([
-      ["that situated", "16%", "主動語態錯誤，應為 <code>that is situated</code>。"],
-      ["which situates", "11%", "主動語態錯誤。"],
-      ["situating", "5%", "主動現在分詞錯誤。"],
-      ["situated", "68%", "省略 <code>which is</code> 的過去分詞片語，修飾 organization。"]
-    ], "D")
-  ),
+h += passage("Thinking Ahead Vocabulary", [
+  [["字彙表：1. keep up with (phr. 趕上) ｜ 2. vehicle (n. 車輛) ｜ 3. manage (v. 設法做到) ｜ 4. rearrange (v. 重新安排) ｜ 5. illiterate (adj. 文盲的) ｜ 6. intricate (adj. 錯綜複雜的) ｜ 7. accuracy (n. 準確) ｜ 8. abandon (v. 放棄) ｜ 9. enthusiasm (n. 熱誠) ｜ 10. endurance (n. 耐力)", ""]],
+  [["1. The [[|intricate]] plot of the novel was so interesting that I forgot to cook dinner.", "這本小說錯綜複雜的情節太有趣了，以至於我忘了煮晚餐。"]],
+  [["2. Watch out for [[|vehicles]] while walking across the road.", "過馬路時要當心車輛。"]],
+  [["3. Due to the flight delay, we had to [[|rearrange]] our trip, and we also had to let the hotel know we would be late.", "由於班機延誤，我們必須重新安排行程，也必須通知飯店我們會晚到。"]],
+  [["4. In spite of a traffic jam, I [[|managed]] to get there on time. Luckily, I was even three minutes early.", "儘管塞車，我還是設法準時趕到那裡。幸運的是，我甚至還提早了三分鐘。"]],
+  [["5. Susan shows [[|enthusiasm]] for politics. Her ambition is to be a mayor.", "蘇珊對政治展現出熱忱。她的抱負是成為一名市長。"]]
+]);
 
-  card("L10", ["慣用搭配", "be due (in large part) to 歸因於"], "B",
-    st("This company delivers around 200,000 home-made lunches daily to office and factory workers. Its success is [[L10|due]] in large part to its employees, known as dabbawalas.", "這家公司每天為辦公室職員和工廠工人遞送約二十萬份家常便當。它的成功在很大程度上歸功於其被稱為「達巴瓦拉（dabbawalas）」的員工。") +
-    clue("句型：<code>be due (in large part) to + N</code>（在很大程度上歸功於／歸因於…）。中間插入了副詞片語 <code>in large part</code>（很大程度上 = to a great degree），不要因此認不出原本的 <code>be due to</code>！") +
-    ops([
-      ["because", "2%", "連接詞不放在 is ___ to 中間。"],
-      ["due", "13%", "構成 <code>is due (in large part) to its employees</code>（歸功於其員工）。"],
-      ["connected", "46%", "常見誤答！「成功」不是「與員工連接在一起（connected to）」，而是「歸功於（due to）」員工。"],
-      ["caused", "39%", "若用 caused 必須搭配介系詞 <code>by</code>（be caused by），而非 to。"]
-    ], "B")
-  ),
+h += card("L1", ["字彙選擇", "executes 執行"], "B",
+  st("Imagine a modern enterprise that [[L1|executes]] around 400,000 transactions daily with an error rate of merely one in sixteen million.", "想像一家現代企業，每天執行約四十萬筆交易，而失誤率僅為一千六百萬分之一。") +
+  clue("around = about = approximately 大約") +
+  ops([
+    ["operates", "36%", "經營; 運營；操作。The IT department operates several servers to maintain the company's network infrastructure."],
+    ["executes", "38%", "執行; 實行。The project manager executes the plan with precision to ensure its success."],
+    ["transfers", "7%", "轉移; 轉讓。The company transfers its employees to other branches to meet staffing needs."],
+    ["manufactures", "20%", "製造; 生產。The factory manufactures high-quality products that meet international standards."]
+  ], "B")
+);
 
-  card("L12", ["同位語解釋", "or 亦即"], "B",
-    st("A dabbawala, [[L12|or]] “one who carries a box,” picks up lunches from customers’ homes and delivers these meals to their workplaces.", "「達巴瓦拉」，亦即「提便當盒的人」，負責從顧客家中收取午餐，並將這些餐點送到他們的工作場所。") +
-    clue("在專有名詞或外來語 <code>A dabbawala</code> 後方加上逗號，用 <code>, or “one who carries a box,”</code> 解釋其字面意義，此處的 <code>or</code> 意為「也就是、亦即」。") +
-    ops([
-      ["known for", "25%", "<code>known for</code> 為「因…而聞名」；若要表「被稱為…」應改為 <code>(which is) known as</code>。"],
-      ["or", "29%", "亦即、也就是，直接連接同位語解釋。"],
-      ["meant", "28%", "單字「意指…」為主動，應改為 <code>which means</code> 或現在分詞 <code>meaning</code>。"],
-      ["referring", "17%", "refer 必須搭配介系詞 <code>to</code>（應改為 <code>which refers to</code> 或 <code>referring to</code>）。"]
-    ], "B") +
-    passage("L14 ~ L16 課文段落與補充例句", [[
-      ["【L14】Since most Mumbai residents live in the suburbs and have to commute long distances to work every day, it’s inconvenient for them to carry their lunches on cramped public transportation.", "由於大多數孟買居民住在郊區，每天必須長途通勤上班，對他們來說，在擁擠的大眾運輸工具上提著便當非常不便。"],
-      ["V. + long distances（移動長距離）：He's used to driving long distances. / Women in Third World countries often have to walk long distances to get water.", "他習慣開長途車。／第三世界國家的婦女經常必須走遠路去取水。"]
-    ]])
-  ),
+h += passage("L2", [
+  [["with 表「有」", ""]]
+]);
 
-  card("L17", ["動詞片語辨析", "sit down to 坐下來享用/閱讀"], "C",
-    st("Therefore, dabbawalas provide a useful service by enabling workers to [[L17|sit down to]] healthy, home-made midday meals in their offices.", "因此，達巴瓦拉提供了實用的服務，讓上班族能在辦公室裡坐下來享用健康、家常的午餐。") +
-    clue("片語 <code>sit down to + N</code> 表示「坐下來開始（吃飯、喝茶、看書等）」（例：<i>sit down to a good book and a cup of tea</i>）。此處指讓上班族能在辦公室「坐下來享用」健康家常的午餐。") +
-    ops([
-      ["attend to", "35%", "處理、照料（如 <i>attend to their tasks</i>）。"],
-      ["respond to", "23%", "回應、對…作出反應（如 <i>respond to your commands</i>）。"],
-      ["sit down to", "22%", "坐下來享用（餐點）。"],
-      ["adapt to", "19%", "適應（如 <i>adapt to a new school</i>）。"]
-    ], "C") +
-    passage("L19 課文段落", [[
-      ["The dabbawalas’ delivery network has fascinated many people because it achieves a high level of efficiency through nothing but smart scheduling and teamwork.", "達巴瓦拉的配送網路令許多人著迷，因為它僅憑聰明的排程與團隊合作，就達到了極高的效率。"]
-    ]])
-  ),
+h += passage("L3", [
+  [["… one in sixteen million …", "X in Y / X out of Y 皆可表示「比例」"]],
+  [["One out of five page views in the US occurs on Facebook.", "在美國，五分之一的頁面瀏覽量是發生在Facebook上。"]],
+  [["One in five women in Seoul have gone under the knife as South Korea tops global list of plastic surgery procedures.", "首爾每五個女生就有一個曾接受(整形)手術，因為南韓在全球整形手術(數量)排名第一。"]]
+]);
 
-  card("L21", ["非限定關係子句 vs. 對等子句", "each of whom / and each of them (複選)"], "B, C",
-    st("This is how it works: Each geographical area employs around twenty-five dabbawalas, [[L21|each of whom / and each of them]] collects roughly thirty tiffin boxes.", "它的運作方式如下：每個地理區域僱用約二十五名達巴瓦拉，其中每個人負責收集大約三十個便當盒。") +
-    clue("注意兩大解題關鍵：<br>1. 逗號前面已經是一個完整句子，若沒有連接詞 <code>and</code>，就必須使用關係代名詞 <code>whom</code>！<br>2. 空格後的動詞是<b>單數動詞 <code>collects</code></b>！<br>• <code>each of whom / each of them</code> 主詞核心是單數的 <code>each</code>，接單數動詞 <code>collects</code>（✔）<br>• <code>who each / they each</code> 主詞核心是複數的 <code>who / they</code>（each 僅為同位語），後面必須接複數動詞 <code>collect</code>（✘）") +
-    ops([
-      ["each of them", "25%", "無連接詞，造成逗號連接兩個獨立句子（Run-on sentence）。"],
-      ["each of whom", "69%", "具有連接詞功能的關係代名詞 whom + 單數主詞 each 搭配 collects。"],
-      ["and each of them", "78%", "對等連接詞 and + 單數主詞 each 搭配 collects。"],
-      ["who each", "22%", "who 指複數的 dabbawalas，動詞應為複數 collect 而非 collects。"],
-      ["and they each", "41%", "they 為複數主詞，動詞應為複數 collect（如 <i>We each have our own skills.</i>）。"]
-    ], "BC", "ABCDE")
-  ),
+h += passage("L3", [
+  [["You might expect only highly advanced computers to be capable of such levels of accuracy, but actually, only simple tools like bicycles and colored pens are used.", "你可能會以為只有高度先進的電腦才有能力達到如此的準確度，但事實上，他們只使用了腳踏車和彩色筆等簡單工具。"]],
+  [["be capable of + N/V-ing = be able to + VR 有做⋯的能力", "Ally is capable of handling such an important task."]]
+]);
 
-  card("L23", ["介系詞片語辨析", "according to 根據"], "D",
-    st("These boxes are then swiftly sorted [[L23|according to]] their general destinations before being loaded onto trains for delivery. Then, the dabbawalas board their trains and travel with the lunchboxes.", "接著，這些便當盒在裝上火車運送之前，會先根據大致的目的地快速分類。然後，達巴瓦拉會搭上火車，隨同便當盒一起移動。") +
-    clue("便當盒會先「根據（according to）」它們大致的目的地進行快速分類。") +
-    ops([
-      ["with regard to", "—", "關於（= regarding，用於引出討論主題）。"],
-      ["in line with", "—", "與…一致、符合（如 <i>in line with company policy</i>）。"],
-      ["in light of", "—", "有鑑於、考慮到（如 <i>In light of recent events...</i>）。"],
-      ["according to", "—", "根據、依照。"]
-    ], "D")
-  ),
+h += card("L6", ["介系詞選擇", "of 在...之中"], "A",
+  st("Furthermore, [[L6|of]] this enterprise’s 5,000 employees, 85% are illiterate! What company could this possibly be?", "此外，在這家企業的五千名員工中，有 85% 是文盲！這究竟會是什麼樣的公司呢？") +
+  clue("Of its 5,000 employees, 85% are illiterate! = 85% of its 5,000 employees are illiterate!") +
+  ops([
+    ["of", "39%", ""],
+    ["despite", "13%", ""],
+    ["beyond", "25%", ""],
+    ["with", "23%", ""]
+  ], "A")
+);
 
-  card("L23-挑戰", ["否定副詞倒裝挑戰題", "Not until ... + 助/be + S + V"], "D",
-    st("挑戰題：Not until the boxes have been sorted swiftly according to their general destinations [[L23-挑戰|are they loaded]] onto trains for delivery.", "直到這些便當盒根據大致的目的地快速分類完成後，它們才會被裝上火車運送。") +
-    clue("本課核心句型 1：<br>• 若句首是 <code>Not until + 副詞/子句</code>：後方主要子句必須<b>倒裝（助動詞/be + S + V）</b> → <code>are they loaded</code>。<br>• 若句首是 <code>It is not until ...</code>（分裂強調句）：後方才接 <code>that + 不倒裝完整子句</code>。") +
-    ops([
-      ["that they are loaded", "32%", "句首沒有 It is，不可用 that 子句！"],
-      ["that are loaded", "27%", "結構錯誤且缺主詞。"],
-      ["that they loaded", "23%", "結構與主動語態皆錯誤。"],
-      ["are they loaded", "18%", "<code>Not until + 子句</code> 置於句首，主要子句倒裝為 <code>are they loaded</code>。"]
-    ], "D")
-  ),
+h += card("L9", ["分詞構句", "situated in 座落於"], "D",
+  st("It’s the Nutan Mumbai Tiffin Box Suppliers Association, a home-cooked lunch delivery organization [[L9|situated]] in Mumbai, India.", "它是「孟買努坦便當盒供應商協會」，一個位於印度孟買的家常午餐外送組織。") +
+  clue("S + be + situated/located + prep. 座落於⋯⋯ The new restaurant is situated by the scenic river, so it is full almost every day.") +
+  ops([
+    ["that situated", "16%", ""],
+    ["which situates", "11%", ""],
+    ["situating", "5%", ""],
+    ["situated", "68%", "(which/that is) situated"]
+  ], "D")
+);
 
-  card("L27", ["介系詞 + 關係代名詞", "to which (go to a location)"], "D",
-    st("At each destination train station, these boxes are sorted again. This time they are divided depending on the buildings or more specific locations [[L27|to which]] the boxes must go.", "在每個目的地火車站，這些便當盒會再次被分類。這一次，它們會根據便當盒必須送往的建築物或更具體的位置來進行分配。") +
-    clue("還原關係子句：<code>the boxes must go <b>to</b> the buildings or more specific locations</code>。<br>因為不及物動詞 <code>go</code> 搭配介系詞 <code>to</code> 表「前往某地點」，將介系詞移至關代前即為 <code>to which</code>（= <code>where</code>）。") +
-    ops([
-      ["which", "7%", "go 為不及物動詞，不能直接接 which 當受詞，缺介系詞 to。"],
-      ["in which", "10%", "變成「在建築物裡面走（go in）」，而非「送往（go to）該建築物」。"],
-      ["at which", "4%", "go 不搭配 at。"],
-      ["to which", "79%", "<code>go to the locations</code> → <code>locations to which the boxes must go</code>。"]
-    ], "D") +
-    passage("L27 補充例句", [[
-      ["depending on（= according to 根據）：The salary varies from NT$30,000 to 40,000, depending on your experience.", "薪資從三萬到四萬台幣不等，視你的經驗而定。"]
-    ]])
-  ),
+h += passage("L9", [
+  [["tiffin n. (UK) = lunch", ""]],
+  [["L10 home-cooked lunches = lunches (which are) cooked at home (N-p.p. = p.p. + 介 + N)", ""]]
+]);
 
-  card("L29", ["否定副詞句首倒裝", "Not until ... can each box be..."], "B",
-    st("[[L29|Not until]] this second round of sorting has been completed can each tiffin box be delivered to its rightful owner.", "直到這第二輪的分類完成後，每個便當盒才能被送到其真正的主人手中。") +
-    clue("觀察後半句主要子句已經倒裝：<code><b>can</b> each tiffin box <b>be</b> delivered to its rightful owner</code>！<br>這代表句首必定是帶有否定意味的 <code>Not until</code>（直到第二輪分類完成，每個便當盒才能被送到真正主人手中）。<br>補充：<code>rightful</code> (adj.) 指「合法的、正當應得的（legally or morally right）」。") +
-    ops([
-      ["Ever since", "19%", "自從…以來（主要子句不倒裝，且應搭配完成式）。"],
-      ["Not until", "39%", "直到…才…，置於句首時後方主要子句須倒裝（<code>can each tiffin box be...</code>）。"],
-      ["By the time", "31%", "到了…的時候（主要子句不倒裝）。"],
-      ["Now that", "11%", "既然（主要子句不倒裝）。"]
-    ], "B") +
-    passage("L31 ~ L35 課文段落", [[
-      ["【L31】In the afternoon, the dabbawalas retrace their original routes in order to bring back each empty lunchbox to its owner’s home.", "到了下午，達巴瓦拉會循著原路線折返，以便將每個空便當盒帶回主人的家。"],
-      ["【L33】In a massive system resembling a relay race, each tiffin box is handled by at least three dabbawalas between its owner’s home and workplace.", "在這個宛如接力賽的龐大系統中，每個便當盒在主人住家與工作場所之間至少會經手三名達巴瓦拉。"]
-    ]])
-  ),
+h += card("L13", ["慣用搭配", "due in large part to"], "B",
+  st("This company delivers around 200,000 home-made lunches daily to office and factory workers. Its success is [[L13|due]] in large part to its employees, known as dabbawalas.", "這家公司每天為辦公室職員和工廠工人遞送約二十萬份家常便當。它的成功在很大程度上歸功於其被稱為「達巴瓦拉（dabbawalas）」的員工。") +
+  clue("in part = partly = to some degree 某種程度上 / 部分(做副詞用) / in large part = to a great/high degree 很大程度上. Success was due in large part to good teamwork. Your salary depends in part on your qualifications.") +
+  ops([
+    ["because", "2%", ""],
+    ["due", "13%", ""],
+    ["connected", "46%", ""],
+    ["caused", "39%", "be caused by…"]
+  ], "B")
+);
 
-  card("L36", ["間接問句（名詞子句）", "how 如何"], "B",
-    st("Many people are curious about [[L36|how]] the Nutan team ensures lunches are always delivered on time and don’t accidentally get delivered to the wrong location.", "許多人很好奇努坦團隊是如何確保便當總能準時送達，而且不會意外送錯地方。") +
-    clue("後文接著解釋達巴瓦拉「如何」透過蓋子上的特殊編碼與顏色來避免送錯，可知此處許多人是好奇努坦團隊「如何（how）」確保便當準時送達且不送錯。") +
-    ops([
-      ["that", "10%", "介系詞 about 後面不可直接接連接詞 that 引導的名詞子句！"],
-      ["how", "57%", "引導名詞子句作介系詞 about 的受詞，表「如何確保…」。"],
-      ["what", "1%", "後方子句 S + V + O 已完整，不可用 what。"],
-      ["why", "32%", "後文是在說明「編碼運作的方法（How）」，而非「為什麼要準時送達的原因（Why）」。"]
-    ], "B") +
-    passage("L37 補充例句", [[
-      ["get + p.p. (= become + p.p. 被動語態)：The team is determined not to get beaten again. / I'm sick of getting yelled at for things that aren't my fault.", "這支隊伍決心不再被打敗。／我受夠了因為不是我的錯的事情而被吼。"]
-    ]])
-  ),
+h += card("L14", ["同位語解釋", "or 也就是"], "B",
+  st("A dabbawala, [[L14|or]] “one who carries a box,” picks up lunches from customers’ homes and delivers these meals to their workplaces.", "「達巴瓦拉」，亦即「提便當盒的人」，負責從顧客家中收取午餐，並將這些餐點送到他們的工作場所。") +
+  clue("自我挑戰：想想(A)(C)(D)如何改1-2字即可合理，或至少文法正確？") +
+  ops([
+    ["known for", "25%", "→ (which is) known as"],
+    ["or", "29%", "or 也就是"],
+    ["meant", "28%", "→ which means / meaning"],
+    ["referring", "17%", "→ which refers to / referring to"]
+  ], "B")
+);
 
-  card("L39", ["與現在事實相反的假設", "If + S + did not VR, S + would + VR"], "D",
-    st("If dabbawalas [[L39|did not employ]] some clever coding tricks, the tiffin boxes would likely get lost quite often.", "如果達巴瓦拉沒有採用一些巧妙的編碼技巧，便當盒很可能會經常遺失。") +
-    clue("觀察後半句主要子句為 <code>the tiffin boxes <b>would likely get</b> lost quite often</code>（現在經常會遺失），而且達巴瓦拉現在實際上有使用編碼技巧，故此句為<b>與現在事實相反的假設</b>，If 子句用過去式 <code>did not employ</code>。") +
-    ops([
-      ["had not employed", "56%", "常見誤答！這是現在仍在運作的日常系統，且主要子句是 <code>would get lost</code>（非 would have gotten lost），故不是與過去事實相反。"],
-      ["should not employ", "—", "萬一不採用，語意不合。"],
-      ["could employ", "—", "肯定與否定方向相反。"],
-      ["did not employ", "44%", "與現在事實相反的假設，用過去簡單式 <code>did not employ</code>。"]
-    ], "D")
-  ),
+h += passage("L16", [
+  [["Since most Mumbai residents live in the suburbs and have to commute long distances to work every day, it’s inconvenient for them to carry their lunches on cramped public transportation.", "由於大多數孟買居民住在郊區，每天必須長途通勤上班，對他們來說，在擁擠的大眾運輸工具上提著便當非常不便。"]],
+  [["V. + long distances 移動長距離", "He's used to driving long distances. Women in Third World countries often have to walk long distances to get water."]],
+  [["transport n. [U] 運輸(方法或工具) (英) / transportation [U] 運輸(方法或工具) (美)", ""]]
+]);
 
-  card("L41", ["獨立不定詞片語", "To be specific 具體來說"], "B",
-    st("[[L41|To be specific]], dabbawalas avoid mix-ups by writing special numbers and characters on each container’s lid to indicate the particular neighborhood, building, floor, and other delivery details.", "具體來說，達巴瓦拉會在每個容器的蓋子上寫下特殊的數字和符號，以標示特定的社區、大樓、樓層和其他配送細節，藉此避免搞混。") +
-    clue("前句籠統提到「巧妙的編碼技巧（clever coding tricks）」，本句進一步具體說明「在蓋子上寫特殊數字與符號標示社區、大樓、樓層」，故用 <code>To be specific</code>（具體來說）。") +
-    ops([
-      ["To be honest", "16%", "老實說。"],
-      ["To be specific", "23%", "具體來說（用於補充具體細節與做法）。"],
-      ["To be fair", "14%", "說句公道話。"],
-      ["To be sure", "46%", "常見誤答！<code>To be sure</code> 意為「誠然、的確」，專門搭配後方的 <code>but</code> 作讓步轉折（如 <i>To be sure, the restaurant is expensive, but the food is excellent.</i>），此句並無 but 轉折！"]
-    ], "B") +
-    passage("L41 補充例句", [[
-      ["mix up A with B（把 A 跟 B 搞混） vs. mix-up (n. 混淆造成的錯誤)：I always mix him up with his brother. / The mayor blamed a mix-up between departments.", "我總是把他和他哥哥搞混。／市長歸咎於部門之間的溝通混淆失誤。"]
-    ]])
-  ),
+h += card("L20", ["動詞片語辨析", "sit down to 坐下來享用"], "C",
+  st("Therefore, dabbawalas provide a useful service by enabling workers to [[L20|sit down to]] healthy, home-made midday meals in their offices.", "因此，達巴瓦拉提供了實用的服務，讓上班族能在辦公室裡坐下來享用健康、家常的午餐。") +
+  clue("sit down to + N 坐下來吃/喝…/看(書等…) After a long day at work, I like to sit down to a good book and a cup of tea to relax. 工作了一整天之後，我喜歡坐下來看本好書，喝杯茶放鬆一下。<br>attend to v. 處理,照顧 The teacher asked the students to attend to their tasks.<br>respond to v. 回答,回應 The dog will respond to your commands if you train it well.<br>adapt to v. 適應,調整 It takes time to adapt to a new school.") +
+  ops([
+    ["attend to", "35%", ""],
+    ["respond to", "23%", ""],
+    ["sit down to", "22%", ""],
+    ["adapt to", "19%", ""]
+  ], "C")
+);
 
-  card("L44", ["慣用搭配", "station / country of origin 起始站/原產國"], "C",
-    st("In addition, color schemes are used to show the train station [[L44|of origin]].", "此外，他們還使用配色方案來標示便當盒的起始火車站。") +
-    clue("配色方案是用來標示便當盒是從哪個「起始火車站（train station of origin）」出發的。<br>補充：<code>country / place of origin</code>（原產地、來源國，如 <i>labelled with its country of origin</i>）。") +
-    ops([
-      ["of importance", "36%", "重要的（= important），不合編碼分類功能。"],
-      ["of necessity", "27%", "必要的。"],
-      ["of origin", "21%", "<code>the train station of origin</code>（起始／出發火車站）。"],
-      ["of responsibility", "16%", "負責的。"]
-    ], "C") +
-    passage("L45 ~ L54 課文段落與補充例句", [[
-      ["【L45】Together, these tactics ensure accurate delivery to a high degree of success.", "這些策略結合起來，確保了極高成功率的精準配送。"],
-      ["to a (certain / some / high) degree（到某種／極高程度）：We're all willing to support him to some degree.", "在某種程度上我們都願意支持他。"],
-      ["【L47】Because of the nearly flawless operating system of the dabbawalas, this food delivery service is recognized as a classic example of efficiency and teamwork.", "由於達巴瓦拉近乎完美的運作系統，這項餐飲外送服務被公認為效率與團隊合作的經典範例。"],
-      ["near- 用在複合形容詞中（= almost / nearly 幾乎）：nearly flawless = near-flawless / near-perfect / near-vertical / near-fatal", "近乎完美的 ／ 近乎垂直的 ／ 幾乎致命的。"],
-      ["【L50】It has been studied by Harvard Business School and is greatly admired by the courier company FedEx. Without a doubt, the service performed by dabbawalas is a true model of excellence.", "它曾被哈佛商學院研究，並受到快遞公司聯邦快遞（FedEx）的高度讚賞。毫無疑問地，達巴瓦拉所提供的服務是卓越的真正典範。"]
-    ]])
-  )
-].join('');
+h += passage("L21", [
+  [["a home-made meal = a meal (which is) made at home (N-p.p. = p.p. + 介 + N)", ""]]
+]);
 
-/* === Part 2: 課本句型與翻譯練習 === */
-const h2 = '<h2 id="p2">課本句型與翻譯練習</h2>' +
-  passage("句型 1：Not until 倒裝句 vs. It was not until 強調分裂句", [[
-    ["例1：Not until 8 o’clock did Lydia wake up. = It was not until 8 o’clock that Lydia woke up.", "直到八點莉蒂亞才醒來。（Not until 句首須倒裝；It was not until 後接 that + 不倒裝子句）"],
-    ["例2：Not until 1492 did Christopher Columbus discover America. = It was not until 1492 that Christopher Columbus discovered America.", "直到 1492 年哥倫布才發現美洲。"],
-    ["分裂句陷阱提醒：(X) It was ill health that my father had to retire. → (O) It was because of ill health that my father had to retire.", "強調原因副詞時必須保留介系詞片語 because of ill health，that 後方才能接完整子句！"]
-  ]]) + [
-  card("句1-1", ["句型1：翻譯", "Not until + S + V + did + S + VR"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">1. 直到我回到家雨才停。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Not until I arrived home did the rain stop.]]")+'<br>（= '+fx("[[|It was not until I arrived home that the rain stopped.]]")+'）</div></div>' + clue("注意：<code>Not until I arrived home</code> 是從屬時間子句（不倒裝），後方的<b>主要子句 <code>did the rain stop</code> 才要倒裝</b>！")),
-  card("句1-2", ["句型1：翻譯", "say hello to / greet"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">2. 直到 Lily 向我打招呼，我才認出她來。(Not until …)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Not until Lily said hello to me did I recognize her.]]")+'</div></div>' + clue("若用 <code>greet</code>，因為 greet 為及物動詞，直接寫 <code>Not until Lily greeted me...</code>（不可加 with！）。")),
-  card("句1-3", ["句型1：翻譯", "accept one's proposal"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">3. 直到 Phil 送她鑽戒，Claire 才答應他的求婚。(Not until …)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Not until Phil gave her a diamond ring did Claire accept his proposal.]]")+'</div></div>' + clue("主要子句過去式倒裝：<code>did Claire accept...</code>。")),
-  card("句1-4", ["句型1：翻譯", "move out of"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">4. 直到上大學，Chris 才搬離父母的房子。(Not until …)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Not until Chris went to college did he move out of his parents’ house.]]")+'</div></div>' + clue("「搬離…」為 <code>move out of...</code>。")),
-  card("句1-5", ["句型1：翻譯", "Not until + 時間名詞"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">5. 直到 1945 年，第二次世界大戰才結束。(Not until …)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Not until 1945 did World War II come to an end.]]")+'</div></div>' + clue("亦可用 <code>did World War II end</code>。")),
-  card("句1-6", ["句型1：翻譯", "realize the importance of"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">6. James 直到出國念書才了解英文的重要。(Not until …)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Not until James studied abroad did he realize the importance of learning English.]]")+'</div></div>' + clue("「出國念書」為 <code>study abroad</code>。")),
-  card("句1-7", ["句型1：翻譯", "quit smoking 戒菸"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">7. Eric 直到寶貝女兒出生了才戒菸。(Not until …)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Not until Eric’s baby girl/daughter was born did he quit smoking.]]")+'</div></div>' + clue("「戒菸」為 <code>quit smoking</code>。")),
-  card("句1-8", ["句型1：翻譯", "被動子句與倒裝"], "參考譯文", '<div class="stem"><div class="zh" style="color:inherit">8. 直到這對戀人接吻的照片被登出他們才透露戀情。(Not until …)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b>'+fx("[[|Not until the photo of the couple kissing was released did they reveal their relationship.]]")+'</div></div>' + clue("「這對戀人正在接吻的照片」為 <code>the photo/picture of the couple/lovers kissing</code>。")),
-  card("句2-A", ["句型2：關係代名詞演練", "Part A (1~6)"], "參考解答", '<div class="stem"><div class="en">1. Alex will take seven courses in college'+fx("[[|, some of which are]]")+' on astrophysics.<br>2. The boy '+fx("[[|who]]")+' is wearing the Flash T-shirt is my brother.<br>3. Sheldon asks Howard to give his paper to Stephen Hawking'+fx("[[|, to whom]]")+' he looks up.<br>4. The student '+fx("[[|whose]]")+' locker had been broken into called the police.<br>5. <i>The Flash</i>'+fx("[[|, which]]")+' is about a forensic scientist who gained super speed after being struck by lightning, is my new favorite TV show.<br>6. Doris just heard from the doctor that she has cancer'+fx("[[|, which]]")+' shocked and saddened her.</div><div class="zh">課本句型 2（關係子句）Part A 選擇題完整解答。</div></div>' + clue("• A1：無連接詞須用關代 <code>, some of which are</code><br>• A3：專有名詞加逗號，且 <code>look up to sb</code> 介系詞前置為 <code>, to whom</code><br>• A4：所有格「某學生的置物櫃」用 <code>whose locker</code><br>• A5：專有名詞劇名用非限定 <code>, which</code>（that 不可用於逗號後）<br>• A6：修飾前面整件事「她罹癌」，用 <code>, which</code>")),
-  card("句2-B", ["句型2：關係代名詞填空", "Part B (1~6)"], "參考解答", '<div class="stem"><div class="en">1. A-mei'+fx("[[|, who]]")+' is one of the best vocalists in Taiwan, is my idol.<br>2. They plan to launch the Grow a Dream Project'+fx("[[|, which]]")+' will donate money to environmental causes in Taiwan.<br>3. On weekends, I like to go to the night market '+fx("[[|which]]")+' is located right beside Feng Chia University.<br>4. Steven is looking for a roommate '+fx("[[|with whom]]")+' he can share his apartment.<br>5. During summer vacation, Emerson read 10 novels, five '+fx("[[|of which]]")+' were in English.<br>6. Because Phil forgot to make a reservation at the restaurant, they had to wait for an hour'+fx("[[|, which]]")+' made Claire very annoyed.</div><div class="zh">課本句型 2（關係子句）Part B 填空題完整解答。</div></div>' + clue("補充：第 2 題的 <code>cause</code> (n.) 指「（利他的）理想、目標、公益事業」。")),
-  card("句1-進階", ["課堂延伸練習", "Not until 綜合改寫 (A2~B3)"], "參考解答", '<div class="stem"><div class="en">• A2: '+fx("[[|Not until Mom arrived at the bank did she realize that it was closed.]]")+'<br>• A3: '+fx("[[|Not until Jimmy had binge-watched the entire season of Game of Thrones did he go to bed.]]")+'<br>• A4: '+fx("[[|Not until you have made a full recovery will you be discharged from the hospital.]]")+'<br>• A5: '+fx("[[|Not until Maggie stormed out did it dawn on Jeff that he had made a huge mistake.]]")+'<br>• A6: '+fx("[[|Not until the transaction was declined did Phoebe find out that she had maxed out her credit card.]]")+'<br>• B2: '+fx("[[|Not until James Harden was traded to the Houston Rockets in 2012 did he become Houston’s featured player.]]")+'<br>• B3: '+fx("[[|Not until Ang Lee won Best Director for Brokeback Mountain did he become the first Asian director to win this Oscar.]]")+'</div><div class="zh">課堂延伸練習：注意助動詞 did 後方動詞必須還原為原形（realize / go / dawn / find）！</div></div>' + clue("常見扣分陷阱：<code>did she realize</code>（不可加 d）、<code>did he go</code>（不可寫 went）、<code>did it dawn on</code>（不可加 ed）！"))
-].join('');
+h += passage("L23", [
+  [["The dabbawalas’ delivery network has fascinated many people because it achieves a high level of efficiency through nothing but smart scheduling and teamwork.", "達巴瓦拉的配送網路令許多人著迷，因為它僅憑聰明的排程與團隊合作，就達到了極高的效率。"]],
+  [["nothing but = only / just", ""]]
+]);
 
-document.getElementById('app').innerHTML = h1 + h2;
-const secs=[['p1','L1~L54 課文講解'],['p2','句型1 & 句型2']];
+h += card("L25", ["非限定關係子句 vs. 對等子句", "each of whom / and each of them (複選)"], "B, C",
+  st("This is how it works: Each geographical area employs around twenty-five dabbawalas, [[L25|each of whom / and each of them]] collects roughly thirty tiffin boxes.", "它的運作方式如下：每個地理區域僱用約二十五名達巴瓦拉，其中每個人負責收集大約三十個便當盒。") +
+  clue("each 相關用法：We each have our own skills. = Each of us has our own skills.<br>The lollipops are ten cents each. = for each one<br>This is how it works (= operates): *Each … = This is the way it works (= operates): *Each … (*冒號後若接完整句子，通常第一個字母大寫)") +
+  ops([
+    ["each of them", "25%", "少連接詞"],
+    ["each of whom", "69%", "☺ each of whom collects = who each collects(X)"],
+    ["and each of them", "78%", "☺"],
+    ["who each", "22%", "who each collects(X) *who = dabbawalas(複數)，應搭配複數動詞"],
+    ["and they each", "41%", "and they each collects(X) *they = dabbawalas(複數)，應搭配複數動詞"]
+  ], "BC", "ABCDE")
+);
+
+h += card("L28", ["介系詞片語辨析", "according to 根據"], "D",
+  st("These boxes are then swiftly sorted [[L28|according to]] their general destinations before being loaded onto trains for delivery. Then, the dabbawalas board their trains and travel with the lunchboxes.", "接著，這些便當盒在裝上火車運送之前，會先根據大致的目的地快速分類。然後，達巴瓦拉會搭上火車，隨同便當盒一起移動。") +
+  clue("(A) with/in regard to = regarding 關於(用於開始討論或引起注意) With regard to your question, I think it's important to consider all perspectives. (B) in line with 與...一致 His actions were not in line with company policy. (C) in light of 有鑑於 In light of recent events, we've decided to increase security measures. (D) according to 根據 According to the weather forecast, it will rain tomorrow.") +
+  ops([
+    ["with regard to", "", ""],
+    ["in line with", "", ""],
+    ["in light of", "", ""],
+    ["according to", "", ""]
+  ], "D")
+);
+
+h += card("L31", ["介系詞 + 關係代名詞", "to which (go to a location)"], "D",
+  st("At each destination train station, these boxes are sorted again. This time they are divided depending on the buildings or more specific locations [[L31|to which]] the boxes must go.", "在每個目的地火車站，這些便當盒會再次被分類。這一次，它們會根據便當盒必須送往的建築物或更具體的位置來進行分配。") +
+  clue("This time they are divided depending on the buildings or more specific locations to which the boxes must go. = This time they are divided depending on the buildings or more specific locations where the boxes must go. (*where = 介 + 關代 ( to + which ))") +
+  ops([
+    ["which", "7%", ""],
+    ["in which", "10%", ""],
+    ["at which", "4%", ""],
+    ["to which", "79%", ""]
+  ], "D")
+);
+
+h += card("挑戰題", ["否定副詞倒裝挑戰題", "Not until ... + 助/be + S + V"], "D",
+  st("Not until the boxes have been sorted swiftly according to their general destinations [[挑戰題|are they loaded]] onto trains for delivery.", "直到這些便當盒根據大致的目的地快速分類完成後，它們才會被裝上火車運送。") +
+  clue("L28 These boxes are then swiftly sorted according to their general destinations before(= and then) being loaded onto trains for delivery.<br>= Not until the boxes have been sorted swiftly according to their general destinations(否定副詞子句) are they loaded onto trains for delivery.(倒裝句(助/be + S …))<br>看不懂嗎？試試簡化版(刪除形容詞、副詞、介片等)：Not until the boxes have been sorted swiftly according to their general destinations(否定副詞子句) are they loaded onto trains for delivery.(倒裝句(助/be + S …))") +
+  ops([
+    ["that they are loaded", "32%", ""],
+    ["that are loaded", "27%", ""],
+    ["that they loaded", "23%", ""],
+    ["are they loaded", "18%", ""]
+  ], "D")
+);
+
+h += passage("L33", [
+  [["depending on在此相似according to，意為「根據」", "The salary varies from NT$30,000 to 40,000, depending on your experience."]]
+]);
+
+h += card("L34", ["否定副詞句首倒裝", "Not until ... can each box be..."], "B",
+  st("[[L34|Not until]] this second round of sorting has been completed can each tiffin box be delivered to its rightful owner.", "直到這第二輪的分類完成後，每個便當盒才能被送到其真正的主人手中。") +
+  clue("Not until this second round of sorting has been completed (not + until引導的副詞子句) can each tiffin box be delivered to its (rightful) owner. (倒裝句)<br>(A) (Ever) since (自從某個時間或事件以來不斷持續) (Ever) since she moved to New York, she has been missing her hometown.<br>(B) Not until (直到某件事發生才...) Not until I moved to a new city did I realize how much I missed my old friends.<br>(C) By the time (到...的時候) By the time I arrived, the party had already started.<br>(D) Now that (既然) Now that you have finished your project, you can take a break.<br>L37 rightful & right 是「正確的」同義字嗎？ rightful = legally or morally right 正當的. The hero eventually gains his rightful place in society. Jealousy is the feeling that someone else has something that rightfully belongs to you.") +
+  ops([
+    ["Ever since", "19%", ""],
+    ["Not until", "39%", ""],
+    ["By the time", "31%", ""],
+    ["Now that", "11%", ""]
+  ], "B")
+);
+
+h += passage("L37", [
+  [["In the afternoon, the dabbawalas retrace their original routes in order to bring back each empty lunchbox to its owner’s home.", "到了下午，達巴瓦拉會循著原路線折返，以便將每個空便當盒帶回主人的家。"]]
+]);
+
+h += passage("L41", [
+  [["In a massive system resembling a relay race, each tiffin box is handled by at least three dabbawalas between its owner’s home and workplace.", "在這個宛如接力賽的龐大系統中，每個便當盒在主人住家與工作場所之間至少會經手三名達巴瓦拉。"]],
+  [["handle vt. 處理、搬運、應對", "Handle with care. / Fragile. 小心搬運 / 易碎"]]
+]);
+
+h += card("L43", ["間接問句（名詞子句）", "how 如何"], "B",
+  st("Many people are curious about [[L43|how]] the Nutan team ensures lunches are always delivered on time and don’t accidentally get delivered to the wrong location.", "許多人很好奇努坦團隊是如何確保便當總能準時送達，而且不會意外送錯地方。") +
+  clue("Many people are curious about how(how + S V) the Nutan team ensures (that) lunches are always delivered on time and don’t accidentally get delivered to the wrong location. *此處的how名詞子句當know的受詞") +
+  ops([
+    ["that", "10%", ""],
+    ["how", "57%", ""],
+    ["what", "1%", ""],
+    ["why", "32%", ""]
+  ], "B")
+);
+
+h += passage("L45", [
+  [["get + p.p. = become + p.p.", "The team is determined not to get beaten again. I'm sick of getting yelled at for things that aren't my fault."]]
+]);
+
+h += card("L46", ["與現在事實相反的假設", "If dabbawalas did not employ"], "D",
+  st("If dabbawalas [[L46|did not employ]] some clever coding tricks, the tiffin boxes would likely get lost quite often.", "如果達巴瓦拉沒有使用一些聰明的編碼技巧，這些便當盒可能經常會遺失。") +
+  clue("從主要子句 the tiffin boxes would likely get lost quite often. 可知為與現在事實相反的假設語氣。") +
+  ops([
+    ["had not employed", "56%", ""],
+    ["should not employ", "", ""],
+    ["could employ", "", ""],
+    ["did not employ", "44%", ""]
+  ], "D")
+);
+
+h += card("L48", ["副詞片語", "To be specific 具體地說"], "B",
+  st("[[L48|To be specific]], dabbawalas avoid mix-ups by writing special numbers and characters on each container’s lid to indicate the particular neighborhood, building, floor, and other delivery details.", "具體來說，達巴瓦拉為了避免混淆，會在每個容器的蓋子上寫下特殊的數字和字元，以標示特定的街區、建築物、樓層和其他送貨細節。") +
+  clue("(B) To be specific (具體地說) To be specific, we need 500 units of the red paint and 300 units of the blue paint. (A) To be honest (說實話) To be honest, I didn't really enjoy the movie. (C) To be fair (說句公道話) To be fair, both candidates have their strengths and weaknesses. (D) To be sure (的確)(搭配 but 用於讓步子句) To be sure, the restaurant is a bit expensive, but the food is always excellent. = Although the restaurant is a bit expensive, but(X) the food is always excellent.") +
+  ops([
+    ["To be honest", "16%", ""],
+    ["To be specific", "23%", ""],
+    ["To be fair", "14%", ""],
+    ["To be sure", "46%", ""]
+  ], "B")
+);
+
+h += passage("L48", [
+  [["mix up A with B 把A當成B；混淆；搞混", "I always mix him up with his brother. They look so much alike. I must have mixed up the times."]],
+  [["mix-up n. 因為混淆而造成的錯誤", "The mayor blamed a mix-up between departments."]]
+]);
+
+h += passage("L50", [
+  [["neighborhood n. (城鎮的某個)區域", "The hotel is situated in a peaceful neighborhood."]]
+]);
+
+h += card("L51", ["介系詞片語辨析", "of origin 來源/起源的"], "C",
+  st("In addition, color schemes are used to show the train station [[L51|of origin]].", "此外，他們也會使用顏色編碼來標示出發的火車站。") +
+  clue("color scheme 配色 The color scheme of this room is blue and white.<br>country/place of origin 來源國/地 All meat should be clearly labelled with its country of origin.") +
+  ops([
+    ["of importance", "36%", ""],
+    ["of necessity", "27%", ""],
+    ["of origin", "21%", ""],
+    ["of responsibility", "16%", ""]
+  ], "C")
+);
+
+h += passage("L51", [
+  [["Together, these tactics ensure accurate delivery to a high degree of success.", "這些策略加起來確保了高度成功的準確配送。"]],
+  [["to a (certain) degree / to some degree 到某種程度上", "To a degree, it is possible to educate oneself. We're all willing to support him to some degree. to a high degree of success 高度成功地(成功機率高)"]]
+]);
+
+h += passage("L55", [
+  [["Because of the nearly flawless operating system of the dabbawalas, this food delivery service is recognized as a classic example of efficiency and teamwork.", "因為達巴瓦拉近乎完美無瑕的運作系統，這項送餐服務被公認為是效率與團隊合作的經典範例。"]],
+  [["nearly flawless = near-flawless", "near- 用在複合字中 = almost / nearly 幾乎. near-perfect / near-vertical / near-fatal"]],
+  [["be recognized as 被認為是⋯", "Cyberbullying is recognized as a serious problem now."]]
+]);
+
+h += passage("L57", [
+  [["It has been studied by Harvard Business School and is greatly admired by the courier company FedEx. Without a doubt, the service performed by dabbawalas is a true model of excellence.", "它曾被哈佛商學院研究，並受到快遞公司聯邦快遞的極大讚賞。毫無疑問地，達巴瓦拉所提供的服務是卓越的真實典範。"]]
+]);
+
+h += '<h2 id="p2">句型 1 倒裝句/分裂句</h2>';
+
+h += passage("講義句1 重點整理", [
+  [["● Not until 8 o’clock did Lydia wake up. (否定副詞 + 倒裝)", "= Lydia didn’t wake up until 8 o’clock. = It was not until 8 o’clock that Lydia woke up. (It is + 副詞 + that + 完整子句)"]],
+  [["強調句型(分裂句)：", "(A) It is + N + that + 不完整子句\nIt was math that Tom failed in the senior year. Tom高三那年被當的是數學 (強調不是英文、物理等其它科目)\n(B) It is + 地方adv. + where/that + 完整子句 / 時間adv. + when/that / 介片 + that\n(X) It was ill health that my father had to retire完整子句. 此句雖然讀起來似乎通順，但ill health是名詞，而that後卻是完整子句，所以不對\n(O) It was because of ill health that my father had to retire. 介系詞片語當副詞用 (我父親是因為健康不佳而退休)"]],
+  [["● Not until 1492 did Christopher Columbus discover America. (否定副詞 + 倒裝)", "= Christopher Columbus didn’t discover America until 1492.\n= It was not until 1492 that Christopher Columbus discovered America. (It is + 副詞 + that + 完整子句)"]]
+]);
+
+h += card("句1-1", ["句型1：倒裝句"], "Not until I arrived home did the rain stop.",
+  '<div class="stem"><div class="zh" style="color:inherit">1. 直到我回到家雨才停。</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Not until I arrived home did the rain stop.]]")+'</div></div>' + clue('Not until I went(X) arrived home did the rain stop. = It wasn\'t until I went(X) arrived home that the rain stopped. = The rain didn’t stop until I arrived home.')
+);
+
+h += card("句1-2", ["句型1：倒裝句"], "Not until Lily greeted me did I recognize her.",
+  '<div class="stem"><div class="zh" style="color:inherit">2. 直到Lily向我打招呼，我才認出她來。(Not until …)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Not until Lily greeted me did I recognize her.]]")+'</div></div>' + clue('Not until Lily greeted with(X) me did I recognize her.')
+);
+
+h += card("句1-3", ["句型1：倒裝句"], "Not until Phil gave her a diamond ring did Claire accept his proposal.",
+  '<div class="stem"><div class="zh" style="color:inherit">3. 直到 Phil 送她鑽戒，Claire 才答應他的求婚。(Not until …)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Not until Phil gave her a diamond ring did Claire accept his proposal.]]")+'</div></div>'
+);
+
+h += card("句1-4", ["句型1：倒裝句"], "Not until Chris went to college did he move out of his parents’ house.",
+  '<div class="stem"><div class="zh" style="color:inherit">4. 直到上大學，Chris才搬離父母的房子。(Not until …)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Not until Chris went to college did he move out of his parents’ house.]]")+'</div></div>'
+);
+
+h += card("句1-5", ["句型1：倒裝句"], "Not until 1945 did World War II end.",
+  '<div class="stem"><div class="zh" style="color:inherit">5. 直到1945年，第二次世界大戰才結束。(Not until …)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Not until 1945 did World War II (come to an) end.]]")+'</div></div>'
+);
+
+h += card("句1-6", ["句型1：倒裝句"], "Not until James studied abroad did he understand the importance of English.",
+  '<div class="stem"><div class="zh" style="color:inherit">6. James直到出國念書才了解英文的重要。(Not until …)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Not until James studied abroad did he understand the importance of English.]]")+'</div></div>'
+);
+
+h += card("句1-7", ["句型1：倒裝句"], "Not until Eric's baby daughter was born did he quit smoking.",
+  '<div class="stem"><div class="zh" style="color:inherit">7. Eric直到寶貝女兒出生了才戒菸。(Not until …)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Not until Eric's baby daughter was born did he quit smoking.]]")+'</div></div>'
+);
+
+h += card("句1-8", ["句型1：倒裝句"], "Not until the picture of the lovers kissing was released did they reveal their relationship.",
+  '<div class="stem"><div class="zh" style="color:inherit">8. 直到這對戀人接吻的照片被登出他們才透露戀情。(Not until …)</div><div class="en" style="margin-top:6px"><b>參考譯文：</b><br>'+fx("[[|Not until the picture of the lovers kissing was released did they reveal their relationship.]]")+'<br><small>(Not until the picture of the couple kissing was published did they reveal their relationship.)</small><br><small>(Not until the picture showing the lovers kissing …)</small></div></div>'
+);
+
+h += passage("錯誤訂正", [
+  [["2. Not until Mon Mom arrived at the bank does did she realized realize that it was closed.", ""]],
+  [["3. Not until Jimmy has had binge-watched the entire season of Game of Thrones did he went go to bed. ☺", ""]],
+  [["4. Not until you have made a full recovery will is you be discharged from the hospital. ☺", ""]],
+  [["5. Not until Maggie stormed out did it dawned dawn on Jeff that he had made a huge mistake. ☺", ""]],
+  [["6. Not until the transaction was declined did Phoebe find out that she had maxed out her credit card. ☺", ""]],
+  [["B2 Not until James Houston Rockets Harden was traded to the Houston Rockets in 2012 did he become the team’s a featured player.", ""]],
+  [["B3. Not until his directorial debut Pushing Hands brought him success, did he go on to direct other films like The wWedding Banquet and Eat drink Man Woman.", ""]],
+  [["B3 (X) Not until Lee Ang received a Master’s degree from NYU was he unemployed for six years.", "Not until Ang Lee directed Pushing Hands did he start his directional career."]],
+  [["B3 Not until Ang Lee won Best Director for Brokeback Mountain did he become the first Asian director to win this Oscar.", "Not until his ninth film, Brokeback Mountain, did Ang Lee finally win an Oscar for best director."]]
+]);
+
+h += '<h2 id="p3">句型 2 關係代名詞</h2>';
+
+h += passage("講義句2 選擇題", [
+  [["A", ""]],
+  [["1. Alex will take seven courses in college (which is / who are / some of them are / [[| , some of which are ]] ) on astrophysics.", "astrophysics 天體物理學"]],
+  [["2. The boy ([[| who ]] / , who / whom / which) is wearing the Flash T-shirt is my brother.", ""]],
+  [["3. Sheldon asks Howard to give his paper to Stephen Hawking (who / , who / to who / [[| , to whom ]]) he looks up.", "look up to 崇拜"]],
+  [["4. The student (who / [[| whose ]] / which / that) locker had been broken into called the police.", ""]],
+  [["5. The Flash ( which / [[| , which ]] / who / , that) is about a forensic scientist who gained super speed after being struck by lightning, is my new favorite TV show.", ""]],
+  [["6. Doris just heard from the doctor that she has cancer (who / , who / which / [[| , which ]]) shocked and saddened her.", ""]],
+  [["B", ""]],
+  [["1. A-mei, [[| , who ]] is one of the best vocalists in Taiwan, is my idol.", ""]],
+  [["2. They plan to launch the Grow a Dream Project, [[| , which ]] will donate money to environmental causes in Taiwan.", "cause n. 利他的理想/目標/事業等"]],
+  [["3. On weekends, I like to go to the night market [[| which ]] is located right beside Feng Chia University.", ""]],
+  [["4. Steven is looking for a roommate [[| with whom ]] he can share his apartment.", ""]],
+  [["5. During summer vacation, Emerson read 10 novels, five [[| of which ]] were in English.", ""]],
+  [["6. Because Phil forgot to make a reservation at the restaurant, they had to wait for an hour, [[| , which ]] made Claire very annoyed.", ""]]
+]);
+
+document.getElementById('app').innerHTML = h;
+
+const secs=[
+  ['p1','Thinking Ahead & 課文講解'],
+  ['p2','句型 1 倒裝句/分裂句'],
+  ['p3','句型 2 關係代名詞']
+];
 document.getElementById('nav').innerHTML=secs.map(s=>'<a href="#'+s[0]+'">'+s[1]+'</a>').join('')+'<button id="tg">全部收合</button>';
 let open=true;
-document.getElementById('tg').onclick=function(){open=!open;document.querySelectorAll('details.q').forEach(d=>d.open=open);this.textContent=open?'全部收合':'全部展開';};
+document.getElementById('tg').onclick=function(){
+  open=!open;
+  document.querySelectorAll('details.q').forEach(d=>d.open=open);
+  this.textContent=open?'全部收合':'全部展開';
+};
 </script>
 <script src="bookmark.js"></script>
 </body>
