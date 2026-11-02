@@ -26,6 +26,7 @@ h3{margin:0 0 8px;font-size:1.05rem;color:var(--acc)}
 .s{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--line)}
 .en{font-family:Georgia,"Times New Roman",serif;font-size:1.02rem}
 .zh{color:var(--mut);font-size:.93rem}
+.prompt-text{color:var(--fg);font-size:.96rem;line-height:1.8}
 .note{color:var(--mut);font-size:.85rem;margin:6px 0 0}
 .bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 4px;border-radius:3px;font-weight:600}
 .bl sup{color:var(--acc);margin-right:3px;font-size:.7em}
@@ -55,6 +56,22 @@ body.practice-mode details.q:not(.graded) .clue { display: none; }
 body.practice-mode details.q:not(.graded) .tag { display: none; }
 body.practice-mode details.q:not(.graded) .stem .zh { display: none; }
 body.practice-mode .pas:not(.graded) .zh { display: none; }
+body.practice-mode .pas:not(.graded) .trans-ans { display: none; }
+body.practice-mode .pas:not(.graded) .note { display: none; }
+.trans-input {
+  display: none;
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1rem;
+}
+.trans-input:focus { outline: none; border-color: var(--acc); }
+body.practice-mode .trans-input { display: block; }
 body.practice-mode .bl:not(.revealed) {
   color: transparent;
   background: var(--bg);
@@ -119,7 +136,7 @@ details.q.graded ul.op li.selected.no { border: 2px solid var(--no) !important; 
   transition: transform 0.1s, opacity 0.2s;
 }
 .btn-grade { background: var(--acc); color: #fff; }
-.all-box .btn-grade { padding: 8px 22px; font-size: 1rem; }
+.all-box .btn-grade, .all-box .btn-reset { padding: 8px 22px; font-size: 1rem; }
 .btn-reset { background: var(--card); color: var(--mut); border-color: var(--line); }
 .btn-grade:hover, .btn-reset:hover { opacity: 0.9; transform: translateY(-1px); }
 .grade-res {
@@ -155,7 +172,7 @@ footer a:hover{text-decoration:underline;}
   <h1><span id="exam-title">102學年度學科能力測驗 英文考科詳解</span> <span id="completed-badge" style="display:none;font-size:1rem;color:var(--ok);">✅ 已完成</span></h1>
   <p>每題含：考點標籤 → 題幹逐句中英對照 → 解題線索 → 正解與全部誤答分析</p>
   <div class="feature-box">
-    💡 <b>複習與作答指南：</b> 點擊「🎯 切換練習模式」可自動挖空題幹答案並隱藏中譯與解析；直接點選各題選項作答後，可點擊各題組下方的「<b>✅ 批改本題組</b>」或單選題最後的「<b>🏆 一次批改全卷</b>」查看得分並自動展開詳解！點擊每題右上角的「標記此題」可收錄錯題；滑鼠反白任何英文字句可「收藏單字」。請前往 <a href="review.html" target="_blank" style="color:var(--acc);font-weight:bold;">錯題與單字總複習頁面</a>。
+    💡 <b>複習與作答指南：</b> 點擊「🎯 切換練習模式」可自動挖空題幹答案並隱藏中譯與解析（含中譯英答案與詳解）；直接點選各題選項作答後，可點擊各題組下方的「<b>✅ 批改本題組</b>」或單選題最後的「<b>🏆 一次批改全卷</b>」查看得分並自動展開詳解（亦可點擊「<b>🔄 一次清空重練</b>」重新作答）！點擊每題右上角的「標記此題」可收錄錯題；滑鼠反白任何英文字句可「收藏單字」。請前往 <a href="review.html" target="_blank" style="color:var(--acc);font-weight:bold;">錯題與單字總複習頁面</a>。
   </div>
   <p>圖例：<span class="bl revealed">黃底</span> ＝ 正確答案填入處 ｜ <span class="tag" id="secret-trigger" style="user-select:none;cursor:default;">考點</span> <span class="tag pos">詞性需求</span></p>
   <div id="secret-counter" style="display:none; margin-top:8px; font-size:0.9rem; color:var(--mut);">
@@ -176,13 +193,13 @@ footer a:hover{text-decoration:underline;}
 
 <script>
 const L="ABCD";
-const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[(\d*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl"'+(n?' data-q="'+n+'"':'')+'>'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const fx=s=>s.replace(/\*([^*]+)\*/g,'<i>$1</i>').replace(/\[\[(\d*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl"'+(n?' data-q="'+n+'"':'')+'>'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
 const SENT={};
 const Q_ANS={};
 
-function passage(title,paras,note,gid){
+function passage(title,paras,note,gid,extraCls){
   paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[(\d+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
-  return '<section class="pas"'+(gid?' id="pas-'+gid+'"':'')+'><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
+  return '<section class="pas'+(extraCls?' '+extraCls:'')+'"'+(gid?' id="pas-'+gid+'"':'')+'><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
 }
 function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
 const clue=t=>'<div class="clue"><h4>解題線索</h4>'+t+'</div>';
@@ -191,7 +208,7 @@ function ops(list,ans,lab){
   return '<ul class="op">'+list.map((o,i)=>{
     const optCode = (lab==='ABCDEF'&&list.length<=4) ? L[i] : lab[i];
     const k=ans.indexOf(optCode)>=0;
-    return '<li class="'+(k?'ok':'no')+'" data-opt="'+optCode+'" onclick="selectOpt(this)"><b>('+optCode+') '+o[0]+'</b>'+(o[1]?' <small>'+o[1]+'</small>':'')+' <i>'+(k?'✔ 正解':'✘ 誤答')+'</i><div class="exp">'+o[2]+'</div></li>';
+    return '<li class="'+(k?'ok':'no')+'" data-opt="'+optCode+'" onclick="selectOpt(this)"><b>('+optCode+') '+fx(o[0])+'</b>'+(o[1]?' <small>'+o[1]+'</small>':'')+' <i>'+(k?'✔ 正解':'✘ 誤答')+'</i><div class="exp">'+o[2]+'</div></li>';
   }).join('')+'</ul>';
 }
 function card(n,tags,ans,body){
@@ -321,9 +338,37 @@ window.resetGroup = function(gid, startQ, endQ) {
   if (pasEl) pasEl.classList.remove('graded');
   if (gid === 'wbank') {
     const bankEl = document.getElementById('bank-wbank');
-    if (bankEl) bankEl.classList.remove('graded');
+    if (bankEl) bankEl.classList.add('graded');
   }
   const resEl = document.getElementById('gres-' + gid);
+  if (resEl) {
+    resEl.innerHTML = '';
+    resEl.classList.remove('show');
+  }
+};
+
+// 展開與重置中譯英詳解
+window.gradeTrans = function() {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  const pasEl = document.getElementById('pas-trans');
+  if (pasEl) pasEl.classList.add('graded');
+  const resEl = document.getElementById('gres-trans');
+  if (resEl) {
+    resEl.innerHTML = '<div>✅ 已展開中譯英參考正解與句型解析，請自行核對作答內容！</div>';
+    resEl.classList.add('show');
+  }
+};
+
+window.resetTrans = function() {
+  enablePracticeMode();
+  const pasEl = document.getElementById('pas-trans');
+  if (pasEl) {
+    pasEl.classList.remove('graded');
+    pasEl.querySelectorAll('.trans-input').forEach(inp => inp.value = '');
+  }
+  const resEl = document.getElementById('gres-trans');
   if (resEl) {
     resEl.innerHTML = '';
     resEl.classList.remove('show');
@@ -348,7 +393,7 @@ window.gradeAllSingleChoice = function() {
       blankList.push(n);
     }
   }
-  document.querySelectorAll('.pas, .bank').forEach(el => el.classList.add('graded'));
+  document.querySelectorAll('.pas:not(#pas-trans), .bank').forEach(el => el.classList.add('graded'));
 
   const resEl = document.getElementById('gres-all');
   let html = '<div><b>🏆 全卷選擇題總成績：</b>答對 <b>' + okCount + ' / 56</b> 題，總分 <b style="color:var(--acc);font-size:1.3rem;">' + earnedPts + ' / 72</b> 分' + (okCount === 56 ? ' 🎉 滿分全對！太強了！' : '') + '</div>';
@@ -375,7 +420,7 @@ window.resetAllSingleChoice = function() {
     if (st) st.style.display = 'none';
     document.querySelectorAll('.bl[data-q="'+n+'"]').forEach(el => el.classList.remove('revealed'));
   }
-  document.querySelectorAll('.pas, .bank').forEach(el => el.classList.remove('graded'));
+  document.querySelectorAll('.pas:not(#pas-essay-prompt):not(#pas-essay-model), .bank').forEach(el => el.classList.remove('graded'));
   document.querySelectorAll('.grade-res').forEach(el => {
     el.innerHTML = '';
     el.classList.remove('show');
@@ -856,7 +901,7 @@ const cloze3 = [
     n: 27,
     tags: ['考點：使役動詞句型（have + O + 原形動詞）', '詞性需求：過去式使役動詞（後接受詞 children 與原形動詞受詞補語 do）'],
     ans: 'A',
-    clue: '觀察空格後的關鍵文法結構：<b>he _____ children do tasks such as...</b>。受詞 <b>children</b> 後方直接接「**原形動詞 do**（省略 to 的不定詞）」！四個選項中，只有使役動詞 <b>have（過去式 had）</b> 後方的受詞補語能直接加原形動詞 <b>do</b>（<b>have + O + V</b>）。',
+    clue: '觀察空格後的關鍵文法結構：<b>he _____ children do tasks such as...</b>。受詞 <b>children</b> 後方直接接「<b>原形動詞 do</b>（省略 to 的不定詞）」！四個選項中，只有使役動詞 <b>have（過去式 had）</b> 後方的受詞補語能直接加原形動詞 <b>do</b>（<b>have + O + V</b>）。',
     ops: [
       ['had', '過去式使役動詞（叫；讓；請）', 'have + 受詞（children）+ 原形動詞（do tasks），完全符合文法結構與施測語境。'],
       ['kept', 'v. 使保持；讓⋯⋯一直做', 'keep + O 後方必須接「現在分詞 V-ing（kept children doing tasks）」，不可接原形動詞 do。<b>何時才對：</b>當受詞補語為 V-ing 時，如：I\'m sorry to have kept you waiting.（很抱歉讓你久等了）。'],
@@ -907,7 +952,7 @@ cloze3.forEach(q => {
 });
 out += groupGradeBox('cloze3', '綜合測驗第三篇（比奈與智力測驗）', 26, 30, 1);
 
-// 三、文意選填
+// 三、文意選填（第 31–40 題，占 10 分）— 完整 (A)–(J) 10 選項全解析更新版
 out += '<h2 id="sec3">三、文意選填（第 31–40 題，占 10 分）</h2>';
 out += '<div class="pas"><div class="bank" id="bank-wbank">' +
   '<span><b>(A)</b> resistance <small>n. 抵抗力；阻力（搭配 to）</small></span>' +
@@ -919,7 +964,7 @@ out += '<div class="pas"><div class="bank" id="bank-wbank">' +
   '<span><b>(G)</b> disappearance <small>n. 消失；滅絕</small></span>' +
   '<span><b>(H)</b> souvenirs <small>n. 紀念品（複數）</small></span>' +
   '<span><b>(I)</b> endangered <small>adj. 瀕臨絕種的</small></span>' +
-  '<span><b>(J)</b> carry <small>v. 攜帶；沖刷帶走（複數動詞）</small></span>' +
+  '<span><b>(J)</b> carry <small>v. 攜帶；沖刷帶走（原形／複數動詞）</small></span>' +
   '</div></div>';
 
 out += passage('第 31–40 題題組：海洋熱帶雨林——珊瑚礁的生存危機', [
@@ -965,12 +1010,18 @@ const wbankData = [
     ans: 'D',
     clue: '空格前有 <b>where fish and sea animals can lay their eggs and _____</b>，需填原形動詞與 lay 平行；且前面提到珊瑚礁充滿陰暗藏身處（<b>full of dark hideaways</b>），空格後接 <b>from predators</b>（躲避掠食者），構成 <b>escape from predators</b>（逃離／躲避掠食者）。',
     ops: [
-      ['escape (D)', 'v. 逃脫；躲避（原形動詞）', 'escape from predators（逃避掠食者的追捕），完全呼應前面的 dark hideaways（藏身處）。'],
-      ['last (C)', 'v. 持續；支撐（原形動詞）', 'last from predators 語意不通。<b>何時才對：</b>用於第 34 題後接時間長短（might not even last that long）。'],
-      ['carry (J)', 'v. 攜帶（原形動詞）', 'carry from predators 語意與文法皆不通。<b>何時才對：</b>用於第 36 題 rivers and streams, which carry the poisons into the ocean。'],
-      ['resistance (A)', 'n. 抵抗力', '名詞不可與動詞 lay 平行接在 can 後方。<b>何時才對：</b>用於第 37 題 have less resistance to diseases。']
+      ['resistance', 'n. 抵抗力；阻力', '名詞不可與動詞 lay 對等接在助動詞 can 後方。<b>何時才對：</b>用於第 37 題作動詞 have 的受詞（have less resistance to diseases）。'],
+      ['identified', 'v. 確認；找出（過去分詞／過去式）', '助動詞 can 後方必須接原形動詞，不可接過去分詞。<b>何時才對：</b>用於第 35 題接於 have been 後構成被動語態。'],
+      ['last', 'v. 持續；維持（原形動詞）', '雖為原形動詞，但 last from predators（從掠食者持續）語意完全不通。<b>何時才對：</b>用於第 34 題後接時間長短（might not even last that long）。'],
+      ['escape', 'v. 逃脫；躲避（原形動詞）', 'escape from predators（逃避掠食者的追捕），完全呼應前面的 dark hideaways（陰暗藏身處）。'],
+      ['sadly', 'adv. 令人遺憾地', '副詞不可當對等動詞與 lay 平行。<b>何時才對：</b>用於第 33 題作句子副詞修飾整句。'],
+      ['eventually', 'adv. 最終；最後', '副詞不可當主要動詞接於 can... and 後方。<b>何時才對：</b>用於第 38 題修飾不及物動詞 dies。'],
+      ['disappearance', 'n. 消失；滅絕', '名詞不可接於助動詞 can 後方作動詞。<b>何時才對：</b>用於第 39 題位於 the 與 of 之間（the disappearance of coral reefs）。'],
+      ['souvenirs', 'n. 紀念品（複數名詞）', '複數名詞不可作原形動詞使用。<b>何時才對：</b>用於第 40 題作介系詞 for 的受詞（collect for souvenirs）。'],
+      ['endangered', 'adj. 瀕臨絕種的', '形容詞不可與原形動詞 lay 對等連接。<b>何時才對：</b>用於第 32 題接在連綴動詞 become 後作主詞補語。'],
+      ['carry', 'v. 攜帶；運送（原形動詞）', 'carry 為及物動詞，後面必須先接受詞，不可直接接 from predators。<b>何時才對：</b>用於第 36 題後接受詞 the poisons（carry the poisons into the ocean）。']
     ],
-    lab: 'DCJA'
+    lab: 'ABCDEFGHIJ'
   },
   {
     n: 32,
@@ -978,12 +1029,18 @@ const wbankData = [
     ans: 'I',
     clue: '空格前為連綴動詞 <b>become</b>，後方接 <b>or disappear completely</b>（或是完全消失／滅絕）。在「完全滅絕消失」之前的前一階段，就是物種變得「瀕臨絕種的（endangered）」。',
     ops: [
-      ['endangered (I)', 'adj. 瀕臨絕種的；瀕危的', 'become endangered or disappear completely（變得瀕臨絕種甚至完全消失），完美構成程度遞進。'],
-      ['identified (B)', 'v. 被確認的（過去分詞）', '失去棲息地會讓魚類「瀕危」，而非「變得被確認」。<b>何時才對：</b>用於第 35 題 three main causes have been identified。'],
-      ['escape (D)', 'v. 逃脫（原形動詞）', 'become 後方不可接原形動詞。<b>何時才對：</b>用於第 31 題。'],
-      ['sadly (E)', 'adv. 可悲地', 'become 後方需接形容詞作補語，不可只放副詞。<b>何時才對：</b>用於第 33 題修飾全句。']
+      ['resistance', 'n. 抵抗力；阻力', '物種不會「變成抵抗力」。<b>何時才對：</b>用於第 37 題 have less resistance to diseases。'],
+      ['identified', 'v. 被確認的（過去分詞）', '失去珊瑚礁棲息地會讓魚類「瀕危」，而非「變得被確認」。<b>何時才對：</b>用於第 35 題 three main causes have been identified。'],
+      ['last', 'v. 持續（原形動詞）', '連綴動詞 become 後方不可接原形動詞。<b>何時才對：</b>用於第 34 題助動詞 might 後方（might not even last that long）。'],
+      ['escape', 'v. 逃脫（原形動詞）', '連綴動詞 become 後方不可接原形動詞。<b>何時才對：</b>用於第 31 題 escape from predators。'],
+      ['sadly', 'adv. 令人遺憾地', 'become 後方需要形容詞作主詞補語，不可單獨填副詞。<b>何時才對：</b>用於第 33 題修飾全句。'],
+      ['eventually', 'adv. 最終；最後', '副詞不可單獨作 become 的主詞補語。<b>何時才對：</b>用於第 38 題修飾動詞 dies。'],
+      ['disappearance', 'n. 消失；滅絕', '物種（species）不會「變成消失（抽象名詞）」，且後方已有動詞 disappear completely。<b>何時才對：</b>用於第 39 題 the disappearance of coral reefs。'],
+      ['souvenirs', 'n. 紀念品（複數名詞）', '前文講的是如果沒有珊瑚礁，海洋魚類會變少甚至瀕危絕種，而非魚類自己變成紀念品。<b>何時才對：</b>用於第 40 題人類折斷珊瑚當作紀念品（collect for souvenirs）。'],
+      ['endangered', 'adj. 瀕臨絕種的；瀕危的', 'become endangered or disappear completely（變得瀕臨絕種甚至完全消失），完美構成生存危機的程度遞進。'],
+      ['carry', 'v. 攜帶（原形動詞）', 'become 後方不可接原形動詞 carry。<b>何時才對：</b>用於第 36 題關係子句動詞。']
     ],
-    lab: 'IBDE'
+    lab: 'ABCDEFGHIJ'
   },
   {
     n: 33,
@@ -991,12 +1048,18 @@ const wbankData = [
     ans: 'E',
     clue: '觀察標點結構：<b>There are thousands of reefs in the world; _____, however, they are now in serious danger.</b> 空格獨立於主句之外，需填「副詞」修飾整句；前句說世上有成千上萬座珊瑚礁，後句轉折說「然而它們現在正處於嚴重危險中」，因此語氣是「令人難過地、遺憾地（sadly）」。',
     ops: [
-      ['sadly (E)', 'adv. 令人遺憾地；可悲地', '表達對珊瑚礁陷入嚴重危機（in serious danger）的惋惜與難過語氣。'],
-      ['eventually (F)', 'adv. 最終；最後', '此句描述的是珊瑚礁「現在（now）」正處於危險中，並非經過一連串過程後的「最終結果」（eventually 用於第 38 題藻類死後珊瑚白化，最終也隨之死亡）。<b>何時才對：</b>用於第 38 題 loses its color and it also dies eventually。'],
-      ['endangered (I)', 'adj. 瀕危的', '形容詞不可單獨放在分號與逗號之間修飾全句。<b>何時才對：</b>用於第 32 題。'],
-      ['disappearance (G)', 'n. 消失', '名詞不可作句子副詞。<b>何時才對：</b>用於第 39 題。']
+      ['resistance', 'n. 抵抗力', '名詞不可單獨置於分號與逗號之間修飾全句。<b>何時才對：</b>用於第 37 題作受詞。'],
+      ['identified', 'v. 確認（過去分詞）', '分詞無法在此處搭配 however 作情緒轉折副詞。<b>何時才對：</b>用於第 35 題 have been identified。'],
+      ['last', 'v. 持續', '動詞不可置於此處修飾全句。<b>何時才對：</b>用於第 34 題 might not even last that long。'],
+      ['escape', 'v. 逃脫', '原形動詞不可修飾全句。<b>何時才對：</b>用於第 31 題 escape from predators。'],
+      ['sadly', 'adv. 令人遺憾地；可悲地', '置於轉折句首修飾全句，精準表達對珊瑚礁陷入嚴重危機（in serious danger）的惋惜語氣。'],
+      ['eventually', 'adv. 最終；最後', '此句描述的是珊瑚礁「現在（now）」正處於危險中，並非經過一連串過程後的「最終結果」。<b>何時才對：</b>用於第 38 題描述共生藻死後，珊瑚先褪色、最終（eventually）也隨之死亡的過程。'],
+      ['disappearance', 'n. 消失', '名詞不可作句子副詞修飾全句。<b>何時才對：</b>用於第 39 題 the disappearance of coral reefs。'],
+      ['souvenirs', 'n. 紀念品（複數）', '複數名詞不可作句子副詞。<b>何時才對：</b>用於第 40 題 collect for souvenirs。'],
+      ['endangered', 'adj. 瀕臨絕種的', '形容詞不可單獨放在分號與逗號之間修飾全句。<b>何時才對：</b>用於第 32 題 become endangered。'],
+      ['carry', 'v. 攜帶', '動詞不可修飾全句。<b>何時才對：</b>用於第 36 題 which carry the poisons。']
     ],
-    lab: 'EFIG'
+    lab: 'ABCDEFGHIJ'
   },
   {
     n: 34,
@@ -1004,12 +1067,18 @@ const wbankData = [
     ans: 'C',
     clue: '前句說超過三分之一的珊瑚礁狀況極差，可能在「十年內死亡（<b>could die within ten years</b>）」，本句緊接著說 <b>Many might not even _____ that long!</b>（許多甚至可能連「那麼久［指十年］」都撐不到／持續不了！）。表示「持續、支撐（一段時間）」的原形動詞為 <b>last</b>。',
     ops: [
-      ['last (C)', 'v. 持續；維持；支撐（原形動詞）', 'last that long（持續／撐那麼久），精準呼應前句的 within ten years。'],
-      ['escape (D)', 'v. 逃脫（原形動詞）', 'escape 不搭配時間長短 that long。<b>何時才對：</b>用於第 31 題 escape from predators。'],
-      ['carry (J)', 'v. 攜帶（原形動詞）', '為及物動詞，不可接時間副詞 that long 表存活多久。<b>何時才對：</b>用於第 36 題。'],
-      ['eventually (F)', 'adv. 最終', '助動詞 might not even 與副詞 that long 之間缺「主要原形動詞」，不可填副詞 eventually。<b>何時才對：</b>用於第 38 題。']
+      ['resistance', 'n. 抵抗力', '助動詞 might not even 後方需要原形動詞，不可填名詞。<b>何時才對：</b>用於第 37 題 have less resistance to diseases。'],
+      ['identified', 'v. 確認（過去分詞／過去式）', '助動詞 might 後方必須接原形動詞，不可接過去分詞。<b>何時才對：</b>用於第 35 題 have been identified。'],
+      ['last', 'v. 持續；維持；支撐（原形動詞）', 'last that long（持續／撐那麼久），精準呼應前句的 within ten years。'],
+      ['escape', 'v. 逃脫（原形動詞）', 'escape 不搭配時間長短 that long。<b>何時才對：</b>用於第 31 題搭配介系詞 from（escape from predators）。'],
+      ['sadly', 'adv. 令人遺憾地', '助動詞 might not even 與 that long 之間缺主要動詞，不可填副詞。<b>何時才對：</b>用於第 33 題修飾全句。'],
+      ['eventually', 'adv. 最終', '同 E，句中缺原形動詞，不可填副詞 eventually。<b>何時才對：</b>用於第 38 題修飾動詞 dies。'],
+      ['disappearance', 'n. 消失', '名詞不可接在助動詞 might 後方當動詞。<b>何時才對：</b>用於第 39 題 the disappearance of coral reefs。'],
+      ['souvenirs', 'n. 紀念品（複數）', '名詞不可接在助動詞後方當動詞。<b>何時才對：</b>用於第 40 題 collect for souvenirs。'],
+      ['endangered', 'adj. 瀕臨絕種的', '形容詞不可直接接於助動詞 might 後方（須有 be/become）。<b>何時才對：</b>用於第 32 題 might even become endangered。'],
+      ['carry', 'v. 攜帶（原形動詞）', 'carry 為及物動詞，不可接時間片語 that long 表存活多久。<b>何時才對：</b>用於第 36 題 carry the poisons into the ocean。']
     ],
-    lab: 'CDJF'
+    lab: 'ABCDEFGHIJ'
   },
   {
     n: 35,
@@ -1017,12 +1086,18 @@ const wbankData = [
     ans: 'B',
     clue: '前句說科學家努力想找出破壞原因，本句說雖然還有許多問題未解，但「三個主要原因已經被確認／找出來了（<b>three main causes have been _____</b>）」，且接下來三段（第 3、4、5 段）就依序介紹這三大原因。故選過去分詞 <b>identified</b>（被確認、被鑑定出來）。',
     ops: [
-      ['identified (B)', 'v. 確認；找出；鑑定（過去分詞）', 'three main causes have been identified（三個主要原因已被確認找出來），完美引出後三段的原因分析。'],
-      ['endangered (I)', 'adj. 瀕危的', '瀕危的是「物種或珊瑚礁」，不是「三個原因（three main causes）瀕臨絕種」。<b>何時才對：</b>用於第 32 題主詞為 Some species 時。'],
-      ['last (C)', 'v. 持續（原形）', 'have been 後方不可接原形動詞。<b>何時才對：</b>用於第 34 題。'],
-      ['resistance (A)', 'n. 抵抗力', 'have been 後方不可接抽象名詞 resistance。<b>何時才對：</b>用於第 37 題。']
+      ['resistance', 'n. 抵抗力', 'have been 後方不可接抽象名詞 resistance，且主詞為 three main causes。<b>何時才對：</b>用於第 37 題 have less resistance to diseases。'],
+      ['identified', 'v. 確認；找出；鑑定（過去分詞）', 'three main causes have been identified（三個主要原因已被確認找出來），完美引出後三段的原因分析。'],
+      ['last', 'v. 持續（原形動詞）', 'have been 後方不可接原形動詞 last。<b>何時才對：</b>用於第 34 題 might not even last that long。'],
+      ['escape', 'v. 逃脫（原形動詞）', 'have been 後方不可接原形動詞 escape。<b>何時才對：</b>用於第 31 題 escape from predators。'],
+      ['sadly', 'adv. 令人遺憾地', 'have been 後方需有過去分詞或形容詞作補語，不可單獨只放副詞。<b>何時才對：</b>用於第 33 題修飾全句。'],
+      ['eventually', 'adv. 最終', '同 E，句尾缺過去分詞完成被動語態。<b>何時才對：</b>用於第 38 題修飾動詞 dies。'],
+      ['disappearance', 'n. 消失', '名詞不可接於 have been 後構成被動。<b>何時才對：</b>用於第 39 題 the disappearance of coral reefs。'],
+      ['souvenirs', 'n. 紀念品（複數）', '「三個主要原因」不會變成「紀念品」。<b>何時才對：</b>用於第 40 題 collect for souvenirs。'],
+      ['endangered', 'adj. 瀕臨絕種的', '瀕臨絕種的是「海洋物種或珊瑚礁」，而非「三個主要原因（three main causes）瀕臨絕種」。<b>何時才對：</b>用於第 32 題主詞為 Some species 時。'],
+      ['carry', 'v. 攜帶（原形動詞）', 'have been 後方不可接原形動詞 carry。<b>何時才對：</b>用於第 36 題 which carry the poisons。']
     ],
-    lab: 'BICA'
+    lab: 'ABCDEFGHIJ'
   },
   {
     n: 36,
@@ -1030,12 +1105,18 @@ const wbankData = [
     ans: 'J',
     clue: '非限定關係代名詞 <b>which</b> 代指前面的複數先行詞 <b>rivers and streams</b>（河川與溪流），空格後接「受詞 <b>the poisons</b> + 介系詞片語 <b>into the ocean</b>」，指河水與溪流將這些毒素「攜帶、沖刷帶入（carry... into...）」海洋中。',
     ops: [
-      ['carry (J)', 'v. 攜帶；運送；帶走（複數現在式）', 'carry the poisons into the ocean（將毒素帶進海洋），主詞複數一致且及物結構完整。'],
-      ['escape (D)', 'v. 逃離', '河水不會「逃離毒素進入海洋」。<b>何時才對：</b>用於第 31 題。'],
-      ['last (C)', 'v. 持續', '不及物動詞，後面不可接 the poisons into the ocean。<b>何時才對：</b>用於第 34 題。'],
-      ['identified (B)', 'v. 確認（過去分詞/過去式）', '本文描述常態過程皆用現在式（run / kill / make），且河水不會「確認毒素」。<b>何時才對：</b>用於第 35 題。']
+      ['resistance', 'n. 抵抗力', '關係代名詞主詞 which 與受詞 the poisons 之間需要及物動詞，不可填名詞。<b>何時才對：</b>用於第 37 題 have less resistance to diseases。'],
+      ['identified', 'v. 確認（過去式）', '本文描述污染擴散的常態過程皆用現在式（run / kill / make），且河川不會「確認毒素」。<b>何時才對：</b>用於第 35 題 have been identified。'],
+      ['last', 'v. 持續（複數現在式）', 'last 為不及物動詞，後面不可接 the poisons into the ocean。<b>何時才對：</b>用於第 34 題 might not even last that long。'],
+      ['escape', 'v. 逃離（複數現在式）', '河川不會「逃離毒素進入海洋」。<b>何時才對：</b>用於第 31 題 escape from predators。'],
+      ['sadly', 'adv. 令人遺憾地', '關係子句中缺主要動詞，不可填副詞。<b>何時才對：</b>用於第 33 題修飾全句。'],
+      ['eventually', 'adv. 最終', '關係子句中缺主要動詞，不可只填副詞。<b>何時才對：</b>用於第 38 題修飾動詞 dies。'],
+      ['disappearance', 'n. 消失', '名詞不可作關係子句的主要動詞。<b>何時才對：</b>用於第 39 題 the disappearance of coral reefs。'],
+      ['souvenirs', 'n. 紀念品（複數）', '名詞不可作關係子句動詞。<b>何時才對：</b>用於第 40 題 collect for souvenirs。'],
+      ['endangered', 'adj. 瀕臨絕種的', '形容詞不可作及物動詞接 the poisons。<b>何時才對：</b>用於第 32 題 become endangered。'],
+      ['carry', 'v. 攜帶；運送；帶走（複數現在式）', 'carry the poisons into the ocean（將毒素帶進海洋），與複數先行詞 rivers and streams 一致且及物結構完整。']
     ],
-    lab: 'JDCB'
+    lab: 'ABCDEFGHIJ'
   },
   {
     n: 37,
@@ -1043,25 +1124,37 @@ const wbankData = [
     ans: 'A',
     clue: '前半句說毒素中的化學物質會使珊瑚礁變得虛弱（<b>make them weak</b>），因此它們對疾病（<b>to diseases</b>）就只剩下較少的「抵抗力（resistance to diseases）」。',
     ops: [
-      ['resistance (A)', 'n. 抵抗力；抗性', 'have less resistance to diseases（對疾病的抵抗力降低），呼應前半句的 make them weak，且 resistance to... 為固定搭配。'],
-      ['disappearance (G)', 'n. 消失', '不可說「對疾病有較少的消失」。<b>何時才對：</b>用於第 39 題 the disappearance of coral reefs。'],
-      ['souvenirs (H)', 'n. 紀念品（複數）', 'less 修飾不可數名詞（不可修飾複數可數名詞 souvenirs），且語意完全無關。<b>何時才對：</b>用於第 40 題。'],
-      ['endangered (I)', 'adj. 瀕危的', 'have less 後方需要名詞受詞，不可填形容詞。<b>何時才對：</b>用於第 32 題。']
+      ['resistance', 'n. 抵抗力；抗性', 'have less resistance to diseases（對疾病的抵抗力降低），呼應前半句的 make them weak，且 resistance to... 為固定搭配。'],
+      ['identified', 'v. 確認（過去分詞）', 'have less 後方需要不可數名詞作受詞，不可填過去分詞。<b>何時才對：</b>用於第 35 題 have been identified。'],
+      ['last', 'v. 持續', '動詞不可受 less 修飾作 have 的受詞。<b>何時才對：</b>用於第 34 題 might not even last that long。'],
+      ['escape', 'v. 逃脫', 'escape 搭配介系詞 from，不搭配 have less... to diseases。<b>何時才對：</b>用於第 31 題 escape from predators。'],
+      ['sadly', 'adv. 令人遺憾地', 'have less 後方需接名詞，不可接副詞。<b>何時才對：</b>用於第 33 題修飾全句。'],
+      ['eventually', 'adv. 最終', '副詞不可作 have less 的受詞。<b>何時才對：</b>用於第 38 題修飾動詞 dies。'],
+      ['disappearance', 'n. 消失', '不可說「對疾病有較少的消失」，且 disappearance 後方搭配介系詞 of 而非 to。<b>何時才對：</b>用於第 39 題 the disappearance of coral reefs。'],
+      ['souvenirs', 'n. 紀念品（複數可數名詞）', 'less 用於修飾不可數名詞（複數可數名詞須用 fewer），且「對疾病有較少紀念品」語意荒謬。<b>何時才對：</b>用於第 40 題 collect for souvenirs。'],
+      ['endangered', 'adj. 瀕臨絕種的', 'have less 後方需要名詞受詞，不可填形容詞。<b>何時才對：</b>用於第 32 題 become endangered。'],
+      ['carry', 'v. 攜帶', '動詞不可作 have less 的受詞。<b>何時才對：</b>用於第 36 題 which carry the poisons。']
     ],
-    lab: 'AGHI'
+    lab: 'ABCDEFGHIJ'
   },
   {
     n: 38,
-    tags: ['考點：時間順序副詞（eventually 最終）', '詞性需求：副詞（修飾不及物動詞 dies）'],
+    tags: ['考點：時間順序副詞（eventually 最終）', '詞性需求：副詞（位於句尾修飾不及物動詞 dies）'],
     ans: 'F',
     clue: '句子描述珊瑚白化死亡的先後過程：當作為食物來源的共生藻死亡時（<b>When the algae die</b>），珊瑚會先失去顏色（<b>the coral loses its color</b>），失去營養來源一段時間後，它「最終（eventually）」也會跟著死亡（<b>and it also dies eventually</b>）。',
     ops: [
-      ['eventually (F)', 'adv. 最終；最後', '精準描繪「共生藻先死 → 珊瑚失去顏色（白化）→ 最終珊瑚也餓死」的漸進過程。'],
-      ['sadly (E)', 'adv. 令人遺憾地', 'sadly 習慣放在句首修飾全句（如第 33 題 ; sadly, however, they are now in serious danger），而句尾動詞 dies 後方描述過程的終點用 eventually 最自然。<b>何時才對：</b>用於第 33 題。'],
-      ['last (C)', 'v./adv. 最後一次', 'last 當副詞意為「上一次、最後一次」，不放在一般現在式 dies 後方表「最終」。<b>何時才對：</b>當動詞「持續」用於第 34 題。'],
-      ['endangered (I)', 'adj. 瀕危的', 'dies 為完整不及物動詞，後方需用副詞而非形容詞修飾。<b>何時才對：</b>用於第 32 題。']
+      ['resistance', 'n. 抵抗力', 'dies 為完整不及物動詞，後方不可接名詞受詞。<b>何時才對：</b>用於第 37 題 have less resistance to diseases。'],
+      ['identified', 'v. 確認（過去分詞）', 'dies 後方不可接過去分詞 identified。<b>何時才對：</b>用於第 35 題 have been identified。'],
+      ['last', 'v./adv. 持續；最後一次', 'last 當副詞意為「上一次」，不放在一般現在式 dies 句尾表過程的最終結果。<b>何時才對：</b>當動詞「持續」用於第 34 題 might not even last that long。'],
+      ['escape', 'v. 逃脫', 'dies 後方不可再接原形動詞 escape。<b>何時才對：</b>用於第 31 題 escape from predators。'],
+      ['sadly', 'adv. 令人遺憾地', 'sadly 為評論全句的態度副詞，習慣放在句首並以逗號隔開（如第 33 題 ; sadly, however,...），而句尾修飾動詞 dies 表過程終點須用 eventually。<b>何時才對：</b>用於第 33 題。'],
+      ['eventually', 'adv. 最終；最後', '精準描繪「共生藻先死 → 珊瑚失去顏色（白化）→ 最終珊瑚也餓死」的漸進時間順序。'],
+      ['disappearance', 'n. 消失', '不及物動詞 dies 後方不可接名詞。<b>何時才對：</b>用於第 39 題 the disappearance of coral reefs。'],
+      ['souvenirs', 'n. 紀念品（複數）', '不及物動詞 dies 後方不可接名詞。<b>何時才對：</b>用於第 40 題 collect for souvenirs。'],
+      ['endangered', 'adj. 瀕臨絕種的', 'dies 後方需用副詞修飾，且既已死亡（dies）就不再只是「瀕危（endangered）」。<b>何時才對：</b>用於第 32 題 become endangered。'],
+      ['carry', 'v. 攜帶', 'dies 後方不可再接原形動詞。<b>何時才對：</b>用於第 36 題 which carry the poisons。']
     ],
-    lab: 'FECI'
+    lab: 'ABCDEFGHIJ'
   },
   {
     n: 39,
@@ -1069,12 +1162,18 @@ const wbankData = [
     ans: 'G',
     clue: '空格位於 <b>The last factor contributing to the _____ of coral reefs is people.</b>（導致珊瑚礁⋯⋯的最後一個因素是人類），這正是接續第 2 段末句「造成珊瑚礁毀滅的三個主要原因」的第三點，且第一段末句也出現過動詞 <b>disappear completely</b>，此處轉為名詞 <b>the disappearance of coral reefs</b>（珊瑚礁的消失）。',
     ops: [
-      ['disappearance (G)', 'n. 消失；滅絕', 'contributing to the disappearance of coral reefs（導致珊瑚礁的消失），直接呼應第一段的 disappear completely 與第二段的 destruction。'],
-      ['resistance (A)', 'n. 抵抗力', '人類開船撞擊、拋錨與踩踏是「破壞珊瑚礁使其消失」，而非促進珊瑚礁的「抵抗力」。<b>何時才對：</b>用於第 37 題 resistance to diseases。'],
-      ['souvenirs (H)', 'n. 紀念品', 'the souvenirs of coral reefs 無法搭配「人類是造成⋯⋯的因素」。<b>何時才對：</b>用於第 40 題。'],
-      ['identified (B)', 'v. 確認（過去分詞）', 'the 與 of 之間必須填名詞。<b>何時才對：</b>用於第 35 題。']
+      ['resistance', 'n. 抵抗力', '後文講人類開船撞擊、拋錨與踩踏珊瑚礁，這是「破壞珊瑚礁使其消失」，而非促成珊瑚礁的「抵抗力」。<b>何時才對：</b>用於第 37 題 have less resistance to diseases。'],
+      ['identified', 'v. 確認（過去分詞）', '定冠詞 the 與介系詞 of 之間必須填名詞，不可填過去分詞。<b>何時才對：</b>用於第 35 題 have been identified。'],
+      ['last', 'v. 持續', '原形動詞不可置於 the... of 之間，且句首已有形容詞 The last factor。<b>何時才對：</b>用於第 34 題 might not even last that long。'],
+      ['escape', 'v. 逃脫', '固定構造在海底的珊瑚礁不會「逃脫」。<b>何時才對：</b>用於第 31 題指魚類逃避掠食者（escape from predators）。'],
+      ['sadly', 'adv. 令人遺憾地', '副詞不可置於 the 與 of 之間。<b>何時才對：</b>用於第 33 題修飾全句。'],
+      ['eventually', 'adv. 最終', '副詞不可置於 the 與 of 之間。<b>何時才對：</b>用於第 38 題修飾動詞 dies。'],
+      ['disappearance', 'n. 消失；滅絕', 'contributing to the disappearance of coral reefs（導致珊瑚礁的消失），直接呼應第一段的 disappear completely 與第二段的 destruction。'],
+      ['souvenirs', 'n. 紀念品（複數）', '「導致珊瑚礁紀念品的最後一個因素是人類」語意不通。<b>何時才對：</b>用於第 40 題 collect for souvenirs。'],
+      ['endangered', 'adj. 瀕臨絕種的', '形容詞不可單獨置於 the 與 of coral reefs 之間。<b>何時才對：</b>用於第 32 題 become endangered。'],
+      ['carry', 'v. 攜帶', '動詞不可置於 the 與 of 之間。<b>何時才對：</b>用於第 36 題 which carry the poisons。']
     ],
-    lab: 'GAHB'
+    lab: 'ABCDEFGHIJ'
   },
   {
     n: 40,
@@ -1082,12 +1181,18 @@ const wbankData = [
     ans: 'H',
     clue: '前半句說 <b>some people even break coral off to collect for _____</b>（有些人甚至把珊瑚折斷採集回家當作⋯⋯），原因子句說 <b>since it is so colorful and pretty</b>（因為它色彩繽紛又漂亮），遊客把漂亮的珊瑚折下來帶回家收藏，正是為了當作「紀念品（souvenirs）」。',
     ops: [
-      ['souvenirs (H)', 'n. 紀念品（複數）', 'collect for souvenirs（採集回家當作紀念品），完全符合遊客因珊瑚漂亮而折斷帶走的行為。'],
-      ['disappearance (G)', 'n. 消失', '沒有人會為了「消失」而收集珊瑚。<b>何時才對：</b>用於第 39 題。'],
-      ['resistance (A)', 'n. 抵抗力', '因為珊瑚漂亮而折斷收集，與抵抗力無關。<b>何時才對：</b>用於第 37 題。'],
-      ['endangered (I)', 'adj. 瀕危的', '介系詞 for 後方必須接名詞，不可接形容詞。<b>何時才對：</b>用於第 32 題。']
+      ['resistance', 'n. 抵抗力', '因為珊瑚漂亮而折斷收集，與「抵抗力」毫無關聯。<b>何時才對：</b>用於第 37 題 have less resistance to diseases。'],
+      ['identified', 'v. 確認（過去分詞）', '介系詞 for 後方必須接名詞或動名詞，不可接過去分詞。<b>何時才對：</b>用於第 35 題 have been identified。'],
+      ['last', 'v. 持續', '介系詞 for 後方不可接原形動詞。<b>何時才對：</b>用於第 34 題 might not even last that long。'],
+      ['escape', 'v. 逃脫', '遊客不會為了「逃脫」而收集漂亮的珊瑚。<b>何時才對：</b>用於第 31 題 escape from predators。'],
+      ['sadly', 'adv. 令人遺憾地', '介系詞 for 後方不可接副詞。<b>何時才對：</b>用於第 33 題修飾全句。'],
+      ['eventually', 'adv. 最終', '介系詞 for 後方不可接副詞。<b>何時才對：</b>用於第 38 題修飾動詞 dies。'],
+      ['disappearance', 'n. 消失', '沒有人會為了「消失」而因為珊瑚漂亮去收集它。<b>何時才對：</b>用於第 39 題 the disappearance of coral reefs。'],
+      ['souvenirs', 'n. 紀念品（複數）', 'collect for souvenirs（採集回家當作紀念品），完全符合遊客因珊瑚色彩繽紛漂亮而折斷帶走的行為。'],
+      ['endangered', 'adj. 瀕臨絕種的', '介系詞 for 後方必須接名詞，不可接形容詞。<b>何時才對：</b>用於第 32 題 become endangered。'],
+      ['carry', 'v. 攜帶', '介系詞 for 後方不可接原形動詞。<b>何時才對：</b>用於第 36 題 which carry the poisons。']
     ],
-    lab: 'HGAI'
+    lab: 'ABCDEFGHIJ'
   }
 ];
 
@@ -1269,7 +1374,7 @@ const rc2 = [
     ops: [
       ['Scientists have cleaned up most of the trash.', '科學家已經清理掉大部分的垃圾了。', '第四段末句說 clean up the trash already there 屬於「未來的計畫（Future plans）」，目前根本還沒清理。<b>何時才對：</b>改為 Scientists plan to clean up the trash in the future.'],
       ['Large pieces of space trash are being closely watched.', '大型的太空垃圾正受到密切監控。', 'are being closely watched 精準同義改寫第四段已經實施的措施：Ground stations have been built to monitor larger pieces of space trash。'],
-      ['Many nations have worked together to stop polluting space.', '許多國家已經攜手合作停止污染太空。', '時態陷阱！第四段最後一句明確標示「**Future plans** include a cooperative effort among many nations to stop littering in space...」，這屬於「未來的計畫」，尚未實現。<b>何時才對：</b>若題目問「未來的計畫（Future plans）包含什麼」才選此項。'],
+      ['Many nations have worked together to stop polluting space.', '許多國家已經攜手合作停止污染太空。', '時態陷阱！第四段最後一句明確標示「<b>Future plans</b> include a cooperative effort among many nations to stop littering in space...」，這屬於「未來的計畫」，尚未實現。<b>何時才對：</b>若題目問「未來的計畫（Future plans）包含什麼」才選此項。'],
       ['Ground stations are built to help store the trash properly in space.', '建造地面觀測站以協助在太空中妥善儲存垃圾。', '地面站的功能是「監控（monitor）大型垃圾以防撞擊衛星或太空梭」，而非在太空中「儲存垃圾」。<b>何時才對：</b>將 store the trash properly 改為 monitor larger pieces of space trash。']
     ]
   }
@@ -1313,7 +1418,7 @@ const rc3 = [
     ans: 'A',
     en: 'For a person who just turned 20, what is the legal alcohol level allowed while driving in the US?',
     zh: '對於一個剛滿 20 歲的人來說，在美國開車時允許的法定酒精濃度是多少？',
-    clue: '注意題幹年齡陷阱：「剛滿 20 歲（<b>just turned 20</b>）」代表「**未滿 21 歲（under 21）**」！第一段第二句明確規定：<b>while people under 21 are not allowed to drive a car with any level of alcohol in their body.</b>（未滿 21 歲者體內不得含有「任何酒精濃度 any level of alcohol」，即零容忍 <b>0.000%</b>）。',
+    clue: '注意題幹年齡陷阱：「剛滿 20 歲（<b>just turned 20</b>）」代表「<b>未滿 21 歲（under 21）</b>」！第一段第二句明確規定：<b>while people under 21 are not allowed to drive a car with any level of alcohol in their body.</b>（未滿 21 歲者體內不得含有「任何酒精濃度 any level of alcohol」，即零容忍 <b>0.000%</b>）。',
     ops: [
       ['0.000%.', '0.000%（零檢出）。', '剛滿 20 歲屬於 under 21（未滿 21 歲），依法體內不得有任何酒精（not allowed... with any level of alcohol），故為 0.000%。'],
       ['0.005%.', '0.005%。', '這是第二段提到 27 種能量飲料中有 26 種所含的酒精濃度下限，並非美國法定酒駕標準。<b>何時才對：</b>若題目問「26 種能量飲料的酒精濃度高於多少」才選此項。'],
@@ -1467,7 +1572,7 @@ out += '<div class="grade-box all-box" id="gbox-all">' +
   '<div class="grade-title">🏆 選擇題全卷總批改（第 1–56 題，共 72 分）</div>' +
   '<div class="grade-btns">' +
     '<button class="btn-grade" onclick="gradeAllSingleChoice()">🏆 一次批改全卷並看總分</button>' +
-    '<button class="btn-reset" onclick="resetAllSingleChoice()">🔄 全部清空重練</button>' +
+    '<button class="btn-reset" onclick="resetAllSingleChoice()">🔄 一次清空重練</button>' +
   '</div>' +
   '<div class="grade-res" id="gres-all"></div>' +
 '</div>';
@@ -1475,44 +1580,64 @@ out += '<div class="grade-box all-box" id="gbox-all">' +
 // 第貳部分：非選擇題
 out += '<h2 id="sec5">第貳部分：非選擇題（中譯英與英文作文解析）</h2>';
 
-out += '<section class="pas graded"><h3>一、中譯英（占 8 分）逐題拆解與標準答案</h3>' +
+out += '<section class="pas" id="pas-trans"><h3>一、中譯英（占 8 分）逐題拆解與標準答案</h3>' +
   '<div class="para">' +
-    '<div class="s"><div class="en"><b>第 1 題：</b>都會地區的高房價對社會產生了嚴重的影響。</div>' +
-    '<div class="zh"><b>參考解答 1：</b><span class="bl revealed">High housing prices in urban (metropolitan) areas have had a serious (severe) impact (effect / influence) on society.</span><br>' +
-    '<b>參考解答 2：</b><span class="bl revealed">The high prices of houses in cities have seriously affected (influenced) our society.</span><br>' +
-    '<b>🎯 關鍵考點與結構拆解：</b><br>' +
-    '1. <b>「都會地區的高房價」：</b>中心主詞「高房價」為 <b>High housing prices</b>（或 <b>The high prices of houses / real estate</b>），後接地點介系詞片語 <b>in urban / metropolitan areas</b>。<br>' +
-    '2. <b>「對⋯⋯產生了嚴重的影響」：</b>使用現在完成式表示已產生並持續至今的影響 <b>have had a serious / severe impact (effect / influence) on...</b>，亦可直接用動詞 <b>have seriously affected / impacted...</b>。<br>' +
-    '3. <b>「社會」：</b>泛指整體人類社會時，<b>society</b> 為不可數名詞，前面<b>不加冠詞 the</b>（或寫成 <b>our society</b>）。</div></div>' +
-    '<div class="s"><div class="en"><b>第 2 題：</b>政府正推出新的政策，以滿足人們的住房需求。</div>' +
-    '<div class="zh"><b>參考解答 1：</b><span class="bl revealed">The government is launching (introducing / rolling out) new policies to meet (satisfy) people’s housing needs (demands).</span><br>' +
-    '<b>參考解答 2：</b><span class="bl revealed">The government is coming up with (promoting) new policies in order to satisfy people’s demand for housing.</span><br>' +
-    '<b>🎯 關鍵考點與結構拆解：</b><br>' +
-    '1. <b>「正推出新的政策」：</b>用現在進行式表正在推動執行，動詞可選用 <b>is launching / introducing / rolling out / promoting / proposing</b>，受詞為 <b>new policies</b>。<br>' +
-    '2. <b>「以滿足⋯⋯」：</b>表目的之不定詞片語 <b>(in order) to meet / satisfy / fulfill...</b>。<br>' +
-    '3. <b>「人們的住房需求」：</b><b>people’s housing needs / demands</b>（或 <b>people’s need / demand for housing</b>）。</div></div>' +
+    '<div class="s">' +
+      '<div class="prompt-text"><b>第 1 題：</b>都會地區的高房價對社會產生了嚴重的影響。</div>' +
+      '<input type="text" class="trans-input" placeholder="請在此輸入第 1 題英文翻譯練習...">' +
+      '<div class="trans-ans"><b>參考解答 1：</b><span class="bl revealed">High housing prices in urban (metropolitan) areas have had a serious (severe) impact (effect / influence) on society.</span><br>' +
+      '<b>參考解答 2：</b><span class="bl revealed">The high prices of houses in cities have seriously affected (influenced) our society.</span></div>' +
+      '<div class="note"><b>🎯 關鍵考點與結構拆解：</b><br>' +
+      '1. <b>「都會地區的高房價」：</b>中心主詞「高房價」為 <b>High housing prices</b>（或 <b>The high prices of houses / real estate</b>），後接地點介系詞片語 <b>in urban / metropolitan areas</b>。<br>' +
+      '2. <b>「對⋯⋯產生了嚴重的影響」：</b>使用現在完成式表示已產生並持續至今的影響 <b>have had a serious / severe impact (effect / influence) on...</b>，亦可直接用動詞 <b>have seriously affected / impacted...</b>。<br>' +
+      '3. <b>「社會」：</b>泛指整體人類社會時，<b>society</b> 為不可數名詞，前面<b>不加冠詞 the</b>（或寫成 <b>our society</b>）。</div>' +
+    '</div>' +
+    '<div class="s">' +
+      '<div class="prompt-text"><b>第 2 題：</b>政府正推出新的政策，以滿足人們的住房需求。</div>' +
+      '<input type="text" class="trans-input" placeholder="請在此輸入第 2 題英文翻譯練習...">' +
+      '<div class="trans-ans"><b>參考解答 1：</b><span class="bl revealed">The government is launching (introducing / rolling out) new policies to meet (satisfy) people’s housing needs (demands).</span><br>' +
+      '<b>參考解答 2：</b><span class="bl revealed">The government is coming up with (promoting) new policies in order to satisfy people’s demand for housing.</span></div>' +
+      '<div class="note"><b>🎯 關鍵考點與結構拆解：</b><br>' +
+      '1. <b>「正推出新的政策」：</b>用現在進行式表正在推動執行，動詞可選用 <b>is launching / introducing / rolling out / promoting / proposing</b>，受詞為 <b>new policies</b>。<br>' +
+      '2. <b>「以滿足⋯⋯」：</b>表目的之不定詞片語 <b>(in order) to meet / satisfy / fulfill...</b>。<br>' +
+      '3. <b>「人們的住房需求」：</b><b>people’s housing needs / demands</b>（或 <b>people’s need / demand for housing</b>）。</div>' +
+    '</div>' +
   '</div></section>';
 
-out += '<section class="pas graded"><h3>二、英文作文（占 20 分）連環圖畫寫作解析與高分範文（278 字）</h3>' +
-  '<p class="note"><b>題目提示：</b>請仔細觀察三幅連環圖片的內容（圖一：在捷運的博愛座上，一名學生正低頭玩手機，無視他面前拄著拐杖卻沒有座位的老人；圖二：這名學生後來打籃球受了傷；圖三：他在捷運上的博愛座前拄著拐杖站著，座位上的乘客卻低頭滑手機無人讓座給他；圖四：自行想像結局），寫出一個涵蓋連環圖片內容並有完整結局的故事（高分進階範文：278 words）。</p>' +
-  '<div class="para">' +
-    '<div class="s"><div class="en">One Friday afternoon, Kevin boarded a crowded MRT train after school and immediately spotted an empty priority seat.</div><div class="zh">某個週五下午，凱文放學後搭上一班擁擠的捷運列車，並立刻發現了一個空的博愛座。</div></div>' +
-    '<div class="s"><div class="en">Without a second thought, he sat down and became completely absorbed in playing games on his smartphone.</div><div class="zh">他不假思索地坐了下來，完全沉迷於玩智慧型手機上的遊戲。</div></div>' +
-    '<div class="s"><div class="en">At the next station, a frail elderly man leaning on a cane got on the train and stood trembling right in front of Kevin, yet Kevin pretended not to notice him and kept his eyes glued to the screen.</div><div class="zh">在下一站，一位拄著拐杖、體弱年邁的老先生走進車廂，顫巍巍地就站在凱文正前方，但凱文卻假裝沒注意到他，雙眼依然死盯著螢幕。</div></div>' +
+out += '<div class="grade-box" id="gbox-trans">' +
+  '<div class="grade-title">📝 一、中譯英對照批改（共 8 分）</div>' +
+  '<div class="grade-btns">' +
+    '<button class="btn-grade" onclick="gradeTrans()">✅ 展開參考答案與解析</button>' +
+    '<button class="btn-reset" onclick="resetTrans()">🔄 清空重練</button>' +
   '</div>' +
-  '<div class="para">' +
-    '<div class="s"><div class="en">Ironically, karma caught up with Kevin just two days later during a fierce basketball game with his classmates.</div><div class="zh">諷刺的是，現世報在短短兩天後就找上了正在和同學進行激烈籃球賽的凱文。</div></div>' +
-    '<div class="s"><div class="en">While leaping high for a rebound, he landed awkwardly on his right foot and severely fractured his ankle, collapsing onto the court in excruciating pain.</div><div class="zh">當他高高躍起爭搶籃板球時，右腳以不自然的姿勢落地，導致腳踝嚴重骨折，伴隨著劇痛倒在球場上。</div></div>' +
-  '</div>' +
-  '<div class="para">' +
-    '<div class="s"><div class="en">The following Monday morning, Kevin had to hobble onto the MRT with a heavy cast on his leg and a pair of crutches under his arms.</div><div class="zh">隔週一早上，凱文必須腿裹著厚重石膏、腋下撐著一副拐杖，一跛一跛地走上捷運。</div></div>' +
-    '<div class="s"><div class="en">Standing painfully in front of the priority seats, he hoped someone would offer him a seat, but the passengers sitting there were busy scrolling through their phones, completely ignoring his helpless plight.</div><div class="zh">他痛苦地站在博愛座前，期盼有人能讓座給他，但坐在那裡的乘客全都忙著滑手機，完全無視他無助的處境。</div></div>' +
-    '<div class="s"><div class="en">At that very moment, the image of the old man he had ignored flashed through his mind, filling him with deep shame and regret.</div><div class="zh">就在那一刻，那位曾被他無視的老先生身影閃過他的腦海，讓他內心充滿了深深的羞愧與懊悔。</div></div>' +
-  '</div>' +
-  '<div class="para">' +
-    '<div class="s"><div class="en">Just as Kevin was about to lose his balance, a kind-hearted middle-aged woman stood up from a regular seat nearby and helped him sit down safely.</div><div class="zh">正當凱文快要失去平衡時，一位好心的中年婦人從旁邊的一般座位站起身，攙扶他安全坐下。</div></div>' +
-    '<div class="s"><div class="en">Moved by her warmth, Kevin made a solemn vow to himself that once his leg healed, he would never occupy a priority seat again and would always show empathy to those in need.</div><div class="zh">深受她的溫暖所感動，凱文在心中暗自立下誓言：一旦他的腿痊癒，他再也不會佔用博愛座，並且永遠會對有需要的人展現同理心。</div></div>' +
-  '</div></section>';
+  '<div class="grade-res" id="gres-trans"></div>' +
+'</div>';
+
+out += '<section class="pas graded" id="pas-essay-prompt"><h3>二、英文作文題目與提示（占 20 分）</h3>' +
+  '<div class="prompt-text"><b>說明：</b>依提示在「答案卷」上寫一篇英文作文，文長至少 120 個單詞（words）。<br>' +
+  '<b>提示：</b>請仔細觀察以下三幅連環圖片的內容，並想像第四幅圖片可能的發展，寫出一個涵蓋連環圖片內容並有完整結局的故事。<br>' +
+  '（圖一：在捷運的博愛座上，一名學生正低頭玩手機，無視他面前拄著拐杖卻沒有座位的老人；圖二：這名學生後來打籃球受了傷；圖三：他在捷運上的博愛座前拄著拐杖站著，座位上的乘客卻低頭滑手機無人讓座給他；圖四：自行想像結局）</div></section>';
+
+out += passage('二、英文作文高分範文逐句中英對照（278 字）', [
+  [
+    ['One Friday afternoon, Kevin boarded a crowded MRT train after school and immediately spotted an empty priority seat.', '某個週五下午，凱文放學後搭上一班擁擠的捷運列車，並立刻發現了一個空的博愛座。'],
+    ['Without a second thought, he sat down and became completely absorbed in playing games on his smartphone.', '他不假思索地坐了下來，完全沉迷於玩智慧型手機上的遊戲。'],
+    ['At the next station, a frail elderly man leaning on a cane got on the train and stood trembling right in front of Kevin, yet Kevin pretended not to notice him and kept his eyes glued to the screen.', '在下一站，一位拄著拐杖、體弱年邁的老先生走進車廂，顫巍巍地就站在凱文正前方，但凱文卻假裝沒注意到他，雙眼依然死盯著螢幕。']
+  ],
+  [
+    ['Ironically, karma caught up with Kevin just two days later during a fierce basketball game with his classmates.', '諷刺的是，現世報在短短兩天後就找上了正在和同學進行激烈籃球賽的凱文。'],
+    ['While leaping high for a rebound, he landed awkwardly on his right foot and severely fractured his ankle, collapsing onto the court in excruciating pain.', '當他高高躍起爭搶籃板球時，右腳以不自然的姿勢落地，導致腳踝嚴重骨折，伴隨著劇痛倒在球場上。']
+  ],
+  [
+    ['The following Monday morning, Kevin had to hobble onto the MRT with a heavy cast on his leg and a pair of crutches under his arms.', '隔週一早上，凱文必須腿裹著厚重石膏、腋下撐著一副拐杖，一跛一跛地走上捷運。'],
+    ['Standing painfully in front of the priority seats, he hoped someone would offer him a seat, but the passengers sitting there were busy scrolling through their phones, completely ignoring his helpless plight.', '他痛苦地站在博愛座前，期盼有人能讓座給他，但坐在那裡的乘客全都忙著滑手機，完全無視他無助的處境。'],
+    ['At that very moment, the image of the old man he had ignored flashed through his mind, filling him with deep shame and regret.', '就在那一刻，那位曾被他無視的老先生身影閃過他的腦海，讓他內心充滿了深深的羞愧與懊悔。']
+  ],
+  [
+    ['Just as Kevin was about to lose his balance, a kind-hearted middle-aged woman stood up from a regular seat nearby and helped him sit down safely.', '正當凱文快要失去平衡時，一位好心的中年婦人從旁邊的一般座位站起身，攙扶他安全坐下。'],
+    ['Moved by her warmth, Kevin made a solemn vow to himself that once his leg healed, he would never occupy a priority seat again and would always show empathy to those in need.', '深受她的溫暖所感動，凱文在心中暗自立下誓言：一旦他的腿痊癒，他再也不會佔用博愛座，並且永遠會對有需要的人展現同理心。']
+  ]
+], null, 'essay-model', 'graded');
 
 document.getElementById('app').innerHTML = out;
 
