@@ -26,6 +26,7 @@ h3{margin:0 0 8px;font-size:1.05rem;color:var(--acc)}
 .s{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--line)}
 .en{font-family:Georgia,"Times New Roman",serif;font-size:1.02rem}
 .zh{color:var(--mut);font-size:.93rem}
+.prompt-text{color:var(--fg);font-size:.96rem;line-height:1.8}
 .note{color:var(--mut);font-size:.85rem;margin:6px 0 0}
 .bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 4px;border-radius:3px;font-weight:600}
 .bl sup{color:var(--acc);margin-right:3px;font-size:.7em}
@@ -55,6 +56,22 @@ body.practice-mode details.q:not(.graded) .clue { display: none; }
 body.practice-mode details.q:not(.graded) .tag { display: none; }
 body.practice-mode details.q:not(.graded) .stem .zh { display: none; }
 body.practice-mode .pas:not(.graded) .zh { display: none; }
+body.practice-mode .pas:not(.graded) .trans-ans { display: none; }
+body.practice-mode .pas:not(.graded) .note { display: none; }
+.trans-input {
+  display: none;
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1rem;
+}
+.trans-input:focus { outline: none; border-color: var(--acc); }
+body.practice-mode .trans-input { display: block; }
 body.practice-mode .bl:not(.revealed) {
   color: transparent;
   background: var(--bg);
@@ -119,7 +136,7 @@ details.q.graded ul.op li.selected.no { border: 2px solid var(--no) !important; 
   transition: transform 0.1s, opacity 0.2s;
 }
 .btn-grade { background: var(--acc); color: #fff; }
-.all-box .btn-grade { padding: 8px 22px; font-size: 1rem; }
+.all-box .btn-grade, .all-box .btn-reset { padding: 8px 22px; font-size: 1rem; }
 .btn-reset { background: var(--card); color: var(--mut); border-color: var(--line); }
 .btn-grade:hover, .btn-reset:hover { opacity: 0.9; transform: translateY(-1px); }
 .grade-res {
@@ -155,7 +172,7 @@ footer a:hover{text-decoration:underline;}
   <h1><span id="exam-title">104學年度學科能力測驗 英文考科詳解</span> <span id="completed-badge" style="display:none;font-size:1rem;color:var(--ok);">✅ 已完成</span></h1>
   <p>每題含：考點標籤 → 題幹逐句中英對照 → 解題線索 → 正解與全部誤答分析</p>
   <div class="feature-box">
-    💡 <b>複習與作答指南：</b> 點擊「🎯 切換練習模式」可自動挖空題幹答案並隱藏中譯與解析；直接點選各題選項作答後，可點擊各題組下方的「<b>✅ 批改本題組</b>」或單選題最後的「<b>🏆 一次批改全卷</b>」查看得分並自動展開詳解！點擊每題右上角的「標記此題」可收錄錯題；滑鼠反白任何英文字句可「收藏單字」。請前往 <a href="review.html" target="_blank" style="color:var(--acc);font-weight:bold;">錯題與單字總複習頁面</a>。
+    💡 <b>複習與作答指南：</b> 點擊「🎯 切換練習模式」可自動挖空題幹答案並隱藏中譯與解析（含中譯英答案與詳解）；直接點選各題選項作答後，可點擊各題組下方的「<b>✅ 批改本題組</b>」或單選題最後的「<b>🏆 一次批改全卷</b>」查看得分並自動展開詳解（亦可點擊「<b>🔄 一次清空重練</b>」重新作答）！點擊每題右上角的「標記此題」可收錄錯題；滑鼠反白任何英文字句可「收藏單字」。請前往 <a href="review.html" target="_blank" style="color:var(--acc);font-weight:bold;">錯題與單字總複習頁面</a>。
   </div>
   <p>圖例：<span class="bl revealed">黃底</span> ＝ 正確答案填入處 ｜ <span class="tag" id="secret-trigger" style="user-select:none;cursor:default;">考點</span> <span class="tag pos">詞性需求</span></p>
   <div id="secret-counter" style="display:none; margin-top:8px; font-size:0.9rem; color:var(--mut);">
@@ -176,13 +193,13 @@ footer a:hover{text-decoration:underline;}
 
 <script>
 const L="ABCD";
-const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[(\d*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl"'+(n?' data-q="'+n+'"':'')+'>'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const fx=s=>s.replace(/\*([^*]+)\*/g,'<i>$1</i>').replace(/\[\[(\d*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl"'+(n?' data-q="'+n+'"':'')+'>'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
 const SENT={};
 const Q_ANS={};
 
-function passage(title,paras,note,gid){
+function passage(title,paras,note,gid,extraCls){
   paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[(\d+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
-  return '<section class="pas"'+(gid?' id="pas-'+gid+'"':'')+'><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
+  return '<section class="pas'+(extraCls?' '+extraCls:'')+'"'+(gid?' id="pas-'+gid+'"':'')+'><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
 }
 function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
 const clue=t=>'<div class="clue"><h4>解題線索</h4>'+t+'</div>';
@@ -191,7 +208,7 @@ function ops(list,ans,lab){
   return '<ul class="op">'+list.map((o,i)=>{
     const optCode = (lab==='ABCDEF'&&list.length<=4) ? L[i] : lab[i];
     const k=ans.indexOf(optCode)>=0;
-    return '<li class="'+(k?'ok':'no')+'" data-opt="'+optCode+'" onclick="selectOpt(this)"><b>('+optCode+') '+o[0]+'</b>'+(o[1]?' <small>'+o[1]+'</small>':'')+' <i>'+(k?'✔ 正解':'✘ 誤答')+'</i><div class="exp">'+o[2]+'</div></li>';
+    return '<li class="'+(k?'ok':'no')+'" data-opt="'+optCode+'" onclick="selectOpt(this)"><b>('+optCode+') '+fx(o[0])+'</b>'+(o[1]?' <small>'+o[1]+'</small>':'')+' <i>'+(k?'✔ 正解':'✘ 誤答')+'</i><div class="exp">'+o[2]+'</div></li>';
   }).join('')+'</ul>';
 }
 function card(n,tags,ans,body){
@@ -212,6 +229,18 @@ function groupGradeBox(gid, title, startQ, endQ, ptsPerQ) {
     '<div class="grade-res" id="gres-'+gid+'"></div>' +
   '</div>';
 }
+
+const ALL_GROUPS = [
+  {id: 'vocab', start: 1, end: 15, pts: 1},
+  {id: 'cloze1', start: 16, end: 20, pts: 1},
+  {id: 'cloze2', start: 21, end: 25, pts: 1},
+  {id: 'cloze3', start: 26, end: 30, pts: 1},
+  {id: 'wbank', start: 31, end: 40, pts: 1},
+  {id: 'rc1', start: 41, end: 44, pts: 2},
+  {id: 'rc2', start: 45, end: 48, pts: 2},
+  {id: 'rc3', start: 49, end: 52, pts: 2},
+  {id: 'rc4', start: 53, end: 56, pts: 2}
+];
 
 // 點擊選項作答
 window.selectOpt = function(li) {
@@ -309,19 +338,8 @@ window.gradeAllSingleChoice = function() {
   if (!document.body.classList.contains('practice-mode')) {
     enablePracticeMode();
   }
-  const gids = [
-    {id: 'vocab', start: 1, end: 15, pts: 1},
-    {id: 'cloze1', start: 16, end: 20, pts: 1},
-    {id: 'cloze2', start: 21, end: 25, pts: 1},
-    {id: 'cloze3', start: 26, end: 30, pts: 1},
-    {id: 'wbank', start: 31, end: 40, pts: 1},
-    {id: 'rc1', start: 41, end: 44, pts: 2},
-    {id: 'rc2', start: 45, end: 48, pts: 2},
-    {id: 'rc3', start: 49, end: 52, pts: 2},
-    {id: 'rc4', start: 53, end: 56, pts: 2}
-  ];
   let totalOk = 0, totalMax = 0, totalScore = 0, wrongList = [], blankList = [];
-  gids.forEach(g => {
+  ALL_GROUPS.forEach(g => {
     let ok = 0;
     for(let n = g.start; n <= g.end; n++){
       const res = evaluateSingleQ(n);
@@ -334,7 +352,8 @@ window.gradeAllSingleChoice = function() {
     if(pasEl) pasEl.classList.add('graded');
     const resEl = document.getElementById('gres-' + g.id);
     if(resEl) {
-      resEl.innerHTML = '<i>（已透過全卷批改更新）</i>';
+      const gTotal = g.end - g.start + 1;
+      resEl.innerHTML = '<div><b>📊 本題組得分：</b>答對 <b>' + ok + ' / ' + gTotal + '</b> 題，得 <b style="color:var(--acc);">' + (ok * g.pts) + ' / ' + (gTotal * g.pts) + '</b> 分</div>';
       resEl.classList.add('show');
     }
   });
@@ -342,7 +361,7 @@ window.gradeAllSingleChoice = function() {
   if(bankEl) bankEl.classList.add('graded');
   
   const allResEl = document.getElementById('gres-all');
-  let html = '<div><b>📊 全卷選擇題批改結果：</b>答對 <b>' + totalOk + ' / 56</b> 題，總得分 <b style="color:var(--acc);font-size:1.3rem;">' + totalScore + ' / 72</b> 分</div>';
+  let html = '<div><b>📊 全卷選擇題批改結果：</b>答對 <b>' + totalOk + ' / 56</b> 題，總得分 <b style="color:var(--acc);font-size:1.3rem;">' + totalScore + ' / 72</b> 分' + (totalOk === 56 ? ' 🏆 滿分全對！太神啦！' : '') + '</div>';
   if (wrongList.length > 0) {
     html += '<div style="margin-top:8px;">❌ <b>答錯題號：</b>' + wrongList.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
   }
@@ -378,6 +397,48 @@ window.resetGroup = function(gid, startQ, endQ) {
     resEl.innerHTML = '';
     resEl.classList.remove('show');
   }
+};
+
+// 展開與重置中譯英詳解
+window.gradeTrans = function() {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  const pasEl = document.getElementById('pas-trans');
+  if (pasEl) pasEl.classList.add('graded');
+  const resEl = document.getElementById('gres-trans');
+  if (resEl) {
+    resEl.innerHTML = '<div>✅ 已展開中譯英參考正解與句型解析，請自行核對作答內容！</div>';
+    resEl.classList.add('show');
+  }
+};
+
+window.resetTrans = function() {
+  enablePracticeMode();
+  const pasEl = document.getElementById('pas-trans');
+  if (pasEl) {
+    pasEl.classList.remove('graded');
+    pasEl.querySelectorAll('.trans-input').forEach(inp => inp.value = '');
+  }
+  const resEl = document.getElementById('gres-trans');
+  if (resEl) {
+    resEl.innerHTML = '';
+    resEl.classList.remove('show');
+  }
+};
+
+// 一次清空全卷重練
+window.resetAllSingleChoice = function() {
+  ALL_GROUPS.forEach(g => {
+    resetGroup(g.id, g.start, g.end);
+  });
+  resetTrans();
+  const allResEl = document.getElementById('gres-all');
+  if (allResEl) {
+    allResEl.innerHTML = '';
+    allResEl.classList.remove('show');
+  }
+  window.scrollTo({ top: document.getElementById('vocab').offsetTop - 60, behavior: 'smooth' });
 };
 
 // === 功能初始化：練習模式與完成標記 ===
@@ -437,6 +498,7 @@ nav.insertAdjacentHTML('beforeend', `
   <a href="#cloze1">二、綜合測驗</a>
   <a href="#wbank">三、文意選填</a>
   <a href="#rc1">四、閱讀測驗</a>
+  <a href="#gbox-all">🏆 全卷批改</a>
   <a href="#trans">非選一、中譯英</a>
   <a href="#essay">非選二、英文作文</a>
 `);
@@ -444,49 +506,49 @@ nav.insertAdjacentHTML('beforeend', `
 // --- 第一部分：詞彙題 (1-15) ---
 html += '<h2 id="vocab">一、詞彙題（占15分）</h2>';
 SENT[1] = ["Nowadays many companies adopt a [[1|flexible]] work schedule which allows their employees to decide when to arrive at work—from as early as 6 a.m. to as late as 11 a.m.", "現今許多公司採用彈性的工作時間表，允許員工決定何時上班——從早至早上6點，晚至早上11點。"];
-html += card(1, ['考點：字彙', '詞性需求：形容詞'], 'D', stem(1) + clue('從後文的「allows their employees to decide when to arrive at work（允許員工決定何時上班）」可知這是一個「彈性的（flexible）」工作時間表。') + ops([['relative', '相對的', '何時才對：描述事物之間的相對關係時'], ['severe', '嚴厲的；嚴重的', '何時才對：形容天氣惡劣或懲罰嚴厲時'], ['primitive', '原始的', '何時才對：形容早期人類或未開化社會時'], ['flexible', '有彈性的', '']], 'D'));
+html += card(1, ['考點：字彙', '詞性需求：形容詞'], 'D', stem(1) + clue('從後文的「allows their employees to decide when to arrive at work（允許員工決定何時上班）」可知這是一個「彈性的（flexible）」工作時間表。') + ops([['relative', '相對的', '何時才對：描述事物之間的相對關係時'], ['severe', '嚴厲的；嚴重的', '何時才對：形容天氣惡劣或懲罰嚴厲時'], ['primitive', '原始的', '何時才對：形容早期人類或未開化社會時'], ['flexible', '有彈性的', '符合語意：員工可自行決定6點到11點間上班，代表工時具彈性。']], 'D'));
 
 SENT[2] = ["To teach children right from wrong, some parents will [[2|reward]] their children when they behave well and punish them when they misbehave.", "為了教導孩子明辨是非，有些父母會在孩子表現良好時獎勵他們，而在他們行為不端時懲罰他們。"];
-html += card(2, ['考點：字彙', '詞性需求：動詞'], 'C', stem(2) + clue('由對等連接詞 and 連接前後兩個對比情境：表現不好時「punish（懲罰）」，因此表現良好時應為「reward（獎勵）」。') + ops([['settle', '解決；定居', '何時才對：處理糾紛或在某地安頓時'], ['declare', '宣布', '何時才對：正式公開某事時'], ['reward', '獎勵；報償', ''], ['neglect', '忽略', '何時才對：疏於照顧或忘記做某事時']], 'C'));
+html += card(2, ['考點：字彙', '詞性需求：動詞'], 'C', stem(2) + clue('由對等連接詞 and 連接前後兩個對比情境：表現不好時「punish（懲罰）」，因此表現良好時應為「reward（獎勵）」。') + ops([['settle', '解決；定居', '何時才對：處理糾紛或在某地安頓時'], ['declare', '宣布', '何時才對：正式公開某事時'], ['reward', '獎勵；報償', '符合語意：與後文的 punish（懲罰）形成對比。'], ['neglect', '忽略', '何時才對：疏於照顧或忘記做某事時']], 'C'));
 
 SENT[3] = ["To stick to a tight budget, Robert bought a more [[3|affordable]] LED TV instead of a fancy, expensive 3D TV.", "為了堅守緊縮的預算，Robert 買了一台較平價的 LED 電視，而不是一台花俏昂貴的 3D 電視。"];
-html += card(3, ['考點：字彙', '詞性需求：形容詞'], 'C', stem(3) + clue('句中提到「To stick to a tight budget（為了堅守緊縮的預算）」以及「instead of a fancy, expensive...（而不是昂貴的...）」，因此推斷他買的是「負擔得起的；平價的（affordable）」電視。') + ops([['technical', '技術的', '何時才對：描述專業技術層面時'], ['significant', '重要的；顯著的', '何時才對：形容影響力大或意義深遠時'], ['affordable', '負擔得起的；平價的', ''], ['expressive', '表達的；表情豐富的', '何時才對：形容情感表達強烈時']], 'C'));
+html += card(3, ['考點：字彙', '詞性需求：形容詞'], 'C', stem(3) + clue('句中提到「To stick to a tight budget（為了堅守緊縮的預算）」以及「instead of a fancy, expensive...（而不是昂貴的...）」，因此推斷他買的是「負擔得起的；平價的（affordable）」電視。') + ops([['technical', '技術的', '何時才對：描述專業技術層面時'], ['significant', '重要的；顯著的', '何時才對：形容影響力大或意義深遠時'], ['affordable', '負擔得起的；平價的', '符合語意：呼應 tight budget（緊縮的預算）並與 expensive 對比。'], ['expressive', '表達的；表情豐富的', '何時才對：形容情感表達強烈時']], 'C'));
 
 SENT[4] = ["David’s new book made it to the best-seller list because of its beautiful [[4|illustrations]] and amusing stories.", "David 的新書登上了暢銷書排行榜，因為它有美麗的插圖和有趣的故事。"];
-html += card(4, ['考點：字彙', '詞性需求：名詞'], 'B', stem(4) + clue('空格與 amusing stories（有趣的故事）並列為書本暢銷的原因，且由 beautiful 修飾，故選「illustrations（插圖）」。') + ops([['operations', '操作；手術', '何時才對：描述機器運作或醫療行為時'], ['illustrations', '插圖；圖解', ''], ['engagements', '訂婚；約會', '何時才對：描述重要約定或承諾時'], ['accomplishments', '成就', '何時才對：描述個人或團體的卓越表現時']], 'B'));
+html += card(4, ['考點：字彙', '詞性需求：名詞'], 'B', stem(4) + clue('空格與 amusing stories（有趣的故事）並列為書本暢銷的原因，且由 beautiful 修飾，故選「illustrations（插圖）」。') + ops([['operations', '操作；手術', '何時才對：描述機器運作或醫療行為時'], ['illustrations', '插圖；圖解', '符合語意：書籍中與故事搭配且可用 beautiful 修飾的元素。'], ['engagements', '訂婚；約會', '何時才對：描述重要約定或承諾時'], ['accomplishments', '成就', '何時才對：描述個人或團體的卓越表現時']], 'B'));
 
 SENT[5] = ["The airport was closed because of the snowstorm, and our [[5|departure]] for Paris had to be delayed until the following day.", "由於暴風雪機場關閉，我們前往巴黎的班機起飛時間必須延遲到隔天。"];
-html += card(5, ['考點：字彙', '詞性需求：名詞'], 'D', stem(5) + clue('機場關閉導致某件事被延遲，且介系詞為 for Paris，可知是「出發 / 起飛（departure）」。') + ops([['movement', '移動；運動', '何時才對：描述物體移動或社會運動時'], ['registration', '登記；註冊', '何時才對：報名課程或登記資料時'], ['tendency', '傾向', '何時才對：描述習慣或趨勢時'], ['departure', '出發；離開', '']], 'D'));
+html += card(5, ['考點：字彙', '詞性需求：名詞'], 'D', stem(5) + clue('機場關閉導致某件事被延遲，且介系詞為 for Paris，可知是「出發 / 起飛（departure）」。') + ops([['movement', '移動；運動', '何時才對：描述物體移動或社會運動時'], ['registration', '登記；註冊', '何時才對：報名課程或登記資料時'], ['tendency', '傾向', '何時才對：描述習慣或趨勢時'], ['departure', '出發；離開', '符合語意：departure for + 目的地，表「前往某地的啟程／班機起飛」。']], 'D'));
 
 SENT[6] = ["The moment the students felt the earthquake, they ran [[6|swiftly]] out of the classroom to an open area outside.", "學生們一感覺到地震的瞬間，就迅速跑出教室到外面的空地。"];
-html += card(6, ['考點：字彙', '詞性需求：副詞'], 'A', stem(6) + clue('感受到地震時的直覺反應是「迅速地（swiftly）」跑出教室。') + ops([['swiftly', '迅速地', ''], ['nearly', '幾乎', '何時才對：描述差一點就發生的情況時'], ['loosely', '鬆散地', '何時才對：描述未綁緊或不嚴謹時'], ['formally', '正式地', '何時才對：描述穿著正式或官方場合時']], 'A'));
+html += card(6, ['考點：字彙', '詞性需求：副詞'], 'A', stem(6) + clue('感受到地震時的直覺反應是「迅速地（swiftly）」跑出教室。') + ops([['swiftly', '迅速地', '符合語意：地震發生時必須迅速逃生。'], ['nearly', '幾乎', '何時才對：描述差一點就發生的情況時'], ['loosely', '鬆散地', '何時才對：描述未綁緊或不嚴謹時'], ['formally', '正式地', '何時才對：描述穿著正式或官方場合時']], 'A'));
 
 SENT[7] = ["The [[7|maximum]] capacity of this elevator is 400 kilograms. For safety reasons, it shouldn’t be overloaded.", "這部電梯的最大載重量是 400 公斤。為了安全起見，它不應該超載。"];
-html += card(7, ['考點：字彙', '詞性需求：形容詞'], 'D', stem(7) + clue('後句提到「it shouldn’t be overloaded（不應該超載）」，因此 400 公斤指的是「最大的（maximum）」容量。') + ops([['delicate', '脆弱的；精緻的', '何時才對：形容易碎物品或精美工藝時'], ['automatic', '自動的', '何時才對：形容機器自動運作時'], ['essential', '必要的；基本的', '何時才對：形容不可或缺的事物時'], ['maximum', '最大的', '']], 'D'));
+html += card(7, ['考點：字彙', '詞性需求：形容詞'], 'D', stem(7) + clue('後句提到「it shouldn’t be overloaded（不應該超載）」，因此 400 公斤指的是「最大的（maximum）」容量。') + ops([['delicate', '脆弱的；精緻的', '何時才對：形容易碎物品或精美工藝時'], ['automatic', '自動的', '何時才對：形容機器自動運作時'], ['essential', '必要的；基本的', '何時才對：形容不可或缺的事物時'], ['maximum', '最大的', '符合語意：maximum capacity 指「最大容量／最高載重上限」。']], 'D'));
 
 SENT[8] = ["An open display of [[8|intimate]] behavior between men and women, such as hugging and kissing, is not allowed in some conservative societies.", "在一些保守的社會中，不允許男女之間公開展示如擁抱和親吻等親密行為。"];
-html += card(8, ['考點：字彙', '詞性需求：形容詞'], 'A', stem(8) + clue('由舉例「hugging and kissing（擁抱和親吻）」可知，這些屬於「親密的（intimate）」行為。') + ops([['intimate', '親密的', ''], ['ashamed', '感到羞恥的', '何時才對：描述做錯事後的心理狀態時'], ['earnest', '認真的；誠摯的', '何時才對：形容態度誠懇嚴肅時'], ['urgent', '緊急的', '何時才對：描述需要立刻處理的狀況時']], 'A'));
+html += card(8, ['考點：字彙', '詞性需求：形容詞'], 'A', stem(8) + clue('由舉例「hugging and kissing（擁抱和親吻）」可知，這些屬於「親密的（intimate）」行為。') + ops([['intimate', '親密的', '符合語意：擁抱與親吻屬於親密舉動（intimate behavior）。'], ['ashamed', '感到羞恥的', '何時才對：描述做錯事後的心理狀態時（通常修飾人）'], ['earnest', '認真的；誠摯的', '何時才對：形容態度誠懇嚴肅時'], ['urgent', '緊急的', '何時才對：描述需要立刻處理的狀況時']], 'A'));
 
 SENT[9] = ["When taking medicine, we should read the instructions on the [[9|labels]] carefully because they provide important information such as how and when to take it.", "吃藥時，我們應該仔細閱讀標籤上的說明，因為它們提供了如何及何時服用等重要資訊。"];
-html += card(9, ['考點：字彙', '詞性需求：名詞'], 'C', stem(9) + clue('藥物上的使用說明會印在藥罐或包裝的「標籤（labels）」上。') + ops([['medals', '獎牌', '何時才對：在比賽中獲勝的獎勵'], ['quotes', '引語；報價', '何時才對：引用他人的話或估價單時'], ['labels', '標籤', ''], ['recipes', '食譜', '何時才對：描述烹飪步驟和材料時']], 'C'));
+html += card(9, ['考點：字彙', '詞性需求：名詞'], 'C', stem(9) + clue('藥物上的使用說明會印在藥罐或包裝的「標籤（labels）」上。') + ops([['medals', '獎牌', '何時才對：在比賽中獲勝的獎勵'], ['quotes', '引語；報價', '何時才對：引用他人的話或估價單時'], ['labels', '標籤', '符合語意：藥袋或藥瓶上的說明標籤。'], ['recipes', '食譜', '何時才對：描述烹飪步驟和材料時']], 'C'));
 
 SENT[10] = ["The angry passengers argued [[10|furiously]] with the airline staff because their flight was cancelled without any reason.", "憤怒的乘客與航空公司人員激烈地爭論，因為他們的航班無故被取消了。"];
-html += card(10, ['考點：字彙', '詞性需求：副詞'], 'B', stem(10) + clue('由主詞「angry passengers（憤怒的乘客）」推導，他們爭論的方式必定是「憤怒地；激烈地（furiously）」。') + ops([['evidently', '明顯地', '何時才對：描述證據確鑿或顯而易見的事實時'], ['furiously', '憤怒地；猛烈地', ''], ['obediently', '順從地', '何時才對：形容聽從命令的行為時'], ['suspiciously', '懷疑地', '何時才對：覺得某事不對勁或起疑心時']], 'B'));
+html += card(10, ['考點：字彙', '詞性需求：副詞'], 'B', stem(10) + clue('由主詞「angry passengers（憤怒的乘客）」推導，他們爭論的方式必定是「憤怒地；激烈地（furiously）」。') + ops([['evidently', '明顯地', '何時才對：描述證據確鑿或顯而易見的事實時'], ['furiously', '憤怒地；猛烈地', '符合語意：呼應 angry passengers 與無故取消航班的情境。'], ['obediently', '順從地', '何時才對：形容聽從命令的行為時'], ['suspiciously', '懷疑地', '何時才對：覺得某事不對勁或起疑心時']], 'B'));
 
 SENT[11] = ["To [[11|promote]] the new product, the company offered some free samples before they officially launched it.", "為了促銷這項新產品，公司在正式上市前提供了一些免費樣品。"];
-html += card(11, ['考點：字彙', '詞性需求：動詞'], 'C', stem(11) + clue('提供免費樣品（free samples）的目的是為了「促銷；推廣（promote）」新產品。') + ops([['contribute', '貢獻；促成', '何時才對：捐獻金錢或促成某結果時'], ['impress', '使留下深刻印象', '何時才對：表現優異讓人讚賞時'], ['promote', '推銷；促進', ''], ['estimate', '估計', '何時才對：計算大約數值時']], 'C'));
+html += card(11, ['考點：字彙', '詞性需求：動詞'], 'C', stem(11) + clue('提供免費樣品（free samples）的目的是為了「促銷；推廣（promote）」新產品。') + ops([['contribute', '貢獻；促成', '何時才對：捐獻金錢或促成某結果時（常接 to）'], ['impress', '使留下深刻印象', '何時才對：表現優異讓人讚賞時（受詞通常為人）'], ['promote', '推銷；促進', '符合語意：promote the new product（促銷／推廣新產品）。'], ['estimate', '估計', '何時才對：計算大約數值時']], 'C'));
 
 SENT[12] = ["I was worried about my first overseas trip, but my father [[12|assured]] me that he would help plan the trip so that nothing would go wrong.", "我很擔心我的第一次出國旅行，但我父親向我保證他會幫忙規劃行程，這樣就不會出岔子。"];
-html += card(12, ['考點：字彙', '詞性需求：動詞'], 'B', stem(12) + clue('因為「我」很擔心，所以父親出面「向我保證（assured）」他會幫忙，以消除我的疑慮。') + ops([['rescued', '救援', '何時才對：從危險中拯救某人時'], ['assured', '向...保證；使確信', ''], ['inspired', '啟發；激勵', '何時才對：激發靈感或給予精神鼓舞時'], ['conveyed', '傳達', '何時才對：傳遞訊息或情感時']], 'B'));
+html += card(12, ['考點：字彙', '詞性需求：動詞'], 'B', stem(12) + clue('因為「我」很擔心，所以父親出面「向我保證（assured）」他會幫忙，以消除我的疑慮。') + ops([['rescued', '救援', '何時才對：從危險中拯救某人時'], ['assured', '向...保證；使確信', '符合語意：assure sb. that...（向某人保證...），消除前文的 worried。'], ['inspired', '啟發；激勵', '何時才對：激發靈感或給予精神鼓舞時'], ['conveyed', '傳達', '何時才對：傳遞訊息或情感時（後不直接接人當間接受詞加 that 子句）']], 'B'));
 
 SENT[13] = ["The recent cooking oil scandals have led to calls for tougher [[13|regulation]] of sales of food products.", "最近的食用油醜聞引發了對食品銷售進行更嚴格管制的呼聲。"];
-html += card(13, ['考點：字彙', '詞性需求：名詞'], 'C', stem(13) + clue('爆發食安醜聞（scandals）後，社會大眾自然會要求更嚴格的「管制 / 規範（regulation）」。') + ops([['tolerance', '寬容；忍受力', '何時才對：包容不同意見或忍受痛苦時'], ['guarantee', '保證', '何時才對：商品保固或承諾某事會發生時'], ['regulation', '規定；管制', ''], ['distribution', '分配；分發', '何時才對：物資分發或商品物流時']], 'C'));
+html += card(13, ['考點：字彙', '詞性需求：名詞'], 'C', stem(13) + clue('爆發食安醜聞（scandals）後，社會大眾自然會要求更嚴格的「管制 / 規範（regulation）」。') + ops([['tolerance', '寬容；忍受力', '何時才對：包容不同意見或忍受痛苦時'], ['guarantee', '保證', '何時才對：商品保固或承諾某事會發生時'], ['regulation', '規定；管制', '符合語意：tougher regulation of...（對...更嚴格的法規管制）。'], ['distribution', '分配；分發', '何時才對：物資分發或商品物流時']], 'C'));
 
 SENT[14] = ["John should [[14|interact]] more often with his friends and family after work, instead of staying in his room to play computer games.", "約翰下班後應該更常與家人和朋友互動，而不是待在房間裡玩電腦遊戲。"];
-html += card(14, ['考點：字彙', '詞性需求：動詞'], 'B', stem(14) + clue('句中以 instead of 對比「待在房間玩電腦」，建議他應該與親友「互動（interact）」。') + ops([['explore', '探索', '何時才對：實地探勘或深入研究某主題時'], ['interact', '互動', ''], ['negotiate', '談判；協商', '何時才對：雙方商討條件以達成共識時'], ['participate', '參加', '何時才對：加入活動或比賽時，常接 in']], 'B'));
+html += card(14, ['考點：字彙', '詞性需求：動詞'], 'B', stem(14) + clue('句中以 instead of 對比「待在房間玩電腦」，建議他應該與親友「互動（interact）」。') + ops([['explore', '探索', '何時才對：實地探勘或深入研究某主題時'], ['interact', '互動', '符合語意：interact with sb.（與某人互動交流）。'], ['negotiate', '談判；協商', '何時才對：雙方商討條件以達成共識時'], ['participate', '參加', '何時才對：加入活動或比賽時，常接 in']], 'B'));
 
 SENT[15] = ["To prevent the spread of the Ebola virus from West Africa to the rest of the world, many airports have begun Ebola [[15|screenings]] for passengers from the infected areas.", "為了防止伊波拉病毒從西非傳播到世界各地，許多機場已經開始對來自疫區的乘客進行伊波拉篩檢。"];
-html += card(15, ['考點：字彙', '詞性需求：名詞'], 'A', stem(15) + clue('為了防止病毒傳播，機場對疫區來的乘客必須進行「篩檢（screenings）」。') + ops([['screenings', '篩檢；放映', ''], ['listings', '列表', '何時才對：清單或節目表'], ['clippings', '剪報；修剪物', '何時才對：報紙剪下來的片段'], ['blockings', '阻擋', '何時才對：物理上的阻礙']], 'A'));
+html += card(15, ['考點：字彙', '詞性需求：名詞'], 'A', stem(15) + clue('為了防止病毒傳播，機場對疫區來的乘客必須進行「篩檢（screenings）」。') + ops([['screenings', '篩檢；放映', '符合語意：醫療或檢疫上的疾病篩檢。'], ['listings', '列表', '何時才對：清單或節目表'], ['clippings', '剪報；修剪物', '何時才對：報紙剪下來的片段'], ['blockings', '阻擋', '何時才對：物理上的阻礙']], 'A'));
 
 html += groupGradeBox('vocab', '第一部分：詞彙題', 1, 15, 1);
 
@@ -503,12 +565,12 @@ let p1 = [
    ["It [[20|reduces]] stress and creates calmness and confidence.", "它能減輕壓力，並創造平靜與自信。"],
    ["Relaxation and a feeling of joy are among the first noticeable differences in a Tai Chi student.", "放鬆和愉悅感是太極拳學生最先顯現出的不同之處。"]]
 ];
-html += passage('太極拳的益處', p1, '', 'cloze1');
-html += card(16, ['考點：動詞搭配', '詞性需求：動詞'], 'A', stem(16) + clue('搭配詞測驗：中文說「打太極拳」，英文搭配的動詞為 practice (practice Tai Chi)。') + ops([['practice', '練習；實行', ''], ['consult', '諮詢', '何時才對：請教專家或查閱資料'], ['display', '展示', '何時才對：陳列物品或展現情感'], ['manage', '管理；設法做到', '何時才對：經營事業或勉強完成某事']], 'A'));
-html += card(17, ['考點：介系詞', '詞性需求：介系詞'], 'B', stem(17) + clue('空位後方列舉了具體的名稱("dragons stirring..."等)，用來舉例說明前面的 poetic names，故填入 like（像是...）。') + ops([['from', '從...', '何時才對：表示來源'], ['like', '像...', ''], ['between', '在...之間', '何時才對：兩者之間'], ['regarding', '關於', '何時才對：表示針對某主題']], 'B'));
-html += card(18, ['考點：主動詞一致', '詞性需求：動詞'], 'A', stem(18) + clue('主詞為 These movements (複數)，中間的 forming an exercise system 為分詞構句作補充說明。複數主詞對應的動詞需用原形 allow。') + ops([['allow', '允許 (原形)', ''], ['allows', '允許 (單數動詞)', '何時才對：主詞為第三人稱單數'], ['allowed', '允許 (過去式)', '何時才對：描述過去發生的事'], ['allowing', '允許 (現在分詞)', '何時才對：作為分詞構句或進行式']], 'A'));
-html += card(19, ['考點：語意對稱', '詞性需求：形容詞'], 'B', stem(19) + clue('由句型 not only A but also B 可知，A 與 B 語意應對稱互補。前面是 physical (身體的)，後面搭配 mental (心理的) 最合理，且下一句開頭為 Psychologically (心理上地) 也呼應此答案。') + ops([['formal', '正式的', ''], ['mental', '心理的', ''], ['social', '社會的；社交的', ''], ['global', '全球的', '']], 'B'));
-html += card(20, ['考點：動詞語意', '詞性需求：動詞'], 'C', stem(20) + clue('本句提到它能創造平靜與自信，因此對於「壓力 (stress)」的作用應為「減輕 (reduces)」。') + ops([['imposes', '強加', '何時才對：把規定或壓力加諸於人'], ['offends', '冒犯', '何時才對：言語或行為得罪人'], ['reduces', '減少；減輕', ''], ['disturbs', '打擾', '何時才對：干擾別人安寧']], 'C'));
+html += passage('第 16–20 題題組：太極拳的益處', p1, '', 'cloze1');
+html += card(16, ['考點：動詞搭配', '詞性需求：動詞'], 'A', stem(16) + clue('搭配詞測驗：中文說「打／練太極拳」，英文搭配的動詞為 practice (practice Tai Chi)。') + ops([['practice', '練習；實行', '符合搭配：practice martial arts / Tai Chi（練習武術／太極拳）。'], ['consult', '諮詢', '何時才對：請教專家或查閱資料'], ['display', '展示', '何時才對：陳列物品或展現情感'], ['manage', '管理；設法做到', '何時才對：經營事業或勉強完成某事']], 'A'));
+html += card(17, ['考點：介系詞', '詞性需求：介系詞'], 'B', stem(17) + clue('空位後方列舉了具體的招式名稱（"dragons stirring..." 等），用來舉例說明前面的 poetic names，故填入 like（像是...）。') + ops([['from', '從...', '何時才對：表示來源或起點'], ['like', '像...（舉例）', '符合語意：等同於 such as，列舉富有詩意的招式名稱。'], ['between', '在...之間', '何時才對：指兩者之間的關係，不作舉例用'], ['regarding', '關於', '何時才對：表示針對某主題進行討論時']], 'B'));
+html += card(18, ['考點：主動詞一致', '詞性需求：動詞'], 'A', stem(18) + clue('主詞為 These movements（複數），中間的 forming an exercise system 為分詞構句作補充說明。複數主詞對應的主要動詞需用原形 allow。') + ops([['allow', '允許 (複數動詞)', '符合文法：主詞 These movements 為複數，現在簡單式用原形動詞。'], ['allows', '允許 (單數動詞)', '何時才對：主詞為第三人稱單數時'], ['allowed', '允許 (過去式)', '何時才對：描述過去發生的事件時（全文為現在式客觀事實）'], ['allowing', '允許 (現在分詞)', '何時才對：作為分詞構句時（若選此項全句將缺少主要動詞）']], 'A'));
+html += card(19, ['考點：語意對稱', '詞性需求：形容詞'], 'B', stem(19) + clue('由句型 not only A but also B 可知，A 與 B 語意應對稱互補。前面是 physical（身體的），後面搭配 mental（心理的）最合理，且下一句開頭為 Psychologically（心理上地）也呼應此答案。') + ops([['formal', '正式的', '何時才對：描述官方或禮儀場合時'], ['mental', '心理的；心智的', '符合語意：與 physical 構成「身心（physical and mental）」對稱，並呼應下句的 Psychologically。'], ['social', '社會的；社交的', '何時才對：強調群體社交活動時'], ['global', '全球的', '何時才對：討論世界性範圍時']], 'B'));
+html += card(20, ['考點：動詞語意', '詞性需求：動詞'], 'C', stem(20) + clue('本句提到它能創造平靜與自信，因此對於「壓力（stress）」的作用應為「減輕（reduces）」。') + ops([['imposes', '強加', '何時才對：把規定或壓力加諸於人（impose... on...）'], ['offends', '冒犯', '何時才對：言語或行為得罪他人時'], ['reduces', '減少；減輕', '符合語意：reduce stress（減輕壓力）。'], ['disturbs', '打擾', '何時才對：干擾別人安寧或思緒時']], 'C'));
 html += groupGradeBox('cloze1', '綜合測驗第一篇', 16, 20, 1);
 
 let p2 = [
@@ -521,56 +583,77 @@ let p2 = [
    ["The feathers of peacocks are considered the most [[25|unlucky]] part of the bird because the eye-shaped markings on them are associated with “evil eyes.”", "孔雀的羽毛被認為是這種鳥最不吉利的部分，因為上面的眼狀斑紋會讓人聯想到「邪眼」。"],
    ["To bring the evil eye into the home is thus believed to invite trouble and sorrow.", "因此，把邪眼帶進家裡被認為會招來麻煩與悲傷。"]]
 ];
-html += passage('文化中的鳥類象徵', p2, '', 'cloze2');
-html += card(21, ['考點：轉折語', '詞性需求：副詞'], 'D', stem(21) + clue('前一句提到「青鳥是吉利的」，本句接著說「啄木鳥也是好兆頭」，兩者概念相同，故使用「同樣地 (Similarly)」。') + ops([['Therefore', '因此', '何時才對：前後句為因果關係'], ['Nevertheless', '然而', '何時才對：前後句為語氣轉折'], ['Roughly', '大約地；粗略地', '何時才對：描述估計數字'], ['Similarly', '同樣地', '']], 'D'));
-html += card(22, ['考點：副詞語意', '詞性需求：副詞'], 'C', stem(22) + clue('前文說多數文化認為青鳥幸運，這裡說「相反地，孔雀並非『普遍地 (universally)』被視為幸運（有些地方視為幸運，有些地方視為不祥）。」') + ops([['officially', '官方地', '何時才對：發布正式聲明'], ['mutually', '互相地', '何時才對：描述雙方共同的行為'], ['universally', '普遍地；全世界地', ''], ['eventually', '最終', '何時才對：表示經過一段時間後的結果']], 'C'));
-html += card(23, ['考點：分詞當形容詞', '詞性需求：形容詞（分詞）'], 'B', stem(23) + clue('邪惡 (evil) 正在靠近，屬於主動進行的動作，因此使用現在分詞 approaching 作形容詞修飾 evil。') + ops([['approach', '接近 (原形動詞)', '何時才對：前方需有助動詞'], ['approaching', '接近中的 (現在分詞)', ''], ['approached', '被接近的 (過去分詞)', '何時才對：描述被動狀態'], ['be approaching', '正在接近 (動詞片語)', '何時才對：做為句子主要動詞時']], 'B'));
-html += card(24, ['考點：動詞語意', '詞性需求：動詞'], 'D', stem(24) + clue('統治家族將孔雀作為象徵，目的是為了「代表 (represent)」他們的地位和財富。') + ops([['replace', '取代', '何時才對：用新事物替換舊事物'], ['disguise', '偽裝', '何時才對：隱藏真實身分'], ['distinguish', '區別', '何時才對：分辨兩者不同'], ['represent', '代表', '']], 'D'));
-html += card(25, ['考點：形容詞語意', '詞性需求：形容詞'], 'A', stem(25) + clue('由後文的 associated with “evil eyes” (與邪眼有關) 以及 invite trouble (招惹麻煩) 可知，羽毛被視為最「不吉利的 (unlucky)」部分。') + ops([['unlucky', '不吉利的', ''], ['illogical', '不合邏輯的', '何時才對：描述推論有誤'], ['impossible', '不可能的', '何時才對：描述事情無法達成'], ['unnecessary', '不必要的', '何時才對：描述多餘的事物']], 'A'));
+html += passage('第 21–25 題題組：文化中的鳥類象徵', p2, '', 'cloze2');
+html += card(21, ['考點：轉折語', '詞性需求：副詞'], 'D', stem(21) + clue('前一句提到「青鳥是吉利的」，本句接著說「啄木鳥也是好兆頭」，兩者概念相同，故使用「同樣地（Similarly）」。') + ops([['Therefore', '因此', '何時才對：前後句為因果關係時'], ['Nevertheless', '然而', '何時才對：前後句為語氣轉折時'], ['Roughly', '大約地；粗略地', '何時才對：描述估計數字時'], ['Similarly', '同樣地', '符合邏輯：承接前句青鳥的好兆頭，類推至啄木鳥。']], 'D'));
+html += card(22, ['考點：副詞語意', '詞性需求：副詞'], 'C', stem(22) + clue('前文說多數文化認為青鳥幸運，這裡說「相反地，孔雀並非『普遍地（universally）』被視為幸運（在印、中、日視為幸運，但在世界其他地方視為不祥）。」') + ops([['officially', '官方地', '何時才對：發布正式聲明時'], ['mutually', '互相地', '何時才對：描述雙方共同的行為時'], ['universally', '普遍地；舉世皆然地', '符合語意：not universally（並非舉世皆然，部分否定），呼應後文不同地區對孔雀的兩極評價。'], ['eventually', '最終', '何時才對：表示經過一段時間後的結果時']], 'C'));
+html += card(23, ['考點：分詞當形容詞', '詞性需求：形容詞（分詞）'], 'B', stem(23) + clue('alert it to 為「警告牠注意...」，此處的 to 是介系詞，後面接名詞 evil（邪惡）；而邪惡「正在逼近」屬於主動進行的狀態，因此使用現在分詞 approaching 作形容詞修飾 evil。') + ops([['approach', '接近 (原形動詞)', '何時才對：alert sb. to 後方的 to 為介系詞，不可接原形動詞'], ['approaching', '接近中的 (現在分詞)', '符合文法：現在分詞作形容詞修飾名詞 evil，表「正在逼近的邪惡」。'], ['approached', '被接近的 (過去分詞)', '何時才對：描述被動狀態時（approach 當不及物動詞時無被動）'], ['be approaching', '正在接近 (動詞片語)', '何時才對：放在助動詞之後時']], 'B'));
+html += card(24, ['考點：動詞語意', '詞性需求：動詞'], 'D', stem(24) + clue('統治家族將孔雀作為象徵（symbols），目的是為了「代表（represent）」他們的地位和財富。') + ops([['replace', '取代', '何時才對：用新事物替換舊事物時'], ['disguise', '偽裝', '何時才對：隱藏真實身分時'], ['distinguish', '區別', '何時才對：分辨兩者不同時'], ['represent', '代表；象徵', '符合語意：呼應前文的 kept as symbols（作為象徵來代表地位與財富）。']], 'D'));
+html += card(25, ['考點：形容詞語意', '詞性需求：形容詞'], 'A', stem(25) + clue('由後文的 associated with “evil eyes”（與邪眼有關）以及 invite trouble and sorrow（招惹麻煩與悲傷）可知，羽毛被視為最「不吉利的（unlucky）」部分。') + ops([['unlucky', '不吉利的', '符合語意：與前文的 lucky 對比，且呼應後文的 evil eyes 與 invite trouble。'], ['illogical', '不合邏輯的', '何時才對：描述推論有誤時'], ['impossible', '不可能的', '何時才對：描述事情無法達成時'], ['unnecessary', '不必要的', '何時才對：描述多餘的事物時']], 'A'));
 html += groupGradeBox('cloze2', '綜合測驗第二篇', 21, 25, 1);
 
 let p3 = [
   [["Nutritional products that can be collected from trees include fruits, nuts, seeds, leaves, and bark.", "能從樹木收集到的營養產品包括水果、堅果、種子、葉子和樹皮。"],
    ["Tree products have been an important part of diets for thousands of years, from early humans [[26|gathering]] fruits and nuts to the first cultivation of important trees, such as mango and apple.", "幾千年來，樹木產品一直是用餐的重要部分，從早期人類「採集」水果和堅果，到人類首次栽培重要的樹木（如芒果與蘋果）。"]],
   [["The apple is one of the world’s most cultivated fruit trees, [[27|with]] over 7,000 different kinds in existence.", "蘋果是世界上被栽種最廣泛的果樹之一，目前存在超過7000個不同的品種。"],
-   ["Despite their great [[28|variety]], however, most domesticated apples can be traced back to a common ancestor, the wild apple of Central Asia, Malus sieversii.", "然而，儘管它們具有極大的「多樣性」，大多數家養蘋果都可以追溯到一個共同的祖先：中亞野蘋果。"],
+   ["Despite their great [[28|variety]], however, most domesticated apples can be traced back to a common ancestor, the wild apple of Central Asia, *Malus sieversii*.", "然而，儘管它們具有極大的「多樣性」，大多數家養蘋果都可以追溯到一個共同的祖先：中亞野蘋果。"],
    ["Apples have been grown for thousands of years in Asia and Europe, and [[29|were brought]] to North America by European colonists in the 17th century.", "蘋果在亞洲和歐洲已種植了數千年，並在17世紀由歐洲殖民者「帶到」北美。"],
    ["Today, apples are [[30|regularly]] eaten the world over and form the basis for multi-million dollar industries.", "現今，蘋果在世界各地「經常地」被食用，並成為數百萬美元產業的基礎。"],
    ["In 2005, at least 55 million tons of apples were grown worldwide, which generated a value of about $10 billion.", "在2005年，全球至少種植了5500萬噸蘋果，創造了約100億美元的產值。"]]
 ];
-html += passage('蘋果的歷史與價值', p3, '', 'cloze3');
-html += card(26, ['考點：介系詞 from... to...', '詞性需求：動名詞'], 'D', stem(26) + clue('句型為 from A to B (從...到...)。這裡的 from 是介系詞，後面的動詞必須加 -ing 變為動名詞，故選 gathering。') + ops([['to gather', '不定詞', '何時才對：表目的時'], ['gather', '原形動詞', '何時才對：放在助動詞後'], ['gathered', '過去式/過去分詞', '何時才對：被動或過去式'], ['gathering', '動名詞', '']], 'D'));
-html += card(27, ['考點：附帶狀態 with', '詞性需求：介系詞'], 'B', stem(27) + clue('逗號後方說明蘋果樹目前的狀態（有7000多種），使用介系詞 with 帶出附帶說明的受詞及補語。') + ops([['all', '全部', ''], ['with', '伴隨；有著', ''], ['around', '大約；在周圍', ''], ['still', '仍然', '']], 'B'));
-html += card(28, ['考點：名詞語意', '詞性需求：名詞'], 'A', stem(28) + clue('前一句剛提到有超過7000種蘋果，這裡用 Despite 承接，指儘管有極大的「多樣性 (variety)」，祖先卻是同一個。') + ops([['variety', '多樣性；種類', ''], ['harvest', '收穫', '何時才對：描述農作物收成'], ['condition', '條件；狀況', '何時才對：描述健康狀態或環境條件'], ['discovery', '發現', '何時才對：找到未知事物']], 'A'));
-html += card(29, ['考點：被動語態與時態', '詞性需求：動詞片語'], 'C', stem(29) + clue('主詞 apples 與動詞 bring 為被動關係。因為事件發生在明確的過去時間點「in the 17th century (在17世紀)」，所以必須使用過去簡單式的被動語態 (were brought)。') + ops([['bring', '帶來(原形/主動)', ''], ['have brought', '現在完成主動', ''], ['were brought', '過去簡單被動', ''], ['have been brought', '現在完成被動', '何時才對：沒有明確過去時間點，且持續影響到現在時']], 'C'));
-html += card(30, ['考點：副詞語意', '詞性需求：副詞'], 'A', stem(30) + clue('現今蘋果廣受歡迎且產值龐大，可知人們是「經常 (regularly)」吃蘋果。') + ops([['regularly', '規律地；經常地', ''], ['particularly', '特別地', '何時才對：強調某一特定事物'], ['permanently', '永久地', '何時才對：狀態不會改變時'], ['barely', '幾乎不', '何時才對：表示稀少或匱乏']], 'A'));
+html += passage('第 26–30 題題組：蘋果的歷史與價值', p3, '', 'cloze3');
+html += card(26, ['考點：介系詞與分詞構句', '詞性需求：現在分詞／動名詞'], 'D', stem(26) + clue('句型為 from A to B（從...到...）。這裡的 from 是介系詞，受詞為 early humans，後方使用現在分詞 gathering 修飾 early humans（或視為所有格意義接動名詞），表「早期人類主動採集水果與堅果」。') + ops([['to gather', '不定詞', '何時才對：表目的或尚未發生的動作時'], ['gather', '原形動詞', '何時才對：介系詞片語中不可直接放原形動詞'], ['gathered', '過去分詞', '何時才對：表被動狀態時（人類採集果實為主動）'], ['gathering', '現在分詞／動名詞', '符合文法：置於介系詞 from + 受詞 early humans 之後，表主動動作。']], 'D'));
+html += card(27, ['考點：附帶狀態 with', '詞性需求：介系詞'], 'B', stem(27) + clue('逗號後方說明蘋果樹目前的附帶狀態（有7000多種存在），使用「with + 受詞（over 7,000 different kinds）+ 介系詞片語（in existence）」構成附帶狀況。') + ops([['all', '全部', '何時才對：若填 all 則前後兩句缺乏連接詞或介系詞結構'], ['with', '伴隨；有著', '符合文法：with + O + OC（in existence）表附帶說明。'], ['around', '大約；在周圍', '何時才對：後方已有 over（超過），語意與結構皆不合'], ['still', '仍然', '何時才對：副詞無法連接名詞片語作為附帶狀況']], 'B'));
+html += card(28, ['考點：名詞語意', '詞性需求：名詞'], 'A', stem(28) + clue('前一句剛提到有超過7000種不同的品種（over 7,000 different kinds），這裡用 Despite 承接，指儘管有極大的「多樣性（variety）」，卻都源自同一個祖先。') + ops([['variety', '多樣性；種類', '符合語意：承接前句的 7,000 different kinds。'], ['harvest', '收穫', '何時才對：描述農作物收成量時'], ['condition', '條件；狀況', '何時才對：描述健康狀態或環境條件時'], ['discovery', '發現', '何時才對：找到未知事物時']], 'A'));
+html += card(29, ['考點：被動語態與時態', '詞性需求：動詞片語'], 'C', stem(29) + clue('主詞 apples 與動詞 bring 為被動關係（被帶到北美）。因為句尾有明確的過去時間點「in the 17th century（在17世紀）」，所以必須使用過去簡單式的被動語態（were brought）。') + ops([['bring', '帶來 (原形主動)', '何時才對：蘋果是被帶去，且發生在17世紀'], ['have brought', '現在完成主動', '何時才對：主詞為執行動作的人，且無明確過去時間點時'], ['were brought', '過去簡單被動', '符合文法：配合過去明確時間 in the 17th century，使用過去式被動。'], ['have been brought', '現在完成被動', '何時才對：沒有明確過去時間副詞（如 in the 17th century）時']], 'C'));
+html += card(30, ['考點：副詞語意', '詞性需求：副詞'], 'A', stem(30) + clue('現今蘋果廣受歡迎且產值高達百億美元，可知人們在世界各地都「經常（regularly）」吃蘋果。') + ops([['regularly', '規律地；經常地', '符合語意：世界各地經常食用蘋果。'], ['particularly', '特別地', '何時才對：強調某一特定對象時'], ['permanently', '永久地', '何時才對：狀態永久不變時'], ['barely', '幾乎不', '何時才對：表示否定、稀少或匱乏時']], 'A'));
 html += groupGradeBox('cloze3', '綜合測驗第三篇', 26, 30, 1);
 
 // --- 第三部分：文意選填 (31-40) ---
 html += '<h2 id="wbank">三、文意選填（占10分）</h2>';
 html += '<div id="bank-wbank" class="bank">' + 
-  '<span class="bl">A</span> familiar <small>(熟悉的)</small>' +
-  '<span class="bl">B</span> honor <small>(紀念；向...致敬)</small>' +
-  '<span class="bl">C</span> device <small>(裝置；器具)</small>' +
-  '<span class="bl">D</span> removable <small>(可移除的)</small>' +
-  '<span class="bl">E</span> known as <small>(被稱為)</small>' +
-  '<span class="bl">F</span> protest <small>(抗議)</small>' +
-  '<span class="bl">G</span> symbol <small>(象徵)</small>' +
-  '<span class="bl">H</span> twisted into <small>(被扭轉成)</small>' +
-  '<span class="bl">I</span> associated with <small>(與...相關聯)</small>' +
-  '<span class="bl">J</span> historical <small>(歷史的)</small>' +
+  '<span><b>(A)</b> familiar <small>adj. 熟悉的</small></span>' +
+  '<span><b>(B)</b> honor <small>v. 紀念；向...致敬</small></span>' +
+  '<span><b>(C)</b> device <small>n. 裝置；器具</small></span>' +
+  '<span><b>(D)</b> removable <small>adj. 可移除的</small></span>' +
+  '<span><b>(E)</b> known as <small>phr. 被稱為</small></span>' +
+  '<span><b>(F)</b> protest <small>n. 抗議</small></span>' +
+  '<span><b>(G)</b> symbol <small>n. 象徵</small></span>' +
+  '<span><b>(H)</b> twisted into <small>phr. 被扭轉成</small></span>' +
+  '<span><b>(I)</b> associated with <small>phr. 與...相關聯</small></span>' +
+  '<span><b>(J)</b> historical <small>adj. 歷史的</small></span>' +
   '</div>';
+
+const WB_OPTS = [
+  ['familiar', 'adj. 熟悉的'],
+  ['honor', 'v. 紀念；向...致敬'],
+  ['device', 'n. 裝置；器具'],
+  ['removable', 'adj. 可移除的'],
+  ['known as', 'phr. 被稱為'],
+  ['protest', 'n. 抗議'],
+  ['symbol', 'n. 象徵'],
+  ['twisted into', 'phr. 被扭轉成'],
+  ['associated with', 'phr. 與...相關聯'],
+  ['historical', 'adj. 歷史的']
+];
+function wbOps(ansCode, okExp) {
+  const codes = 'ABCDEFGHIJ';
+  return ops(WB_OPTS.map((o, i) => [
+    o[0],
+    o[1],
+    codes[i] === ansCode ? okExp : '詞性或語意不符合本空格上下文需求。'
+  ]), ansCode, codes);
+}
 
 let p4 = [
   [["A paperclip, made of steel wire bent into a hooped shape, is an instrument used to hold sheets of paper together.", "迴紋針是由鋼絲彎曲成圈狀製成的，是一種用來將紙張夾在一起的工具。"],
-   ["This common [[31|device]] is a wonder of simplicity and function.", "這個常見的「裝置」是簡潔與功能性結合的奇蹟。"],
+   ["This common [[31|device]] is a wonder of simplicity and function.", "這個常見的「裝置／小器具」是簡潔與功能性結合的奇蹟。"],
    ["But where did this simple, cheap, and indispensable invention come from?", "但這個簡單、便宜且不可或缺的發明是從哪裡來的呢？"]],
   [["In the late 19th century, the most common way to hold papers together was by using a pin.", "在19世紀末，把紙張夾在一起最常見的方法是使用大頭針。"],
    ["Although the pin was an inexpensive tool and was easily [[32|removable]], it would leave holes in the paper.", "雖然大頭針是便宜的工具且容易「移除」，但它會在紙上留下洞。"],
    ["Later, as steel wire became more common, inventors began to notice its elastic feature.", "後來，隨著鋼絲變得更加普遍，發明家開始注意到它的彈性特徵。"],
    ["With this feature, it could be stretched and [[33|twisted into]] various clip-like objects.", "有了這個特性，它可以被拉伸並「扭轉成」各種夾子狀的物體。"],
    ["In the years just prior to 1900, quite a few paperclip designs emerged.", "在1900年之前的幾年裡，出現了相當多種迴紋針的設計。"],
-   ["The name most frequently [[34|associated with]] the paperclip invention is Johan Vaaler, a Norwegian inventor.", "最常「被與迴紋針發明聯想在一起」的名字是 Johan Vaaler，一位挪威發明家。"],
+   ["The name most frequently [[34|associated with]] the paperclip invention is Johan Vaaler, a Norwegian inventor.", "最常「與迴紋針發明聯想在一起」的名字是 Johan Vaaler，一位挪威發明家。"],
    ["However, Vaaler’s clips were not the same as the paperclips currently in use.", "然而，Vaaler 的迴紋針與現今使用的迴紋針並不相同。"],
    ["Specifically, they did not have the interior loop we see today.", "具體來說，它們沒有我們今天看到的內圈。"],
    ["The [[35|familiar]] looped design was invented by Gem Manufacturing Ltd. in England.", "我們「熟悉的」圈狀設計是由英國的 Gem 製造有限公司發明的。"],
@@ -582,26 +665,26 @@ let p4 = [
    ["The reason for doing this was simple: Paperclips were a Norwegian invention whose original function was to bind together.", "這樣做的原因很簡單：迴紋針是挪威的發明，其原始功能是將東西結合在一起。"],
    ["After the war, a giant paperclip statue was erected in Oslo to [[40|honor]] Vaaler—even though his design was never actually manufactured.", "戰後，奧斯陸豎立了一座巨大的迴紋針雕像來「紀念」Vaaler——即使他的設計從未實際量產。"]]
 ];
-html += passage('迴紋針的歷史', p4, '', 'wbank');
-html += card(31, ['考點：名詞', '詞性需求：名詞'], 'C', stem(31) + clue('前一句提到它是 instrument (工具)，所以這裡以 This common 加上同義詞 device (裝置/器具) 來指稱迴紋針。') + ops([], 'C', 'ABCDEFGHIJ'));
-html += card(32, ['考點：形容詞', '詞性需求：形容詞'], 'D', stem(32) + clue('大頭針便宜且「容易移除 (removable)」，但缺點是會留下洞。與 easily 搭配的形容詞。') + ops([], 'D', 'ABCDEFGHIJ'));
-html += card(33, ['考點：過去分詞片語', '詞性需求：動詞過去分詞'], 'H', stem(33) + clue('與 stretched (拉伸) 對等連接，鋼絲可以被拉伸且「扭轉成 (twisted into)」各種形狀。') + ops([], 'H', 'ABCDEFGHIJ'));
-html += card(34, ['考點：分詞片語', '詞性需求：動詞過去分詞'], 'I', stem(34) + clue('The name (which is) most frequently associated with...，名字最常「與...連結/聯想在一起」。') + ops([], 'I', 'ABCDEFGHIJ'));
-html += card(35, ['考點：形容詞', '詞性需求：形容詞'], 'A', stem(35) + clue('今天我們看到的內圈設計，對我們來說是「熟悉的 (familiar)」設計。') + ops([], 'A', 'ABCDEFGHIJ'));
-html += card(36, ['考點：被動片語', '詞性需求：被動片語'], 'E', stem(36) + clue('因為由 Gem 公司發明，因此被稱為 (known as) Gem 迴紋針。') + ops([], 'E', 'ABCDEFGHIJ'));
-html += card(37, ['考點：形容詞', '詞性需求：形容詞'], 'J', stem(37) + clue('修飾 role，在挪威扮演了重要的「歷史 (historical)」角色。') + ops([], 'J', 'ABCDEFGHIJ'));
-html += card(38, ['考點：名詞', '詞性需求：名詞'], 'G', stem(38) + clue('禁止佩戴任何國家團結的「象徵 (symbol)」。') + ops([], 'G', 'ABCDEFGHIJ'));
-html += card(39, ['考點：介系詞片語', '詞性需求：名詞'], 'F', stem(39) + clue('in protest 為固定用法，意為「做為抗議；出於抗議」。') + ops([], 'F', 'ABCDEFGHIJ'));
-html += card(40, ['考點：動詞', '詞性需求：原形動詞'], 'B', stem(40) + clue('to 後面接原形動詞，豎立雕像是為了「向...致敬 / 紀念 (honor)」Vaaler。') + ops([], 'B', 'ABCDEFGHIJ'));
+html += passage('第 31–40 題題組：迴紋針的歷史', p4, '', 'wbank');
+html += card(31, ['考點：名詞呼應', '詞性需求：單數名詞'], 'C', stem(31) + clue('前一句提到迴紋針是 an instrument（一種工具），本句開頭以 This common 加上單數名詞同義字 device（裝置／器具）來指稱迴紋針。') + wbOps('C', '符合語意與詞性：代指前句的 paperclip / instrument。'));
+html += card(32, ['考點：形容詞補語', '詞性需求：形容詞'], 'D', stem(32) + clue('was easily 後方需接形容詞或過去分詞作主詞補語。大頭針便宜且「容易移除的（removable）」，缺點則是會在紙上留下針孔。') + wbOps('D', '符合語意與詞性：easily removable（容易取下的）。'));
+html += card(33, ['考點：被動語態與介系詞', '詞性需求：過去分詞片語'], 'H', stem(33) + clue('與前面的 stretched（被拉伸）由 and 對等連接，且後方直接接名詞受詞 various clip-like objects，故需填入過去分詞加上介系詞「twisted into（被扭轉成...）」。') + wbOps('H', '符合文法：could be stretched and twisted into...（可被拉伸並扭轉成...）。'));
+html += card(34, ['考點：分詞片語後位修飾', '詞性需求：過去分詞片語'], 'I', stem(34) + clue('主詞為 The name，主要動詞為後方的 is。中間為省略 which is 的分詞片語修飾 The name，表「最常與迴紋針發明被聯想在一起（associated with）的名字」。') + wbOps('I', '符合文法：associated with（與...相關聯）。'));
+html += card(35, ['考點：形容詞修飾名詞', '詞性需求：形容詞'], 'A', stem(35) + clue('空格位於冠詞 The 與名詞片語 looped design 之間，需填形容詞。承接前句「我們今天看到的內圈」，可知這是我們「熟悉的（familiar）」雙圈設計。') + wbOps('A', '符合語意：The familiar looped design（人們熟悉的圈狀設計）。'));
+html += card(36, ['考點：被動片語', '詞性需求：過去分詞片語'], 'E', stem(36) + clue('因為是由 Gem 公司發明的，所以這種迴紋針有時「被稱為（is known as）」Gem 迴紋針。') + wbOps('E', '符合搭配：be known as + 名稱（以...之名為人所知／被稱為）。'));
+html += card(37, ['考點：形容詞修飾名詞', '詞性需求：形容詞'], 'J', stem(37) + clue('空格位於形容詞 important 與名詞 role 之間，且後文開始敘述二戰期間挪威的歷史故事，故填「歷史上的（historical）」。') + wbOps('J', '符合語意：played an important historical role（扮演重要的歷史角色）。'));
+html += card(38, ['考點：名詞語意', '詞性需求：名詞'], 'G', stem(38) + clue('any 後方接名詞，且由後文的舉例「印有國王名字首字母的徽章鈕扣」可知，納粹禁止挪威人佩戴任何國家團結的「象徵（symbol）」。') + wbOps('G', '符合語意：any symbol of their national unity（任何國家團結的象徵）。'));
+html += card(39, ['考點：介系詞片語', '詞性需求：名詞'], 'F', stem(39) + clue('介系詞 in 後方缺名詞。in protest 為固定搭配，意為「作為抗議；出於抗議」。') + wbOps('F', '符合片語搭配：in protest（為了抗議）。'));
+html += card(40, ['考點：不定詞表目的', '詞性需求：原形動詞'], 'B', stem(40) + clue('不定詞 to 後方需接原形動詞表目的。戰後豎立巨大迴紋針雕像是為了「紀念／向...致敬（honor）」發明家 Vaaler。') + wbOps('B', '符合文法與語意：to honor Vaaler（以紀念 Vaaler）。'));
 html += groupGradeBox('wbank', '文意選填', 31, 40, 1);
 
 // --- 第四部分：閱讀測驗 (41-56) ---
 html += '<h2 id="rc1">四、閱讀測驗（占32分）</h2>';
 let p5 = [
   [["In 2009, the Taiwu Elementary School Folk Singers were invited to perform in Belgium, France, Germany, and Luxemburg.", "2009年，泰武國小古謠傳唱隊受邀至比利時、法國、德國和盧森堡演出。"],
-   ["In 2011, they were voted as one of the world’s top five performance groups by audiences of Japan Broadcasting Corporation’s Amazing Voice program.", "2011年，他們被日本放送協會《Amazing Voice》節目的觀眾票選為世界五大表演團體之一。"]],
+   ["In 2011, they were voted as one of the world’s top five performance groups by audiences of Japan Broadcasting Corporation’s *Amazing Voice* program.", "2011年，他們被日本放送協會《Amazing Voice》節目的觀眾票選為世界五大表演團體之一。"]],
   [["Recalling the group’s first tour in Europe, Camake Valaule, a physical education teacher and the founder of the Taiwu Elementary School Folk Singers, admitted that he felt very nervous.", "回憶起該團體第一次的歐洲巡演，泰武國小古謠傳唱隊的創辦人兼體育老師查馬克·法拉屋樂承認他當時感到非常緊張。"],
-   ["He was worried that the audience would fall asleep since most of the 75-minute performance was a cappella, that is, singing without instrumental sound.", "他很擔心觀眾會睡著，因為這場75分鐘的表演大多是阿卡貝拉（無伴奏合唱），也就是沒有樂器伴奏的演唱。"],
+   ["He was worried that the audience would fall asleep since most of the 75-minute performance was *a cappella*, that is, singing without instrumental sound.", "他很擔心觀眾會睡著，因為這場75分鐘的表演大多是阿卡貝拉（無伴奏合唱），也就是沒有樂器伴奏的演唱。"],
    ["Surprisingly, the audience listened with full focus and high spirits.", "令人驚訝的是，觀眾聽得全神貫注且興致高昂。"],
    ["Camake said, “They told me afterward that through our performance, they had a vision of our country, our village, without having to visit it. This experience greatly boosted our confidence.”", "查馬克說：「他們事後告訴我，透過我們的表演，他們無需親自造訪，就能在腦海中看見我們的國家和村莊。這段經歷極大地增強了我們的自信。」"]],
   [["According to Camake Valaule, singing traditional ballads has helped students and their parents to re-understand their culture.", "根據查馬克的說法，演唱傳統古謠幫助了學生及其父母重新認識他們的文化。"],
@@ -613,11 +696,18 @@ let p5 = [
    ["Referring to the relocation of Taiwu Elementary School and Taiwu Village following Typhoon Morakot in August 2009, Camake said, “We could not take the forest or our houses in the mountains with us; but we were able to bring our culture along.", "提到2009年8月莫拉克颱風後泰武國小及泰武村的遷村，查馬克說：「我們無法帶走山上的森林或房子；但我們能夠帶走我們的文化。"],
    ["As long as the children are willing to sing, I will always be there for them, singing with them and leading them to experience the meaning of the ballads.”", "只要孩子們願意唱，我就會一直陪著他們，和他們一起唱，並帶領他們體會這些古謠的意義。」"]]
 ];
-html += passage('泰武國小古謠傳唱隊', p5, '', 'rc1');
-html += card(41, ['考點：細節題', '詞性需求：N/A'], 'B', clue('文章第二段第一句提到：「...Camake Valaule, a physical education teacher and the founder of the Taiwu Elementary School Folk Singers...」，可知該團體是由一位體育老師創辦的。') + ops([['The group was first established in 2009.', '該團體在2009年首次成立。', '何時才對：文章最後一段指出是在2006年創辦。'], ['The group was founded by a PE teacher.', '該團體由一位體育老師創辦。', '✔ 正解'], ['The singers usually sing popular folk songs.', '歌手們通常唱流行民歌。', '何時才對：他們唱的是 traditional ballads (傳統古謠)。'], ['The singers learn to sing from their parents.', '歌手們從父母那裡學唱歌。', '何時才對：文章提到現在反而是孩子教父母唱歌。']], 'B'));
-html += card(42, ['考點：細節題', '詞性需求：N/A'], 'B', clue('文章第二段提到查馬克擔心觀眾睡著的原因：「since most of the 75-minute performance was a cappella, that is, singing without instrumental sound (因為大部分表演是無伴奏合唱)」。') + ops([['The average age of the audience was between fifty and sixty.', '觀眾的平均年齡在五十到六十歲之間。', '何時才對：這個年齡是部落耆老的年紀。'], ['Most of the performance was not accompanied by any instrument.', '大部分的表演沒有任何樂器伴奏。', '✔ 正解'], ['Nobody could understand the language and the meaning of the songs.', '沒有人能聽懂歌曲的語言和意義。', '何時才對：文章未提及此為擔心的原因。'], ['The audience could not visualize the theme sung by the school children.', '觀眾無法想像學童演唱的主題。', '何時才對：事後觀眾表示他們能透過歌聲看見村莊。']], 'B'));
-html += card(43, ['考點：語意推論', '詞性需求：N/A'], 'D', clue('第三段提到父母問自己為什麼不會唱，接著說現在是孩子教父母，從而拼湊回「模糊記憶的碎片」。這表示父母對自己傳統文化的記憶已經模糊。') + ops([['The children’s ignorance of their own culture.', '孩子們對自己文化的無知。', '何時才對：現在是孩子們在傳唱。'], ['The fading memories about old tribal people.', '關於部落老人的褪色記憶。', '何時才對：是指文化傳承的記憶，非針對老人。'], ['The broken pieces of knowledge taught at school.', '學校教導的破碎知識。', '何時才對：文章未提學校知識。'], ['The parents’ vague understanding of their own tradition.', '父母對自己傳統的模糊了解。', '✔ 正解']], 'D'));
-html += card(44, ['考點：細節推論', '詞性需求：N/A'], 'C', clue('文章最後一段提到遷村時，查馬克說無法帶走森林房子，但可以帶走文化（bring our culture along），強調傳承文化的重要性。') + ops([['The significance of the relocation of Taiwu Elementary School.', '泰武國小遷校的重大意義。', '何時才對：遷校是背景，重點在於文化。'], ['The need to respect nature to avoid being destroyed by it.', '需要尊重大自然以避免被其毀滅。', '何時才對：文章未討論環保議題。'], ['The importance of passing on the traditional culture.', '傳承傳統文化的重要性。', '✔ 正解'], ['The consequence of building houses in the forest.', '在森林建房子的後果。', '何時才對：文章未探討建築地點。']], 'C'));
+html += passage('第 41–44 題題組：泰武國小古謠傳唱隊', p5, '', 'rc1');
+SENT[41] = ["Which of the following is true about Taiwu Elementary School Folk Singers?", "關於泰武國小古謠傳唱隊，下列何者正確？"];
+html += card(41, ['考點：細節題', '詞性需求：句子理解'], 'B', stem(41) + clue('文章第二段第一句提到：「...Camake Valaule, a physical education teacher and the founder of the Taiwu Elementary School Folk Singers...」，可知該團體是由一位體育老師（PE teacher）創辦的。') + ops([['The group was first established in 2009.', '該團體在2009年首次成立。', '何時才對：第四段首句指出是在 2006 年創辦（2009年是受邀至歐洲演出）。'], ['The group was founded by a PE teacher.', '該團體由一位體育老師創辦。', '符合文意：physical education teacher 即為 PE teacher。'], ['The singers usually sing popular folk songs.', '歌手們通常唱流行民歌。', '何時才對：第三段指出他們唱的是 traditional ballads（傳統古謠），而非流行歌曲。'], ['The singers learn to sing from their parents.', '歌手們從父母那裡學唱歌。', '何時才對：第三段末尾指出現在反而是孩子教父母唱歌（children who teach the songs to their parents）。']], 'B'));
+
+SENT[42] = ["On his first trip to Europe, why did Camake think the audience might fall asleep?", "在第一次歐洲之旅中，為什麼查馬克認為觀眾可能會睡著？"];
+html += card(42, ['考點：細節題', '詞性需求：句子理解'], 'B', stem(42) + clue('文章第二段提到查馬克擔心觀眾睡著的原因：「since most of the 75-minute performance was *a cappella*, that is, singing without instrumental sound（因為大部分表演是無伴奏合唱，沒有樂器聲音）」。') + ops([['The average age of the audience was between fifty and sixty.', '觀眾的平均年齡在五十到六十歲之間。', '何時才對：第三段提到50到60歲是指部落耆老（tribal elders）的年紀，而非歐洲觀眾。'], ['Most of the performance was not accompanied by any instrument.', '大部分的表演沒有任何樂器伴奏。', '符合文意：singing without instrumental sound 即為 not accompanied by any instrument。'], ['Nobody could understand the language and the meaning of the songs.', '沒有人能聽懂歌曲的語言和意義。', '何時才對：文中未提及語言不通是他擔心觀眾睡著的原因。'], ['The audience could not visualize the theme sung by the school children.', '觀眾無法想像學童演唱的主題。', '何時才對：第二段末句觀眾事後表示他們能透過歌聲在腦海看見村莊（had a vision of our country, our village）。']], 'B'));
+
+SENT[43] = ["What does “the pieces of a blurred memory” in the third paragraph most likely refer to?", "第三段中的「模糊記憶的碎片」最可能是指什麼？"];
+html += card(43, ['考點：語意推論', '詞性需求：名詞片語指代'], 'D', stem(43) + clue('第三段提到父母問自己「為什麼我們不會唱這些古謠？」，接著說現在是由孩子教父母唱，從而拼湊回「模糊記憶的碎片」。這表示父母輩對自己部落傳統文化的認識與記憶已經模糊。') + ops([['The children’s ignorance of their own culture.', '孩子們對自己文化的無知。', '何時才對：現在是孩子們學會古謠並教導父母。'], ['The fading memories about old tribal people.', '關於部落老人的褪色記憶。', '何時才對：模糊的是對傳統古謠與文化的記憶，而非忘記老人本身。'], ['The broken pieces of knowledge taught at school.', '學校教導的破碎知識。', '何時才對：文中未批評學校教育的知識破碎。'], ['The parents’ vague understanding of their own tradition.', '父母對自己傳統的模糊了解。', '符合推論：blurred 對應 vague，指父母輩逐漸淡忘的傳統古謠文化。']], 'D'));
+
+SENT[44] = ["What did Camake realize after the incident of Typhoon Morakot?", "莫拉克颱風事件後，查馬克體認到了什麼？"];
+html += card(44, ['考點：細節推論', '詞性需求：句子理解'], 'C', stem(44) + clue('文章最後一段提到莫拉克風災後遷村，查馬克說：「我們帶不走山上的森林或房子，但我們能夠帶走我們的文化（bring our culture along）」，凸顯保存與傳承傳統文化的重要性。') + ops([['The significance of the relocation of Taiwu Elementary School.', '泰武國小遷校的重大意義。', '何時才對：遷校是風災迫不得已的結果，他的體悟在於文化能隨人遷移傳承。'], ['The need to respect nature to avoid being destroyed by it.', '需要尊重大自然以避免被其毀滅。', '何時才對：文章並未討論環保或敬畏自然的主題。'], ['The importance of passing on the traditional culture.', '傳承傳統文化的重要性。', '符合文意：呼應第四段 preserve and pass on their culture 以及帶走文化的感言。'], ['The consequence of building houses in the forest.', '在森林建房子的後果。', '何時才對：文中未檢討部落建築位置。']], 'C'));
 html += groupGradeBox('rc1', '閱讀測驗第一篇', 41, 44, 2);
 
 let p6 = [
@@ -637,11 +727,18 @@ let p6 = [
    ["Under the new doctor’s care, the regular testing stopped and Mrs. Power’s condition stabilized.", "在新醫生的照顧下，例行性檢查停止了，而 Power 太太的病情也穩定了下來。"],
    ["Now she sees the doctor only four or five times a year.", "現在她一年只看四到五次醫生。"]]
 ];
-html += passage('過度醫療的潛在危害', p6, '', 'rc2');
-html += card(45, ['考點：主旨題', '詞性需求：N/A'], 'C', clue('文章第一段點出主旨：過度治療（overtreatment）可能有害。後續透過 Power 夫婦的例子說明過多的檢查反而造成身心與財務負擔。') + ops([['Treatments do not always cause harmful side effects.', '治療並不總是會引起有害的副作用。', '何時才對：非文章探討重點。'], ['Patients tend to believe more testing is better treatment.', '病人傾向於認為越多的檢查就是更好的治療。', '何時才對：這是現象，非文章核心主張。'], ['Too much medical care may not be beneficial to patients.', '過多的醫療照護可能對病人無益。', '✔ 正解'], ['Doctors generally recommend office visits that are necessary.', '醫生通常建議必要的回診。', '何時才對：文章舉例中的醫生建議了不必要的回診。']], 'C'));
-html += card(46, ['考點：細節題', '詞性需求：N/A'], 'C', clue('第二段提到：「Even when tests came back negative, more were ordered...（即使檢查結果呈陰性，醫生還是安排了更多檢查）」。') + ops([['She had to be hospitalized for three weeks whenever she had a cold.', '她每次感冒都必須住院三週。', '何時才對：文章說每三週回診，感冒時住院，未說住三週。'], ['She didn’t have any insurance, so she went broke because of her illness.', '她沒有任何保險，所以因為生病而破產。', '何時才對：文章說財務近乎破產，但未提保險。'], ['When test results showed she was fine, her doctor still ordered more tests.', '當檢查結果顯示她沒事時，她的醫生仍然安排了更多檢查。', '✔ 正解'], ['Her doctor asked her to consult other specialists due to her constant complaints.', '她的醫生因為她不斷抱怨而要求她諮詢其他專家。', '何時才對：是為了微小病痛(minor complaints)轉診，非病人抱怨。']], 'C'));
-html += card(47, ['考點：代名詞指代', '詞性需求：N/A'], 'A', clue('第三段 Mr. Power 說「要判定 they 何時越界很困難」，在此情境中，一直安排無止盡檢查的是「醫生（Physicians / doctors）」。') + ops([['Physicians.', '醫生。', '✔ 正解'], ['Other patients.', '其他病人。', '何時才對：其他病人是提供諮詢對象。'], ['Mr. and Mrs. Power.', 'Power夫婦。', '何時才對：他們是受害者。'], ['The online support groups.', '網路支持社團。', '何時才對：這是提供協助的平台。']], 'A'));
-html += card(48, ['考點：作者態度推論', '詞性需求：N/A'], 'A', clue('第一段作者明言：「overtreatment... may pose harm（過度治療可能有害）」，且整篇文章都在批評不必要的過度檢查。') + ops([['More tests than necessary are too much.', '超過必要的檢查就是太多了。', '✔ 正解'], ['Medical tests are essential for disease prevention.', '醫療檢查對於預防疾病是必要的。', '何時才對：作者強調的是過度的壞處。'], ['Many tests are needed for confirmation of diagnosis.', '需要許多檢查來確認診斷。', '何時才對：作者反對無意義的許多檢查。'], ['Doctors’ interpretations of test results are seldom wrong.', '醫生對檢查結果的解讀很少出錯。', '何時才對：文章未探討解讀正確與否。']], 'A'));
+html += passage('第 45–48 題題組：過度醫療的潛在危害', p6, '', 'rc2');
+SENT[45] = ["What is the main idea of this passage?", "本文的主旨是什麼？"];
+html += card(45, ['考點：主旨題', '詞性需求：句子理解'], 'C', stem(45) + clue('文章第一段即點出主旨：過度治療（overtreatment）可能帶來傷害（pose harm）。後續透過 Power 夫婦的例子說明過多的醫療檢查反而造成身心痛苦與財務負擔。') + ops([['Treatments do not always cause harmful side effects.', '治療並不總是會引起有害的副作用。', '何時才對：本文重點在於批評「過度醫療與檢查」，而非替治療的副作用辯護。'], ['Patients tend to believe more testing is better treatment.', '病人傾向於認為越多的檢查就是更好的治療。', '何時才對：這只是第一段首句引出主題的迷思背景，並非全文的核心結論。'], ['Too much medical care may not be beneficial to patients.', '過多的醫療照護可能對病人無益。', '符合主旨：精準概括首段的 overtreatment may pose harm 及全文案例。'], ['Doctors generally recommend office visits that are necessary.', '醫生通常建議必要的回診。', '何時才對：與文中案例相反，前一位醫生安排了大量非必要的回診。']], 'C'));
+
+SENT[46] = ["Which of the following was a problem for Mrs. Power during her medical treatment?", "在醫療過程中，下列何者是 Power 太太遇到的問題？"];
+html += card(46, ['考點：細節題', '詞性需求：句子理解'], 'C', stem(46) + clue('第二段提到：「Even when tests came back negative, more were ordered...（即使檢查結果呈陰性／正常，醫生還是安排了更多檢查）」。') + ops([['She had to be hospitalized for three weeks whenever she had a cold.', '她每次感冒都必須住院三週。', '何時才對：文中是說「每三週回診一次」且「感冒時預防性住院」，並未說住院三週。'], ['She didn’t have any insurance, so she went broke because of her illness.', '她沒有任何保險，所以因為生病而破產。', '何時才對：文中僅說近乎財務破產（near financial ruin），未提及有無保險。'], ['When test results showed she was fine, her doctor still ordered more tests.', '當檢查結果顯示她沒事時，她的醫生仍然安排了更多檢查。', '符合文意：醫學檢驗中 came back negative（陰性）即代表沒有檢出異常（she was fine）。'], ['Her doctor asked her to consult other specialists due to her constant complaints.', '她的醫生因為她不斷抱怨而要求她諮詢其他專家。', '何時才對：文中 minor complaints 是指「輕微的身體不適／小毛病」，而非病人個性愛抱怨。']], 'C'));
+
+SENT[47] = ["Who does “they” in the third paragraph most likely refer to?", "第三段中的「they」最可能指誰？"];
+html += card(47, ['考點：代名詞指代', '詞性需求：名詞指代'], 'A', stem(47) + clue('第三段 Mr. Power 說：「要判定『他們（they）』何時越界（crossed the line，指過度醫療）真的很難，你以為她得到了世上最好的照顧...」，在此情境中，提供醫療照顧卻安排無止盡檢查的是「醫生（Physicians）」。') + ops([['Physicians.', '內科醫生／醫師。', '符合指代：執行醫療與開立檢查、可能逾越合理醫療界線的人正是醫師。'], ['Other patients.', '其他病人。', '何時才對：其他病友是提供建議的人，不會對 Power 太太進行過度醫療。'], ['Mr. and Mrs. Power.', 'Power 夫婦。', '何時才對：Mr. Power 不會用第三人稱 they 指稱自己夫妻倆。'], ['The online support groups.', '網路支持社團。', '何時才對：支持社團是幫助他們看清真相的團體。']], 'A'));
+
+SENT[48] = ["Which of the following best describes the author’s attitude toward medical tests?", "下列何者最能描述作者對醫療檢查的態度？"];
+html += card(48, ['考點：作者態度推論', '詞性需求：句子理解'], 'A', stem(48) + clue('第一段作者明言：「overtreatment—too many scans, too many blood tests... may pose harm」，最後一段也顯示停止非必要例行檢查後病情反而穩定，可見作者認為「超出必要的檢查就是過頭了」。') + ops([['More tests than necessary are too much.', '超過必要的檢查就是太多了。', '符合態度：作者反對非必要的過度檢驗（overtreatment）。'], ['Medical tests are essential for disease prevention.', '醫療檢查對於預防疾病是必要的。', '何時才對：本文旨在警告過度檢查的害處，而非推廣預防篩檢。'], ['Many tests are needed for confirmation of diagnosis.', '需要許多檢查來確認診斷。', '何時才對：這正是作者所批評的「更多檢查才是好」迷思。'], ['Doctors’ interpretations of test results are seldom wrong.', '醫生對檢查結果的解讀很少出錯。', '何時才對：文中並未討論檢驗結果判讀錯誤的問題。']], 'A'));
 html += groupGradeBox('rc2', '閱讀測驗第二篇', 45, 48, 2);
 
 let p7 = [
@@ -655,19 +752,26 @@ let p7 = [
    ["And Africa fueled another interest in him: photography.", "而非洲激發了他的另一個興趣：攝影。"],
    ["He then wandered around the world with his camera, using a handheld camera to catch images from fleeting moments of everyday life.", "隨後，他帶著相機在世界各地遊歷，使用手持相機捕捉日常生活中轉瞬即逝的畫面。"]],
   [["Not long after World War II, Cartier-Bresson traveled east, spending considerable time in India, where he met and photographed Gandhi shortly before his assassination in 1948.", "二戰後不久，卡蒂爾－布列松向東旅行，在印度度過了相當長的時間，在那裡他遇見了甘地，並在1948年甘地遇刺前不久為他拍攝了照片。"],
-   ["Cartier-Bresson’s subsequent work to document Gandhi’s death and its immediate impact on the country became one of Life Magazine’s most prized photo essays.", "卡蒂爾－布列松隨後記錄甘地之死及其對該國立即影響的作品，成為《生活雜誌》最受推崇的攝影報導之一。"]],
+   ["Cartier-Bresson’s subsequent work to document Gandhi’s death and its immediate impact on the country became one of *Life Magazine*’s most prized photo essays.", "卡蒂爾－布列松隨後記錄甘地之死及其對該國立即影響的作品，成為《生活雜誌》最受推崇的攝影報導之一。"]],
   [["Cartier-Bresson’s approach to photography remained much the same throughout his life.", "卡蒂爾－布列松對攝影的方法終其一生幾乎保持不變。"],
    ["He made clear his dislike of images that had been improved by artificial light, darkroom effects, and even cropping.", "他明確表示不喜歡透過人造光、暗房效果甚至裁切來改善的影像。"],
    ["The naturalist in Cartier-Bresson believed that all editing should be done when the photo is taken.", "卡蒂爾－布列松心中的自然主義者認為，所有的編輯都應該在拍攝照片的那一刻完成。"],
-   ["In 1952, his first book, The Decisive Moment, a rich collection of his work spanning two decades, was published.", "1952年，他的第一本書《決定性瞬間》出版，這是他橫跨二十年作品的豐富選集。"],
+   ["In 1952, his first book, *The Decisive Moment*, a rich collection of his work spanning two decades, was published.", "1952年，他的第一本書《決定性瞬間》出版，這是他橫跨二十年作品的豐富選集。"],
    ["“There is nothing in this world that does not have a decisive moment,” he said.", "他說：「這個世界上沒有任何事物沒有決定性的瞬間。」"]],
   [["In 1968, he began to turn away from photography and returned to his passion for drawing and painting.", "在1968年，他開始放棄攝影，回歸他對素描和繪畫的熱情。"]]
 ];
-html += passage('攝影大師卡蒂爾-布列松', p7, '', 'rc3');
-html += card(49, ['考點：細節題', '詞性需求：N/A'], 'A', clue('第二段提到父親賺大錢使家庭富裕，但父母極度節儉（frugal ways），讓他覺得家裡好像很窮。') + ops([['His family was rich but was very economical.', '他的家庭很富裕但非常節儉。', '✔ 正解'], ['His father went to Paris to open a textile factory.', '他的父親去巴黎開紡織廠。', '何時才對：文章只提父親是紡織廠老闆，未提去巴黎開廠。'], ['His wealthy family went bankrupt and became poor.', '他富裕的家庭破產變窮了。', '何時才對：是父母節儉讓他感覺窮，非真破產。'], ['His parents were very liberal in their ways of education.', '他的父母在教育方式上非常開明。', '何時才對：文章說他反抗父母 formal ways (正式/死板的) 教育。']], 'A'));
-html += card(50, ['考點：細節題', '詞性需求：N/A'], 'B', clue('第四段指出他在1931年去非洲打獵，而「Africa fueled another interest in him: photography（非洲激發了他的另一個興趣：攝影）」。') + ops([['He devoted himself to photography all his life.', '他一生都致力於攝影。', '何時才對：最後一段說他1968年回歸繪畫。'], ['He developed a passion for photography when he traveled to Africa.', '當他去非洲旅行時，他培養了對攝影的熱情。', '✔ 正解'], ['He quit photography right after the publication of The Decisive Moment.', '《決定性瞬間》出版後他立刻放棄了攝影。', '何時才對：書在1952年出版，他1968年才轉向繪畫。'], ['During World War II, he documented the everyday life of the Indian people.', '在二戰期間，他記錄了印度人民的日常生活。', '何時才對：他是二戰「後 (Not long after WWII)」才去印度。']], 'B'));
-html += card(51, ['考點：細節題', '詞性需求：N/A'], 'C', clue('第五段提到他拍攝甘地遇刺前的照片，且「document Gandhi’s death and its immediate impact on the country（記錄甘地之死及其對國家的影響）」的作品廣受推崇。') + ops([['He witnessed Gandhi’s assassination in 1948.', '他目擊了1948年甘地的暗殺。', '何時才對：他是在遇刺前不久拍照片，沒說目擊暗殺。'], ['He was the first photographer to take Gandhi’s photo.', '他是第一位拍甘地照片的攝影師。', '何時才對：文章未提及他是第一位。'], ['He used photos to document the effect of Gandhi’s death on India.', '他用照片記錄了甘地之死對印度的影響。', '✔ 正解'], ['His photos told the world who was guilty of assassinating Gandhi.', '他的照片告訴世界誰是暗殺甘地的兇手。', '何時才對：照片紀錄的是國家的衝擊，非揪出兇手。']], 'C'));
-html += card(52, ['考點：細節題', '詞性需求：N/A'], 'D', clue('倒數第二段提到他的自然主義精神：「made clear his dislike of images that had been improved by artificial light, darkroom effects...（不喜歡人工光線或暗房效果處理過的影像）」，認為所有編輯應在拍攝時完成。') + ops([['He never waited for a decisive moment to shoot photos.', '他從不等待決定性的瞬間拍照。', '何時才對：他出版的書名就叫《決定性瞬間》。'], ['He preferred to edit his images carefully in his darkroom.', '他喜歡在暗房裡仔細編輯影像。', '何時才對：他討厭暗房效果 (dislike darkroom effects)。'], ['Most of his photos described things that happen every day.', '他大多數的照片描述每天發生的事。', '何時才對：雖然捕捉日常，但未必是每天發生的事，而是轉瞬即逝的瞬間。'], ['He experimented with different ways and settled on being a naturalist.', '他嘗試過不同方法，並決定成為一名自然主義者。', '✔ 正解（廣義而言，他堅持自然手法）']], 'D'));
+html += passage('第 49–52 題題組：攝影大師卡蒂爾-布列松', p7, '', 'rc3');
+SENT[49] = ["Which of the following best describes Cartier-Bresson’s family background?", "下列何者最能描述卡蒂爾－布列松的家庭背景？"];
+html += card(49, ['考點：細節題', '詞性需求：句子理解'], 'A', stem(49) + clue('第二段提到他的家庭很富裕（wealthy），但因為父母節儉的生活方式（due to his parents’ frugal ways），常讓人覺得好像家裡很窮。frugal 即等同於 economical（節儉的）。') + ops([['His family was rich but was very economical.', '他的家庭很富裕但非常節儉。', '符合文意：wealthy 對應 rich，frugal 對應 economical。'], ['His father went to Paris to open a textile factory.', '他的父親去巴黎開紡織廠。', '何時才對：文中只說他在巴黎受教育、父親是紡織製造商，未說父親去巴黎開廠。'], ['His wealthy family went bankrupt and became poor.', '他富裕的家庭破產變窮了。', '何時才對：只是因為節儉而「看似（seemed as though）」貧窮，並非真的破產。'], ['His parents were very liberal in their ways of education.', '他的父母在教育方式上非常開明。', '何時才對：第三段說父母是採取死板正式的教育方式（formal ways of education）。']], 'A'));
+
+SENT[50] = ["Which of the following is true about Cartier-Bresson’s career in photography?", "關於卡蒂爾－布列松的攝影生涯，下列何者正確？"];
+html += card(50, ['考點：細節題', '詞性需求：句子理解'], 'B', stem(50) + clue('第四段指出他在1931年去非洲打獵，而「Africa fueled another interest in him: photography（非洲激發了他的另一個興趣：攝影）」。') + ops([['He devoted himself to photography all his life.', '他一生都致力於攝影。', '何時才對：最後一段指出他在 1968 年開始離開攝影，重回繪畫懷抱。'], ['He developed a passion for photography when he traveled to Africa.', '當他去非洲旅行時，他培養了對攝影的熱情。', '符合文意：直接對應第四段 Africa fueled another interest in him: photography。'], ['He quit photography right after the publication of *The Decisive Moment*.', '《決定性瞬間》出版後他立刻放棄了攝影。', '何時才對：該書於 1952 年出版，但他直到 1968 年才淡出攝影。'], ['During World War II, he documented the everyday life of the Indian people.', '在二戰期間，他記錄了印度人民的日常生活。', '何時才對：第五段指出他是二戰結束後不久（Not long after World War II）才去印度。']], 'B'));
+
+SENT[51] = ["What significance did Cartier-Bresson have to Gandhi of India?", "卡蒂爾－布列松對印度的甘地有何重要意義？"];
+html += card(51, ['考點：細節題', '詞性需求：句子理解'], 'C', stem(51) + clue('第五段提到：「Cartier-Bresson’s subsequent work to document Gandhi’s death and its immediate impact on the country became one of *Life Magazine*’s most prized photo essays.（他記錄甘地之死及其對印度立即影響的作品，成為《生活雜誌》最珍視的攝影報導之一）」。') + ops([['He witnessed Gandhi’s assassination in 1948.', '他目擊了1948年甘地的暗殺。', '何時才對：文中說他在甘地遇刺前不久（shortly before his assassination）拍了甘地，未說目擊刺殺瞬間。'], ['He was the first photographer to take Gandhi’s photo.', '他是第一位拍甘地照片的攝影師。', '何時才對：文中未提及他是第一位拍攝甘地的人。'], ['He used photos to document the effect of Gandhi’s death on India.', '他用照片記錄了甘地之死對印度的影響。', '符合文意：document Gandhi’s death and its immediate impact on the country。'], ['His photos told the world who was guilty of assassinating Gandhi.', '他的照片告訴世界誰是暗殺甘地的兇手。', '何時才對：文中未提到他的照片有指認兇手的功能。']], 'C'));
+
+SENT[52] = ["Which of the following is true about Cartier-Bresson’s approach to photography?", "關於卡蒂爾－布列松的攝影方式，下列何者正確？"];
+html += card(52, ['考點：細節題', '詞性需求：句子理解'], 'C', stem(52) + clue('第四段末句指出他「using a handheld camera to catch images from fleeting moments of everyday life（使用手持相機捕捉日常生活中轉瞬即逝的畫面）」，可知他的作品多半描繪日常發生的事物。') + ops([['He never waited for a decisive moment to shoot photos.', '他從不等待決定性的瞬間拍照。', '何時才對：第六段指出他認為萬事萬物皆有「決定性瞬間（decisive moment）」。'], ['He preferred to edit his images carefully in his darkroom.', '他喜歡在暗房裡仔細編輯影像。', '何時才對：第六段說他非常討厭（dislike）人造光、暗房效果與裁切。'], ['Most of his photos described things that happen every day.', '他大多數的照片描述每天日常發生的事。', '符合文意：對應第四段 catch images from fleeting moments of everyday life（捕捉日常生活瞬間）。'], ['He experimented with different ways and settled on being a naturalist.', '他嘗試過不同方法，並決定成為一名自然主義者。', '何時才對：第六段首句明確說他的攝影方式「終其一生幾乎保持不變（remained much the same throughout his life）」，並未嘗試各種不同方法。']], 'C'));
 html += groupGradeBox('rc3', '閱讀測驗第三篇', 49, 52, 2);
 
 let p8 = [
@@ -686,18 +790,26 @@ let p8 = [
   [["Scared straight out of your chair? Good.", "嚇得直接從椅子上跳起來了嗎？很好。"],
    ["The remedy is as simple as standing up and taking activity breaks.", "解決方法很簡單：站起來，花點時間動一動。"]]
 ];
-html += passage('久坐病的危機', p8, '', 'rc4');
-html += card(53, ['考點：主旨題', '詞性需求：N/A'], 'D', clue('文章主要介紹了「sitting disease（久坐病）」，解釋坐太久對健康的負面影響，以及規律運動也不一定能完全抵消久坐的危害，呼籲大家多站起來活動。') + ops([['To point out the challenges of the modern lifestyle.', '指出現代生活方式的挑戰。', '何時才對：太過廣泛，未點出「久坐」。'], ['To discuss how a modern epidemic may spread quickly.', '討論現代流行病如何快速傳播。', '何時才對：sitting disease 非傳染病。'], ['To explore the effects of regular exercise to our body.', '探討規律運動對我們身體的影響。', '何時才對：焦點是久坐，非運動。'], ['To explain the threat to our health from long hours of sitting.', '解釋長時間坐著對健康的威脅。', '✔ 正解']], 'D'));
-html += card(54, ['考點：字彙推論', '詞性需求：N/A'], 'C', clue('第三段問：「你不必擔心 sedentary lifestyle 的危害，因為你規律運動，對吧？」，此處用規律運動來對比，可推知 sedentary 意指「久坐的、不活動的 (Inactive)」。') + ops([['Modern.', '現代的。', ''], ['Risky.', '危險的。', ''], ['Inactive.', '不活動的；久坐的。', '✔ 正解'], ['Epidemic.', '流行病的。', '']], 'C'));
-html += card(55, ['考點：細節題', '詞性需求：N/A'], 'C', clue('第二段明確寫道：「Small amounts of regular activity, even just standing and moving around... is enough to bring the increased levels back down.（少量規律活動，例如站立走動，就足以把數值降下來）」。') + ops([['Exercising for 150 minutes or more every week.', '每週運動150分鐘以上。', '何時才對：文章說這不足以抵消久坐的危害。'], ['Getting rid of the habit of car commuting and TV watching.', '戒除開車通勤和看電視的習慣。', '何時才對：文章建議的解方是增加活動空檔。'], ['Interrupting sitting time with light activity as often as possible.', '盡可能頻繁地用輕度活動來打斷坐著的時間。', '✔ 正解'], ['Standing or moving around for at least two or three minutes every day.', '每天至少站立或走動兩三分鐘。', '何時才對：文章是說累積30分鐘（分次進行），而非每天只動兩三分鐘。']], 'C'));
-html += card(56, ['考點：細節推論', '詞性需求：N/A'], 'B', clue('第三段指出：「Regular exercisers... are found to be about 30 percent less active on days when they exercise.（有規律運動的人，在運動當天，活動量反而會減少約30%）」。') + ops([['They often live longer than those who don’t exercise.', '他們通常比不運動的人活得久。', '何時才對：文章未提及壽命長短。'], ['They tend to stand or move around less on days they work out.', '在運動的那天，他們往往較少站立或走動。', '✔ 正解'], ['They generally spend less time sitting than those who are inactive.', '他們通常比不活動的人花較少時間坐著。', '何時才對：文章說人們平均都坐64小時，無論有沒有運動。'], ['They usually do not meet the standard of exercise recommended by WHO.', '他們通常未達到 WHO 建議的運動標準。', '何時才對：文章假設他們有達到標準，但依然受久坐危害。']], 'B'));
+html += passage('第 53–56 題題組：久坐病的危機', p8, '', 'rc4');
+SENT[53] = ["What is the purpose of this passage?", "本文的寫作目的為何？"];
+html += card(53, ['考點：主旨題', '詞性需求：句子理解'], 'D', stem(53) + clue('全文圍繞著「sitting disease（久坐病）」，剖析長時間久坐對人體代謝、心血管造成的健康威脅，並提醒即使有運動習慣也無法完全抵銷久坐傷害。') + ops([['To point out the challenges of the modern lifestyle.', '指出現代生活方式的挑戰。', '何時才對：範圍過於廣泛，未點出核心主題「久坐（sitting）」。'], ['To discuss how a modern epidemic may spread quickly.', '討論現代流行病如何快速傳播。', '何時才對：文中的 epidemic 為比喻久坐問題之普遍，並非討論傳染病如何擴散。'], ['To explore the effects of regular exercise to our body.', '探討規律運動對我們身體的影響。', '何時才對：規律運動僅為第三段用來說明無法抵銷久坐傷害的配角。'], ['To explain the threat to our health from long hours of sitting.', '解釋長時間坐著對健康的威脅。', '符合主旨：精準點出「長時間久坐」與「健康威脅」。']], 'D'));
+
+SENT[54] = ["What does the word “sedentary” in the third paragraph most likely mean?", "第三段中的「sedentary」一詞最可能的意思是什麼？"];
+html += card(54, ['考點：字彙推論', '詞性需求：形容詞'], 'C', stem(54) + clue('第三段問：「你不必擔心 sedentary lifestyle 的危害，因為你有規律運動（exercise regularly），對吧？」，此處與「規律運動」形成對比，且承接前兩段探討的「久坐（rooted in the chair / sitting for too long）」，故 sedentary 指「久坐的；不活動的（Inactive）」。') + ops([['Modern.', '現代的。', '何時才對：與後文的 because you exercise regularly 無法構成邏輯對比。'], ['Risky.', '危險的。', '何時才對：前面已經有 the harm of（...的危害），若填 risky 則語意重複且無法對比規律運動。'], ['Inactive.', '不活動的；久坐的。', '符合語意：sedentary lifestyle 指「久坐少動的生活型態」。'], ['Epidemic.', '流行病的。', '何時才對：epidemic 是第一段用來形容久坐現象的詞彙，非 lifestyle 的屬性。']], 'C'));
+
+SENT[55] = ["What is the best way to bring down high blood sugar level and blood pressure?", "降低高血糖和高血壓的最佳方法是什麼？"];
+html += card(55, ['考點：細節題', '詞性需求：句子理解'], 'C', stem(55) + clue('第二段指出：「Small amounts of regular activity, even just standing and moving around, throughout the day is enough to bring the increased levels back down.（一整天進行少量規律的活動，哪怕只是站立和走動，就足以把升高的數值降下來）」以及最後一段「standing up and taking activity breaks」。') + ops([['Exercising for 150 minutes or more every week.', '每週運動150分鐘以上。', '何時才對：第三段指出就算達到 WHO 建議的每週運動 150 分鐘，仍每週久坐 64 小時，無法抵銷傷害。'], ['Getting rid of the habit of car commuting and TV watching.', '戒除開車通勤和看電視的習慣。', '何時才對：文中並未要求完全戒除開車與看電視，而是強調中間要起身活動。'], ['Interrupting sitting time with light activity as often as possible.', '盡可能頻繁地用輕度活動來打斷坐著的時間。', '符合文意：對應第二段分成2-3分鐘的輕度活動（light activity）及末段的 taking activity breaks。'], ['Standing or moving around for at least two or three minutes every day.', '每天至少站立或走動兩三分鐘。', '何時才對：第二段是說每次 2–3 分鐘、整天累積達 30 分鐘（30 minutes of light activity in two or three-minute bursts），而非一天只動兩三分鐘。']], 'C'));
+
+SENT[56] = ["Which of the following may be inferred about those who do serious exercise?", "關於那些認真運動的人，可以推論出下列何者？"];
+html += card(56, ['考點：細節推論', '詞性需求：句子理解'], 'B', stem(56) + clue('第三段明確指出：「Regular exercisers, furthermore, are found to be about 30 percent less active on days when they exercise.（研究發現有規律運動習慣的人，在他們運動的那天，活動量反而比平時減少約30%）」。') + ops([['They often live longer than those who don’t exercise.', '他們通常比不運動的人活得久。', '何時才對：文中未比較壽命長短。'], ['They tend to stand or move around less on days they work out.', '在運動的那天，他們往往較少站立或走動。', '符合推論：對應 30 percent less active on days when they exercise。'], ['They generally spend less time sitting than those who are inactive.', '他們通常比不活動的人花較少時間坐著。', '何時才對：第三段指出無論有沒有每週運動150分鐘，人們平均每週都坐長達64小時。'], ['They usually do not meet the standard of exercise recommended by WHO.', '他們通常未達到 WHO 建議的運動標準。', '何時才對：文中提到即使達到 WHO 建議標準的人，依然久坐過長。']], 'B'));
 html += groupGradeBox('rc4', '閱讀測驗第四篇', 53, 56, 2);
 
-// --- 全卷選擇題批改按鈕 ---
+// --- 全卷選擇題批改與重練按鈕 ---
 html += '<div class="grade-box all-box" id="gbox-all">' +
-    '<div class="grade-title">🏆 選擇題全卷批改（第 1–56 題）</div>' +
+    '<div class="grade-title">🏆 選擇題全卷總批改（第 1–56 題，共 72 分）</div>' +
     '<div class="grade-btns">' +
-      '<button class="btn-grade" onclick="gradeAllSingleChoice()">🏆 一次批改全卷選擇題</button>' +
+      '<button class="btn-grade" onclick="gradeAllSingleChoice()">🏆 一次批改全卷</button>' +
+      '<button class="btn-reset" onclick="resetAllSingleChoice()">🔄 一次清空重練</button>' +
     '</div>' +
     '<div class="grade-res" id="gres-all"></div>' +
   '</div>';
@@ -708,28 +820,71 @@ let t1 = "1. 一個成功的企業不應該把獲利當作最主要的目標。"
 let ta1 = "A successful business should not regard making a profit as its main goal.";
 let t2 = "2. 它應該負起社會責任，以增進大眾的福祉。";
 let ta2 = "It should shoulder social responsibilities to enhance the welfare of the public.";
-html += '<div class="pas"><h3>中譯英試題</h3><div class="s"><div class="zh"><b>' + t1 + '</b></div><div class="en" style="margin-top:8px;color:var(--ok);font-weight:bold;">' + ta1 + '</div><div class="note"><b>字詞提示：</b><br>1. 企業：business / enterprise / company<br>2. 把...當作：regard... as / view... as / see... as<br>3. 獲利：make a profit / earn profits<br>4. 主要的目標：main goal / primary objective / chief aim</div></div><hr style="border:0;border-top:1px dashed var(--line);margin:12px 0;"><div class="s"><div class="zh"><b>' + t2 + '</b></div><div class="en" style="margin-top:8px;color:var(--ok);font-weight:bold;">' + ta2 + '</div><div class="note"><b>字詞提示：</b><br>1. 負起：take on / shoulder / assume<br>2. 社會責任：social responsibility (responsibilities)<br>3. 增進：enhance / promote / improve<br>4. 福祉：welfare / well-being</div></div></div>';
+html += '<div class="pas" id="pas-trans"><h3>中譯英試題與詳解</h3>' +
+  '<div class="prompt-text" style="margin-bottom:10px;color:var(--mut);font-size:.9rem;"><b>說明：</b>1.請將以下中文句子譯成正確、通順、達意的英文，並將答案寫在「答案卷」上。<br>   2.請依序作答，並標明子題號。每題4分，共8分。</div>' +
+  '<div class="s"><div class="prompt-text"><b>' + t1 + '</b></div>' +
+  '<input type="text" class="trans-input" placeholder="請在此輸入第 1 題英文翻譯練習...">' +
+  '<div class="en trans-ans" style="margin-top:6px;color:var(--ok);font-weight:bold;">✔ 參考正解：' + ta1 + '</div>' +
+  '<div class="note"><b>💡 解題關鍵與替換表達：</b><br>' +
+  '• <b>成功的企業：</b>a successful business / enterprise / company<br>' +
+  '• <b>把 A 當作 B：</b>regard A as B ／ view A as B ／ see A as B ／ take A as B ／ consider A (to be) B<br>' +
+  '• <b>獲利：</b>making a profit（動名詞片語）或 profit(s)（名詞）<br>' +
+  '• <b>最主要的目標：</b>its main goal / primary objective / chief aim</div></div>' +
+  '<hr style="border:0;border-top:1px dashed var(--line);margin:14px 0;">' +
+  '<div class="s"><div class="prompt-text"><b>' + t2 + '</b></div>' +
+  '<input type="text" class="trans-input" placeholder="請在此輸入第 2 題英文翻譯練習...">' +
+  '<div class="en trans-ans" style="margin-top:6px;color:var(--ok);font-weight:bold;">✔ 參考正解：' + ta2 + '</div>' +
+  '<div class="note"><b>💡 解題關鍵與替換表達：</b><br>' +
+  '• <b>負起（責任）：</b>shoulder / take on / assume / bear<br>' +
+  '• <b>社會責任：</b>social responsibility / social responsibilities<br>' +
+  '• <b>以增進...：</b>to enhance / promote / improve / advance（不定詞表目的）<br>' +
+  '• <b>大眾的福祉：</b>the welfare of the public ／ public well-being</div></div></div>';
+
+html += '<div class="grade-box" id="gbox-trans">' +
+    '<div class="grade-title">📝 非選擇題一：中譯英（第 1–2 題，共 8 分）</div>' +
+    '<div class="grade-btns">' +
+      '<button class="btn-grade" onclick="gradeTrans()">✅ 對照翻譯答案與解析</button>' +
+      '<button class="btn-reset" onclick="resetTrans()">🔄 重練中譯英</button>' +
+    '</div>' +
+    '<div class="grade-res" id="gres-trans"></div>' +
+  '</div>';
 
 // --- 非選二：英文作文 ---
 html += '<h2 id="essay">非選擇題二、英文作文（占20分）</h2>';
-html += '<div class="pas"><h3>試題提示</h3><div class="zh">下面兩本書是學校建議的暑假閱讀書籍，請依書名想想看該書的內容，並思考你會選擇哪一本書閱讀，為什麼？請在第一段說明你會選哪一本書及你認為該書的內容大概會是什麼，第二段提出你選擇該書的理由。<br><br>第一本書名：Everyone is beautiful: Respect others and be yourself. By Caroline Strong<br>第二本書名：Leadership is a choice: Conquer your fears and you can be a leader too. By Austin Young</div></div>';
+html += '<div class="pas graded"><h3>試題說明與提示</h3>' +
+  '<div class="prompt-text">' +
+  '<b>說明：</b>1.依提示在「答案卷」上寫一篇英文作文。<br>' +
+  '   2.文長至少120個單詞（words）。<br><br>' +
+  '<b>提示：</b>下面兩本書是學校建議的暑假閱讀書籍，請依書名想想看該書的內容，並思考你會選擇哪一本書閱讀，為什麼？請在第一段說明你會選哪一本書及你認為該書的內容大概會是什麼，第二段提出你選擇該書的理由。<br><br>' +
+  '<b>第一本書名：</b><i>Everyone is beautiful: Respect others and be yourself.</i> By Caroline Strong<br>' +
+  '<b>第二本書名：</b><i>Leadership is a choice: Conquer your fears and you can be a leader too.</i> By Austin Young' +
+  '</div></div>';
 
-let essayEN = [
-  "Between the two recommended summer reading books, I would definitely choose *Everyone is beautiful: Respect others and be yourself* by Caroline Strong. Judging from its title, I believe this book primarily explores the true definition of beauty, which goes far beyond physical appearance. It likely discusses how individuals can cultivate self-confidence in a world heavily influenced by social media and unrealistic beauty standards. Furthermore, the book probably provides practical advice on embracing one's unique flaws and highlights the importance of respecting diverse backgrounds and perspectives. In short, it is expected to be an inspiring guide that encourages readers to appreciate inner beauty and build a healthy self-image.",
-  "There are a couple of reasons why this book appeals to me. First and foremost, as a teenager growing up in an era of constant comparison, I often find myself struggling with body image issues and self-doubt. I hope this book can offer me the emotional support and psychological tools to overcome my insecurities. Secondly, learning how to respect others for who they truly are is a vital lesson for personal growth and social harmony. In today's highly competitive environment, people tend to judge one another superficially. By reading this book, I expect to broaden my horizons, become more empathetic, and eventually learn to love myself unconditionally while treating others with genuine respect."
+let essayParas = [
+  [
+    ["Between the two recommended summer reading books, I would definitely choose *Everyone is beautiful: Respect others and be yourself* by Caroline Strong.", "在這兩本學校推薦的暑期讀物中，我絕對會選擇由 Caroline Strong 所著的《每個人都是美麗的：尊重他人，做你自己》。"],
+    ["Judging from its inspiring title, I believe this book primarily explores the true definition of beauty, which goes far beyond mere physical appearance.", "從它鼓舞人心的書名來判斷，我認為這本書主要在探討「美」的真正定義，而這遠遠超越了單純的外表。"],
+    ["It likely discusses how individuals can cultivate self-confidence and embrace their uniqueness in a world heavily influenced by social media and narrow beauty standards.", "書中很可能討論了在一個深受社群媒體與狹隘審美標準影響的世界裡，個人該如何培養自信並擁抱自己的獨特性。"],
+    ["Furthermore, the author probably shares touching real-life stories and practical advice on how to appreciate diverse backgrounds, reminding readers that everyone deserves to be treated with dignity.", "此外，作者可能分享了感人的真實故事與實用建議，教導我們如何欣賞多元背景，並提醒讀者每個人都值得被有尊嚴地對待。"],
+    ["In short, it is expected to be a heartwarming guide that encourages people to value inner beauty and live authentically.", "簡而言之，這預計會是一本溫暖人心的指南，鼓勵人們重視內在美並活出真實的自我。"]
+  ],
+  [
+    ["There are two main reasons why this book appeals to me so deeply.", "這本書如此深深吸引我有兩個主要原因。"],
+    ["First and foremost, as a high school student growing up in an era of constant peer comparison, I sometimes find myself struggling with insecurities and self-doubt.", "首先，身為一個在同儕不斷相互比較的時代中成長的高中生，我有時會發現自己正與不安全感和自我懷疑苦苦掙扎。"],
+    ["Reading this book during the summer vacation can provide me with the mental strength to accept my imperfections and stay true to myself.", "在暑假期間閱讀這本書，能給予我心理上的力量去接納自己的不完美，並忠於自我。"],
+    ["Secondly, learning to respect others for who they truly are is an essential lesson for building harmonious relationships.", "其次，學習尊重他人真實的樣貌，是建立和諧人際關係不可或缺的一課。"],
+    ["In our fast-paced society, people tend to judge others superficially before truly knowing them.", "在我們步調快速的社會中，人們往往在真正認識他人之前，就先從表面膚淺地評判對方。"],
+    ["By immersing myself in Caroline Strong’s words, I hope to broaden my perspective, develop deeper empathy, and learn to love myself unconditionally while treating everyone around me with genuine kindness.", "透過沉浸在 Caroline Strong 的文字中，我希望能拓寬視野、培養更深厚的同理心，並學會無條件地愛自己，同時以真誠的善意對待身邊的每一個人。"]
+  ]
 ];
-let essayZH = [
-  "在這兩本推薦的暑期讀物中，我一定會選擇卡洛琳·史壯所著的《每個人都是美麗的：尊重他人，做你自己》。從書名來判斷，我認為這本書主要探討美的真正定義，而這遠遠超越了外表。它可能討論在深受社群媒體與不切實際審美標準影響的世界中，個人該如何培養自信。此外，這本書很可能提供了接納自身獨特缺陷的實用建議，並強調了尊重多元背景與觀點的重要性。簡而言之，預期這將是一本鼓舞人心的指南，鼓勵讀者欣賞內在美並建立健康的自我形象。",
-  "這本書吸引我有幾個原因。首先，身為一個在不斷比較的時代中成長的青少年，我經常發現自己正與容貌焦慮和自我懷疑掙扎。我希望這本書能提供我克服不安全感的情感支持與心理工具。其次，學習如何尊重他人的真實面貌，是個人成長與社會和諧的重要課題。在當今高度競爭的環境中，人們往往會膚淺地評判彼此。透過閱讀這本書，我期望能拓寬視野，變得更有同理心，並最終學會無條件地愛自己，同時以真誠的尊重對待他人。"
-];
 
-let essayHtml = '<div class="pas"><h3>💡 參考範文 (Model Essay)</h3>';
-for(let i=0; i<essayEN.length; i++) {
-  essayHtml += '<div class="para"><div class="s"><div class="en">' + essayEN[i] + '</div><div class="zh" style="margin-top:4px;">' + essayZH[i] + '</div></div></div>';
-}
-essayHtml += '<div class="note"><b>📝 作文解析：</b><br>第一段清楚點出選擇的書名，並根據副標題「Respect others and be yourself」合理推測書籍內容（探討內在美、建立自信、抵禦社群媒體的不良影響）。<br>第二段則緊扣個人經驗（青少年的容貌焦慮、同儕比較），並說明這本書能如何幫助自己成長（變得更有同理心、學會愛自己），理由充分且具說服力，字數控制在 250-300 字的最佳範圍。</div></div>';
-
-html += essayHtml;
+html += passage(
+  '💡 滿分參考範文（逐句英中對照，共 275 字）',
+  essayParas,
+  '📝 <b>寫作結構解析：</b><br>1. <b>第一段（選書＋預測內容，5句）：</b>第 1 句開門見山點出選擇第一本書；第 2–4 句扣緊副標題中的 <i>be yourself</i>（培養自信、接納獨特、擺脫社群媒體容貌焦慮）與 <i>Respect others</i>（欣賞多元、尊重他人）合理推論書籍內容；第 5 句總結全書定位。<br>2. <b>第二段（選擇理由，6句）：</b>第 1 句以主題句引出兩個理由；第 2–3 句以 <i>First and foremost</i> 結合自身高中生容易產生的同儕比較與自我懷疑（呼應 <i>be yourself</i>）；第 4–6 句以 <i>Secondly</i> 延伸至社會現象與人際相處的同理心（呼應 <i>Respect others</i>），首尾呼應、結構嚴謹。',
+  'essay-model',
+  'graded'
+);
 
 document.getElementById('app').innerHTML = html;
 </script>
