@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>101學年度學科能力測驗 英文考科詳解</title>
+<style>
+:root{--bg:#faf8f4;--fg:#222;--card:#fff;--line:#e4ded3;--acc:#9a3b2e;--ok:#1f7a4d;--no:#b3261e;--mut:#6b6558;--hl:#fff1c9}
+@media(prefers-color-scheme:dark){:root{--bg:#161512;--fg:#e8e4da;--card:#201f1b;--line:#3a372f;--acc:#e08a78;--ok:#6fcf9a;--no:#f08a82;--mut:#a39d8f;--hl:#4a3f1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+.top{max-width:900px;margin:auto;padding:28px 18px 10px}
+.top h1{margin:0 0 4px;font-size:1.6rem;color:var(--acc)}
+.top p{margin:2px 0;color:var(--mut);font-size:.92rem}
+.feature-box{background:var(--hl);border-left:4px solid var(--acc);padding:8px 12px;border-radius:0 6px 6px 0;margin:10px 0;font-size:0.9rem;color:var(--fg);}
+nav{position:sticky;top:0;z-index:9;background:var(--bg);border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px;padding:8px 12px}
+nav a,nav button{flex:none;padding:5px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--fg);text-decoration:none;font:inherit;font-size:.88rem;cursor:pointer}
+nav a:hover,nav button:hover{border-color:var(--acc);color:var(--acc)}
+nav a.review-btn{background:var(--acc);color:#fff;border-color:var(--acc);font-weight:bold;}
+nav button.pm-active { background:var(--acc); color:#fff; border-color:var(--acc); }
+main{max-width:900px;margin:auto;padding:0 16px 70px}
+h2{margin:36px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--acc);font-size:1.3rem}
+h3{margin:0 0 8px;font-size:1.05rem;color:var(--acc)}
+.pas,.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.para{margin-bottom:14px}
+.s{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--line)}
+.en{font-family:Georgia,"Times New Roman",serif;font-size:1.02rem}
+.zh{color:var(--mut);font-size:.93rem}
+.note{color:var(--mut);font-size:.85rem;margin:6px 0 0}
+.bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 4px;border-radius:3px;font-weight:600}
+.bl sup{color:var(--acc);margin-right:3px;font-size:.7em}
+.bank{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.92rem;margin-bottom:8px}
+details.q>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+details.q>summary::-webkit-details-marker{display:none}
+.n{background:var(--acc);color:#fff;border-radius:6px;padding:0 10px;font-weight:700;font-size:1.05rem}
+.tag{font-size:.78rem;border:1px solid var(--acc);color:var(--acc);border-radius:99px;padding:0 9px;line-height:1.6}
+.tag.pos{border-color:var(--ok);color:var(--ok)}
+.ans{margin-left:auto;font-weight:700;color:var(--ok)}
+.qb{margin-top:10px}
+.stem{margin-bottom:8px;padding:8px 10px;background:var(--bg);border-radius:6px}
+.clue{margin:8px 0;padding:8px 12px;border-left:4px solid var(--acc);background:var(--bg);border-radius:0 6px 6px 0}
+.clue h4,.qb h4{margin:0 0 2px;font-size:.92rem;color:var(--acc)}
+ul.op{list-style:none;margin:6px 0 0;padding:0}
+ul.op li{padding:7px 10px;margin:5px 0;border-radius:6px;border:1px solid var(--line);font-size:.95rem;transition:background 0.2s;cursor:pointer}
+ul.op li.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 9%,transparent)}
+ul.op li.no{border-color:color-mix(in srgb,var(--no) 45%,transparent)}
+ul.op i{font-style:normal;font-weight:700;font-size:.82rem}
+li.ok i{color:var(--ok)}li.no i{color:var(--no)}
+.exp{margin-top:4px}
+small{color:var(--mut)}
+
+/* === 練習模式與批改狀態樣式 === */
+body.practice-mode details.q:not(.graded) .ans { visibility: hidden; }
+body.practice-mode details.q:not(.graded) .clue { display: none; }
+body.practice-mode details.q:not(.graded) .tag { display: none; }
+body.practice-mode details.q:not(.graded) .stem .zh { display: none; }
+body.practice-mode .pas:not(.graded) .zh { display: none; }
+body.practice-mode .bl:not(.revealed) {
+  color: transparent;
+  background: var(--bg);
+  border-bottom: 2px solid var(--acc);
+  padding: 0 18px;
+  user-select: none;
+  display: inline-block;
+  min-width: 64px;
+  text-align: center;
+}
+body.practice-mode .bl:not(.revealed) sup {
+  color: var(--acc);
+  font-weight: 700;
+}
+body.practice-mode .bank:not(.graded) small { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li small { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li.ok,
+body.practice-mode details.q:not(.graded) ul.op li.no { border-color: var(--line); background: transparent; }
+body.practice-mode details.q:not(.graded) ul.op li i { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li .exp { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li:hover { background: var(--hl); }
+ul.op li.selected { border-color: var(--acc) !important; background: color-mix(in srgb, var(--acc) 12%, transparent) !important; font-weight: 600; }
+
+/* 已批改題目的作答回饋樣式 */
+details.q.graded ul.op li.selected.ok { border: 2px solid var(--ok) !important; background: color-mix(in srgb, var(--ok) 15%, transparent) !important; }
+details.q.graded ul.op li.selected.no { border: 2px solid var(--no) !important; background: color-mix(in srgb, var(--no) 14%, transparent) !important; }
+.user-status { font-weight: 700; font-size: .88rem; padding: 1px 8px; border-radius: 99px; margin-left: 6px; }
+.user-status.st-ok { background: color-mix(in srgb, var(--ok) 15%, transparent); color: var(--ok); border: 1px solid var(--ok); }
+.user-status.st-no { background: color-mix(in srgb, var(--no) 15%, transparent); color: var(--no); border: 1px solid var(--no); }
+.user-status.st-blank { background: var(--hl); color: var(--acc); border: 1px solid var(--acc); }
+
+/* 題組批改面板與全卷總批改面板 */
+.grade-box {
+  background: var(--card);
+  border: 2px dashed var(--acc);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin: 18px 0 32px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.grade-box.all-box {
+  border: 2px solid var(--acc);
+  background: color-mix(in srgb, var(--hl) 45%, var(--card));
+  padding: 20px 22px;
+  margin: 30px 0 40px;
+}
+.grade-title { font-weight: 700; color: var(--acc); font-size: 1.02rem; }
+.all-box .grade-title { font-size: 1.2rem; }
+.grade-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn-grade, .btn-reset {
+  padding: 6px 16px;
+  border-radius: 99px;
+  font: inherit;
+  font-size: .92rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid var(--acc);
+  transition: transform 0.1s, opacity 0.2s;
+}
+.btn-grade { background: var(--acc); color: #fff; }
+.all-box .btn-grade { padding: 8px 22px; font-size: 1rem; }
+.btn-reset { background: var(--card); color: var(--mut); border-color: var(--line); }
+.btn-grade:hover, .btn-reset:hover { opacity: 0.9; transform: translateY(-1px); }
+.grade-res {
+  width: 100%;
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  font-size: .95rem;
+  display: none;
+}
+.grade-res.show { display: block; }
+.q-Jump {
+  display: inline-block;
+  padding: 1px 8px;
+  margin: 2px 3px;
+  border-radius: 6px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  color: var(--acc);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: .86rem;
+}
+.q-Jump:hover { background: var(--acc); color: #fff; border-color: var(--acc); }
+
+/* 非選擇題（中譯英）參考譯文摺疊區 */
+details.mini{margin-top:8px;border:1px dashed var(--line);border-radius:8px;padding:6px 12px}
+details.mini>summary{cursor:pointer;font-weight:700;color:var(--acc)}
+
+footer{max-width:900px;margin:auto;padding:20px 16px 40px;color:var(--mut);font-size:.85rem;line-height:1.6;border-top:1px solid var(--line);margin-top:40px;}
+footer a{color:var(--acc);text-decoration:none;font-weight:bold;}
+footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1><span id="exam-title">101學年度學科能力測驗 英文考科詳解</span> <span id="completed-badge" style="display:none;font-size:1rem;color:var(--ok);">✅ 已完成</span></h1>
+  <p>每題含：考點標籤 → 題幹逐句中英對照 → 解題線索 → 正解與全部誤答分析</p>
+  <div class="feature-box">
+    💡 <b>複習與作答指南：</b> 點擊「🎯 切換練習模式」可自動挖空題幹答案並隱藏中譯與解析；直接點選各題選項作答後，可點擊各題組下方的「<b>✅ 批改本題組</b>」或單選題最後的「<b>🏆 一次批改全卷</b>」查看得分並自動展開詳解！點擊每題右上角的「標記此題」可收錄錯題；滑鼠反白任何英文字句可「收藏單字」。請前往 <a href="review.html" target="_blank" style="color:var(--acc);font-weight:bold;">錯題與單字總複習頁面</a>。
+  </div>
+  <p>圖例：<span class="bl revealed">黃底</span> ＝ 正確答案填入處 ｜ <span class="tag" id="secret-trigger" style="user-select:none;cursor:default;">考點</span> <span class="tag pos">詞性需求</span></p>
+  <div id="secret-counter" style="display:none; margin-top:8px; font-size:0.9rem; color:var(--mut);">
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    👁️ <b>本頁瀏覽人次：</b><span id="busuanzi_value_page_pv"></span> 次
+  </div>
+</div>
+<nav id="nav">
+  <button id="pm-toggle">🎯 切換練習模式</button>
+  <button id="complete-btn">📝 標記為已完成</button>
+  <a href="review.html" class="review-btn" target="_blank">📚 前往總複習</a>
+</nav>
+<main id="app"></main>
+<footer>
+  限定用途教學教材。本詳解為教學輔助，題目版權屬原出版單位（大學入學考試中心）。<br>
+  💡 <b>問題回報與建議：</b> Line: etpaul ｜ IG: <a href="https://www.instagram.com/etpaul" target="_blank">@etpaul</a>
+</footer>
+
+<script>
+const L="ABCD";
+const fx=s=>s.replace(/^\*([A-Z][^*]*)\*/,'<i>$1</i>').replace(/ \*([A-Z][^*]*)\*\./,' <i>$1</i>.').replace(/\[\[(\d*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl"'+(n?' data-q="'+n+'"':'')+'>'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const SENT={};
+const Q_ANS={};
+// 各題配分：1–40 題每題 1 分、41–56 題每題 2 分（全卷批改使用）
+const ptsOfQ=(n,p)=>typeof window.PTS==='function'?window.PTS(n):(p||1);
+
+function passage(title,paras,note,gid){
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[(\d+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  return '<section class="pas"'+(gid?' id="pas-'+gid+'"':'')+'><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
+}
+function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
+const clue=t=>'<div class="clue"><h4>解題線索</h4>'+t+'</div>';
+function ops(list,ans,lab){
+  lab=lab||'ABCDEF';
+  return '<ul class="op">'+list.map((o,i)=>{
+    const optCode = (lab==='ABCDEF'&&list.length<=4) ? L[i] : lab[i];
+    const k=ans.indexOf(optCode)>=0;
+    return '<li class="'+(k?'ok':'no')+'" data-opt="'+optCode+'" onclick="selectOpt(this)"><b>('+optCode+') '+o[0]+'</b>'+(o[1]?' <small>'+o[1]+'</small>':'')+' <i>'+(k?'✔ 正解':'✘ 誤答')+'</i><div class="exp">'+o[2]+'</div></li>';
+  }).join('')+'</ul>';
+}
+function card(n,tags,ans,body){
+  Q_ANS[n] = ans;
+  return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="user-status" id="st'+n+'" style="display:none"></span><span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
+}
+
+// 產生各題組批改面板 HTML
+function groupGradeBox(gid, title, startQ, endQ, ptsPerQ) {
+  ptsPerQ = ptsPerQ || 1;
+  const totalPts = (endQ - startQ + 1) * ptsPerQ;
+  return '<div class="grade-box" id="gbox-'+gid+'">' +
+    '<div class="grade-title">📝 '+title+'（第 '+startQ+'–'+endQ+' 題，共 '+totalPts+' 分）</div>' +
+    '<div class="grade-btns">' +
+      '<button class="btn-grade" onclick="gradeGroup(\''+gid+'\','+startQ+','+endQ+','+ptsPerQ+')">✅ 批改本題組</button>' +
+      '<button class="btn-reset" onclick="resetGroup(\''+gid+'\','+startQ+','+endQ+')">🔄 重練本題組</button>' +
+    '</div>' +
+    '<div class="grade-res" id="gres-'+gid+'"></div>' +
+  '</div>';
+}
+
+// 產生全卷單選題總批改面板 (#gbox-all)，放在最後一題單選題之後
+function allGradeBox(startQ, endQ, ptsPerQ) {
+  let totalPts = 0;
+  for (let n = startQ; n <= endQ; n++) totalPts += ptsOfQ(n, ptsPerQ);
+  return '<div class="grade-box all-box" id="gbox-all">' +
+    '<div class="grade-title">🏆 全卷單選題總批改（第 '+startQ+'–'+endQ+' 題，共 '+totalPts+' 分）</div>' +
+    '<div class="grade-btns">' +
+      '<button class="btn-grade" onclick="gradeAllSingleChoice('+startQ+','+endQ+','+(ptsPerQ||1)+')">🏆 一次批改全卷</button>' +
+      '<button class="btn-reset" onclick="resetAllSingleChoice('+startQ+','+endQ+')">🔄 全卷重練</button>' +
+    '</div>' +
+    '<div class="grade-res" id="gres-all"></div>' +
+  '</div>';
+}
+
+// 點擊選項作答
+window.selectOpt = function(li) {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  const qEl = li.closest('details.q');
+  if (qEl && qEl.classList.contains('graded')) {
+    qEl.classList.remove('graded');
+    const qNum = qEl.id.replace('q', '');
+    const st = document.getElementById('st' + qNum);
+    if (st) st.style.display = 'none';
+  }
+  li.parentNode.querySelectorAll('li').forEach(el => el.classList.remove('selected'));
+  li.classList.add('selected');
+};
+
+// 批改單一題目並回傳狀態 ('ok' | 'no' | 'blank')
+function evaluateSingleQ(n) {
+  const qEl = document.getElementById('q' + n);
+  if (!qEl) return 'blank';
+  qEl.classList.add('graded');
+  qEl.open = true;
+
+  document.querySelectorAll('.bl[data-q="'+n+'"]').forEach(el => el.classList.add('revealed'));
+
+  const sel = qEl.querySelector('ul.op li.selected');
+  const st = document.getElementById('st' + n);
+  const ans = Q_ANS[n];
+
+  if (!sel) {
+    if (st) {
+      st.className = 'user-status st-blank';
+      st.textContent = '⚠️ 未作答';
+      st.style.display = 'inline-block';
+    }
+    return 'blank';
+  }
+
+  const userOpt = sel.getAttribute('data-opt');
+  if (ans.indexOf(userOpt) >= 0) {
+    if (st) {
+      st.className = 'user-status st-ok';
+      st.textContent = '✔ 答對 (' + userOpt + ')';
+      st.style.display = 'inline-block';
+    }
+    return 'ok';
+  } else {
+    if (st) {
+      st.className = 'user-status st-no';
+      st.textContent = '✘ 答錯 (選 ' + userOpt + ')';
+      st.style.display = 'inline-block';
+    }
+    return 'no';
+  }
+}
+
+// 共用：組出批改結果 HTML（earned / maxPts 可由呼叫端覆寫，用於各題配分不同時）
+function buildResultHtml(okCount, totalQ, ptsPerQ, wrongList, blankList, earnedOv, maxOv) {
+  const earnedPts = (earnedOv !== undefined) ? earnedOv : okCount * ptsPerQ;
+  const maxPts = (maxOv !== undefined) ? maxOv : totalQ * ptsPerQ;
+  let html = '<div><b>📊 批改結果：</b>答對 <b>' + okCount + ' / ' + totalQ + '</b> 題，得分 <b style="color:var(--acc);font-size:1.15rem;">' + earnedPts + ' / ' + maxPts + '</b> 分' + (okCount === totalQ ? ' 🎉 全部答對！' : '') + '</div>';
+  if (wrongList.length > 0) {
+    html += '<div style="margin-top:4px;">❌ <b>答錯題號：</b>' + wrongList.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  if (blankList.length > 0) {
+    html += '<div style="margin-top:4px;">⚠️ <b>未作答題號：</b>' + blankList.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  return html;
+}
+
+// 批改特定題組
+window.gradeGroup = function(gid, startQ, endQ, ptsPerQ) {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  let okCount = 0, wrongList = [], blankList = [];
+  for (let n = startQ; n <= endQ; n++) {
+    const res = evaluateSingleQ(n);
+    if (res === 'ok') okCount++;
+    else if (res === 'no') wrongList.push(n);
+    else blankList.push(n);
+  }
+  const pasEl = document.getElementById('pas-' + gid);
+  if (pasEl) pasEl.classList.add('graded');
+  if (gid === 'wbank') {
+    const bankEl = document.getElementById('bank-wbank');
+    if (bankEl) bankEl.classList.add('graded');
+  }
+  const resEl = document.getElementById('gres-' + gid);
+  resEl.innerHTML = buildResultHtml(okCount, endQ - startQ + 1, ptsPerQ, wrongList, blankList);
+  resEl.classList.add('show');
+};
+
+// 一次批改全卷單選題
+window.gradeAllSingleChoice = function(startQ, endQ, ptsPerQ) {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  let okCount = 0, earned = 0, maxPts = 0, wrongList = [], blankList = [];
+  for (let n = startQ; n <= endQ; n++) {
+    const res = evaluateSingleQ(n);
+    const p = ptsOfQ(n, ptsPerQ);
+    maxPts += p;
+    if (res === 'ok') { okCount++; earned += p; }
+    else if (res === 'no') wrongList.push(n);
+    else blankList.push(n);
+  }
+  document.querySelectorAll('.pas, .bank').forEach(el => el.classList.add('graded'));
+  const resEl = document.getElementById('gres-all');
+  resEl.innerHTML = buildResultHtml(okCount, endQ - startQ + 1, ptsPerQ || 1, wrongList, blankList, earned, maxPts);
+  resEl.classList.add('show');
+};
+
+// 重練特定題組
+window.resetGroup = function(gid, startQ, endQ) {
+  enablePracticeMode();
+  for (let n = startQ; n <= endQ; n++) {
+    const qEl = document.getElementById('q' + n);
+    if (qEl) {
+      qEl.classList.remove('graded');
+      qEl.querySelectorAll('ul.op li').forEach(li => li.classList.remove('selected'));
+    }
+    const st = document.getElementById('st' + n);
+    if (st) st.style.display = 'none';
+    document.querySelectorAll('.bl[data-q="'+n+'"]').forEach(el => el.classList.remove('revealed'));
+  }
+  const pasEl = document.getElementById('pas-' + gid);
+  if (pasEl) pasEl.classList.remove('graded');
+  if (gid === 'wbank') {
+    const bankEl = document.getElementById('bank-wbank');
+    if (bankEl) bankEl.classList.remove('graded');
+  }
+  const resEl = document.getElementById('gres-' + gid);
+  if (resEl) {
+    resEl.innerHTML = '';
+    resEl.classList.remove('show');
+  }
+};
+
+// 全卷重練
+window.resetAllSingleChoice = function(startQ, endQ) {
+  enablePracticeMode();
+  for (let n = startQ; n <= endQ; n++) {
+    const qEl = document.getElementById('q' + n);
+    if (qEl) {
+      qEl.classList.remove('graded');
+      qEl.querySelectorAll('ul.op li').forEach(li => li.classList.remove('selected'));
+    }
+    const st = document.getElementById('st' + n);
+    if (st) st.style.display = 'none';
+    document.querySelectorAll('.bl[data-q="'+n+'"]').forEach(el => el.classList.remove('revealed'));
+  }
+  document.querySelectorAll('.pas, .bank').forEach(el => el.classList.remove('graded'));
+  const resEl = document.getElementById('gres-all');
+  if (resEl) {
+    resEl.innerHTML = '';
+    resEl.classList.remove('show');
+  }
+};
+
+// === 功能初始化：練習模式與完成標記 ===
+const pmBtn = document.getElementById('pm-toggle');
+function enablePracticeMode() {
+  document.body.classList.add('practice-mode');
+  pmBtn.classList.add('pm-active');
+  pmBtn.textContent = '退出練習模式（顯示全部詳解）';
+  document.querySelectorAll('details.q').forEach(d => d.open = true);
+}
+function disablePracticeMode() {
+  document.body.classList.remove('practice-mode');
+  pmBtn.classList.remove('pm-active');
+  pmBtn.textContent = '🎯 切換練習模式';
+}
+pmBtn.onclick = function() {
+  if (document.body.classList.contains('practice-mode')) {
+    disablePracticeMode();
+  } else {
+    enablePracticeMode();
+  }
+};
+
+const examTitle = document.getElementById('exam-title').innerText;
+const compBtn = document.getElementById('complete-btn');
+const badge = document.getElementById('completed-badge');
+let comps = JSON.parse(localStorage.getItem('completed_exams')||'[]');
+
+if(comps.includes(examTitle)) {
+  badge.style.display = 'inline-block';
+  compBtn.innerText = '取消完成標記';
+}
+
+compBtn.onclick = function() {
+  comps = JSON.parse(localStorage.getItem('completed_exams')||'[]');
+  if(comps.includes(examTitle)) {
+    comps = comps.filter(t => t !== examTitle);
+    this.innerText = '📝 標記為已完成';
+    badge.style.display = 'none';
+  } else {
+    comps.push(examTitle);
+    this.innerText = '取消完成標記';
+    badge.style.display = 'inline-block';
+  }
+  localStorage.setItem('completed_exams', JSON.stringify(comps));
+};
+
+// === 各大題資料、groupGradeBox、allGradeBox 與渲染邏輯 ===
+window.PTS = n => n >= 41 ? 2 : 1;
+const W = (why, when) => why + '<br><b>何時才對：</b>' + when;
+const R = why => '<b>為何正確：</b>' + why;
+const T = (kd, pos) => ['考點：' + kd, '詞性需求：' + pos];
+const NP = '不適用（閱讀題，重在文意理解）';
+function vq(n, en, zh, tags, ans, cl, list) { SENT[n] = [en, zh]; return card(n, tags, ans, stem(n) + clue(cl) + ops(list, ans)); }
+function pq(n, tags, ans, cl, list) { return card(n, tags, ans, stem(n) + clue(cl) + ops(list, ans)); }
+function rq(n, qen, qzh, tags, ans, cl, list) {
+  return card(n, tags, ans, '<div class="stem"><div class="en">' + qen + '</div><div class="zh">' + qzh + '</div></div>' + clue(cl) + ops(list, ans));
+}
+const SECS = [];
+function sec(id, title) { SECS.push([id, title]); return '<h2 id="' + id + '">' + title + '</h2>'; }
+
+let H = '';
+
+/* ================= 一、詞彙 1–15 ================= */
+H += sec('s-vocab', '第壹部分 一、詞彙（第 1–15 題）');
+H += '<p class="note">說明：每題 1 分。先看空格前後的詞性與搭配，再比對語意。</p>';
+
+H += vq(1, `The ending of the movie did not come as a [[1|surprise]] to John because he had already read the novel that the movie was based on.`,
+  `這部電影的結局對約翰來說並不令人意外，因為他早已讀過這部電影所改編的小說。`,
+  T('固定搭配 come as a surprise（令人意外）', '單數可數名詞（前有冠詞 a）'), 'C',
+  `空格前有 <b>come as a</b>，後有 <b>to John</b>；後半句 <b>already read the novel</b> 說明他早知道結局，所以「不令人驚訝」。`,
+  [
+    ['vision', '願景；視力', W('vision 指「遠見、視力」，<b>come as a vision</b> 不是慣用說法，也與「早已讀過小說」無關。', 'The doctor tested his <b>vision</b>. / She has a clear <b>vision</b> of the future.')],
+    ['focus', '焦點', W('focus 是「焦點、重心」，不能搭配 come as a ... to John 表示「令某人意外」。', 'The <b>focus</b> of the meeting was the budget.')],
+    ['surprise', '驚訝；意外', R('<b>come as a surprise (to sb)</b> ＝對某人來說是意外。因為約翰讀過原著，結局對他「不是意外」。')],
+    ['conclusion', '結論；結局', W('conclusion 雖有「結尾」之意，但搭配為 <b>come to a conclusion</b>（得出結論），沒有 come as a conclusion。', 'After a long talk, they <b>came to a conclusion</b>.')]
+  ]);
+
+H += vq(2, `In order to stay healthy and fit, John exercises [[2|regularly]]. He works out twice a week in a gym.`,
+  `為了保持健康與體態，約翰規律地運動。他每週在健身房鍛鍊兩次。`,
+  T('副詞語意：由後句 twice a week 推得「規律地」', '副詞（修飾 exercises）'), 'A',
+  `後句 <b>works out twice a week</b> 提供具體頻率，表示「有規律」；前句目的是 <b>stay healthy and fit</b>。`,
+  [
+    ['regularly', '規律地；定期地', R('每週固定兩次＝<b>regularly</b>，且與「為了保持健康」的目的吻合。')],
+    ['directly', '直接地', W('directly 指「不經中間步驟」，與運動頻率無關。', 'The bus goes <b>directly</b> to the airport.')],
+    ['hardly', '幾乎不', W('hardly 是否定副詞，與「每週運動兩次」矛盾。', 'He <b>hardly</b> ever exercises, so he is out of shape.')],
+    ['gradually', '逐漸地', W('gradually 強調「漸進變化」，後句只說明頻率，沒有逐步改變的線索。', 'He <b>gradually</b> increased the time he spent running.')]
+  ]);
+
+H += vq(3, `Traveling is a good way for us to [[3|explore]] different cultures and broaden our horizons.`,
+  `旅行是讓我們探索不同文化並開闊視野的好方法。`,
+  T('動詞語意：explore cultures（探索文化）', '原形及物動詞（to + V，受詞為 cultures）'), 'B',
+  `空格在 <b>to</b> 之後需原形動詞，受詞是 <b>different cultures</b>，並與 <b>broaden our horizons</b> 並列，語意為「探索、接觸」。`,
+  [
+    ['assume', '假定；承擔', W('assume 是「假定」或「承擔（責任）」，assume cultures 語意不通。', 'Don\'t <b>assume</b> that everyone agrees. / He will <b>assume</b> the role of manager.')],
+    ['explore', '探索；探究', R('<b>explore different cultures</b> 是「接觸、了解不同文化」，與 broaden our horizons 語意一致。')],
+    ['occupy', '佔據；佔用', W('occupy 指「佔領、佔用空間或時間」，不能以文化為受詞。', 'The army <b>occupied</b> the city. / The meeting <b>occupied</b> the whole morning.')],
+    ['inspire', '激勵；啟發', W('inspire 受詞通常是「人」（inspire sb to V），inspire cultures 不通。', 'Her speech <b>inspired</b> us to work harder.')]
+  ]);
+
+H += vq(4, `The story about Hou-I shooting down nine suns is a well-known Chinese [[4|legend]], but it may not be a true historical event.`,
+  `后羿射下九個太陽的故事是中國著名的傳說，但它可能不是真實的歷史事件。`,
+  T('名詞語意：legend（傳說）vs. true historical event', '單數可數名詞（well-known Chinese ＿）'), 'D',
+  `關鍵在後半 <b>may not be a true historical event</b>：故事流傳廣但不一定真實，所以是「傳說」。`,
+  [
+    ['figure', '人物；數字', W('figure 是「人物／數字」，無法用來稱呼一則「故事」。', 'Confucius is an important historical <b>figure</b>.')],
+    ['rumor', '謠言', W('rumor 指未經證實、近期流傳的「消息」，不會形容古老、著名的故事，也不帶文化傳承意味。', 'There is a <b>rumor</b> that the school will close.')],
+    ['miracle', '奇蹟', W('miracle 指「已發生的奇蹟」，與 may not be true 的語氣不合。', 'It was a <b>miracle</b> that he survived the crash.')],
+    ['legend', '傳說', R('<b>legend</b> ＝流傳已久、帶有神話色彩且未必屬實的故事，與 well-known、not a true historical event 完全吻合。')]
+  ]);
+
+H += vq(5, `According to recent research, children under the age of 12 are generally not [[5|mature]] enough to recognize risk and deal with dangerous situations.`,
+  `根據最近的研究，12 歲以下的孩童通常還不夠成熟，無法辨識風險並應付危險情況。`,
+  T('形容詞語意：mature enough to ...', '形容詞（置於 enough 之前）'), 'B',
+  `<b>not ___ enough to recognize risk and deal with dangerous situations</b>：能判斷風險、處理危險，是「心智成熟」的表現。`,
+  [
+    ['diligent', '勤勉的', W('diligent 指「勤奮」，與「辨識風險、應付危險」的能力無關。', 'A <b>diligent</b> student reviews lessons every day.')],
+    ['mature', '成熟的', R('<b>mature enough to V</b> ＝成熟到足以…；兒童年紀小，心智尚未成熟，故用 not mature enough。')],
+    ['familiar', '熟悉的', W('familiar 要搭配 <b>with</b>（be familiar with），且 familiar enough to recognize 語意偏離。', 'He is <b>familiar</b> with the city.')],
+    ['sincere', '真誠的', W('sincere 形容態度「誠懇」，與判斷力無關。', 'Please accept my <b>sincere</b> apologies.')]
+  ]);
+
+H += vq(6, `Helen let out a sigh of [[6|relief]] after hearing that her brother was not injured in the accident.`,
+  `海倫聽到她弟弟在意外中沒有受傷後，鬆了一口氣。`,
+  T('固定搭配 a sigh of relief（鬆了一口氣）', '不可數名詞（介系詞 of 後）'), 'B',
+  `<b>a sigh of ___</b> + 聽到弟弟「沒受傷」＝放下心中大石。`,
+  [
+    ['hesitation', '猶豫', W('hesitation 是「猶豫」，聽到弟弟平安不會產生猶豫的嘆息。', 'She answered without <b>hesitation</b>.')],
+    ['relief', '寬心；解脫', R('<b>a sigh of relief</b> ＝鬆了一口氣，因為壞事沒有發生。')],
+    ['sorrow', '悲傷', W('sorrow 與「弟弟沒受傷」的好消息相反。若弟弟受傷才可能 sigh of sorrow。', 'He let out a sigh of <b>sorrow</b> when he heard the sad news.')],
+    ['triumph', '勝利；成功', W('triumph 用於「獲勝、成功」，此處並非贏得什麼。', 'The team returned home in <b>triumph</b>.')]
+  ]);
+
+H += vq(7, `Research suggests that people with outgoing personalities tend to be more [[7|optimistic]], often expecting that good things will happen.`,
+  `研究指出，個性外向的人往往比較樂觀，常常預期好事會發生。`,
+  T('形容詞語意：後面分詞片語 expecting that good things will happen 即定義', '形容詞（比較級 more ＋ adj.）'), 'D',
+  `<b>expecting that good things will happen</b> 是對空格的補充說明＝「預期好事發生」＝樂觀。`,
+  [
+    ['efficient', '有效率的', W('efficient 指做事「有效率」，與「預期好事發生」無關。', 'An <b>efficient</b> worker finishes tasks quickly.')],
+    ['practical', '實際的', W('practical 指「務實」，與「期待好事」的態度不同。', 'She gave me some <b>practical</b> advice.')],
+    ['changeable', '易變的', W('changeable 指「善變」，後面分詞片語沒有任何「變化」的線索。', 'The weather here is very <b>changeable</b>.')],
+    ['optimistic', '樂觀的', R('<b>optimistic</b> ＝對未來抱持正面期待，與 expecting that good things will happen 完全吻合。')]
+  ]);
+
+H += vq(8, `No one could beat Paul at running. He has won the running championship [[8|continuously]] for three years.`,
+  `沒有人跑得贏保羅。他已經連續三年贏得賽跑冠軍。`,
+  T('副詞語意：continuously for three years（連續三年）', '副詞（修飾 has won）'), 'C',
+  `前句 <b>No one could beat Paul</b> 表示他一直獲勝，現在完成式 + <b>for three years</b> ＝ 連續三年。`,
+  [
+    ['rapidly', '快速地', W('rapidly 修飾「速度、變化快」，與「連續三年」的時間性不搭。', 'The city is growing <b>rapidly</b>.')],
+    ['urgently', '緊急地', W('urgently 用於「急迫要求」，此處沒有急迫語意。', 'We urgently need your help.')],
+    ['continuously', '連續不斷地', R('<b>continuously for three years</b> ＝連續三年（沒有中斷），與沒人能擊敗他吻合。')],
+    ['temporarily', '暫時地', W('temporarily 指「短暫」，與 for three years 的長期時間矛盾。', 'The road is <b>temporarily</b> closed for repairs.')]
+  ]);
+
+H += vq(9, `If you fly from Taipei to Tokyo, you'll be taking an international, rather than a [[9|domestic]] flight.`,
+  `如果你從臺北飛到東京，你搭的是國際航班，而不是國內航班。`,
+  T('對比詞：international vs. domestic', '形容詞（修飾 flight）'), 'B',
+  `<b>an international, rather than a ___ flight</b>：<b>rather than</b> 表對比，international 的反義是 domestic。`,
+  [
+    ['liberal', '開明的；自由的', W('liberal 指思想「自由開放」，不是航班類型。', 'She has a <b>liberal</b> attitude toward education.')],
+    ['domestic', '國內的', R('<b>domestic flight</b> ＝國內航班，與 international flight（國際航班）相對。')],
+    ['connected', '相連的', W('「轉機航班」英文是 connecting flight（現在分詞），connected 不是此意，也不與 international 形成對比。', 'The two cities are <b>connected</b> by a railway.')],
+    ['universal', '普遍的', W('universal 指「全世界通用的」，不是航班的類別。', 'Music is a <b>universal</b> language.')]
+  ]);
+
+H += vq(10, `Jack is very proud of his fancy new motorcycle. He has been [[10|boasting]] to all his friends about how cool it looks and how fast it runs.`,
+  `傑克對他那輛炫麗的新機車感到非常自豪。他一直向所有朋友吹噓它看起來有多酷、跑得有多快。`,
+  T('動詞搭配：boast to sb about sth', '現在分詞（have been + V-ing）'), 'A',
+  `句型 <b>He has been ___ to all his friends about ...</b>：前句 is very proud 暗示他在「炫耀」。`,
+  [
+    ['boasting', '吹噓；誇耀', R('<b>boast to sb about sth</b> ＝向某人誇耀某事，與 be proud of 語意連貫。')],
+    ['proposing', '提議；求婚', W('propose 後接 to V / V-ing / that 子句，或 propose to sb（向某人求婚），不能接 about how it looks。', 'He <b>proposed</b> that we leave early.')],
+    ['gossiping', '說閒話', W('gossip 多為「談論別人的八卦」，與炫耀自己的新機車不同，語氣也不合。', 'They were <b>gossiping</b> about their neighbors.')],
+    ['confessing', '坦承', W('confess 是「承認過錯或祕密」，與「驕傲」的語氣相反。', 'He <b>confessed</b> to breaking the window.')]
+  ]);
+
+H += vq(11, `The ideas about family have changed [[11|considerably]] in the past twenty years. For example, my grandfather was one of ten children in his family, but I am the only child.`,
+  `過去二十年來，人們對家庭的觀念已有相當大的改變。例如，我祖父家有十個孩子，而我是獨生子女。`,
+  T('副詞語意：由 For example 舉例推得「大幅改變」', '副詞（修飾 have changed）'), 'C',
+  `<b>For example</b> 後的例子：十個孩子 → 獨生子，差距極大，所以「改變很大」。`,
+  [
+    ['mutually', '互相地', W('mutually 指「彼此相互」，與 changed 搭配不合邏輯。', 'The two sides <b>mutually</b> agreed to stop fighting.')],
+    ['narrowly', '勉強地；狹窄地', W('narrowly 指「險些、僅僅」，例如 narrowly escape，不能描述變化幅度。', 'He <b>narrowly</b> escaped being hit by the car.')],
+    ['considerably', '相當大地', R('<b>change considerably</b> ＝大幅改變，與十個孩子變成獨生子的對比吻合。')],
+    ['scarcely', '幾乎不', W('scarcely 是否定副詞，意為「幾乎沒有」，與後句所舉的巨大改變矛盾。', 'I could <b>scarcely</b> believe my eyes.')]
+  ]);
+
+H += vq(12, `The chairperson of the meeting asked everyone to speak up instead of [[12|murmuring]] their opinions among themselves.`,
+  `會議主席要求大家大聲發言，而不是在彼此之間小聲嘀咕自己的意見。`,
+  T('語意對比：speak up vs. murmuring（小聲嘀咕）', '動名詞（instead of + V-ing，且為及物動詞）'), 'C',
+  `<b>speak up</b>（大聲說）與 <b>instead of</b> 之後的動作相反，且 <b>among themselves</b> 表示私下低聲說話。`,
+  [
+    ['reciting', '背誦', W('recite 是「背誦、朗誦」，意見是自己的想法，不是背誦出來。', 'Each student <b>recited</b> a poem in class.')],
+    ['giggling', '咯咯笑', W('giggle 是不及物動詞，不能接受詞 their opinions。', 'The girls were <b>giggling</b> at the joke.')],
+    ['murmuring', '低聲咕噥', R('<b>murmur</b> 可接受詞，意為「小聲說」，正好與 speak up 相反。')],
+    ['whistling', '吹口哨', W('whistle 是「吹口哨」，不能以 opinions 為受詞。', 'He was <b>whistling</b> a happy tune.')]
+  ]);
+
+H += vq(13, `Although Mr. Chen is rich, he is a very [[13|stingy]] person and is never willing to spend any money to help those who are in need.`,
+  `雖然陳先生很有錢，但他是個非常吝嗇的人，從不願意花錢幫助有需要的人。`,
+  T('讓步句 Although 的反義語意：rich vs. stingy', '形容詞（修飾 person）'), 'D',
+  `<b>Although ... rich</b> 引出轉折；後面 <b>never willing to spend any money</b> 即「吝嗇」的定義。`,
+  [
+    ['absolute', '絕對的', W('absolute 指「絕對的、完全的」，不能描述人的個性。', 'I have <b>absolute</b> trust in you.')],
+    ['precise', '精確的', W('precise 指「精準」，與是否願意花錢無關。', 'Please give me the <b>precise</b> time of the meeting.')],
+    ['economic', '經濟（上）的', W('economic 指「經濟學的；經濟方面的」；「節儉的」要用 economical，且與「不願意幫助人」語意不合。', 'The country is facing an <b>economic</b> crisis.')],
+    ['stingy', '吝嗇的', R('<b>stingy</b> ＝小氣、捨不得花錢，與 never willing to spend any money 一致。')]
+  ]);
+
+H += vq(14, `If you want to know what your dreams mean, now there are websites you can visit to help you [[14|interpret]] them.`,
+  `如果你想知道夢境代表什麼，現在有一些網站可以幫助你解讀它們。`,
+  T('動詞語意：interpret dreams（解夢）', '原形及物動詞（help you + V）'), 'B',
+  `<b>what your dreams mean</b> 指出需求是「了解夢的意義」，也就是「解釋、解讀」。`,
+  [
+    ['overcome', '克服', W('overcome 受詞為困難、恐懼等，如 overcome fear。夢境不是要被克服的對象。', 'She <b>overcame</b> her fear of speaking in public.')],
+    ['interpret', '解釋；解讀', R('<b>interpret</b> ＝說明意義、解讀，與 what your dreams mean 呼應。')],
+    ['transfer', '轉移；調動', W('transfer 指「轉乘、調職、轉帳」，不適合以 dreams 為受詞。', 'He was <b>transferred</b> to the Taichung office.')],
+    ['revise', '修改', W('revise 指「修訂（文稿、計畫）」，與理解夢的意義無關。', 'Please <b>revise</b> your essay before handing it in.')]
+  ]);
+
+H += vq(15, `The memory [[15|capacity]] of the new computer has been increased so that more information can be stored.`,
+  `這台新電腦的記憶體容量已經增加，所以可以儲存更多資訊。`,
+  T('複合名詞：memory capacity（記憶體容量）', '名詞（memory ＿ 為複合名詞）'), 'A',
+  `<b>so that more information can be stored</b> 說明增加的是「儲存量」，故為 capacity。`,
+  [
+    ['capacity', '容量', R('<b>memory capacity</b> ＝記憶體容量；增加容量→可儲存更多資訊，因果清楚。')],
+    ['occupation', '職業', W('occupation 是「職業」，與電腦記憶體無關。', 'What is your <b>occupation</b>?')],
+    ['attachment', '附件；依戀', W('attachment 指「（郵件）附件」或「情感依附」，不是儲存量。', 'Please open the <b>attachment</b> in the email.')],
+    ['machinery', '機器（總稱）', W('machinery 是不可數名詞，指「機械設備」，不能與 memory 組成「記憶體容量」。', 'The factory bought new <b>machinery</b>.')]
+  ]);
+
+H += groupGradeBox('vocab', '詞彙', 1, 15, 1);
+
+/* ================= 二、綜合測驗 16–30 ================= */
+H += sec('s-cloze', '二、綜合測驗（第 16–30 題）');
+H += '<p class="note">說明：每題 1 分。先通讀全文掌握主旨，再看空格前後的文法線索（詞性、連接詞、時態）。</p>';
+
+/* ---- 第 16–20 題：基日島 ---- */
+H += passage('綜合測驗（一）：基日島 Kizhi', [
+  [
+    [`Kizhi is an island on Lake Onega in Karelia, Russia, with a beautiful collection of wooden churches and houses.`, `基日島是位於俄羅斯卡累利阿地區奧涅加湖上的一座島嶼，擁有一批美麗的木造教堂與房屋。`],
+    [`It is one of the most popular tourist [[16|attractions]] in Russia and a United Nations Educational, Scientific, and Cultural Organization (UNESCO) World Heritage Site.`, `它是俄羅斯最受歡迎的觀光景點之一，同時也是聯合國教育科學及文化組織（UNESCO）的世界遺產。`]
+  ],
+  [
+    [`The island is about 7 km long and 0.5 km wide.`, `這座島長約七公里、寬約半公里。`],
+    [`It is surrounded by about 5,000 other islands, some of [[17|which]] are just rocks sticking out of the ground.`, `它被大約五千座其他島嶼環繞，其中有些只是從地面凸出來的岩石。`]
+  ],
+  [
+    [`The entire island of Kizhi is, [[18|in fact]], an outdoor museum of wooden architecture created in 1966.`, `事實上，整座基日島是一座成立於 1966 年的木造建築露天博物館。`],
+    [`It contains many historically significant and beautiful wooden structures, [[19|including]] windmills, boathouses, chapels, fish houses, and homes.`, `島上有許多具歷史意義又美麗的木造建築，包括風車、船屋、小禮拜堂、漁屋與住家。`],
+    [`The jewel of the architecture is the 22-domed Transfiguration Church, built in the early 1700s.`, `這些建築中的瑰寶是建於 1700 年代初期、擁有 22 個圓頂的主易容教堂。`],
+    [`It is about 37 m tall, [[20|making]] it one of the tallest log structures in the world.`, `它高約 37 公尺，使它成為世界上最高的原木建築之一。`],
+    [`The church was built with pine trees brought from the mainland, which was quite common for the 18th century.`, `這座教堂是用從大陸運來的松木建造的，這在 18 世紀相當普遍。`]
+  ]
+], '全文主題：介紹俄羅斯的世界遺產——基日島的位置、特色與主要建築。', 'cl1');
+
+H += pq(16, T('搭配詞：tourist attractions（觀光景點）', '複數可數名詞（one of the most popular ... 之後）'), 'D',
+  `<b>one of the most popular tourist ___</b> 後接複數名詞；又與 <b>World Heritage Site</b> 並列，指「吸引遊客的景點」。`,
+  [
+    ['affairs', '事務', W('affairs 是「事務、事件」，tourist affairs 不是「景點」，也不符合 World Heritage Site 的描述。', 'The minister is in charge of foreign <b>affairs</b>.')],
+    ['fashions', '流行款式', W('fashions 指「時尚、流行」，與島嶼無關。', 'Paris is famous for its fashions.')],
+    ['industries', '產業', W('tourist industries 指「觀光相關產業」，不是島嶼本身；且 one of the most popular 與「景點」才吻合。', 'Tourism and farming are the two main <b>industries</b> here.')],
+    ['attractions', '吸引人的事物；景點', R('<b>tourist attractions</b> ＝觀光景點，與前句描述島上美麗的木造教堂相符。')]
+  ]);
+
+H += pq(17, T('關係代名詞：介系詞 + which（some of which）', '關係代名詞（of 之後，指前面的 islands）'), 'D',
+  `空格前是 <b>some of</b>，後面還有動詞 <b>are</b>；逗號後接的是「<b>名詞子句／形容詞子句</b>」，需要能放在介系詞 of 後的關係代名詞 → <b>which</b>。`,
+  [
+    ['them', '它們', W('them 是代名詞，不具連接兩個子句的功能；前後各有完整的子句，只用逗號連接會造成逗點連接句（comma splice）。', 'He gave me some books, and I read <b>them</b> all.')],
+    ['that', '關係代名詞 that', W('that 不能放在介系詞之後，也不能放在逗號之後引導非限定子句。', 'The book <b>that</b> I borrowed was interesting.')],
+    ['those', '那些', W('those 是指示代名詞，也沒有連接子句的功能。', '<b>Those</b> are my books.')],
+    ['which', '關係代名詞（which）', R('<b>some of which are ...</b> ＝其中有些是……，是「量詞 + of + 關係代名詞」的標準用法，which 代替前面的 5,000 other islands。')]
+  ]);
+
+H += pq(18, T('插入語 / 連接副詞：in fact（事實上）', '副詞片語（插入語）'), 'A',
+  `句首已有 <b>The entire island of Kizhi is ... an outdoor museum</b>，空格前後被逗號夾住，是插入語，用來強調「整座島其實就是博物館」。`,
+  [
+    ['in fact', '事實上', R('<b>in fact</b> ＝事實上，用來補充說明、強調前面介紹的內容，語氣自然。')],
+    ['once again', '再一次', W('once again 表示「又一次」，前文沒有重複的線索。', 'He made the same mistake <b>once again</b>.')],
+    ['as usual', '一如往常', W('as usual 指「照例」，與介紹博物館無關。', 'He was late for school <b>as usual</b>.')],
+    ['for instance', '例如', W('for instance 用來「舉例」，但後文並不是舉例，而是補充說明。', 'There are many tourist spots in Taiwan; <b>for instance</b>, Alishan.')]
+  ]);
+
+H += pq(19, T('介系詞語意：including（包括）', '介系詞（後接名詞並列）'), 'C',
+  `<b>many ... structures, ___ windmills, boathouses, chapels, ...</b> 後面列舉的是「建築的種類」，屬於前面 structures 的內容 → 包括。`,
+  [
+    ['except', '除了……之外（不含）', W('except 表示「不包含」，與列舉內容矛盾。', 'Everyone came <b>except</b> Tom.')],
+    ['besides', '除……之外（還有）', W('besides 指「在……之外另外還有」，表示後面的東西不屬於前面，此處風車、船屋都是 structures 的一部分，不選此項。', 'Besides English, she speaks French.')],
+    ['including', '包括', R('<b>including</b> ＝包括，用來列舉前述名詞的實際例子。')],
+    ['regarding', '關於', W('regarding 是「關於」，不能引出實例清單。', 'I am writing <b>regarding</b> your application.')]
+  ]);
+
+H += pq(20, T('分詞構句：表結果，V-ing（making it ...）', '現在分詞（主動、表結果）'), 'B',
+  `前面已有主詞 <b>It</b> 與動詞 <b>is</b>；逗號後不能再出現第二個動詞，需用<b>現在分詞構句</b>表示「結果」，意為「使它成為……」。`,
+  [
+    ['make', '原形動詞', W('make 為原形，前面已有 is，逗號後不可再加一個定式動詞。', 'They <b>make</b> wooden furniture.')],
+    ['making', '現在分詞', R('<b>, making it one of the tallest ...</b> ＝使得它成為最高之一。<b>making</b> 的主詞是前面整件事（37 公尺高），表「結果」。')],
+    ['made', '過去分詞', W('made 在此會被視為另一個過去式動詞，逗號前已有完整子句 It is ... tall，逗號後不能再接定式動詞；若是過去分詞，則語意變成「被製造」，與受詞 it 無法搭配。', 'The church, <b>made</b> of logs, is very tall. （made of ... 修飾名詞，才是被動用法）')],
+    ['to make', '不定詞', W('to make 表「目的」，語意變成「為了使它成為最高之一而高」，不合邏輯。', 'He worked hard <b>to make</b> money.')]
+  ]);
+
+H += groupGradeBox('cl1', '綜合測驗（一）', 16, 20, 1);
+
+/* ---- 第 21–25 題：婆羅賀摩藏神性 ---- */
+H += passage('綜合測驗（二）：藏起來的神性', [
+  [
+    [`There was once a time when all human beings were gods.`, `從前有一段時期，所有人類都是神。`],
+    [`However, they often took their divinity for granted and [[21|even]] abused it.`, `然而，他們常把自己的神性視為理所當然，甚至濫用它。`],
+    [`Seeing this, Brahma, the chief god, decided to take their divinity away from them and hide it [[22|where]] it could never be found.`, `看到這種情形，主神梵天決定拿走他們的神性，並把它藏在永遠找不到的地方。`]
+  ],
+  [
+    [`Brahma called a council of the gods to help him decide on a place to hide the divinity.`, `梵天召開眾神會議，請他們幫忙決定藏匿神性的地點。`],
+    [`The gods suggested that they hide it [[23|deep]] in the earth or take it to the top of the highest mountain.`, `眾神建議把它深藏在地底，或帶到最高的山頂。`],
+    [`But Brahma thought [[24|neither]] would do because he believed humans would dig into the earth and climb every mountain, and eventually find it.`, `但梵天認為兩者都不行，因為他相信人類會挖掘大地、爬遍每座山，最終找到它。`],
+    [`So, the gods gave up.`, `於是眾神放棄了。`]
+  ],
+  [
+    [`Brahma thought for a long time and finally decided to hide their divinity in the center of their own being, for humans would never think to [[25|look for]] it there.`, `梵天想了很久，最後決定把神性藏在人類自己存在的中心，因為人類絕不會想到要在那裡尋找它。`],
+    [`Since that time humans have been going up and down the earth, digging, climbing, and exploring—searching for something already within themselves.`, `從那時起，人類一直在大地上上下下，挖掘、攀爬、探索——尋找早已在自己體內的東西。`]
+  ]
+], '全文主題：古老寓言——神性被藏在人類自己的內心，人們卻向外尋找。', 'cl2');
+
+H += pq(21, T('副詞語意：even（甚至）表遞進', '副詞（修飾動詞 abused）'), 'B',
+  `<b>took ... for granted and ___ abused it</b>：由「視為理所當然」進一步到「濫用」，語意遞進 → <b>even</b>。`,
+  [
+    ['yet', '然而；尚未', W('and yet 表「然而卻」的轉折，但「視為理所當然」與「濫用」是同方向的遞進，並非轉折。', 'He is rich, and <b>yet</b> he is not happy.')],
+    ['even', '甚至', R('<b>even abused it</b> ＝甚至濫用它，表示程度更嚴重，與前面 took for granted 層層遞進。')],
+    ['never', '從不', W('never abused 與後文「梵天因此拿走神性」矛盾，也與 often took 的語氣不合。', 'He <b>never</b> eats breakfast.')],
+    ['rather', '相當；寧可', W('rather 修飾形容詞或副詞（rather expensive），或用 rather than；「and rather abused it」不成立。', 'The test was <b>rather</b> difficult.')]
+  ]);
+
+H += pq(22, T('關係副詞：where 引導地點子句', '關係副詞（先行詞為地點，hide it where ...）'), 'C',
+  `<b>hide it ___ it could never be found</b>：空格前後各有完整子句，需要表示「在……的地方」的關係副詞；hide 本身暗含「藏在某處」。`,
+  [
+    ['though', '雖然', W('though 表讓步，「雖然它永遠找不到」語意不合。', '<b>Though</b> it was raining, we went out.')],
+    ['because', '因為', W('because 表原因，「因為它永遠找不到」無法說明 hide 的方式。', 'He stayed home <b>because</b> he was ill.')],
+    ['where', '在……的地方', R('<b>hide it where it could never be found</b> ＝把它藏在永遠找不到的地方。')],
+    ['when', '當……時', W('when 引導時間子句，hide it when ... 語意為「在……的時候藏」，與地點無關。', 'Call me <b>when</b> you arrive.')]
+  ]);
+
+H += pq(23, T('副詞語意：deep in the earth（深藏在地下）', '副詞（修飾介系詞片語 in the earth）'), 'C',
+  `<b>hide it ___ in the earth</b> 對照 <b>top of the highest mountain</b>，一深一高，所以「深埋」→ <b>deep</b>。`,
+  [
+    ['close', '靠近', W('close 要接 to（close to the earth），不能直接修飾 in。', 'The hotel is <b>close</b> to the station.')],
+    ['apart', '分開地', W('apart 通常搭配 from（apart from the earth），且語意為「分離」，與 in the earth 矛盾。', 'The two towns are 10 km <b>apart</b>.')],
+    ['deep', '深深地', R('<b>deep in the earth</b> ＝深埋在地底，與後面的最高山頂構成「最深／最高」的對比。')],
+    ['hard', '努力地', W('hard 是副詞「努力」，不能修飾 in the earth。', 'She studies <b>hard</b> every day.')]
+  ]);
+
+H += pq(24, T('代名詞：neither（兩者皆不）', '代名詞（作 thought 的受詞子句主詞）'), 'D',
+  `前句提出<b>兩個方案</b>（in the earth / top of the mountain），後面說明人類會挖地、爬山而找到，所以「<b>兩者都不行</b>」→ neither would do。連接詞 <b>But</b> 也提示否定。`,
+  [
+    ['each', '各個', W('each 是「各自」，不表示否定，與 But 轉折和後面「會被找到」語意不合。', '<b>Each</b> of the students has a book.')],
+    ['more', '更多', W('more 表示「更多」，語意不通。', 'I need <b>more</b> time.')],
+    ['any', '任何一個', W('any 用於否定或疑問；肯定句 thought any would do ＝認為任何一個都可以，與 But 後的理由（人類會找到）矛盾。', 'I don\'t think <b>any</b> of them will work.')],
+    ['neither', '兩者都不', R('<b>neither would do</b> ＝兩個辦法都行不通，呼應後面 because 說明的理由。')]
+  ]);
+
+H += pq(25, T('片語動詞語意：look for（尋找）', '原形動詞片語（think to ＋ V）'), 'A',
+  `<b>humans would never think to ___ it there</b>：人類不會想到在「中心」尋找神性，且最後一句 <b>searching for something</b> 與其呼應。`,
+  [
+    ['look for', '尋找', R('<b>look for it there</b> ＝在那裡找它，與最後一句 searching for 前後呼應。')],
+    ['get over', '克服；復原', W('get over 指「克服困難、從疾病中恢復」，不能以 it（神性）作受詞表示尋找。', 'It took him a week to <b>get over</b> the flu.')],
+    ['do without', '沒有……也行', W('do without 表示「沒有也能過」，與要「找到神性」的情節不合。', 'We can\'t <b>do without</b> water.')],
+    ['bump into', '偶然遇到', W('bump into 是「偶然碰到」，與 never think to（不會想到去做）搭配不順；「想到要偶然遇見」不合邏輯。', 'I <b>bumped into</b> an old friend at the mall.')]
+  ]);
+
+H += groupGradeBox('cl2', '綜合測驗（二）', 21, 25, 1);
+
+/* ---- 第 26–30 題：World Hello Day ---- */
+H += passage('綜合測驗（三）：世界問候日 World Hello Day', [
+  [
+    [`In the fall of 1973, in an effort to bring attention to the conflict between Egypt and Israel, World Hello Day was born.`, `1973 年秋天，為了喚起大眾對埃及與以色列衝突的關注，世界問候日誕生了。`],
+    [`The objective is to promote peace all over the world, and to [[26|break down]] barriers between every nationality.`, `其目標是在全世界促進和平，並打破各國籍之間的隔閡。`],
+    [`Since then, World Hello Day—November 21st of every year—[[27|has been]] observed by people in 180 countries.`, `從那時起，每年 11 月 21 日的世界問候日已有 180 個國家的人民參與慶祝。`]
+  ],
+  [
+    [`Taking part couldn't be [[28|easier]].`, `參與再容易不過了。`],
+    [`All one has to do is say hello to 10 people on the day.`, `一個人只需要在這一天向十個人說聲哈囉。`],
+    [`However, in response to the [[29|aim]] of this event, the concepts of fostering peace and harmony do not have to be confined to one day a year.`, `然而，要回應這項活動的宗旨，促進和平與和諧的概念並不必侷限於一年中的一天。`],
+    [`We can [[30|keep]] the spirit going by communicating often and consciously.`, `我們可以藉由經常且有意識地溝通，讓這種精神持續下去。`],
+    [`It is a simple act that anyone can do and it reminds us that communication is more effective than conflict.`, `這是任何人都能做的簡單舉動，它提醒我們：溝通比衝突更有效。`]
+  ]
+], '全文主題：說明世界問候日的由來、宗旨與參與方式。', 'cl3');
+
+H += pq(26, T('片語動詞：break down barriers（打破隔閡）', '原形動詞片語（to + V，受詞 barriers）'), 'D',
+  `<b>promote peace ... and to ___ barriers</b>：促進和平的同時要「打破」國籍間的隔閡 → <b>break down barriers</b>（固定搭配）。`,
+  [
+    ['skip over', '跳過', W('skip over 指「略過」，「略過隔閡」無助於促進和平。', 'Don\'t <b>skip over</b> the difficult questions.')],
+    ['come across', '偶然發現', W('come across 是「偶然遇到」，無法表示對障礙採取行動。', 'I <b>came across</b> an old photo in a drawer.')],
+    ['look into', '調查', W('look into 指「調查」，barriers 並不是被調查的對象。', 'The police are <b>looking into</b> the case.')],
+    ['break down', '打破；拆除', R('<b>break down barriers</b> ＝消除隔閡，與 promote peace 的目標一致。')]
+  ]);
+
+H += pq(27, T('時態：Since then 搭配現在完成式（被動）', '助動詞 has been + p.p.（單數主詞）'), 'B',
+  `<b>Since then</b> 表示「從那時起到現在」，須用<b>現在完成式</b>；主詞 World Hello Day 為單數，被動為 <b>has been observed</b>。`,
+  [
+    ['is', '現在式', W('is observed 為現在式，無法表達「自那時起」的持續時間。', 'The holiday <b>is</b> observed every year.')],
+    ['has been', '現在完成式', R('<b>Since then ... has been observed</b> ＝自那時起一直被慶祝，Since 與現在完成式固定搭配。')],
+    ['was', '過去式', W('was observed 為單純過去式，不能與 Since then 搭配，也無法表示「到現在仍持續」。', 'The festival <b>was</b> observed in 1990.')],
+    ['had been', '過去完成式', W('had been 表示「過去某時點之前」已發生，這裡的基準是現在，不是過去。', 'By 1980, the festival <b>had been</b> observed for ten years.')]
+  ]);
+
+H += pq(28, T('比較級慣用語：couldn\'t be easier（再容易不過）', '形容詞比較級（couldn\'t be + 比較級）'), 'C',
+  `接下來一句 <b>All one has to do is say hello to 10 people</b> 說明很簡單，所以「參加起來再簡單不過」。`,
+  [
+    ['quicker', '更快', W('quicker 強調速度，與後句「只要向十個人打招呼」所說的「簡單」不同。', 'This way is <b>quicker</b> than that one.')],
+    ['sooner', '更早', W('sooner 指時間更早，和 taking part 的難易無關。', 'The <b>sooner</b>, the better.')],
+    ['easier', '更容易', R('<b>couldn\'t be easier</b> ＝再容易不過，與下一句說明的參與方式（只需向十人問好）一致。')],
+    ['better', '更好', W('couldn\'t be better 是「好得不得了」，雖是慣用語，但此處要強調的是「容易」，後句 All one has to do 說明門檻低。', 'How are you? — I <b>couldn\'t be better</b>!')]
+  ]);
+
+H += pq(29, T('名詞語意：the aim of this event（活動宗旨）', '名詞（the ＿ of this event）'), 'A',
+  `<b>in response to the ___ of this event</b>：回應活動的「目的」，後面說明 <b>the concepts of fostering peace and harmony</b>，也就是宗旨。`,
+  [
+    ['aim', '目標；宗旨', R('<b>the aim of this event</b> ＝這項活動的目的，下文談促進和平的概念，正是活動宗旨的延伸。')],
+    ['tone', '語氣', W('tone 是「語氣、音調」，不符合「促進和平的概念」。', 'I don\'t like his <b>tone</b> of voice.')],
+    ['key', '關鍵', W('the key of this event 指「活動的關鍵」，語意含糊；且「回應關鍵」說不通。', 'Hard work is the <b>key</b> to success.')],
+    ['peak', '顛峰', W('peak 指「山峰、巔峰」，與活動宗旨無關。', 'The <b>peak</b> of the season is in July.')]
+  ]);
+
+H += pq(30, T('使役／持續用法：keep + O + V-ing（讓……持續）', '原形動詞（We can + V）'), 'B',
+  `<b>___ the spirit going</b>：<b>keep sth going</b> ＝讓某事持續進行，後面 <b>by communicating often</b> 說明持續的方式。`,
+  [
+    ['push', '推', W('push the spirit going 不成立，push 常搭配 push sb to V / push forward。', 'We should <b>push</b> him to try harder.')],
+    ['keep', '使保持', R('<b>keep ... going</b> ＝使持續不斷，keep + O + V-ing 為標準句型，與 by communicating often 呼應。')],
+    ['bring', '帶來', W('bring ... going 不是固定用法，bring 後接 going 不成立。', 'Please <b>bring</b> your ID card.')],
+    ['make', '使', W('make + O + 原形動詞（make the spirit go），不是 going。若寫成 get the spirit going ＝讓它開始，意思也不同於「持續」。', 'He <b>made</b> me laugh.')]
+  ]);
+
+H += groupGradeBox('cl3', '綜合測驗（三）', 26, 30, 1);
+
+/* ================= 三、文意選填 31–40 ================= */
+H += sec('s-bank', '三、文意選填（第 31–40 題）');
+H += '<p class="note">說明：每題 1 分。10 個選項選 10 個，每個字只用一次。先判斷空格需要的詞性，再用語意排除。</p>';
+
+const BANK = {
+  A: ['request', 'n./v. 要求；請求', 'She made a <b>request</b> for more time. / He <b>requested</b> a refund.'],
+  B: ['favor', 'n./v. 恩惠；偏愛', 'Could you do me a <b>favor</b>? / Many people <b>favor</b> online shopping.'],
+  C: ['disadvantage', 'n. 缺點', 'The only <b>disadvantage</b> of this plan is the cost.'],
+  D: ['composed', 'p.p. 組成的 (be composed of)', 'The team is <b>composed</b> of ten players.'],
+  E: ['recycled', 'p.p. 回收的；循環使用的', 'These bottles will be <b>recycled</b>.'],
+  F: ['practice', 'n./v. 做法；練習', 'It is common <b>practice</b> to tip in the U.S.'],
+  G: ['replaced', 'p.p. 被取代的', 'The old system was <b>replaced</b> by a new one.'],
+  H: ['raise', 'v. 提高；喚起', 'The campaign aims to <b>raise</b> awareness of pollution.'],
+  I: ['various', 'adj. 各式各樣的', 'The store sells <b>various</b> kinds of snacks.'],
+  J: ['female', 'adj./n. 女性的', 'There are more <b>female</b> students than male students here.']
+};
+// 依空格需要的詞性，自動產生誤答分析；ov 為針對高誘答力選項的專屬說明
+function wbOps(ans, need, rightWhy, ov) {
+  const keys = 'ABCDEFGHIJ';
+  return keys.split('').map(k => {
+    const b = BANK[k];
+    let exp;
+    if (k === ans) exp = R(rightWhy);
+    else {
+      const why = (ov && ov[k]) ? ov[k] : ('此處需要<b>' + need + '</b>，' + b[0] + '（' + b[1] + '）放入後詞性或語意不合。');
+      exp = W(why, b[2]);
+    }
+    return [b[0], b[1], exp];
+  });
+}
+
+const bankHtml = '<div class="bank" id="bank-wbank">' + Object.keys(BANK).map(k => '<span>(' + k + ') ' + BANK[k][0] + ' <small>' + BANK[k][1] + '</small></span>').join('') + '</div>';
+
+H += bankHtml + passage('文意選填：颱風的命名', [
+  [
+    [`Generally there are two ways to name typhoons: the number-based convention and the list-based convention.`, `一般而言，颱風有兩種命名方式：編號制與名單制。`],
+    [`Following the number-based convention, typhoons are coded with [[31|various]] types of numbers such as a 4-digit or a 6-digit code.`, `依編號制，颱風以各種不同類型的數字編碼，例如四位數或六位數的代碼。`],
+    [`For example, the 14th typhoon in 2003 can be labeled either as Typhoon 0314 or Typhoon 200314.`, `例如，2003 年的第 14 號颱風可以標示為颱風 0314，或颱風 200314。`],
+    [`The [[32|disadvantage]] of this convention, however, is that a number is hard to remember.`, `然而，這種制度的缺點是數字不容易記住。`],
+    [`The list-based convention, on the other hand, is based on the list of typhoon names compiled in advance by a committee, and is more widely used.`, `另一方面，名單制是依據委員會事先編成的颱風名單，也比較廣泛使用。`]
+  ],
+  [
+    [`At the very beginning, only [[33|female]] names were used because at that time typhoons were named after girlfriends or wives of the experts on the committee.`, `最初只使用女性名字，因為當時颱風是以委員會專家的女友或妻子來命名。`],
+    [`In 1979, however, male names were also included because women protested against the original naming [[34|practice]] for reasons of gender equality.`, `然而到了 1979 年，也納入了男性名字，因為女性基於性別平等的理由抗議原本的命名做法。`]
+  ],
+  [
+    [`In Asia, Western names were used until 2000 when the committee decided to use Asian names to [[35|raise]] Asians' awareness of typhoons.`, `在亞洲，直到 2000 年委員會決定改用亞洲名字以提高亞洲人對颱風的意識之前，一直使用西方名字。`],
+    [`The names were chosen from a name pool [[36|composed]] of 140 names, 10 each from the 14 members of the committee.`, `這些名字選自一個由 140 個名字組成的名字庫，由委員會 14 個成員各提供 10 個。`],
+    [`Each country has its unique naming preferences.`, `每個國家有各自獨特的命名偏好。`],
+    [`Korea and Japan [[37|favor]] animal names and China likes names of gods such as Longwang (dragon king) and Fengshen (god of the wind).`, `韓國與日本偏愛動物名字，而中國喜歡龍王與風神等神祇的名字。`]
+  ],
+  [
+    [`After the 140 names are all used in order, they will be [[38|recycled]].`, `140 個名字依序用完之後，它們會被重複循環使用。`],
+    [`But the names can be changed.`, `但名字是可以更改的。`],
+    [`If a member country suffers great damage from a certain typhoon, it can [[39|request]] that the name of the typhoon be deleted from the list at the annual committee meeting.`, `如果某個成員國因某個颱風而遭受重大損害，可以在年度委員會議中要求將該颱風的名字從名單中刪除。`],
+    [`For example, the names of Nabi by South Korea, and Longwang by China were [[40|replaced]] with other names in 2007.`, `例如，南韓提出的「奈比」與中國提出的「龍王」兩個名字，在 2007 年被其他名字取代。`],
+    [`The deletion of both names was due to the severe damage caused by the typhoons bearing the names.`, `這兩個名字被刪除，是因為使用這些名字的颱風造成嚴重損害。`]
+  ]
+], '全文主題：颱風命名的兩種制度（編號制／名單制）及名單制的演變與更替。', 'wbank');
+
+const WL = 'ABCDEFGHIJ';
+const pq2 = (n, tags, ans, cl, html) => card(n, tags, ans, stem(n) + clue(cl) + html);
+H += pq2(31, T('形容詞 + types：various types of（各種類型的）', '形容詞（修飾 types）'), 'I',
+  `<b>coded with ___ types of numbers</b>：<b>types</b> 前需要形容詞；後面舉例 4-digit、6-digit，說明有「多種」。`,
+  ops(wbOps('I', '形容詞（修飾名詞 types）', '<b>various types of</b> ＝各種類型的，下文舉出四位數與六位數兩種，符合語意。', {
+    J: 'female 雖為形容詞，但 female types of numbers（女性的數字類型）語意不通。',
+    D: 'composed 是過去分詞，composed types 語意不通；必須以 composed of 的形式使用。',
+    E: 'recycled 為過去分詞，recycled types of numbers（回收的數字類型）語意不通。'
+  }), 'I', WL));
+
+H += pq2(32, T('名詞語意：the disadvantage of（缺點）', '名詞（the ＿ of this convention）'), 'C',
+  `<b>The ___ of this convention, however, is that a number is hard to remember</b>：<b>however</b> 轉折＋「數字不好記」＝缺點。`,
+  ops(wbOps('C', '名詞（the ＿ of this convention）', '<b>disadvantage</b> ＝缺點，與 however 與「數字不好記」互相呼應。', {
+    A: 'request 是「要求」，不能解釋「數字不容易記住」。',
+    B: 'favor 是「恩惠」，與「數字不好記」語意不合。',
+    F: 'practice 是「做法」，the practice of this convention 只是中性描述，無法連接「however ... hard to remember」的缺點語氣。'
+  }), 'C', WL));
+
+H += pq2(33, T('形容詞語意：female names（女性名字）', '形容詞（修飾 names）'), 'J',
+  `<b>only ___ names</b>：後面說明「以女友或妻子命名」，所以只有女性名字；1979 年才加入 male names（對照）。`,
+  ops(wbOps('J', '形容詞（修飾 names）', '<b>female names</b> ＝女性名字，與下文 girlfriends or wives 以及 1979 加入 male names 的對照吻合。', {
+    I: 'various 為形容詞，但 only various names 與「只用女友或妻子的名字」語意不合。',
+    D: 'composed 為過去分詞，composed names 語意不通。',
+    E: 'recycled 為過去分詞，與句意（最初只用某類名字）無關。'
+  }), 'J', WL));
+
+H += pq2(34, T('名詞語意：naming practice（命名做法）', '名詞（the original naming ＿）'), 'F',
+  `<b>women protested against the original naming ___ for reasons of gender equality</b>：抗議的對象是「原本的命名做法」，naming practice 為複合名詞。`,
+  ops(wbOps('F', '名詞（naming 之後的複合名詞）', '<b>naming practice</b> ＝命名的做法，女性抗議的是這種全用女性名字的慣例。', {
+    A: 'request 是「要求」，naming request 語意不合。',
+    B: 'favor 是「偏愛、恩惠」，naming favor 不成立。',
+    C: 'disadvantage 是「缺點」，naming disadvantage 無法與 protested against 搭配，且前文已用過 disadvantage。'
+  }), 'F', WL));
+
+H += pq2(35, T('動詞語意：raise awareness（提高意識）', '原形動詞（to + V）'), 'H',
+  `<b>to ___ Asians' awareness of typhoons</b>：不定詞 to 後接原形動詞，受詞 awareness 的固定搭配是 <b>raise awareness</b>。`,
+  ops(wbOps('H', '原形動詞（to + V，受詞 awareness）', '<b>raise ... awareness</b> ＝提高意識，與使用亞洲名字以提高亞洲人對颱風的認識吻合。', {
+    A: 'request 作動詞需接 sb to V 或 that 子句，request awareness 不通。',
+    B: 'favor 作動詞是「偏愛」，favor awareness 語意不合。',
+    F: 'practice 作動詞是「練習、實行」，practice awareness 不是常見搭配。'
+  }), 'H', WL));
+
+H += pq2(36, T('片語：be composed of（由……組成）', '過去分詞（後置修飾 name pool）'), 'D',
+  `<b>a name pool ___ of 140 names</b>：空格後有介系詞 <b>of</b>，且 pool 的內容物是 140 個名字 → <b>composed of</b>（過去分詞作後置修飾）。`,
+  ops(wbOps('D', '過去分詞（空格後有 of）', '<b>composed of</b> ＝由……組成，過去分詞後置修飾 name pool，a name pool composed of 140 names。', {
+    E: 'recycled 為過去分詞，但 recycled of 無此搭配，且名字庫並非「被回收」。',
+    G: 'replaced 為過去分詞，但 replaced of 不是搭配，replace 的搭配是 replaced by / with。',
+    I: 'various 為形容詞，a name pool various of 140 names 語法不成立。'
+  }), 'D', WL));
+
+H += pq2(37, T('動詞語意：favor（偏愛）', '現在式複數動詞（主詞 Korea and Japan）'), 'B',
+  `<b>Korea and Japan ___ animal names and China likes names of gods</b>：與 <b>likes</b> 並列、表示各國偏好，且主詞為複數 → <b>favor</b>。`,
+  ops(wbOps('B', '現在式複數動詞（與 China likes 並列）', '<b>favor</b> ＝偏愛，與 China likes ... 並列並呼應上一句 naming preferences。', {
+    A: 'request 作動詞是「要求」，request animal names 語意不合。',
+    F: 'practice 作動詞是「練習、實行」，practice animal names 無法表示偏好。',
+    H: 'raise 作動詞可表「飼養」，但此處是「命名偏好」，raise animal names 不通。'
+  }), 'B', WL));
+
+H += pq2(38, T('被動語態：will be recycled（循環使用）', '過去分詞（will be + p.p.）'), 'E',
+  `<b>After the 140 names are all used in order, they will be ___</b>：名單用完之後再重新使用＝循環使用；下一句 <b>But the names can be changed</b>（但可以更改）說明前一句並非「被取代」。`,
+  ops(wbOps('E', '過去分詞（will be + p.p.）', '<b>will be recycled</b> ＝（用完後）會被循環使用。', {
+    G: 'replaced 為過去分詞，語法上可放在 will be 之後，但語意為「被取代」，與下句 But the names can be changed 的轉折不合；replaced 要留給第 40 題。',
+    D: 'composed 後面要接 of，will be composed 語意不完整。',
+    A: 'request 為動詞或名詞，will be request 語法不成立（過去分詞應為 requested）。'
+  }), 'E', WL));
+
+H += pq2(39, T('動詞語意：request that + 子句（要求……）', '原形動詞（it can + V）'), 'A',
+  `<b>it can ___ that the name of the typhoon be deleted</b>：後接 that 子句，且子句動詞用<b>原形（假設語氣）</b>be deleted，是 <b>request / demand / suggest</b> 類動詞的特徵。`,
+  ops(wbOps('A', '原形動詞（後接 that 子句，子句用原形 be）', '<b>request that ... be deleted</b> ＝要求將名字刪除；request 後的 that 子句用 (should) + 原形。', {
+    H: 'raise 後面不接 that 子句表示「要求」。',
+    B: 'favor 作動詞後面不接 that 子句表示要求。',
+    F: 'practice 作動詞表示「練習／實行」，不能接 that 子句。'
+  }), 'A', WL));
+
+H += pq2(40, T('被動語態：be replaced with（被……取代）', '過去分詞（were + p.p. + with）'), 'G',
+  `<b>were ___ with other names in 2007</b>：<b>replace A with B</b> 的被動 <b>A be replaced with B</b>；前一句 names be deleted 呼應「被其他名字取代」。`,
+  ops(wbOps('G', '過去分詞（were + p.p. + with）', '<b>were replaced with other names</b> ＝被其他名字取代，與前面 deleted from the list 呼應。', {
+    E: 'recycled 為過去分詞，語法成立，但前面已用 recycled 描述名單用完的情形；且「被其他名字循環使用」語意不通。',
+    D: 'composed with 語意為「用……組成」，不是「被取代」。',
+    A: 'request 的過去分詞為 requested，不是原形 request。'
+  }), 'G', WL));
+
+H += groupGradeBox('wbank', '文意選填', 31, 40, 1);
+
+/* ================= 四、閱讀測驗 41–56 ================= */
+H += sec('s-read', '四、閱讀測驗（第 41–56 題，每題 2 分）');
+H += '<p class="note">說明：先看題目問什麼，再回文中定位關鍵句；每個選項都標明「對照原文哪一句」。</p>';
+
+/* ---- 41–44 蘇格蘭裙 ---- */
+H += passage('閱讀測驗（一）：蘇格蘭裙 The Kilt', [
+  [
+    [`The kilt is a skirt traditionally worn by Scottish men.`, `褶裙（kilt）是蘇格蘭男性傳統上穿著的裙子。`],
+    [`It is a tailored garment that is wrapped around the wearer's body at the waist starting from one side, around the front and back and across the front again to the opposite side.`, `它是一件經過剪裁的衣物，在腰部從一側開始纏繞穿著者的身體，繞過前面與後面，再從前面橫跨到另一側。`],
+    [`The overlapping layers in front are called "aprons."`, `前面重疊的幾層稱為「圍片」（aprons）。`],
+    [`Usually, the kilt covers the body from the waist down to just above the knees.`, `通常，褶裙會從腰部往下遮到膝蓋稍上方。`],
+    [`A properly made kilt should not be so loose that the wearer can easily twist the kilt around the body, nor should it be so tight that it causes bulging of the fabric where it is buckled.`, `一件做得好的褶裙不應鬆到穿著者能輕易把裙子在身上轉動，也不應緊到在扣環處使布料鼓起。`],
+    [`Underwear may be worn as one prefers.`, `是否穿內衣褲，隨個人喜好。`]
+  ],
+  [
+    [`One of the most distinctive features of the kilt is the pattern of squares, or sett, it exhibits.`, `褶裙最獨特的特色之一，是它所呈現的方格圖案，稱為 sett。`],
+    [`The association of particular patterns with individual families can be traced back hundreds of years.`, `特定圖案與個別家族的連結，可以追溯到數百年前。`],
+    [`Then in the Victorian era (19th century), weaving companies began to systematically record and formalize the system of setts for commercial purposes.`, `接著在維多利亞時代（19 世紀），紡織公司為了商業目的，開始有系統地記錄並將 sett 的體系正式化。`],
+    [`Today there are also setts for States and Provinces, schools and universities, and general patterns that anybody can wear.`, `今日也有代表州與省、學校與大學的 sett，以及任何人都能穿的一般圖案。`]
+  ],
+  [
+    [`The kilt can be worn with accessories.`, `褶裙可以搭配配件穿著。`],
+    [`On the front apron, there is often a kilt pin, topped with a small decorative family symbol.`, `前圍片上常有一根褶裙別針，上面有一個小小的家族裝飾符號。`],
+    [`A small knife can be worn with the kilt too.`, `也可以搭配一把小刀。`],
+    [`It typically comes in a very wide variety, from fairly plain to quite elaborate silver- and jewel-ornamented designs.`, `它通常款式非常多，從相當樸素到十分精緻、以銀和珠寶裝飾的設計都有。`],
+    [`The kilt can also be worn with a sporran, which is the Gaelic word for pouch or purse.`, `褶裙也可搭配 sporran，這是蓋爾語中「小袋或錢包」的意思。`]
+  ]
+], '閱讀主題：介紹蘇格蘭傳統服飾 kilt 的穿法、圖案與配件。', 'rc1');
+
+H += rq(41, `What's the proper way of wearing the kilt?`, `穿褶裙的正確方式是什麼？`, T('細節題：穿法描述', NP), 'D',
+  `定位第一段第 2 句：從一側開始，<b>around the front and back and across the front again</b>，正面又橫跨一次 → 前面有兩層。`,
+  [
+    ['It should be worn with underwear underneath it.', '穿著時內裡要穿內衣褲。', W('原文：<b>Underwear may be worn as one prefers.</b>（內衣褲隨個人喜好），不是「應該」穿。', '若文中寫成「Underwear must be worn」，此選項才對。')],
+    ['It should loosely fit on the body to be turned around.', '應該鬆鬆地穿在身上，以便可以轉動。', W('原文：<b>should not be so loose that the wearer can easily twist the kilt around the body</b>，不能鬆到能輕易轉動。', '若文中說 should be loose enough to turn around，此選項才對。')],
+    ['It should be long enough to cover the wearer\'s knees.', '長度應足以蓋住膝蓋。', W('原文：<b>down to just above the knees</b>，是蓋到膝蓋「稍上方」，並未蓋住膝蓋。', '若文中寫 down to below the knees，此選項才對。')],
+    ['It should be wrapped across the front of the body two times.', '應在身體前面橫跨兩次。', R('由 <b>around the front and back and across the front again</b>，前面被橫跨兩次，重疊的部分稱為 aprons。')]
+  ]);
+
+H += rq(42, `Which of the following is a correct description about setts?`, `以下哪一項是關於 sett 的正確描述？`, T('細節題：sett 的歷史與用途', NP), 'A',
+  `定位第二段：<b>The association of particular patterns with individual families can be traced back hundreds of years.</b>`,
+  [
+    ['They were once symbols for different Scottish families.', '它們曾經是不同蘇格蘭家族的象徵。', R('原文：<b>association of particular patterns with individual families ... hundreds of years</b>，圖案與家族連結已有數百年歷史。')],
+    ['They were established by the government for business purposes.', '它們是政府為了商業目的所建立的。', W('原文：<b>weaving companies</b> began to record and formalize ... for commercial purposes，是「紡織公司」而非政府。', '若原文主詞為 the government，此選項才對。')],
+    ['They represented different States and Provinces in the 19th century.', '它們在 19 世紀代表不同的州與省。', W('原文：<b>Today there are also setts for States and Provinces</b>，是「今日」才有，而非 19 世紀。', '若原文寫 In the 19th century there were setts for States ...，此選項才對。')],
+    ['They used to come in one general pattern for all individuals and institutions.', '它們以前只有一種通用圖案，適用於所有個人與機構。', W('原文：<b>Today there are also ... general patterns that anybody can wear</b>，一般圖案是「今日」才額外有的，過去是家族專屬圖案。', '若原文寫 In the past there was only one general pattern ...，此選項才對。')]
+  ]);
+
+H += rq(43, `Which of the following items is NOT typically worn with the kilt for decoration?`, `下列何者通常不是搭配褶裙的裝飾配件？`, T('細節題 + NOT 題：排除法', NP), 'C',
+  `第三段列舉配件：<b>kilt pin</b>、<b>small knife</b>、<b>sporran</b>（pouch or purse）。<b>apron</b> 是裙子本身重疊的部分，不是配件。`,
+  [
+    ['A pin.', '別針。', W('原文：<b>there is often a kilt pin</b>，是配件。因題目問 NOT，所以不選。', '若題目問「哪一個是配件」，此項才對。')],
+    ['A purse.', '小袋／錢包。', W('原文：<b>sporran, which is the Gaelic word for pouch or purse</b>，是配件。', '若題目問「哪一個是配件」，此項才對。')],
+    ['A ruby apron.', '紅寶石圍片。', R('<b>apron</b> 是裙子前面重疊的幾層（第一段），不是配件；全文也沒有 ruby。')],
+    ['A silver knife.', '銀製小刀。', W('原文：<b>A small knife ... silver- and jewel-ornamented designs</b>，是配件。', '若題目問「哪一個是配件」，此項才對。')]
+  ]);
+
+H += rq(44, `What is the purpose of this passage?`, `這篇文章的目的是什麼？`, T('主旨／寫作目的題', NP), 'A',
+  `全文依序介紹 kilt 的穿法、sett 圖案、配件，是<b>說明性文章</b>，目的在「介紹」。`,
+  [
+    ['To introduce a Scottish garment.', '介紹一種蘇格蘭服飾。', R('三段分別說明 kilt 的穿法、圖案與配件，是對一種傳統服飾的全面介紹。')],
+    ['To advertise a weaving pattern.', '推銷一種織紋。', W('文中提到 sett 只是 kilt 的特色之一，且沒有任何促銷用語。', '若文章呼籲讀者購買某圖案，此選項才對。')],
+    ['To persuade men to wear kilts.', '說服男性穿褶裙。', W('文中沒有勸說語氣，只描述事實。', '若文章出現 You should wear ... 之類的勸導，此選項才對。')],
+    ['To compare a skirt with a kilt.', '比較一般裙子與褶裙。', W('文章沒有比較兩者的差異，開頭只說 kilt 是 a skirt traditionally worn by Scottish men。', '若文章逐項對比 skirt 與 kilt，此選項才對。')]
+  ]);
+
+H += groupGradeBox('rc1', '閱讀測驗（一）', 41, 44, 2);
+
+/* ---- 45–48 Wesla Whitfield ---- */
+H += passage('閱讀測驗（二）：爵士歌手 Wesla Whitfield', [
+  [
+    [`Wesla Whitfield, a famous jazz singer, has a unique style and life story, so I decided to see one of her performances and interview her for my column.`, `爵士歌手韋絲拉·惠特菲爾德擁有獨特的風格與人生故事，因此我決定去看她的一場表演，並為我的專欄採訪她。`],
+    [`I went to a nightclub in New York and watched the stage lights go up.`, `我到紐約的一間夜總會，看著舞臺燈光亮起。`],
+    [`After the band played an introduction, Wesla Whitfield wheeled herself onstage in a wheelchair.`, `樂團演奏完前奏後，韋絲拉·惠特菲爾德自己推著輪椅上臺。`],
+    [`As she sang, Whitfield's voice was so powerful and soulful that everyone in the room forgot the wheelchair was even there.`, `她一開口唱歌，歌聲強而有力又充滿靈魂，使得現場所有人都忘了輪椅的存在。`]
+  ],
+  [
+    [`At 57, Whitfield is small and pretty, witty and humble, persistent and philosophical.`, `57 歲的惠特菲爾德嬌小漂亮、機智又謙虛、堅持又富哲思。`],
+    [`Raised in California, Whitfield began performing in public at age 18, when she took a job as a singing waitress at a pizza parlor.`, `在加州長大的惠特菲爾德 18 歲開始公開表演，當時她在一家披薩店當駐唱女服務生。`],
+    [`After studying classical music in college, she moved to San Francisco and went on to sing with the San Francisco Opera Chorus.`, `在大學主修古典音樂之後，她搬到舊金山，並接著加入舊金山歌劇合唱團演唱。`]
+  ],
+  [
+    [`Walking home from rehearsal at age 29, she was caught in the midst of a random shooting that left her paralyzed from the waist down.`, `29 歲那年，她排練後走路回家，被捲入一場隨機槍擊，導致她腰部以下癱瘓。`],
+    [`I asked how she dealt with the realization that she'd never walk again, and she confessed that initially she didn't want to face it.`, `我問她如何面對再也無法行走的事實，她坦承一開始自己不願面對。`],
+    [`After a year of depression she tried to kill herself.`, `經過一年的憂鬱後，她曾試圖自殺。`],
+    [`She was then admitted to a hospital for treatment, where she was able to recover.`, `她隨後被送入醫院接受治療，並在那裡得以康復。`]
+  ],
+  [
+    [`Whitfield said she came to understand that the only thing she had lost in this misfortunate event was the ability to walk.`, `惠特菲爾德說，她漸漸明白，在這場不幸中，她唯一失去的只是行走的能力。`],
+    [`She still possessed her most valuable asset—her mind.`, `她仍擁有她最寶貴的資產——她的心智。`],
+    [`Pointing to her head, she said, "Everything important is in here. The only real disability in life is losing your mind."`, `她指著自己的頭說：「所有重要的東西都在這裡。人生中唯一真正的殘缺，是失去你的心智。」`],
+    [`When I asked if she was angry about what she had lost, she admitted to being frustrated occasionally, "especially when everybody's dancing, because I love to dance. But when that happens I just remove myself so I can focus instead on what I can do."`, `我問她是否對失去的東西感到憤怒，她承認偶爾會感到挫折，「尤其是大家都在跳舞的時候，因為我愛跳舞。但那種時候，我就讓自己抽離，專注在我能做的事情上。」`]
+  ]
+], '閱讀主題：專欄作家採訪輪椅爵士歌手 Wesla Whitfield 的生平與人生態度。', 'rc2');
+
+H += rq(45, `In which of the following places has Wesla Whitfield worked?`, `下列哪個地方是韋絲拉·惠特菲爾德工作過的？`, T('細節題：工作地點', NP), 'C',
+  `第二段：<b>took a job as a singing waitress at a pizza parlor</b> → 在披薩店工作。`,
+  [
+    ['A college.', '大學。', W('原文：<b>After studying classical music in college</b>，她是在大學「讀書」，不是工作。', '若原文寫 taught music in college，此選項才對。')],
+    ['A hospital.', '醫院。', W('原文：<b>She was then admitted to a hospital for treatment</b>，是「住院治療」，不是工作。', '若原文寫 worked as a nurse in a hospital，此選項才對。')],
+    ['A pizza parlor.', '披薩店。', R('原文：<b>took a job as a singing waitress at a pizza parlor</b>，明確說她在披薩店擔任駐唱女服務生。')],
+    ['A news agency.', '通訊社。', W('寫專欄、做採訪的是第一人稱的「我」（記者），不是 Whitfield。', '若 Whitfield 擔任採訪記者，此選項才對。')]
+  ]);
+
+H += rq(46, `What does "when that happens" mean in the last paragraph?`, `最後一段的 "when that happens" 是什麼意思？`, T('指涉題：that 指代前文情境', NP), 'D',
+  `<b>that</b> 指向前一句她所說的 <b>especially when everybody's dancing</b>（大家都在跳舞的時候）。`,
+  [
+    ['When Wesla is losing her mind.', '當韋絲拉失去心智時。', W('losing your mind 出現在她所說的「真正的殘缺」，與 when that happens 之後「抽離自己」無關。', '若上文寫 when I lose my mind，此選項才對。')],
+    ['When Wesla is singing on the stage.', '當韋絲拉在臺上唱歌時。', W('文中說她唱歌時全場忘了輪椅，沒有任何「感到挫折」的線索。', '若上文寫 especially when I am singing，此選項才對。')],
+    ['When Wesla is going out in her wheelchair.', '當韋絲拉坐輪椅外出時。', W('全文沒有提到外出時的挫折。', '若上文寫 especially when I go out in my wheelchair，此選項才對。')],
+    ['When Wesla is watching other people dancing.', '當韋絲拉看著別人跳舞時。', R('<b>especially when everybody\'s dancing, because I love to dance</b>：大家跳舞而她不能跳，所以 that happens 指此情況，之後她選擇抽離。')]
+  ]);
+
+H += rq(47, `Which of the following statements is true about Wesla Whitfield's physical disability?`, `關於惠特菲爾德的身體殘疾，以下哪一項敘述為真？`, T('細節題：是非判斷', NP), 'B',
+  `第三段：<b>After a year of depression she tried to kill herself</b>；第一句也說她<b>一開始不願面對</b> → 起初悲傷、憂鬱。`,
+  [
+    ['It was caused by a traffic accident.', '是由車禍造成的。', W('原文：<b>a random shooting</b>（隨機槍擊），不是車禍。', '若原文寫 a car accident，此選項才對。')],
+    ['It made her sad and depressed at first.', '一開始讓她悲傷與憂鬱。', R('原文：<b>initially she didn\'t want to face it. After a year of depression ...</b> 與 sad and depressed at first 一致。')],
+    ['It seriously affected her singing career.', '嚴重影響她的歌唱事業。', W('文中她仍是 famous jazz singer，且歌聲 so powerful and soulful，沒有說事業受重創。', '若原文寫 she could never sing again，此選項才對。')],
+    ['It happened when she was a college student.', '發生在她讀大學期間。', W('原文：<b>at age 29</b>，且是她在歌劇合唱團排練後回家；大學已是更早之事。', '若原文寫 at age 20 when she was a student，此選項才對。')]
+  ]);
+
+H += rq(48, `What advice would Wesla most likely give other disabled people?`, `韋絲拉最可能給其他身障者什麼建議？`, T('推論題：作者想傳達的人生態度', NP), 'A',
+  `關鍵句：<b>the only thing she had lost was the ability to walk</b>、<b>focus instead on what I can do</b> → 不要糾結失去的，善用擁有的。`,
+  [
+    ['Ignore what you have lost and make the best use of what you have.', '不要在意失去的，善加利用你所擁有的。', R('與她所說 <b>focus instead on what I can do</b>、<b>She still possessed her most valuable asset—her mind</b> 完全一致。')],
+    ['Be modest and hard-working to earn respect from other people.', '謙虛努力以贏得他人尊重。', W('文中形容她 humble，但她並沒有勸人「謙虛努力以贏得尊重」。', '若她說 Work hard and others will respect you，此選項才對。')],
+    ['Acquire a skill so that you can still be successful and famous.', '學一項技能，使自己仍能成功出名。', W('文中沒有勸人追求成名，她強調的是心智與專注在能做的事。', '若她說 Learn a skill to become famous，此選項才對。')],
+    ['Try to sing whenever you feel upset and depressed.', '心情低落時就唱歌。', W('她只在受訪時說明自己如何面對挫折，並未建議用唱歌排解情緒。', '若她說 Singing helped me through depression，此選項才對。')]
+  ]);
+
+H += groupGradeBox('rc2', '閱讀測驗（二）', 45, 48, 2);
+
+/* ---- 49–52 叉子 ---- */
+H += passage('閱讀測驗（三）：叉子的歷史 The History of Forks', [
+  [
+    [`Forks trace their origins back to the ancient Greeks.`, `叉子的起源可追溯到古希臘人。`],
+    [`Forks at that time were fairly large with two tines that aided in the carving of meat in the kitchen.`, `當時的叉子相當大，有兩根叉齒，用來協助在廚房切肉。`],
+    [`The tines prevented meat from twisting or moving during carving and allowed food to slide off more easily than it would with a knife.`, `叉齒能防止肉在切割時扭動或移位，也比用刀更容易讓食物滑落。`]
+  ],
+  [
+    [`By the 7th century A.D., royal courts of the Middle East began to use forks at the table for dining.`, `到公元 7 世紀，中東的王室宮廷開始在餐桌上用叉子進食。`],
+    [`From the 10th through the 13th centuries, forks were fairly common among the wealthy in Byzantium.`, `從 10 世紀到 13 世紀，叉子在拜占庭的富人之間相當普遍。`],
+    [`In the 11th century, a Byzantine wife brought forks to Italy; however, they were not widely adopted there until the 16th century.`, `11 世紀時，一位拜占庭的妻子把叉子帶到義大利；然而直到 16 世紀它們才在當地被廣泛採用。`],
+    [`Then in 1533, forks were brought from Italy to France.`, `接著在 1533 年，叉子從義大利傳入法國。`],
+    [`The French were also slow to accept forks, for using them was thought to be awkward.`, `法國人也很慢才接受叉子，因為使用叉子被認為很笨拙。`]
+  ],
+  [
+    [`In 1608, forks were brought to England by Thomas Coryate, who saw them during his travels in Italy.`, `1608 年，湯瑪斯·柯里亞特把叉子帶到英國，他是在義大利旅行時看到的。`],
+    [`The English first ridiculed forks as being unnecessary.`, `英國人起初嘲笑叉子是多餘的。`],
+    [`"Why should a person need a fork when God had given him hands?" they asked.`, `他們說：「上帝既然給了人手，人為什麼還需要叉子？」`],
+    [`Slowly, however, forks came to be adopted by the wealthy as a symbol of their social status.`, `然而，叉子漸漸被富人採用，成為他們社會地位的象徵。`],
+    [`They were prized possessions made of expensive materials intended to impress guests.`, `它們是用昂貴材料製成、為了讓賓客印象深刻的珍貴物品。`],
+    [`By the mid 1600s, eating with forks was considered fashionable among the wealthy British.`, `到 17 世紀中葉，用叉子吃飯在英國富人之間被視為時髦。`]
+  ],
+  [
+    [`Early table forks were modeled after kitchen forks, but small pieces of food often fell through the two tines or slipped off easily.`, `早期的餐叉是仿照廚房用叉製作，但小塊食物常從兩根叉齒間掉下去或輕易滑落。`],
+    [`In late 17th century France, larger forks with four curved tines were developed.`, `17 世紀末的法國，發展出有四根彎曲叉齒的較大叉子。`],
+    [`The additional tines made diners less likely to drop food, and the curved tines served as a scoop so people did not have to constantly switch to a spoon while eating.`, `增加的叉齒使用餐者較不容易掉食物，而彎曲的叉齒可當作勺子，人們就不必在吃飯時不斷換用湯匙。`],
+    [`By the early 19th century, four-tined forks had also been developed in Germany and England and slowly began to spread to America.`, `到 19 世紀初，德國和英國也發展出四齒叉，並慢慢開始傳到美國。`]
+  ]
+], '閱讀主題：叉子從古希臘到近代歐洲的演變與傳播。', 'rc3');
+
+H += rq(49, `What is the passage mainly about?`, `這篇文章主要在談什麼？`, T('主旨題', NP), 'C',
+  `全文依年代敘述叉子從古希臘→中東→義大利→法國→英國→形狀演變，是「叉子用於進餐的歷史」。`,
+  [
+    ['The different designs of forks.', '叉子的不同設計。', W('設計（二齒→四齒彎曲）只在最後一段提到，並非全文主軸。', '若全文逐一比較各種叉子的款式，此選項才對。')],
+    ['The spread of fork-aided cooking.', '叉子輔助烹調的傳播。', W('文中提到最早的叉子用於廚房切肉，但全文主要談「餐桌用叉」的傳播，而非烹調。', '若全文談如何用叉子做菜，此選項才對。')],
+    ['The history of using forks for dining.', '用叉子進餐的歷史。', R('全文依年代說明叉子如何由廚房用具變成餐桌用具，並由各地傳播與改良，屬於「歷史」性質。')],
+    ['The development of fork-related table manners.', '與叉子相關餐桌禮儀的發展。', W('文中沒有談用叉的禮儀規範，只提到不同國家接受叉子的態度。', '若全文談 how to hold a fork 的規矩，此選項才對。')]
+  ]);
+
+H += rq(50, `By which route did the use of forks spread?`, `叉子的使用是循哪條路線傳播的？`, T('細節整合題：依時間排序傳播路線', NP), 'B',
+  `依序：Greeks（古希臘）→ Middle East（7 世紀）→ Italy（11 世紀拜占庭妻子帶入）→ France（1533）→ England（1608）。`,
+  [
+    ['Middle East → Greece → England → Italy → France', '中東→希臘→英國→義大利→法國', W('起點應為希臘，且義大利早於英國與法國。', '若文中說叉子先到英國，此選項才對。')],
+    ['Greece → Middle East → Italy → France → England', '希臘→中東→義大利→法國→英國', R('Greece（起源）→ Middle East（7 世紀）→ Italy（11 世紀）→ France（1533）→ England（1608）。')],
+    ['Greece → Middle East → France → Italy → Germany', '希臘→中東→法國→義大利→德國', W('叉子是先到義大利（11 世紀），再由義大利傳到法國（1533），不是先法國後義大利。', '若原文寫 forks went to France before Italy，此選項才對。')],
+    ['Middle East → France → England → Italy → Germany', '中東→法國→英國→義大利→德國', W('起點應是希臘；且順序與原文不符（義大利最早）。', '若文中指出叉子最早來自中東，此選項的起點才對。')]
+  ]);
+
+H += rq(51, `How did forks become popular in England?`, `叉子在英國是如何流行起來的？`, T('細節題：因果關係', NP), 'D',
+  `第三段：<b>forks came to be adopted by the wealthy as a symbol of their social status</b>。`,
+  [
+    ['Wealthy British were impressed by the design of forks.', '英國富人對叉子的設計印象深刻。', W('文中是富人用叉子去 <b>impress guests</b>（讓賓客印象深刻），不是他們被設計打動。', '若原文寫 The wealthy British were impressed by the shape of forks，此選項才對。')],
+    ['Wealthy British thought it awkward to use their hands to eat.', '英國富人認為用手吃飯很笨拙。', W('原文：<b>using them was thought to be awkward</b> 指法國人認為「用叉子」笨拙；英國人是先嘲笑叉子沒必要。', '若原文說 using hands was thought awkward，此選項才對。')],
+    ['Wealthy British gave special forks to the nobles as luxurious gifts.', '英國富人把特製叉子當奢華禮物送給貴族。', W('文中沒有送禮的情節，只說叉子是昂貴的私人物品。', '若原文寫 forks were given as gifts to nobles，此選項才對。')],
+    ['Wealthy British considered dining with forks a sign of social status.', '英國富人認為用叉子進餐是社會地位的象徵。', R('<b>adopted by the wealthy as a symbol of their social status</b>，並於 <b>mid 1600s</b> 成為富人間的時尚。')]
+  ]);
+
+H += rq(52, `Why were forks made into a curved shape?`, `叉子為什麼被做成彎曲的形狀？`, T('細節題：原因', NP), 'A',
+  `最後一段：<b>the curved tines served as a scoop so people did not have to constantly switch to a spoon</b>。`,
+  [
+    ['They could be used to scoop food as well.', '它們也可以用來舀食物。', R('原文：<b>the curved tines served as a scoop</b>，所以不需要不斷換湯匙。')],
+    ['They looked more fashionable in this way.', '這樣看起來更時髦。', W('「fashionable」出現在英國富人用叉子的段落，與彎曲叉齒的原因無關。', '若原文說 curved forks were more fashionable，此選項才對。')],
+    ['They were designed in this way for export to the US.', '這樣設計是為了出口到美國。', W('原文只說四齒叉慢慢傳到美國，不是為出口而設計。', '若原文寫 were designed for export，此選項才對。')],
+    ['They ensured the meat would not twist while being cut.', '確保肉在切割時不會扭動。', W('這是古希臘兩齒叉（<b>The tines prevented meat from twisting</b>）的功能，不是彎曲形狀的原因。', '若題目問「古希臘叉子為何有叉齒」，此選項才對。')]
+  ]);
+
+H += groupGradeBox('rc3', '閱讀測驗（三）', 49, 52, 2);
+
+/* ---- 53–56 寵物攝影 ---- */
+H += passage('閱讀測驗（四）：動物攝影 Photographing Animals', [
+  [
+    [`Animals are a favorite subject of many photographers.`, `動物是許多攝影師最愛的拍攝主題。`],
+    [`Cats, dogs, and other pets top the list, followed by zoo animals.`, `貓、狗與其他寵物名列榜首，其次是動物園的動物。`],
+    [`However, because it's hard to get them to sit still and "perform on command," some professional photographers refuse to photograph pets.`, `然而，由於很難讓牠們乖乖坐著並「聽令表演」，有些專業攝影師拒絕拍攝寵物。`]
+  ],
+  [
+    [`One way to get an appealing portrait of a cat or dog is to hold a biscuit or treat above the camera.`, `想拍出貓或狗討喜的肖像，有個方法是把餅乾或點心舉在相機上方。`],
+    [`The animal's longing look toward the food will be captured by the camera, but the treat won't appear in the picture because it's out of the camera's range.`, `動物渴望地望向食物的神情會被相機捕捉下來，但點心因為在鏡頭範圍外，不會出現在照片中。`],
+    [`When you show the picture to your friends afterwards, they'll be impressed by your pet's loving expression.`, `之後把照片拿給朋友看時，他們會對你寵物充滿愛意的表情印象深刻。`]
+  ],
+  [
+    [`If you are using fast film, you can take some good, quick shots of a pet by simply snapping a picture right after calling its name.`, `如果你用的是高感光度底片，只要在呼喚寵物名字之後立刻按下快門，就能拍出一些好看的快照。`],
+    [`You'll get a different expression from your pet using this technique.`, `用這個技巧，你會從寵物身上捕捉到不同的表情。`],
+    [`Depending on your pet's mood, the picture will capture an interested, curious expression or possibly a look of annoyance, especially if you've awakened it from a nap.`, `依寵物當時的心情，照片會拍到感興趣、好奇的表情，也可能是不耐煩的神情，尤其是你把牠從午睡中叫醒時。`]
+  ],
+  [
+    [`Taking pictures of zoo animals requires a little more patience.`, `拍攝動物園的動物需要多一點耐心。`],
+    [`After all, you can't wake up a lion!`, `畢竟，你不能把獅子叫醒啊！`],
+    [`You may have to wait for a while until the animal does something interesting or moves into a position for you to get a good shot.`, `你可能得等一會兒，直到動物做出有趣的舉動，或移到適合拍攝的位置。`],
+    [`When photographing zoo animals, don't get too close to the cages, and never tap on the glass or throw things between the bars of a cage.`, `拍攝動物園動物時，不要太靠近籠子，也絕不要敲玻璃或把東西丟進籠子欄杆之間。`],
+    [`Concentrate on shooting some good pictures, and always respect the animals you are photographing.`, `專心拍出好照片，並且永遠尊重你所拍攝的動物。`]
+  ]
+], '閱讀主題：寵物與動物園動物的拍攝技巧。', 'rc4');
+
+H += rq(53, `Why do some professional photographers NOT like to take pictures of pets?`, `為什麼有些專業攝影師不喜歡拍寵物？`, T('細節題：原因（NOT）', NP), 'A',
+  `第一段末句：<b>it's hard to get them to sit still and "perform on command"</b> → 寵物不聽指令。`,
+  [
+    ['Pets may not follow orders.', '寵物可能不聽從指令。', R('<b>perform on command</b> ＝聽令表演；hard to get them to sit still ＝不聽從指示，故攝影師拒拍。')],
+    ['Pets don\'t want to be bothered.', '寵物不想被打擾。', W('文中提到「被叫醒時會有不耐煩的表情」，但那是拍攝技巧段落，不是攝影師拒拍的原因。', '若原文寫 pets hate being photographed，此選項才對。')],
+    ['Pets may not like photographers.', '寵物可能不喜歡攝影師。', W('全文沒有說寵物討厭攝影師。', '若原文寫 pets dislike strangers，此選項才對。')],
+    ['Pets seldom change their expressions.', '寵物很少改變表情。', W('文中說可拍到好奇、不耐煩等不同表情，與此選項相反。', '若原文寫 pets keep the same expression，此選項才對。')]
+  ]);
+
+H += rq(54, `What is the use of a biscuit in taking pictures of a pet?`, `拍寵物時，餅乾有什麼用處？`, T('細節題：功能', NP), 'A',
+  `第二段：<b>The animal's longing look toward the food will be captured</b>，朋友會對寵物的 <b>loving expression</b> 印象深刻。`,
+  [
+    ['To capture a cute look.', '捕捉可愛的神情。', R('餅乾引出寵物渴望、充滿愛意的神情，朋友看了印象深刻＝討喜的表情。')],
+    ['To create a special atmosphere.', '營造特殊氛圍。', W('文中沒有提到氣氛，且餅乾不會入鏡。', '若原文寫 the biscuit adds mood to the photo，此選項才對。')],
+    ['To arouse the appetite of the pet.', '引起寵物的食慾。', W('餅乾是為了引出寵物的「神情」，不是為了讓牠想吃。這是手段而非目的。', '若題目問「餅乾如何讓寵物看向鏡頭」，此選項的敘述才較接近。')],
+    ['To keep the pet from looking at the camera.', '避免寵物看向相機。', W('原文是寵物望向食物（<b>above the camera</b>），並非避免看相機；題目問的是「拍照用途」。', '若原文說 hide the treat to avoid eye contact，此選項才對。')]
+  ]);
+
+H += rq(55, `What is the advantage of calling your pet's name when taking a shot of it?`, `拍寵物時呼喚牠的名字有什麼好處？`, T('細節題：優點', NP), 'D',
+  `第三段：<b>You'll get a different expression from your pet using this technique.</b>`,
+  [
+    ['To help your pet look its best.', '幫助寵物呈現最好的樣子。', W('文中沒說這是為了讓寵物最好看，反而可能拍到不耐煩的樣子。', '若原文寫 your pet will always look its best，此選項才對。')],
+    ['To make sure that your pet sits still.', '確保寵物坐著不動。', W('文章第一段說寵物很難乖乖坐著；呼喚名字是為了「快拍」，並非讓牠不動。', '若原文寫 Calling its name makes it sit still，此選項才對。')],
+    ['To keep your pet awake for a while.', '讓寵物暫時保持清醒。', W('文中提到午睡被叫醒會不耐煩，但那只是範例，不是目的。', '若題目問「叫醒午睡中寵物的後果」，此選項才有關聯。')],
+    ['To catch a different expression of your pet.', '捕捉寵物不同的表情。', R('原文：<b>You\'ll get a different expression from your pet using this technique</b>。')]
+  ]);
+
+H += rq(56, `In what way is photographing zoo animals different from photographing pets?`, `拍攝動物園動物與拍攝寵物在哪方面不同？`, T('細節題：比較差異', NP), 'D',
+  `第四段開頭：<b>requires a little more patience</b>；後面 <b>You may have to wait for a while</b> → 需要更多時間等待。`,
+  [
+    ['You need to have fast film.', '需要高感光度底片。', W('fast film 是拍「寵物」快照的建議，不是動物園動物的差異。', '若題目問「拍寵物快照需要什麼」，此選項才對。')],
+    ['You need special equipment.', '需要特殊器材。', W('全文沒有提到動物園拍攝需要特殊器材。', '若原文寫 You need a long lens，此選項才對。')],
+    ['You need to stay close to the animals.', '需要靠近動物。', W('原文：<b>don\'t get too close to the cages</b>，剛好相反。', '若原文寫 get close to the cages，此選項才對。')],
+    ['You need more time to watch and wait.', '需要更多時間觀察與等待。', R('<b>requires a little more patience ... wait for a while until the animal does something interesting</b>。')]
+  ]);
+
+H += groupGradeBox('rc4', '閱讀測驗（四）', 53, 56, 2);
+
+// 全卷單選題總批改（第 1–56 題；1–40 題每題 1 分、41–56 題每題 2 分，共 72 分）
+H += allGradeBox(1, 56, 1);
+
+/* ================= 第貳部分 非選擇題 ================= */
+H += sec('s-trans', '第貳部分 一、中譯英（占 8 分）');
+H += '<p class="note">說明：每題 4 分。評分重點為句構正確、用字恰當、時態與冠詞無誤。點開「參考譯文」查看答案與解析。</p>';
+
+function transCard(no, zh, en, points, alts) {
+  return '<section class="pas"><h3>第 ' + no + ' 題</h3>' +
+    '<div class="stem"><div>' + zh + '</div></div>' +
+    '<details class="mini"><summary>👀 參考譯文與解析</summary>' +
+    '<div class="stem"><div class="en">' + en + '</div></div>' +
+    clue(points) +
+    '<div class="clue"><h4>其他可接受的寫法</h4>' + alts + '</div>' +
+    '</details></section>';
+}
+
+H += transCard(1,
+  `近年來，許多臺灣製作的影片已經受到國際的重視。`,
+  `In recent years, many films made in Taiwan have received international attention.`,
+  `<b>近年來</b> → In recent years（表示「到現在為止」，搭配<b>現在完成式 have received</b>）。<br><b>臺灣製作的影片</b> → films <b>made in Taiwan</b>（過去分詞片語後置修飾）或 Taiwan-made films。<br><b>受到國際的重視</b> → receive / gain / attract international attention（或 gain international recognition）。<br>測驗重點：現在完成式、過去分詞後置修飾、receive attention 搭配詞。`,
+  `Over the past few years, a lot of Taiwan-made movies have gained international recognition.<br>Recently, many movies produced in Taiwan have attracted attention from around the world.`);
+
+H += transCard(2,
+  `拍攝這些電影的地點也成為熱門的觀光景點。`,
+  `The places where these films were shot have also become popular tourist attractions.`,
+  `<b>拍攝這些電影的地點</b> → The places <b>where</b> these films were shot（關係副詞 where 引導形容詞子句，shoot 的被動為 were shot）。<br><b>也</b> → have <b>also</b> become（also 置於助動詞 have 之後、過去分詞之前）。<br><b>成為</b> → become；<b>熱門的觀光景點</b> → popular tourist attractions（attractions 用複數，與 places 一致）。<br>測驗重點：關係副詞 where、被動語態、also 的位置、主詞與動詞的一致性。`,
+  `The locations where these movies were filmed have also turned into popular tourist spots.<br>The sites at which these films were made have also become popular tourist destinations.`);
+
+H += sec('s-essay', '第貳部分 二、英文作文（占 20 分）');
+H += `<section class="pas"><h3>題目</h3>
+<div class="stem"><div><b>提示：</b>你最好的朋友最近迷上電玩，因此常常熬夜，疏忽課業，並受到父母的責罵。你（英文名字必須假設為 Jack 或 Jill）打算寫一封信給他／她（英文名字必須假設為 Ken 或 Barbie），適當地給予勸告。</div>
+<div class="note">要求：文長至少 120 個單詞；信末須用 Jack 或 Jill 署名，不得使用自己的真實姓名。</div></div>
+<div class="clue"><h4>寫作策略</h4>① <b>開頭</b>：問候並說明寫信目的（擔心對方）。② <b>同理</b>：先認同玩遊戲的樂趣，避免說教語氣。③ <b>三大問題</b>：健康（熬夜）、課業（成績下滑）、親子關係（被責罵）。④ <b>具體建議</b>：設定時間上限、培養其他興趣、與父母溝通。⑤ <b>結尾</b>：鼓勵並表達願意陪伴，信末署名 Jack。<br>可用句型：I'm writing to ...／not because ... but because ...／To begin with, ...／Most importantly, ...／rather than ...／get back on track。</div></section>`;
+
+H += passage('範文（約 276 字，結構：問候 → 同理 → 問題 → 建議 → 鼓勵）', [
+  [
+    [`Dear Ken,`, `親愛的肯：`],
+    [`How have you been lately?`, `你最近好嗎？`],
+    [`I am writing this letter because I have been worried about you for quite a while.`, `我寫這封信，是因為我擔心你已經好一陣子了。`]
+  ],
+  [
+    [`Last week, your mom told me that you have been staying up late playing video games almost every night.`, `上週你媽媽告訴我，你幾乎每晚都熬夜打電玩。`],
+    [`I was not surprised, since you have looked so tired and sleepy at school these days.`, `我並不意外，因為你最近在學校看起來又累又想睡。`],
+    [`I used to be crazy about them myself, so I know how hard it is to stop.`, `我自己以前也很迷電玩，所以知道要停下來有多難。`]
+  ],
+  [
+    [`However, as your best friend, I have to be honest with you.`, `不過，身為你最好的朋友，我必須對你坦白。`],
+    [`First, losing sleep is bad for your health, and it is also why you fell asleep in class last week.`, `第一，睡眠不足有害健康，這也是你上週在課堂上睡著的原因。`],
+    [`Second, your grades have dropped because you spend less time on homework and on reviewing lessons.`, `第二，你的成績下滑了，因為你花在作業與複習功課的時間變少了。`],
+    [`Third, your parents scold you not because they hate you but because they care about your future.`, `第三，你的父母責罵你，不是因為討厭你，而是因為他們在乎你的未來。`],
+    [`If you keep ignoring their words, the quarrels will only get worse.`, `如果你一直不理會他們的話，爭吵只會越來越嚴重。`]
+  ],
+  [
+    [`Therefore, I would like to offer you some suggestions.`, `因此，我想給你一些建議。`],
+    [`To begin with, set a limit for yourself, such as playing for one hour after you finish your homework, and never play past ten o'clock.`, `首先，為自己設定限制，例如寫完功課後只玩一小時，而且絕不玩過十點。`],
+    [`Next, find another hobby that keeps you moving.`, `其次，找另一個能讓你動起來的嗜好。`],
+    [`For example, playing basketball with me on weekends is a good way to relax and stay fit.`, `例如，週末和我一起打籃球，就是放鬆又保持健康的好方法。`],
+    [`Most importantly, have a sincere talk with your parents and promise them that you will change.`, `最重要的是，誠懇地和你的父母談一談，並向他們承諾你會改變。`],
+    [`I am sure they will be glad to hear it and give you more trust.`, `我相信他們會很高興聽到，也會給你更多信任。`]
+  ],
+  [
+    [`Remember, games should be a way to enjoy life rather than something that controls it.`, `記住，遊戲應該是享受生活的一種方式，而不是控制生活的東西。`],
+    [`If you need any help, I will always be here for you.`, `如果你需要任何幫助，我會一直在你身邊。`],
+    [`Let's work together to get you back on track!`, `讓我們一起努力，讓你回到正軌吧！`]
+  ],
+  [
+    [`Best wishes,`, `祝好，`],
+    [`Jack`, `傑克`]
+  ]
+], '範文字數約 276 字（不含問候與署名），符合 250–300 字的範文要求；考試實際至少寫 120 字即可。重點加分：連接詞（However / Therefore / To begin with）、分點論述、not ... but ... 結構、信末正確署名 Jack。', 'essay');
+
+/* ================= 組裝與渲染 ================= */
+document.getElementById('app').innerHTML = H;
+const navEl = document.getElementById('nav');
+SECS.forEach(s => {
+  const a = document.createElement('a');
+  a.href = '#' + s[0];
+  a.textContent = (s[1].startsWith('第貳部分') ? '非選：' + s[1].replace(/^第貳部分\s*[一二]、/, '') : s[1].replace(/^第壹部分\s*/, '')).replace(/（.*?）/, '');
+  navEl.insertBefore(a, navEl.querySelector('.review-btn'));
+});
+
+
+
+</script>
+<script src="bookmark.js"></script>
+<script>
+  let secretClickCount = 0;
+  let secretTimer;
+  document.getElementById('secret-trigger').addEventListener('click', function() {
+    secretClickCount++;
+    if (secretClickCount === 3) {
+      const counter = document.getElementById('secret-counter');
+      counter.style.display = counter.style.display === 'none' ? 'block' : 'none';
+      secretClickCount = 0;
+    }
+    clearTimeout(secretTimer);
+    secretTimer = setTimeout(() => { secretClickCount = 0; }, 2000);
+  });
+</script>
+</body>
+</html>
