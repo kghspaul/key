@@ -155,7 +155,7 @@ footer a:hover{text-decoration:underline;}
   <h1><span id="exam-title">102學年度學科能力測驗 英文考科詳解</span> <span id="completed-badge" style="display:none;font-size:1rem;color:var(--ok);">✅ 已完成</span></h1>
   <p>每題含：考點標籤 → 題幹逐句中英對照 → 解題線索 → 正解與全部誤答分析</p>
   <div class="feature-box">
-    💡 <b>複習與作答指南：</b> 點擊「🎯 切換練習模式」可自動挖空題幹答案並隱藏中譯與解析；直接點選各題選項作答後，可點擊各題組下方的「<b>✅ 批改本題組</b>」或第 56 題下方的「<b>🏆 一次批改全卷</b>」查看得分並自動展開詳解！點擊每題右上角的「標記此題」可收錄錯題；滑鼠反白任何英文字句可「收藏單字」。請前往 <a href="review.html" target="_blank" style="color:var(--acc);font-weight:bold;">錯題與單字總複習頁面</a>。
+    💡 <b>複習與作答指南：</b> 點擊「🎯 切換練習模式」可自動挖空題幹答案並隱藏中譯與解析；直接點選各題選項作答後，可點擊各題組下方的「<b>✅ 批改本題組</b>」或單選題最後的「<b>🏆 一次批改全卷</b>」查看得分並自動展開詳解！點擊每題右上角的「標記此題」可收錄錯題；滑鼠反白任何英文字句可「收藏單字」。請前往 <a href="review.html" target="_blank" style="color:var(--acc);font-weight:bold;">錯題與單字總複習頁面</a>。
   </div>
   <p>圖例：<span class="bl revealed">黃底</span> ＝ 正確答案填入處 ｜ <span class="tag" id="secret-trigger" style="user-select:none;cursor:default;">考點</span> <span class="tag pos">詞性需求</span></p>
   <div id="secret-counter" style="display:none; margin-top:8px; font-size:0.9rem; color:var(--mut);">
@@ -236,7 +236,6 @@ function evaluateSingleQ(n) {
   qEl.classList.add('graded');
   qEl.open = true;
 
-  // 顯示文章與題幹中對應題號的黃底答案
   document.querySelectorAll('.bl[data-q="'+n+'"]').forEach(el => el.classList.add('revealed'));
 
   const sel = qEl.querySelector('ul.op li.selected');
@@ -331,72 +330,56 @@ window.resetGroup = function(gid, startQ, endQ) {
   }
 };
 
-// 一次批改全卷單選題（1–56 題，滿分 72 分）
+// 一次批改全卷選擇題（第 1–56 題，共 72 分）
 window.gradeAllSingleChoice = function() {
   if (!document.body.classList.contains('practice-mode')) {
     enablePracticeMode();
   }
-  const groups = [
-    ['vocab', 1, 15, 1],
-    ['cloze1', 16, 20, 1],
-    ['cloze2', 21, 25, 1],
-    ['cloze3', 26, 30, 1],
-    ['wbank', 31, 40, 1],
-    ['rc1', 41, 44, 2],
-    ['rc2', 45, 48, 2],
-    ['rc3', 49, 52, 2],
-    ['rc4', 53, 56, 2]
-  ];
-  groups.forEach(g => gradeGroup(g[0], g[1], g[2], g[3]));
-
-  let totalScore = 0, totalOk = 0, wrongList = [], blankList = [];
+  let okCount = 0, earnedPts = 0, wrongList = [], blankList = [];
   for (let n = 1; n <= 56; n++) {
-    const pts = n >= 41 ? 2 : 1;
-    const qEl = document.getElementById('q' + n);
-    const sel = qEl ? qEl.querySelector('ul.op li.selected') : null;
-    if (!sel) {
-      blankList.push(n);
-    } else if (Q_ANS[n].indexOf(sel.getAttribute('data-opt')) >= 0) {
-      totalOk++;
-      totalScore += pts;
-    } else {
+    const pts = (n >= 41) ? 2 : 1;
+    const res = evaluateSingleQ(n);
+    if (res === 'ok') {
+      okCount++;
+      earnedPts += pts;
+    } else if (res === 'no') {
       wrongList.push(n);
+    } else {
+      blankList.push(n);
     }
   }
+  document.querySelectorAll('.pas, .bank').forEach(el => el.classList.add('graded'));
 
-  const pct = Math.round((totalScore / 72) * 100);
   const resEl = document.getElementById('gres-all');
-  let html = '<div style="font-size:1.08rem;">🎯 <b>全卷單選題總分：</b><b style="color:var(--acc);font-size:1.35rem;">' + totalScore + ' / 72</b> 分（答對 <b>' + totalOk + ' / 56</b> 題，得分率 <b>' + pct + '%</b>）' + (totalScore === 72 ? ' 🏆 滿分全對！太強了！' : '') + '</div>';
+  let html = '<div><b>🏆 全卷選擇題總成績：</b>答對 <b>' + okCount + ' / 56</b> 題，總分 <b style="color:var(--acc);font-size:1.3rem;">' + earnedPts + ' / 72</b> 分' + (okCount === 56 ? ' 🎉 滿分全對！太強了！' : '') + '</div>';
   if (wrongList.length > 0) {
-    html += '<div style="margin-top:8px;">❌ <b>全卷答錯題號（共 '+wrongList.length+' 題）：</b>' + wrongList.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+    html += '<div style="margin-top:6px;">❌ <b>答錯題號（共 ' + wrongList.length + ' 題）：</b>' + wrongList.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
   }
   if (blankList.length > 0) {
-    html += '<div style="margin-top:6px;">⚠️ <b>全卷未作答題號（共 '+blankList.length+' 題）：</b>' + blankList.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+    html += '<div style="margin-top:6px;">⚠️ <b>未作答題號（共 ' + blankList.length + ' 題）：</b>' + blankList.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
   }
   resEl.innerHTML = html;
   resEl.classList.add('show');
 };
 
-// 重練全卷
+// 重練全卷選擇題
 window.resetAllSingleChoice = function() {
-  const groups = [
-    ['vocab', 1, 15],
-    ['cloze1', 16, 20],
-    ['cloze2', 21, 25],
-    ['cloze3', 26, 30],
-    ['wbank', 31, 40],
-    ['rc1', 41, 44],
-    ['rc2', 45, 48],
-    ['rc3', 49, 52],
-    ['rc4', 53, 56]
-  ];
-  groups.forEach(g => resetGroup(g[0], g[1], g[2]));
-  const resEl = document.getElementById('gres-all');
-  if (resEl) {
-    resEl.innerHTML = '';
-    resEl.classList.remove('show');
+  enablePracticeMode();
+  for (let n = 1; n <= 56; n++) {
+    const qEl = document.getElementById('q' + n);
+    if (qEl) {
+      qEl.classList.remove('graded');
+      qEl.querySelectorAll('ul.op li').forEach(li => li.classList.remove('selected'));
+    }
+    const st = document.getElementById('st' + n);
+    if (st) st.style.display = 'none';
+    document.querySelectorAll('.bl[data-q="'+n+'"]').forEach(el => el.classList.remove('revealed'));
   }
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.querySelectorAll('.pas, .bank').forEach(el => el.classList.remove('graded'));
+  document.querySelectorAll('.grade-res').forEach(el => {
+    el.innerHTML = '';
+    el.classList.remove('show');
+  });
 };
 
 // === 功能初始化：練習模式與完成標記 ===
@@ -690,7 +673,7 @@ out += passage('第 16–20 題題組：電話區域號碼（Area Code）的由�
     ['In countries other than the United States and Canada, the area code generally determines the [[20|cost]] of a call.', '在美國和加拿大以外的國家，區域號碼通常決定了一通電話的費用。'],
     ['Calls within an area code and often a small group of neighboring area codes are normally charged at a lower rate than outside the area code.', '在同一個區碼內（以及通常包含少數鄰近區碼）的通話，其收費費率通常比跨區碼的通話來得低。']
   ]
-], '', 'cloze1');
+], null, 'cloze1');
 
 const cloze1 = [
   {
@@ -758,7 +741,7 @@ const cloze1 = [
 cloze1.forEach(q => {
   out += card(q.n, q.tags, q.ans, stem(q.n) + clue(q.clue) + ops(q.ops, q.ans));
 });
-out += groupGradeBox('cloze1', '二、綜合測驗（第一篇：電話區碼）', 16, 20, 1);
+out += groupGradeBox('cloze1', '綜合測驗第一篇（電話區域號碼）', 16, 20, 1);
 
 // 21-25 題組
 out += passage('第 21–25 題題組：決定錢幣收藏價值的關鍵因素（Coin Collecting）', [
@@ -772,7 +755,7 @@ out += passage('第 21–25 題題組：決定錢幣收藏價值的關鍵因素�
     ['Some coins may command higher prices because they are more popular with collectors.', '有些錢幣之所以能喊出較高的價格，是因為它們更受收藏家歡迎。'],
     ['For example, a 1798 dime is much rarer than a 1916 dime, but the [[25|latter]] sells for significantly more, simply because many more people collect early 20th century dimes than dimes from the 1700s.', '舉例來說，一枚 1798 年的十分硬幣比一枚 1916 年的十分硬幣稀有得多，但後者（1916 年硬幣）的售價卻高出許多，純粹是因為收藏 20 世紀初期十分硬幣的人，遠比收藏 1700 年代十分硬幣的人多得多。']
   ]
-], '', 'cloze2');
+], null, 'cloze2');
 
 const cloze2 = [
   {
@@ -840,7 +823,7 @@ const cloze2 = [
 cloze2.forEach(q => {
   out += card(q.n, q.tags, q.ans, stem(q.n) + clue(q.clue) + ops(q.ops, q.ans));
 });
-out += groupGradeBox('cloze2', '二、綜合測驗（第二篇：錢幣收藏）', 21, 25, 1);
+out += groupGradeBox('cloze2', '綜合測驗第二篇（錢幣收藏價值）', 21, 25, 1);
 
 // 26-30 題組
 out += passage('第 26–30 題題組：法國心理學家比奈（Alfred Binet）與智力測驗（IQ）的誕生', [
@@ -854,7 +837,7 @@ out += passage('第 26–30 題題組：法國心理學家比奈（Alfred Binet�
     ['The IQ is the ratio of “mental age” to chronological age times 100, with 100 [[30|being]] the average.', '智商是「心理年齡（心智年齡）」除以實際年齡的比率再乘以 100，其中以 100 作為平均值。'],
     ['So, an 8-year-old who passes the 10-year-old’s test would have an IQ of 10/8 times 100, or 125.', '因此，一個通過十歲測驗的八歲兒童，其智商就是 10 除以 8 再乘以 100，也就是 125。']
   ]
-], '', 'cloze3');
+], null, 'cloze3');
 
 const cloze3 = [
   {
@@ -922,7 +905,7 @@ const cloze3 = [
 cloze3.forEach(q => {
   out += card(q.n, q.tags, q.ans, stem(q.n) + clue(q.clue) + ops(q.ops, q.ans));
 });
-out += groupGradeBox('cloze3', '二、綜合測驗（第三篇：比奈與智力測驗）', 26, 30, 1);
+out += groupGradeBox('cloze3', '綜合測驗第三篇（比奈與智力測驗）', 26, 30, 1);
 
 // 三、文意選填
 out += '<h2 id="sec3">三、文意選填（第 31–40 題，占 10 分）</h2>';
@@ -973,7 +956,7 @@ out += passage('第 31–40 題題組：海洋熱帶雨林——珊瑚礁的生�
   [
     ['How can we help the reefs? We need to learn more about them and work together to stop the activities that may threaten their existence.', '我們該如何幫助珊瑚礁呢？我們需要更深入了解它們，並攜手合作制止那些可能威脅它們生存的活動。']
   ]
-], '', 'wbank');
+], null, 'wbank');
 
 const wbankData = [
   {
@@ -1111,7 +1094,7 @@ const wbankData = [
 wbankData.forEach(q => {
   out += card(q.n, q.tags, q.ans, stem(q.n) + clue(q.clue) + ops(q.ops, q.ans, q.lab));
 });
-out += groupGradeBox('wbank', '三、文意選填', 31, 40, 1);
+out += groupGradeBox('wbank', '三、文意選填（珊瑚礁危機）', 31, 40, 1);
 
 // 四、閱讀測驗
 out += '<h2 id="sec4">四、閱讀測驗（第 41–56 題，占 32 分）</h2>';
@@ -1142,7 +1125,7 @@ out += passage('第 41–44 題題組：瑞士刀的起源與名稱由來（The 
     ['And as they could buy the Swiss army knife at shops on military bases, they bought huge quantities of them.', '由於他們可以在軍事基地的商店裡買到這種瑞士刀，他們便大量購買。'],
     ['However, it seems that “Schweizer Offizier Messer” was too difficult for them to say, so they just called it the Swiss army knife, and that is the name it is now known by all over the world.', '然而，「Schweizer Offizier Messer」對他們來說似乎太難發音了，所以他們就乾脆稱它為「瑞士陸軍刀（Swiss army knife）」，而這也成為它如今聞名全世界的名稱。']
   ]
-], '', 'rc1');
+], null, 'rc1');
 
 const rc1 = [
   {
@@ -1207,7 +1190,7 @@ rc1.forEach(q => {
   SENT[q.n] = [q.en, q.zh];
   out += card(q.n, q.tags, q.ans, stem(q.n) + clue(q.clue) + ops(q.ops, q.ans));
 });
-out += groupGradeBox('rc1', '四、閱讀測驗（第一篇：瑞士刀起源）', 41, 44, 2);
+out += groupGradeBox('rc1', '閱讀測驗第一篇（瑞士刀的起源）', 41, 44, 2);
 
 // 45-48 題組
 out += passage('第 45–48 題題組：太空垃圾危機（Space Junk）', [
@@ -1231,7 +1214,7 @@ out += passage('第 45–48 題題組：太空垃圾危機（Space Junk）', [
     ['Ground stations have been built to monitor larger pieces of space trash to prevent them from crashing into working satellites or space shuttles.', '人們已經建造了地面觀測站來監控較大塊的太空垃圾，以防止它們撞上運作中的人造衛星或太空梭。'],
     ['Future plans include a cooperative effort among many nations to stop littering in space and to clean up the trash already there.', '未來的計畫包括多國之間的合作努力，以停止在太空中亂丟垃圾，並清理已經存在於那裡的垃圾。']
   ]
-], '', 'rc2');
+], null, 'rc2');
 
 const rc2 = [
   {
@@ -1296,7 +1279,7 @@ rc2.forEach(q => {
   SENT[q.n] = [q.en, q.zh];
   out += card(q.n, q.tags, q.ans, stem(q.n) + clue(q.clue) + ops(q.ops, q.ans));
 });
-out += groupGradeBox('rc2', '四、閱讀測驗（第二篇：太空垃圾危機）', 45, 48, 2);
+out += groupGradeBox('rc2', '閱讀測驗第二篇（太空垃圾危機）', 45, 48, 2);
 
 // 49-52 題組
 out += passage('第 49–52 題題組：能量飲料與呼氣酒測實驗（Energy Drinks and Alcohol Breath Tests）', [
@@ -1321,7 +1304,7 @@ out += passage('第 49–52 題題組：能量飲料與呼氣酒測實驗（Ener
     ['This shows that when the test is taken plays a crucial role in the test result.', '這顯示「何時進行測試（檢測的時間點）」在測試結果中扮演了關鍵角色。'],
     ['The sooner the test is conducted after the consumption of these drinks, the more likely a positive alcohol reading will be obtained.', '在喝完這些飲料後越快進行酒測，就越有可能測出酒精陽性讀數。']
   ]
-], '', 'rc3');
+], null, 'rc3');
 
 const rc3 = [
   {
@@ -1386,7 +1369,7 @@ rc3.forEach(q => {
   SENT[q.n] = [q.en, q.zh];
   out += card(q.n, q.tags, q.ans, stem(q.n) + clue(q.clue) + ops(q.ops, q.ans));
 });
-out += groupGradeBox('rc3', '四、閱讀測驗（第三篇：能量飲料與酒測）', 49, 52, 2);
+out += groupGradeBox('rc3', '閱讀測驗第三篇（能量飲料與酒測實驗）', 49, 52, 2);
 
 // 53-56 題組
 out += passage('第 53–56 題題組：印度眉心紅點「蒂卡／賓迪（Bindi）」的宗教起源與現代演變', [
@@ -1412,7 +1395,7 @@ out += passage('第 53–56 題題組：印度眉心紅點「蒂卡／賓迪（B
     ['Decorative or sticker bindis come in all sizes, colors and variations, and can be worn by young and old, married and unmarried people alike.', '裝飾性或貼紙式的賓迪有各種尺寸、顏色和款式變化，無論老少、已婚或未婚人士皆可配戴。'],
     ['Wearing a bindi has become more of a fashion statement than a religious custom.', '配戴賓迪已經變得更像是一種時尚宣言，而非單純的宗教習俗了。']
   ]
-], '', 'rc4');
+], null, 'rc4');
 
 const rc4 = [
   {
@@ -1477,13 +1460,13 @@ rc4.forEach(q => {
   SENT[q.n] = [q.en, q.zh];
   out += card(q.n, q.tags, q.ans, stem(q.n) + clue(q.clue) + ops(q.ops, q.ans));
 });
-out += groupGradeBox('rc4', '四、閱讀測驗（第四篇：印度眉心紅點 Bindi）', 53, 56, 2);
+out += groupGradeBox('rc4', '閱讀測驗第四篇（印度眉心紅點 Bindi）', 53, 56, 2);
 
-// 全卷單選題總批改面板（第 1–56 題，滿分 72 分）
+// 全卷選擇題總批改面板（第 1–56 題，共 72 分）
 out += '<div class="grade-box all-box" id="gbox-all">' +
-  '<div class="grade-title">🏆 第壹部分：全卷單選題總批改（第 1–56 題，滿分 72 分）</div>' +
+  '<div class="grade-title">🏆 選擇題全卷總批改（第 1–56 題，共 72 分）</div>' +
   '<div class="grade-btns">' +
-    '<button class="btn-grade" onclick="gradeAllSingleChoice()">🏆 一次批改全卷單選題</button>' +
+    '<button class="btn-grade" onclick="gradeAllSingleChoice()">🏆 一次批改全卷並看總分</button>' +
     '<button class="btn-reset" onclick="resetAllSingleChoice()">🔄 全部清空重練</button>' +
   '</div>' +
   '<div class="grade-res" id="gres-all"></div>' +
@@ -1492,25 +1475,25 @@ out += '<div class="grade-box all-box" id="gbox-all">' +
 // 第貳部分：非選擇題
 out += '<h2 id="sec5">第貳部分：非選擇題（中譯英與英文作文解析）</h2>';
 
-out += '<section class="pas"><h3>一、中譯英（占 8 分）逐題拆解與標準答案</h3>' +
+out += '<section class="pas graded"><h3>一、中譯英（占 8 分）逐題拆解與標準答案</h3>' +
   '<div class="para">' +
     '<div class="s"><div class="en"><b>第 1 題：</b>都會地區的高房價對社會產生了嚴重的影響。</div>' +
-    '<div class="zh"><b>參考解答 1：</b><span class="bl">High housing prices in urban (metropolitan) areas have had a serious (severe) impact (effect / influence) on society.</span><br>' +
-    '<b>參考解答 2：</b><span class="bl">The high prices of houses in cities have seriously affected (influenced) our society.</span><br>' +
+    '<div class="zh"><b>參考解答 1：</b><span class="bl revealed">High housing prices in urban (metropolitan) areas have had a serious (severe) impact (effect / influence) on society.</span><br>' +
+    '<b>參考解答 2：</b><span class="bl revealed">The high prices of houses in cities have seriously affected (influenced) our society.</span><br>' +
     '<b>🎯 關鍵考點與結構拆解：</b><br>' +
     '1. <b>「都會地區的高房價」：</b>中心主詞「高房價」為 <b>High housing prices</b>（或 <b>The high prices of houses / real estate</b>），後接地點介系詞片語 <b>in urban / metropolitan areas</b>。<br>' +
     '2. <b>「對⋯⋯產生了嚴重的影響」：</b>使用現在完成式表示已產生並持續至今的影響 <b>have had a serious / severe impact (effect / influence) on...</b>，亦可直接用動詞 <b>have seriously affected / impacted...</b>。<br>' +
     '3. <b>「社會」：</b>泛指整體人類社會時，<b>society</b> 為不可數名詞，前面<b>不加冠詞 the</b>（或寫成 <b>our society</b>）。</div></div>' +
     '<div class="s"><div class="en"><b>第 2 題：</b>政府正推出新的政策，以滿足人們的住房需求。</div>' +
-    '<div class="zh"><b>參考解答 1：</b><span class="bl">The government is launching (introducing / rolling out) new policies to meet (satisfy) people’s housing needs (demands).</span><br>' +
-    '<b>參考解答 2：</b><span class="bl">The government is coming up with (promoting) new policies in order to satisfy people’s demand for housing.</span><br>' +
+    '<div class="zh"><b>參考解答 1：</b><span class="bl revealed">The government is launching (introducing / rolling out) new policies to meet (satisfy) people’s housing needs (demands).</span><br>' +
+    '<b>參考解答 2：</b><span class="bl revealed">The government is coming up with (promoting) new policies in order to satisfy people’s demand for housing.</span><br>' +
     '<b>🎯 關鍵考點與結構拆解：</b><br>' +
     '1. <b>「正推出新的政策」：</b>用現在進行式表正在推動執行，動詞可選用 <b>is launching / introducing / rolling out / promoting / proposing</b>，受詞為 <b>new policies</b>。<br>' +
     '2. <b>「以滿足⋯⋯」：</b>表目的之不定詞片語 <b>(in order) to meet / satisfy / fulfill...</b>。<br>' +
     '3. <b>「人們的住房需求」：</b><b>people’s housing needs / demands</b>（或 <b>people’s need / demand for housing</b>）。</div></div>' +
   '</div></section>';
 
-out += '<section class="pas"><h3>二、英文作文（占 20 分）連環圖畫寫作解析與高分範文（278 字）</h3>' +
+out += '<section class="pas graded"><h3>二、英文作文（占 20 分）連環圖畫寫作解析與高分範文（278 字）</h3>' +
   '<p class="note"><b>題目提示：</b>請仔細觀察三幅連環圖片的內容（圖一：在捷運的博愛座上，一名學生正低頭玩手機，無視他面前拄著拐杖卻沒有座位的老人；圖二：這名學生後來打籃球受了傷；圖三：他在捷運上的博愛座前拄著拐杖站著，座位上的乘客卻低頭滑手機無人讓座給他；圖四：自行想像結局），寫出一個涵蓋連環圖片內容並有完整結局的故事（高分進階範文：278 words）。</p>' +
   '<div class="para">' +
     '<div class="s"><div class="en">One Friday afternoon, Kevin boarded a crowded MRT train after school and immediately spotted an empty priority seat.</div><div class="zh">某個週五下午，凱文放學後搭上一班擁擠的捷運列車，並立刻發現了一個空的博愛座。</div></div>' +
