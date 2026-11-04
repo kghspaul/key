@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>87學年度學科能力測驗 英文考科詳解</title>
+<style>
+:root{--bg:#faf8f4;--fg:#222;--card:#fff;--line:#e4ded3;--acc:#9a3b2e;--ok:#1f7a4d;--no:#b3261e;--mut:#6b6558;--hl:#fff1c9}
+@media(prefers-color-scheme:dark){:root{--bg:#161512;--fg:#e8e4da;--card:#201f1b;--line:#3a372f;--acc:#e08a78;--ok:#6fcf9a;--no:#f08a82;--mut:#a39d8f;--hl:#4a3f1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+.top{max-width:900px;margin:auto;padding:28px 18px 10px}
+.top h1{margin:0 0 4px;font-size:1.6rem;color:var(--acc)}
+.top p{margin:2px 0;color:var(--mut);font-size:.92rem}
+.feature-box{background:var(--hl);border-left:4px solid var(--acc);padding:8px 12px;border-radius:0 6px 6px 0;margin:10px 0;font-size:0.9rem;color:var(--fg);}
+nav{position:sticky;top:0;z-index:9;background:var(--bg);border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px;padding:8px 12px}
+nav a,nav button{flex:none;padding:5px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--fg);text-decoration:none;font:inherit;font-size:.88rem;cursor:pointer}
+nav a:hover,nav button:hover{border-color:var(--acc);color:var(--acc)}
+nav a.review-btn{background:var(--acc);color:#fff;border-color:var(--acc);font-weight:bold;}
+nav button.pm-active { background:var(--acc); color:#fff; border-color:var(--acc); }
+main{max-width:900px;margin:auto;padding:0 16px 70px}
+h2{margin:36px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--acc);font-size:1.3rem}
+h3{margin:0 0 8px;font-size:1.05rem;color:var(--acc)}
+.pas,.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.para{margin-bottom:14px}
+.s{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--line)}
+.en{font-family:Georgia,"Times New Roman",serif;font-size:1.02rem}
+.zh{color:var(--mut);font-size:.93rem}
+.prompt-text{color:var(--fg);font-size:.96rem;line-height:1.8}
+.note{color:var(--mut);font-size:.85rem;margin:6px 0 0}
+.bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 4px;border-radius:3px;font-weight:600}
+.bl sup{color:var(--acc);margin-right:3px;font-size:.7em}
+.bank{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.92rem;margin-bottom:8px}
+details.q>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+details.q>summary::-webkit-details-marker{display:none}
+.n{background:var(--acc);color:#fff;border-radius:6px;padding:0 10px;font-weight:700;font-size:1.05rem}
+.tag{font-size:.78rem;border:1px solid var(--acc);color:var(--acc);border-radius:99px;padding:0 9px;line-height:1.6}
+.tag.pos{border-color:var(--ok);color:var(--ok)}
+.ans{margin-left:auto;font-weight:700;color:var(--ok)}
+.qb{margin-top:10px}
+.stem{margin-bottom:8px;padding:8px 10px;background:var(--bg);border-radius:6px}
+.clue{margin:8px 0;padding:8px 12px;border-left:4px solid var(--acc);background:var(--bg);border-radius:0 6px 6px 0}
+.clue h4,.qb h4{margin:0 0 2px;font-size:.92rem;color:var(--acc)}
+ul.op{list-style:none;margin:6px 0 0;padding:0}
+ul.op li{padding:7px 10px;margin:5px 0;border-radius:6px;border:1px solid var(--line);font-size:.95rem;transition:background 0.2s;cursor:pointer}
+ul.op li.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 9%,transparent)}
+ul.op li.no{border-color:color-mix(in srgb,var(--no) 45%,transparent)}
+ul.op i{font-style:normal;font-weight:700;font-size:.82rem}
+li.ok i{color:var(--ok)}li.no i{color:var(--no)}
+.exp{margin-top:4px}
+small{color:var(--mut)}
+
+/* === 練習模式與批改狀態樣式 === */
+body.practice-mode details.q:not(.graded) .ans { visibility: hidden; }
+body.practice-mode details.q:not(.graded) .clue { display: none; }
+body.practice-mode details.q:not(.graded) .tag { display: none; }
+body.practice-mode details.q:not(.graded) .stem .zh { display: none; }
+body.practice-mode .pas:not(.graded) .zh { display: none; }
+body.practice-mode .pas:not(.graded) .trans-ans { display: none; }
+body.practice-mode .pas:not(.graded) .note { display: none; }
+.trans-input {
+  display: none;
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1rem;
+}
+.trans-input:focus { outline: none; border-color: var(--acc); }
+body.practice-mode .trans-input { display: block; }
+body.practice-mode .bl:not(.revealed) {
+  color: transparent;
+  background: var(--bg);
+  border-bottom: 2px solid var(--acc);
+  padding: 0 18px;
+  user-select: none;
+  display: inline-block;
+  min-width: 64px;
+  text-align: center;
+}
+body.practice-mode .bl:not(.revealed) sup {
+  color: var(--acc);
+  font-weight: 700;
+}
+body.practice-mode .bank:not(.graded) small { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li small { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li.ok,
+body.practice-mode details.q:not(.graded) ul.op li.no { border-color: var(--line); background: transparent; }
+body.practice-mode details.q:not(.graded) ul.op li i { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li .exp { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li:hover { background: var(--hl); }
+ul.op li.selected { border-color: var(--acc) !important; background: color-mix(in srgb, var(--acc) 12%, transparent) !important; font-weight: 600; }
+
+/* 已批改題目的作答回饋樣式 */
+details.q.graded ul.op li.selected.ok { border: 2px solid var(--ok) !important; background: color-mix(in srgb, var(--ok) 15%, transparent) !important; }
+details.q.graded ul.op li.selected.no { border: 2px solid var(--no) !important; background: color-mix(in srgb, var(--no) 14%, transparent) !important; }
+.user-status { font-weight: 700; font-size: .88rem; padding: 1px 8px; border-radius: 99px; margin-left: 6px; }
+.user-status.st-ok { background: color-mix(in srgb, var(--ok) 15%, transparent); color: var(--ok); border: 1px solid var(--ok); }
+.user-status.st-no { background: color-mix(in srgb, var(--no) 15%, transparent); color: var(--no); border: 1px solid var(--no); }
+.user-status.st-blank { background: var(--hl); color: var(--acc); border: 1px solid var(--acc); }
+
+/* 題組批改面板與全卷總批改面板 */
+.grade-box {
+  background: var(--card);
+  border: 2px dashed var(--acc);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin: 18px 0 32px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.grade-box.all-box {
+  border: 2px solid var(--acc);
+  background: color-mix(in srgb, var(--hl) 45%, var(--card));
+  padding: 20px 22px;
+  margin: 30px 0 40px;
+}
+.grade-title { font-weight: 700; color: var(--acc); font-size: 1.02rem; }
+.all-box .grade-title { font-size: 1.2rem; }
+.grade-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn-grade, .btn-reset {
+  padding: 6px 16px;
+  border-radius: 99px;
+  font: inherit;
+  font-size: .92rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid var(--acc);
+  transition: transform 0.1s, opacity 0.2s;
+}
+.btn-grade { background: var(--acc); color: #fff; }
+.all-box .btn-grade, .all-box .btn-reset { padding: 8px 22px; font-size: 1rem; }
+.btn-reset { background: var(--card); color: var(--mut); border-color: var(--line); }
+.btn-grade:hover, .btn-reset:hover { opacity: 0.9; transform: translateY(-1px); }
+.grade-res {
+  width: 100%;
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  font-size: .95rem;
+  display: none;
+}
+.grade-res.show { display: block; }
+.q-Jump {
+  display: inline-block;
+  padding: 1px 8px;
+  margin: 2px 3px;
+  border-radius: 6px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  color: var(--acc);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: .86rem;
+}
+.q-Jump:hover { background: var(--acc); color: #fff; border-color: var(--acc); }
+
+footer{max-width:900px;margin:auto;padding:20px 16px 40px;color:var(--mut);font-size:.85rem;line-height:1.6;border-top:1px solid var(--line);margin-top:40px;}
+footer a{color:var(--acc);text-decoration:none;font-weight:bold;}
+footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1><span id="exam-title">87學年度學科能力測驗 英文考科詳解</span> <span id="completed-badge" style="display:none;font-size:1rem;color:var(--ok);">✅ 已完成</span></h1>
+  <p>每題含：考點標籤 → 題幹逐句中英對照 → 解題線索 → 正解與全部誤答分析</p>
+  <div class="feature-box">
+    💡 <b>複習與作答指南：</b> 點擊「🎯 切換練習模式」可自動挖空題幹答案並隱藏中譯與解析（含短詩閱讀簡答題答案與詳解）；直接點選各題選項作答後，可點擊各題組下方的「<b>✅ 批改本題組</b>」或單選題最後的「<b>🏆 一次批改全卷</b>」查看得分並自動展開詳解（亦可點擊「<b>🔄 一次清空重練</b>」重新作答）！點擊每題右上角的「標記此題」可收錄錯題；滑鼠反白任何英文字句可「收藏單字」。請前往 <a href="review.html" target="_blank" style="color:var(--acc);font-weight:bold;">錯題與單字總複習頁面</a>。
+  </div>
+  <p>圖例：<span class="bl revealed">黃底</span> ＝ 正確答案填入處 ｜ <span class="tag" id="secret-trigger" style="user-select:none;cursor:default;">考點</span> <span class="tag pos">詞性需求</span></p>
+  <div id="secret-counter" style="display:none; margin-top:8px; font-size:0.9rem; color:var(--mut);">
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    👁️ <b>本頁瀏覽人次：</b><span id="busuanzi_value_page_pv"></span> 次
+  </div>
+</div>
+<nav id="nav">
+  <button id="pm-toggle">🎯 切換練習模式</button>
+  <button id="complete-btn">📝 標記為已完成</button>
+  <a href="review.html" class="review-btn" target="_blank">📚 前往總複習</a>
+</nav>
+<main id="app"></main>
+<footer>
+  限定用途教學教材。本詳解為教學輔助，題目版權屬原出版單位。<br>
+  💡 <b>問題回報與建議：</b> Line: etpaul ｜ IG: <a href="https://www.instagram.com/etpaul" target="_blank">@etpaul</a>
+</footer>
+
+<script>
+const L="ABCD";
+const fx=s=>s.replace(/\*([^*]+)\*/g,'<i>$1</i>').replace(/\[\[(\d*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl"'+(n?' data-q="'+n+'"':'')+'>'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const SENT={};
+const Q_ANS={};
+
+function passage(title,paras,note,gid,extraCls){
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[(\d+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  return '<section class="pas'+(extraCls?' '+extraCls:'')+'"'+(gid?' id="pas-'+gid+'"':'')+'><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
+}
+function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
+const clue=t=>'<div class="clue"><h4>解題線索</h4>'+t+'</div>';
+function ops(list,ans,lab){
+  lab=lab||'ABCDEF';
+  return '<ul class="op">'+list.map((o,i)=>{
+    const optCode = (lab==='ABCDEF'&&list.length<=4) ? L[i] : lab[i];
+    const k=ans.indexOf(optCode)>=0;
+    return '<li class="'+(k?'ok':'no')+'" data-opt="'+optCode+'" onclick="selectOpt(this)"><b>('+optCode+') '+fx(o[0])+'</b>'+(o[1]?' <small>'+o[1]+'</small>':'')+' <i>'+(k?'✔ 正解':'✘ 誤答')+'</i><div class="exp">'+o[2]+'</div></li>';
+  }).join('')+'</ul>';
+}
+function card(n,tags,ans,body){
+  Q_ANS[n] = ans;
+  return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="user-status" id="st'+n+'" style="display:none"></span><span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
+}
+
+// 產生各題組批改面板 HTML
+function groupGradeBox(gid, title, startQ, endQ, ptsPerQ) {
+  ptsPerQ = ptsPerQ || 1;
+  const totalPts = (endQ - startQ + 1) * ptsPerQ;
+  return '<div class="grade-box" id="gbox-'+gid+'">' +
+    '<div class="grade-title">📝 '+title+'（第 '+startQ+'–'+endQ+' 題，共 '+totalPts+' 分）</div>' +
+    '<div class="grade-btns">' +
+      '<button class="btn-grade" onclick="gradeGroup(\''+gid+'\','+startQ+','+endQ+','+ptsPerQ+')">✅ 批改本題組</button>' +
+      '<button class="btn-reset" onclick="resetGroup(\''+gid+'\','+startQ+','+endQ+')">🔄 重練本題組</button>' +
+    '</div>' +
+    '<div class="grade-res" id="gres-'+gid+'"></div>' +
+  '</div>';
+}
+
+// 點擊選項作答
+window.selectOpt = function(li) {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  const qEl = li.closest('details.q');
+  if (qEl && qEl.classList.contains('graded')) {
+    qEl.classList.remove('graded');
+    const qNum = qEl.id.replace('q', '');
+    const st = document.getElementById('st' + qNum);
+    if (st) st.style.display = 'none';
+  }
+  li.parentNode.querySelectorAll('li').forEach(el => el.classList.remove('selected'));
+  li.classList.add('selected');
+};
+
+// 批改單一題目並回傳狀態 ('ok' | 'no' | 'blank')
+function evaluateSingleQ(n) {
+  const qEl = document.getElementById('q' + n);
+  if (!qEl) return 'blank';
+  qEl.classList.add('graded');
+  qEl.open = true;
+
+  document.querySelectorAll('.bl[data-q="'+n+'"]').forEach(el => el.classList.add('revealed'));
+
+  const sel = qEl.querySelector('ul.op li.selected');
+  const st = document.getElementById('st' + n);
+  const ans = Q_ANS[n];
+
+  if (!sel) {
+    if (st) {
+      st.className = 'user-status st-blank';
+      st.textContent = '⚠️ 未作答';
+      st.style.display = 'inline-block';
+    }
+    return 'blank';
+  }
+
+  const userOpt = sel.getAttribute('data-opt');
+  if (ans.indexOf(userOpt) >= 0) {
+    if (st) {
+      st.className = 'user-status st-ok';
+      st.textContent = '✔ 答對 (' + userOpt + ')';
+      st.style.display = 'inline-block';
+    }
+    return 'ok';
+  } else {
+    if (st) {
+      st.className = 'user-status st-no';
+      st.textContent = '✘ 答錯 (選 ' + userOpt + ')';
+      st.style.display = 'inline-block';
+    }
+    return 'no';
+  }
+}
+
+// 批改特定題組
+window.gradeGroup = function(gid, startQ, endQ, ptsPerQ) {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  let okCount = 0, wrongList = [], blankList = [];
+  for (let n = startQ; n <= endQ; n++) {
+    const res = evaluateSingleQ(n);
+    if (res === 'ok') okCount++;
+    else if (res === 'no') wrongList.push(n);
+    else blankList.push(n);
+  }
+  const pasEl = document.getElementById('pas-' + gid);
+  if (pasEl) pasEl.classList.add('graded');
+  if (gid === 'wbank') {
+    const bankEl = document.getElementById('bank-wbank');
+    if (bankEl) bankEl.classList.add('graded');
+  }
+
+  const totalQ = endQ - startQ + 1;
+  const earnedPts = okCount * ptsPerQ;
+  const maxPts = totalQ * ptsPerQ;
+  const resEl = document.getElementById('gres-' + gid);
+
+  let html = '<div><b>📊 批改結果：</b>答對 <b>' + okCount + ' / ' + totalQ + '</b> 題，得分 <b style="color:var(--acc);font-size:1.15rem;">' + earnedPts + ' / ' + maxPts + '</b> 分' + (okCount === totalQ ? ' 🎉 全部答對！' : '') + '</div>';
+  if (wrongList.length > 0) {
+    html += '<div style="margin-top:4px;">❌ <b>答錯題號：</b>' + wrongList.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  if (blankList.length > 0) {
+    html += '<div style="margin-top:4px;">⚠️ <b>未作答題號：</b>' + blankList.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  resEl.innerHTML = html;
+  resEl.classList.add('show');
+};
+
+// 重練特定題組
+window.resetGroup = function(gid, startQ, endQ) {
+  enablePracticeMode();
+  for (let n = startQ; n <= endQ; n++) {
+    const qEl = document.getElementById('q' + n);
+    if (qEl) {
+      qEl.classList.remove('graded');
+      qEl.querySelectorAll('ul.op li').forEach(li => li.classList.remove('selected'));
+    }
+    const st = document.getElementById('st' + n);
+    if (st) st.style.display = 'none';
+    document.querySelectorAll('.bl[data-q="'+n+'"]').forEach(el => el.classList.remove('revealed'));
+  }
+  const pasEl = document.getElementById('pas-' + gid);
+  if (pasEl) pasEl.classList.remove('graded');
+  if (gid === 'wbank') {
+    const bankEl = document.getElementById('bank-wbank');
+    if (bankEl) bankEl.classList.remove('graded');
+  }
+  const resEl = document.getElementById('gres-' + gid);
+  if (resEl) {
+    resEl.innerHTML = '';
+    resEl.classList.remove('show');
+  }
+};
+
+// 展開與重置簡答題詳解
+window.gradeTrans = function() {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  const pasEl = document.getElementById('pas-trans');
+  if (pasEl) pasEl.classList.add('graded');
+  const pasSaq = document.getElementById('pas-saq');
+  if (pasSaq) pasSaq.classList.add('graded');
+  const resEl = document.getElementById('gres-trans');
+  if (resEl) {
+    resEl.innerHTML = '<div>✅ 已展開短詩閱讀中譯、參考正解與解題說明，請自行核對作答內容！</div>';
+    resEl.classList.add('show');
+  }
+};
+
+window.resetTrans = function() {
+  enablePracticeMode();
+  const pasEl = document.getElementById('pas-trans');
+  if (pasEl) {
+    pasEl.classList.remove('graded');
+    pasEl.querySelectorAll('.trans-input').forEach(inp => inp.value = '');
+  }
+  const pasSaq = document.getElementById('pas-saq');
+  if (pasSaq) pasSaq.classList.remove('graded');
+  const resEl = document.getElementById('gres-trans');
+  if (resEl) {
+    resEl.innerHTML = '';
+    resEl.classList.remove('show');
+  }
+};
+
+// === 功能初始化：練習模式與完成標記 ===
+const pmBtn = document.getElementById('pm-toggle');
+function enablePracticeMode() {
+  document.body.classList.add('practice-mode');
+  pmBtn.classList.add('pm-active');
+  pmBtn.textContent = '退出練習模式（顯示全部詳解）';
+  document.querySelectorAll('details.q').forEach(d => d.open = true);
+}
+function disablePracticeMode() {
+  document.body.classList.remove('practice-mode');
+  pmBtn.classList.remove('pm-active');
+  pmBtn.textContent = '🎯 切換練習模式';
+}
+pmBtn.onclick = function() {
+  if (document.body.classList.contains('practice-mode')) {
+    disablePracticeMode();
+  } else {
+    enablePracticeMode();
+  }
+};
+
+const examTitle = document.getElementById('exam-title').innerText;
+const compBtn = document.getElementById('complete-btn');
+const badge = document.getElementById('completed-badge');
+let comps = JSON.parse(localStorage.getItem('completed_exams')||'[]');
+
+if(comps.includes(examTitle)) {
+  badge.style.display = 'inline-block';
+  compBtn.innerText = '取消完成標記';
+}
+
+compBtn.onclick = function() {
+  comps = JSON.parse(localStorage.getItem('completed_exams')||'[]');
+  if(comps.includes(examTitle)) {
+    comps = comps.filter(t => t !== examTitle);
+    this.innerText = '📝 標記為已完成';
+    badge.style.display = 'none';
+  } else {
+    comps.push(examTitle);
+    this.innerText = '取消完成標記';
+    badge.style.display = 'inline-block';
+  }
+  localStorage.setItem('completed_exams', JSON.stringify(comps));
+};
+
+// === 全卷題組清單與全卷批改邏輯 ===
+// 87學測單選題共 60 題（第 1–50 題及第 61–70 題，滿分 70 分）
+const ALL_GROUPS = [
+  { gid: 'vocab', title: '一、字彙、片語與語法（第 1–20 題）', startQ: 1, endQ: 20, pts: 1 },
+  { gid: 'cloze1', title: '二、綜合測驗（第 21–30 題：不會講 Catano 的鸚鵡與四隻雞）', startQ: 21, endQ: 30, pts: 1 },
+  { gid: 'cloze2', title: '二、綜合測驗（第 31–40 題：大笑對健康的益處）', startQ: 31, endQ: 40, pts: 1 },
+  { gid: 'rc1', title: '三、閱讀測驗（41–43 題：機器人擔任大學畢業典禮致詞嘉賓）', startQ: 41, endQ: 43, pts: 2 },
+  { gid: 'rc2', title: '三、閱讀測驗（44–46 題：父親開辦的暑期航海與古史學校）', startQ: 44, endQ: 46, pts: 2 },
+  { gid: 'rc3', title: '三、閱讀測驗（47–50 題：巴黎迎接千禧年興建木造艾菲爾鐵塔）', startQ: 47, endQ: 50, pts: 2 },
+  { gid: 'wbank', title: '貳、選擇題第二部分：文意選填（第 61–70 題：美國說故事傳統的演變）', startQ: 61, endQ: 70, pts: 1 }
+];
+
+window.gradeAllSingleChoice = function() {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  let totalEarned = 0, totalMax = 0, totalOk = 0, totalQ = 0;
+  let allWrong = [], allBlank = [];
+
+  ALL_GROUPS.forEach(g => {
+    gradeGroup(g.gid, g.startQ, g.endQ, g.pts);
+    for (let n = g.startQ; n <= g.endQ; n++) {
+      totalQ++;
+      totalMax += g.pts;
+      const res = evaluateSingleQ(n);
+      if (res === 'ok') {
+        totalOk++;
+        totalEarned += g.pts;
+      } else if (res === 'no') {
+        allWrong.push(n);
+      } else {
+        allBlank.push(n);
+      }
+    }
+  });
+
+  const resEl = document.getElementById('gres-all');
+  let html = '<div style="font-size:1.08rem;"><b>🏆 全卷單選題總成績：</b>共答對 <b>' + totalOk + ' / ' + totalQ + '</b> 題，總分 <b style="color:var(--acc);font-size:1.35rem;">' + totalEarned + ' / ' + totalMax + '</b> 分' + (totalEarned === totalMax ? ' 🎉 滿分全對！太強了！' : '') + '</div>';
+  if (allWrong.length > 0) {
+    html += '<div style="margin-top:6px;">❌ <b>全卷答錯題號（共 '+allWrong.length+' 題）：</b>' + allWrong.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  if (allBlank.length > 0) {
+    html += '<div style="margin-top:6px;">⚠️ <b>全卷未作答題號（共 '+allBlank.length+' 題）：</b>' + allBlank.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  resEl.innerHTML = html;
+  resEl.classList.add('show');
+};
+
+window.resetAllSingleChoice = function() {
+  ALL_GROUPS.forEach(g => {
+    resetGroup(g.gid, g.startQ, g.endQ);
+  });
+  const resEl = document.getElementById('gres-all');
+  if (resEl) {
+    resEl.innerHTML = '';
+    resEl.classList.remove('show');
+  }
+};
+
+// === 壹：選擇題（第一部分） 一、字彙、片語與語法 (1–20) ===
+const VOCAB = [
+  [1, ['考點：名詞詞義與組裝物品搭配', '詞性需求：複數名詞（動詞 Follow 的受詞）'], 'D',
+    'Follow the [[1|instructions]] closely, and you will find it easy to assemble the bicycle.',
+    '仔細按照說明書的指示步驟去做，你就會發現組裝這輛腳踏車很容易。',
+    '後半句 `you will find it easy to assemble the bicycle`（你會發現組裝腳踏車很容易）點出DIY組裝情境。要順利組裝產品，必須仔細遵照「**操作指南、說明書指示（instructions）**」。',
+    [
+      ['functions', 'n. 功能；作用；典禮', '組裝腳踏車是依照「說明書步驟（*instructions*）」，而非遵照「功能」。<b>何時才對：</b>介紹機器或器官的功能時，如 *perform many useful functions*。'],
+      ['diagnoses', 'n. 診斷（diagnosis 的複數形）', '醫療詞彙，指醫生對疾病的診斷結果，與組裝腳踏車無關。<b>何時才對：</b>指醫療診斷時。'],
+      ['appointments', 'n. 預約；約會（常指看診或商務會面）', '不與組裝腳踏車搭配。<b>何時才對：</b>預約看牙醫或拜訪客戶時，如 *make an appointment with the dentist*。'],
+      ['instructions', 'n. 操作指南；用法說明（常作複數）；指示', '正確。*follow the instructions*（按照說明書指示／遵照指示）為高頻固定搭配。']
+    ]
+  ],
+  [2, ['考點：動詞詞義與禮貌客套句型（don\'t hesitate to V）', '詞性需求：原形動詞（否定祈使句 don\'t 後）'], 'B',
+    'If I can help you with the project, don\'t [[2|hesitate]] to call me.',
+    '如果我在這項專案上幫得上忙，請儘管打電話給我（別猶豫打給我）。',
+    '主動向朋友或同事表示願意幫忙時，英文最常說 `don\'t ___ to call me`（**別猶豫／請儘管**打電話給我），固定搭配動詞 **hesitate**（猶豫、遲疑）。',
+    [
+      ['concern', 'v. 與……有關；使擔憂', '及物動詞，後面必須先接「人」作受詞，不接不定詞 *to call*。<b>何時才對：</b>搭配 *be concerned about*（關心／擔憂）時。'],
+      ['hesitate', 'v. 猶豫；遲疑', '正確。`Don\'t hesitate to call / ask me`（請儘管打給我／問我，不必客氣猶豫）為書信與口語必背句型。'],
+      ['notify', 'v. 通知（及物動詞，需接 notify sb.）', '*notify* 後方必須接「被通知的人」，不能直接接不定詞 *to call me*。<b>何時才對：</b>如 *notify the police immediately*（立即通知警方）。'],
+      ['submit', 'v. 呈交；提交（報告）；屈服（submit to）', '語意與用法皆不合。<b>何時才對：</b>繳交報告或申請表時，如 *submit an application*。']
+    ]
+  ],
+  [3, ['考點：名詞詞義與動詞 resolved（解決／化解）搭配', '詞性需求：複數名詞（主詞）'], 'C',
+    '[[3|Conflicts]] between good friends should be resolved, not ignored.',
+    '好朋友之間的衝突（爭執）應該要被化解，而不是被忽視。',
+    '注意關鍵被動動詞 **`should be resolved, not ignored`**（應該被**解決／化解**，而不是被忽視置之不理）！朋友之間發生什麼事情才需要「被解決化解（*resolved*）」？自然是「**衝突、爭執、矛盾（Conflicts）**」！',
+    [
+      ['Compliments', 'n. 稱讚；恭維', '朋友間的「稱讚」是好事，不需要「被化解（*resolved*）」。<b>何時才對：</b>指給予讚美時，如 *pay someone a compliment*。'],
+      ['Concerns', 'n. 擔憂；關心；關切的事', '兩個好朋友「彼此之間（*between good friends*）」需要化解的對立嫌隙是「衝突（*Conflicts*）」，而非「擔憂」。<b>何時才對：</b>指對某議題表達關切（*express concerns about...*）時。'],
+      ['Conflicts', 'n. 衝突；爭執；摩擦', '正確。*resolve conflicts between good friends*（化解好朋友之間的衝突）為最精準的搭配。'],
+      ['Connections', 'n. 關聯；人脈；連接', '朋友間的聯繫不需要「被解決」。<b>何時才對：</b>指兩事物的關聯或交通轉乘時。']
+    ]
+  ],
+  [4, ['考點：副詞詞義與前句對比邏輯（Group vs. individually）', '詞性需求：副詞（修飾動詞 register）'], 'B',
+    'Group registrations are not allowed. Each member must register for the conference [[4|individually]].',
+    '不允許團體報名。每位成員都必須個別（單獨）報名參加研討會。',
+    '前句明確規定 **`Group registrations are not allowed.`**（不允許**團體**報名），後句主詞改為 **`Each member`**（每一位成員），與「團體（*Group*）」完全相對的概念就是「**個別地、單獨地（individually）**」報名！',
+    [
+      ['comfortably', 'adv. 舒適地', '無法與前句的 *Group registrations*（團體報名）形成對比。<b>何時才對：</b>形容坐得舒服或生活寬裕時。'],
+      ['individually', 'adv. 個別地；單獨地；各自地', '正確。直接與前句的 *Group*（團體）對比，且呼應主詞 *Each member*（每位成員各自）。'],
+      ['intelligently', 'adv. 聰明地；明智地', '報名研討會與「聰明地」無關。<b>何時才對：</b>形容回答問題很有智慧時。'],
+      ['respectfully', 'adv. 恭敬地；有禮貌地', '無法呼應「禁止團體報名」的前提。<b>何時才對：</b>形容對長輩態度恭敬時。']
+    ]
+  ],
+  [5, ['考點：形容詞詞義與因果邏輯', '詞性需求：形容詞（主詞補語）'], 'C',
+    'Mr. Wang\'s arguments were very [[5|persuasive]] and the committee finally accepted his proposal.',
+    '王先生的論點非常有說服力，委員會最後終於採納了他的提案。',
+    '後半句結果為 `and the committee finally accepted his proposal`（委員會最後接受了他的提案）。能讓委員會點頭接受提案，表示王先生提出的論點（*arguments*）非常「**有說服力的、令人信服的（persuasive）**」。',
+    [
+      ['artificial', 'adj. 人造的；人工的；矯揉造作的', '負面或中立物理詞彙，「人造／虛假的論點」不會讓委員會接受提案。<b>何時才對：</b>修飾人工智慧（*artificial intelligence*）或人工色素時。'],
+      ['inappropriate', 'adj. 不適當的；不合宜的', '語意相反！若論點不恰當，委員會就會拒絕而非接受提案。<b>何時才對：</b>後句為 *so the committee rejected his proposal* 時。'],
+      ['persuasive', 'adj. 有說服力的；令人信服的（源自動詞 persuade 說服）', '正確。*persuasive arguments*（具說服力的論點）直接促成委員會採納其提案。'],
+      ['descriptive', 'adj. 描寫的；敘述性的', '單純「描述性的」文字無法像「有說服力的（*persuasive*）」那樣專門修飾 *arguments*（論點）並促成提案通過。<b>何時才對：</b>形容寫景散文充滿描寫細節時，如 *descriptive writing*。']
+    ]
+  ],
+  [6, ['考點：性格形容詞辨析（sentimental 多愁善感的）', '詞性需求：形容詞（so + adj. + that...）'], 'D',
+    'The woman is so [[6|sentimental]] that she cries every time she hears a sad story.',
+    '這位女士是如此多愁善感（易動感情），以至於她每次聽到悲傷的故事都會哭泣。',
+    '在結果副詞子句 `so... that she cries every time she hears a sad story`（以至於每次聽到悲傷的故事就會掉眼淚）中，一聽到感傷故事就哭，說明她的性格非常「**多愁善感的、容易傷感落淚的（sentimental）**」。',
+    [
+      ['casual', 'adj. 隨興的；漫不經心的；休閒的', '隨興漫不經心的人不會每次聽悲傷故事都哭。<b>何時才對：</b>形容休閒服裝（*casual clothes*）或態度隨意時。'],
+      ['harsh', 'adj. 嚴厲的；刺耳的；嚴酷的', '個性嚴厲冷酷的人更不可能動輒落淚。<b>何時才對：</b>形容嚴酷氣候、刺耳聲音或嚴厲懲罰時。'],
+      ['intimate', 'adj. 親密的；私密的', '形容兩人的關係親密（*intimate friends*），不能用來表示「一聽悲傷故事就哭」的性格。<b>何時才對：</b>形容摯友或私密話題時。'],
+      ['sentimental', 'adj. 多愁善感的；感傷的；重感情的', '正確。形容極易受悲傷故事或音樂觸動而流淚的性格。']
+    ]
+  ],
+  [7, ['考點：副詞與動詞固定搭配（firmly believe 堅信）', '詞性需求：副詞（修飾動詞 believe）'], 'A',
+    'We [[7|firmly]] believe that with your intelligence and hard work, you will pass the exam without any difficulty.',
+    '我們堅信憑藉你的聰明才智與努力，你將會毫無困難地通過這次考試。',
+    '後半句充滿信心地斷言 `you will pass the exam without any difficulty`（你將會輕易通過考試），在動詞 **`believe`**（相信）前面表達「深信不疑、堅定地相信」，英文固定搭配副詞 **firmly**（*firmly believe*）。',
+    [
+      ['firmly', 'adv. 堅定地；深信不疑地；牢固地', '正確。*firmly believe / convince*（堅信）為高頻黃金搭配。'],
+      ['extremely', 'adv. 極度地；非常（專門修飾形容詞或副詞，不修飾動詞 believe）', '中式英文陷阱！*extremely* 只能修飾形容詞或副詞（如 *extremely difficult*），英文不說 *extremely believe*！<b>何時才對：</b>後面是形容詞或副詞時。'],
+      ['strictly', 'adv. 嚴格地', '搭配規定或禁止（如 *strictly forbidden* 嚴格禁止），不說「嚴格地相信」。<b>何時才對：</b>指嚴格執行規定時。'],
+      ['inquiringly', 'adv. 探詢地；充滿疑問地', '與深信不疑的語境完全相反。<b>何時才對：</b>形容帶著疑問的眼神看某人時（*look at sb. inquiringly*）。']
+    ]
+  ],
+  [8, ['考點：名詞詞義與介系詞 at 搭配（at this slow pace 以這麼慢的步調）', '詞性需求：單數名詞（at this slow ___）'], 'B',
+    'If we walk at this slow [[8|pace]], we\'ll never get to our destination on time.',
+    '如果我們以這麼慢的步調（速度）走路，我們永遠無法準時抵達目的地。',
+    '動詞是 **`walk`**（走路），形容詞是 **`slow`**（慢的），主要子句是「無法準時到達目的地」。形容走路或做事的速度、步調，固定用 **`at a slow / fast pace`**！',
+    [
+      ['mood', 'n. 心情；情緒', '心情搭配介系詞 *in*（*in a good/bad mood*），不能說「以這麼慢的心情走路」。<b>何時才對：</b>描述情緒狀態時。'],
+      ['pace', 'n. 步調；速度；一步的距離', '正確。*walk at this slow pace*（以這麼慢的步調／速度走路）為標準搭配。'],
+      ['tide', 'n. 潮汐；潮流', '走路速度與海水潮汐無關。<b>何時才對：</b>指漲潮退潮（*high / low tide*）時。'],
+      ['access', 'n. 進入的管道；使用權（常搭配 have access to）', '語意不合。<b>何時才對：</b>指有權使用網路或進入建築物時，如 *have easy access to the Internet*。']
+    ]
+  ],
+  [9, ['考點：歷史溯源固定動詞片語（be traced back to 可追溯至……）', '詞性需求：過去分詞（can be ___ back to）'], 'C',
+    'The territorial dispute can be [[9|traced]] back to the year 1917, when the two countries were at war.',
+    '這場領土爭端可以追溯到 1917 年，當時這兩個國家正處於交戰狀態。',
+    '看到主詞為歷史事件或爭端（*The territorial dispute*），且空格後緊接著 **`back to + 過去年份（the year 1917）`**！在英文中，表達某歷史事件、傳統或問題的起源「**可以追溯到（某年代）**」，絕對固定使用 **`be traced back to + 時間／起源`**！',
+    [
+      ['held', 'v-pp. 舉行；握住（hold back 意為抑制、隱瞞）', '*be held back* 意為「被阻擋、被留級」，不接 *to the year 1917*。<b>何時才對：</b>指控制情緒或阻擋人潮時。'],
+      ['recalled', 'v-pp. 回想起；召回（瑕疵品）', '人回想過去直接說 *recall the year 1917*，主詞「領土爭端（*dispute*）」不會自己回想，也沒有 *be recalled back to* 的用法。<b>何時才對：</b>主詞為人回想往事，或車廠召回汽車時。'],
+      ['traced', 'v-pp. 追溯；追蹤；描繪', '正確。`can be traced back to...`（可追溯至……）為閱讀與克漏字必背的超高頻片語。'],
+      ['switched', 'v-pp. 轉換；切換', '語意不合，爭端不能「被切換回 1917 年」。<b>何時才對：</b>切換頻道或座位時。']
+    ]
+  ],
+  [10, ['考點：動詞與名詞固定搭配（attain the goal 達成目標）', '詞性需求：原形動詞（不定詞 to 後，受詞為 the goal）'], 'A',
+    'One key factor to success is to have a definite goal first and then do your best to [[10|attain]] the goal.',
+    '成功的一個關鍵因素，就是先有一個明確的目標，然後盡全力去達成這個目標。',
+    '空格後的受詞是 **`the goal`**（目標）。前面說先設定明確目標，接著全力以赴去「**達成、實現（attain / achieve / reach）**」這個目標，故選 **(A) attain**。',
+    [
+      ['attain', 'v. 達成（目標）；獲得（成就、境界）', '正確。*attain / achieve / reach a goal*（達成目標）為標準同義搭配。'],
+      ['contest', 'v. 爭奪；對（判決或結果）提出異議；競爭', '不說「爭辯／對抗這個目標」。<b>何時才對：</b>指爭奪席次或對遺囑／比賽結果提出申訴時。'],
+      ['encounter', 'v. 遭遇（困難）；偶然遇見', '目標是自己努力去達成的，不是在路上「偶然遭遇（*encounter*）」的；*encounter* 常接困難或問題（*encounter difficulties / problems*）。<b>何時才對：</b>受詞為 *difficulties* 或 *obstacles* 時。'],
+      ['struggle', 'v. 奮鬥；掙扎（不及物動詞，需加 for / to V）', '文法錯誤！*struggle* 是不及物動詞，不能直接加名詞受詞 *the goal*（需說 *struggle for the goal*）。<b>何時才對：</b>後接介系詞 *for* 或不定詞 *to V* 時。']
+    ]
+  ],
+  [11, ['考點：高頻固定片語搭配（have nothing in common 毫無共同之處）', '詞性需求：介系詞片語（構成 have... in common）'], 'A',
+    'Jane and Sue are twins, but they seem to have nothing [[11|in common]].',
+    '珍和蘇雖然是雙胞胎，但她們看起來卻毫無共通點。',
+    '前半句說她們是雙胞胎（*twins*，照理說應該很像），後半句用 **`but`** 轉折：`they seem to have nothing ___`（她們似乎毫無共同點）。英文中表示「有許多／毫無共同之處」的固定片語為 **`have a lot / something / nothing in common`**！',
+    [
+      ['in common', 'phr. 共同的；共有的（搭配 have... in common）', '正確。*have nothing in common*（毫無共通點）為必考核心片語。'],
+      ['in comparison', 'phr. 相較之下', '不與 *have nothing* 搭配。<b>何時才對：</b>作轉承副詞比較兩事物時，如 *In comparison with Taipei, this town is very quiet*。'],
+      ['in contact', 'phr. 有聯繫（常搭配 be / keep / stay in contact with）', '搭配動詞 *be / keep / stay*，不說 *have nothing in contact*（若用 *have* 應說 *have no contact with each other*）。<b>何時才對：</b>搭配 *keep in contact with*（與……保持聯繫）。'],
+      ['in contrast', 'phr. 相反地；形成對比', '作句首轉承片語，不能構成 *have nothing in contrast*。<b>何時才對：</b>置於句首對比兩項相反事實時。']
+    ]
+  ],
+  [12, ['考點：動詞片語辨析（come about 發生＝ happen）', '詞性需求：原形動詞片語（How did the accident ___?）'], 'A',
+    'How did the traffic accident [[12|come about]]?',
+    '這場車禍是怎麼發生的？',
+    '主詞是 `the traffic accident`（這場交通事故），疑問詞是 **`How`**（如何）。詢問某事件或意外「**是如何發生的（How did... happen?）**」，固定使用不及物動詞片語 **`come about`**！',
+    [
+      ['come about', 'phr. 發生；產生（＝ happen / take place / occur，常與 How 連用）', '正確。*How did the accident come about?*（這場意外是怎麼發生的？）為大考必背片語。'],
+      ['come around', 'phr. 甦醒過來（恢復意識）；順道來訪；改變心意支持', '主詞通常是「人」，車禍不會「甦醒過來」或「順道拜訪」。<b>何時才對：</b>指昏迷病人醒來或朋友來家裡坐坐時。'],
+      ['come off', 'phr. 脫落（如鈕扣）；成功舉行', '車禍是悲劇意外，不能說「脫落」或「成功達成」。<b>何時才對：</b>指鈕扣掉落（*A button came off my shirt*）時。'],
+      ['come over', 'phr. 順道過來（家裡）；（情緒）突然湧上心頭', '主詞通常為訪客，車禍不會「過來家裡玩」。<b>何時才對：</b>邀請朋友來家裡時，如 *Why don\'t you come over for dinner tonight?*']
+    ]
+  ],
+  [13, ['考點：動詞片語辨析（run over 快速瀏覽／複習）', '詞性需求：過去式動詞片語（受詞為 her notes）'], 'D',
+    'During the lunch hour, Jane [[13|ran over]] her notes so she would remember them for the test.',
+    '在午休的一小時期間，珍快速瀏覽（複習）了她的筆記，好讓自己在考試時能記住內容。',
+    '目的子句為 `so she would remember them for the test`（為了在考試時能記住筆記內容），可見她在午休時間把筆記「**快速看過一遍、複習一遍（ran over / went over）**」。',
+    [
+      ['ran into', 'phr. 偶然遇見（某人）；撞上；遭遇（困難）', '筆記是自己主動拿出來看的，不是在路上「巧遇（*ran into*）」自己的筆記。<b>何時才對：</b>在街上巧遇老友時，如 *I ran into an old friend on the street*。'],
+      ['ran off', 'phr. 逃跑；跑掉；複印出', '考前為了記住內容是「複習（*ran over*）」筆記，而非逃跑。<b>何時才對：</b>指小偷逃跑時。'],
+      ['ran out of', 'phr. 用光；耗盡（時間、金錢、紙張）', '若說「她用光了她的筆記」，後面怎會接「好讓自己在考試時能記住它們」？因果完全不通！<b>何時才對：</b>指墨水或時間用完時。'],
+      ['ran over', 'phr. 快速瀏覽／複習（筆記、講稿，＝ go over）；（車輛）輾過', '正確。除了「被車輾過」之外，*run over one\'s notes / lines* 意為「考前或上台前快速瀏覽複習一遍筆記／台詞」，完全吻合 *so she would remember them for the test*！']
+    ]
+  ],
+  [14, ['考點：`by` 慣用轉承片語辨析（by the way 順帶一提）', '詞性需求：插入轉承片語'], 'C',
+    'We shall expect you at eight o\'clock; [[14|by the way]], it\'s an informal dinner.',
+    '我們將在八點鐘恭候您的光臨；順帶一提，這是一場非正式的晚宴（您不必穿得太拘束）。',
+    '分號前半句講完了約定的時間（我們八點見），後半句順便補充提醒對方一件事：「**順帶一提、對了（by the way）**，這是場輕鬆的非正式晚宴」。',
+    [
+      ['by accident', 'phr. 偶然；不小心（＝ by chance）', '晚宴是否正式是主人事先安排好的，不能說「不小心這是一場非正式晚宴」。<b>何時才對：</b>指無意間做某事時。'],
+      ['by all means', 'phr. 當然可以；務必；盡一切辦法', '常用來爽快答應別人的請求（如 *May I use your phone? — By all means!*），不放在此處補充晚宴性質。<b>何時才對：</b>回應請求表「請便、當然好」時。'],
+      ['by the way', 'phr. 順帶一提；對了', '正確。在交代完主要事項（八點見）後，順便補充提醒對方服裝場合無須太正式。'],
+      ['by then', 'phr. 到那時候為止', '晚宴的性質從一開始就是非正式的，不是「等到八點那時候才會變成非正式晚宴」。<b>何時才對：</b>搭配未來完成式表「到那時已經……」時。']
+    ]
+  ],
+  [15, ['考點：動詞片語辨析（ward off 防止／避開危險或疾病）', '詞性需求：原形動詞片語（不定詞 to 後，受詞為 potential dangers）'], 'A',
+    'Stricter measures have been taken to [[15|ward off]] potential dangers concerning cigarette-smoking.',
+    '有關單位已經採取更嚴格的措施，以防範（避開）與吸菸相關的潛在危險。',
+    '前半句 `Stricter measures have been taken`（已採取更嚴格的措施），目的不定詞後的受詞是 **`potential dangers`**（潛在的危險）。採取嚴格措施自然是為了「**防範、抵禦、避開（ward off）**」抽菸帶來的潛在危害。',
+    [
+      ['ward off', 'phr. 防止；避開；抵禦（危險、疾病、攻擊）', '正確。*ward off danger / disease / evil*（防範危險／預防疾病／辟邪）為高頻搭配。'],
+      ['give in', 'phr. 屈服；投降；讓步（不及物片語）', '語意相反且文法錯誤（不及物片語後不可直接接 *potential dangers*），採取嚴格措施是為了防範危險，不是向危險投降。<b>何時才對：</b>搭配 *give in to pressure*（向壓力屈服）時。'],
+      ['check out', 'phr. 辦理退房；借書；查看確認', '採取嚴格禁菸措施是為了「防範阻止（*ward off*）」危害，不是去「退房」或好奇「看看」危險。<b>何時才對：</b>在飯店退房或去圖書館借書時。'],
+      ['hang up', 'phr. 掛斷電話；把衣服掛起來', '與防範吸菸危害毫無關聯。<b>何時才對：</b>掛電話時，如 *Don\'t hang up on me!*']
+    ]
+  ],
+  [16, ['考點：間接引語之祈使句轉述（ask + O + to V）', '詞性需求：不定詞（to help，作受詞補語）'], 'B',
+    'Henry: Please help me return these books to the library, James. / James: What? / Henry: I asked you [[16|to help]] me return these books to the library.',
+    '亨利：詹姆士，請幫我把這些書還給圖書館。／詹姆士：你說什麼？／亨利：我是請你幫我把這些書還給圖書館。',
+    '亨利重複剛才請詹姆士幫忙的話：`I asked you ___ me return...`。在英文文法中，將祈使句（`Please help me...`）轉為間接引語時，使用句型 **`ask / tell + 人 (O) + to V (OC)`**（要求／請某人去做某事），故選不定詞 **(B) to help**。',
+    [
+      ['help', 'v. 幫忙（原形動詞）', '*ask* 不是使役動詞（*make / have / let*）也不是感官動詞，受詞 *you* 後面絕對不能直接放原形動詞 *help*！<b>何時才對：</b>前面是使役動詞 *I let / made you help me* 時。'],
+      ['to help', 'to-V. 幫忙（不定詞）', '正確。`ask + sb. + to V`（請某人做某事）為最核心的基礎句型。'],
+      ['helped', 'v-pt. 過去式', '單一子句中已有過去式動詞 *asked*，受詞 *you* 後不能再放過去式動詞 *helped*。<b>何時才對：</b>作子句的主要動詞時。'],
+      ['would help', 'aux.+V. 將會幫忙', '*asked you* 後方不是名詞子句，不能接助動詞 *would help*。<b>何時才對：</b>接在 *I hoped that you would help me* 時。']
+    ]
+  ],
+  [17, ['考點：時間副詞子句以現在簡單式代替未來式（until + 現在式）', '詞性需求：第三人稱單數現在簡單式動詞（comes）'], 'B',
+    'Mary: Are you ready to go? I can give you a ride. / Betty: Thanks, but I think I\'ll wait until the mail [[17|comes]].',
+    '瑪麗：妳準備好要走了嗎？我可以順道載妳一程。／貝蒂：謝謝，但我想我還是等到信件送來再走吧。',
+    '貝蒂說 `I\'ll wait until the mail ___`（我將會一直等到郵件送來為止）。**`until`** 引導的是**時間副詞子句**，用來修飾前面的未來動作 *I\'ll wait*；根據必考文法鐵律：**時間副詞子句中，必須以「現在簡單式」代替未來式**！且主詞 `the mail`（郵件）為第三人稱單數不可數名詞，故選 **(B) comes**。',
+    [
+      ['will come', 'v. 將會來（未來式）', '經典文法陷阱！在 *until / when / as soon as / before / after* 引導的時間副詞子句中，**絕對不可使用未來式 `will come`**！<b>何時才對：</b>位於主要子句中時。'],
+      ['comes', 'v. 來（第三人稱單數現在簡單式）', '正確。主詞 *the mail* 為單數，以現在簡單式 *comes* 代替未來式。'],
+      ['to come', 'to-V. 不定詞', '連接詞 *until* 後面有主詞 *the mail*，必須接限定動詞 *comes* 才能構成完整子句，不能放不定詞 *to come*。<b>何時才對：</b>搭配 *wait for the mail to come*（用介系詞 *for* 而非連接詞 *until*）時。'],
+      ['come', 'v. 原形／複數動詞', '主詞 *the mail* 為不可數單數名詞，現在式動詞必須加 `-s`（*comes*）。<b>何時才對：</b>主詞為複數（如 *the letters*）時。']
+    ]
+  ],
+  [18, ['考點：`adj./adv. + enough + to V` 句型與語序（early enough to see it）', '詞性需求：副詞＋enough（early enough）'], 'C',
+    'Alice: There\'s a very good movie on television at eight tonight. / John: Maybe I\'ll get home [[18|early enough]] to see it.',
+    '愛麗絲：今晚八點電視上有一部非常好看的電影。／約翰：或許我會夠早回到家，趕得上看這部電影。',
+    '愛麗絲推薦今晚八點有部好電影，約翰希望能趕得上看（`Maybe I\'ll get home ___ to see it`）。表示「夠早而能趕上看電影」的句型為 **`形容詞／副詞 + enough + to V`**，注意 **`enough` 修飾形容詞或副詞時，必須放在該形容詞／副詞的「後面」**（即 **`early enough`** *to see it*），故選 **(C)**！',
+    [
+      ['so early', 'phr. 這麼早', '*so + adj./adv.* 後方必須搭配 **`that + 子句`**（*so early that I can see it*）或 **`as to + V`**（*so early as to see it*），不能直接接 *to see it*！<b>何時才對：</b>改為 *so early as to see it* 時。'],
+      ['much early', 'phr. 文法錯誤', '*much* 不能修飾原級副詞 *early*（應為 *very early*），且 *very early* 也不與後方的結果不定詞搭配表「夠早得以……」。<b>何時才對：</b>修飾比較級 *much earlier* 時。'],
+      ['early enough', 'phr. 夠早（構成 early enough to V）', '正確。標準的 `adv. + enough + to V`（夠早回家而得以看到那部電影）。'],
+      ['too early', 'phr. 太早（構成 too + adv. + to V 太……而不能……）', '語意相反陷阱！若填入 **`too early`** *to see it*，在 `too... to...` 結構中意為「**太早回家而無法看到那部電影**」，這完全違背常理（越早回家應該越看得到晚上八點的電視電影才對）！<b>何時才對：</b>填入 *too late to see it*（太晚回家而看不到）時。']
+    ]
+  ],
+  [19, ['考點：`I wish + S + 過去式助動詞 (could)` 與現在事實相反之假設語氣', '詞性需求：過去式情態助動詞（could）'], 'B',
+    'Mr. Lin: Don\'t you think our government should build another nuclear power plant in Taiwan? / Mr. Liu: Well, I wish I [[19|could]] agree with you, but I don\'t.',
+    '林先生：你不覺得我們政府應該在臺灣再蓋一座核能發電廠嗎？／劉先生：嗯，我真希望我能同意你的看法，但我並不同意。',
+    '觀察劉先生的回答：`Well, **I wish** I ___ agree with you, **but I don\'t**.`！後半句 **`but I don\'t (agree with you)`** 點出「我現在事實上並不同意你」，因此前面的 **`I wish`** 引導的是**與現在事實相反的假設語氣**！在 `I wish` 後方的子句中，必須使用**過去式動詞或過去式助動詞（were / V-ed / could / would）**，委婉拒絕對方意見時最常說 **`I wish I could agree with you, but I don\'t.`**（我也很希望我能贊同你，但我實在無法贊同），故選 **(B) could**。',
+    [
+      ['had to', 'aux. 當時必須', '雖然形式上是過去式，但語意變成「我真希望我必須同意你」，不合邏輯。<b>何時才對：</b>不搭配 *I wish... agree with you*。'],
+      ['could', 'aux. 能夠（can 的過去式，用於與現在事實相反的假設語氣）', '正確。`I wish I could agree with you`（我真希望我能同意你）是英文中極有禮貌地表達反對意見的經典套語。'],
+      ['do', 'aux. 現在式助動詞', '文法錯誤！動詞 **`wish`** 後面的名詞子句絕對是「與事實相反的假設語氣」，**永遠不能用現在式助動詞 `do` 或 `can`**！<b>何時才對：</b>動詞改為 *I hope* 時。'],
+      ['have to', 'aux. 必須（現在式）', '同 (C)，*wish* 後不可接現在式，且語意不合。<b>何時才對：</b>直述句表「必須」時。']
+    ]
+  ],
+  [20, ['考點：間接問句（名詞子句）之直述語序與過去時態（where + S + V）', '詞性需求：直述句語序之過去式間接問句'], 'D',
+    'Mary: Did you ask Tom [[20|where he went for the summer vacation]]? / Helen: No, I didn\'t, but I will.',
+    '瑪麗：妳有問湯姆他暑假去了哪裡嗎？／海倫：沒有，我還沒問，但我會去問的。',
+    '空格位於 `Did you ask Tom ___?` 之中，作為動詞 *ask* 的直接受詞，這是一個**間接問句（名詞子句）**！解間接問句有兩大鐵律：(1) **語序必須還原為「主詞＋動詞（`where + he + V`）」的直述句語序**，絕對不可保留助動詞提前的疑問倒裝語序（直接淘汰 A、B！）；(2) 「暑假去了哪裡（*for the summer vacation*）」是已經結束的過去事件（且主要子句也是過去式 *Did you ask*），不能用現在簡單式 *goes*（淘汰 C），故選過去簡單式直述語序的 **(D) where he went for the summer vacation**！',
+    [
+      ['where had he gone for the summer vacation', '倒裝語序錯誤', '間接問句中，助動詞 *had* 不可置於主詞 *he* 之前！<b>何時才對：</b>還原為 *where he had gone...* 時。'],
+      ['where was he going for the summer vacation', '倒裝語序錯誤', '間接問句中，be 動詞 *was* 不可置於主詞 *he* 之前！<b>何時才對：</b>還原為 *where he was going...* 時。'],
+      ['where he goes for the summer vacation', '時態不合', '現在簡單式 *goes* 表「每年例行習慣」，但此處詢問剛過去的這個暑假去了哪裡，且主要子句為過去式 *Did you ask*，應使用過去式 *went*。<b>何時才對：</b>詢問每年的習慣 *where he usually goes for summer vacations* 時。'],
+      ['where he went for the summer vacation', '他暑假去了哪裡（直述語序＋過去式）', '正確。符合「疑問詞 + 主詞 (*he*) + 過去式動詞 (*went*)」的間接問句標準結構。']
+    ]
+  ]
+];
+
+// === 壹：選擇題（第一部分） 二、綜合測驗 (21–30 鸚鵡與四隻雞) ===
+const CLOZE1_PARAS = [
+  [
+    ['There was once a man in Puerto Rico who had a wonderful parrot.', '從前在波多黎各（Puerto Rico）有一個人，他養了一隻非常棒的鸚鵡。'],
+    ['The parrot was [[21|unique]]; there was no other bird like him in the whole world.', '這隻鸚鵡是獨一無二的；在全世界沒有任何其他鳥像牠一樣。'],
+    ['He could learn to say any word—[[22|except]] one. He could not say the name of his native town, Catano.', '牠可以學會說任何一個字——只有一個字除外。牠就是不會說牠家鄉小鎮的名字：「卡塔尼奧（Catano）」。']
+  ],
+  [
+    ['The man [[23|did]] everything he could to teach the parrot to say "Catano," but he never [[24|succeeded]].', '這名男子竭盡所能（做了他能做的一切）來教這隻鸚鵡說「Catano」，但他從未成功過。'],
+    ['At first he was very gentle with the bird, but gradually he lost his [[25|temper]].', '起初他對這隻鳥非常溫和，但漸漸地他失去了耐性（發脾氣了）。'],
+    ['"You stupid bird! [[26|Why]] can\'t you learn to say that one word? Say \'Catano\' or I\'ll kill you!"', '「你這隻笨鳥！為什麼你就學不會說那唯一的一個字呢？快說『Catano』，否則我就宰了你！」'],
+    ['But the parrot would not say it.', '但這隻鸚鵡就是不肯說。'],
+    ['Many times the man screamed, "Say \'Catano\' or I\'ll kill you!" But the bird would not [[27|repeat]] the name.', '好幾次這名男子氣得尖叫大吼：「快說『Catano』，否則我就宰了你！」但這隻鳥依然不肯跟著複誦這個地名。']
+  ],
+  [
+    ['Finally the man gave up. He picked up the parrot and threw the bird into the chicken house.', '最後這名男子放棄了。他抓起這隻鸚鵡，把牠丟進了雞舍裡。'],
+    ['In the chicken house, there were four old chickens, waiting to be killed [[28|for]] Sunday\'s dinner.', '在雞舍裡有四隻老母雞，正等著被宰來做星期天的晚餐。'],
+    ['"You are even more stupid than the chickens," the man said as he was leaving.', '「你比這些雞還要笨，」這名男子在離開時說道。']
+  ],
+  [
+    ['The next morning, the man went out to the chicken house. When he opened the door, he was [[29|shocked]] by what he saw.', '隔天早上，這名男子走到外面的雞舍。當他打開門時，他對眼前的景象感到震驚不已。'],
+    ['He could not believe his eyes and ears!', '他簡直不敢相信自己的眼睛和耳朵！'],
+    ['On the floor [[30|lay]] three dead chickens. The parrot was screaming at the fourth, "Say \'Catano\' or I\'ll kill you!"', '地板上躺著三隻死掉的雞。而那隻鸚鵡正對著第四隻雞尖叫大吼：「快說『Catano』，否則我就宰了你！」']
+  ]
+];
+
+const CLOZE1_QS = [
+  [21, ['考點：形容詞詞義與分號後同義解釋呼應', '詞性需求：形容詞（主詞補語）'], 'B',
+    '分號後半句直接解釋原因：`there was no other bird like him in the whole world.`（全世界沒有任何其他鳥像牠一樣）。全天下絕無僅有、舉世無雙，就叫做「**獨一無二的（unique）**」，故選 **(B) unique**。',
+    [
+      ['lonely', 'adj. 孤單的；寂寞的', '全世界沒有別的鳥像牠一樣聰明會講話，是形容牠「獨一無二（*unique*）」，而非心理感到孤單寂寞。<b>何時才對：</b>描述缺乏同伴而感到孤寂時。'],
+      ['unique', 'adj. 獨一無二的；獨特的', '正確。直接與分號後的 *there was no other bird like him in the whole world* 完全等價呼應。'],
+      ['sorrowful', 'adj. 悲傷的；哀痛的', '語意不合。<b>何時才對：</b>形容喪親或悲劇的哀傷心情時。'],
+      ['personal', 'adj. 個人的；私人的', '不能形容鸚鵡本身的特質。<b>何時才對：</b>修飾個人物品或私人問題時。']
+    ]
+  ],
+  [22, ['考點：排除介系詞（any word — except one 除了其中一個字以外）', '詞性需求：介系詞（後接代名詞 one）'], 'C',
+    '破折號前說 `He could learn to say **any word**`（牠能學會說**任何一個字**），下一句卻說 `He could not say the name of his native town, Catano.`（牠不會說家鄉的名字 Catano）。什麼字都會說，「**唯獨／除了（except）**」這一個字不會說，故選表排除在外的 **(C) except**。',
+    [
+      ['without', 'prep. 沒有（伴隨工具或條件）', '表示從整體（*any word*）中扣除、排除唯一的一項（*one*），英文固定用 **except**（*any word except one*），不說 *without one*。<b>何時才對：</b>表缺乏某工具或條件時。'],
+      ['beyond', 'prep. 超越；在……的那一邊', '語意不合。<b>何時才對：</b>搭配 *beyond description / imagination*（難以言喻／超乎想像）時。'],
+      ['except', 'prep. 除了……之外（不包括在內）', '正確。*any word except one*（除了一個字以外的任何字都會說）。'],
+      ['despite', 'prep. 儘管', '「儘管一個字」語意完全不通。<b>何時才對：</b>後接阻礙或困難名詞時。']
+    ]
+  ],
+  [23, ['考點：固定動詞搭配（do everything one can to V 竭盡所能）', '詞性需求：過去式動詞（受詞為 everything）'], 'A',
+    '空格後的受詞是代名詞 **`everything`** *(that) he could (do)*（他所能做的一切事）。在英文中，「做某人能做的一切、竭盡所能」固定使用動詞 **do**（過去式為 **`did everything he could to teach...`**），故選 **(A) did**。',
+    [
+      ['did', 'v-pt. 做（do 的過去式）', '正確。`do everything (that) one can to + V`（竭盡全力去做某事）為固定慣用句型。'],
+      ['put', 'v-pt. 放置', '不說 *put everything he could*。<b>何時才對：</b>搭配 *put effort into* 時。'],
+      ['had', 'v-pt. 有', '不說 *had everything he could*。<b>何時才對：</b>表擁有某物時。'],
+      ['made', 'v-pt. 製造', '搭配 *effort* 時用 *made every effort*，但搭配代名詞 **`everything`** 時一律用 **did**（*did everything he could*）！<b>何時才對：</b>受詞為 *every effort* 時。']
+    ]
+  ],
+  [24, ['考點：動詞詞義與轉折邏輯（but he never succeeded）', '詞性需求：過去式不及物動詞'], 'D',
+    '前半句說主人竭盡所能教鸚鵡說 Catano，轉折詞 **`but he never ___`**（但他從未……），且後文說鸚鵡始終不肯說這個字，最後主人只好放棄（*Finally the man gave up*）。可見他怎麼教都「**從未成功過（never succeeded）**」，故選 **(D) succeeded**。',
+    [
+      ['failed', 'v. 失敗', '雙重否定陷阱！前面已經有否定詞 **`never`**！若填入 *failed* 會變成 *he **never failed***（他從未失敗＝每次都成功），這與鸚鵡始終不肯開口說 Catano 的事實完全相反！<b>何時才對：</b>沒有否定詞 *never*，單純說 *he failed* 時。'],
+      ['attempted', 'v. 嘗試', '前半句才剛說他「做了他能做的一切（*did everything he could*）」，怎麼可能說「但他從未嘗試過」？<b>何時才對：</b>指從未嘗試過某事時。'],
+      ['changed', 'v. 改變', '語意不合。<b>何時才對：</b>指改變計畫或態度時。'],
+      ['succeeded', 'v. 成功', '正確。*tried everything..., but never succeeded*（試盡一切辦法，卻從未成功過）。']
+    ]
+  ],
+  [25, ['考點：情緒慣用片語（lose one\'s temper 發脾氣）', '詞性需求：名詞（構成 lose one\'s temper）'], 'C',
+    '前半句說 `At first he was very gentle with the bird`（起初他對這隻鳥非常溫和有耐心），轉折詞 **`but gradually he lost his ___`**（但漸漸地他失去了……），下一句他開始對鳥破口大罵：`"You stupid bird!... Say \'Catano\' or I\'ll kill you!"`。從溫和變成咆哮威脅要殺鳥，代表他「**發脾氣、失去耐性了（lost his temper）**」！',
+    [
+      ['pet', 'n. 寵物', '鸚鵡還在籠子裡被他吼叫，並未走失（沒有失去他的寵物）。<b>何時才對：</b>寵物走丟時。'],
+      ['thing', 'n. 東西', '語意不通。<b>何時才對：</b>無此搭配。'],
+      ['temper', 'n. 脾氣；性情', '正確。*lose one\'s temper*（發脾氣、動怒）與 *keep one\'s temper*（忍住脾氣）為大考必背片語。'],
+      ['possession', 'n. 財產；擁有物', '語意不合（若指失去理智應為 *lost his self-control / mind*）。<b>何時才對：</b>指失去財物時。']
+    ]
+  ],
+  [26, ['考點：疑問詞辨析（Why can\'t you...? 你為什麼就是不能……？）', '詞性需求：疑問副詞'], 'B',
+    '主人氣急敗壞地對鸚鵡責問：`"`[[26|Why]]` can\'t you learn to say that one word?"`（「你**為什麼**就學不會說那唯一的一個字呢？」）。句子結構 `can\'t you learn to say that one word` 主詞、動詞、受詞皆完整，用來質問原因並表達氣憤不解，使用疑問副詞 **Why**！',
+    [
+      ['How', 'adv. 如何（若問「為何不能」需用 How come + S + V 直述語序）', '若用 *How*，後面搭配倒裝 *can\'t you* 不合習慣（表責備「為何不能」固定說 **Why can\'t you...?** 或不倒裝的 **How come you can\'t...?**）。<b>何時才對：</b>肯定句 *How can you say that?* 或 *How come you can\'t...?* 時。'],
+      ['Why', 'adv. 為什麼', '正確。`Why can\'t you...?`（你為什麼就是不能……？）是責備與抱怨對方做不到某事的標準句型。'],
+      ['What', 'pron. 什麼', '後方動詞 *say* 已經有受詞 *that one word* 了，不缺受詞，不可用疑問代名詞 *What*。<b>何時才對：</b>子句缺受詞時。'],
+      ['When', 'adv. 什麼時候', '否定句 *When can\'t you learn...*（你什麼時候不能學會……）語意完全不通。<b>何時才對：</b>肯定句詢問時間時。']
+    ]
+  ],
+  [27, ['考點：說話類動詞及物與不及物用法辨析（repeat the name）', '詞性需求：及物原形動詞（直接接名詞受詞 the name）'], 'C',
+    '主人對著鸚鵡大吼了好幾次 `"Say \'Catano\' or I\'ll kill you!"`（快說 Catano，否則我宰了你！），`But the bird would not ___ the name.`（但這隻鳥就是不肯**跟著唸出／複誦**這個地名）。注意空格後直接接名詞受詞 **`the name`**！四個選項中，能直接接 `the name` 作受詞且表示「跟著主人唸一遍」的及物動詞唯有 **repeat**（複誦、重複說）！',
+    [
+      ['tell', 'v. 告訴；分辨；講（故事、謊言）', '*tell* 表「告訴」時後面需接「人」（*tell me the name*），且主人是叫鸚鵡跟著發音唸出那個字，不是請鸚鵡告訴主人地名是什麼。<b>何時才對：</b>搭配 *tell a story / a lie / the truth* 或 *tell sb. sth.* 時。'],
+      ['talk', 'v. 說話；交談（不及物動詞）', '文法錯誤！*talk* 是不及物動詞，後面不能直接接名詞受詞 *the name*（需加介系詞 *about* 等）。<b>何時才對：</b>作不及物動詞 *The bird would not talk* 時。'],
+      ['repeat', 'v. 重複說；複誦；重做', '正確。鸚鵡學舌就是「跟著主人重複唸出（*repeat*）」聽到的字詞，且 *repeat* 為及物動詞可直接接 *the name*。'],
+      ['converse', 'v. 交談；會話（正式不及物動詞，搭配 converse with）', '文法與語意皆錯。*converse* 為不及物動詞，後面不能接 *the name*。<b>何時才對：</b>指兩人進行正式交談（*converse with sb.*）時。']
+    ]
+  ],
+  [28, ['考點：表「目的／作為……之用」之介系詞（for Sunday\'s dinner）', '詞性需求：介系詞'], 'D',
+    '雞舍裡的四隻老母雞正等著被宰殺，`waiting to be killed ___ Sunday\'s dinner.`（等著被宰來**作為／準備給**星期天的晚餐）。表示「作為……之用、為了……（的目的）」，固定使用介系詞 **for**！',
+    [
+      ['in', 'prep. 在……裡面', '不說 *killed in Sunday\'s dinner*。<b>何時才對：</b>後接空間或月份年份時。'],
+      ['on', 'prep. 在（某一天）', '雖然 *on Sunday* 用 *on*，但這裡受詞核心是餐點 **`dinner`**（被宰殺的目的與用途是拿來當週日晚餐的食材，且在週日晚餐「之前」就會先宰殺烹煮好），故表用途目的用 **for** *Sunday\'s dinner*。<b>何時才對：</b>單純指在星期天當天（*on Sunday*）時。'],
+      ['at', 'prep. 在（某時刻或聚餐場合）', '不會在吃晚餐的餐桌現場才殺雞（*killed at dinner*）。<b>何時才對：</b>指在晚宴席間聊天（*talked at Sunday\'s dinner*）時。'],
+      ['for', 'prep. 為了；作為……之用', '正確。*be killed for Sunday\'s dinner*（被宰來做週日晚餐）為最道地的介系詞搭配。']
+    ]
+  ],
+  [29, ['考點：情緒過去分詞辨析（shocked 震驚的）', '詞性需求：過去分詞形容詞（was ___ by what he saw）'], 'B',
+    '隔天早上主人打開雞舍門，`he was ___ by what he saw. He could not believe his eyes and ears!`（他對眼前的景象感到**無比震驚**。他簡直不敢相信自己的眼睛和耳朵！）：因為地板上竟然死了三隻雞，而那隻鸚鵡正模仿主人昨天的狠話，逼第四隻雞唸出 Catano！看到這超乎想像的驚人一幕，主人的反應自然是「**震驚的、大吃一驚的（shocked）**」。',
+    [
+      ['worried', 'adj. 擔心的', '後句緊接著驚嘆號 `He could not believe his eyes and ears!`（不敢相信自己的眼睛和耳朵！），這是目睹荒謬驚人畫面時的「震驚（*shocked*）」，而非事前的擔心。<b>何時才對：</b>事情發生前感到憂慮時。'],
+      ['shocked', 'adj. 震驚的；大吃一驚的', '正確。*be shocked by what he saw* 完全呼應下句 *He could not believe his eyes and ears!*。'],
+      ['delighted', 'adj. 欣喜的；高興的', '自己養來準備週日晚餐吃的三隻母雞被鸚鵡弄死了，且場面荒誕驚悚，主人怎麼可能感到「高興欣喜」？<b>何時才對：</b>看到令人開心的驚喜時。'],
+      ['blinded', 'v-pp. 使失明；使看不見', '他看得很清楚（看到地上三隻死雞與鸚鵡對第四隻雞大吼），並沒有失明看不見。<b>何時才對：</b>被強光刺眼看不見（*blinded by the bright light*）時。']
+    ]
+  ],
+  [30, ['考點：地方副詞片語置於句首之完全倒裝句（On the floor lay three dead chickens）', '詞性需求：過去簡單式不及物動詞（lie「躺」的過去式 lay）'], 'A',
+    '全卷最經典的文法必考題！分析句子結構：**`On the floor ___ three dead chickens.`** 句首 `On the floor` 是**地方介系詞片語（不能當主詞！）**，真正的主詞是後面的複數名詞 **`three dead chickens`**（三隻死雞）。這是將地方副詞片語移至句首所形成的**完全倒裝句（`地方副詞片語 + 不及物動詞 + 主詞`）**！還原正常語序為：`Three dead chickens ___ on the floor.`（三隻死雞**躺在**地板上）。因為全文時態為**過去簡單式**，且表示「躺、位於（不及物）」的原形動詞是 `lie`，其三態變化為 **`lie — lay — lain`**，因此過去式必須填 **`lay`**！',
+    [
+      ['lay', 'v-pt. 躺；位於（不及物動詞 lie 的過去式：lie - lay - lain）', '正確！完全倒裝句缺少的是子句的「過去式主要動詞」，三隻死雞「躺在（*lay*）」地板上，時態與及物／不及物屬性完全正確！'],
+      ['laid', 'v-pt./pp. 放置；下蛋（及物動詞 lay 的過去式：lay - laid - laid）', '三態混淆頭號陷阱！*laid* 是及物動詞「把某物放下、下蛋」的過去式，若用被動需有 *were laid*，單獨放 *laid* 會變成三隻死雞主動去下蛋或放東西，文法錯誤！<b>何時才對：</b>前面有 *were*（*were laid*）或主動有受詞時。'],
+      ['lied', 'v-pt./pp. 說謊（不及物動詞 lie 的過去式：lie - lied - lied）', '三態混淆陷阱！*lied* 是「說謊」的過去式，三隻死雞不會在地板上「說謊」！<b>何時才對：</b>指人撒謊時（如第 4 題 *lied to his mother*）。'],
+      ['lying', 'v-ing. 躺（現在分詞）', '文法錯誤！`On the floor ___ three dead chickens.` 是一句獨立完整的句子，中間必須有**限定動詞（過去式動詞 `lay`）**，單獨放現在分詞 *lying*（沒有 be 動詞 *were*）會使整句話沒有動詞！<b>何時才對：</b>前面有過去式 be 動詞（*On the floor **were lying** three dead chickens*）時。']
+    ]
+  ]
+];
+
+// === 壹：選擇題（第一部分） 二、綜合測驗 (31–40 大笑與健康) ===
+const CLOZE2_PARAS = [
+  [
+    ['Perhaps most of us are familiar with the saying "Laugh and the world [[31|laughs]] with you, weep and you weep alone."', '或許我們大多數人都很熟悉這句俗諺：「當你歡笑時，全世界都會跟著你一起笑；當你哭泣時，卻只有你獨自垂淚。」'],
+    ['[[32|But]] did you know that according to recent research, people are losing the art of laughter and it could have a [[33|serious]] effect on our health?', '但是你知道嗎？根據最近的研究顯示，人們正在失去歡笑的藝術（能力），而這可能會對我們的健康造成嚴重的影響？']
+  ],
+  [
+    ['In 1930 we laughed on average for 19 minutes each day, but by 1980 it [[34|had decreased]] to six minutes.', '在 1930 年，我們平均每天會笑十九分鐘，但到了 1980 年，這個時間已經減少到只剩六分鐘了。'],
+    ['Children, [[35|on the other hand]], can see the funny side of things more often and may laugh up to 400 times a day.', '另一方面，兒童則較常看到事物有趣好笑的一面，一天可能會笑高達四百次。']
+  ],
+  [
+    ['By exhaling air from the lungs in short [[36|bursts]] of laughter, breathing is quickened and heartbeats increased, which achieves [[37|as much]] good as ten minutes on an exercise bike.', '藉由在一陣陣短促的笑聲中將空氣從肺部呼出，呼吸會加快、心跳也會加速，這能達到與騎十分鐘健身腳踏車一樣多的益處。'],
+    ['Laughter, too, has a beneficial effect on our immune system, [[38|encouraging]] the production of white blood cells and increasing our resistance to infection.', '歡笑對我們的免疫系統也有益處，它能促進白血球的生成，並增強我們對抗感染的抵抗力。'],
+    ['[[39|It]] makes a difference to our appearance, too, when we relax our facial muscles!', '當我們放鬆臉部肌肉時，它（歡笑）對我們的外表容貌也會產生正面的影響！']
+  ],
+  [
+    ['Laughter [[40|really]] is the best medicine, so why not give yourself a treat? Have a good laugh today—and feel better for it.', '「笑」真的就是最好的良藥，那麼何不善待自己一下呢？今天就好整以暇地開懷大笑一場吧——你會因此感覺更舒暢的。']
+  ]
+];
+
+const CLOZE2_QS = [
+  [31, ['考點：英語經典諺語對稱結構（Laugh and the world laughs with you）', '詞性需求：第三人稱單數現在式動詞'], 'C',
+    '觀察這句世界名言（出自美國詩人 Ella Wheeler Wilcox 的詩作〈Solitude〉）的平行對仗結構：後半句是 `**weep** and you **weep** alone`（前半用原形祈使動詞 **weep**「哭泣」，後半緊接著重複同一個動詞 **weep**）；因此前半句 `**Laugh** and the world ___ with you` 必然也是重複同一個動詞 **laughs**（「你笑，全世界都會跟著你一起**笑**」），故選 **(C) laughs**。',
+    [
+      ['fights', 'v. 戰鬥；爭吵', '破壞諺語的對仗結構與語意。<b>何時才對：</b>無此諺語搭配。'],
+      ['sings', 'v. 唱歌', '前半動詞是 *Laugh*（笑）而非 *Sing*。<b>何時才對：</b>若前面為 *Sing and...* 時。'],
+      ['laughs', 'v. 笑', '正確。經典名言 *"Laugh, and the world laughs with you; weep, and you weep alone."*，前後皆以同一動詞重複對仗。'],
+      ['cries', 'v. 哭泣', '「哭泣（*weep*）」在逗號後半句，前半句講的是歡笑（*Laugh*）。<b>何時才對：</b>與後半句混淆時才會誤選。']
+    ]
+  ],
+  [32, ['考點：轉折連接詞引出意外的研究警訊', '詞性需求：對等連接詞（But）'], 'B',
+    '第一句說「我們大多數人都很熟悉『你笑世界就跟著你笑』這句老話」，第二句卻拋出一個令人警醒的負面新發現：`___ did you know that according to recent research, people are losing the art of laughter...?`（**但是**你知道嗎？根據最近研究，現代人正在逐漸失去歡笑的能力……？）。從「大家都熟知笑的名言」轉折到「但你知道現代人其實越來越不會笑了嗎？」，使用轉折連接詞 **But**！',
+    [
+      ['How', 'adv. 如何', '後面是助動詞開頭的是非問句 *did you know that...*，若加 *How* 會變成「你如何知道這項最新研究的？」，不符合文章向讀者介紹新知的科普語氣。<b>何時才對：</b>詢問對方獲知消息的管道時。'],
+      ['But', 'conj. 但是；然而', '正確。`But did you know that...?`（但你知道……嗎？）是科普文章承接普遍認知、轉而引出驚人研究事實的標準句型。'],
+      ['So', 'conj. 所以', '「熟悉這句俗諺」並不會成為「現代人失去歡笑能力」的原因。<b>何時才對：</b>表順向因果推論時。'],
+      ['When', 'adv. 何時', '科普作者是在告知讀者這項研究，不會問讀者「你什麼時候知道這項研究的？」。<b>何時才對：</b>詢問獲知時間時。']
+    ]
+  ],
+  [33, ['考點：形容詞詞義與負面健康影響搭配', '詞性需求：形容詞（修飾單數名詞 effect）'], 'B',
+    '前半句說 `people are losing the art of laughter`（人們正在失去歡笑的能力——這是負面現象），因此這會對我們的健康造成「**嚴重的（serious）**」不良影響（*a serious effect on our health*），故選 **(B) serious**。',
+    [
+      ['good', 'adj. 好的', '語意相反！「失去歡笑的能力（不常笑了）」對健康是有害的，怎麼會有「好（*good*）」影響？（是「笑」本身才有好影響，而「失去笑的能力」則會有嚴重負面影響）。<b>何時才對：</b>主詞為 *Laughing often* 時。'],
+      ['serious', 'adj. 嚴重的；重大的', '正確。*have a serious (negative) effect on our health*（對我們的健康造成嚴重影響）。'],
+      ['few', 'det. 很少的（修飾複數可數名詞）', '文法錯誤！空格前有單數不定冠詞 **`a`**，後面是單數名詞 **`effect`**，絕對不能放修飾複數名詞的 *few*！<b>何時才對：</b>無冠詞 *a* 且後接複數 *effects* 時。'],
+      ['heavy', 'adj. 沉重的', '形容影響（*effect / impact*）重大或嚴重，英文搭配 *serious / great / profound / significant effect*，不說 *a heavy effect*。<b>何時才對：</b>修飾雨勢、交通或負擔（*a heavy burden*）時。']
+    ]
+  ],
+  [34, ['考點：`by + 過去時間點（by 1980）` 搭配過去完成式', '詞性需求：過去完成式動詞（had decreased）'], 'D',
+    '看到時間標記：**`by 1980`**（到了 1980 年為止）！在英文時態規則中，**`by + 過去時間點`（到了過去某時間點為止已經完成的變化）是「過去完成式（`had + p.p.`）」的鐵證**！1930 年每天笑 19 分鐘，到了 1980 年為止「**已經減少到（had decreased to）**」只剩 6 分鐘，故秒選 **(D) had decreased**！',
+    [
+      ['has been decreasing', 'v. 一直在減少（現在完成進行式）', '時間點是過去的 *by 1980*（1980 年），不可使用現在完成進行式。<b>何時才對：</b>搭配 *since 1980*（自 1980 年以來至今）時。'],
+      ['was decreasing', 'v. 當時正在減少（過去進行式）', '後面有明確的最終數值結果 **`to six minutes`**（減少**到**六分鐘，表動作完成的結果），且搭配 `by + 過去時間`，應使用過去完成式而非進行式。<b>何時才對：</b>描述過去某時段正在持續下滑的過程、無 *by 1980* 與最終結果數值時。'],
+      ['should have decreased', 'aux.+V. 本該減少卻未減少', '與事實相反的責備語氣，不符合客觀統計數據陳述。<b>何時才對：</b>表示過去應發生卻未發生時。'],
+      ['had decreased', 'v. 已經減少（過去完成式）', '正確。`by + 過去年份 (1980)` 搭配過去完成式 `had decreased to six minutes` 為大考必背時態公式。']
+    ]
+  ],
+  [35, ['考點：對比轉承片語（on the other hand 另一方面）', '詞性需求：插入語轉承片語'], 'D',
+    '前一句說成人到了 1980 年每天平均只笑區區「**6 分鐘**」，本句則說「兒童（*Children*）則較常看到事物的趣味面，一天可以笑高達 **400 次**！」。將「成人笑得極少」與「兒童笑得極多」做鮮明對比，使用轉承片語 **on the other hand**（另一方面、相較之下），故選 **(D)**。',
+    [
+      ['as a result', 'phr. 因此；結果', '「成人每天只笑六分鐘」並不會導致「所以小孩一天笑四百次」，兩者是對比而非因果。<b>何時才對：</b>表前因後果時。'],
+      ['in addition', 'phr. 此外；而且', '表同向延伸，無法凸顯成人（6 分鐘）與兒童（一天 400 次）之間的強烈反差。<b>何時才對：</b>補充同向事實時。'],
+      ['by chance', 'phr. 偶然；碰巧', '兒童愛笑是天性使然，不是「碰巧」。<b>何時才對：</b>指意外巧合時。'],
+      ['on the other hand', 'phr. 另一方面（用來對比兩個相反或不同的群體／面向）', '正確。完美對比成人與兒童在發笑頻率上的巨大差異。']
+    ]
+  ],
+  [36, ['考點：笑聲量詞固定搭配（short bursts of laughter 一陣陣短促的笑聲）', '詞性需求：複數名詞'], 'A',
+    '人們大笑時，肺部是一陣一陣突然把氣吐出來的。在英文中，形容笑聲、掌聲、哭聲或怒氣「一陣陣突然爆發」，固定使用搭配詞 **`bursts of laughter / applause / tears / anger`**！故選 **(A) bursts**。',
+    [
+      ['bursts', 'n. 突發；一陣陣爆發（a burst of laughter 一陣爆發的笑聲）', '正確。*in short bursts of laughter*（在一陣陣短促爆發的笑聲中）為極道地的母語搭配。'],
+      ['breaks', 'n. 休息；中斷；破裂', '不說 *short breaks of laughter*。<b>何時才對：</b>指下課休息時間（*take a short break*）時。'],
+      ['circles', 'n. 圓圈；社交圈', '笑聲不是圓圈。<b>何時才對：</b>指圓形或交友圈時。'],
+      ['pieces', 'n. 碎片；一片／塊', '笑聲不用 *pieces* 計量。<b>何時才對：</b>搭配 *pieces of paper / advice / information* 時。']
+    ]
+  ],
+  [37, ['考點：原級比較搭配不可數名詞（as much good as... 與……一樣多的益處）', '詞性需求：as + 不可數形容詞 much（修飾不可數名詞 good）'], 'B',
+    '觀察空格後的結構：`achieves ___ **good as** ten minutes on an exercise bike`！まず看到後面的比較連接詞 **`as`**，且前面是肯定動詞 *achieves*，確定是原級比較 **`as... as...`**（肯定句不用 *so... as*，先淘汰 C、D）；接著看中間被修飾的名詞 **`good`** 在此作**不可數名詞，意為「益處、好處（benefit）」**！修飾不可數名詞 *good* 必須用 **`much`**，構成 **`as much good as...`**（達到與騎十分鐘健身車一樣多的好處），故選 **(B) as much**！',
+    [
+      ['as many', 'phr. 和……一樣多的（修飾複數可數名詞）', '*many* 只能修飾複數可數名詞，而此處的 *good* 是不可數名詞「益處」（注意它後面沒有加 `-s` 變成 *goods* 商品！）。<b>何時才對：</b>後面是複數可數名詞（如 *as many benefits as*）時。'],
+      ['as much', 'phr. 和……一樣多的（修飾不可數名詞）', '正確。肯定句原級比較用 `as... as`，且 `much` 修飾不可數名詞 `good`（益處、好處，如 *do you a lot of good*）。'],
+      ['so many', 'phr. 這麼多的（用於否定句 not so... as 或 so... that）', '本句為肯定句原級比較，不用 *so*，且 *good* 為不可數名詞不可用 *many*。<b>何時才對：</b>用於 *so many benefits that...* 時。'],
+      ['so much', 'phr. 這麼多的（用於否定句 not so... as 或 so... that）', '肯定句的同級比較固定用 **`as`** *much good as*，不用 *so much good as*（*so... as* 僅用於否定句 *not so much good as*）。<b>何時才對：</b>前面有否定詞 *does not achieve so much good as* 時。']
+    ]
+  ],
+  [38, ['考點：對等平行之分詞構句（encouraging... and increasing...）', '詞性需求：現在分詞（V-ing，與後方的 and increasing 對稱）'], 'C',
+    '最強解題線索就在同句後方的對等連接詞：**`___ the production of white blood cells and increasing our resistance to infection.`**！看到 `and` 後面是現在分詞 **`increasing`**（並增強我們對抗感染的抵抗力），根據對等連接詞 `and` 前後詞性與結構必須絕對平行的鐵律，空格必然也是**現在分詞 encouraging**（作補充說明結果的分詞構句），故秒選 **(C) encouraging**！',
+    [
+      ['encourages', 'v. 促進；鼓勵（第三人稱單數動詞）', '逗號前已是完整子句且無連接詞，不可放限定動詞，且無法與後面的 *and increasing* 對稱。<b>何時才對：</b>有關係代名詞 *which encourages... and increases...* 時。'],
+      ['encouraged', 'v-pp. 被鼓勵（過去分詞）', '後方有受詞 *the production of white blood cells*（主動促進白血球生成），且需與主動現在分詞 *and increasing* 平行，不可用過去分詞。<b>何時才對：</b>被動語態時。'],
+      ['encouraging', 'v-ing. 促進；鼓勵（現在分詞）', '正確。與後方的 `and increasing` 構成完全對稱的兩個現在分詞構句，補充說明 *Laughter* 對免疫系統的具體益處。'],
+      ['to encourage', 'to-V. 不定詞', '無法與後方的現在分詞 *and increasing* 對稱。<b>何時才對：</b>後方也同步為 *and (to) increase* 且表目的時。']
+    ]
+  ],
+  [39, ['考點：人稱代名詞指代前文主詞（Laughter）', '詞性需求：第三人稱單數代名詞主詞（It）'], 'A',
+    '前一句主詞是不可數名詞 **`Laughter`**（歡笑）：`Laughter, too, has a beneficial effect on our immune system...`，本句接著說歡笑對外貌也有幫助：`___ makes a difference to our appearance, too, when we relax our facial muscles!`（當我們大笑放鬆臉部肌肉時，**它［歡笑］**對我們的外貌也會帶來改變！）。指代前句單數不可數名詞 *Laughter* 並作本句動詞 *makes* 的主詞，使用代名詞 **It**，故選 **(A) It**。',
+    [
+      ['It', 'pron. 它（指代前句主詞 Laughter）', '正確。同時也可視為形式主詞或指代 *Laughter*，搭配單數動詞 *makes a difference*。'],
+      ['There', 'adv./pron. 存在句虛主詞', '*There* 作存在句虛主詞時搭配 *be / exist / seem / remain* 等不及物動詞，不能接及物動詞片語 *makes a difference*（不說 *There makes a difference*）。<b>何時才對：</b>搭配 *There is a big difference* 時。'],
+      ['What', 'pron. ……的事物（引導名詞子句）', '若放 *What*，則 `What makes a difference to our appearance` 整個變成一個名詞子句主詞，整句話就會缺少主要動詞！<b>何時才對：</b>後方另有主要動詞 *is* 時。'],
+      ['Where', 'conj./adv. 在哪裡', '同 (C)，會使主要子句變成無主詞的錯誤結構。<b>何時才對：</b>引導副詞子句且另有主要子句時。']
+    ]
+  ],
+  [40, ['考點：肯定強調副詞與格言搭配（Laughter really is the best medicine）', '詞性需求：肯定強調副詞（修飾動詞 is）'], 'D',
+    '前文詳述了大笑對心肺運動、免疫系統與臉部外貌的種種科學實證好處，最後一段首句總結呼應西方最著名的健康諺語「笑是最好的良藥（*Laughter is the best medicine*）」：`Laughter ___ is the best medicine, so why not give yourself a treat?`（笑**真的／確實**就是最好的良藥，那麼何不善待自己大笑一場呢？）。需要正向肯定的強調副詞 **really**，故選 **(D) really**。',
+    [
+      ['hardly', 'adv. 幾乎不（否定副詞）', '語意完全相反！全文都在讚揚笑的健康益處，最後怎會說「笑幾乎不是最好的良藥」？<b>何時才對：</b>否定某錯誤觀念時。'],
+      ['kindly', 'adv. 仁慈地；親切地', '語意不合，不會說「笑仁慈地是最好的藥」。<b>何時才對：</b>修飾人的親切舉動時。'],
+      ['rarely', 'adv. 很少；罕見地（否定副詞）', '同 (A)，否定副詞與全文主旨及後句 *so why not give yourself a treat?* 完全矛盾。<b>何時才對：</b>表極少發生時。'],
+      ['really', 'adv. 真正地；確實地（＝ truly / indeed）', '正確。放在主詞 *Laughter* 與強調的 be 動詞 *is* 之間，肯定驗證了「笑確實是最好的良藥」這句名言。']
+    ]
+  ]
+];
+
+// === 壹：選擇題（第一部分） 三、閱讀測驗 (41–50) ===
+const RC1_PARAS = [
+  [
+    ['One of the most unusual graduation speakers of the 1983 commencement season was not a person at all.', '在 1983 年的畢業典禮季節中，最不尋常的畢業致詞嘉賓之一根本就不是人類。'],
+    ['The speaker was Robot Redford, a robot who delivered the commencement address at a community college in suburban Maryland.', '這位演講者是「機器人瑞德福（Robot Redford）」，一個在馬里蘭州郊區一所社區大學發表畢業典禮演說的機器人。']
+  ],
+  [
+    ['The speaker, carefully programmed, arrived on the stage under its own power and proceeded to tell the audience of 658 graduates, their families, and friends that they would have to learn to work with robots and technology to solve society\'s problems.', '這位經過精心程式設計的演講者，靠著自身的動力走上講台，接著告訴台下六百五十八名畢業生及其親友聽眾，他們未來必須學會與機器人及科技合作，以解決社會的問題。'],
+    ['The robot described itself as an extension of a person to help humans increase the workload.', '這個機器人將自己形容為人類的延伸，用來協助人類提升工作負載量（產能）。'],
+    ['Although this particular robot can be programmed to speak, the voice heard wasn\'t that of the robot, because it was feared that the robot\'s voice was not loud enough to carry throughout the hall.', '雖然這台特定的機器人可以透過程式設定來發聲說話，但現場聽到的聲音並不是機器人自己發出的，因為校方擔心機器人的聲音不夠宏亮，無法傳遍整個禮堂。'],
+    ['An amplified voice of a human was used instead, while the listeners watched the robot.', '因此改用了經擴音放大的真人聲音，而台下聽眾則看著台上的機器人。']
+  ],
+  [
+    ['Robot Redford was followed by a person, William Bakaleinikoff, who spoke about the need for cooperation between people and technology.', '接在機器人瑞德福之後上台的是一位真人——威廉・巴卡萊尼科夫（William Bakaleinikoff），他演講的主題是人類與科技之間合作的必要性。'],
+    ['Mr. Bakaleinikoff\'s experience with his topic included the fact that he had created Robot Redford and had provided the voice for the robot\'s words to the graduates.', '巴卡萊尼科夫先生在這個主題上的親身經驗，包括了他正是創造出「機器人瑞德福」的發明者，而且剛才機器人對畢業生致詞的幕後配音也是由他所提供的。']
+  ],
+  [
+    ['There was quite a bit of controversy over the choice of a robot as a commencement speaker.', '對於選擇一個機器人來擔任畢業典禮致詞嘉賓這件事，引發了相當大的爭議。'],
+    ['Some students thought it was insensitive and degrading to use a robot. Others thought the idea was clever and innovative.', '有些學生認為找機器人來致詞既不近人情（缺乏同理心）又貶低了畢業生的格調；另一些人則認為這個點子非常聰明且具創新精神。']
+  ],
+  [
+    ['"I\'ll never forget this speech," said one graduate. "You forget a political leader, but you won\'t forget a robot."', '「我永遠不會忘記這場演講，」一名畢業生說。「你會忘記政治領袖講過的話，但你絕對不會忘記一個機器人。」']
+  ]
+];
+
+const RC1_QS = [
+  [41, ['考點：文章焦點與細節歸納題', '詞性需求：原因子句'], 'C',
+    ['Robot Redford\'s speech was discussed in this article mainly because [[41|it was controversial]].', '機器人瑞德福的演講之所以在本文中被探討，主要是因為它頗具爭議性（非比尋常且引發正反熱議）。'],
+    '定位第一段與第四段：第一段點出這是 1983 年最不尋常的畢業演講（*One of the most unusual graduation speakers*），第四段則說明選擇機器人當致詞嘉賓引發了相當大的爭議（`There was quite a bit of **controversy** over the choice of a robot as a commencement speaker. Some students thought... Others thought...`）。名詞 *controversy*（爭議）的形容詞即為 **controversial**（具爭議性的），故選 **(C)**。',
+    [
+      ['it was political', '它是政治性的', '最後一段畢業生說「你會忘記政治領袖（*a political leader*），但不會忘記機器人」，機器人的演講主題是人機科技合作，並非政治演說。<b>何時才對：</b>演講者為政客談論選舉時。'],
+      ['it was psychological', '它是心理學方面的', '演講主題是科技與機器人（*robots and technology*），與心理學無關。<b>何時才對：</b>探討人類心理機制時。'],
+      ['it was controversial', '它是具爭議性的（引起正反兩極討論）', '正確。直接對應第四段首句 *There was quite a bit of controversy over the choice of a robot as a commencement speaker*。'],
+      ['it was insensitive', '它是不體貼／麻木不仁的', '以偏概全。*insensitive*（不近人情的）只是第四段「反對派學生（*Some students*）」單方面的批評，另有支持派認為它 *clever and innovative*，用 **controversial**（正反爭議的）才能客觀涵蓋全貌！<b>何時才對：</b>題目問反對派學生的批評為何時。']
+    ]
+  ],
+  [42, ['考點：否定細節判斷題（NOT true）', '詞性需求：完整子句'], 'D',
+    ['Which of the following statements is NOT true? [[42|Robot Redford graduated from a college in Maryland.]]', '下列哪一項敘述是「不正確」的？機器人瑞德福從馬里蘭州的一所大學畢業。'],
+    '定位第一段第二句：`The speaker was Robot Redford, a robot who **delivered the commencement address** at a community college in suburban Maryland.` 機器人瑞德福是受邀去該所社區大學「**發表畢業典禮演說的致詞嘉賓（graduation speaker）**」，並不是從該大學畢業的畢業生（**graduated from a college**）！故 **(D) 為錯誤敘述（本題正解）**。',
+    [
+      ['Robot Redford was a talking machine.', '機器人瑞德福是一台會說話的機器。', '符合第二段第三句 *Although this particular robot can be programmed to speak...*（這台機器人本身確實具備經程式設定說話的功能，只是當天為了音量改用真人配音）（正確敘述）。<b>何時才對：</b>本題選 NOT true，故不選。'],
+      ['Robot Redford walked to the stage by itself.', '機器人瑞德福靠自己走上講台。', '符合第二段第一句 *arrived on the stage under its own power*（靠自身動力走上台，正確敘述）。<b>何時才對：</b>本題選 NOT true，故不選。'],
+      ['Robot Redford made a graduation speech in 1983.', '機器人瑞德福在 1983 年發表了一場畢業演說。', '符合第一段 *of the 1983 commencement season... delivered the commencement address*（正確敘述）。<b>何時才對：</b>本題選 NOT true，故不選。'],
+      ['Robot Redford graduated from a college in Maryland.', '機器人瑞德福從馬里蘭州的一所大學畢業。', '正確（此項為 NOT true）。它是致詞嘉賓（*commencement speaker*），不是畢業生（*graduate*）。']
+    ]
+  ],
+  [43, ['考點：正誤細節支持題（Supporting Details）', '詞性需求：完整子句'], 'B',
+    ['Which of the following statements can be supported by the passage? [[43|Robot Redford was the brainchild of William Bakaleinikoff.]]', '下列哪一項敘述可以得到本文的支持？機器人瑞德福是威廉・巴卡萊尼科夫的心血結晶（發明創作）。'],
+    '定位第三段第二句：`Mr. Bakaleinikoff\'s experience with his topic included the fact that **he had created Robot Redford**...`（巴卡萊尼科夫先生正是**創造出機器人瑞德福的人**）。單字 **brainchild** 意為「某人腦力激盪創造出的心血結晶／發明物」，與 *he had created Robot Redford* 完全吻合，故選 **(B)**！',
+    [
+      ['A robot was designed to let humans decrease their productivity.', '機器人被設計來讓人類降低生產力。', '與第二段第二句 *help humans **increase** the workload*（協助人類提升工作產能）完全相反！<b>何時才對：</b>將 *decrease* 改為 *increase* 時。'],
+      ['Robot Redford was the brainchild of William Bakaleinikoff.', '機器人瑞德福是威廉・巴卡萊尼科夫的發明結晶。', '正確。*brainchild*（心血結晶、創作發明）精準替換原文的 *he had created Robot Redford*。'],
+      ['Everybody in the commencement was pleased with the arrangement.', '畢業典禮上的每個人都對這項安排感到滿意。', '與第四段 *There was quite a bit of controversy... Some students thought it was insensitive and degrading*（引發爭議，部分學生感到不滿）相反。<b>何時才對：</b>全場一致叫好時。'],
+      ['Robot Redford\'s speech was too difficult to understand.', '機器人瑞德福的演講太深奧難懂了。', '無中生有，文中完全沒說演講內容聽不懂。<b>何時才對：</b>與本文無關。']
+    ]
+  ]
+];
+
+const RC2_PARAS = [
+  [
+    ['Summers with father were always enjoyable.', '與父親共度的夏天總是充滿樂趣。'],
+    ['Swimming, hiking, boating, fishing—the days were not long enough to contain all of our activities.', '游泳、健行、划船、釣魚——白天的時間根本不夠容納我們所有的活動。'],
+    ['There never seemed to be enough time to go to church, which disturbed some friends and relatives.', '我們似乎永遠沒有足夠的時間去上教堂做禮拜，這讓一些親友感到頗為不安（微詞）。'],
+    ['Accused of neglecting this part of our education, my father still instituted a summer school for my brother and me.', '儘管被指責忽略了我們這部分的（宗教）教育，我父親依然為我和哥哥開辦了一所「暑期學校」。'],
+    ['His summer course included ancient history, which Papa felt our schools neglected, and navigation, in which we first had a formal examination in the dining room, part of which consisted of tying several knots in a given time limit.', '他的暑期課程包含了「古代史」（爸爸覺得我們的正規學校忽略了這門課）以及「航海術（navigation）」；在航海課中，我們首先要在餐廳裡接受一場正式考試，考試的一部分是在規定時間內打出好幾種繩結。'],
+    ['Then we were each separately sent on what was grandly referred to as a cruise in my father\'s 18-foot boat, spending the night on board, and loaded down, according to my mother, with enough food for a week.', '接著，我們兄弟倆會分別被派出去進行一場被隆重稱為「遠航（cruise）」的任務——駕駛父親那艘十八英尺長的小船出海、在船上過夜，而且根據我母親的說法，船上還塞滿了足夠吃上一個禮拜的食物。'],
+    ['I remember that on my cruise I was required to formally plot our course, using the tide table, even though our goal was an island I could see quite clearly across the water in the distance.', '我還記得在我的那趟航行中，我被要求必須使用潮汐表來正式繪製我們的航線圖，儘管我們的目的地只是一座隔著水面在遠處就能看得很清楚的小島。']
+  ]
+];
+
+const RC2_QS = [
+  [44, ['考點：上下文詞義推論題（navigation 航海術）', '詞性需求：名詞片語'], 'B',
+    ['As used in the passage, "navigation" clearly means [[44|the practice of sailing a boat]].', '在本文中，"navigation" 這個字顯然是指「駕駛船隻航行的技術（航海術）」。'],
+    '定位第五至七句：在 **navigation** 這門課中，第一階段要在限時內打好幾種水手繩結（*tying several knots*），接著第二階段要獨自駕駛父親 18 英尺長的小船出海過夜（*a cruise in my father\'s 18-foot boat, spending the night on board*），還要查閱潮汐表來繪製航線圖（*plot our course, using the tide table*）。這些全都是「**駕駛船隻航行的實務技術（the practice of sailing a boat）**」，故選 **(B)**。',
+    [
+      ['going to a summer school', '去上暑期學校', '*navigation* 與 *ancient history* 是父親暑期學校裡開授的兩門「課程科目」之一，並非去上暑期學校這件事本身。<b>何時才對：</b>誤把課程科目當成上學時。'],
+      ['the practice of sailing a boat', '駕駛船隻航行的實務技術（航海術）', '正確。打繩結、開 18 英尺小船出海、看潮汐表繪製航線，完全符合航海技術的定義。'],
+      ['the act of piloting an airplane', '駕駛飛機的行為（航空術）', '雖然 *navigation* 廣義也可指航空導航，但本文明確指出是開父親的「18 英尺小船（*18-foot boat*）」與看「潮汐表（*tide table*）」，所以在此處顯然指開船而非開飛機！<b>何時才對：</b>文中工具為飛機時。'],
+      ['a formal examination in a dining room', '在餐廳裡的正式考試', '餐廳考試只是 *navigation* 課程的第一個小測驗環節（*in which we first had a formal examination... Then we were sent on a cruise...*），並非 *navigation* 本身的意思。<b>何時才對：</b>以偏概全誤讀時。']
+    ]
+  ],
+  [45, ['考點：否定細節題（NOT planned）', '詞性需求：動名詞片語'], 'A',
+    ['Which of the following activities was NOT planned by the father for his children\'s summer education? [[45|Going to church.]]', '下列哪一項活動「沒有」被父親規劃在孩子們的暑期活動與教育中？去教堂做禮拜。'],
+    '定位第二至四句：夏天與父親的活動包括游泳、健行、划船、釣魚（`Swimming, hiking, boating, fishing` → 包含 **(B)**、**(C)**），暑期學校課程包括古代史與航海（`His summer course included ancient history...` → 包含 **(D)**）；唯獨第三、四句明確指出：`There never seemed to be enough time to **go to church**, which disturbed some friends and relatives. Accused of neglecting this part of our education...`（**從來沒有時間去上教堂**，父親還因此被親友指責忽略了宗教教育）！故選 **(A) Going to church.**。',
+    [
+      ['Going to church.', '去教堂做禮拜。', '正確（父親並未安排此項）。原文第三句明言 *There never seemed to be enough time to go to church*。'],
+      ['Going hiking.', '去健行。', '第二句明列 *Swimming, hiking, boating, fishing*。<b>何時才對：</b>本題選 NOT planned，故不選。'],
+      ['Going swimming.', '去游泳。', '第二句第一個活動即為 *Swimming*。<b>何時才對：</b>本題選 NOT planned，故不選。'],
+      ['Studying ancient history.', '研讀古代史。', '第五句明言 *His summer course included ancient history*。<b>何時才對：</b>本題選 NOT planned，故不選。']
+    ]
+  ],
+  [46, ['考點：細節因果與動機題', '詞性需求：不定詞片語'], 'D',
+    ['The main reason for holding the summer school was [[46|to make up for things missing in a regular classroom]].', '父親舉辦這所暑期學校的主要原因，是為了彌補正規學校課堂上所忽略缺少的東西。'],
+    '定位第四、五句：親友指責父親沒帶孩子去教堂、忽略了某部分教育，但父親開辦暑期學校教的是「古代史」與「航海實作」，因為 `which Papa felt our schools neglected`（**爸爸覺得我們的正規學校忽略了這些科目**）！可見父親辦暑期學校是為了「**彌補一般學校教育所忽略缺少的知識與技能（to make up for things missing in a regular classroom）**」，故選 **(D)**。',
+    [
+      ['to show the children the importance of religion', '為了向孩子展示宗教的重要性', '相反！親友罵他不去教堂、忽略宗教教育，但他辦的暑期學校依然不教宗教，而是教「古代史」與「航海」。<b>何時才對：</b>若他開辦主日學讀聖經時。'],
+      ['to teach the children how to spend a night on board', '為了教孩子如何在船上過夜', '在船上過夜只是航海課出海實習的一個細節，並非開辦整個暑期學校（還包含古代史）的主要原因。<b>何時才對：</b>以偏概全時。'],
+      ['to reward the children for completing summer school', '為了獎勵孩子完成暑期學校', '題目問的就是「為什麼要舉辦暑期學校（*holding the summer school*）」，總不能說「舉辦暑期學校是為了獎勵完成暑期學校」（邏輯循環矛盾）。<b>何時才對：</b>與邏輯不符。'],
+      ['to make up for things missing in a regular classroom', '為了彌補正規學校課堂上所缺少的東西', '正確。直接對應第五句 *which Papa felt our schools neglected*（爸爸覺得我們學校忽略沒教好的東西）。']
+    ]
+  ]
+];
+
+const RC3_PARAS = [
+  [
+    ['PARIS, Dec. 9—Paris will be given a new Eiffel Tower—but made of wood—for the millennium, city mayor Jean Tiberi said Tuesday, presenting a program of celebration for the year 2,000 which would transform the "city of light" into the "capital of light."', '巴黎十二月九日電——巴黎市長尚・提貝里（Jean Tiberi）週二在發表迎接西元兩千年的慶祝計畫時表示，為了迎接千禧年（the millennium），巴黎將獲贈一座全新的艾菲爾鐵塔——不過是用木頭打造的——這項慶祝計畫將把這座「光之城」轉化為「光之首都」。']
+  ],
+  [
+    ['The new structure will be 200 meters high, 100 meters shorter than the cast-iron Eiffel Tower built 100 years ago.', '這座新建築將高達兩百公尺，比一百年前建造的鑄鐵艾菲爾鐵塔矮一百公尺。']
+  ],
+  [
+    ['It will be made of timber as an ecological symbol of "the right to a dignified life on a protected Earth," said architects Normier, Henni and Lelievre, who were also responsible for the Europe section at the Seville exhibition.', '這座塔將使用木材建造，作為「在受保護的地球上享有尊嚴生活之權利」的生態環保象徵，建築師 Normier、Henni 與 Lelievre 表示；他們三位也曾負責塞維亞博覽會（Seville exhibition）的歐洲展區設計。']
+  ],
+  [
+    ['The tower, of pinewood, will be built on eight pillars and will be topped with a flower of five metal petals of 700 square meters each.', '這座松木塔將建立在八根支柱之上，塔頂則會裝飾一朵由五片各七百平方公尺的金屬花瓣所組成的花朵。']
+  ],
+  [
+    ['The structure, to be erected in the redeveloped areas of the capital\'s 13th district, will cost 250 million francs (US$42 million).', '這座預計豎立於首都第十三區重劃區內的建築，將耗資兩億五千萬法郎（約四千兩百萬美元）。']
+  ],
+  [
+    ['Tiberi also said that Paris would be placed under the sign of the lights of "culture and life" and "intelligence."', '提貝里市長還表示，巴黎將沐浴在象徵「文化與生命」及「智慧」的光芒標誌之下。'],
+    ['"If, in 1900, Paris was consecrated the \'city of light\', it will become the \'capital of light\' for the millennium," Tiberi said.', '「如果說在 1900 年，巴黎被譽為『光之城』，那麼到了千禧年，它將成為『光之首都』，」提貝里說。']
+  ],
+  [
+    ['The mayor said new buildings would be illuminated, notably along the banks of the Seine, which would become a luminous strip, while Notre Dame Cathedral would be lit from the inside to show off its stained glass windows.', '市長表示，新建築物將會被點亮照耀，特別是沿著塞納河（the Seine）的兩岸，將變成一條璀璨發光的光帶；而巴黎聖母院大教堂則會從內部打光，以展現其彩繪玻璃窗之美。']
+  ],
+  [
+    ['A laser clock would be installed on top of the Arc de Triomphe at the top of the Champs Elysees and three laser beams would pick out the hands showing the hours, minutes and seconds in the millennium countdown, Tiberi said.', '提貝里說，香榭麗舍大道頂端的凱旋門（Arc de Triomphe）上方將安裝一座雷射時鐘，三道雷射光束將勾勒出時針、分針與秒針，進行千禧年的倒數計時。']
+  ],
+  [
+    ['A giant egg-timer will be set up in the Place de la Concorde and its sand will begin running after a solar eclipse scheduled on April 11, 1999.', '協和廣場（Place de la Concorde）上則將豎立一座巨大的沙漏計時器，裡面的沙子將在預定於 1999 年 4 月 11 日發生的日食過後開始流瀉計時。']
+  ]
+];
+
+const RC3_QS = [
+  [47, ['考點：新聞導言目的題（Supporting Details）', '詞性需求：完整子句'], 'D',
+    ['Why is Paris building a new Eiffel Tower? [[47|The tower is built to celebrate the coming of the year 2,000.]]', '為什麼巴黎要建造一座新的艾菲爾鐵塔？這座塔是為了慶祝西元兩千年（千禧年）的到來而建造的。'],
+    '定位第一段：`Paris will be given a new Eiffel Tower—but made of wood—**for the millennium**, city mayor Jean Tiberi said Tuesday, presenting **a program of celebration for the year 2,000**...` 原文明確指出建造這座木造新塔是為了迎接千禧年（*the millennium*），亦即「**為了慶祝西元 2,000 年的到來（celebrate the coming of the year 2,000）**」，故選 **(D)**。',
+    [
+      ['The old Eiffel Tower must be torn down.', '舊的艾菲爾鐵塔必須被拆除。', '無中生有，百年前的鑄鐵艾菲爾鐵塔是巴黎永久地標，完全沒有要拆除，新木塔是建在第 13 區重劃區內。<b>何時才對：</b>與事實完全不符。'],
+      ['The old iron Eiffel Tower needs to be re-built with wood.', '舊的鐵製艾菲爾鐵塔需要用木頭重建。', '並非把舊鐵塔拆掉改用木頭重建，而是另外在第 13 區新建一座矮 100 公尺的木塔。<b>何時才對：</b>與原文不符。'],
+      ['The tower is built to celebrate the Seville exhibition.', '這座塔是為了慶祝塞維亞博覽會而建的。', '張冠李戴！第三段提到塞維亞博覽會（*the Seville exhibition*），只是背景介紹這三位建築師「以前也曾負責過塞維亞博覽會的歐洲展區（*who were also responsible for...*）」，並非為了該博覽會而建塔。<b>何時才對：</b>誤讀關係子句時。'],
+      ['The tower is built to celebrate the coming of the year 2,000.', '這座塔是為了慶祝西元兩千年的到來而建的。', '正確。直接對應第一段 *for the millennium... a program of celebration for the year 2,000*。']
+    ]
+  ],
+  [48, ['考點：細節歸納題（Supporting Details）', '詞性需求：複數名詞'], 'B',
+    ['According to Mayor Tiberi, Paris will be decorated mostly by [[48|lights]].', '根據提貝里市長的說法，巴黎將主要以「燈光（光影）」來裝飾點綴。'],
+    '定位第一段與第六至八段：市長宣稱要將巴黎從「光之城（*city of light*）」升級為「**光之首都（capital of light）**」，具體裝飾包括：象徵文化、生命與智慧的**燈光（lights）**、塞納河兩岸建築**點燈（illuminated）**形成一條**發光帶（a luminous strip）**、聖母院從內部**打光（lit from the inside）**展現彩繪玻璃，以及凱旋門頂端的**三道雷射光束時鐘（laser clock / three laser beams）**。全城主要都是用「**燈光（lights）**」來裝飾，故選 **(B)**。',
+    [
+      ['flowers', '花朵', '只有第四段提到新木塔頂端有一朵五片金屬花瓣的裝飾花，並非全巴黎主要以花朵裝飾。<b>何時才對：</b>以偏概全時。'],
+      ['lights', '燈光；光影', '正確。完美呼應第六至八段的 *capital of light*, *illuminated*, *luminous strip*, *lit from the inside* 與 *laser beams*。'],
+      ['new buildings', '新建築物', '第七段說的是將河岸的新建築「打光點亮（*new buildings would be illuminated*）」，裝飾的元素是燈光而非蓋滿新建築。<b>何時才對：</b>誤讀第七段時。'],
+      ['towers', '高塔', '新木塔只有一座，並非到處用塔裝飾巴黎。<b>何時才對：</b>以偏概全時。']
+    ]
+  ],
+  [49, ['考點：上下文詞彙推論題（along the banks of the Seine）', '詞性需求：單數名詞片語'], 'C',
+    ['What is "the Seine" mentioned in the passage? [[49|A river.]]', '文中提到的 "the Seine"（塞納河）是什麼？一條河流。'],
+    '即使不知道巴黎的塞納河，也可從第七段的上下文搭配詞輕鬆推論：`notably **along the banks of** the Seine, which would become a luminous strip`（特別是**沿著 the Seine 的兩岸河堤**，將變成一條發光帶）！在英文中，擁有 **`banks`**（河岸、河堤，*along the banks of...*）的自然地理景觀，必然是「**一條河流（A river）**」，故選 **(C)**。',
+    [
+      ['A tall monument.', '一座高大的紀念碑。', '紀念碑不會有「沿著……的兩岸河堤（*along the banks of*）」。<b>何時才對：</b>指凱旋門或方尖碑時。'],
+      ['The name of the new tower.', '那座新塔的名字。', '新塔在第一段被稱為 *a new Eiffel Tower (made of wood)*，並非 *the Seine*。<b>何時才對：</b>與本文不符。'],
+      ['A river.', '一條河流（塞納河）。', '正確。從關鍵線索 *along the banks of the Seine*（沿著塞納河兩岸）即可確知為貫穿巴黎的河流。'],
+      ['A crowded street.', '一條擁擠的街道。', '街道兩旁稱為 *sides of the street*，只有河流兩岸才稱為 *banks*（河岸）。<b>何時才對：</b>指香榭麗舍大道（*Champs Elysees*）時。']
+    ]
+  ],
+  [50, ['考點：細節因果題（Supporting Details）', '詞性需求：不定詞片語'], 'A',
+    ['Why is the new tower made of wood? [[50|To serve as a symbol of environmental concerns.]]', '為什麼這座新塔要用木頭建造？為了作為關注生態環境保護的象徵。'],
+    '定位第三段：`It will be made of timber **as an ecological symbol of "the right to a dignified life on a protected Earth,"** said architects...`（它將由木材打造，**作為「在受保護的地球上享有尊嚴生活權利」的生態象徵**）。*an ecological symbol... on a protected Earth* 即同義替換為「**作為關注環境生態保護的象徵（serve as a symbol of environmental concerns）**」，故選 **(A)**。',
+    [
+      ['To serve as a symbol of environmental concerns.', '作為關注環境保護的象徵。', '正確。直接對應第三段 *as an ecological symbol of "the right to a dignified life on a protected Earth"*。'],
+      ['To reduce the weight and ensure the safety.', '為了減輕重量並確保安全。', '無中生有，文中完全未提減輕重量或安全考量。<b>何時才對：</b>工程力學報告提及減重時。'],
+      ['Out of the consideration of the limited budget.', '出於預算有限的考量。', '第五段說這座木塔耗資高達 2.5 億法郎（4,200 萬美元），並未說是因為沒錢買鋼鐵才改用木頭。<b>何時才對：</b>原文提及經費不足時。'],
+      ['To form a contrast with the iron structure of the old tower.', '為了與舊鐵塔的鐵製結構形成對比。', '第二段僅客觀比較新木塔（200 公尺）比百年鑄鐵塔矮 100 公尺，但第三段建築師親自說明選用木材（*timber*）的真正原因是作為「生態環保象徵（*an ecological symbol*）」。<b>何時才對：</b>建築師受訪表示純粹為了材質對比時。']
+    ]
+  ]
+];
+
+// === 貳：選擇題（第二部分） 文意選填 (61–70，12 選 10，選項 A–L) ===
+const WBANK_LIST = [
+  ['A', 'come to', 'phr. 逐漸開始……；總計（have come to believe）'],
+  ['B', 'knowledge', 'n. 知識；認知（指代前句理解的人生道理）'],
+  ['C', 'Today', 'adv. 如今；現在（與第一段 In earlier days 對比）'],
+  ['D', 'Therefore', 'adv. 因此（干擾選項）'],
+  ['E', 'that', 'conj. 引導名詞子句（shown that + 完整子句）'],
+  ['F', 'about', 'prep. 關於（stories that were told about them）'],
+  ['G', 'interested', 'adj. 感興趣的（干擾選項）'],
+  ['H', 'what', 'pron. ……的事情（複合關代，understanding what happens）'],
+  ['I', 'used to', 'aux. 過去一向／以前常（used to tell stories）'],
+  ['J', 'intimate', 'adj. 親密的；私密貼近的（personal and intimate activity）'],
+  ['K', 'known', 'v-pp. 被認識；為人所知（were known by the stories）'],
+  ['L', 'way', 'n. 方式；途徑（a way of V-ing）']
+];
+
+const WBANK_PARAS = [
+  [
+    ['People in the United States [[61|used to]] tell stories a lot more than they do today.', '美國人過去經常講故事，比他們現在講得多太多了。'],
+    ['In earlier days, people were [[62|known]] by the stories they told and the stories that were told [[63|about]] them.', '在早期，人們是透過他們自己所講的故事，以及別人所講述關於他們的故事而為人所知（被大家認識了解）。'],
+    ['Storytelling was a [[64|way]] of passing on family history, of giving meaning to experience, of understanding [[65|what]] happens in people\'s lives and of passing that [[66|knowledge]] on.', '「說故事」曾是一種傳承家族歷史的方式、一種賦予人生經驗意義的方式、一種理解人們生活中所發生之事的方式，也是一種將那份認知（智慧與知識）傳承下去的方式。']
+  ],
+  [
+    ['[[67|Today]], television, movies, and books have taken over the once personal and [[68|intimate]] activity of storytelling.', '如今，電視、電影與書籍已經取代了說故事這項曾經充滿個人色彩且親密溫馨的活動。'],
+    ['We have [[69|come to]] believe that storytelling is just for children.', '我們已經逐漸養成一種觀念，認為說故事只是給小孩子聽的。'],
+    ['However, recent studies have shown [[70|that]] interest in storytelling for adults is returning.', '然而，最近的研究顯示，針對成年人的說故事活動之興趣正在重新回歸。']
+  ]
+];
+
+const WBANK_QS = [
+  [61, ['考點：過去習慣與現在對比助動詞片語（used to V... than they do today）', '詞性需求：過去習慣助動詞（used to，後接原形動詞 tell）'], 'I',
+    '觀察句尾的今昔對比：`People in the United States ___ **tell** stories a lot more **than they do today**.`（美國人**過去一向／以前常**講故事，比他們現在 *today* 講得多太多了），且下一句緊接著 `In earlier days...`（在早期……）。空格後是原形動詞 **tell**，表示「過去常做某事（但現在較少了）」的固定助動詞片語即為 **`used to + V`**，故選 **(I) used to**。',
+    WBANK_LIST.map(o => [o[1], o[2], o[0]==='I' ? '正確。*used to tell... more than they do today*（以前比現在更常講故事）完美呈現今昔對比。' : (o[0]==='A' ? '*come to* 若不加 *have*，在過去語境中不能用現在式 *come to tell*，且 *come to V* 意為「漸漸開始做（第 69 題）」，不符合「以前比現在常講」的語意。' : '詞性或語意不合，無法接原形動詞 *tell* 並與 *than they do today* 對比。')])
+  ],
+  [62, ['考點：被動語態與動詞詞義（were known by... 藉由……而為人所知）', '詞性需求：過去分詞（were + p.p. + by）'], 'K',
+    '句子結構為 `In earlier days, people were ___ by the stories they told...`（在早期，人們是透過他們所說的故事而**被大家認識／了解**的）。空格位於 `were` 與 `by` 之間，需要過去分詞或形容詞；比較兩個 `-ed` 選項 *(G) interested* 與 *(K) known*：*interested* 搭配介系詞 **in**（*were interested in*），唯有 **known** 能搭配 **`by`**（`be known by...` 藉由……而為人所知／辨識，如 *A tree is known by its fruit*），故選 **(K) known**。',
+    WBANK_LIST.map(o => [o[1], o[2], o[0]==='K' ? '正確。*people were known by the stories they told*（人們透過他們講的故事而為人所認識）。' : (o[0]==='G' ? '陷阱干擾項！*interested* 必須搭配介系詞 **in**（*were interested in*），不搭配後方的 **by**！' : '詞性或語意不合。')])
+  ],
+  [63, ['考點：介系詞與 tell stories 搭配（stories told about them 關於他們的故事）', '詞性需求：介系詞（後接代名詞受詞 them）'], 'F',
+    '前半句是「他們自己講的故事（*the stories they told*）」，對稱的後半句是 `and the stories that were told ___ them`（以及別人所講述**關於**他們的故事）。在十二個選項中，唯一的介系詞就是 **(F) about**（*tell a story about sb.* 講述關於某人的故事）！',
+    WBANK_LIST.map(o => [o[1], o[2], o[0]==='F' ? '正確。全題組唯一的單純介系詞，*stories that were told about them*（被流傳講述關於他們的事蹟故事）。' : '非介系詞，無法置於被動動詞 *were told* 與代名詞受詞 *them* 之間。'])
+  ],
+  [64, ['考點：單數名詞搭配（a way of V-ing 一種……的方式）', '詞性需求：單數可數名詞（不定冠詞 a 與介系詞 of 之間）'], 'L',
+    '觀察空格後的四個平行 `of + V-ing` 結構：`Storytelling was **a ___ of passing on** family history, **of giving** meaning..., **of understanding**..., and **of passing**...`！空格前有不定冠詞 **`a`**，後面有 **`of + V-ing`**，表示「說故事曾是傳承家族歷史的一種**方式／途徑（a way of V-ing）**」，故選 **(L) way**。',
+    WBANK_LIST.map(o => [o[1], o[2], o[0]==='L' ? '正確。全題組中唯一能放在不定冠詞 *a* 後面（`a way of V-ing`）的單數可數名詞！' : (o[0]==='B' ? '*knowledge* 為不可數名詞，前面不能加不定冠詞 *a*（不能說 *a knowledge of passing on*），應留給第 66 題。' : '非單數可數名詞，無法置於 *a ___ of passing on* 中。')])
+  ],
+  [65, ['考點：複合關係代名詞（what happens 發生的事情）', '詞性需求：複合關係代名詞（引導名詞子句作 understanding 的受詞，並作 happens 的主詞）'], 'H',
+    '在第三個平行結構 `of understanding ___ happens in people\'s lives` 中，及物動名詞 *understanding* 後面需要**受詞**，而空格後的單數動詞 **`happens`** 又缺少**主詞**！既能當 *understanding* 的受詞、又能當 *happens* 的主詞，意為「在人們生活中**所發生的事情（the things that happen）**」，唯有複合關係代名詞 **(H) what**！',
+    WBANK_LIST.map(o => [o[1], o[2], o[0]==='H' ? '正確。*understanding what happens in people\'s lives*（理解人們生活中所發生的事），*what* 兼作受詞與 *happens* 的主詞。' : (o[0]==='E' ? '連接詞 *that* 引導名詞子句時，本身在子句中不充當主詞或受詞，後面不能直接接缺乏主詞的動詞 *happens*！' : '無法同時充當 *understanding* 的受詞與 *happens* 的主詞。')])
+  ],
+  [66, ['考點：指示限定詞 that + 不可數名詞（passing that knowledge on）', '詞性需求：名詞（指示形容詞 that 後，作動名詞 passing 的受詞）'], 'B',
+    '在最後一個平行結構 `and of passing **that ___** on` 中，指示形容詞 **`that`**（那份……）後面必須接一個**單數或不可數名詞**，用來總括前面剛剛提到的「家族歷史、人生經驗的意義，以及對世事的理解（*family history, meaning, understanding what happens*）」。把這些理解到的「**知識與智慧（that knowledge）**」傳承下去（*passing that knowledge on*），故選 **(B) knowledge**。',
+    WBANK_LIST.map(o => [o[1], o[2], o[0]==='B' ? '正確。*passing that knowledge on*（將那份知識／認知傳承下去），名詞 *knowledge* 完美承接前文的 *family history* 與 *understanding*。' : '非抽象名詞，無法置於 *passing that ___ on* 中總括前文的歷史與理解。'])
+  ],
+  [67, ['考點：今昔對比之時間副詞（In earlier days... vs. Today...）', '詞性需求：時間副詞（置於第二段句首，搭配現在完成式 have taken over）'], 'C',
+    '第一段描述的是過去：`In earlier days, people were... Storytelling was...`（在早期，說故事曾是……）；第二段首句時態切換為**現在完成式**：`___, television, movies, and books **have taken over** the once personal... activity of storytelling.`（**如今／現在**，電視、電影和書籍已經取代了昔日的說故事活動）。與第一段的 `In earlier days` 及本句中的 `once`（昔日、曾經）形成今昔對比，句首應填時間副詞 **(C) Today**！',
+    WBANK_LIST.map(o => [o[1], o[2], o[0]==='C' ? '正確。*Today,*（如今，）與第一段的 *In earlier days* 及句中的 *the once... activity*（昔日的活動）形成完美的今昔對比。' : (o[0]==='D' ? '陷阱干擾項！第一段講早期說故事有多麼重要，第二段講電視電影取代了說故事，兩者是「今昔轉變對比」而非「因果關係（因此）」，故絕對不可選 *Therefore*！' : '無法置於句首加逗號表「現今」。')])
+  ],
+  [68, ['考點：對等形容詞搭配（personal and intimate 個人且親密的）', '詞性需求：形容詞（與 personal 對等並列，修飾名詞 activity）'], 'J',
+    '觀察空格前後結構：`the once **personal and ___** activity of storytelling`（說故事這項曾經充滿個人色彩且**親密溫馨的**活動）。與電視、電影等大眾傳播媒體相比，以前人們面對面圍坐講故事是人與人直接互動、非常「**親密的、貼近私密的（intimate）**」活動，故選 **(J) intimate**。',
+    WBANK_LIST.map(o => [o[1], o[2], o[0]==='J' ? '正確。*personal and intimate activity*（個人且親密的活動）與冷冰冰的大眾媒體 *television, movies* 形成生動對比。' : (o[0]==='G' ? '*interested*（感興趣的）只能修飾「人」，不能修飾「活動（*activity*）」！' : '非形容詞或語意不合。')])
+  ],
+  [69, ['考點：現在完成式慣用片語（have come to believe 已經逐漸開始認為）', '詞性需求：過去分詞片語（We have ___ believe，後接原形動詞 believe）'], 'A',
+    '分析句子結構：`We **have** ___ **believe** that storytelling is just for children.` 前面有現在完成式助動詞 **`have`**，後面卻是原形動詞 **`believe`**！在十二個選項中，能接在 `have` 後面（因為 `come` 的三態為 **`come — came — come`**，過去分詞仍是 **`come`**！），同時後面帶有不定詞記號 **`to`** 以連接原形動詞 *believe* 的，唯有 **(A) come to**（`have come to believe` 已經逐漸開始認為／相信）！',
+    WBANK_LIST.map(o => [o[1], o[2], o[0]==='A' ? '正確。`have come to + V (believe / realize / understand)` 意為「（隨時間演變）已經逐漸開始認為／體認到……」，其中 *come* 為過去分詞。' : (o[0]==='I' ? '*used to* 是過去式助動詞，**前面絕對不能加助動詞 `have`**（英文沒有 *have used to* 的用法）！' : '無法置於 *have* 與原形動詞 *believe* 之間。')])
+  ],
+  [70, ['考點：引導受詞名詞子句之連接詞（have shown that + 完整子句）', '詞性需求：名詞子句連接詞（that）'], 'E',
+    '觀察最後一句結構：`However, recent studies **have shown** ___ interest in storytelling for adults is returning.` 在及物動詞 `have shown`（已經顯示出）之後，子句 `interest in storytelling for adults is returning`（對成人說故事的興趣正在回歸）主詞（*interest*）與不及物動詞（*is returning*）已經完全齊備、不缺任何名詞成分，因此需要單純引導名詞子句的連接詞 **(E) that**！',
+    WBANK_LIST.map(o => [o[1], o[2], o[0]==='E' ? '正確。`studies have shown that + S + V`（研究顯示……）為最標準的名詞子句結構。' : (o[0]==='H' ? '後方子句主詞 *interest* 與不及物動詞 *is returning* 皆完整，不缺主詞或受詞，不可用複合關代 *what*。' : '無法引導結構完整的受詞名詞子句。')])
+  ]
+];
+
+// === 參：非選擇題 — 一、短詩閱讀 (10%，April Rain Song by Langston Hughes) ===
+const SAQ_PARAS = [
+  [
+    ['April Rain Song — by Langston Hughes', '〈四月雨之歌〉——蘭斯頓・休斯（Langston Hughes，美國哈林文藝復興著名詩人）'],
+    ['Let the rain kiss you.', '讓雨親吻你吧。'],
+    ['Let the rain beat upon your head with silver liquid drops.', '讓雨用銀色的液態水珠輕敲你的頭頂吧。'],
+    ['Let the rain sing you a lullaby.', '讓雨為你唱一首搖籃曲吧。'],
+    ['The rain makes still pools on the sidewalk.', '雨在人行道上積成了一窪窪靜止的小水窪。'],
+    ['The rain makes running pools in the gutter.', '雨在排水溝裡匯成了一道道流動的水窪。'],
+    ['The rain plays a little sleep-song on our roof at night—', '雨在夜晚的屋頂上彈奏著一首小小的催眠曲——'],
+    ['And I love the rain.', '而我愛這場雨。']
+  ]
+];
+
+const SAQ_ITEMS = [
+  [1, '1. Which season of the year serves as the setting of the poem?（一年當中的哪一個季節是這首詩的背景？）',
+    'Spring.',
+    '定位詩題：**`April Rain Song`**（四月雨之歌）。四月（*April*）屬於北半球的「**春天（Spring）**」。注意題目問的是 **`Which season`**（哪一個**季節**），請回答季節名稱 **`Spring`**（切勿只抄月份 *April*！）。'],
+  [2, '2. Which word in the poem is closest in meaning to sleep-song?（詩中哪一個單字的意思與 "sleep-song"［催眠曲］最接近？）',
+    'Lullaby. (lullaby)',
+    '定位第三行與第六行：第三行說 `Let the rain sing you a **lullaby**.`（讓雨為你唱一首**搖籃曲／催眠曲**），第六行對應說 `The rain plays a little **sleep-song** on our roof at night`。因此詩中與 *sleep-song* 同義的單字即為 **`lullaby`**。'],
+  [3, '3. What does the phrase silver liquid drops refer to?（片語 "silver liquid drops"［銀色的液態水珠］指的是什麼？）',
+    'Raindrops. / The rain. / Drops of rain.',
+    '定位第二行：`Let the rain beat upon your head with **silver liquid drops**.`（讓雨用銀色的液態水珠輕拍你的頭）。「銀色的液態水滴」指的就是「**雨滴／雨水（Raindrops / The rain / Drops of rain）**」。'],
+  [4, '4. Which word in the poem is opposite in meaning to running?（詩中哪一個單字的意思與 "running"［流動的］相反？）',
+    'Still. (still)',
+    '定位第四行與第五行的對比句：`The rain makes **still** pools on the sidewalk.`（雨在人行道上形成**靜止的**水窪）vs. `The rain makes **running** pools in the gutter.`（雨在排水溝裡形成**流動的**水窪）。形容詞 **`still`** 在此意為「靜止不動的（not moving）」，正是 *running*（流動的）的反義詞！'],
+  [5, '5. Which of the following words best describes the rain in this poem: boring, harsh, depressing, heavy, hopeful, or musical?（下列哪一個字最能貼切形容這首詩裡的雨：boring, harsh, depressing, heavy, hopeful, 還是 musical？）',
+    'Musical. (musical)',
+    '定位詩中第三行 `Let the rain **sing** you a **lullaby**.`（讓雨為你唱首搖籃曲）與第六行 `The rain **plays a little sleep-song** on our roof at night`（雨在夜晚的屋頂上彈奏著一首小小的催眠曲），加上整首詩名稱為 *April Rain **Song***。詩人將雨聲比喻為唱歌與彈奏催眠曲，因此題目給出的六個選項中，最能形容這場雨的字顯然是 **`musical`**（悅耳動聽的、富音樂性的）！']
+];
+
+// === 參：非選擇題 — 二、英文作文 (20%) ===
+const ESSAY_MODEL = [
+  [
+    ['People often associate rainy days with gloom, inconvenience, and dampness, but a memorable experience in the mountains completely changed my perception of the rain.', '人們常將下雨天與陰鬱、不便和潮濕聯想在一起，但一次在山林裡的難忘經歷，徹底改變了我對雨的看法。'],
+    ['Last autumn, while I was hiking along a quiet forest trail in the afternoon, dark clouds suddenly gathered overhead and a gentle rain began to fall.', '去年秋天，當我下午正沿著一條幽靜的森林步道健行時，頭頂上突然烏雲密布，接著便下起了綿綿細雨。'],
+    ['Fortunately, I spotted an old wooden pavilion nearby and stepped inside to take shelter.', '幸運的是，我發現附近有一座古老的木造涼亭，便走進去避雨。'],
+    ['Sitting alone on the wooden bench, I watched the silver raindrops tapping rhythmically on the broad green leaves and creating ripples in the small puddles along the path.', '我獨自坐在木長椅上，看著銀色的雨滴有節奏地輕敲著寬大的綠葉，並在小徑旁的水窪中激起陣陣漣漪。'],
+    ['The fresh, earthy scent of wet soil and pine trees filled the cool air, while the mist slowly drifted through the valley like a traditional ink-wash painting.', '潮濕泥土與松樹清新宜人的自然氣息盈滿了微涼的空氣，而山嵐薄霧則緩緩飄過山谷，宛如一幅傳統的水墨畫。']
+  ],
+  [
+    ['At that moment, the rain did not feel annoying or depressing to me at all; instead, it brought a profound sense of tranquility and renewal to my mind.', '在那一刻，這場雨讓我覺得一點也不惱人或憂鬱；相反地，它為我的心靈帶來了一股深沉的寧靜與煥然一新的感受。'],
+    ['In our fast-paced daily lives, we are constantly rushing from one task to another without pausing to breathe or listen to our inner voices.', '在我們快節奏的日常生活中，我們總是不斷地從一項任務匆忙趕往下一個行程，卻從未停下腳步喘口氣，或傾聽自己內心的聲音。'],
+    ['That unexpected afternoon shower forced me to slow down my pace and simply appreciate the soothing melody of nature.', '那場不期而遇的午後陣雨，迫使我放慢了腳步，純粹地去欣賞大自然撫慰人心的旋律。'],
+    ['As the raindrops washed away the dust on the leaves, I felt as if my own stress and fatigue were also being gently cleansed away.', '隨著雨滴洗去樹葉上的塵埃，我覺得自己心中的壓力與疲憊彷彿也正被溫柔地洗滌殆盡。'],
+    ['Ever since that day, whenever I hear the sound of rain beating against my window, I welcome it with a peaceful smile as a gentle reminder to rest and reflect.', '自從那天起，每當我聽見雨滴敲打窗戶的聲音，我都會帶著平靜的微笑迎接它，將它視為大自然要我們歇息與沉澱的溫柔提醒。']
+  ]
+];
+
+// === 渲染全卷內容 ===
+let out = '';
+
+// 一、字彙、片語與語法 (1–20)
+out += '<h2 id="sec-vocab">壹、選擇題（第一部分）：一、字彙、片語與語法（20%，每題 1 分）</h2>';
+VOCAB.forEach(q => {
+  SENT[q[0]] = [q[3], q[4]];
+  out += card(q[0], q[1], q[2], stem(q[0]) + clue(q[5]) + ops(q[6], q[2]));
+});
+out += groupGradeBox('vocab', '一、字彙、片語與語法（第 1–20 題）', 1, 20, 1);
+
+// 二、綜合測驗 (21–40)
+out += '<h2 id="sec-cloze">二、綜合測驗（20%，每題 1 分）</h2>';
+
+out += passage('第 21–30 題題組：波多黎各不會講「Catano」的聰明鸚鵡與四隻母雞', CLOZE1_PARAS, '重點詞彙：parrot (n. 鸚鵡)、unique (adj. 獨一無二的)、native town (n. 家鄉小鎮)、lose one\'s temper (phr. 發脾氣)、scream (v. 尖叫；大吼)、repeat (v. 複誦；重複)。', 'cloze1');
+CLOZE1_QS.forEach(q => {
+  out += card(q[0], q[1], q[2], stem(q[0]) + clue(q[3]) + ops(q[4], q[2]));
+});
+out += groupGradeBox('cloze1', '綜合測驗第一篇（第 21–30 題）', 21, 30, 1);
+
+out += passage('第 31–40 題題組：歡笑是最好的良藥——大笑對身心健康的科學益處', CLOZE2_PARAS, '重點詞彙：weep (v. 哭泣；流淚)、on average (phr. 平均而言)、exhale (v. 呼氣；吐氣)、short bursts of laughter (phr. 一陣陣短促的笑聲)、beneficial (adj. 有益的)、immune system (n. 免疫系統)、white blood cell (n. 白血球)、resistance to infection (n. 對感染的抵抗力)。', 'cloze2');
+CLOZE2_QS.forEach(q => {
+  out += card(q[0], q[1], q[2], stem(q[0]) + clue(q[3]) + ops(q[4], q[2]));
+});
+out += groupGradeBox('cloze2', '綜合測驗第二篇（第 31–40 題）', 31, 40, 1);
+
+// 三、閱讀測驗 (41–50)
+out += '<h2 id="sec-rc">三、閱讀測驗（20%，每題 2 分）</h2>';
+
+out += passage('第 41–43 題題組：1983 年馬里蘭州社區大學畢業典禮致詞嘉賓——機器人瑞德福（Robot Redford）', RC1_PARAS, '重點詞彙：commencement (n. 大學畢業典禮)、commencement address (n. 畢業典禮致詞演說)、extension (n. 延伸)、workload (n. 工作負荷量)、amplified (adj. 擴音放大的)、controversy (n. 爭議)、insensitive (adj. 不近人情的；麻木不仁的)、degrading (adj. 貶低格調的；丟臉的)、innovative (adj. 創新的)。', 'rc1');
+RC1_QS.forEach(q => {
+  SENT[q[0]] = q[3];
+  out += card(q[0], q[1], q[2], stem(q[0]) + clue(q[4]) + ops(q[5], q[2]));
+});
+out += groupGradeBox('rc1', '閱讀測驗第一篇（第 41–43 題）', 41, 43, 2);
+
+out += passage('第 44–46 題題組：與父親共度的夏日——家裡的古代史與小船航海暑期學校', RC2_PARAS, '重點詞彙：neglect (v. 忽略；疏忽)、institute (v. 設立；開辦)、navigation (n. 航海術；領航)、tie a knot (phr. 打繩結)、cruise (n. 乘船巡航；航行)、plot one\'s course (phr. 繪製航線)、tide table (n. 潮汐表)。', 'rc2');
+RC2_QS.forEach(q => {
+  SENT[q[0]] = q[3];
+  out += card(q[0], q[1], q[2], stem(q[0]) + clue(q[4]) + ops(q[5], q[2]));
+});
+out += groupGradeBox('rc2', '閱讀測驗第二篇（第 44–46 題）', 44, 46, 2);
+
+out += passage('第 47–50 題題組：巴黎迎接西元兩千年千禧年——建造木造艾菲爾鐵塔與「光之首都」慶祝計畫', RC3_PARAS, '重點詞彙：millennium (n. 千禧年；一千年)、cast-iron (adj. 鑄鐵的)、timber (n. 木材)、ecological symbol (n. 生態象徵)、dignified (adj. 有尊嚴的)、pillar (n. 柱子；支柱)、petal (n. 花瓣)、erect (v. 建造；豎立)、consecrate (v. 奉為；使神聖化)、illuminate (v. 照亮；點燈裝飾)、luminous strip (n. 發光帶)、stained glass (n. 彩繪玻璃)、solar eclipse (n. 日食)。', 'rc3');
+RC3_QS.forEach(q => {
+  SENT[q[0]] = q[3];
+  out += card(q[0], q[1], q[2], stem(q[0]) + clue(q[4]) + ops(q[5], q[2]));
+});
+out += groupGradeBox('rc3', '閱讀測驗第三篇（第 47–50 題）', 47, 50, 2);
+
+// 貳：選擇題（第二部分） 文意選填 (61–70，選項 A–L)
+out += '<h2 id="sec-wbank">貳、選擇題（第二部分）：文意選填（10%，第 61–70 題，每題 1 分）</h2>';
+out += '<p class="note" style="margin-bottom:8px;">📌 註：依 87 學年度原卷題號編排，第一部分為第 1–50 題，第二部分直接由第 61 題開始至第 70 題（原卷無 51–60 題），共 12 個選項（A–L）選 10 題。</p>';
+out += '<div class="pas"><div class="bank" id="bank-wbank">' +
+  WBANK_LIST.map(b => '<span><b>('+b[0]+')</b> '+b[1]+' <small>'+b[2]+'</small></span>').join('') +
+  '</div></div>';
+out += passage('第 61–70 題題組：美國「說故事（Storytelling）」傳統的式微與復興', WBANK_PARAS, '重點詞彙：pass on (phr. 傳承；傳遞下去)、take over (phr. 接管；取代)、intimate (adj. 親密的；貼近個人的)、come to V (phr. 逐漸開始……)。', 'wbank');
+WBANK_QS.forEach(q => {
+  out += card(q[0], q[1], q[2], stem(q[0]) + clue(q[3]) + ops(q[4], q[2], 'ABCDEFGHIJKL'));
+});
+out += groupGradeBox('wbank', '貳、文意選填（第 61–70 題）', 61, 70, 1);
+
+// 全卷單選題總批改面板
+out += '<div class="grade-box all-box" id="gbox-all">' +
+  '<div class="grade-title">🏆 選擇題全卷總批改（第 1–50 題及第 61–70 題，共 60 題，滿分 70 分）</div>' +
+  '<div class="grade-btns">' +
+    '<button class="btn-grade" onclick="gradeAllSingleChoice()">🏆 一次批改全卷</button>' +
+    '<button class="btn-reset" onclick="resetAllSingleChoice()">🔄 一次清空重練</button>' +
+  '</div>' +
+  '<div class="grade-res" id="gres-all"></div>' +
+'</div>';
+
+// 參：非選擇題 — 一、短詩閱讀 (10%)
+out += '<h2 id="sec-trans">參、非選擇題 — 一、短詩閱讀（10%，每題 2 分）</h2>';
+out += passage('短詩閱讀文本：April Rain Song（〈四月雨之歌〉，作者：Langston Hughes）', SAQ_PARAS, '重點詞彙：beat upon (phr. 輕敲；拍打)、liquid drops (n. 液態水珠)、lullaby (n. 搖籃曲；催眠曲)、still pool (n. 靜止的水窪)、sidewalk (n. 人行道)、running pool (n. 流動的水窪)、gutter (n. 排水溝；街溝)。', 'saq');
+
+out += '<section class="pas" id="pas-trans">' +
+  '<h3>短詩閱讀簡答題作答區（請以單字或片語簡答）</h3>' +
+  '<div class="para"><p class="prompt-text"><b>說明：</b>以上為一篇短詩，請於閱讀後，以<b>單字或片語</b>簡答詩後所附之問題。請先標明題號，再將答案寫在「答案卷」上。每題答對得 2 分。</p></div>' +
+  SAQ_ITEMS.map(item =>
+    '<div class="para"><div class="s">' +
+      '<div class="prompt-text"><b>' + item[1] + '</b></div>' +
+      '<input type="text" class="trans-input" placeholder="請在此輸入單字或片語簡答（練習模式）...">' +
+      '<div class="en trans-ans" style="margin-top:6px;color:var(--ok);font-weight:700;">✔ 參考標準答案：' + item[2] + '</div>' +
+      '<p class="note">💡 <b>解析：</b>' + item[3] + '</p>' +
+    '</div></div>'
+  ).join('') +
+'</section>';
+
+out += '<div class="grade-box" id="gbox-trans">' +
+  '<div class="grade-title">📝 一、短詩閱讀簡答題對答與詳解控制（第 1–5 題，共 10 分）</div>' +
+  '<div class="grade-btns">' +
+    '<button class="btn-grade" onclick="gradeTrans()">✅ 展開短詩簡答題正解與解析</button>' +
+    '<button class="btn-reset" onclick="resetTrans()">🔄 清空重練短詩簡答題</button>' +
+  '</div>' +
+  '<div class="grade-res" id="gres-trans"></div>' +
+'</div>';
+
+// 參：非選擇題 — 二、英文作文 (20%)
+out += '<h2 id="sec-essay">參、非選擇題 — 二、英文作文（20%）</h2>';
+out += '<section class="pas graded">' +
+  '<h3>英文作文題目與提示</h3>' +
+  '<div class="para">' +
+    '<p class="prompt-text"><b>說明：</b>1. 請依提示在「答案卷」上寫一篇英文作文。<br>2. 文長以 120 字左右為原則。<br><b>提示：</b>每個人在不同的情況下對雨可能有不同的感受。請寫一篇短文，<b>敘述你在某一個下雨天的實際經歷或看到的景象，並據此敘述你對雨的感覺</b>。</p>' +
+  '</div>' +
+'</section>';
+
+out += passage(
+  '高分範文賞析：A Rainy Afternoon in the Mountain Forest（逐句中英對照，約 280 字）',
+  ESSAY_MODEL,
+  '<b>🌟 寫作架構與高分亮點解析：</b><br>' +
+  '1. <b>第一段（由常人對雨的刻板印象切入，並具體描繪山林避雨所見的景象）：</b>開頭以對比法指出人們常將雨天與陰鬱不便聯想在一起（<i>associate rainy days with gloom, inconvenience, and dampness</i>），接著敘述去年秋天在森林步道健行遇雨、走進古木涼亭避雨的經歷。運用豐富的視覺、聽覺與嗅覺感官描寫（雨滴輕敲綠葉 <i>tapping rhythmically on the broad green leaves</i>、水窪漣漪、泥土與松樹香氣、如水墨畫般的山嵐 <i>like a traditional ink-wash painting</i>），完美達成題目「敘述實際經歷與看到的景象」之要求。<br>' +
+  '2. <b>第二段（深入抒發對雨的感受與心境昇華）：</b>承接上段景象，點出那場雨帶給自己深沉的寧靜與煥然一新之感（<i>a profound sense of tranquility and renewal</i>），對比現代人匆忙趕路的生活步調，說明午後陣雨如何讓人放慢腳步、洗滌心靈的壓力與疲憊（<i>cleansed away</i>），結尾以每逢聽見雨聲敲窗便微笑迎接作結，意境優美且呼應前篇休斯的短詩主題。',
+  'essay-model',
+  'graded'
+);
+
+document.getElementById('app').innerHTML = out;
+
+// 動態填入導覽列錨點連結
+const navEl = document.getElementById('nav');
+const navLinks = [
+  ['#sec-vocab', '一、字彙與語法 (1–20)'],
+  ['#sec-cloze', '二、綜合測驗 (21–40)'],
+  ['#sec-rc', '三、閱讀測驗 (41–50)'],
+  ['#sec-wbank', '貳、文意選填 (61–70)'],
+  ['#gbox-all', '🏆 全卷總批改'],
+  ['#sec-trans', '非選一：短詩閱讀'],
+  ['#sec-essay', '非選二：英文作文']
+];
+navLinks.forEach(item => {
+  const a = document.createElement('a');
+  a.href = item[0];
+  a.textContent = item[1];
+  navEl.appendChild(a);
+});
+</script>
+<script src="bookmark.js"></script>
+<script>
+  let secretClickCount = 0;
+  let secretTimer;
+  document.getElementById('secret-trigger').addEventListener('click', function() {
+    secretClickCount++;
+    if (secretClickCount === 3) {
+      const counter = document.getElementById('secret-counter');
+      counter.style.display = counter.style.display === 'none' ? 'block' : 'none';
+      secretClickCount = 0;
+    }
+    clearTimeout(secretTimer);
+    secretTimer = setTimeout(() => { secretClickCount = 0; }, 2000);
+  });
+</script>
+</body>
+</html>
