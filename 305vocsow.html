@@ -24,13 +24,13 @@ h3{margin:0 0 8px;font-size:1.05rem;color:var(--acc)}
 .pas,.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
 .para{margin-bottom:14px}
 .s{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--line)}
-.en{font-family:Georgia,"Times New Roman",serif;font-size:1.02rem}
+.en{font-family:Georgia,"Times New Roman",serif;font-size:1.04rem;line-height:2}
 .zh{color:var(--mut);font-size:.93rem}
 .prompt-text{color:var(--fg);font-size:.96rem;line-height:1.8}
 .note{color:var(--mut);font-size:.85rem;margin:6px 0 0}
-.bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 4px;border-radius:3px;font-weight:600}
+.bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 6px;border-radius:3px;font-weight:600;cursor:pointer}
 .bl sup{color:var(--acc);margin-right:3px;font-size:.7em}
-.bank{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.92rem;margin-bottom:8px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+.bank{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:.95rem;margin-bottom:10px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
 details.q>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 details.q>summary::-webkit-details-marker{display:none}
 .n{background:var(--acc);color:#fff;border-radius:6px;padding:0 10px;font-weight:700;font-size:1.05rem}
@@ -38,41 +38,74 @@ details.q>summary::-webkit-details-marker{display:none}
 .tag.pos{border-color:var(--ok);color:var(--ok)}
 .ans{margin-left:auto;font-weight:700;color:var(--ok)}
 .qb{margin-top:10px}
-.stem{margin-bottom:8px;padding:8px 10px;background:var(--bg);border-radius:6px}
+.stem{margin-bottom:8px;padding:10px 12px;background:var(--bg);border-radius:6px}
 .clue{margin:8px 0;padding:8px 12px;border-left:4px solid var(--acc);background:var(--bg);border-radius:0 6px 6px 0}
-.clue h4,.qb h4{margin:0 0 2px;font-size:.92rem;color:var(--acc)}
-ul.op{list-style:none;margin:6px 0 0;padding:0}
-ul.op li{padding:7px 10px;margin:5px 0;border-radius:6px;border:1px solid var(--line);font-size:.95rem;transition:background 0.2s;cursor:pointer}
-ul.op li.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 9%,transparent)}
-ul.op li.no{border-color:color-mix(in srgb,var(--no) 45%,transparent)}
-ul.op i{font-style:normal;font-weight:700;font-size:.82rem}
-li.ok i{color:var(--ok)}li.no i{color:var(--no)}
-.exp{margin-top:4px}
+.clue h4,.qb h4{margin:0 0 4px;font-size:.92rem;color:var(--acc)}
+.vocab-box{margin:8px 0 0;padding:10px 14px;border:1px solid var(--line);border-radius:8px;background:color-mix(in srgb,var(--hl) 25%,var(--card));font-size:.93rem}
+.vocab-box ul{margin:4px 0 0;padding-left:20px}
+.vocab-box li{margin:4px 0}
 small{color:var(--mut)}
 
-/* === 練習模式與批改狀態樣式 === */
+/* === 填空題輸入框與練習模式樣式 === */
+.blank-wrap { display: inline-flex; align-items: baseline; vertical-align: baseline; margin: 0 2px; }
+.blank-input {
+  display: none;
+  width: 135px;
+  padding: 2px 8px;
+  margin: 0 3px;
+  border: none;
+  border-bottom: 2px solid var(--acc);
+  border-radius: 4px 4px 0 0;
+  background: var(--card);
+  color: var(--fg);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.02rem;
+  font-weight: 600;
+  text-align: center;
+  transition: border-color 0.2s, background 0.2s;
+}
+.blank-input:focus {
+  outline: none;
+  background: var(--hl);
+  border-bottom-color: var(--ok);
+}
+.blank-input.inp-ok {
+  border: 1.5px solid var(--ok);
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--ok) 14%, var(--card));
+  color: var(--ok);
+}
+.blank-input.inp-no {
+  border: 1.5px solid var(--no);
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--no) 14%, var(--card));
+  color: var(--no);
+  text-decoration: line-through;
+}
+.blank-corr {
+  display: none;
+  font-size: .88rem;
+  font-weight: 700;
+  color: var(--ok);
+  background: color-mix(in srgb, var(--ok) 12%, var(--card));
+  border: 1px solid var(--ok);
+  border-radius: 4px;
+  padding: 0 6px;
+  margin-left: 4px;
+}
+
+/* 練習模式下隱藏詳解與切換輸入框 */
 body.practice-mode details.q:not(.graded) .ans { visibility: hidden; }
 body.practice-mode details.q:not(.graded) .clue { display: none; }
+body.practice-mode details.q:not(.graded) .vocab-box { display: none; }
 body.practice-mode details.q:not(.graded) .tag { display: none; }
 body.practice-mode details.q:not(.graded) .stem .zh { display: none; }
 body.practice-mode .pas:not(.graded) .zh { display: none; }
-body.practice-mode .pas:not(.graded) .trans-ans { display: none; }
 body.practice-mode .pas:not(.graded) .note { display: none; }
-.trans-input {
-  display: none;
-  width: 100%;
-  margin-top: 8px;
-  padding: 8px 12px;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  background: var(--bg);
-  color: var(--fg);
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1rem;
-}
-.trans-input:focus { outline: none; border-color: var(--acc); }
-body.practice-mode .trans-input { display: block; }
-body.practice-mode .bl:not(.revealed) {
+body.practice-mode .bank:not(.graded) small { display: none; }
+
+/* 題組總覽區塊 (.pas) 在練習模式將空格挖空隱藏 */
+body.practice-mode .pas .bl:not(.revealed) {
   color: transparent;
   background: var(--bg);
   border-bottom: 2px solid var(--acc);
@@ -82,22 +115,17 @@ body.practice-mode .bl:not(.revealed) {
   min-width: 64px;
   text-align: center;
 }
-body.practice-mode .bl:not(.revealed) sup {
+body.practice-mode .pas .bl:not(.revealed) sup {
   color: var(--acc);
   font-weight: 700;
 }
-body.practice-mode .bank:not(.graded) small { display: none; }
-body.practice-mode details.q:not(.graded) ul.op li small { display: none; }
-body.practice-mode details.q:not(.graded) ul.op li.ok,
-body.practice-mode details.q:not(.graded) ul.op li.no { border-color: var(--line); background: transparent; }
-body.practice-mode details.q:not(.graded) ul.op li i { display: none; }
-body.practice-mode details.q:not(.graded) ul.op li .exp { display: none; }
-body.practice-mode details.q:not(.graded) ul.op li:hover { background: var(--hl); }
-ul.op li.selected { border-color: var(--acc) !important; background: color-mix(in srgb, var(--acc) 12%, transparent) !important; font-weight: 600; }
 
-/* 已批改題目的作答回饋樣式 */
-details.q.graded ul.op li.selected.ok { border: 2px solid var(--ok) !important; background: color-mix(in srgb, var(--ok) 15%, transparent) !important; }
-details.q.graded ul.op li.selected.no { border: 2px solid var(--no) !important; background: color-mix(in srgb, var(--no) 14%, transparent) !important; }
+/* 單題作答區 (.stem) 在練習模式直接顯示打字輸入框 */
+body.practice-mode .stem .bl { display: none; }
+body.practice-mode .stem .blank-input { display: inline-block; }
+details.q.graded .stem .blank-corr.show-corr { display: inline-block; }
+
+/* 已批改題目的作答回饋狀態標籤 */
 .user-status { font-weight: 700; font-size: .88rem; padding: 1px 8px; border-radius: 99px; margin-left: 6px; }
 .user-status.st-ok { background: color-mix(in srgb, var(--ok) 15%, transparent); color: var(--ok); border: 1px solid var(--ok); }
 .user-status.st-no { background: color-mix(in srgb, var(--no) 15%, transparent); color: var(--no); border: 1px solid var(--no); }
@@ -170,11 +198,11 @@ footer a:hover{text-decoration:underline;}
 <body>
 <div class="top">
   <h1><span id="exam-title">Lesson 5 Kyoto: The Heart of Japan 單字與片語填空詳解</span> <span id="completed-badge" style="display:none;font-size:1rem;color:var(--ok);">✅ 已完成</span></h1>
-  <p>每題含：考點標籤 → 題幹逐句中英對照 → 解題線索 → 正解與全部誤答詞性／搭配分析（共 20 題、46 格）</p>
+  <p>每題含：考點標籤 → 原卷打字填空題幹（中英對照） → 解題線索 → 字族詞性轉換與搭配詞深度解析（共 20 題、46 格）</p>
   <div class="feature-box">
-    💡 <b>複習與作答指南：</b> 點擊「🎯 切換練習模式」可自動挖空題幹答案並隱藏中譯與解析；直接點選各題選項作答後，可點擊各題組下方的「<b>✅ 批改本題組</b>」或最後的「<b>🏆 一次批改全卷</b>」查看得分並自動展開詳解（亦可點擊「<b>🔄 一次清空重練</b>」重新作答）！點擊每題右上角的「標記此題」可收錄錯題；滑鼠反白任何英文字句可「收藏單字」。請前往 <a href="review.html" target="_blank" style="color:var(--acc);font-weight:bold;">錯題與單字總複習頁面</a>。
+    💡 <b>複習與填空作答指南：</b> 點擊「<b>🎯 切換練習模式</b>」（或直接點擊題幹中的黃底空格）即可將全卷切換為原卷的<b>打字填空輸入框</b>並隱藏中譯與解析！在空格中輸入英文單字（按 <code>Enter</code> 可直接跳下一格）後，點擊各題組下方的「<b>✅ 批改本題組</b>」或最後的「<b>🏆 一次批改全卷</b>」即可自動核對拼字、計算得分並展開完整詳解（亦可點擊「<b>🔄 一次清空重練</b>」重新作答）。點擊每題右上角的「標記此題」可收錄錯題；滑鼠反白任何英文字句可「收藏單字」。請前往 <a href="review.html" target="_blank" style="color:var(--acc);font-weight:bold;">錯題與單字總複習頁面</a>。
   </div>
-  <p>圖例：<span class="bl revealed">黃底</span> ＝ 正確答案填入處 ｜ <span class="tag" id="secret-trigger" style="user-select:none;cursor:default;">考點</span> <span class="tag pos">詞性需求</span></p>
+  <p>圖例：<span class="bl revealed">黃底</span> ＝ 正確答案填入處（點擊可直接進入填空練習） ｜ <span class="tag" id="secret-trigger" style="user-select:none;cursor:default;">考點</span> <span class="tag pos">詞性需求</span></p>
   <div id="secret-counter" style="display:none; margin-top:8px; font-size:0.9rem; color:var(--mut);">
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     👁️ <b>本頁瀏覽人次：</b><span id="busuanzi_value_page_pv"></span> 次
@@ -192,112 +220,193 @@ footer a:hover{text-decoration:underline;}
 </footer>
 
 <script>
-const L="ABCD";
-const fx=s=>s.replace(/\*([^*]+)\*/g,'<i>$1</i>').replace(/\[\[(\d*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl"'+(n?' data-q="'+n+'"':'')+'>'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
-const SENT={};
-const Q_ANS={};
+// 將題組總覽中的 [[題號|答案]] 轉為黃底標籤
+const fx = s => s.replace(/\*([^*]+)\*/g,'<i>$1</i>').replace(/\[\[(\d*)\|([^\]]+)\]\]/g,(m,n,a)=>{
+  const disp = a.split('/')[0].trim();
+  return '<span class="bl"'+(n?' data-q="'+n+'"':'')+' onclick="enablePracticeMode()">'+(n?'<sup>'+n+'</sup>':'')+disp+'</span>';
+});
 
-function passage(title,paras,note,gid,extraCls){
+// 將單題題幹中的 [[題號|答案]] 同時產生「黃底正解標籤」與「練習模式打字輸入框」
+function fxStem(s, qNum) {
+  let bIdx = 0;
+  return s.replace(/\*([^*]+)\*/g,'<i>$1</i>').replace(/\[\[(\d*)\|([^\]]+)\]\]/g,(m,n,a)=>{
+    bIdx++;
+    const disp = a.split('/')[0].trim();
+    const widthPx = Math.max(105, Math.min(200, disp.length * 11 + 28));
+    return '<span class="blank-wrap">' +
+      '<span class="bl" data-q="'+n+'" onclick="focusBlank('+qNum+','+bIdx+')">'+(n?'<sup>'+n+'</sup>':'')+a+'</span>' +
+      '<input type="text" class="blank-input" data-q="'+n+'" data-bidx="'+bIdx+'" data-ans="'+a+'" style="width:'+widthPx+'px" placeholder="第 '+bIdx+' 格" autocomplete="off" spellcheck="false" oninput="onBlankInput(this)" onkeydown="onBlankKey(event, this)">' +
+      '<span class="blank-corr" id="corr-'+n+'-'+bIdx+'">✔ '+a+'</span>' +
+    '</span>';
+  });
+}
+
+const SENT = {};
+const Q_ANS = {};
+
+function passage(title, paras, note, gid, extraCls){
   paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[(\d+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
   return '<section class="pas'+(extraCls?' '+extraCls:'')+'"'+(gid?' id="pas-'+gid+'"':'')+'><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
 }
-function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
-const clue=t=>'<div class="clue"><h4>解題線索</h4>'+t+'</div>';
-function ops(list,ans,lab){
-  lab=lab||'ABCDEF';
-  return '<ul class="op">'+list.map((o,i)=>{
-    const optCode = (lab==='ABCDEF'&&list.length<=4) ? L[i] : lab[i];
-    const k=ans.indexOf(optCode)>=0;
-    return '<li class="'+(k?'ok':'no')+'" data-opt="'+optCode+'" onclick="selectOpt(this)"><b>('+optCode+') '+fx(o[0])+'</b>'+(o[1]?' <small>'+o[1]+'</small>':'')+' <i>'+(k?'✔ 正解':'✘ 誤答')+'</i><div class="exp">'+o[2]+'</div></li>';
-  }).join('')+'</ul>';
+
+function stem(n){
+  const s = SENT[n];
+  return s ? '<div class="stem"><div class="en">'+fxStem(s[0], n)+'</div><div class="zh">'+s[1]+'</div></div>' : '';
 }
-function card(n,tags,ans,body){
-  Q_ANS[n] = ans;
-  return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="user-status" id="st'+n+'" style="display:none"></span><span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
+
+const clue = t => '<div class="clue"><h4>💡 解題線索與語境分析</h4>'+t+'</div>';
+
+function vocabNotes(items) {
+  return '<div class="vocab-box"><h4>📚 詞性變化、搭配詞與易混淆字解析</h4><ul>' +
+    items.map(it => '<li>' + it + '</li>').join('') +
+  '</ul></div>';
+}
+
+function card(n, tags, ansDisplay, body){
+  Q_ANS[n] = ansDisplay;
+  return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="user-status" id="st'+n+'" style="display:none"></span><span class="ans">答案：'+ansDisplay+'</span></summary><div class="qb">'+body+'</div></details>';
 }
 
 // 產生各題組批改面板 HTML
-function groupGradeBox(gid, title, startQ, endQ, ptsPerQ) {
-  ptsPerQ = ptsPerQ || 1;
-  const totalPts = (endQ - startQ + 1) * ptsPerQ;
+function groupGradeBox(gid, title, startQ, endQ, totalBlanks) {
+  const totalQ = endQ - startQ + 1;
   return '<div class="grade-box" id="gbox-'+gid+'">' +
-    '<div class="grade-title">📝 '+title+'（第 '+startQ+'–'+endQ+' 題，共 '+totalPts+' 分）</div>' +
+    '<div class="grade-title">📝 '+title+'（第 '+startQ+'–'+endQ+' 題，共 '+totalQ+' 題 ／ '+totalBlanks+' 格）</div>' +
     '<div class="grade-btns">' +
-      '<button class="btn-grade" onclick="gradeGroup(\''+gid+'\','+startQ+','+endQ+','+ptsPerQ+')">✅ 批改本題組</button>' +
+      '<button class="btn-grade" onclick="gradeGroup(\''+gid+'\','+startQ+','+endQ+')">✅ 批改本題組</button>' +
       '<button class="btn-reset" onclick="resetGroup(\''+gid+'\','+startQ+','+endQ+')">🔄 重練本題組</button>' +
     '</div>' +
     '<div class="grade-res" id="gres-'+gid+'"></div>' +
   '</div>';
 }
 
-// 點擊選項作答
-window.selectOpt = function(li) {
+// 點擊黃底空格直接進入練習模式並聚焦該輸入框
+window.focusBlank = function(qNum, bIdx) {
   if (!document.body.classList.contains('practice-mode')) {
     enablePracticeMode();
   }
-  const qEl = li.closest('details.q');
+  const inp = document.querySelector('#q'+qNum+' .blank-input[data-bidx="'+bIdx+'"]');
+  if (inp) inp.focus();
+};
+
+// 輸入時若該題已批改過，清除批改狀態讓學生重新修改
+window.onBlankInput = function(inp) {
+  const qEl = inp.closest('details.q');
   if (qEl && qEl.classList.contains('graded')) {
     qEl.classList.remove('graded');
     const qNum = qEl.id.replace('q', '');
     const st = document.getElementById('st' + qNum);
     if (st) st.style.display = 'none';
   }
-  li.parentNode.querySelectorAll('li').forEach(el => el.classList.remove('selected'));
-  li.classList.add('selected');
+  inp.classList.remove('inp-ok', 'inp-no');
+  const corr = inp.parentNode.querySelector('.blank-corr');
+  if (corr) corr.classList.remove('show-corr');
 };
 
-// 批改單一題目並回傳狀態 ('ok' | 'no' | 'blank')
+// 在輸入框按 Enter 自動跳至下一格
+window.onBlankKey = function(e, inp) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    const allInputs = Array.from(document.querySelectorAll('.stem .blank-input'));
+    const idx = allInputs.indexOf(inp);
+    if (idx >= 0 && idx < allInputs.length - 1) {
+      allInputs[idx + 1].focus();
+    } else {
+      inp.blur();
+    }
+  }
+};
+
+// 比對單一空格答案是否正確（支援 a / b 多重標準答案）
+function isBlankMatch(userVal, rawAns) {
+  const cleanUser = userVal.trim().toLowerCase().replace(/\s+/g, ' ');
+  if (!cleanUser) return false;
+  // 展開像是 historic(al) 或 magnificent / breathtaking 的寫法
+  const expanded = rawAns.replace(/historic\(al\)/gi, 'historic / historical');
+  const candidates = expanded.split('/').map(s => s.trim().toLowerCase().replace(/\s+/g, ' '));
+  return candidates.includes(cleanUser);
+}
+
+// 批改單一題目並回傳該題各格統計 { state: 'ok'|'no'|'blank', okBlanks, totalBlanks }
 function evaluateSingleQ(n) {
   const qEl = document.getElementById('q' + n);
-  if (!qEl) return 'blank';
+  if (!qEl) return { state: 'blank', okBlanks: 0, totalBlanks: 0 };
   qEl.classList.add('graded');
   qEl.open = true;
 
   document.querySelectorAll('.bl[data-q="'+n+'"]').forEach(el => el.classList.add('revealed'));
 
-  const sel = qEl.querySelector('ul.op li.selected');
+  const inputs = Array.from(qEl.querySelectorAll('.stem .blank-input'));
   const st = document.getElementById('st' + n);
-  const ans = Q_ANS[n];
+  let okBlanks = 0;
+  let emptyBlanks = 0;
 
-  if (!sel) {
+  inputs.forEach(inp => {
+    const rawAns = inp.getAttribute('data-ans');
+    const val = inp.value;
+    const corr = inp.parentNode.querySelector('.blank-corr');
+    inp.classList.remove('inp-ok', 'inp-no');
+    if (corr) corr.classList.remove('show-corr');
+
+    if (!val.trim()) {
+      emptyBlanks++;
+      inp.classList.add('inp-no');
+      if (corr) corr.classList.add('show-corr');
+    } else if (isBlankMatch(val, rawAns)) {
+      okBlanks++;
+      inp.classList.add('inp-ok');
+    } else {
+      inp.classList.add('inp-no');
+      if (corr) corr.classList.add('show-corr');
+    }
+  });
+
+  const totalBlanks = inputs.length;
+  let state = 'no';
+
+  if (emptyBlanks === totalBlanks) {
+    state = 'blank';
     if (st) {
       st.className = 'user-status st-blank';
-      st.textContent = '⚠️ 未作答';
+      st.textContent = '⚠️ 未作答（0 / ' + totalBlanks + ' 格）';
       st.style.display = 'inline-block';
     }
-    return 'blank';
-  }
-
-  const userOpt = sel.getAttribute('data-opt');
-  if (ans.indexOf(userOpt) >= 0) {
+  } else if (okBlanks === totalBlanks) {
+    state = 'ok';
     if (st) {
       st.className = 'user-status st-ok';
-      st.textContent = '✔ 答對 (' + userOpt + ')';
+      st.textContent = '✔ 完全正確（' + okBlanks + ' / ' + totalBlanks + ' 格）';
       st.style.display = 'inline-block';
     }
-    return 'ok';
   } else {
+    state = 'no';
     if (st) {
       st.className = 'user-status st-no';
-      st.textContent = '✘ 答錯 (選 ' + userOpt + ')';
+      st.textContent = '✘ 答對 ' + okBlanks + ' / ' + totalBlanks + ' 格';
       st.style.display = 'inline-block';
     }
-    return 'no';
   }
+
+  return { state, okBlanks, totalBlanks };
 }
 
 // 批改特定題組
-window.gradeGroup = function(gid, startQ, endQ, ptsPerQ) {
+window.gradeGroup = function(gid, startQ, endQ) {
   if (!document.body.classList.contains('practice-mode')) {
     enablePracticeMode();
   }
-  let okCount = 0, wrongList = [], blankList = [];
+  let okQCount = 0, wrongList = [], blankList = [];
+  let okBlanksTotal = 0, groupBlanksTotal = 0;
+
   for (let n = startQ; n <= endQ; n++) {
     const res = evaluateSingleQ(n);
-    if (res === 'ok') okCount++;
-    else if (res === 'no') wrongList.push(n);
+    okBlanksTotal += res.okBlanks;
+    groupBlanksTotal += res.totalBlanks;
+    if (res.state === 'ok') okQCount++;
+    else if (res.state === 'no') wrongList.push(n);
     else blankList.push(n);
   }
+
   const pasEl = document.getElementById('pas-' + gid);
   if (pasEl) pasEl.classList.add('graded');
   if (gid === 'part1') {
@@ -306,13 +415,12 @@ window.gradeGroup = function(gid, startQ, endQ, ptsPerQ) {
   }
 
   const totalQ = endQ - startQ + 1;
-  const earnedPts = okCount * ptsPerQ;
-  const maxPts = totalQ * ptsPerQ;
+  const pct = groupBlanksTotal > 0 ? Math.round((okBlanksTotal / groupBlanksTotal) * 100) : 0;
   const resEl = document.getElementById('gres-' + gid);
 
-  let html = '<div><b>📊 批改結果：</b>答對 <b>' + okCount + ' / ' + totalQ + '</b> 題，得分 <b style="color:var(--acc);font-size:1.15rem;">' + earnedPts + ' / ' + maxPts + '</b> 分' + (okCount === totalQ ? ' 🎉 全部答對！' : '') + '</div>';
+  let html = '<div><b>📊 批改結果：</b>共答對 <b style="color:var(--acc);font-size:1.15rem;">' + okBlanksTotal + ' / ' + groupBlanksTotal + '</b> 格（正確率 <b>' + pct + '%</b>；完全答對題數：<b>' + okQCount + ' / ' + totalQ + '</b> 題）' + (okBlanksTotal === groupBlanksTotal ? ' 🎉 全部拼寫完全正確！' : '') + '</div>';
   if (wrongList.length > 0) {
-    html += '<div style="margin-top:4px;">❌ <b>答錯題號：</b>' + wrongList.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+    html += '<div style="margin-top:4px;">❌ <b>有誤題號：</b>' + wrongList.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
   }
   if (blankList.length > 0) {
     html += '<div style="margin-top:4px;">⚠️ <b>未作答題號：</b>' + blankList.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
@@ -328,7 +436,11 @@ window.resetGroup = function(gid, startQ, endQ) {
     const qEl = document.getElementById('q' + n);
     if (qEl) {
       qEl.classList.remove('graded');
-      qEl.querySelectorAll('ul.op li').forEach(li => li.classList.remove('selected'));
+      qEl.querySelectorAll('.blank-input').forEach(inp => {
+        inp.value = '';
+        inp.classList.remove('inp-ok', 'inp-no');
+      });
+      qEl.querySelectorAll('.blank-corr').forEach(c => c.classList.remove('show-corr'));
     }
     const st = document.getElementById('st' + n);
     if (st) st.style.display = 'none';
@@ -394,38 +506,36 @@ compBtn.onclick = function() {
 
 // === 全卷題組設定與總批改邏輯 ===
 const ALL_GROUPS = [
-  { gid: 'part1', title: '第一大題：方框字彙與詞形變化填空', startQ: 1, endQ: 9, ptsPerQ: 5 },
-  { gid: 'part2', title: '第二大題：第五課單字、衍生字與片語填空', startQ: 10, endQ: 20, ptsPerQ: 5 }
+  { gid: 'part1', title: '第一大題：方框字彙與詞形變化填空', startQ: 1, endQ: 9, blanks: 12 },
+  { gid: 'part2', title: '第二大題：第五課單字、衍生字與片語填空', startQ: 10, endQ: 20, blanks: 34 }
 ];
 
-window.gradeAllSingleChoice = function() {
+window.gradeAllBlanks = function() {
   if (!document.body.classList.contains('practice-mode')) {
     enablePracticeMode();
   }
-  let totalOk = 0, totalQ = 0, totalEarned = 0, totalMax = 0;
+  let totalOkQ = 0, totalQ = 0;
+  let totalOkBlanks = 0, totalAllBlanks = 0;
   let allWrong = [], allBlank = [];
 
   ALL_GROUPS.forEach(g => {
-    gradeGroup(g.gid, g.startQ, g.endQ, g.ptsPerQ);
+    gradeGroup(g.gid, g.startQ, g.endQ);
     for (let n = g.startQ; n <= g.endQ; n++) {
       totalQ++;
-      totalMax += g.ptsPerQ;
-      const st = document.getElementById('st' + n);
-      if (st && st.classList.contains('st-ok')) {
-        totalOk++;
-        totalEarned += g.ptsPerQ;
-      } else if (st && st.classList.contains('st-no')) {
-        allWrong.push(n);
-      } else {
-        allBlank.push(n);
-      }
+      const res = evaluateSingleQ(n);
+      totalOkBlanks += res.okBlanks;
+      totalAllBlanks += res.totalBlanks;
+      if (res.state === 'ok') totalOkQ++;
+      else if (res.state === 'no') allWrong.push(n);
+      else allBlank.push(n);
     }
   });
 
+  const score100 = totalAllBlanks > 0 ? Math.round((totalOkBlanks / totalAllBlanks) * 100) : 0;
   const resEl = document.getElementById('gres-all');
-  let html = '<div><b>🏆 全卷批改總結：</b>共答對 <b>' + totalOk + ' / ' + totalQ + '</b> 題，總分 <b style="color:var(--acc);font-size:1.3rem;">' + totalEarned + ' / ' + totalMax + '</b> 分' + (totalOk === totalQ ? ' 🌟 滿分全對，太強了！' : '') + '</div>';
+  let html = '<div><b>🏆 全卷批改總結：</b>共答對 <b style="color:var(--acc);font-size:1.3rem;">' + totalOkBlanks + ' / ' + totalAllBlanks + '</b> 格，折合百分制得分 <b style="color:var(--acc);font-size:1.3rem;">' + score100 + ' / 100</b> 分（完全答對題數：<b>' + totalOkQ + ' / ' + totalQ + '</b> 題）' + (totalOkBlanks === totalAllBlanks ? ' 🌟 46 格全數拼寫正確，太強了！' : '') + '</div>';
   if (allWrong.length > 0) {
-    html += '<div style="margin-top:6px;">❌ <b>全卷答錯題號：</b>' + allWrong.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+    html += '<div style="margin-top:6px;">❌ <b>全卷有誤題號：</b>' + allWrong.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
   }
   if (allBlank.length > 0) {
     html += '<div style="margin-top:6px;">⚠️ <b>全卷未作答題號：</b>' + allBlank.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
@@ -434,7 +544,7 @@ window.gradeAllSingleChoice = function() {
   resEl.classList.add('show');
 };
 
-window.resetAllSingleChoice = function() {
+window.resetAllBlanks = function() {
   ALL_GROUPS.forEach(g => resetGroup(g.gid, g.startQ, g.endQ));
   const resEl = document.getElementById('gres-all');
   if (resEl) {
@@ -495,106 +605,88 @@ html += passage(
   'part1'
 );
 
-html += card(1, ['考點：一字多義（capital 表「首都」）','詞性需求：單數可數名詞 (n.)'], 'A',
+html += card(1, ['考點：一字多義（capital 表「首都」）','詞性需求：單數可數名詞 (n.)'], 'capital',
   stem(1) +
   clue('空格位於定冠詞 <b>the</b> 與介系詞 <b>of Australia</b> 之間，且後句舉出雪梨（Sydney）、墨爾本（Melbourne）與坎培拉（Canberra）三座城市，並用 <b>neither... nor... but...</b> 指出坎培拉才是澳洲的「首都」，故填單數名詞 <b>capital</b>。') +
-  ops([
-    ['capital','n. 首都；首府','完整契合「the + N + of + 國家」結構，指澳洲聯邦首都坎培拉。'],
-    ['destination','n. 目的地','語意不合。雪梨與墨爾本同樣是熱門旅遊目的地，不會說「既不是雪梨也不是墨爾本」。<br><b>何時才對：</b>若句意為「我們這趟旅程的最終目的地（final destination）是坎培拉」時才選。'],
-    ['landmark','n. 地標','坎培拉是一整座城市（a city），而非單一建築地標。<br><b>何時才對：</b>指雪梨歌劇院（Sydney Opera House）或大港橋等具體建築物時才用 landmark。'],
-    ['entrance','n. 入口','後接介系詞多為 <b>to</b>（the entrance to...），且城市並非國家的「入口」。<br><b>何時才對：</b>搭配介系詞 to 表建築物或園區的入口時。']
-  ], 'A')
+  vocabNotes([
+    '<b>capital</b> (n. [C]) 首都、首府：常用結構為 <b>the capital (city) of + 國家</b>。',
+    '<b>本卷第 1、2、4 題連考 capital 一字三義</b>：第 1 題表「首都 [C]」、第 2 題表「資金 [U]（start-up capital）」、第 4 題表「死刑的（capital punishment）」，此外亦可指「大寫字母（a capital letter）」。'
+  ])
 );
 
-html += card(2, ['考點：一字多義與商業搭配（start-up capital）','詞性需求：不可數名詞 (n.)'], 'B',
+html += card(2, ['考點：一字多義與商業搭配（start-up capital）','詞性需求：不可數名詞 (n.)'], 'capital',
   stem(2) +
-  clue('句中出現關鍵商業搭配詞 <b>start-up _____ (創業資金)</b>，與前面的 <b>Establishing a company（創立公司）</b> 呼應。<b>capital</b> 作不可數名詞時意為「資金、資本」，不需加 -s。') +
-  ops([
-    ['capitals','n. 首都（複數）；大寫字母（複數）','capital 指「資金、資本」時為<b>不可數名詞</b>，不可加複數 -s。<br><b>何時才對：</b>指多個國家的「首都」或多個「大寫字母（capital letters）」時才用複數 capitals。'],
-    ['capital','n. [U] 資金、資本','<b>start-up capital</b> 為固定商業搭配詞，意為「創業資金、啟動資金」，不可數。'],
-    ['boast','n./v. 自誇；引以為傲的事物','語意與「創立公司所需的資金」完全無關。<br><b>何時才對：</b>作及物動詞表某地「擁有（傲人資源）」時使用。'],
-    ['destination','n. 目的地','無法與形容詞 start-up（新創的）搭配。<br><b>何時才對：</b>搭配 tourist destination（旅遊勝地）或 get to one\'s destination（抵達目的地）時。']
-  ], 'B')
+  clue('句中出現關鍵商業搭配詞 <b>start-up _____ (創業資金)</b>，與前面的 <b>Establishing a company（創立公司）</b> 呼應。<b>capital</b> 作「資金、資本」解時為<b>不可數名詞</b>，前面雖有 <i>some</i>，但字尾絕對不可加 <i>-s</i>。') +
+  vocabNotes([
+    '<b>start-up capital</b> (n. [U]) 創業資金、啟動資金（其中 <i>start-up</i> 亦可作可數名詞指「新創公司」）。',
+    '<b>不可數陷阱提醒</b>：指「金錢、資金」的 <b>capital</b> 與 <i>money</i>、<i>funding</i> 一樣屬於不可數名詞，切勿誤寫為複數 <i>capitals</i>。'
+  ])
 );
 
-html += card(3, ['考點：主詞單數動詞變化與形容詞修飾名詞','詞性需求：第三人稱單數動詞 (v.) ＋ 形容詞 (adj.)'], 'C',
+html += card(3, ['考點：主詞單數動詞變化與形容詞修飾名詞','詞性需求：第三人稱單數動詞 (v.) ＋ 形容詞 (adj.)'], 'boasts / magnificent (or breathtaking)',
   stem(3) +
-  clue('第一格缺本句主要動詞，主詞 <b>Taiwan</b> 為單數且陳述客觀事實（後句為現在式 <i>We are proud...</i>），故動詞 <b>boast（擁有引以為傲的事物）</b> 必須加 <b>-s</b> 成為 <b>boasts</b>；第二格修飾名詞片語 <i>natural scenery</i>，題幹括號提示同義詞 <b>(=spectacular, amazing)</b>，方框中的 <b>magnificent</b> 或 <b>breathtaking</b> 皆完全吻合。') +
-  ops([
-    ['boast / magnificent','原形動詞 ＋ 形容詞','第一格主詞 Taiwan 為第三人稱單數，現在簡單式動詞不可用原形 boast。<br><b>何時才對：</b>主詞為複數（如 <i>Many islands in Asia boast...</i>）或助動詞後才用原形 boast。'],
-    ['boasts / magnificence','第三人稱單數動詞 ＋ 名詞','第二格位於名詞片語 <i>natural scenery</i> 之前，需用形容詞修飾，不可填抽象名詞 magnificence。<br><b>何時才對：</b>用於「the magnificence of the natural scenery（自然風光的壯麗）」結構時才填名詞。'],
-    ['boasts / magnificent (or breathtaking)','第三人稱單數動詞 ＋ 形容詞','第一格 <b>boasts</b> 符合單數主詞一致；第二格 <b>magnificent（壯麗的）</b> 或 <b>breathtaking（令人屏息的）</b> 皆為形容詞，精準對應 (=spectacular, amazing)。'],
-    ['is boasted / distinct','被動語態 ＋ 形容詞','boast 表「擁有（令人自豪的事物）」時為主動及物動詞，不接被動語態；且 distinct 意為「明顯的、截然不同的」，不等於 spectacular/amazing。<br><b>何時才對：</b>distinct 用於描述「明顯的氣味／差異（a distinct smell/difference）」時。']
-  ], 'C')
+  clue('<b>第一格：</b>缺本句主要動詞，主詞 <b>Taiwan</b> 為第三人稱單數，且陳述客觀事實（後句為現在式 <i>We are proud...</i>），故方框中的動詞 <b>boast（擁有引以為傲的事物）</b> 必須加 <b>-s</b> 成為 <b>boasts</b>。<br><b>第二格：</b>修飾名詞片語 <i>natural scenery（自然風光）</i>，題幹括號提示同義詞 <b>(=spectacular, amazing)</b>，方框中的 <b>magnificent</b> 或 <b>breathtaking</b> 皆為正確答案。') +
+  vocabNotes([
+    '<b>boast</b> (v.) 擁有（引以為傲的事物）：以「地點／國家／城市」為主詞時，直接作<b>及物動詞</b>接優點或景點（如 <i>Taiwan boasts...</i>），不需加介系詞 of 或 about；當主詞為「人」表「自吹自擂」時才用 <i>boast of/about...</i>。',
+    '<b>magnificent</b> (adj.) 壯麗的、宏偉的 ＝ <b>breathtaking</b> (adj. 令人屏息的) ＝ <b>spectacular</b> ＝ <b>splendid</b>（第二大題第 12 題考點）。'
+  ])
 );
 
-html += card(4, ['考點：固定複合名詞搭配（capital punishment 死刑）','詞性需求：形容詞 (adj.)'], 'A',
+html += card(4, ['考點：固定複合名詞搭配（capital punishment 死刑）','詞性需求：形容詞 (adj.)'], 'capital',
   stem(4) +
-  clue('空格後緊接 <b>punishment, or death penalty（或是死刑）</b>，其中 <i>, or death penalty</i> 為同位語解釋，提示前面的片語正是「死刑」的正式英文 <b>capital punishment</b>（源於拉丁文 <i>caput</i>「頭」，即斬首極刑）。') +
-  ops([
-    ['capital','adj. 死刑的；極刑的','<b>capital punishment</b> 為固定法律術語，與後方的 <b>death penalty</b> 完全同義，意為「死刑」。'],
-    ['deliberate','adj. 故意的；審慎的','deliberate punishment 指「刻意的懲罰」，不等於死刑（death penalty）。<br><b>何時才對：</b>描述某個行為並非意外而是「蓄意的、故意的（by accident ↔ deliberate）」時才選。'],
-    ['distinct','adj. 明顯的；不同的','distinct punishment 並無「死刑」之意。<br><b>何時才對：</b>表達「截然不同的類別（distinct categories）」或「清楚的氣味」時。'],
-    ['historic','adj. 具歷史意義的','historic punishment 無法與 death penalty 形成同位語代換。<br><b>何時才對：</b>修飾具有重大歷史意義的事件、時刻或古蹟（historic monument/moment）時。']
-  ], 'A')
+  clue('空格後緊接 <b>punishment, or death penalty（或是死刑）</b>，其中 <i>, or death penalty</i> 為同位語解釋，提示前面的片語正是「死刑」的正式英文 <b>capital punishment</b>（字源來自拉丁文 <i>caput</i>「頭」，原指斬首之極刑）。') +
+  vocabNotes([
+    '<b>capital punishment</b> (n. [U]) ＝ <b>the death penalty</b> 死刑、極刑。',
+    '<b>相關議題搭配詞</b>：<b>abolish</b> capital punishment（廢除死刑）、a matter of debate（備受爭論的議題）。'
+  ])
 );
 
-html += card(5, ['考點：對比語境線索（by accident ↔ deliberate）','詞性需求：形容詞 (adj.)'], 'D',
+html += card(5, ['考點：對比語境線索（by accident ↔ deliberate）','詞性需求：形容詞 (adj.)'], 'deliberate',
   stem(5) +
   clue('破折號前後形成強烈語意對比：前半句說 <b>I don\'t think he mispronounced my name by accident（我不認為他是無意間唸錯我的名字）</b>，後半句在連綴動詞 <b>was</b> 後方需填入與 <i>by accident（偶然、無意間）</i> 相反的形容詞作主詞補語，故填 <b>deliberate（故意的、蓄意的）</b>。') +
-  ops([
-    ['deliberately','adv. 故意地、蓄意地','空格位於連綴動詞 <b>was</b> 之後作主詞補語（修飾主詞 it，即「唸錯名字這件事」），應使用形容詞而非副詞。<br><b>何時才對：</b>若句子改為修飾一般動詞，如 <i>I think he <b>deliberately</b> mispronounced my name</i> 時才填副詞。'],
-    ['distinct','adj. 明顯的；截然不同的','無法與前半句的 <i>by accident（無意間）</i> 構成「意外 vs. 蓄意」的反義對比。<br><b>何時才對：</b>形容容易辨別的特徵或氣味（如 a distinct smell）時。'],
-    ['breathtaking','adj. 令人屏息的','多用於讚嘆美景或精彩表現，用於「唸錯名字」語意荒謬。<br><b>何時才對：</b>修飾 scenery、view 等壯觀景色時。'],
-    ['deliberate','adj. 故意的、蓄意的','作連綴動詞 was 的主詞補語，精準與前半句的 <b>by accident</b> 形成反義對比。']
-  ], 'D')
+  vocabNotes([
+    '<b>deliberate</b> [dɪˈlɪbərɪt] (adj.) (1) 故意的、蓄意的（＝ <b>intentional</b> / <b>on purpose</b>，反義詞：<b>accidental</b> / <b>by accident</b>）；(2) 審慎的、深思熟慮的（如第二大題第 13 題 <i>deliberate care</i>「細心呵護」）。',
+    '<b>詞性注意</b>：本題位於 be 動詞 <i>was</i> 之後作主詞補語，須填形容詞 <b>deliberate</b>，不可填副詞 <i>deliberately</i>。'
+  ])
 );
 
-html += card(6, ['考點：one of the + 複數可數名詞','詞性需求：複數可數名詞 (n.)'], 'B',
+html += card(6, ['考點：one of the + 複數可數名詞','詞性需求：複數可數名詞 (n.)'], 'landmarks',
   stem(6) +
-  clue('同位語結構 <b>one of the new _____ in Kaohsiung（高雄的新……之一）</b> 出現經典必考句型 <b>one of the + 複數可數名詞</b>（「眾多……當中的一個」），因此方框中的單數名詞 <b>landmark（地標）</b> 必須加上複數詞尾 <b>-s</b> 變為 <b>landmarks</b>。') +
-  ops([
-    ['landmark','n. 地標（單數）','違反 <b>one of the + 複數名詞</b> 的文法規則（必須有兩個以上的地標，才能稱為「其中之一」）。<br><b>何時才對：</b>當前面直接接不定冠詞，如 <i>Dagang Bridge is a famous <b>landmark</b> in Kaohsiung</i> 時才用單數。'],
-    ['landmarks','n. 地標（複數）','符合 <b>one of the new + 複數可數名詞</b> 的文法結構，且語意契合大港橋作為高雄知名地標的身分。'],
-    ['destinations','n. 目的地（複數）','大港橋是一座「橋樑建築（pedestrian swing bridge）」，屬於城市中的「地標（landmark）」，而非整座旅遊目的地城市。<br><b>何時才對：</b>指高雄或花蓮等旅遊勝地（tourist destinations）時。'],
-    ['entrances','n. 入口（複數）','橋樑並非某建築物的入口，且後方無介系詞 to。<br><b>何時才對：</b>指車站、百貨公司或國家公園的入口（entrances to the park）時。']
-  ], 'B')
+  clue('同位語結構 <b>one of the new _____ in Kaohsiung（高雄的新……之一）</b> 出現大考必考文法 <b>one of the + 複數可數名詞</b>（「眾多……當中的一個」），因此方框中的單數名詞 <b>landmark（地標）</b> 必須加上複數詞尾 <b>-s</b> 變為 <b>landmarks</b>。') +
+  vocabNotes([
+    '<b>landmark</b> (n. [C]) 地標；里程碑。',
+    '<b>必檢查文法公式</b>：看到 <b>one of the (+ 形容詞) + N</b>，名詞務必加複數 <b>-s</b>（<b>landmarks</b>），而主要子句的動詞則配合單數主詞 <i>Dagang Bridge</i> 用單數 <b>is</b>。'
+  ])
 );
 
-html += card(7, ['考點：詞性轉換與易混淆字辨析（historical vs. historic）','詞性需求：形容詞 (adj.) ＋ 形容詞 (adj.)'], 'C',
+html += card(7, ['考點：詞性轉換與易混淆字辨析（historical vs. historic）','詞性需求：形容詞 (adj.) ＋ 形容詞 (adj.)'], 'historical / historic(al)',
   stem(7) +
-  clue('句首 <b>As a historian（身為一名歷史學家）</b> 給出字根提示 <i>historian</i>。兩格皆位於名詞（<i>novels</i> 與 <i>monuments</i>）之前，必須將名詞 historian 轉換為形容詞：<br>• 第一格 <b>_____ novels（歷史小說）</b>：指「以歷史為題材、與歷史相關的」小說，固定使用 <b>historical</b>。<br>• 第二格 <b>_____ monuments（歷史古蹟）</b>：指「具有重大歷史意義的」或「與歷史有關的」古蹟，可用 <b>historic</b> 或 <b>historical</b>（教師版標準答案標示為 <b>historic(al)</b>）。') +
-  ops([
-    ['historian / historic','名詞 ＋ 形容詞','historian 為「歷史學家（人）」，不可直接修飾 novels。<br><b>何時才對：</b>指「人」本身時（如句首 <i>As a historian</i>）才用 historian。'],
-    ['historic / historian','形容詞 ＋ 名詞','第一格「歷史題材小說」應搭配 historical novels（而非 historic novels）；第二格不可用指人的名詞 historian 修飾 monuments。<br><b>何時才對：</b>historic 用於修飾具重大歷史意義的事件或古蹟（historic event/monument）。'],
-    ['historical / historic(al)','形容詞 ＋ 形容詞','第一格 <b>historical novels</b>（歷史小說，表與歷史相關的題材）；第二格 <b>historic(al) monuments</b>（具歷史意義的／歷史古蹟），完全符合詞性變化與搭配習慣。'],
-    ['historically / historical','副詞 ＋ 形容詞','第一格修飾名詞 novels 需用形容詞 historical，不可用副詞 historically。<br><b>何時才對：</b>修飾整句或形容詞／動詞（如 <i>historically accurate</i>「符合史實的」）時才用副詞 historically。']
-  ], 'C')
+  clue('句首 <b>As a historian（身為一名歷史學家）</b> 給出字根提示 <i>historian</i>。兩格皆位於名詞（<i>novels</i> 與 <i>monuments</i>）之前，必須將指「人」的名詞 historian 轉換為形容詞：<br>• <b>第一格 _____ novels（歷史小說）：</b>指「以歷史為題材、與歷史相關的」小說，固定使用 <b>historical</b>。<br>• <b>第二格 _____ monuments（歷史古蹟）：</b>指「具有重大歷史意義的」或「與歷史相關的」古蹟，填 <b>historic</b> 或 <b>historical</b> 皆可（教師版標準答案標示為 <b>historic(al)</b>）。') +
+  vocabNotes([
+    '<b>historian</b> (n. [C]) 歷史學家（字尾 <i>-ian</i> 表專精於某領域之人，如 <i>musician</i>、<i>magician</i>）。',
+    '<b>historical vs. historic 黃金區分法</b>：<br>1. <b>historical</b> (adj.)「與歷史有關的、真實發生過的、歷史題材的」→ <b>historical novels / movies / documents / figures</b>（歷史小說／電影／文獻／人物）。<br>2. <b>historic</b> (adj.)「具有重大歷史意義的、名留青史的」→ <b>a historic moment / victory / monument / site</b>（歷史性的一刻／重大勝利／古蹟）。'
+  ])
 );
 
-html += card(8, ['考點：語境搭配與反義詞線索（entrance ↔ exit）','詞性需求：單數名詞 (n.) ＋ 單數名詞 (n.)'], 'A',
+html += card(8, ['考點：語境搭配與反義詞線索（entrance ↔ exit）','詞性需求：單數名詞 (n.) ＋ 單數名詞 (n.)'], 'destination / entrance',
   stem(8) +
-  clue('第一句說 <b>We got lost, and so it took us a few more hours to get to our _____（我們迷路了，因此多花了幾個小時才抵達我們的……）</b>，動詞片語 <b>get to our _____</b> 搭配 <b>destination（目的地）</b>；第二句括號明確給出反義詞提示 <b>(←→exit)</b>，且後方接介系詞 <b>to the national park</b>，故填「出口（exit）」的反義詞 <b>entrance（入口）</b>。') +
-  ops([
-    ['destination / entrance','n. 目的地 ＋ n. 入口','第一格 <b>get to our destination（抵達目的地）</b> 呼應迷路情境；第二格 <b>the entrance to the national park（國家公園的入口）</b> 對應反義詞 exit。'],
-    ['entrance / destination','n. 入口 ＋ n. 目的地','兩格順序顛倒。第二格有明確反義詞提示 <i>(←→exit)</i>，必為 entrance。<br><b>何時才對：</b>將兩格位置對調時才正確。'],
-    ['landmark / capital','n. 地標 ＋ n. 首都','語意完全不符「迷路多花幾小時抵達目的地」與「出口的反義詞」。<br><b>何時才對：</b>分別用於「城市新地標」與「國家首都／創業資金」語境。'],
-    ['destinations / entering','n. 複數目的地 ＋ 動名詞','後半句特指「這座國家公園（the national park）」，目的地為單一地點故用單數 destination；第二格在定冠詞 the 與介系詞 to 之間需填具體名詞 entrance 而非動名詞 entering。<br><b>何時才對：</b>entering 作動名詞時後面直接接受詞（如 <i>entering the national park</i>），不加介系詞 to。']
-  ], 'A')
+  clue('<b>第一格：</b>第一句說 <b>We got lost, and so it took us a few more hours to get to our _____（我們迷路了，因此多花了幾個小時才抵達我們的……）</b>，動詞片語 <b>get to our _____</b> 搭配 <b>destination（目的地）</b>。<br><b>第二格：</b>括號明確給出反義詞提示 <b>(←→exit)</b>，且後方接介系詞 <b>to the national park</b>，故填「出口（exit）」的反義詞 <b>entrance（入口）</b>。') +
+  vocabNotes([
+    '<b>destination</b> (n. [C]) 目的地、終點：常見搭配 <b>get to / reach / arrive at one\'s destination</b>（抵達目的地）、<b>a tourist destination</b>（旅遊勝地，見第 20 題）。',
+    '<b>entrance</b> (n. [C]) 入口（動詞為 <i>enter</i>）：注意後面表「通往……的入口」時，固定搭配介系詞 <b>to</b>（<b>the entrance to the national park</b>，如同 <i>the key to the door</i>、<i>the answer to the question</i>）。'
+  ])
 );
 
-html += card(9, ['考點：感官名詞搭配（a distinct smell 明顯的氣味）','詞性需求：形容詞 (adj.)'], 'D',
+html += card(9, ['考點：感官名詞搭配（a distinct smell 明顯的氣味）','詞性需求：形容詞 (adj.)'], 'distinct',
   stem(9) +
   clue('空格位於不定冠詞 <b>a</b> 與感官名詞 <b>smell of cigarettes（香菸味）</b> 之間，且後句推測「稍早一定有人在裡面抽菸（<i>Someone must have (been) smoking in there earlier</i>）」，可見這股菸味非常「清楚、明顯、容易察覺」，故填形容詞 <b>distinct</b>。') +
-  ops([
-    ['deliberate','adj. 故意的、蓄意的','氣味（smell）本身沒有意識，不能說是「故意的氣味」。<br><b>何時才對：</b>修飾人的行為、決定或言語（如 a deliberate attempt/lie）時。'],
-    ['magnificent','adj. 壯麗的、宏偉的','為正面讚美詞彙，廁所裡的香菸味屬於負面刺鼻氣味，不可用 magnificent。<br><b>何時才對：</b>修飾自然美景或宏偉建築時。'],
-    ['distinctly','adv. 明顯地、清楚地','空格後為名詞 smell，必須用形容詞修飾名詞，不可用副詞 distinctly。<br><b>何時才對：</b>修飾動詞（如 <i>I distinctly smelled cigarettes</i> 或 <i>I distinctly remember...</i>）時才用副詞。'],
-    ['distinct','adj. 明顯的、清楚的','<b>a distinct smell of...</b> 為高頻常考搭配，指「一股清晰可辨、明顯的……氣味」。']
-  ], 'D')
+  vocabNotes([
+    '<b>distinct</b> (adj.) (1) 明顯的、清楚的（容易聽見、聞到或看見，如 <b>a distinct smell / sound / memory</b>）；(2) 截然不同的、有區別的（常搭配 <i>be distinct from...</i>）。',
+    '<b>延伸對比（見第 15、19 題）</b>：<b>distinctive</b> (adj.) 意為「獨特的、有特色的（＝ <b>unique</b>）」，強調與眾不同的個人特色（如 <i>a distinctive appearance / voice</i>）。'
+  ])
 );
 
-html += groupGradeBox('part1', '第一大題：方框字彙與詞形變化填空', 1, 9, 5);
+html += groupGradeBox('part1', '第一大題：方框字彙與詞形變化填空', 1, 9, 12);
 
 // ==================== 第二大題 ====================
 html += '<h2 id="sec-part2">II. Complete the following sentences by filling in Words for Production & Phrases from L5.（第 10–20 題，共 34 格）</h2>';
@@ -605,135 +697,114 @@ html += passage(
   'part2'
 );
 
-html += card(10, ['考點：時間對比與副詞／形容詞轉換（previous）','詞性需求：副詞 (adv.) ＋ 形容詞 (adj.)'], 'B',
+html += card(10, ['考點：時間對比與副詞／形容詞轉換（previous）','詞性需求：副詞 (adv.) ＋ 形容詞 (adj.)'], 'previously / previous',
   stem(10) +
-  clue('第一句過去式 <b>was _____ a flight attendant</b> 與現在式 <b>works as a receptionist now</b> 形成「以前 vs. 現在」的時間對比，修飾整句／be 動詞狀態需填時間副詞 <b>previously（先前、以前）</b>；第二格位於所有格 <i>Her</i> 與名詞片語 <i>work experience</i> 之間，且括號給出同義形容詞提示 <b>(=prior)</b>，故填形容詞 <b>previous（先前的）</b>。') +
-  ops([
-    ['previous / previously','形容詞 ＋ 副詞','兩格詞性顛倒。第一格不可用形容詞 previous 修飾名詞 a flight attendant（否則冠詞 a 位置不對）；第二格不可用副詞 previously 修飾名詞片語 work experience。<br><b>何時才對：</b>將兩格位置對調時才正確。'],
-    ['previously / previous','adv. 先前地 ＋ adj. 先前的','第一格以副詞 <b>previously</b> 表「先前曾是空服員」；第二格以形容詞 <b>previous (=prior)</b> 修飾名詞片語 <i>work experience</i>。'],
-    ['prior / previously','形容詞 ＋ 副詞','prior 雖等於 previous，但為形容詞，不可填入第一格當時間副詞。<br><b>何時才對：</b>若第一格改為介系詞片語 <i><b>Prior to</b> her current job, Alison was a flight attendant</i> 時才可用 prior。'],
-    ['preceding / precedent','形容詞 ＋ 名詞','第五課目標單字為 previous，且 precedent 為名詞「先例」，不可直接修飾 work experience。<br><b>何時才對：</b>set a precedent 表「開創先例」。']
-  ], 'B')
+  clue('<b>第一格：</b>第一句過去式 <b>was _____ a flight attendant</b> 與現在式 <b>works as a receptionist now</b> 形成「以前 vs. 現在」的時間對比，修飾整句／be 動詞狀態需填時間副詞 <b>previously（先前、以前）</b>。<br><b>第二格：</b>位於所有格 <i>Her</i> 與名詞片語 <i>work experience</i> 之間，且括號給出同義形容詞提示 <b>(=prior)</b>，故填形容詞 <b>previous（先前的）</b>。') +
+  vocabNotes([
+    '<b>previous</b> (adj.) 先前的、以前的（＝ <b>prior</b>）：常用搭配 <b>previous experience</b>（先前的經驗）、<b>previous owner</b>（前任屋主／車主）、<b>previous to + N</b>（在……之前 ＝ <i>prior to + N</i>）。',
+    '<b>previously</b> (adv.) 先前地、以前（＝ <b>beforehand</b> / <b>formerly</b>）。'
+  ])
 );
 
-html += card(11, ['考點：介系詞片語（in blossom）與複數可數名詞','詞性需求：介系詞片語 (prep. phr.) ＋ 複數名詞 (n.)'], 'A',
+html += card(11, ['考點：介系詞片語（in blossom）與複數可數名詞','詞性需求：介系詞片語 (2 格) ＋ 複數名詞 (1 格)'], 'in / blossom / blossoms',
   stem(11) +
-  clue('第一部分有兩個空格，且括號提示同義片語 <b>(=in bloom)</b>，對應第五課核心片語 <b>be in blossom（正在盛開、開花中，此時 blossom 作不可數狀態名詞，不加 -s）</b>；最後一格 <b>the beauty of the cherry _____</b> 指日本各地樹上一朵朵盛開的「櫻花（花朵）」，為可數名詞且泛指多數花朵，必須填複數 <b>blossoms</b>。') +
-  ops([
-    ['in blossom / blossoms','介系詞片語（盛開）＋ 複數名詞（花朵）','<b>are in blossom (=in bloom)</b> 表「處於盛開狀態」；<b>cherry blossoms</b> 用複數指滿樹盛開的櫻花花朵。'],
-    ['in blossoms / blossom','介系詞片語（誤加 -s）＋ 單數名詞','片語 <b>in blossom</b> 中的 blossom 表抽象「開花狀態」，不可加 -s；反之最後一格指具體的櫻花花朵，應加 -s。<br><b>何時才對：</b>將第一格去 -s、最後一格加 -s 時才正確。'],
-    ['on blossom / blossoming','介系詞誤用 ＋ 現在分詞','「盛開中」的固定介系詞為 <b>in</b>（in blossom / in bloom），不用 on；且 cherry 後方需接名詞 blossoms。<br><b>何時才對：</b>若不加介系詞，直接用現在進行式可寫 <i>When cherry trees are <b>blossoming</b></i>。'],
-    ['with blossom / bloom','介系詞誤用 ＋ 單數名詞','be with blossom 非正確英文慣用語，且第五課目標字為 blossom。<br><b>何時才對：</b>搭配介系詞 in 構成 <i>in blossom</i> 或 <i>in bloom</i>。']
-  ], 'A')
+  clue('<b>第一、二格：</b>共有兩個空格，且括號提示同義片語 <b>(=in bloom)</b>，對應第五課核心片語 <b>be in blossom（正在盛開、開花中）</b>，注意此處 <i>blossom</i> 表抽象開花狀態，<b>不可加 -s</b>。<br><b>第三格：</b><b>the beauty of the cherry _____</b> 指日本各地樹上一朵朵盛開的「櫻花（花朵）」，為可數名詞且泛指滿樹花朵，必須填複數 <b>blossoms</b>。') +
+  vocabNotes([
+    '<b>be in blossom</b> ＝ <b>be in (full) bloom</b>（片語）正在盛開、繁花似錦（片語中的 <i>blossom</i> 為單數無冠詞）。',
+    '<b>cherry blossoms</b> (n. [C] 常用複數) 櫻花（特指果樹或觀賞樹木如櫻花、梅花、桃花的花朵；一般草本植物的花則用 <i>flower</i>）。'
+  ])
 );
 
-html += card(12, ['考點：同字根詞性轉換（splendor / splendid）與情緒分詞（stunned）','詞性需求：名詞 (n.) ＋ 過去分詞形容詞 (adj.) ＋ 形容詞 (adj.)'], 'C',
+html += card(12, ['考點：同字根詞性轉換（splendor / splendid）與情緒分詞（stunned）','詞性需求：名詞 (n.) ＋ 過去分詞形容詞 (adj.) ＋ 形容詞 (adj.)'], 'splendor / stunned / splendid',
   stem(12) +
-  clue('本題連考三格：<br>1. 第一格位於 <b>the _____ of the sunrise（日出的……）</b> 中，「the + N + of」結構必須填入抽象名詞 <b>splendor（壯麗、光彩）</b>。<br>2. 第二格主詞為人（<i>They</i>），後方接被動介系詞 <i>by...</i> 與括號同義提示 <b>(=amazed)</b>，故填過去分詞情緒形容詞 <b>stunned（感到驚嘆的、驚呆的）</b>。<br>3. 第三格位於冠詞 <i>the</i> 與名詞 <i>view</i> 之間，括號提示 <b>(=spectacular)</b>，故填與第一格同字根的形容詞 <b>splendid（壯觀的、極佳的）</b>。') +
-  ops([
-    ['splendid / stunning / splendor','形容詞 ＋ 現在分詞 ＋ 名詞','第一格與第三格詞性顛倒；第二格主詞為「人（They）」，感到驚嘆應用過去分詞 stunned，而非令人驚嘆的 stunning。<br><b>何時才對：</b>stunning 用於修飾「事物／景色」（如 <i>a stunning view</i>）。'],
-    ['splendor / stun / splendidly','名詞 ＋ 原形動詞 ＋ 副詞','第二格被動語態 <i>were _____ by</i> 需用過去分詞 stunned；第三格修飾名詞 view 需用形容詞 splendid 而非副詞 splendidly。<br><b>何時才對：</b>splendidly 用於修飾動詞或形容詞（如 <i>performed splendidly</i>）。'],
-    ['splendor / stunned / splendid','n. 壯麗 ＋ adj. 驚嘆的 ＋ adj. 壯觀的','完全符合三格的文法位置與括號同義提示（stunned = amazed；splendid = spectacular）。'],
-    ['splendors / stunned / spectacle','複數名詞 ＋ 過去分詞 ＋ 名詞','splendor 指日出的「壯麗景致／光彩」時為不可數抽象名詞；且第三格修飾名詞 view 需用形容詞 splendid，不可填名詞 spectacle。<br><b>何時才對：</b>spectacle 作名詞單獨使用（如 <i>a magnificent spectacle</i>「壯觀的景象」）。']
-  ], 'C')
+  clue('本題連考三格：<br>1. <b>第一格：</b>位於 <b>the _____ of the sunrise（日出的……）</b> 中，「the + N + of」結構必須填入抽象名詞 <b>splendor（壯麗、光彩）</b>。<br>2. <b>第二格：</b>主詞為人（<i>They</i>），後方接被動介系詞 <i>by...</i> 與括號同義提示 <b>(=amazed)</b>，故填過去分詞情緒形容詞 <b>stunned（感到驚嘆的、驚呆的）</b>。<br>3. <b>第三格：</b>位於冠詞 <i>the</i> 與名詞 <i>view</i> 之間，括號提示 <b>(=spectacular)</b>，故填與第一格同字根的形容詞 <b>splendid（壯觀的、極佳的）</b>。') +
+  vocabNotes([
+    '<b>splendor</b> (n. [U]) 壯麗、華麗、光彩 → <b>splendid</b> (adj.) 壯觀的、極佳的（＝ <b>spectacular</b> / <b>magnificent</b>）。',
+    '<b>stun</b> (v.) 使震驚、使驚嘆（過去式與過去分詞需重複字尾 n：<b>stunned</b>）→ <b>be stunned by / at...</b>（對……感到驚呆／驚嘆不已 ＝ <b>be amazed / astonished by...</b>）；修飾事物「令人驚豔的」則用現在分詞形容詞 <b>stunning</b>（如 <i>a stunning view</i>）。'
+  ])
 );
 
-html += card(13, ['考點：delicacy（脆弱性）與 delicate（易碎的）詞性轉換','詞性需求：不可數名詞 (n.) ＋ 形容詞 (adj.)'], 'D',
+html += card(13, ['考點：delicacy（脆弱性）與 delicate（易碎的）詞性轉換','詞性需求：不可數名詞 (n.) ＋ 形容詞 (adj.)'], 'delicacy / delicate',
   stem(13) +
-  clue('第一格位於所有格介系詞片語 <b>due to their _____（由於它們的……）</b> 後方，所有格 <i>their</i> 後必須接名詞，指初版古書的「脆弱性、嬌貴」，故填不可數抽象名詞 <b>delicacy</b>；第二格位於結果子句句型 <b>so _____ (=fragile) that...</b> 中，連綴動詞 <i>are</i> 與副詞 <i>so</i> 後接形容詞 <b>delicate（脆弱的、易損壞的）</b>。') +
-  ops([
-    ['delicate / delicacy','形容詞 ＋ 名詞','兩格詞性完全顛倒：their 後需接名詞 delicacy，so... that 中間需接形容詞 delicate。<br><b>何時才對：</b>將兩格答案位置互換時才正確。'],
-    ['delicacies / delicate','複數可數名詞（佳餚）＋ 形容詞','<b>delicacy</b> 作可數複數 <b>delicacies</b> 時意為「山珍海味、地方佳餚（= fine foods）」，用於形容初版書籍（first-edition books）語意荒謬！表「脆弱性」時為不可數名詞，不可加 -s。<br><b>何時才對：</b>第 20 題指「花蓮當地美食（local delicacies）」時才用複數 delicacies。'],
-    ['delicacy / delicately','名詞 ＋ 副詞','第二格主詞為 They（初版書籍），動詞為連綴動詞 are，需用形容詞 delicate 作主詞補語，不可用副詞 delicately。<br><b>何時才對：</b>修飾動作（如 <i>handled the books delicately</i>「小心地拿取書籍」）時才用副詞。'],
-    ['delicacy / delicate','n. [U] 脆弱性 ＋ adj. 脆弱的','第一格所有格 their 後接不可數抽象名詞 <b>delicacy</b>；第二格 <b>so + adj. (delicate = fragile) + that</b> 句型完全正確。']
-  ], 'D')
+  clue('<b>第一格：</b>位於所有格介系詞片語 <b>due to their _____（由於它們的……）</b> 後方，所有格 <i>their</i> 後必須接名詞，指初版古書的「脆弱性、嬌貴」，故填不可數抽象名詞 <b>delicacy</b>。<br><b>第二格：</b>位於結果子句句型 <b>so _____ (=fragile) that...</b> 中，連綴動詞 <i>are</i> 與副詞 <i>so</i> 後接形容詞 <b>delicate（脆弱的、易損壞的）</b>。') +
+  vocabNotes([
+    '<b>delicate</b> (adj.) (1) 脆弱的、易碎的（＝ <b>fragile</b>）；(2) 需要小心處理的、微妙的；(3) 精緻的、清淡鮮美的。',
+    '<b>delicacy 一字雙義（單複數大不同！）</b>：<br>1. <b>[U] 不可數名詞</b>：脆弱性、精緻（如本題 <i>due to their <b>delicacy</b></i>，不可加 -s）。<br>2. <b>[C] 可數名詞（常作複數 delicacies）</b>：山珍海味、地方佳餚（＝ <b>fine foods</b>，見第 20 題 <i>local <b>delicacies</b></i>）。'
+  ])
 );
 
-html += card(14, ['考點：literature（文學）與 literary（文學的）詞性轉換','詞性需求：不可數名詞 (n.) ＋ 形容詞 (adj.)'], 'A',
+html += card(14, ['考點：literature（文學）與 literary（文學的）詞性轉換','詞性需求：不可數名詞 (n.) ＋ 形容詞 (adj.)'], 'literature / literary',
   stem(14) +
-  clue('第一格位於形容詞 <i>contemporary（當代的）</i> 後方作主詞，且動詞為單數 <i>refers to</i>，指「當代文學」這門領域，故填不可數名詞 <b>literature</b>；第二格位於複數名詞 <i>works（作品）</i> 之前作定語修飾，指「文學作品」，故填衍生形容詞 <b>literary</b>。') +
-  ops([
-    ['literature / literary','n. [U] 文學 ＋ adj. 文學的','<b>contemporary literature（當代文學）</b> 與 <b>literary works（文學作品）</b> 為第五課最核心的同字根搭配。'],
-    ['literary / literature','adj. 文學的 ＋ n. 文學','兩格詞性顛倒。contemporary 為形容詞，後面需接名詞當主詞。<br><b>何時才對：</b>將兩格位置對調時才正確。'],
-    ['literature / literate','n. 文學 ＋ adj. 識字的','易混淆字陷阱！<b>literate</b> 意為「識字的、有讀寫能力的」，不能用來修飾 works 表「文學作品」。<br><b>何時才對：</b>形容人「識字的」或「具備某領域素養的（如 computer-literate）」時才用 literate。'],
-    ['literal / literary','adj. 字面上的 ＋ adj. 文學的','<b>literal</b> 為形容詞「字面上的（如 literal meaning 字面意義）」，不可作主詞表「文學」。<br><b>何時才對：</b>搭配 literal translation（逐字翻譯）或 literal meaning（字面意思）時。']
-  ], 'A')
+  clue('<b>第一格：</b>位於形容詞 <i>contemporary（當代的）</i> 後方作主詞，且動詞為單數 <i>refers to</i>，指「當代文學」這門領域，故填不可數名詞 <b>literature</b>。<br><b>第二格：</b>位於複數名詞 <i>works（作品）</i> 之前作定語修飾，指「文學作品」，故填衍生形容詞 <b>literary</b>。') +
+  vocabNotes([
+    '<b>literature</b> (n. [U]) 文學；文獻 → <b>literary</b> (adj.) 文學的（必背搭配：<b>literary works</b> 文學作品、<b>a literary giant</b> 文學巨擘）。',
+    '<b>形近字三兄弟辨析</b>：<br>• <b>literary</b> (adj.) 文學的（<i>literary works</i>）<br>• <b>literate</b> (adj.) 識字的、有讀寫能力的（反義：<i>illiterate</i> 文盲的；衍生名詞：<i>literacy</i> 識字率／素養）<br>• <b>literal</b> (adj.) 字面上的（<i>the literal meaning</i> 字面意義；副詞 <i>literally</i> 簡直、字面上地）。'
+  ])
 );
 
-html += card(15, ['考點：appearance (=looks) 與 with grace (=gracefully)','詞性需求：單數名詞 (n.) ＋ 介系詞片語 (prep. phr.)'], 'B',
+html += card(15, ['考點：appearance (=looks) 與 with grace (=gracefully)','詞性需求：單數名詞 (1 格) ＋ 介系詞片語 (2 格)'], 'appearance / with / grace',
   stem(15) +
-  clue('第一格位於 <b>a distinctive _____ (=looks)</b> 中，不定冠詞 <i>a</i> 與形容詞 <i>distinctive</i> 後接單數名詞，且括號提示 <b>(=looks 外貌)</b>，故填 <b>appearance</b>；第二部分有兩個空格，用來修飾不及物動詞 <i>moves</i>，括號提示副詞 <b>(=gracefully 優雅地)</b>，利用英文重要轉換公式「<b>with + 抽象名詞 = 副詞</b>」，故填 <b>with grace</b>。') +
-  ops([
-    ['appear / graceful','動詞 ＋ 形容詞','第一格在形容詞 distinctive 後需填名詞 appearance；第二格修飾一般動詞 moves 需用副詞片語 with grace 而非形容詞 graceful。<br><b>何時才對：</b>graceful 用於修飾名詞（如 <i>graceful movements</i>）或連綴動詞後（<i>she looks graceful</i>）。'],
-    ['appearance / with grace','n. 外貌 ＋ 介系詞片語（優雅地）','<b>a distinctive appearance (=looks)</b> 意為「獨特的外貌」；<b>with grace</b> 等同於副詞 <b>gracefully</b>，修飾動詞 moves。'],
-    ['appearances / in grace','複數名詞 ＋ 介系詞誤用','前面有不定冠詞 <b>a</b>，故 appearance 必須用單數；且「優雅地」的固定介系詞搭配為 <b>with grace</b>，不用 in grace。<br><b>何時才對：</b>keep up appearances（顧全外表／撐場面）才用複數 appearances。'],
-    ['appearance / with graceful','單數名詞 ＋ 介系詞後誤接形容詞','介系詞 <b>with</b> 後方必須接名詞 <b>grace</b>，不可接形容詞 graceful。<br><b>何時才對：</b>將 graceful 改為名詞 grace，或直接單填一格副詞 gracefully。']
-  ], 'B')
+  clue('<b>第一格：</b>位於 <b>a distinctive _____ (=looks)</b> 中，不定冠詞 <i>a</i> 與形容詞 <i>distinctive</i> 後接單數名詞，且括號提示 <b>(=looks 外貌)</b>，故填 <b>appearance</b>。<br><b>第二、三格：</b>共有兩個空格，用來修飾不及物動詞 <i>moves</i>，括號提示副詞 <b>(=gracefully 優雅地)</b>，利用英文重要轉換公式「<b>with + 抽象名詞 = 副詞</b>」，故填 <b>with grace</b>。') +
+  vocabNotes([
+    '<b>appearance</b> (n.) 外表、外貌（＝ <b>looks</b>）；出現、露面（由動詞 <i>appear</i> 加字尾 <i>-ance</i> 變化而來）。',
+    '<b>grace</b> (n. [U]) 優雅、優美 → <b>graceful</b> (adj. 優雅的) → <b>gracefully</b> (adv.) ＝ <b>with grace</b>（優雅地；同理：<i>carefully = with care</i>、<i>ease = with ease</i>）。'
+  ])
 );
 
-html += card(16, ['考點：leisure activities 與 -ly 結尾之形容詞 leisurely','詞性需求：名詞作定語 (n.) ＋ 形容詞 (adj.)'], 'C',
+html += card(16, ['考點：leisure activities 與 -ly 結尾之形容詞 leisurely','詞性需求：名詞作定語 (n.) ＋ 形容詞 (adj.)'], 'leisure / leisurely',
   stem(16) +
-  clue('第一格與複數名詞 <i>activities</i> 構成複合名詞 <b>_____ activities（休閒活動）</b>，固定以不可數名詞 <b>leisure（閒暇、休閒）</b> 直接作定語修飾；第二格位於不定冠詞 <i>a</i> 與名詞 <i>afternoon</i> 之間，括號提示同義形容詞 <b>(=laid-back, relaxed 悠閒的)</b>，故填以 <b>-ly</b> 結尾的形容詞 <b>leisurely</b>！') +
-  ops([
-    ['leisurely / leisure','形容詞 ＋ 名詞','兩格位置顛倒。「休閒活動」固定說 <b>leisure activities</b>；而修飾「悠閒的午後」則用形容詞 <b>a leisurely afternoon</b>。<br><b>何時才對：</b>將兩格對調時才正確。'],
-    ['leisure / lecherous','名詞 ＋ 拼字誤導形容詞','第二格應填 leisurely（悠閒的）。<br><b>何時才對：</b>注意名詞 <b>leisure + -ly = leisurely（adj. 悠閒的、從容不迫的）</b> 的正確拼法。'],
-    ['leisure / leisurely','n. 休閒 ＋ adj. 悠閒的','第一格 <b>leisure activities</b> 為固定搭配；第二格 <b>leisurely</b> 雖為 -ly 結尾，但在此作<b>形容詞</b>（= laid-back, relaxed），修飾名詞 afternoon。'],
-    ['leisures / relaxedly','錯誤複數名詞 ＋ 副詞','leisure 為不可數名詞，作定語時更不可加 -s；第二格修飾名詞 afternoon 需用形容詞 leisurely 而非副詞。<br><b>何時才對：</b>記住 friendly、lovely、lonely、leisurely 皆為「-ly 結尾的形容詞」。']
-  ], 'C')
+  clue('<b>第一格：</b>與複數名詞 <i>activities</i> 構成複合名詞 <b>_____ activities（休閒活動）</b>，固定以不可數名詞 <b>leisure（閒暇、休閒）</b> 直接作定語修飾。<br><b>第二格：</b>位於不定冠詞 <i>a</i> 與名詞 <i>afternoon</i> 之間，括號提示同義形容詞 <b>(=laid-back, relaxed 悠閒的)</b>，故填以 <b>-ly</b> 結尾的形容詞 <b>leisurely</b>！') +
+  vocabNotes([
+    '<b>leisure</b> (n. [U]) 閒暇、空閒時間：常見固定搭配 <b>leisure activities</b>（休閒活動）、<b>leisure time / hours</b>（休閒時光）、<b>at one\'s leisure</b>（在某人有空時）。',
+    '<b>leisurely</b> (adj. / adv.) 悠閒的（地）、從容不迫的（地）（＝ <b>laid-back</b>, <b>relaxed</b>, <b>unhurried</b>）：注意「<b>名詞 + -ly = 形容詞</b>」規則（如同 <i>friendly</i>、<i>lovely</i>、<i>lonely</i>、<i>costly</i>），故 <b>a leisurely afternoon / stroll / pace</b> 中的 <i>leisurely</i> 是道地的<b>形容詞</b>！'
+  ])
 );
 
-html += card(17, ['考點：instrumental music（純音樂）與 stringed instruments（弦樂器）','詞性需求：形容詞 (adj.) ＋ 複數可數名詞 (n.)'], 'A',
+html += card(17, ['考點：instrumental music（純音樂）與 stringed instruments（弦樂器）','詞性需求：形容詞 (adj.) ＋ 複數可數名詞 (n.)'], 'instrumental / instruments',
   stem(17) +
-  clue('第一句由 <b>because music with words tends to distract her（因為有歌詞的音樂容易讓她分心）</b> 可推知，她讀書時只聽「沒有人聲歌詞、純用樂器演奏的音樂」，修飾名詞 <i>music</i> 填形容詞 <b>instrumental（器樂的、用樂器演奏的）</b>；第二句後方舉出 <i>such as the guitar, violin and cello（例如吉他、小提琴和大提琴）</i> 三種樂器，故在形容詞 <i>stringed（有弦的）</i> 後方填入複數可數名詞 <b>instruments（樂器）</b>。') +
-  ops([
-    ['instrumental / instruments','adj. 樂器演奏的 ＋ n. 樂器（複數）','<b>instrumental music</b> 指「純音樂／器樂曲」；<b>stringed instruments</b> 指「弦樂器（複數）」，完全呼應後方的三種樂器舉例。'],
-    ['instrument / instrumental','單數名詞 ＋ 形容詞','兩格詞性顛倒。第二格在介系詞 by 與形容詞 stringed 後方必須填名詞作受詞，不可填形容詞 instrumental。<br><b>何時才對：</b>將兩格位置對調，並將 instrument 改為複數 instruments。'],
-    ['instrumental / instrument','形容詞 ＋ 單數名詞','第二格後方以 <i>such as the guitar, violin and cello</i> 列舉了多種樂器，且前面無不定冠詞 a/an，可數名詞 instrument 不可用單數裸名詞。<br><b>何時才對：</b>加上複數詞尾 -s 變為 <b>instruments</b>。'],
-    ['instructed / instructions','過去分詞 ＋ 名詞（指示）','字根混淆！instruct（指導、指示）與 instrument（樂器、儀器）字義完全不同。<br><b>何時才對：</b>follow the instructions 表「遵照說明書／指示」。']
-  ], 'A')
+  clue('<b>第一格：</b>由 <b>because music with words tends to distract her（因為有歌詞的音樂容易讓她分心）</b> 可推知，她讀書時只聽「沒有人聲歌詞、純用樂器演奏的音樂」，修飾名詞 <i>music</i> 填形容詞 <b>instrumental（器樂的、用樂器演奏的）</b>。<br><b>第二格：</b>後方舉出 <i>such as the guitar, violin and cello（例如吉他、小提琴和大提琴）</i> 三種樂器，故在形容詞 <i>stringed（有弦的）</i> 後方填入複數可數名詞 <b>instruments（樂器）</b>。') +
+  vocabNotes([
+    '<b>instrument</b> (n. [C]) 樂器（常作 <b>musical instrument</b>）；儀器、工具 → <b>stringed instruments</b>（弦樂器，記得加複數 <b>-s</b>）。',
+    '<b>instrumental</b> (adj.) (1) 用樂器演奏的（<b>instrumental music</b> 純音樂／器樂曲，對比 <i>vocal music</i> 聲樂）；(2) 起重要作用的、有幫助的（常搭配 <i>be instrumental in + V-ing/N</i>）。'
+  ])
 );
 
-html += card(18, ['考點：狀態轉變動詞片語（turn into 變成）','詞性需求：原形動詞片語 (v. phr.)'], 'D',
+html += card(18, ['考點：狀態轉變動詞片語（turn into 變成）','詞性需求：原形動詞片語 (2 格)'], 'turn / into',
   stem(18) +
   clue('題號前標註 <b>(片)</b>，主詞為 <i>The old warehouse（這座舊倉庫）</i>，受詞為 <i>a museum（一座博物館）</i>，描述舊建築「轉變成、改建為」博物館。空格位於助動詞 <b>will</b>（與時間副詞 soon）之後，故填第五課原形動詞片語 <b>turn into</b>。') +
-  ops([
-    ['turned into','過去式動詞片語','空格前面有未來式助動詞 <b>will</b>，後面必須接原形動詞 turn，不可用過去式 turned。<br><b>何時才對：</b>若改為過去式主動句 <i>The old warehouse <b>turned into</b> a museum last year</i> 或被動語態 <i>will soon <b>be turned into</b> a museum</i> 時才用 turned。'],
-    ['turns into','第三人稱單數動詞片語','雖然主詞 The old warehouse 為單數，但因有助動詞 <b>will</b>，動詞必須維持原形 turn。<br><b>何時才對：</b>沒有助動詞 will 的現在簡單式句子才用 turns into。'],
-    ['turn out','原形動詞片語（結果是）','<b>turn out</b> 表「結果是、原來是」，後方需接 <b>to be + N</b>（如 <i>turn out to be a museum</i>），不可直接接名詞 a museum。<br><b>何時才對：</b>表達「出乎意料的結果（It turned out to be a great success）」時。'],
-    ['turn into','原形動詞片語（轉變成、變成）','助動詞 <b>will</b> 後接原形動詞片語 <b>turn into</b>，表「舊倉庫很快將變身為一座博物館」。']
-  ], 'D')
+  vocabNotes([
+    '<b>turn into + N</b> ＝ <b>turn... into...</b>（片語）（使）變成、（使）轉變為（＝ <i>transform into</i> / <i>change into</i>）。',
+    '<b>時態提醒</b>：前面有助動詞 <b>will</b>，因此第一格務必填原形動詞 <b>turn</b>。'
+  ])
 );
 
-html += card(19, ['考點：stand out from（脫穎而出）與 distinctive (=unique)','詞性需求：第三人稱單數動詞片語 (v. phr.) ＋ 形容詞 (adj.)'], 'B',
+html += card(19, ['考點：stand out from（脫穎而出）與 distinctive (=unique)','詞性需求：第三人稱單數動詞片語 (2 格) ＋ 形容詞 (1 格)'], 'stands / out / distinctive',
   stem(19) +
-  clue('第一部分為兩格片語，後方接 <b>from the rest of the contestants（從其他參賽者之中……）</b>，對應第五課必考片語 <b>stand out (from...)（顯眼、脫穎而出）</b>；注意主詞 <b>The boy</b> 為第三人稱單數，且對照從屬子句 <i>because he <b>has</b>...</i> 與後句 <i>We <b>bet</b>...</i> 為現在簡單式，故必須加 <b>-s</b> 填 <b>stands out</b>！最後一格括號提示 <b>(=unique 獨特的)</b>，強調「與眾不同、有特色的嗓音」，故填形容詞 <b>distinctive</b>。') +
-  ops([
-    ['stand out / distinctive','原形動詞片語 ＋ 形容詞','主詞 <b>The boy</b> 為第三人稱單數，現在簡單式動詞 stand 漏加 -s。<br><b>何時才對：</b>主詞為複數（如 <i>The boys stand out...</i>）或有助動詞時才用原形 stand out。'],
-    ['stands out / distinctive','三單動詞片語（脫穎而出）＋ adj. 獨特的','第一、二格 <b>stands out</b> 符合主詞 The boy 的單數動詞一致；第三格 <b>distinctive (=unique)</b> 精準修飾「獨特、有辨識度的嗓音（voice）」。'],
-    ['stands out / distinct','三單動詞片語 ＋ adj. 明顯的、截然不同的','易混淆字比較：雖然 distinct 與 distinctive 同字根，但題幹括號明確提示 <b>(=unique 獨特的、有特色的)</b>，且第二大題考 Words for Production（第五課主單字為 <b>distinctive</b>，第一大題方框字才是 distinct）。<br><b>何時才對：</b>distinct 偏重「清晰可辨的（a distinct smell）」或「截然不同的（two distinct groups）」；<b>distinctive</b> 則等同於 <b>unique / characteristic</b>（獨特的、有特色的）。'],
-    ['stands up / distinct','三單動詞片語（站起來）＋ 形容詞','stand up 意為「起立、站起來」，搭配 from the rest of the contestants 無法表達「在比賽中脫穎而出」。<br><b>何時才對：</b>stand up for oneself（悍衛自己權益）或具體動作「起立」時。']
-  ], 'B')
+  clue('<b>第一、二格：</b>為兩格片語，後方接 <b>from the rest of the contestants（從其他參賽者之中……）</b>，對應第五課必考片語 <b>stand out (from...)（顯眼、脫穎而出）</b>；注意主詞 <b>The boy</b> 為第三人稱單數，且對照從屬子句 <i>because he <b>has</b>...</i> 與後句 <i>We <b>bet</b>...</i> 為現在簡單式，故第一格動詞必須加 <b>-s</b> 填 <b>stands out</b>！<br><b>第三格：</b>括號提示 <b>(=unique 獨特的)</b>，強調「與眾不同、極具辨識度的嗓音」，故填形容詞 <b>distinctive</b>。') +
+  vocabNotes([
+    '<b>stand out (from / among...)</b>（片語）脫穎而出、顯眼、突出（衍生形容詞為 <b>outstanding</b>「傑出的、優秀的」）。',
+    '<b>distinctive</b> (adj.) 獨特的、有特色的（＝ <b>unique</b> / <b>characteristic</b>）：與第一大題第 9 題的 <i>distinct（明顯的、截然不同的）</i> 同字根，但當題目提示 <b>(=unique)</b> 修飾個人外貌（appearance）、嗓音（voice）或風格（style）時，必定填 <b>distinctive</b>。'
+  ])
 );
 
-html += card(20, ['考點：tourist destination、delicacies (=fine foods) 與 feast one\'s eyes on','詞性需求：單數名詞 (n.) ＋ 複數名詞 (n.) ＋ 原形動詞 (v.)'], 'C',
+html += card(20, ['考點：tourist destination、delicacies (=fine foods) 與 feast one\'s eyes on','詞性需求：單數名詞 (1 格) ＋ 複數名詞 (1 格) ＋ 原形動詞 (1 格)'], 'destination / delicacies / feast',
   stem(20) +
-  clue('本題整合三個第五課重點：<br>1. 第一格 <b>a tourist _____（一個旅遊勝地）</b>：前面有不定冠詞 <i>a</i>，填單數名詞 <b>destination</b>。<br>2. 第二格 <b>local _____ (=fine foods)（當地山珍海味／佳餚）</b>：括號提示複數 <b>(=fine foods)</b>，當 <b>delicacy</b> 指具體「美食佳餚」時為可數名詞，前面無冠詞且表多樣美食，故填複數 <b>delicacies</b>。<br>3. 第三格 <b>splendid scenery they can _____ their eyes on（讓他們能大飽眼福的壯麗風景）</b>：關係子句（受格關代省略）中，助動詞 <i>can</i> 後接原形動詞 <b>feast</b>，構成片語 <b>feast one\'s eyes on...（大飽眼福、盡情欣賞）</b>。') +
-  ops([
-    ['destination / delicacy / feast','單數名詞 ＋ 單數名詞 ＋ 原形動詞','第二格括號明確提示複數 <b>(=fine foods)</b>，delicacy 指「當地各式美食佳餚」為可數名詞，不可用單數裸名詞。<br><b>何時才對：</b>加上複數詞尾變為 <b>delicacies</b>（對比第 13 題表「脆弱性」時才是不可數單數 delicacy）。'],
-    ['landmark / delicacies / feasting','單數名詞 ＋ 複數名詞 ＋ 現在分詞','花蓮（Hualien）是一整個縣市與「旅遊勝地（tourist destination）」，而非單一建築地標（landmark）；且第三格在助動詞 can 後必須用原形動詞 feast。<br><b>何時才對：</b>can 後接原形動詞 feast。'],
-    ['destination / delicacies / feast','n. 目的地 ＋ n. 佳餚（複數）＋ v. 盡情欣賞','完美結合 <b>a tourist destination（旅遊勝地）</b>、<b>local delicacies (=fine foods 當地佳餚）</b> 與片語 <b>feast their eyes on（大飽眼福）</b>。'],
-    ['destinations / delicate / feasts','複數名詞 ＋ 形容詞 ＋ 三單動詞','第一格有不定冠詞 a，需用單數 destination；第二格需填複數名詞 delicacies 而非形容詞 delicate；第三格在助動詞 can 後需用原形 feast。<br><b>何時才對：</b>三格皆修正為正確詞性與單複數時。']
-  ], 'C')
+  clue('本題整合三個第五課重點：<br>1. <b>第一格 a tourist _____（一個旅遊勝地）：</b>前面有不定冠詞 <i>a</i>，填單數名詞 <b>destination</b>。<br>2. <b>第二格 local _____ (=fine foods)（當地山珍海味／佳餚）：</b>括號提示複數 <b>(=fine foods)</b>，當 <b>delicacy</b> 指具體「美食佳餚」時為可數名詞，前面無冠詞且表多樣美食，故填去 y 加 ies 的複數 <b>delicacies</b>。<br>3. <b>第三格 splendid scenery they can _____ their eyes on（讓他們能大飽眼福的壯麗風景）：</b>關係子句（受格關代省略）中，助動詞 <i>can</i> 後接原形動詞 <b>feast</b>，構成片語 <b>feast one\'s eyes on...（大飽眼福、盡情欣賞）</b>。') +
+  vocabNotes([
+    '<b>a tourist destination</b> (n. [C]) 旅遊勝地、觀光目的地。',
+    '<b>local delicacies</b> (n. [C] 複數) 當地美食、地方山珍海味（＝ <b>fine foods</b>，對比第 13 題不可數 <i>delicacy</i> 表「脆弱性」）。',
+    '<b>feast one\'s eyes on + N</b>（片語）盡情欣賞……、讓雙眼大飽眼福（字面意思為「讓眼睛像享用盛宴 feast 一樣大快朵頤」）。'
+  ])
 );
 
-html += groupGradeBox('part2', '第二大題：第五課單字、衍生字與片語填空', 10, 20, 5);
+html += groupGradeBox('part2', '第二大題：第五課單字、衍生字與片語填空', 10, 20, 34);
 
 // ==================== 全卷總批改面板 ====================
 html += '<div class="grade-box all-box" id="gbox-all">' +
-  '<div class="grade-title">🏆 全卷總批改（第 1–20 題，每題 5 分，滿分 100 分）</div>' +
+  '<div class="grade-title">🏆 全卷總批改（共 20 題 ／ 46 格填空，折合滿分 100 分）</div>' +
   '<div class="grade-btns">' +
-    '<button class="btn-grade" onclick="gradeAllSingleChoice()">🏆 一次批改全卷</button>' +
-    '<button class="btn-reset" onclick="resetAllSingleChoice()">🔄 一次清空重練</button>' +
+    '<button class="btn-grade" onclick="gradeAllBlanks()">🏆 一次批改全卷</button>' +
+    '<button class="btn-reset" onclick="resetAllBlanks()">🔄 一次清空重練</button>' +
   '</div>' +
   '<div class="grade-res" id="gres-all"></div>' +
 '</div>';
