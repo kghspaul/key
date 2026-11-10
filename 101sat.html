@@ -1,0 +1,1420 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>101學年度指定科目考試 英文考科詳解</title>
+<style>
+:root{--bg:#faf8f4;--fg:#222;--card:#fff;--line:#e4ded3;--acc:#9a3b2e;--ok:#1f7a4d;--no:#b3261e;--mut:#6b6558;--hl:#fff1c9}
+@media(prefers-color-scheme:dark){:root{--bg:#161512;--fg:#e8e4da;--card:#201f1b;--line:#3a372f;--acc:#e08a78;--ok:#6fcf9a;--no:#f08a82;--mut:#a39d8f;--hl:#4a3f1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+.top{max-width:900px;margin:auto;padding:28px 18px 10px}
+.top h1{margin:0 0 4px;font-size:1.6rem;color:var(--acc)}
+.top p{margin:2px 0;color:var(--mut);font-size:.92rem}
+.feature-box{background:var(--hl);border-left:4px solid var(--acc);padding:8px 12px;border-radius:0 6px 6px 0;margin:10px 0;font-size:0.9rem;color:var(--fg);}
+nav{position:sticky;top:0;z-index:9;background:var(--bg);border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px;padding:8px 12px}
+nav a,nav button{flex:none;padding:5px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--fg);text-decoration:none;font:inherit;font-size:.88rem;cursor:pointer}
+nav a:hover,nav button:hover{border-color:var(--acc);color:var(--acc)}
+nav a.review-btn{background:var(--acc);color:#fff;border-color:var(--acc);font-weight:bold;}
+nav button.pm-active { background:var(--acc); color:#fff; border-color:var(--acc); }
+main{max-width:900px;margin:auto;padding:0 16px 70px}
+h2{margin:36px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--acc);font-size:1.3rem}
+h3{margin:0 0 8px;font-size:1.05rem;color:var(--acc)}
+.pas,.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.para{margin-bottom:14px}
+.s{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--line)}
+.en{font-family:Georgia,"Times New Roman",serif;font-size:1.02rem}
+.zh{color:var(--mut);font-size:.93rem}
+.prompt-text{color:var(--fg);font-size:.96rem;line-height:1.8}
+.note{color:var(--mut);font-size:.85rem;margin:6px 0 0}
+.bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 4px;border-radius:3px;font-weight:600}
+.bl sup{color:var(--acc);margin-right:3px;font-size:.7em}
+.bank{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.92rem;margin-bottom:8px}
+details.q>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+details.q>summary::-webkit-details-marker{display:none}
+.n{background:var(--acc);color:#fff;border-radius:6px;padding:0 10px;font-weight:700;font-size:1.05rem}
+.tag{font-size:.78rem;border:1px solid var(--acc);color:var(--acc);border-radius:99px;padding:0 9px;line-height:1.6}
+.tag.pos{border-color:var(--ok);color:var(--ok)}
+.ans{margin-left:auto;font-weight:700;color:var(--ok)}
+.qb{margin-top:10px}
+.stem{margin-bottom:8px;padding:8px 10px;background:var(--bg);border-radius:6px}
+.clue{margin:8px 0;padding:8px 12px;border-left:4px solid var(--acc);background:var(--bg);border-radius:0 6px 6px 0}
+.clue h4,.qb h4{margin:0 0 2px;font-size:.92rem;color:var(--acc)}
+ul.op{list-style:none;margin:6px 0 0;padding:0}
+ul.op li{padding:7px 10px;margin:5px 0;border-radius:6px;border:1px solid var(--line);font-size:.95rem;transition:background 0.2s;cursor:pointer}
+ul.op li.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 9%,transparent)}
+ul.op li.no{border-color:color-mix(in srgb,var(--no) 45%,transparent)}
+ul.op i{font-style:normal;font-weight:700;font-size:.82rem}
+li.ok i{color:var(--ok)}li.no i{color:var(--no)}
+.exp{margin-top:4px}
+small{color:var(--mut)}
+
+/* === 練習模式與批改狀態樣式 === */
+body.practice-mode details.q:not(.graded) .ans { visibility: hidden; }
+body.practice-mode details.q:not(.graded) .clue { display: none; }
+body.practice-mode details.q:not(.graded) .tag { display: none; }
+body.practice-mode details.q:not(.graded) .stem .zh { display: none; }
+body.practice-mode .pas:not(.graded) .zh { display: none; }
+body.practice-mode .pas:not(.graded) .trans-ans { display: none; }
+body.practice-mode .pas:not(.graded) .note { display: none; }
+.trans-input {
+  display: none;
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1rem;
+}
+.trans-input:focus { outline: none; border-color: var(--acc); }
+body.practice-mode .trans-input { display: block; }
+body.practice-mode .bl:not(.revealed) {
+  color: transparent;
+  background: var(--bg);
+  border-bottom: 2px solid var(--acc);
+  padding: 0 18px;
+  user-select: none;
+  display: inline-block;
+  min-width: 64px;
+  text-align: center;
+}
+body.practice-mode .bl:not(.revealed) sup {
+  color: var(--acc);
+  font-weight: 700;
+}
+body.practice-mode .bank:not(.graded) small { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li small { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li.ok,
+body.practice-mode details.q:not(.graded) ul.op li.no { border-color: var(--line); background: transparent; }
+body.practice-mode details.q:not(.graded) ul.op li i { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li .exp { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li:hover { background: var(--hl); }
+ul.op li.selected { border-color: var(--acc) !important; background: color-mix(in srgb, var(--acc) 12%, transparent) !important; font-weight: 600; }
+
+details.q.graded ul.op li.selected.ok { border: 2px solid var(--ok) !important; background: color-mix(in srgb, var(--ok) 15%, transparent) !important; }
+details.q.graded ul.op li.selected.no { border: 2px solid var(--no) !important; background: color-mix(in srgb, var(--no) 14%, transparent) !important; }
+.user-status { font-weight: 700; font-size: .88rem; padding: 1px 8px; border-radius: 99px; margin-left: 6px; }
+.user-status.st-ok { background: color-mix(in srgb, var(--ok) 15%, transparent); color: var(--ok); border: 1px solid var(--ok); }
+.user-status.st-no { background: color-mix(in srgb, var(--no) 15%, transparent); color: var(--no); border: 1px solid var(--no); }
+.user-status.st-blank { background: var(--hl); color: var(--acc); border: 1px solid var(--acc); }
+
+.grade-box {
+  background: var(--card);
+  border: 2px dashed var(--acc);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin: 18px 0 32px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.grade-box.all-box {
+  border: 2px solid var(--acc);
+  background: color-mix(in srgb, var(--hl) 45%, var(--card));
+  padding: 20px 22px;
+  margin: 30px 0 40px;
+}
+.grade-title { font-weight: 700; color: var(--acc); font-size: 1.02rem; }
+.all-box .grade-title { font-size: 1.2rem; }
+.grade-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn-grade, .btn-reset {
+  padding: 6px 16px;
+  border-radius: 99px;
+  font: inherit;
+  font-size: .92rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid var(--acc);
+  transition: transform 0.1s, opacity 0.2s;
+}
+.btn-grade { background: var(--acc); color: #fff; }
+.all-box .btn-grade, .all-box .btn-reset { padding: 8px 22px; font-size: 1rem; }
+.btn-reset { background: var(--card); color: var(--mut); border-color: var(--line); }
+.btn-grade:hover, .btn-reset:hover { opacity: 0.9; transform: translateY(-1px); }
+.grade-res {
+  width: 100%;
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  font-size: .95rem;
+  display: none;
+}
+.grade-res.show { display: block; }
+.q-Jump {
+  display: inline-block;
+  padding: 1px 8px;
+  margin: 2px 3px;
+  border-radius: 6px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  color: var(--acc);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: .86rem;
+}
+.q-Jump:hover { background: var(--acc); color: #fff; border-color: var(--acc); }
+
+footer{max-width:900px;margin:auto;padding:20px 16px 40px;color:var(--mut);font-size:.85rem;line-height:1.6;border-top:1px solid var(--line);margin-top:40px;}
+footer a{color:var(--acc);text-decoration:none;font-weight:bold;}
+footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1><span id="exam-title">101學年度指定科目考試 英文考科詳解</span> <span id="completed-badge" style="display:none;font-size:1rem;color:var(--ok);">✅ 已完成</span></h1>
+  <p>每題含：考點標籤 → 題幹逐句中英對照 → 解題線索 → 正解與全部誤答分析</p>
+  <div class="feature-box">
+    💡 <b>複習與作答指南：</b> 點擊「🎯 切換練習模式」可自動挖空題幹答案並隱藏中譯與解析（含中譯英答案與詳解）；直接點選各題選項作答後，可點擊各題組下方的「<b>✅ 批改本題組</b>」或單選題最後的「<b>🏆 一次批改全卷</b>」查看得分並自動展開詳解（亦可點擊「<b>🔄 一次清空重練</b>」重新作答）！點擊每題右上角的「標記此題」可收錄錯題；滑鼠反白任何英文字句可「收藏單字」。請前往 <a href="review.html" target="_blank" style="color:var(--acc);font-weight:bold;">錯題與單字總複習頁面</a>。
+  </div>
+  <p>圖例：<span class="bl revealed">黃底</span> ＝ 正確答案填入處 ｜ <span class="tag" id="secret-trigger" style="user-select:none;cursor:default;">考點</span> <span class="tag pos">詞性需求</span></p>
+  <div id="secret-counter" style="display:none; margin-top:8px; font-size:0.9rem; color:var(--mut);">
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    👁️ <b>本頁瀏覽人次：</b><span id="busuanzi_value_page_pv"></span> 次
+  </div>
+</div>
+<nav id="nav">
+  <button id="pm-toggle">🎯 切換練習模式</button>
+  <button id="complete-btn">📝 標記為已完成</button>
+  <a href="review.html" class="review-btn" target="_blank">📚 前往總複習</a>
+  <a href="#sec-vocab">一、詞彙</a>
+  <a href="#sec-cloze">二、綜合測驗</a>
+  <a href="#sec-wbank">三、文意選填</a>
+  <a href="#sec-disc">四、篇章結構</a>
+  <a href="#sec-rc">五、閱讀測驗</a>
+  <a href="#gbox-all">🏆 全卷批改</a>
+  <a href="#sec-trans">中譯英</a>
+  <a href="#sec-essay">英文作文</a>
+</nav>
+<main id="app"></main>
+<footer>
+  限定用途教學教材。本詳解為教學輔助，題目版權屬原出版單位。<br>
+  💡 <b>問題回報與建議：</b> Line: etpaul ｜ IG: <a href="https://www.instagram.com/etpaul" target="_blank">@etpaul</a>
+</footer>
+
+<script>
+const L="ABCD";
+const fx=s=>s.replace(/\*([^*]+)\*/g,'<i>$1</i>').replace(/\[\[(\d*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl"'+(n?' data-q="'+n+'"':'')+'>'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const SENT={};
+const Q_ANS={};
+const appEl = document.getElementById('app');
+function appendApp(html){ appEl.insertAdjacentHTML('beforeend', html); }
+
+function passage(title,paras,note,gid,extraCls){
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[(\d+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  return '<section class="pas'+(extraCls?' '+extraCls:'')+'"'+(gid?' id="pas-'+gid+'"':'')+'><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
+}
+function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
+const clue=t=>'<div class="clue"><h4>解題線索</h4>'+t+'</div>';
+function ops(list,ans,lab){
+  lab=lab||'ABCDEF';
+  return '<ul class="op">'+list.map((o,i)=>{
+    const optCode = (lab==='ABCDEF'&&list.length<=4) ? L[i] : lab[i];
+    const k=ans.indexOf(optCode)>=0;
+    return '<li class="'+(k?'ok':'no')+'" data-opt="'+optCode+'" onclick="selectOpt(this)"><b>('+optCode+') '+fx(o[0])+'</b>'+(o[1]?' <small>'+o[1]+'</small>':'')+' <i>'+(k?'✔ 正解':'✘ 誤答')+'</i><div class="exp">'+o[2]+'</div></li>';
+  }).join('')+'</ul>';
+}
+function card(n,tags,ans,body){
+  Q_ANS[n] = ans;
+  return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="user-status" id="st'+n+'" style="display:none"></span><span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
+}
+
+function groupGradeBox(gid, title, startQ, endQ, ptsPerQ) {
+  ptsPerQ = ptsPerQ || 1;
+  const totalPts = (endQ - startQ + 1) * ptsPerQ;
+  return '<div class="grade-box" id="gbox-'+gid+'">' +
+    '<div class="grade-title">📝 '+title+'（第 '+startQ+'–'+endQ+' 題，共 '+totalPts+' 分）</div>' +
+    '<div class="grade-btns">' +
+      '<button class="btn-grade" onclick="gradeGroup(\''+gid+'\','+startQ+','+endQ+','+ptsPerQ+')">✅ 批改本題組</button>' +
+      '<button class="btn-reset" onclick="resetGroup(\''+gid+'\','+startQ+','+endQ+')">🔄 重練本題組</button>' +
+    '</div>' +
+    '<div class="grade-res" id="gres-'+gid+'"></div>' +
+  '</div>';
+}
+
+window.selectOpt = function(li) {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  const qEl = li.closest('details.q');
+  if (qEl && qEl.classList.contains('graded')) {
+    qEl.classList.remove('graded');
+    const qNum = qEl.id.replace('q', '');
+    const st = document.getElementById('st' + qNum);
+    if (st) st.style.display = 'none';
+  }
+  li.parentNode.querySelectorAll('li').forEach(el => el.classList.remove('selected'));
+  li.classList.add('selected');
+};
+
+function evaluateSingleQ(n) {
+  const qEl = document.getElementById('q' + n);
+  if (!qEl) return 'blank';
+  qEl.classList.add('graded');
+  qEl.open = true;
+
+  document.querySelectorAll('.bl[data-q="'+n+'"]').forEach(el => el.classList.add('revealed'));
+
+  const sel = qEl.querySelector('ul.op li.selected');
+  const st = document.getElementById('st' + n);
+  const ans = Q_ANS[n];
+
+  if (!sel) {
+    if (st) {
+      st.className = 'user-status st-blank';
+      st.textContent = '⚠️ 未作答';
+      st.style.display = 'inline-block';
+    }
+    return 'blank';
+  }
+
+  const userOpt = sel.getAttribute('data-opt');
+  if (ans.indexOf(userOpt) >= 0) {
+    if (st) {
+      st.className = 'user-status st-ok';
+      st.textContent = '✔ 答對 (' + userOpt + ')';
+      st.style.display = 'inline-block';
+    }
+    return 'ok';
+  } else {
+    if (st) {
+      st.className = 'user-status st-no';
+      st.textContent = '✘ 答錯 (選 ' + userOpt + ')';
+      st.style.display = 'inline-block';
+    }
+    return 'no';
+  }
+}
+
+window.gradeGroup = function(gid, startQ, endQ, ptsPerQ) {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  let okCount = 0, wrongList = [], blankList = [];
+  for (let n = startQ; n <= endQ; n++) {
+    const res = evaluateSingleQ(n);
+    if (res === 'ok') okCount++;
+    else if (res === 'no') wrongList.push(n);
+    else blankList.push(n);
+  }
+  const pasEl = document.getElementById('pas-' + gid);
+  if (pasEl) pasEl.classList.add('graded');
+  if (gid === 'wbank') {
+    const bankEl = document.getElementById('bank-wbank');
+    if (bankEl) bankEl.classList.add('graded');
+  }
+  if (gid === 'disc') {
+    const bankEl = document.getElementById('bank-disc');
+    if (bankEl) bankEl.classList.add('graded');
+  }
+
+  const totalQ = endQ - startQ + 1;
+  const earnedPts = okCount * ptsPerQ;
+  const maxPts = totalQ * ptsPerQ;
+  const resEl = document.getElementById('gres-' + gid);
+
+  let html = '<div><b>📊 批改結果：</b>答對 <b>' + okCount + ' / ' + totalQ + '</b> 題，得分 <b style="color:var(--acc);font-size:1.15rem;">' + earnedPts + ' / ' + maxPts + '</b> 分' + (okCount === totalQ ? ' 🎉 全部答對！' : '') + '</div>';
+  if (wrongList.length > 0) {
+    html += '<div style="margin-top:4px;">❌ <b>答錯題號：</b>' + wrongList.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  if (blankList.length > 0) {
+    html += '<div style="margin-top:4px;">⚠️ <b>未作答題號：</b>' + blankList.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  resEl.innerHTML = html;
+  resEl.classList.add('show');
+};
+
+window.resetGroup = function(gid, startQ, endQ) {
+  enablePracticeMode();
+  for (let n = startQ; n <= endQ; n++) {
+    const qEl = document.getElementById('q' + n);
+    if (qEl) {
+      qEl.classList.remove('graded');
+      qEl.querySelectorAll('ul.op li').forEach(li => li.classList.remove('selected'));
+    }
+    const st = document.getElementById('st' + n);
+    if (st) st.style.display = 'none';
+    document.querySelectorAll('.bl[data-q="'+n+'"]').forEach(el => el.classList.remove('revealed'));
+  }
+  const pasEl = document.getElementById('pas-' + gid);
+  if (pasEl) pasEl.classList.remove('graded');
+  if (gid === 'wbank') {
+    const bankEl = document.getElementById('bank-wbank');
+    if (bankEl) bankEl.classList.remove('graded');
+  }
+  if (gid === 'disc') {
+    const bankEl = document.getElementById('bank-disc');
+    if (bankEl) bankEl.classList.remove('graded');
+  }
+  const resEl = document.getElementById('gres-' + gid);
+  if (resEl) {
+    resEl.innerHTML = '';
+    resEl.classList.remove('show');
+  }
+};
+
+window.gradeTrans = function() {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  const pasEl = document.getElementById('pas-trans');
+  if (pasEl) pasEl.classList.add('graded');
+  const resEl = document.getElementById('gres-trans');
+  if (resEl) {
+    resEl.innerHTML = '<div>✅ 已展開中譯英參考正解與句型解析，請自行核對作答內容！</div>';
+    resEl.classList.add('show');
+  }
+};
+
+window.resetTrans = function() {
+  enablePracticeMode();
+  const pasEl = document.getElementById('pas-trans');
+  if (pasEl) {
+    pasEl.classList.remove('graded');
+    pasEl.querySelectorAll('.trans-input').forEach(inp => inp.value = '');
+  }
+  const resEl = document.getElementById('gres-trans');
+  if (resEl) {
+    resEl.innerHTML = '';
+    resEl.classList.remove('show');
+  }
+};
+
+const pmBtn = document.getElementById('pm-toggle');
+function enablePracticeMode() {
+  document.body.classList.add('practice-mode');
+  pmBtn.classList.add('pm-active');
+  pmBtn.textContent = '退出練習模式（顯示全部詳解）';
+  document.querySelectorAll('details.q').forEach(d => d.open = true);
+}
+function disablePracticeMode() {
+  document.body.classList.remove('practice-mode');
+  pmBtn.classList.remove('pm-active');
+  pmBtn.textContent = '🎯 切換練習模式';
+}
+pmBtn.onclick = function() {
+  if (document.body.classList.contains('practice-mode')) {
+    disablePracticeMode();
+  } else {
+    enablePracticeMode();
+  }
+};
+
+const examTitle = document.getElementById('exam-title').innerText;
+const compBtn = document.getElementById('complete-btn');
+const badge = document.getElementById('completed-badge');
+let comps = JSON.parse(localStorage.getItem('completed_exams')||'[]');
+
+if(comps.includes(examTitle)) {
+  badge.style.display = 'inline-block';
+  compBtn.innerText = '取消完成標記';
+}
+
+compBtn.onclick = function() {
+  comps = JSON.parse(localStorage.getItem('completed_exams')||'[]');
+  if(comps.includes(examTitle)) {
+    comps = comps.filter(t => t !== examTitle);
+    this.innerText = '📝 標記為已完成';
+    badge.style.display = 'none';
+  } else {
+    comps.push(examTitle);
+    this.innerText = '取消完成標記';
+    badge.style.display = 'inline-block';
+  }
+  localStorage.setItem('completed_exams', JSON.stringify(comps));
+};
+
+const ALL_GROUPS = [
+  { gid: 'vocab', title: '一、詞彙題', startQ: 1, endQ: 10, ptsPerQ: 1 },
+  { gid: 'cloze1', title: '二、綜合測驗（第 11–15 題）', startQ: 11, endQ: 15, ptsPerQ: 1 },
+  { gid: 'cloze2', title: '二、綜合測驗（第 16–20 題）', startQ: 16, endQ: 20, ptsPerQ: 1 },
+  { gid: 'wbank', title: '三、文意選填（第 21–30 題）', startQ: 21, endQ: 30, ptsPerQ: 1 },
+  { gid: 'disc', title: '四、篇章結構（第 31–35 題）', startQ: 31, endQ: 35, ptsPerQ: 2 },
+  { gid: 'rc1', title: '五、閱讀測驗（第 36–39 題）', startQ: 36, endQ: 39, ptsPerQ: 2 },
+  { gid: 'rc2', title: '五、閱讀測驗（第 40–43 題）', startQ: 40, endQ: 43, ptsPerQ: 2 },
+  { gid: 'rc3', title: '五、閱讀測驗（第 44–47 題）', startQ: 44, endQ: 47, ptsPerQ: 2 },
+  { gid: 'rc4', title: '五、閱讀測驗（第 48–51 題）', startQ: 48, endQ: 51, ptsPerQ: 2 }
+];
+
+window.gradeAllSingleChoice = function() {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  let totalOk = 0, totalQ = 0, totalEarned = 0, totalMax = 0;
+  let allWrong = [], allBlank = [];
+
+  ALL_GROUPS.forEach(g => {
+    gradeGroup(g.gid, g.startQ, g.endQ, g.ptsPerQ);
+    for (let n = g.startQ; n <= g.endQ; n++) {
+      totalQ++;
+      totalMax += g.ptsPerQ;
+      const st = document.getElementById('st' + n);
+      if (st && st.classList.contains('st-ok')) {
+        totalOk++;
+        totalEarned += g.ptsPerQ;
+      } else if (st && st.classList.contains('st-no')) {
+        allWrong.push(n);
+      } else {
+        allBlank.push(n);
+      }
+    }
+  });
+
+  const resEl = document.getElementById('gres-all');
+  let html = '<div style="font-size:1.08rem;"><b>🏆 全卷選擇題總成績：</b>答對 <b>' + totalOk + ' / ' + totalQ + '</b> 題，總分 <b style="color:var(--acc);font-size:1.35rem;">' + totalEarned + ' / ' + totalMax + '</b> 分' + (totalEarned === totalMax ? ' 🎉 滿分全對！' : '') + '</div>';
+  if (allWrong.length > 0) {
+    html += '<div style="margin-top:6px;">❌ <b>全卷答錯題號（共 '+allWrong.length+' 題）：</b>' + allWrong.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  if (allBlank.length > 0) {
+    html += '<div style="margin-top:6px;">⚠️ <b>全卷未作答題號（共 '+allBlank.length+' 題）：</b>' + allBlank.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  resEl.innerHTML = html;
+  resEl.classList.add('show');
+};
+
+window.resetAllSingleChoice = function() {
+  enablePracticeMode();
+  ALL_GROUPS.forEach(g => {
+    resetGroup(g.gid, g.startQ, g.endQ);
+  });
+  const resEl = document.getElementById('gres-all');
+  if (resEl) {
+    resEl.innerHTML = '';
+    resEl.classList.remove('show');
+  }
+};
+
+// ==================== 一、詞彙題 ====================
+appendApp('<h2 id="sec-vocab">一、詞彙題（第 1–10 題，每題 1 分，共 10 分）</h2>');
+
+const VOCAB = [
+  [1, ['考點：自然乾旱因果與名詞搭配（water shortage）','詞性需求：單數可數名詞 (n.)'], 'C',
+    'Since it hasn\'t rained for months, there is a water [[1|shortage]] in many parts of the country.',
+    '由於已經好幾個月沒有下雨了，該國許多地區都出現了缺水（水資源短缺）的情況。',
+    '原因子句「Since **it hasn\'t rained for months**（因為已經好幾個月沒下雨）」直接點出水源匱乏的結果。固定搭配 **a water shortage** 意為「缺水、水資源短缺」。',
+    [
+      ['resource','n. 資源（常作複數 water resources）','若久旱不雨，水資源只會匱乏而不會反而出現水資源。<br><b>何時才對：</b>討論保護自然資源（*conserve natural resources*）時。'],
+      ['deposit','n. 存款、押金；礦床、沉積物','久旱不雨不會導致「水押金／水沉積」。<br><b>何時才對：</b>描述銀行存款、租屋押金或地下礦藏時。'],
+      ['shortage','n. 短缺、不足、缺乏','*a water / food / labor shortage*（缺水／缺糧／缺工），與前半句「好幾個月沒下雨」構成直接因果。'],
+      ['formula','n. 公式、配方、奶粉','與久旱缺水無關。<br><b>何時才對：</b>描述數學公式、化學式或嬰兒配方奶時。']
+    ]
+  ],
+  [2, ['考點：人物盲點與後接 that 子句之及物動詞','詞性需求：第三人稱單數現在式動詞 (v.)'], 'C',
+    'The problem with Larry is that he doesn\'t know his limitations; he just [[2|assumes]] he can do everything.',
+    '賴瑞的問題在於他不知道自己的能力極限；他總是自以為（想當然爾地認為）自己什麼事都做得到。',
+    '前半句點出他的盲點：「he **doesn\'t know his limitations**（他不知道自己的極限）」，分號後接省略 *that* 的名詞子句「he can do everything（他什麼事都做得到）」。在沒有事實根據下主觀「臆測、想當然爾地認為、自以為」某事為真，應選 **assumes**。',
+    [
+      ['convinces','v. 說服、使確信（須先接「人」作受詞：convince sb. that...）','語法結構不合：*convince* 後面必須先接「人」當受詞（如 *convinces himself that...*），不可直接接子句 *he can do everything*。<br><b>何時才對：</b>受詞為人時（如：He *convinced* us that he could do the job）。'],
+      ['disguises','v. 偽裝、喬裝、掩飾','後面不可接名詞子句 *he can do everything*。<br><b>何時才對：</b>搭配 *disguise oneself as...*（偽裝成……）或掩飾情緒時。'],
+      ['assumes','v. 假定、臆測、想當然爾地認為','後可直接接 (that) 名詞子句，精準描述不知道自身極限、理所當然自以為無所不能的心態。'],
+      ['evaluates','v. 評估、評價','若他懂得客觀「評估」自己的能力，就會知道自己的極限了，且 *evaluate* 後通常接名詞或疑問詞子句（*evaluate whether...*）。<br><b>何時才對：</b>評估績效或風險時。']
+    ]
+  ],
+  [3, ['考點：個人魅力隱喻形容詞（a magnetic personality）','詞性需求：形容詞 (adj.)'], 'D',
+    'Agnes seems to have a [[3|magnetic]] personality. Almost everyone is immediately attracted to her when they first see her.',
+    '艾格妮絲似乎擁有如磁鐵般迷人的個性（個人魅力）。幾乎每個人在初次見到她時，都會立刻被她吸引。',
+    '破題關鍵在後句：「Almost everyone **is immediately attracted to her** when they first see her（幾乎每個人第一次見到她時，都會**立刻被她吸引**）」。能像磁鐵一樣瞬間把所有人都吸引過來的個性，英文固定稱為 **a magnetic personality**（富有磁性的／極具吸引力的個人魅力）。',
+    [
+      ['clumsy','adj. 笨拙的、笨手笨腳的','笨手笨腳不會讓所有人一見面就立刻被吸引。<br><b>何時才對：</b>形容動作笨拙常打破東西時。'],
+      ['durable','adj. 耐用的、持久的','用來形容家具、衣物或器材堅固耐用，不可形容人的個性。<br><b>何時才對：</b>形容牛仔褲或行李箱耐磨耐用時。'],
+      ['furious','adj. 狂怒的、暴怒的','暴躁易怒只會把人嚇跑，不會讓人立刻被吸引。<br><b>何時才對：</b>形容極度生氣（*furious at/with sb.*）時。'],
+      ['magnetic','adj. 有磁性的；極具吸引力的、有魅力的','源自 *magnet*（磁鐵），*a magnetic personality* 為經典搭配，與後句的 *immediately attracted to her* 形成最貼切的磁鐵吸引比喻。']
+    ]
+  ],
+  [4, ['考點：動詞片語搭配（persist in V-ing）與永不半途而廢','詞性需求：第三人稱單數現在式不及物動詞 (v.)'], 'A',
+    'Jason always [[4|persists]] in finishing a task no matter how difficult it may be. He hates to quit halfway in anything he does.',
+    '無論任務有多麼困難，傑森總是堅持完成它。他做任何事都討厭半途而廢。',
+    '線索一：空格後接介系詞 **in + V-ing**（`in finishing a task`）；線索二：後文「no matter how difficult it may be. **He hates to quit halfway**（無論多難，他都討厭半途而廢）」。固定搭配 **persist in + N. / V-ing** 意為「堅持、執意（做完某事）」。',
+    [
+      ['persists','v. 堅持、持續不懈（不及物，固定搭配 in）','*persist in finishing a task*（堅持把任務完成），完全呼應後句「討厭半途而廢（hates to quit halfway）」。'],
+      ['motivates','v. 激勵、驅使（及物動詞，搭配 motivate sb. to V）','及物動詞，後面必須接「人」當受詞，不可直接接 *in finishing*。<br><b>何時才對：</b>激勵員工或學生時（如：The teacher *motivated* the students to study hard）。'],
+      ['fascinates','v. 使著迷、深深吸引（及物動詞，以事物為主詞、人為受詞）','不可說人 *fascinates in finishing*。<br><b>何時才對：</b>描述某事物令某人著迷時（如：The magic trick *fascinated* the children）。'],
+      ['sacrifices','v. 犧牲、獻出','不搭配 *in finishing a task*。<br><b>何時才對：</b>描述為家庭犧牲健康或時間時（如：*sacrifice* one\'s health for work）。']
+    ]
+  ],
+  [5, ['考點：缺糧語境與健康名詞辨析','詞性需求：不可數名詞 (n.)'], 'B',
+    'Poor [[5|nutrition]] has caused millions of deaths in developing countries where there is only a limited amount of food.',
+    '在只有有限糧食的開發中國家，營養不良已經造成了數百萬人死亡。',
+    '句尾關係子句「**where there is only a limited amount of food**（在那些只有有限食物的地方）」直接提供線索：因為缺乏足夠的食物，導致嚴重的「營養不良（Poor nutrition ＝ malnutrition）」，進而造成數百萬人死亡。',
+    [
+      ['reputation','n. 名聲、聲譽','缺糧不會導致「名聲不良而餓死數百萬人」。<br><b>何時才對：</b>討論個人或企業商譽時（如：earn a good *reputation*）。'],
+      ['nutrition','n. 營養（不可數）','*poor / inadequate nutrition*（營養不良），與句尾的 *a limited amount of food*（食物有限）及 *caused millions of deaths* 完全扣合。'],
+      ['construction','n. 建造、工程、建築物','與食物有限無關。<br><b>何時才對：</b>描述大樓施工中（*under construction*）時。'],
+      ['stimulation','n. 刺激、激勵','缺糧導致的是缺乏「營養」而非缺乏「刺激」。<br><b>何時才對：</b>描述感官刺激或經濟刺激方案時。']
+    ]
+  ],
+  [6, ['考點：直升機搜救動作動詞（hover over...）','詞性需求：過去式不及物動詞 (v.)'], 'D',
+    'The helicopters [[6|hovered]] over the sea, looking for the divers who had been missing for more than 30 hours.',
+    '直升機在海面上空盤旋（懸停），搜尋失蹤已超過 30 小時的潛水客。',
+    '主詞為「**The helicopters**（直升機）」，方位片語為「**over the sea**（在海面上空）」，伴隨動作為「looking for the divers who had been missing（搜尋失蹤的潛水客）」。形容直升機、鳥類或昆蟲在空中定點「盤旋、懸停」的專屬動詞即為 **hovered**。',
+    [
+      ['tackled','v. 處理、解決（難題）；（橄欖球／足球）擒抱、鏟球','及物動詞，不可接 *over the sea* 描述飛行器的動作。<br><b>何時才對：</b>處理棘手問題（*tackle a problem*）時。'],
+      ['rustled','v. 發出沙沙聲（如樹葉或紙張摩擦）','直升機螺旋槳是發出轟隆巨響，不是樹葉被微風吹拂的「沙沙聲」。<br><b>何時才對：</b>描述風吹樹葉沙沙作響時（如：The leaves *rustled* in the breeze）。'],
+      ['strolled','v. 散步、漫步、閒逛','人才能在公園或街上悠閒散步，直升機無法在海面上空「散步」。<br><b>何時才對：</b>描述人在河畔悠閒漫步時（如：We *strolled* along the beach）。'],
+      ['hovered','v. （直升機、鳥、昆蟲在空中）盤旋、懸停；徘徊','*hover over the sea / the ground*（在海面／地面上空盤旋），完全符合直升機執行海上搜救任務的畫面。']
+    ]
+  ],
+  [7, ['考點：觀光旅遊景點複合名詞（hot spring resorts）','詞性需求：複數可數名詞 (n.)'], 'A',
+    'One of the tourist attractions in Japan is its hot spring [[7|resorts]], where guests can enjoy relaxing baths and beautiful views.',
+    '日本的觀光勝地之一是它的溫泉度假村，房客可以在那裡享受放鬆的泡湯與美麗的景色。',
+    '主詞點出「One of the **tourist attractions** in Japan（日本的觀光勝地之一）」，後方關係副詞 *where* 引導的子句說明「**guests** can enjoy relaxing baths and beautiful views（房客可以在那裡泡湯賞景）」。供遊客住宿泡湯的溫泉勝地即為 **hot spring resorts**（溫泉度假村／溫泉勝地）。',
+    [
+      ['resorts','n. 度假勝地、度假村（如 ski resort, beach resort）','*hot spring resorts*（溫泉度假村），完全符合 *tourist attractions* 與 *where guests can enjoy relaxing baths* 的語境。'],
+      ['hermits','n. 隱士、離群索居者','隱士是「人」，不能接關係副詞 *where* 讓房客在裡面泡澡。<br><b>何時才對：</b>描述隱居深山不問世事的人時。'],
+      ['galleries','n. 美術館、畫廊、藝廊','人們去美術館是看畫展，不是去「泡溫泉澡（enjoy relaxing baths）」。<br><b>何時才對：</b>描述欣賞藝術畫作的場所時。'],
+      ['faculties','n. （大學的）全體教師、院系；（天生的）官能、能力','與泡溫泉度假無關。<br><b>何時才對：</b>指大學教職員或人類感官心智能力時。']
+    ]
+  ],
+  [8, ['考點：法律責任固定搭配（be held accountable for...）','詞性需求：形容詞 (adj.)'], 'D',
+    'When a young child goes out and commits a crime, it is usually the parents who should be held [[8|accountable]] for the child\'s conduct.',
+    '當年幼的孩子在外犯下罪行時，通常應該由父母為孩子的行為負起責任。',
+    '關鍵句型與搭配為「**be held _____ for** the child\'s conduct（為孩子的行為負起責任）」。在英文中，**hold sb. accountable / responsible / liable for sth.**（被動：**be held accountable for sth.**）為極常考的固定搭配，意為「要求某人對某事負完全責任」。',
+    [
+      ['eligible','adj. 有資格的、符合條件的（搭配 for 福利/獎學金 或 to V）','不與 *be held* 搭配，且小孩犯罪不是父母「有資格領取」的好處。<br><b>何時才對：</b>符合投票或申請資格時。'],
+      ['dispensable','adj. 可有可無的、可省卻的','與句意相反，且不構成 *be held dispensable for*。<br><b>何時才對：</b>與 *indispensable*（不可或缺的）相對時。'],
+      ['credible','adj. 可信的、可靠的','不可說父母因小孩犯罪而「被認為是可信的」。<br><b>何時才對：</b>形容證人或消息來源可靠（*a credible witness*）時。'],
+      ['accountable','adj. 應負責任的、有說明義務的','*be held accountable for...*（應對……負起責任），法律與社會責任議題必考搭配。']
+    ]
+  ],
+  [9, ['考點：時間先後邏輯與字首 pre- 形容詞（premature）','詞性需求：形容詞 (adj.)'], 'B',
+    'Since you have not decided on the topic of your composition, it\'s still [[9|premature]] to talk about how to write your conclusion.',
+    '既然你連作文的題目都還沒決定好，現在就談論如何寫結論還言之過早（操之過急）。',
+    '原因子句指出：「**Since you have not decided on the topic** of your composition（既然你連作文題目都還沒決定）」，在題目都還沒定的情況下就跳去討論「如何寫結論（how to write your conclusion）」，在時間順序上顯然「太早了、時機尚未成熟、言之過早（premature）」。',
+    [
+      ['preventive','adj. 預防性的','連題目都沒定就談寫結論，不是一種「預防措施」。<br><b>何時才對：</b>描述預防醫學或防範措施（*preventive measures*）時。'],
+      ['premature','adj. 言之過早的、時機未成熟的；早產的','由字首 *pre-*（在……之前）+ *mature*（成熟的）構成，*It is premature to V*（現在做某事還言之過早），完美契合「題目未定就談結論」的邏輯。'],
+      ['productive','adj. 多產的、有成效的、有建設性的','題目都不知道怎麼可能寫出有成效的結論。<br><b>何時才對：</b>形容會議富有成效（*a productive meeting*）時。'],
+      ['progressive','adj. 進步的、開明的；逐步發展的','語意不合。<br><b>何時才對：</b>形容進步改革理念或漸進式教學時。']
+    ]
+  ],
+  [10, ['考點：that is 同位解釋線索（born with = inherently）','詞性需求：副詞 (adv.)'], 'A',
+    'Human rights are fundamental rights to which a person is [[10|inherently]] entitled, that is, rights that she or he is born with.',
+    '人權是一個人天生（與生俱來）就應享有的基本權利，換句話說，就是他或她生來就具備的權利。',
+    '句尾的「**that is, rights that she or he is born with**（換句話說，就是一個人**生來就具備**的權利）」直接解釋了空格副詞的意思！與 *born with*（與生俱來的、天賦的）完全同義的副詞即為 **inherently**（天生地、固有地、與生俱來地）。',
+    [
+      ['inherently','adv. 天生地、固有地、與生俱來地','形容詞 *inherent* 指「內在固有的、與生俱來的」，直接對應後文 *that is, rights that she or he is born with*（天賦人權）。'],
+      ['imperatively','adv. 急迫地、命令式地','與「生來就具備（born with）」無關。<br><b>何時才對：</b>描述緊急命令時。'],
+      ['authentically','adv. 道地地、真正地','無法對應 *born with* 的「天生固有」之意。<br><b>何時才對：</b>形容文化或料理原汁原味時。'],
+      ['alternatively','adv. 二擇一地、或者（作為替代方案）','天賦人權是基本權利，不是可有可無的「替代方案」。<br><b>何時才對：</b>提出第二種替代選擇時。']
+    ]
+  ]
+];
+
+SENT[1]=[VOCAB[0][3], VOCAB[0][4]];
+SENT[2]=[VOCAB[1][3], VOCAB[1][4]];
+SENT[3]=[VOCAB[2][3], VOCAB[2][4]];
+SENT[4]=[VOCAB[3][3], VOCAB[3][4]];
+SENT[5]=[VOCAB[4][3], VOCAB[4][4]];
+SENT[6]=[VOCAB[5][3], VOCAB[5][4]];
+SENT[7]=[VOCAB[6][3], VOCAB[6][4]];
+SENT[8]=[VOCAB[7][3], VOCAB[7][4]];
+SENT[9]=[VOCAB[8][3], VOCAB[8][4]];
+SENT[10]=[VOCAB[9][3], VOCAB[9][4]];
+
+let vocabHtml = '';
+VOCAB.forEach(q => {
+  vocabHtml += card(q[0], q[1], q[2], stem(q[0]) + clue(q[5]) + ops(q[6], q[2]));
+});
+vocabHtml += groupGradeBox('vocab', '一、詞彙題', 1, 10, 1);
+appendApp(vocabHtml);
+
+// ==================== 二、綜合測驗 ====================
+appendApp('<h2 id="sec-cloze">二、綜合測驗（第 11–20 題，每題 1 分，共 10 分）</h2>');
+
+// 第 11–15 題題組
+let cloze1Html = passage('第 11 至 15 題為題組：挪威奧斯陸「諾貝爾和平中心（The Nobel Peace Center）」', [
+  [
+    ['The Nobel Peace Center is located in an old train station building close to the Oslo City Hall and overlooking the harbor.', '諾貝爾和平中心位於奧斯陸市政廳附近、俯瞰港口的舊火車站建築內。'],
+    ['It was officially opened on June 11, 2005 as part of the celebrations to [[11|mark]] Norway\'s centenary as an independent country.', '它於 2005 年 6 月 11 日正式開幕，作為紀念（慶祝）挪威獨立一百週年慶典活動的一部分。'],
+    ['It is a center where you can experience and learn about the various Nobel Peace Prize Laureates and their activities [[12|as well as]] the remarkable history of Alfred Nobel, the founder of the Nobel Prize.', '這是一個能讓你體驗並了解歷屆諾貝爾和平獎得主及其事蹟，以及諾貝爾獎創辦人阿لف雷德．諾貝爾非凡生平歷史的中心。'],
+    ['In addition, it serves as a meeting place where exhibits, discussions, and reflections [[13|related]] to war, peace, and conflict resolution are in focus.', '此外，它也作為一個聚會場所，聚焦於與戰爭、和平及衝突解決相關的展覽、討論與省思。'],
+    ['The Center combines exhibits and films with digital communication and interactive installations and has already received attention for its use of state-of-the-art technology.', '該中心將展覽、影片與數位通訊及互動式裝置結合在一起，並已因其運用最尖端的科技而備受矚目。'],
+    ['Visitors are welcome to experience the Center [[14|on their own]] or join a guided tour.', '歡迎遊客自行參觀體驗該中心，或是參加導覽團。'],
+    ['Since its opening, the Nobel Peace Center has been educating, inspiring and entertaining its visitors [[15|through]] exhibitions, activities, lectures, and cultural events.', '自開幕以來，諾貝爾和平中心一直透過展覽、活動、演講與文化盛事，來教育、啟發並娛樂造訪的遊客。'],
+    ['The Center is financed by private and public institutions.', '該中心由私人與公共機構共同出資贊助。']
+  ]
+], '', 'cloze1');
+
+const CLOZE1 = [
+  [11, ['考點：慶典紀念動詞搭配（mark the centenary / anniversary）','詞性需求：原形及物動詞 (v.)'], 'D',
+    '受詞為「Norway\'s **centenary** as an independent country（挪威作為獨立國家的**一百週年紀念**）」，搭配前文的「as part of the **celebrations** to _____...（作為慶祝活動的一部分，以紀念……）」。在正式英文中，動詞 **mark** 常接週年紀念、重要節日或里程碑（如 *mark the centenary / 10th anniversary / occasion*），意為「紀念、慶祝、標誌著」。',
+    [
+      ['help','v. 幫助','舉辦慶典不是為了「幫助一百週年」。<br><b>何時才對：</b>後接人或具體需要協助的事務時。'],
+      ['solve','v. 解決（問題、謎團）','國家獨立一百週年是喜事，不是需要解決的「問題」。<br><b>何時才對：</b>受詞為 *problem / crisis / mystery* 時。'],
+      ['take','v. 拿取、花費','不與 *centenary*（百週年紀念）搭配。<br><b>何時才對：</b>搭配 *take place / take action* 時。'],
+      ['mark','v. 紀念、慶祝（重大事件或週年）；標記','*celebrations to mark Norway\'s centenary*（紀念挪威獨立一百週年的慶祝活動），為新聞與歷史報導最道地的搭配。']
+    ]
+  ],
+  [12, ['考點：對等連接片語（A as well as B）','詞性需求：對等連接詞片語'], 'B',
+    '動詞片語 *learn about* 後方連接兩個並列的受詞內容：一是「the various Nobel Peace Prize Laureates and their activities（歷屆諾貝爾和平獎得主及其事蹟）」，二是「the remarkable history of Alfred Nobel（創辦人諾貝爾的非凡歷史）」。用來連接兩個對等名詞片語、表「還有、以及（＝ in addition to / and）」的片語即為 **as well as**。',
+    [
+      ['so much as','甚至連……（常與 not 連用構成 not so much as...）','用於否定句表「甚至連……都沒有」，不用於肯定句連接兩個展覽主題。<br><b>何時才對：</b>用於 *He left without so much as saying goodbye*（他甚至連聲再見都沒說就走了）時。'],
+      ['as well as','以及、還有、不僅……而且……','完美並列遊客在諾貝爾和平中心能了解的兩大核心內容：得主事蹟與創辦人歷史。'],
+      ['in spite of','儘管、雖然','了解得主事蹟與了解創辦人歷史是相輔相成的，毫無轉折對立。<br><b>何時才對：</b>前後語意相反時。'],
+      ['on behalf of','代表（某人或某機構發言／領獎）','得主事蹟不會「代表諾貝爾的歷史」。<br><b>何時才對：</b>代表公司或他人致詞領獎時（如：accept the award *on behalf of* the team）。']
+    ]
+  ],
+  [13, ['考點：過去分詞片語後位修飾（related to...）','詞性需求：過去分詞形容詞 (adj.)'], 'A',
+    '分析關係子句結構：「where **exhibits, discussions, and reflections** _____ **to war, peace, and conflict resolution** are in focus」。子句主要動詞是句尾的 *are (in focus)*，中間的「_____ to war, peace, and conflict resolution」是省略 *which are* 的分詞片語，用來後位修飾主詞「展覽、討論與省思」。表示「與……有關的、相關的」固定搭配為 **(which are) related to...**。',
+    [
+      ['related','adj./p.p. 與……有關的、相關的（搭配 to）','*exhibits, discussions, and reflections related to war, peace, and conflict resolution*（與戰爭、和平及衝突解決相關的展覽、討論與省思），語意與文法完全正確。'],
+      ['limited','adj./p.p. 僅限於……的（搭配 to）','此處是在正面積極介紹該中心聚焦於與戰爭和平相關的展覽討論，而非負面設限說「只局限於」。<br><b>何時才對：</b>規定名額或資格限制時。'],
+      ['addicted','adj. 對……上癮的、沉迷於……的（搭配 to）','主詞必須是「人」，展覽與討論不會「對戰爭與和平上癮」。<br><b>何時才對：</b>形容人沉迷網路或藥物時。'],
+      ['contributed','v.(p.p.) 貢獻、捐獻（主動 contribute to 才表「促成」；被動 be contributed to 表「被捐贈給……」）','展覽與討論不是被捐贈給戰爭的物品。<br><b>何時才對：</b>描述善款被捐給慈善機構時。']
+    ]
+  ],
+  [14, ['考點：參觀方式對比（自行參觀 vs. 參加導覽團）','詞性需求：介系詞片語'], 'C',
+    '對等連接詞 **or** 呈現兩種常見的博物館參觀方式：「Visitors are welcome to experience the Center _____ **or join a guided tour**.（歡迎遊客……體驗該中心，**或是參加專人導覽團**。）」與「跟隨導覽員解說（join a guided tour）」相對的另一種參觀方式，自然是「自己逛、獨自自行參觀（on their own）」。',
+    [
+      ['in this regard','在這點上、關於這方面','與參觀方式無關。<br><b>何時才對：</b>承接前文某特定議題做評論時。'],
+      ['one on one','一對一地','遊客自行買票進館參觀不是跟博物館「一對一單挑或一對一教學」。<br><b>何時才對：</b>描述一對一家教或籃球鬥牛時。'],
+      ['on their own','獨自地、靠自己、自行','*experience the Center on their own*（自行參觀體驗中心），與後文的 *or join a guided tour*（或參加導覽團）構成博物館最標準的兩種參觀選擇。'],
+      ['by and large','大體而言、總體來說（= on the whole）','屬全句修飾評註副詞，不可描述參觀方式。<br><b>何時才對：</b>做大略總結時。']
+    ]
+  ],
+  [15, ['考點：方法與管道介系詞（through + 展覽/演講）','詞性需求：介系詞 (prep.)'], 'D',
+    '主要子句說明該中心的功能：「has been educating, inspiring and entertaining its visitors（一直在教育、啟發並娛樂遊客）」，後方接實現這些功能的**具體媒介與方式**：「_____ **exhibitions, activities, lectures, and cultural events**（**透過／藉由**展覽、活動、演講與文化盛事）」。表「透過、藉由（某種活動或管道，＝ by means of / via）」的介系詞即為 **through**。',
+    [
+      ['among','prep. 在（三者以上）之中','遊客不是被夾在展覽和演講中間受教育。<br><b>何時才對：</b>表達在群體之中時。'],
+      ['regarding','prep. 關於（= concerning / about）','「教育遊客關於展覽」語意不通，展覽與演講是該中心用來教育遊客的「方式與管道」。<br><b>何時才對：</b>引出討論的主題內容時。'],
+      ['including','prep. 包含、包括','前方受詞是 *its visitors*（遊客），遊客不會「包含展覽、活動與演講」。<br><b>何時才對：</b>前面有同類上位名詞（如 *many programs, including exhibitions...*）時。'],
+      ['through','prep. 透過、藉由（管道、媒介或活動）','*educate... its visitors through exhibitions, activities, lectures...*（透過展覽、活動與演講來教育遊客），語意最自然通順。']
+    ]
+  ]
+];
+
+CLOZE1.forEach(q => {
+  cloze1Html += card(q[0], q[1], q[2], stem(q[0]) + clue(q[3]) + ops(q[4], q[2]));
+});
+cloze1Html += groupGradeBox('cloze1', '二、綜合測驗（第 11–15 題）', 11, 15, 1);
+appendApp(cloze1Html);
+
+// 第 16–20 題題組
+let cloze2Html = passage('第 16 至 20 題為題組：1985 年比利時布魯塞爾足球場暴動慘案（海塞爾球場慘案）', [
+  [
+    ['In 1985, a riot at a Brussels soccer match occurred, in which many fans lost their lives.', '1985 年，比利時布魯塞爾的一場足球賽發生了暴動，許多球迷在事件中喪生。'],
+    ['The [[16|tragedy]] began 45 minutes before the start of the European Cup final.', '這場悲劇（慘案）始於歐洲盃決賽開踢前的 45 分鐘。'],
+    ['The British team was scheduled to [[17|compete against]] the Italian team in the game.', '英國隊（利物浦）原定在該場比賽中與義大利隊（尤文圖斯）對戰較量。'],
+    ['Noisy British fans, after setting off some rockets and fireworks to cheer for [[18|their]] team, broke through a thin wire fence and started to attack the Italian fans.', '喧鬧的英國球迷在施放了一些沖天炮與煙火為他們的球隊加油後，衝破了一道薄鐵絲網圍欄，開始攻擊義大利球迷。'],
+    ['The Italians, in panic, [[19|headed for]] the main exit in their section when a six-foot concrete wall collapsed.', '驚慌失措的義大利球迷紛紛朝他們看台區的主要出口逃去，就在這時，一道六英尺高的水泥牆倒塌了。']
+  ],
+  [
+    ['By the end of the night, 38 soccer fans had died and 437 were injured.', '到當晚結束時，共有 38 名足球迷死亡、437 人受傷。'],
+    ['The majority of the deaths resulted from people [[20|being]] trampled underfoot or crushed against barriers in the stadium.', '絕大多數的死亡案例，都是因為人們在體育場內慘遭踐踏於腳下，或是被擠壓在圍欄上所致。'],
+    ['As a result of this 1985 soccer incident, security measures have since been tightened at major sports competitions to prevent similar events from happening.', '由於這起 1985 年的足球場慘案，此後各大體育賽事都加強了維安措施，以防止類似事件再次發生。']
+  ]
+], '', 'cloze2');
+
+const CLOZE2 = [
+  [16, ['考點：定冠詞 The 回指首句球迷喪生之暴動慘案','詞性需求：單數名詞 (n.)'], 'C',
+    '第一句點出事件結果：「a riot at a Brussels soccer match occurred, **in which many fans lost their lives**（布魯塞爾一場足球賽發生暴動，**許多球迷在事件中喪生**）」，第二段更記載多達 38 人死亡、437 人受傷。用來回指這場造成眾多球迷喪生之暴動事件的單數名詞，必然是 **tragedy**（悲劇、慘案）。',
+    [
+      ['circumstance','n. 環境、情況、境遇（常作複數 circumstances）','無法呼應首句「許多球迷喪生（many fans lost their lives）」的悲慘性質，且不說 *The circumstance began 45 minutes before...*。<br><b>何時才對：</b>搭配 *under no circumstances*（無論如何決不）時。'],
+      ['sequence','n. 一連串、順序、次序','暴動慘案不是一個「順序」。<br><b>何時才對：</b>描述事件發生的先後次序（*in chronological sequence*）時。'],
+      ['tragedy','n. 悲劇、慘案、不幸事件','直接回指首句造成眾多球迷喪生的球場暴動，為新聞報導重大傷亡事故的標準字彙。'],
+      ['phenomenon','n. 現象（自然或社會現象）','單一一次造成 38 人死亡的球場暴動是一場「慘案（tragedy）」，而非自然或社會「現象」。<br><b>何時才對：</b>描述極光、全球暖化或長期社會趨勢時。']
+    ]
+  ],
+  [17, ['考點：運動比賽對戰動詞片語搭配','詞性需求：原形動詞片語'], 'D',
+    '主詞為「The British team（英國隊）」，受詞為「the Italian team（義大利隊）」，地點為「in the game（在這場歐洲盃決賽中）」。在體育賽事中，兩支球隊「與……對戰、同……比賽競爭」的標準片語即為 **compete against / with + 對手**（或 *play against*）。',
+    [
+      ['oppose to','文法錯誤搭配','*oppose* 表「反對、對抗」時本身就是**及物動詞**，後面直接接名詞，不可加 *to*（只有被動或形容詞 *be opposed to* 才加 *to*）。<br><b>何時才對：</b>表達反對某項政策（*are opposed to the plan*）時。'],
+      ['fight over','為了爭奪（某物）而打架','*fight over + 爭奪的標的物*（如 107 指考第 1 題：*fight over sex, food, or territory*），若填 *fight over the Italian team* 會變成「為了搶奪義大利隊而打架」，語意荒謬！<br><b>何時才對：</b>後接所爭奪的資源、地盤或遺產時。'],
+      ['battle for','為了贏得（冠軍頭銜或生存）而奮戰','*battle for* 後面應接「欲爭取的目標或獎盃」（如 *battle for the championship title*），而非接對手球隊（接對手應為 *battle against*）。<br><b>何時才對：</b>後接冠軍獎盃或自由時。'],
+      ['compete against','與（對手）比賽競爭、對戰','*compete against the Italian team in the game*（在比賽中與義大利隊對戰較量），語法與運動語境完全正確。']
+    ]
+  ],
+  [18, ['考點：複數主詞對應之所有格代名詞','詞性需求：複數所有格 (pron.)'], 'D',
+    '本句主詞為複數名詞「Noisy **British fans**（喧鬧的**英國球迷們**）」。英國球迷放煙火歡呼助陣的對象，當然是屬於他們英國人自己的球隊，故搭配複數主詞 *British fans* 的所有格即為 **their**（*cheer for their team*，為他們的球隊加油）。',
+    [
+      ['a','不定冠詞','英國球迷是專程為自己支持的英國隊加油，不會隨便為「某一支不特定的球隊（a team）」加油。<br><b>何時才對：</b>泛指任何一支球隊時。'],
+      ['that','指示形容詞','前文剛提過英國隊與義大利隊兩支隊伍，用 *that team* 指代不清，且不如 *their team*（他們自己的球隊）貼切。<br><b>何時才對：</b>無。'],
+      ['each','形容詞（每一）','英國球迷只為英國隊加油，不會為場上「每一支」球隊加油。<br><b>何時才對：</b>無。'],
+      ['their','複數所有格（他們的）','回指複數主詞 *Noisy British fans*，*cheer for their team*（為他們自己的球隊加油）最自然合乎常理。']
+    ]
+  ],
+  [19, ['考點：驚慌逃生方向之動詞片語（head for the exit）','詞性需求：過去式動詞片語'], 'A',
+    '前一句說英國球迷衝破圍欄開始攻擊義大利球迷，因此本句主詞「The Italians, **in panic**, _____ **the main exit** in their section（驚慌失措的義大利球迷紛紛……他們看台區的**主要出口**）」。受到攻擊驚慌逃命時，自然是朝著主要出口「前往、衝去、奔去（headed for the main exit）」。',
+    [
+      ['headed for','朝……方向移動、前往、奔向','*head for the exit / door*（朝出口方向奔去），完全符合受到攻擊時驚慌逃生的動作。'],
+      ['backed up','倒車；備份（資料）；支持（某人）；造成塞車','不可說「把主要出口備份／倒車」。<br><b>何時才對：</b>電腦備份檔案或出面力挺朋友時。'],
+      ['called out','大聲叫喊；點名；出動（救援人員）','若要接地點或人，需加介系詞 *to*，不可直接接 *the main exit*。<br><b>何時才對：</b>大聲呼救（*call out for help*）時。'],
+      ['passed on','傳遞下去；婉拒；去世','不可說「傳遞主要出口」。<br><b>何時才對：</b>將訊息傳給下一位（*pass on the message*）時。']
+    ]
+  ],
+  [20, ['考點：介系詞 from 後接動名詞複合結構（resulted from people being p.p.）','詞性需求：動名詞之被動助動詞 (being)'], 'C',
+    '分析句子結構：「The majority of the deaths **resulted from** people _____ **trampled underfoot or crushed against barriers** in the stadium.」動詞片語 *resulted from*（起因於……）中的 **from 是介系詞**，後方受詞的核心動作必須使用**動名詞（V-ing）**，而 *people* 則是該動名詞的「意義上主詞（邏輯主詞）」。由於人們是「**被**踐踏、**被**擠壓（被動）」，因此動名詞的被動式即為 **being + p.p.**（`people being trampled... or crushed...`）！',
+    [
+      ['be','原形 Be 動詞','介系詞 *from* 後不可接原形動詞 *be*。<br><b>何時才對：</b>前有助動詞時。'],
+      ['been','過去分詞','過去分詞 *been* 前必須有助動詞 *have / has / had*，不可直接放在介系詞 *from* 與名詞 *people* 後方。<br><b>何時才對：</b>構成完成式 *having been trampled* 時。'],
+      ['being','動名詞（構成介系詞後之被動動名詞 being + p.p.）','*resulted from [people] being trampled... or crushed...* 為標準的「介系詞 + 意義主詞 + 動名詞被動式」結構。'],
+      ['to be','不定詞','此處不是「將要被踐踏的人」，而是整件事「人們慘遭踐踏」作為介系詞 *from* 的受詞，故須用動名詞 *being*。<br><b>何時才對：</b>無。']
+    ]
+  ]
+];
+
+CLOZE2.forEach(q => {
+  cloze2Html += card(q[0], q[1], q[2], stem(q[0]) + clue(q[3]) + ops(q[4], q[2]));
+});
+cloze2Html += groupGradeBox('cloze2', '二、綜合測驗（第 16–20 題）', 16, 20, 1);
+appendApp(cloze2Html);
+
+// ==================== 三、文意選填 ====================
+appendApp('<h2 id="sec-wbank">三、文意選填（第 21–30 題，每題 1 分，共 10 分）</h2>');
+
+const WBANK_OPTS = [
+  ['attracted', 'v.(pt./p.p.) 吸引'],
+  ['appeal', 'n. 吸引力、趣味 / v. 呼籲、吸引'],
+  ['accompanied', 'v.(p.p.) 伴奏、陪伴（搭配 by）'],
+  ['conduct', 'v. 指揮（樂團）、進行 / n. 行為'],
+  ['director', 'n. 導演、團長、總監'],
+  ['figures', 'n. 人偶、人物形象、數字（複數）'],
+  ['occasions', 'n. 場合、時刻（複數）'],
+  ['succeed', 'v. 繼承、接替（某人的職位）；成功'],
+  ['transparent', 'adj. 透明的、顯而易見的'],
+  ['supporting', 'adj. 配角的、輔助的、次要的'],
+  ['techniques', 'n. 技巧、技藝（複數）'],
+  ['worship', 'v./n. 敬拜、崇拜、酬神']
+];
+const WBANK_LAB = 'ABCDEFGHIJKL';
+
+let wbankHtml = '<div class="pas"><div class="bank" id="bank-wbank">' +
+  WBANK_OPTS.map((o,i)=>'<span><b>('+WBANK_LAB[i]+') '+o[0]+'</b> <small>'+o[1]+'</small></span>').join('') +
+'</div></div>';
+
+wbankHtml += passage('第 21 至 30 題為題組：臺灣傳統表演藝術「布袋戲（Budaixi）」的後場音樂、操偶師徒與酬神文化', [
+  [
+    ['The Taiwanese puppet show ("Budaixi") is a distinguished form of performing arts in Taiwan.', '臺灣布袋戲是臺灣一種傑出的表演藝術形式。'],
+    ['Although basically hand puppets, the [[21|figures]] appear as complete forms, with hands and feet, on an elaborately decorated stage.', '雖然基本上是套在手上的掌中戲偶，但這些戲偶（人物造型）在裝飾華麗的舞台上，卻呈現出有手有腳的完整身形。']
+  ],
+  [
+    ['The puppet performance is typically [[22|accompanied]] by a small orchestra.', '布袋戲演出通常會由一個小型樂團（後場）伴奏。'],
+    ['The backstage music is directed by the drum player.', '後場音樂由鼓手（頭手鼓）負責指揮領導。'],
+    ['The drummer needs to pay attention to what is going on in the plot and follow the rhythm of the characters.', '鼓手必須留意劇情的發展，並配合角色的節奏。'],
+    ['He also uses the drum to [[23|conduct]] the other musicians.', '他也會利用鼓聲來指揮其他樂師。'],
+    ['There are generally around four to five musicians who perform the backstage music.', '通常大約有四到五名樂師演奏後場音樂。'],
+    ['The form of music used is often associated with various performance [[24|techniques]], including acrobatics and skills like window-jumping, stage movement, and fighting.', '所使用的音樂形式常與各種操偶表演技巧相互配合，包括特技以及跳窗、走台步與武打等技藝。'],
+    ['Sometimes unusual animal puppets also appear on stage for extra [[25|appeal]], especially for children in the audience.', '有時奇特的動物戲偶也會在舞台上登場，以增添額外的吸引力（趣味），特別是針對台下的兒童觀眾。']
+  ],
+  [
+    ['In general, a show needs two performers.', '一般而言，一場布袋戲演出需要兩名操偶師（主演與助演）。'],
+    ['The main performer is generally the chief or [[26|director]] of the troupe.', '主要操偶師（主演）通常是劇團的團長或導演（總監）。'],
+    ['He is the one in charge of the whole show, manipulating the main puppets, singing, and narrating.', '他是負責掌控整場演出的人，操縱主要戲偶、演唱並念白（口白）。'],
+    ['The [[27|supporting]] performer manipulates the puppets to coordinate with the main performer.', '副手（助演／配角）操偶師則操縱戲偶以配合主演。'],
+    ['He also changes the costumes of the puppets, and takes care of the stage.', '他同時也負責為戲偶更換戲服，並打理舞台雜務。'],
+    ['The relationship between the main performer and his partner is one of master and apprentice.', '主演與其搭檔之間的關係是「師父與徒弟」的關係。'],
+    ['Frequently, the master trains his sons to eventually [[28|succeed]] him as puppet masters.', '通常，師父會訓練自己的兒子，讓他們最終接替（繼承）他成為布袋戲大師。']
+  ],
+  [
+    ['Budaixi troupes are often hired to perform at processions and festivals held in honor of local gods, and on happy [[29|occasions]] such as weddings, births, and promotions.', '布袋戲團經常受雇於敬奉地方神明的遶境遊行與廟會節慶中演出，以及在諸如婚禮、弄璋之喜（生子）與升遷等喜慶場合中表演。'],
+    ['The main purpose of Budaixi is to [[30|worship]] and offer thanks to the deities.', '布袋戲最主要的目的，是敬拜（酬神）並向神明答謝還願。'],
+    ['The shows also serve as a popular means of folk entertainment.', '這些演出同時也作為一種深具人氣的民間娛樂方式。']
+  ]
+], '', 'wbank');
+
+function makeWbankOps(ansCode, correctExp, wrongHint) {
+  return WBANK_OPTS.map((o, i) => {
+    const code = WBANK_LAB[i];
+    if (code === ansCode) {
+      return [o[0], o[1], correctExp];
+    } else {
+      return [o[0], o[1], wrongHint + '（本選項為 ' + o[1] + '，對應第 ' + ({A:'無（干擾項）',B:25,C:22,D:23,E:26,F:21,G:29,H:28,I:'無（干擾項）',J:27,K:24,L:30}[code]) + ' 題）。'];
+    }
+  });
+}
+
+const WBANK_Q = [
+  [21, ['考點：讓步子句代換主詞（hand puppets → the figures）','詞性需求：複數可數名詞 (n.)'], 'F',
+    '讓步子句「Although basically **hand puppets**（雖然基本上是掌中戲偶）」省略了與主要子句相同的主詞，主要子句動詞為複數 *appear as complete forms, with hands and feet*。能直接替換 *hand puppets*（戲偶）且指稱具有手腳人形外觀的複數名詞即為 **figures**（人偶、人物塑像）。',
+    '複數名詞 *figures*（人偶、人物造型）直接回指前半句的 *hand puppets*，並搭配複數動詞 *appear*。',
+    '此處位於定冠詞 *the* 與複數動詞 *appear* 之間，回指前半句的 *hand puppets*（布袋戲偶），需填複數名詞 *figures*'
+  ],
+  [22, ['考點：音樂伴奏被動搭配（be accompanied by an orchestra）','詞性需求：過去分詞 (p.p.)'], 'C',
+    '主詞為「The puppet performance（布袋戲演出）」，後方為「**is typically _____ by a small orchestra**（通常由一個小型樂團……）」。在音樂與戲劇表演中，「由（樂器或樂團）伴奏」的固定搭配即為 **be accompanied by...**。',
+    '*is typically accompanied by a small orchestra*（通常由一個小型樂團伴奏），為表演藝術核心搭配。',
+    '此處構成被動語態 *is typically _____ by a small orchestra*，需填表「由樂團伴奏」的過去分詞 *accompanied*'
+  ],
+  [23, ['考點：樂團指揮動詞（conduct the musicians）與前文 directed 呼應','詞性需求：原形及物動詞 (v.)'], 'D',
+    '本段第二句已經點出：「後場音樂是由鼓手**指揮領導**的（The backstage music **is directed by** the drum player）」。本句接著說明他如何領導：「He also uses the drum **to _____ the other musicians**（他也會利用鼓聲來**指揮**其他樂師）」。不定詞 *to* 後缺原形及物動詞，專門指「指揮（樂團、樂師）」的動詞即為 **conduct**（樂團指揮家即 *conductor*）。',
+    '原形及物動詞 *conduct*（指揮）以 *the other musicians* 為受詞，直接呼應前文的 *directed by the drum player*。',
+    '此處位於 *uses the drum to* 與受詞 *the other musicians* 之間，需填表「指揮樂師」的原形及物動詞 *conduct*'
+  ],
+  [24, ['考點：後文 including 具體例證（acrobatics and skills）之上位名詞','詞性需求：複數名詞 (n.)'], 'K',
+    '空格後以 *including* 舉例說明：「various performance _____, **including acrobatics and skills like window-jumping, stage movement, and fighting**（各種表演……，**包括特技以及像跳窗、走台步與武打等技藝**）」。特技、跳窗、走台步與武打全都是操偶表演的「技巧、技藝（techniques）」，與 *skills* 同義呼應！',
+    '複數名詞 *techniques*（技巧、技藝）統括後方 *including acrobatics and skills like window-jumping...*。',
+    '此處受 *various performance* 修飾，並總括後文的 *acrobatics and skills*（特技與技藝），需填複數名詞 *techniques*'
+  ],
+  [25, ['考點：介系詞片語（for extra appeal）與吸引兒童觀眾','詞性需求：不可數名詞 (n.)'], 'B',
+    '「Sometimes unusual animal puppets also appear on stage **for extra _____**, especially **for children in the audience**.（有時奇特的動物戲偶也會登場，以增添額外的……，特別是針對台下的兒童觀眾。）」形容詞 *extra*（額外的）後需接名詞。讓可愛奇特的動物戲偶出場，目的自然是為了增添對小朋友的「吸引力、趣味（appeal）」。',
+    '不可數名詞 *appeal*（吸引力、趣味）接在 *for extra* 後方，說明動物戲偶能吸引台下兒童觀眾。',
+    '此處位於介系詞片語 *for extra _____* 中，需填名詞 *appeal* 表增添對兒童觀眾的「吸引力」'
+  ],
+  [26, ['考點：對等職務頭銜名詞（the chief or director of the troupe）','詞性需求：單數可數名詞 (n.)'], 'E',
+    '「The main performer is generally **the chief or _____ of the troupe**. He is the one **in charge of the whole show**...（主要操偶師通常是劇團的團長或……，他是負責掌控整場演出的人）」。與 *the chief*（負責人、團長）由 *or* 對等連接、掌管整個劇團與演出的職銜即為 **director**（導演、團長、藝術總監）。',
+    '單數職稱名詞 *director*（導演、團長）與 *the chief* 對等並列，呼應下句 *in charge of the whole show*。',
+    '此處與 *the chief* 對等連接，後接 *of the troupe*（劇團的……），需填單數人物職稱名詞 *director*'
+  ],
+  [27, ['考點：主角與配角對比（The main performer vs. The supporting performer）','詞性需求：形容詞 / 現在分詞 (adj.)'], 'J',
+    '本段首句說一場戲需要兩位表演者（two performers）。前兩句介紹第一位是「**The main performer**（主要操偶師／主演）」，本句介紹第二位：「**The _____ performer** manipulates the puppets **to coordinate with the main performer**.（這位……操偶師操縱戲偶以**配合主演**，並幫忙換戲服、打理舞台。）」在戲劇與表演中，與 *main / leading*（主演、主角）相對、負責配合主角的副手或配角，固定稱為 **supporting**（如奧斯卡最佳男配角 *Best Supporting Actor*）！',
+    '*The supporting performer*（副手／助演／配角操偶師），與前文的 *The main performer*（主演）構成標準對比。',
+    '此處位於 *The* 與 *performer* 之間，與前文的 *The main performer*（主演）相對並負責配合主演，需填形容詞 *supporting*（輔助的、配角的）'
+  ],
+  [28, ['考點：師徒父子傳承動詞（succeed sb. as...）','詞性需求：原形及物動詞 (v.)'], 'H',
+    '關鍵結構為：「the master trains his sons **to eventually _____ him as puppet masters**（師父常訓練自己的兒子，好讓他們最終……他成為布袋戲大師）」。不定詞 *to* 後缺原形及物動詞，受詞為人稱代名詞 **him**（指老父師父）。注意：**succeed** 作不及物動詞（*succeed in...*）時意為「成功」；但作**及物動詞直接接「人」當受詞（succeed sb. as + 職位）**時，意為「**繼承、接替（某人）擔任……**」！',
+    '*succeed sb. as + 頭銜* 為核心必考搭配，意為「接替／繼承某人成為……」，完全契合父傳子的技藝傳承。',
+    '此處位於 *to eventually* 後且直接以人稱代名詞 *him* 為受詞、後接 *as puppet masters*，需填及物動詞 *succeed* 表「接替、繼承某人」'
+  ],
+  [29, ['考點：後文 such as 喜慶實例（weddings, births, promotions）之上位名詞','詞性需求：複數可數名詞 (n.)'], 'G',
+    '介系詞片語「and **on happy _____ such as weddings, births, and promotions**（以及在諸如婚禮、生子與升遷等喜慶……）」。婚禮、生子與升官全都是人生中喜氣洋洋的「場合、時刻（occasions）」，且固定搭配介系詞 **on**（*on happy / special / ceremonial occasions*）。',
+    '*on happy occasions such as weddings, births, and promotions*（在如婚禮、生子與升遷等喜慶場合），介系詞 *on* 與後文例子完美吻合。',
+    '此處搭配介系詞 *on happy _____* 並統括後文的「婚禮、生子、升遷」，需填複數名詞 *occasions*（場合）'
+  ],
+  [30, ['考點：酬神謝戲對等動詞（to worship and offer thanks to the deities）','詞性需求：原形及物動詞 (v.)'], 'L',
+    '前一句剛提到布袋戲團常受雇於敬奉地方神明的廟會（held in honor of local gods），本句點出布袋戲最核心的宗教功能：「The main purpose of Budaixi is **to _____ and offer thanks to the deities**.（布袋戲的主要目的是為了……並向神明［the deities］答謝還願。）」不定詞 *to* 後與 *offer thanks to* 對等連接、以「神明（the deities）」為共同受詞的原形動詞即為 **worship**（敬拜、崇拜、酬神）。',
+    '原形動詞 *worship*（敬拜、崇拜）與 *offer thanks to* 並列，共同以 *the deities*（神明）為受詞。',
+    '此處位於 *is to* 後方，與 *and offer thanks to the deities*（向神明答謝）對等並列，需填表「敬拜（神明）」的原形動詞 *worship*'
+  ]
+];
+
+WBANK_Q.forEach(q => {
+  wbankHtml += card(q[0], q[1], q[2], stem(q[0]) + clue(q[3]) + ops(makeWbankOps(q[2], q[4], q[5]), q[2], WBANK_LAB));
+});
+wbankHtml += groupGradeBox('wbank', '三、文意選填（第 21–30 題）', 21, 30, 1);
+appendApp(wbankHtml);
+
+// ==================== 四、篇章結構 ====================
+appendApp('<h2 id="sec-disc">四、篇章結構（第 31–35 題，每題 2 分，共 10 分）</h2>');
+
+const DISC_OPTS = [
+  ['Political advertising is one example.', '政治廣告就是一個例子。'],
+  ['To put it another way, ads are communication designed to get someone to do something.', '換句話說，廣告就是為了讓某人去做某件事而設計的溝通傳播。'],
+  ['Advertising can be the most important source of income for the media through which it is conducted.', '對於播放刊登廣告的媒體而言，廣告可能是最重要的收入來源。'],
+  ['They differ from commercial ads in that political ads "sell" candidates rather than commercial goods.', '它們與商業廣告的不同之處在於，政治廣告「推銷」的是候選人而非商業商品。'],
+  ['Aside from campaign advertising, political advertising is also used to persuade people to support or oppose proposals.', '除了競選廣告之外，政治廣告也被用來遊說人們支持或反對某些政策提案。'],
+  ['In addition to political parties, environmental groups and human rights organizations also buy advertising to persuade people to accept their way of thinking.', '除了政黨之外，環保團體與人權組織也會購買廣告，以說服人們接受他們的理念想法。']
+];
+const DISC_LAB = 'ABCDEF';
+
+let discHtml = '<div class="pas"><div class="bank" id="bank-disc">' +
+  DISC_OPTS.map((o,i)=>'<div style="width:100%;"><b>('+DISC_LAB[i]+') '+o[0]+'</b> <small>'+o[1]+'</small></div>').join('') +
+'</div></div>';
+
+discHtml += passage('第 31 至 35 題為題組：廣告的核心本質「說服（Persuasion）」——從商業廣告、政治廣告到公益倡議廣告', [
+  [
+    ['All advertising includes an attempt to persuade.', '所有的廣告都包含「說服」的企圖。'],
+    ['[[31|(B) To put it another way, ads are communication designed to get someone to do something.]]', '換句話說，廣告就是為了讓某人去做某件事而設計的溝通傳播。'],
+    ['Even if an advertisement claims to be purely informational, it still has persuasion at its core.', '即使一則廣告聲稱純粹是提供資訊，它的核心依然在於「說服」。'],
+    ['The ad informs the consumers with one purpose: to get the consumer to like the brand and, on that basis, to eventually buy the brand.', '廣告提供資訊給消費者只有一個目的：讓消費者喜歡該品牌，並在此基礎上最終購買該品牌。'],
+    ['Without this persuasive intent, communication about a product might be news, but it would not be advertising.', '若沒有這種說服的企圖，關於某項產品的傳播或許只是新聞報導，而不會是廣告。']
+  ],
+  [
+    ['Advertising can be persuasive communication not only about a product but also an idea or a person.', '廣告不僅可以是關於「產品」的說服性傳播，也可以是關於一種「理念（政策）」或一個「人物」的說服性傳播。'],
+    ['[[32|(A) Political advertising is one example.]]', '政治廣告就是一個例子。'],
+    ['Although political ads are supposed to be concerned with the public welfare, they are paid for and they all have a persuasive intent.', '雖然政治廣告理應關注公共福祉，但它們都是花錢買的，而且全都帶有說服的企圖。'],
+    ['[[33|(D) They differ from commercial ads in that political ads "sell" candidates rather than commercial goods.]]', '它們與商業廣告的不同之處在於，政治廣告「推銷」的是候選人而非商業商品。'],
+    ['A Bush campaign ad, for instance, did not ask anyone to buy anything, yet it attempted to persuade American citizens to view George Bush favorably.', '舉例來說，小布希的競選廣告並沒有要求任何人購買任何東西，但它試圖說服美國公民對喬治．布希產生好感（支持候選人）。'],
+    ['[[34|(E) Aside from campaign advertising, political advertising is also used to persuade people to support or oppose proposals.]]', '除了競選廣告之外，政治廣告也被用來遊說人們支持或反對某些政策提案。'],
+    ['Critics of President Clinton\'s health care plan used advertising to influence lawmakers and defeat the government\'s plan.', '批評柯林頓總統健保計畫的人士，便曾利用廣告來影響國會議員並擊敗政府的健保方案。']
+  ],
+  [
+    ['[[35|(F) In addition to political parties, environmental groups and human rights organizations also buy advertising to persuade people to accept their way of thinking.]]', '除了政黨之外，環保團體與人權組織也會購買廣告，以說服人們接受他們的理念想法。'],
+    ['For instance, the international organization Greenpeace uses advertising to get their message out.', '舉例來說，國際環保組織「綠色和平（Greenpeace）」就利用廣告來傳達他們的訊息。'],
+    ['In the ads, they warn people about serious pollution problems and the urgency of protecting the environment.', '在廣告中，他們警告人們嚴重的汙染問題以及保護環境的迫切性。'],
+    ['They, too, are selling something and trying to make a point.', '他們同樣也在「推銷」某種東西，並試圖闡明一個觀點。']
+  ]
+], '', 'disc');
+
+function makeDiscOps(ansCode, correctExp) {
+  return DISC_OPTS.map((o, i) => {
+    const code = DISC_LAB[i];
+    if (code === ansCode) {
+      return [o[0], o[1], correctExp];
+    } else if (code === 'C') {
+      return [o[0], o[1], '全文探討的是「各類廣告（商業、政治、公益）皆以說服為核心目的」，並未討論媒體公司的廣告財務收入來源，故 (C) 為干擾選項。'];
+    } else {
+      const qMap = {B:31, A:32, D:33, E:34, F:35};
+      return [o[0], o[1], '此選項屬於第 ' + qMap[code] + ' 題的上下文邏輯，不符合本題空格前後的銜接線索。'];
+    }
+  });
+}
+
+const DISC_Q = [
+  [31, ['考點：換句話說重述首句定義（attempt to persuade → get someone to do something）','詞性需求：完整句子'], 'B',
+    '第一段首句開門見山給出定義：「All advertising includes **an attempt to persuade**.（所有的廣告都包含『說服』的企圖。）」第 31 題以 **To put it another way**（換句話說）白話解釋什麼叫「說服」，同時完美預示第 4 句的「**to get the consumer to like** the brand and... **to eventually buy** the brand（讓某人去做某件事）」，故選 **(B)**。'
+  ],
+  [32, ['考點：引出段落核心主題詞（political ads）','詞性需求：完整句子'], 'A',
+    '第二段首句將廣告的範圍從「產品（product）」擴展到「一種理念或一個人物（not only about a product **but also an idea or a person**）」。而第 32 題後方緊接著說：「Although **political ads** are supposed to be concerned with the public welfare...（雖然**政治廣告**理應關注公共福祉……）」。因此第 32 題必須率先引出「政治廣告」作為推銷理念或人物的例子——即 **(A)**「**Political advertising is one example.**」！'
+  ],
+  [33, ['考點：後句 for instance 具體例證（不賣商品而是推銷候選人布希）','詞性需求：完整句子'], 'D',
+    '破題關鍵在空格後一句的舉例：「**A Bush campaign ad, for instance, did not ask anyone to buy anything**, yet it attempted to persuade American citizens **to view George Bush favorably**.（例如，布希的競選廣告並沒有叫人買任何商品，而是試圖說服選民支持候選人布希。）」*for instance* 舉出的這個例子，正是用來證明第 33 題 **(D)**「**它們與商業廣告不同，因為政治廣告『推銷』的是候選人（candidates，如布希）而非商業商品（rather than commercial goods，呼應 did not ask anyone to buy anything）**」！'
+  ],
+  [34, ['考點：由「競選候選人廣告」過渡到「政策提案廣告（柯林頓健保案）」','詞性需求：完整句子'], 'E',
+    '空格前一句剛舉完「小布希競選廣告（A Bush **campaign ad**）」推銷「人物（a person）」的例子；而空格後一句卻舉了「反對者利用廣告擊敗**柯林頓總統的健保計畫方案**（defeat the government\'s **health care plan**）」這個針對「政策提案（an idea / proposals）」的例子！因此中間第 34 題必須作為橋樑，從「競選廣告（campaign advertising）」過渡到「支持或反對政策提案的政治廣告（support or oppose proposals）」，即 **(E)**！'
+  ],
+  [35, ['考點：跨段過渡主題句（由第二段政治政黨 → 第三段綠色和平環保組織）','詞性需求：完整句子'], 'F',
+    '第 35 題位於第三段句首。第二段整段都在講「政治／政黨廣告」，而第 35 題後方立刻以 *For instance* 舉例：「**For instance**, the international organization **Greenpeace** uses advertising... warn people about serious pollution problems and **the urgency of protecting the environment**.（例如，國際組織『綠色和平』利用廣告提醒大眾保護環境的迫切性。）」因此第三段首句必然是承接第二段的「政黨（In addition to political parties）」，並引出本段的「環保團體（environmental groups，如綠色和平）」，即 **(F)**！'
+  ]
+];
+
+DISC_Q.forEach(q => {
+  discHtml += card(q[0], q[1], q[2], stem(q[0]) + clue(q[3]) + ops(makeDiscOps(q[2], q[3]), q[2], DISC_LAB));
+});
+discHtml += groupGradeBox('disc', '四、篇章結構（第 31–35 題）', 31, 35, 2);
+appendApp(discHtml);
+
+// ==================== 五、閱讀測驗 ====================
+appendApp('<h2 id="sec-rc">五、閱讀測驗（第 36–51 題，每題 2 分，共 32 分）</h2>');
+
+// 第 36–39 題題組
+let rc1Html = passage('第 36 至 39 題為題組：幽默是一把雙面刃——連結型幽默、貶損型幽默與自虐型幽默', [
+  [
+    ['A sense of humor is something highly valued.', '幽默感是一種受到高度重視的特質。'],
+    ['A person who has a great sense of humor is often considered to be happy and socially confident.', '一個富有幽默感的人，通常被認為是快樂且在社交場合充滿自信的。'],
+    ['However, humor is a double-edged sword.', '然而，幽默是一把雙面刃。'],
+    ['It can forge better relationships and help you cope with life, but sometimes it can also damage self-esteem and antagonize others.', '它可以促進更好的人際關係並幫助你應付生活，但有時它也會傷害自尊並樹敵（惹惱他人）。']
+  ],
+  [
+    ['People who use bonding humor tell jokes and generally lighten the mood.', '使用「連結型（親和型）幽默」的人會講笑話，通常能讓氣氛變得輕鬆愉快。'],
+    ['They\'re perceived as being good at reducing the tension in uncomfortable situations.', '人們認為他們擅長在尷尬不自在的情境中化解緊張氣氛。'],
+    ['They often make fun of their common experiences, and sometimes they may even laugh off their own misfortunes.', '他們常拿彼此共同的經歷開玩笑，有時甚至對自己的不幸遭遇一笑置之。'],
+    ['The basic message they deliver is: We\'re all alike, we find the same things funny, and we\'re all in this together.', '他們傳遞的基本訊息是：我們都一樣、我們覺得同樣的事情好笑，而且我們都在同一條船上（休戚與共）。']
+  ],
+  [
+    ['Put-down humor, on the other hand, is an aggressive type of humor used to criticize and manipulate others through teasing.', '另一方面，「貶損型（攻擊型）幽默」則是一種具攻擊性的幽默，用來透過揶揄取笑的方式批評並操弄他人。'],
+    ['When it\'s aimed against politicians, as it often is, it\'s hilarious and mostly harmless.', '當它針對政治人物時——這也是常有的事——往往令人捧腹大笑且多半無傷大雅。'],
+    ['But in the real world, it may have a harmful impact.', '但在真實日常世界中，它可能會帶來有害的影響。'],
+    ['An example of such humor is telling friends an embarrassing story about another friend.', '這種幽默的一個例子，就是向朋友們爆料另一個朋友出糗的尷尬故事。'],
+    ['When challenged about their teasing, the put-down jokers might claim that they are "just kidding," thus allowing themselves to avoid responsibility.', '當他們因為取笑他人而受到質疑時，這些愛貶低人的說笑者可能會宣稱自己「只是開玩笑的」，藉此逃避責任。'],
+    ['This type of humor, though considered by some people to be socially acceptable, may hurt the feelings of the one being teased and thus take a toll on personal relationships.', '這類型的幽默雖然被某些人認為在社交上是可以接受的，但可能會傷害被取笑者的感情，進而對人際關係造成損害。']
+  ],
+  [
+    ['Finally, in hate-me humor, the joker is the target of the joke for the amusement of others.', '最後，在「自虐型（討罵型）幽默」中，說笑者為了博取他人一笑，把自己當成笑話嘲弄的箭靶。'],
+    ['This type of humor was used by comedians John Belushi and Chris Farley—both of whom suffered for their success in show business.', '喜劇演員約翰．貝魯西（John Belushi）與克里斯．法利（Chris Farley）就常使用這類幽默——他們兩人都為了自己在演藝圈的成功而飽受折磨（付出慘痛代價）。'],
+    ['A small dose of such humor is charming, but routinely offering oneself up to be humiliated erodes one\'s self-respect, and fosters depression and anxiety.', '偶爾來一點這種自嘲幽默頗具魅力，但習慣性地把自己推出去受人羞辱，會侵蝕一個人的自尊，並助長憂鬱與焦慮。']
+  ],
+  [
+    ['So it seems that being funny isn\'t necessarily an indicator of good social skills and well-being.', '因此看來，風趣搞笑未必是良好社交技巧與身心健康的指標。'],
+    ['In certain cases, it may actually have a negative impact on interpersonal relationships.', '在某些情況下，它實際上可能會對人際關係產生負面的影響。']
+  ]
+], '', 'rc1');
+
+const RC1_Q = [
+  [36, ['考點：細節定位題（貶損型幽默常見對象）','詞性需求：複數名詞 (n.)'], 'C',
+    '36. According to the passage, which group is among the common targets of put-down humor?',
+    '36. 根據本文，下列哪一個群體是「貶損型幽默（put-down humor）」常見的嘲諷目標？',
+    '定位第三段第 1–2 句：「**Put-down humor**, on the other hand, is an aggressive type of humor used to criticize and manipulate others through teasing. **When it\'s aimed against politicians, as it often is**, it\'s hilarious and mostly harmless.（當它針對**政治人物**時——**這也是常有的事［as it often is］**——往往令人捧腹大笑且多半無傷大雅。）」明確指出 **Politicians（政治人物）** 是常見目標，故選 **(C)**。',
+    [
+      ['Comedians.','喜劇演員。','喜劇演員（comedians）是在第四段「自虐型幽默（hate-me humor）」中被提及的表演者，而非第三段貶損型幽默的常見目標。<br><b>何時才對：</b>無。'],
+      ['People who tell jokes.','講笑話的人。','把自己當成笑話箭靶（the joker is the target of the joke）的是第四段的「自虐型幽默（hate-me humor）」，而非貶損他人的 *put-down humor*。<br><b>何時才對：</b>題目若問 *hate-me humor* 的目標是誰時。'],
+      ['Politicians.','政治人物。','完全符合第三段第 2 句「When it\'s aimed against politicians, as it often is（常以政治人物為目標）」。'],
+      ['People who are friendly to others.','對他人友善的人。','文中未提及友善的人是常見目標。<br><b>何時才對：</b>無。']
+    ]
+  ],
+  [37, ['考點：細節方式題（連結型幽默如何營造輕鬆氣氛）','詞性需求：介系詞片語'], 'B',
+    '37. How can people create a relaxing atmosphere through bonding humor?',
+    '37. 人們如何透過「連結型幽默（bonding humor）」來營造輕鬆的氣氛？',
+    '定位第二段第 1–3 句：「People who use **bonding humor** tell jokes and generally lighten the mood... **They often make fun of their common experiences**, and sometimes they may even laugh off their own misfortunes.（他們常拿彼此**共同的經歷**開玩笑，有時甚至對自己的不幸遭遇一笑置之。）」其中 *make fun of their common experiences* 完全等同於選項 **(B) By joking about experiences that they all have**！',
+    [
+      ['By laughing at other people\'s misfortunes.','藉由嘲笑他人的不幸遭遇。','張冠李戴：第二段第 3 句說的是「對**自己的**不幸遭遇一笑置之（laugh off **their own** misfortunes）」，而非嘲笑「別人的」不幸（嘲笑別人出糗屬於第三段的 *put-down humor*）。<br><b>何時才對：</b>改為 *laughing off their own misfortunes* 時。'],
+      ['By joking about experiences that they all have.','藉由拿大家共有的經歷開玩笑。','完全對應第二段第 3 句「make fun of their common experiences」與第 4 句「We\'re all in this together」。'],
+      ['By revealing their own personal relationships.','藉由揭露自己的私人感情關係。','文中未提及揭露私人關係。<br><b>何時才對：</b>無。'],
+      ['By making fun of unique experiences of their friends.','藉由拿朋友獨特的經歷（糗事）開玩笑。','拿朋友的尷尬故事開玩笑（telling friends an embarrassing story about another friend）是第三段具破壞性的「貶損型幽默（put-down humor）」，而非連結型幽默。<br><b>何時才對：</b>無。']
+    ]
+  ],
+  [38, ['考點：細節事實查核題（喜劇演員案例）','詞性需求：完整句子'], 'C',
+    '38. According to the passage, which of the following is true about John Belushi and Chris Farley?',
+    '38. 根據本文，關於約翰．貝魯西（John Belushi）與克里斯．法利（Chris Farley），下列何者正確？',
+    '定位第四段第 2 句：「This type of humor was used by **comedians John Belushi and Chris Farley—both of whom suffered for their success in show business**.（他們兩人都為了自己在**演藝圈的成功**而飽受折磨。）」既然說「為了他們在演藝圈的**成功（their success in show business）**付出代價」，代表他們在身為喜劇演員的演藝事業上是成功的（They were successful in their careers as comedians），故 **(C)** 正確！',
+    [
+      ['They suffered from over-dosage of anxiety pills.','他們遭受過量服用抗焦慮藥物之苦。','過度腦補：第四段末句只說長期自虐受辱會「侵蝕自尊並助長憂鬱與焦慮（fosters depression and anxiety）」，至於前面的 *A small dose of such humor* 是比喻「少量的這種自嘲幽默」，文中完全沒提到服用抗焦慮藥丸（anxiety pills）過量！<br><b>何時才對：</b>無。'],
+      ['They often humiliated other people on the stage.','他們常在舞台上羞辱別人。','主客體顛倒：他們使用的是「自虐型幽默（hate-me humor）」，是「把自己推出去讓別人羞辱（offering **oneself** up to be humiliated）」，而非羞辱別人。<br><b>何時才對：</b>改為 *offered themselves up to be humiliated* 時。'],
+      ['They were successful in their careers as comedians.','他們在身為喜劇演員的職涯中是成功的。','完全符合第四段第 2 句「comedians John Belushi and Chris Farley—both of whom suffered for **their success in show business**」。'],
+      ['They managed to rebuild their self-respect from their shows.','他們設法從表演中重建了自己的自尊。','與第四段末句「erodes one\'s self-respect（侵蝕一個人的自尊）」完全相反。<br><b>何時才對：</b>無。']
+    ]
+  ],
+  [39, ['考點：全文核心主旨題（Main Message）','詞性需求：完整句子'], 'B',
+    '39. What is the message that the author is trying to convey?',
+    '39. 作者試圖傳達的訊息為何？',
+    '定位第一段第 3–4 句（全文主旨句）：「**However, humor is a double-edged sword. It can forge better relationships and help you cope with life, but sometimes it can also damage self-esteem and antagonize others.**」以及最後一段的總結。作者以「雙面刃（a double-edged sword）」貫穿全文：第二段介紹幽默光明的正面（bonding humor），第三、四段介紹幽默陰暗的負面（put-down humor 與 hate-me humor）。因此作者旨在傳達：**幽默兼具光明面與陰暗面（Humor has both its bright side and dark side）**！',
+    [
+      ['Humor deserves to be studied carefully.','幽默值得被仔細研究。','文章並非呼籲學術界研究幽默，而是提醒讀者在人際互動中認清幽默的正反兩面影響。<br><b>何時才對：</b>無。'],
+      ['Humor has both its bright side and dark side.','幽默同時具有光明面與陰暗面。','完美詮釋首段的核心比喻 *humor is a double-edged sword*（雙面刃）以及全文正反兩面的剖析。'],
+      ['Humor is a highly valued personality trait.','幽默是一種備受重視的人格特質。','這只是第一段前兩句用來欲揚先抑的鋪墊，隨即被 *However, humor is a double-edged sword* 與末段推翻。<br><b>何時才對：</b>無。'],
+      ['Humor can be learned in many different ways.','幽默可以透過許多不同方式學習。','文中探討的是幽默的三種類型及其好壞影響，並未教導如何學習培養幽默感。<br><b>何時才對：</b>無。']
+    ]
+  ]
+];
+
+RC1_Q.forEach(q => {
+  SENT[q[0]]=[q[3], q[4]];
+  rc1Html += card(q[0], q[1], q[2], stem(q[0]) + clue(q[5]) + ops(q[6], q[2]));
+});
+rc1Html += groupGradeBox('rc1', '五、閱讀測驗（第 36–39 題）', 36, 39, 2);
+appendApp(rc1Html);
+
+// 第 40–43 題題組
+let rc2Html = passage('第 40 至 43 題為題組：陽光航空（Sunny Airlines）機師工會揭露飛安施壓與保全強制驅離事件', [
+  [
+    ['On June 23, 2010, a Sunny Airlines captain with 32 years of experience stopped his flight from departing.', '2010 年 6 月 23 日，一位擁有 32 年飛行資歷的陽光航空（Sunny Airlines）機長，阻止了他的航班起飛。'],
+    ['He was deeply concerned about a balky power component that might eliminate all electrical power on his trans-Pacific flight.', '他深切擔憂一個故障不靈光的電力組件，可能會導致他這趟跨太平洋航班在飛行途中完全失去所有電力。'],
+    ['Despite his valid concerns, Sunny Airlines\' management pressured him to fly the airplane, over the ocean, at night.', '儘管他的顧慮合情合理，陽光航空的管理階層仍施壓要求他在夜間駕駛這架飛機飛越汪洋大海。'],
+    ['When he refused to jeopardize the safety of his passengers, Sunny Airlines\' security escorted him out of the airport, and threatened to arrest his crew if they did not cooperate.', '當他拒絕拿乘客的生命安全冒險時，陽光航空的保全人員竟將他強行押送（驅離）出機場，並威脅他的機組人員若不配合就要將他們逮捕。']
+  ],
+  [
+    ['Besides that, five more Sunny Airlines pilots also refused to fly the aircraft, citing their own concerns about the safety of the plane.', '除此之外，另外五名陽光航空的機師也以對該機飛安的顧慮為由，拒絕駕駛這架飛機。'],
+    ['It turned out the pilots were right: the power component was faulty and the plane was removed from service and, finally, fixed.', '事實證明這些機師是對的：該電力組件確實有故障，這架飛機隨後被停飛檢修，並最終修復完畢。'],
+    ['Eventually a third crew operated the flight, hours later.', '數小時後，最終由第三組機組人員執飛了該航班。'],
+    ['In this whole process, Sunny Airlines pressured their highly experienced pilots to ignore their safety concerns and fly passengers over the Pacific Ocean at night in a plane that needed maintenance.', '在整個過程中，陽光航空不斷向他們經驗豐富的機師施壓，要求他們忽視飛安顧慮，在夜間駕駛一架需要維修的飛機載著乘客飛越太平洋。'],
+    ['Fortunately for all of us, these pilots stood strong and would not be intimidated.', '對我們所有人來說幸運的是，這些機師堅守立場，沒有被威嚇屈服。']
+  ],
+  [
+    ['Don\'t just take our word that this happened.', '請不要只聽我們的一面之詞就相信這件事。'],
+    ['Please research this yourself and learn the facts.', '請您親自查證並了解事實真相。'],
+    ['Here\'s a starting point: www.SunnyAirlinePilot.org.', '這裡有一個起點網站：www.SunnyAirlinePilot.org。'],
+    ['Once you review this shocking information, please keep in mind that while their use of Corporate Security to remove a pilot from the airport is a new procedure, the intimidation of flight crews is becoming commonplace at Sunny Airlines, with documented events occurring on a weekly basis.', '一旦您檢視了這些令人震驚的資訊，請記住：雖然動用「公司保全（Corporate Security）」將機師驅離機場是一項新手段，但恐嚇威脅機組人員在陽光航空早已司空見慣，有紀錄可查的事件幾乎每週都在發生。']
+  ],
+  [
+    ['The flying public deserves the highest levels of safety.', '搭機大眾理應享有最高標準的飛航安全。'],
+    ['No airlines should maximize their revenues by pushing their employees to move their airplanes regardless of the potential human cost.', '任何航空公司都不應該為了追求營收最大化，而不顧潛在的人命代價，強逼員工把問題飛機開上天。'],
+    ['Sunny Airlines\' pilots are committed to resisting any practices that compromise your safety for economic gain.', '陽光航空的全體機師致力於抵制任何為了經濟利益而犧牲您飛航安全的做法。'],
+    ['We\'ve been trying to fix these problems behind the scenes for quite some time; now we need your help.', '我們已經在幕後努力試圖解決這些問題好一段時間了；現在，我們需要您的協助。'],
+    ['Go to www.SunnyAirlinePilot.org to get more information and find out what you can do.', '請前往 www.SunnyAirlinePilot.org 以獲取更多資訊，並了解您能如何盡一份心力。']
+  ]
+], '', 'rc2');
+
+const RC2_Q = [
+  [40, ['考點：細節定位題（機長拒飛後的遭遇）','詞性需求：完整句子'], 'B',
+    '40. According to the passage, what happened to the captain after he refused to fly the aircraft?',
+    '40. 根據本文，在這位機長拒絕駕駛該架飛機後，他遭遇了什麼事？',
+    '定位第一段最後一句：「When he refused to jeopardize the safety of his passengers, **Sunny Airlines\' security escorted him out of the airport**, and threatened to arrest his crew if they did not cooperate.」並結合第三段末句：「their use of **Corporate Security to remove a pilot from the airport**」。可知他被陽光航空的保全人員強行帶離（驅逐出）機場，即 **(B) He was forced to leave the airport by security staff of Sunny Airlines**！',
+    [
+      ['He was asked to find another pilot to replace his position.','他被要求自己去找另一位機師來頂替他的職務。','是航空公司管理層自己去找了另外五名機師（也都拒飛）與最後第三組機組員，並非叫機長自己找人代班。<br><b>何時才對：</b>無。'],
+      ['He was forced to leave the airport by security staff of Sunny Airlines.','他被陽光航空的保全人員強行帶離機場。','完全對應第一段末句「Sunny Airlines\' security escorted him out of the airport」與第三段「use of Corporate Security to remove a pilot from the airport」。'],
+      ['He was made to help the Airlines find out what was wrong with the plane.','他被迫協助航空公司找出飛機哪裡出了問題。','機長直接被保全趕出機場了，並未被留下來修飛機。<br><b>何時才對：</b>無。'],
+      ['He was fired for refusing to fly the plane and abandoning the passengers.','他因為拒飛並遺棄乘客而遭到開除。','文中只說保全將他驅離機場並威脅逮捕組員，並未說他遭到開除（fired），更非遺棄乘客。<br><b>何時才對：</b>無。']
+    ]
+  ],
+  [41, ['考點：寫作目的題（Author\'s Purpose）','詞性需求：不定詞片語'], 'D',
+    '41. What is the main purpose of the passage?',
+    '41. 本文的主要目的為何？',
+    '綜合全文：第一、二段揭露陽光航空管理層為了營利無視飛安故障，甚至動用公司保全強行驅離拒飛機長、恐嚇機組員；第三、四段進一步指出公司動用保全與恐嚇機組員已成常態（while their use of Corporate Security to remove a pilot... the intimidation of flight crews is becoming commonplace），並呼籲大眾上機師協會網站了解這些危及飛航安全（safety / security）的不當做法。因此本文旨在**揭露陽光航空在飛安與保全處理做法上的嚴重問題（To expose problems with Sunny Airlines\' security practices）**，故選 **(D)**。',
+    [
+      ['To maximize Sunny Airlines\' revenues.','為了使陽光航空的營收最大化。','第四段第 2 句是在痛批「No airlines should maximize their revenues by pushing their employees...（任何航空公司都不該為了追求最大營收而不顧人命）」，並非要幫公司賺錢！<br><b>何時才對：</b>無。'],
+      ['To introduce Sunny Airlines\' pilot training programs.','為了介紹陽光航空的機師培訓計畫。','文中完全未提及機師訓練課程。<br><b>何時才對：</b>無。'],
+      ['To review plans for improving Sunny Airlines\' service.','為了檢視改善陽光航空客服品質的計畫。','這是一篇揭發航空公司高層罔顧飛安、威逼機師的公開抗議聲明，並非討論機上餐飲或客服計畫。<br><b>何時才對：</b>無。'],
+      ['To expose problems with Sunny Airlines\' security practices.','為了揭露陽光航空在安全與保全做法上的問題。','完美涵蓋揭發「動用公司保全驅離機長（Corporate Security）」及「為求營收危及飛航安全（compromise safety）」的核心目的。']
+    ]
+  ],
+  [42, ['考點：細節事實題（飛機後續處理）','詞性需求：完整句子'], 'B',
+    '42. What happened to the aircraft after the pilots refused to operate the flight?',
+    '42. 在機師們拒絕執飛該航班後，這架飛機後來怎麼了？',
+    '定位第二段第 2–3 句：「It turned out the pilots were right: **the power component was faulty and the plane was removed from service and, finally, fixed**. Eventually a third crew operated the flight, hours later.」可知飛機的故障問題被查出確認，並將飛機停飛檢修直到**最終修復完畢（finally, fixed ＝ finally repaired）**，數小時後才由第三組機組員飛走，故 **(B)** 正確！',
+    [
+      ['It was found to be too old for any more flight service.','它被發現太過老舊，無法再執行任何飛行任務。','飛機修好後幾小時就由第三組機組員執飛了（operated the flight, hours later），並非永久報廢。<br><b>何時才對：</b>無。'],
+      ['Its mechanical problem was detected and finally repaired.','它的機械（電力組件）問題被查出並最終修復完畢。','完全符合第二段第 2 句「the power component was faulty and the plane was removed from service and, finally, fixed」。'],
+      ['It was removed from the airport for a week-long checkup.','它被移出機場進行長達一週的檢修。','時間張冠李戴：第二段說數小時後（**hours later**）修好就飛了；而「每週發生（on a **weekly** basis）」是第三段末句形容公司恐嚇機組員的頻率，並非修飛機修了一星期！<br><b>何時才對：</b>無。'],
+      ['Its power component problem remained and no crew would operate the flight.','它的電力組件問題依然存在，且沒有任何機組員願意執飛。','與第二段第 2–3 句「finally, fixed. Eventually a third crew operated the flight, hours later（最終修好並由第三組機組員執飛）」完全相反。<br><b>何時才對：</b>無。']
+    ]
+  ],
+  [43, ['考點：作者身分推論題（Author Identity）','詞性需求：名詞片語'], 'C',
+    '43. By whom was the passage most likely written?',
+    '43. 本文最可能是由誰所撰寫的？',
+    '定位第三、四段的人稱代名詞與官方網址：「Don\'t just take **our** word... Here\'s a starting point: **www.SunnyAirlinePilot.org**... **Sunny Airlines\' pilots** are committed to resisting any practices that compromise **your** safety for economic gain. **We\'ve** been trying to fix these problems behind the scenes for quite some time; now **we** need **your** help.」作者自稱「我們（We / our）」，推廣的網站是 `www.SunnyAirlinePilot.org`（非營利組織 `.org`），並對搭機大眾（the flying public / your safety）喊話，顯然是由**陽光航空機師工會／機師組織的成員（Members of Sunny Airlines pilot organization）**所撰寫發表的公開信！',
+    [
+      ['Sunny Airlines security guards.','陽光航空的保全人員。','保全人員是第一、三段中被譴責聽命高層驅離機長並威脅逮捕組員的角色。<br><b>何時才對：</b>無。'],
+      ['Sunny Airlines personnel manager.','陽光航空的人事經理。','公司管理層（management）正是文中被揭發與痛批的對象。<br><b>何時才對：</b>無。'],
+      ['Members of Sunny Airlines pilot organization.','陽光航空機師組織（工會）的成員。','完全契合文中的第一人稱複數 *we / our*、代表全體 *Sunny Airlines\' pilots* 發聲，以及連往 `www.SunnyAirlinePilot.org` 的網址。'],
+      ['One of the passengers of the Sunny Airlines flight.','該趟陽光航空班機上的一名乘客。','第四段把乘客稱為「你們（compromise **your** safety / now we need **your** help）」，而把在幕後努力解決問題的機師們稱為「我們（We\'ve been trying to fix these problems behind the scenes）」，故作者是機師組織而非乘客。<br><b>何時才對：</b>無。']
+    ]
+  ]
+];
+
+RC2_Q.forEach(q => {
+  SENT[q[0]]=[q[3], q[4]];
+  rc2Html += card(q[0], q[1], q[2], stem(q[0]) + clue(q[5]) + ops(q[6], q[2]));
+});
+rc2Html += groupGradeBox('rc2', '五、閱讀測驗（第 40–43 題）', 40, 43, 2);
+appendApp(rc2Html);
+
+// 第 44–47 題題組
+let rc3Html = passage('第 44 至 47 題為題組：手機遊戲《憤怒鳥（Angry Birds）》席捲全球媒體、廣告與跨界文化', [
+  [
+    ['*Angry Birds* is a video game developed by Finnish computer game developer Rovio Mobile.', '《憤怒鳥（Angry Birds）》是由芬蘭電腦遊戲開發商 Rovio Mobile 所研發的一款電玩遊戲。'],
+    ['Inspired primarily by a sketch of stylized wingless birds, the game was first released for Apple\'s mobile operating system in December 2009.', '該遊戲的靈感主要來自一幅風格化無翅鳥類的素描草圖，於 2009 年 12 月首次在蘋果（Apple）的行動作業系統（iOS）上推出。'],
+    ['Since then, over 12 million copies of the game have been purchased from Apple\'s App Store.', '自那時起，該遊戲在蘋果 App Store 上已被購買超過 1,200 萬次。']
+  ],
+  [
+    ['With its fast-growing popularity worldwide, the game and its characters—angry birds and their enemy pigs—have been referenced in television programs throughout the world.', '隨著它在全球迅速竄紅，這款遊戲及其角色——憤怒鳥與牠們的死對頭綠豬——已在世界各地的電視節目中被廣泛引用。'],
+    ['The Israeli comedy *A Wonderful Country*, one of the nation\'s most popular TV programs, satirized recent failed Israeli-Palestinian peace attempts by featuring the Angry Birds in peace negotiations with the pigs.', '以色列最受歡迎的電視節目之一、喜劇《美好國度（A Wonderful Country）》，便讓憤怒鳥與綠豬進行和平談判，藉此諷刺近期失敗的以巴和平談判嘗試。'],
+    ['Clips of the segment went viral, getting viewers from all around the world.', '該片段的短片在網路上瘋傳（爆紅），吸引了來自世界各地的觀眾收看。'],
+    ['American television hosts Conan O\'Brien, Jon Stewart, and Daniel Tosh have referenced the game in comedy sketches on their respective series, *Conan*, *The Daily Show*, and *Tosh.0*.', '美國電視節目主持人柯南．歐布萊恩、強．史都華與丹尼爾．托許，也都曾在各自主持的節目《柯南秀》、《每日秀》與《Tosh.0》的喜劇短劇中提及這款遊戲。'],
+    ['Some of the game\'s more notable fans include Prime Minister David Cameron of the United Kingdom, who plays the iPad version of the game, and author Salman Rushdie, who is believed to be "something of a master at *Angry Birds*."', '這款遊戲較知名的粉絲包括玩 iPad 版本的英國首相大衛．卡麥隆，以及被認為「堪稱《憤怒鳥》高手（大師）」的知名作家薩爾曼．魯西迪（Salman Rushdie）。']
+  ],
+  [
+    ['*Angry Birds* and its characters have also been featured in advertisements in different forms.', '《憤怒鳥》及其角色也以不同形式出現在各大廣告中。'],
+    ['In March 2011, the characters began appearing in a series of advertisements for Microsoft\'s Bing search engine.', '2011 年 3 月，這些角色開始出現在微軟 Bing 搜尋引擎的一系列廣告中。'],
+    ['In the same year, Nokia projected an advertisement in Austin, Texas that included the game\'s characters on a downtown building for its new handset.', '同年，諾基亞（Nokia）為了宣傳新款手機，在德州奧斯汀市中心的一棟大樓外牆上，投影了一則包含該遊戲角色的廣告。'],
+    ['Later, a T-Mobile advertisement filmed in Spain included a real-life mock-up of the game in a city plaza.', '隨後，電信商 T-Mobile 在西班牙拍攝的一則廣告，更在城市廣場上搭建了一座真人實境比例的《憤怒鳥》遊戲模型。'],
+    ['Nokia also used the game in Malaysia to promote an attempt to set a world record for the largest number of people playing a single mobile game.', '諾基亞也在馬來西亞利用這款遊戲進行宣傳，試圖創下最多人同時玩單一手機遊戲的世界紀錄。']
+  ],
+  [
+    ['*Angry Birds* has even inspired works of philosophical analogy.', '《憤怒鳥》甚至啟發了哲學類比著作。'],
+    ['A five-part essay entitled "*Angry Birds* Yoga—How to Eliminate the Green Pigs in Your Life" was written by Giridhari Dasar in Brazil, utilizing the characters and gameplay mechanics to interpret various concepts of yoga philosophy.', '巴西的吉里達里．達薩爾（Giridhari Dasar）撰寫了一篇分為五部分的文章，題為〈憤怒鳥瑜伽——如何消滅你生命中的綠豬〉，利用遊戲中的角色與玩法機制來詮釋瑜伽哲學的各種概念。'],
+    ['The piece attracted much media attention for its unique method of philosophical presentation.', '這篇文章因其獨特的哲學呈現方式，吸引了眾多媒體的關注。']
+  ]
+], '', 'rc3');
+
+const RC3_Q = [
+  [44, ['考點：寫作目的與主旨題（Author\'s Purpose）','詞性需求：不定詞片語'], 'D',
+    '44. What is the purpose of the passage?',
+    '44. 本文的寫作目的為何？',
+    '檢視各段主題：第一段簡述《憤怒鳥》遊戲誕生與熱賣背景；**第二段**介紹它在全球**電視節目與網路影片**中的傳播；**第三段**介紹它在微軟、Nokia、T-Mobile 等跨國**商業廣告**中的應用；**第四段**介紹它甚至跨界啟發了巴西的**哲學專欄文章**並吸引媒體關注。因此全文旨在**報導《憤怒鳥》在世界各地不同媒體形式中的廣泛傳播與引用（To report on the spread of *Angry Birds* in different media around the world）**，故選 **(D)**。',
+    [
+      ['To explain how the video game *Angry Birds* was devised.','為了解釋電玩遊戲《憤怒鳥》是如何被設計出來的。','遊戲靈感來源僅占第一段第 2 句前半句（Inspired primarily by a sketch...），後三段全在講遊戲爆紅後在全球各類媒體的跨界傳播。<br><b>何時才對：</b>當全文介紹程式設計師如何設計關卡與物理引擎時。'],
+      ['To investigate why *Angry Birds* has quickly become well-liked.','為了探究為什麼《憤怒鳥》會迅速受到歡迎。','文章是直接將「迅速竄紅（With its fast-growing popularity worldwide）」當作既定事實前提，進而介紹它在電視、廣告與文章中的衍生應用，並未分析它「為何好玩受歡迎」的原因。<br><b>何時才對：</b>無。'],
+      ['To introduce *Angry Birds* characters in TV programs and advertisements.','為了介紹電視節目與廣告中的《憤怒鳥》角色。','不完整：漏掉了第四段啟發巴西瑜伽哲學文章（philosophical analogy）的跨界傳播，且本文重點不是介紹每隻鳥的角色設定，而是報導該遊戲在各媒體的傳播現象。<br><b>何時才對：</b>無。'],
+      ['To report on the spread of *Angry Birds* in different media around the world.','為了報導《憤怒鳥》在全球不同媒體中的傳播。','完整涵蓋電視節目（第二段）、商業與戶外投影廣告（第三段）及哲學散文與媒體報導（第四段）。']
+    ]
+  ],
+  [45, ['考點：上下文猜測詞義（went viral）','詞性需求：形容詞 (adj.)'], 'D',
+    '45. Which of the following is closest in meaning to the word "viral" in the second paragraph?',
+    '45. 下列何者與第二段中的「viral」一詞意思最接近？',
+    '定位第二段第 3 句：「Clips of the segment **went viral, getting viewers from all around the world**.（該片段的短片在網路上**像病毒般瘋傳／爆紅，吸引了來自世界各地的觀眾收看**。）」逗號後的分詞構句 `getting viewers from all around the world`（獲得全球各地觀眾點閱）直接說明這支短片變得極為「**熱門的、受歡迎的、廣為流傳的（Popular）**」！片語 **go viral** 為網路時代核心詞彙，意為「（影片或貼文）在網路上瘋傳、爆紅」。',
+    [
+      ['Apparent.','明顯的、顯而易見的。','與吸引全球觀眾點閱無關。<br><b>何時才對：</b>替換 *obvious* 時。'],
+      ['Sarcastic.','諷刺的、挖苦的。','雖然前句提到該喜劇節目「諷刺（satirized）」以巴和談，但第 3 句 `went viral, getting viewers from all around the world` 描述的是影片上傳後的「傳播熱度與高人氣」，而非諷刺。<br><b>何時才對：</b>替換 *ironic / satirical* 時。'],
+      ['Exciting.','令人興奮的、刺激的。','*viral* 源自 *virus*（病毒），比喻資訊像病毒一樣快速擴散、人人都看過（即 *popular / widely spread*），而非刺激。<br><b>何時才對：</b>無。'],
+      ['Popular.','受歡迎的、熱門的、廣為流傳的。','直接對應同句後方的 *getting viewers from all around the world*。']
+    ]
+  ],
+  [46, ['考點：細節人物定位題（something of a master at Angry Birds）','詞性需求：專有名詞（人名）'], 'C',
+    '46. According to the passage, which of the following people is good at playing *Angry Birds*?',
+    '46. 根據本文，下列哪一位人士很擅長玩《憤怒鳥》？',
+    '定位第二段最後一句：「Some of the game\'s more notable fans include Prime Minister David Cameron of the United Kingdom, who plays the iPad version of the game, and **author Salman Rushdie, who is believed to be "something of a master at *Angry Birds*."**」片語 *something of a master at...* 意為「堪稱……的高手／大師」，明確指出作家**薩爾曼．魯西迪（Salman Rushdie）**非常擅長玩《憤怒鳥》，故選 **(C)**。',
+    [
+      ['Giridhari Dasar.','吉里達里．達薩爾。','他是第四段撰寫〈憤怒鳥瑜伽〉哲學文章的巴西作者，文中未說他是遊戲高手。<br><b>何時才對：</b>題目若問誰寫了憤怒鳥瑜伽哲學文章時。'],
+      ['Conan O\'Brien.','柯南．歐布萊恩。','他是第二段在電視脫口秀短劇中提及《憤怒鳥》的美國主持人，文中未提其遊戲技術。<br><b>何時才對：</b>無。'],
+      ['Salman Rushdie.','薩爾曼．魯西迪。','完全符合第二段末句「author Salman Rushdie, who is believed to be "something of a master at *Angry Birds*"」。'],
+      ['Daniel Tosh.','丹尼爾．托許。','與 (B) 相同，僅是在節目短劇中引用該遊戲的美國電視主持人。<br><b>何時才對：</b>無。']
+    ]
+  ],
+  [47, ['考點：細節事實查核題（True Statement）','詞性需求：完整句子'], 'C',
+    '47. Which of the following is true about the use of *Angry Birds*, according to the passage?',
+    '47. 根據本文，關於《憤怒鳥》的應用，下列何者正確？',
+    '定位第三段第 4 句：「Later, **a T-Mobile advertisement filmed in Spain included a real-life mock-up of the game in a city plaza**.」T-Mobile 是知名行動電話電信商（搭配智慧型手機宣傳），在西班牙城市廣場搭建了真人實境比例的《憤怒鳥》模型（a real-life mock-up）拍攝手機電信廣告，故 **(C)** 正確！',
+    [
+      ['It has been cited by UK Prime Minister to illustrate political issues.','它曾被英國首相引用來說明政治議題。','張冠李戴：用《憤怒鳥》諷刺以巴和平談判政治議題的是「以色列的電視喜劇節目（The Israeli comedy *A Wonderful Country*）」，而英國首相卡麥隆只是喜歡在 iPad 上玩這款遊戲的粉絲而已！<br><b>何時才對：</b>改為 *used by an Israeli TV comedy to satirize political issues* 時。'],
+      ['Its characters are used in advertisements mainly for Apple\'s products.','它的角色主要被用於蘋果（Apple）產品的廣告中。','與第一、三段相反：Apple 只是首發該遊戲的平台（App Store）；第三段提到的廣告主分別是 **Microsoft（微軟 Bing）**、**Nokia（諾基亞手機）** 與 **T-Mobile**，全都是非蘋果陣營的品牌！<br><b>何時才對：</b>無。'],
+      ['Its real-life mock-up has appeared in an advertisement for mobile phones.','它的真人實境比例模型曾出現在行動電話相關廣告中。','完全對應第三段第 4 句「a T-Mobile advertisement filmed in Spain included a real-life mock-up of the game」。'],
+      ['It has been developed into a film about the life of a Brazilian yoga master.','它已被改編成一部關於巴西瑜伽大師生平的電影。','第四段指出巴西作者 Giridhari Dasar 寫的是一篇分為五部分的「**文章／散文**（**A five-part essay** entitled "*Angry Birds* Yoga..."）」，並非拍成電影！<br><b>何時才對：</b>改為 *inspired a five-part essay on yoga philosophy* 時。']
+    ]
+  ]
+];
+
+RC3_Q.forEach(q => {
+  SENT[q[0]]=[q[3], q[4]];
+  rc3Html += card(q[0], q[1], q[2], stem(q[0]) + clue(q[5]) + ops(q[6], q[2]));
+});
+rc3Html += groupGradeBox('rc3', '五、閱讀測驗（第 44–47 題）', 44, 47, 2);
+appendApp(rc3Html);
+
+// 第 48–51 題題組
+let rc4Html = passage('第 48 至 51 題為題組：摩天大樓的「爆破拆除工程（Explosive Demolition）」原理與方向控制', [
+  [
+    ['Demolition is the tearing-down of buildings and other structures.', '「拆除工程（demolition）」是指拆毀建築物及其他構造物的作業。'],
+    ['You can level a five-story building easily with excavators and wrecking balls, but when you need to bring down a 20-story skyscraper, explosive demolition is the preferred method for safely demolishing the huge structure.', '你可以用挖土機與拆除大鐵球輕鬆夷平一棟五層樓的建築；但當你需要拆掉一棟二十層樓高的摩天大樓時，「爆破拆除（explosive demolition）」則是安全拆毀這種巨大構造物的首選方法。']
+  ],
+  [
+    ['In order to demolish a building safely, blasters must map out a careful plan ahead of time.', '為了安全地拆除建築物，爆破人員必須事先擬定周詳的計畫。'],
+    ['The first step is to examine architectural blueprints of the building to determine how the building is put together.', '第一步是檢視該建築物的建築藍圖（設計圖），以確定這棟建築是如何組構而成的。'],
+    ['Next, the blaster crew tours the building, jotting down notes about the support structure on each floor.', '接著，爆破小組會實地巡視整棟大樓，針對每一層樓的支撐結構做下紀錄。'],
+    ['Once they have gathered all the data they need, the blasters devise a plan of attack.', '一旦收集完所需的所有資料，爆破人員就會擬定爆破行動計畫。'],
+    ['They decide what explosives to use, where to position them in the building, and how to time their explosions.', '他們會決定要使用哪種炸藥、要將炸藥安置在大樓內的哪些位置，以及如何設定引爆的時間差。']
+  ],
+  [
+    ['Generally speaking, blasters will explode the major support columns on the lower floors first and then on a few upper stories.', '一般而言，爆破人員會先引爆較低樓層的主要支撐柱，接著再引爆幾個較高樓層的支撐柱。'],
+    ['In a 20-story building, the blasters might blow the columns on the first and second floor, as well as the 12th and 15th floors.', '以一棟二十層樓的建築為例，爆破人員可能會炸毀一樓與二樓、以及十二樓與十五樓的柱子。'],
+    ['In most cases, blowing the support structures on the lower floors is sufficient for collapsing the building, but loading explosives on upper floors helps break the building material into smaller pieces as it falls.', '在大多數情況下，炸毀較低樓層的支撐結構就足以讓整棟大樓倒塌；但在較高樓層裝設炸藥，則有助於在大樓倒塌過程中將建築材料炸碎成較小的碎塊。'],
+    ['This makes for easier cleanup following the blast.', '這會讓爆破後的清理工作變得更加容易。'],
+    ['The main challenge in bringing a building down is controlling the direction in which it falls.', '拆毀大樓最主要的挑戰，在於控制大樓倒塌的方向。'],
+    ['To topple the building towards the north, the blasters set off explosives on the north side of the building first.', '若要讓大樓朝北方傾倒，爆破人員就要先引爆大樓北側的炸藥。'],
+    ['By controlling the way it collapses, a blasting crew will be able to tumble the building over on one side, into a parking lot or other open area.', '藉由控制倒塌的方式，爆破小組就能讓大樓朝特定一側傾倒，直接倒進停車場或其他空曠區域中。'],
+    ['This sort of blast is the easiest to execute, and it is generally the safest way to go.', '這種爆破方式最容易執行，而且通常也是最安全的做法。']
+  ]
+], '', 'rc4');
+
+const RC4_Q = [
+  [48, ['考點：細節定位題（爆破前準備工作）','詞性需求：原形動詞片語'], 'A',
+    '48. What do the blasters need to do in preparing for the demolition of a building, according to the passage?',
+    '48. 根據本文，爆破人員在準備拆除一棟建築物時需要做什麼？',
+    '定位第二段第 2–3 句：「The first step is to **examine architectural blueprints of the building to determine how the building is put together**. Next, the blaster crew tours the building, **jotting down notes about the support structure on each floor**.」無論是檢視建築藍圖以了解大樓如何組構，還是實地巡視記錄每層樓的支撐結構，全都是在**研究這棟建築物的結構（Study the structure of the building）**，故選 **(A)**！',
+    [
+      ['Study the structure of the building.','研究該建築物的結構。','完全符合第二段「檢視建築藍圖確定大樓如何組構（how the building is put together）」與「巡視記錄每層樓的支撐結構（the support structure on each floor）」。'],
+      ['Hire an experienced tour guide.','聘請一位經驗豐富的導遊。','一字多義誤讀：第二段第 3 句 `the blaster crew tours the building` 中的 *tours* 是動詞「實地巡視、勘查（大樓內部）」，並非去觀光旅遊要請導遊（tour guide）！<br><b>何時才對：</b>無。'],
+      ['Make a miniature of the building.','製作該建築物的微縮模型。','文中只說檢視平面建築藍圖（architectural blueprints），並未說要製作立體縮小模型。<br><b>何時才對：</b>無。'],
+      ['Consult the original architect.','諮詢原建築師。','文中只說檢視「建築藍圖（architectural blueprints）」，並未提及找原建築師本人諮詢。<br><b>何時才對：</b>無。']
+    ]
+  ],
+  [49, ['考點：細節順序定位題（引爆起始位置）','詞性需求：名詞片語'], 'C',
+    '49. In most cases, where does the explosion start in the building during its destruction?',
+    '49. 在大多數情況下，建築物在爆破拆除時，爆炸會從建築物的哪個部位開始？',
+    '定位第三段第 1–2 句：「Generally speaking, **blasters will explode the major support columns on the lower floors first** and then on a few upper stories. In a 20-story building, the blasters might blow the columns **on the first and second floor**, as well as the 12th and 15th floors.」明確指出會**先從較低樓層（the lower floors ＝ the lower levels，如一樓與二樓）**開始引爆，接著才引爆較高樓層，故選 **(C)**。',
+    [
+      ['The topmost layer.','最頂層。','最頂層並非最先引爆處。<br><b>何時才對：</b>無。'],
+      ['The upper floors.','較高樓層。','第三段首句指出較高樓層是「接著、後來（and **then** on a few upper stories）」才引爆，目的是把下墜中的建材炸碎以便清理。<br><b>何時才對：</b>題目若問「為了將建材炸成小碎塊以便清理，還會在哪裡裝設炸藥」時。'],
+      ['The lower levels.','較低樓層。','完全對應第三段首句「explode the major support columns on the lower floors first」。'],
+      ['The basement.','地下室。','文中舉例是一樓與二樓（the first and second floor / the lower floors），並未提及地下室（basement）。<br><b>何時才對：</b>無。']
+    ]
+  ],
+  [50, ['考點：圖文空間邏輯應用題（控制大樓傾倒方向）','詞性需求：方位名詞片語'], 'C',
+    '50. According to the following diagram, which part of the target building should the demolition team explode first to safely bring it down?<br>' +
+    '<div style="margin:10px auto;padding:12px;background:var(--card);border:1px solid var(--line);border-radius:8px;max-width:460px;text-align:center;font-family:sans-serif;font-size:.9rem;">' +
+      '<div style="margin-bottom:6px;font-weight:700;color:var(--acc);">🧭 原卷方位配置示意圖（上北 N、下南 S、左西 W、右東 E）</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:8px;align-items:center;">' +
+        '<div></div><div style="padding:6px;border:1px solid var(--line);border-radius:4px;"><b>Park（公園）</b><br><small>［北側 North］</small></div><div></div>' +
+        '<div style="padding:6px;border:1px solid var(--line);border-radius:4px;"><b>Department Store</b><br><b>Church（百貨/教堂）</b><br><small>［西側 West］</small></div>' +
+        '<div style="padding:12px 6px;border:2px solid var(--acc);background:var(--hl);border-radius:6px;font-weight:700;">🏢 The Target Building<br>（目標拆除大樓）</div>' +
+        '<div style="padding:6px;border:1px solid var(--line);border-radius:4px;"><b>School</b><br><b>Post Office（學校/郵局）</b><br><small>［東側 East］</small></div>' +
+        '<div></div><div style="padding:8px;border:2px dashed var(--ok);background:color-mix(in srgb,var(--ok) 12%,transparent);border-radius:4px;font-weight:700;color:var(--ok);">✅ Cleared Area（淨空空曠區）<br><small>［南側 South］</small></div><div></div>' +
+      '</div>' +
+    '</div>',
+    '50. 根據上方示意圖，為了安全拆毀目標大樓，爆破團隊應該先引爆目標大樓的哪一側？',
+    '結合第三段最後三句的兩大規則進行推論：<br>1. **要讓大樓倒向哪裡？**「a blasting crew will be able to **tumble the building over on one side, into a parking lot or other open area**.（必須讓大樓倒向停車場或**其他空曠淨空區域**，才不會砸毀周圍建築）」→ 觀察示意圖，目標大樓北邊是公園、西邊是百貨公司與教堂、東邊是學校與郵局，唯有**南側（South）是「Cleared Area（已淨空的空曠區域）」**！因此必須讓大樓**朝南側（towards the south）**傾倒。<br>2. **要讓大樓朝南傾倒，該先引爆哪一側？**「**To topple the building towards the north, the blasters set off explosives on the north side of the building first.**（要讓大樓朝北傾倒，就要先引爆北側的炸藥。）」同理，要讓大樓朝**南側（Cleared Area）**傾倒，就必須先引爆大樓**南側（The south side）**的炸藥，故選 **(C)**！',
+    [
+      ['The east side.','東側。','東側有學校（School）與郵局（Post Office），若先引爆東側會讓大樓倒向東側砸毀學校與郵局。<br><b>何時才對：</b>當東側為 *Cleared Area* 時。'],
+      ['The west side.','西側。','西側有百貨公司（Department Store）與教堂（Church），不可倒向西側。<br><b>何時才對：</b>當西側為 *Cleared Area* 時。'],
+      ['The south side.','南側。','因為南側是唯一的「已淨空空曠區（Cleared Area）」，根據「要倒向哪一側，就先引爆哪一側」的原理，應先引爆南側（The south side）使大樓安全倒進南邊的淨空區。'],
+      ['The north side.','北側。','陷阱選項：文中雖然舉例「To topple the building towards the north, ... set off explosives on the north side first」，但圖中北側是公園（Park），而專門清出來的安全淨空區（Cleared Area）在**南側**！切勿不看圖就直接照抄文中的舉例字眼 *north*。<br><b>何時才對：</b>當圖中的 *Cleared Area* 位於北側時。']
+    ]
+  ],
+  [51, ['考點：文章主旨題（Main Idea）','詞性需求：疑問詞不定詞片語'], 'B',
+    '51. What is the passage mainly about?',
+    '51. 本文主要關於什麼？',
+    '第一段點出拆除高樓的首選方法是「**爆破拆除（explosive demolition）**」；第二段說明爆破團隊如何勘查結構並決定炸藥種類、位置與引爆時間（what **explosives** to use, where to position them...）；第三段詳述如何先炸低樓層再炸高樓層、以及如何利用先後引爆控制大樓傾倒方向（**collapsing the building** / **loading explosives** / **controlling the way it collapses**）。因此全文主旨為 **(B) How to collapse a building with explosives（如何利用炸藥使建築物倒塌／進行爆破拆除）**。',
+    [
+      ['How to execute demolition at the right time.','如何在正確的時間點執行拆除。','引爆時間差（how to time their explosions）僅是第二段末句的其中一個細節，無法涵蓋藍圖勘查、高低樓層裝藥與傾倒方向控制。<br><b>何時才對：</b>無。'],
+      ['How to collapse a building with explosives.','如何利用炸藥使建築物倒塌（爆破拆除大樓）。','完美統括首段的 *explosive demolition* 以及第二、三段完整的爆破規劃與倒塌控制流程。'],
+      ['How to use explosives for different purposes.','如何將炸藥用於不同的目的。','全文只探討「拆除高樓建築（demolishing a building）」這單一目的，並未探討開山鑿洞、採礦或軍事等不同用途。<br><b>何時才對：</b>無。'],
+      ['How to destroy a building with minimum manpower.','如何以最少的人力摧毀建築物。','文中強調的是安全（safely）與方向控制，並未探討如何「節省人力（minimum manpower）」。<br><b>何時才對：</b>無。']
+    ]
+  ]
+];
+
+RC4_Q.forEach(q => {
+  SENT[q[0]]=[q[3], q[4]];
+  rc4Html += card(q[0], q[1], q[2], stem(q[0]) + clue(q[5]) + ops(q[6], q[2]));
+});
+rc4Html += groupGradeBox('rc4', '五、閱讀測驗（第 48–51 題）', 48, 51, 2);
+appendApp(rc4Html);
+
+// ==================== 全卷單選題總批改面板 ====================
+appendApp('<div class="grade-box all-box" id="gbox-all">' +
+  '<div class="grade-title">🏆 全卷選擇題總批改（第 1–51 題，滿分 72 分）</div>' +
+  '<div class="grade-btns">' +
+    '<button class="btn-grade" onclick="gradeAllSingleChoice()">🏆 一次批改全卷</button>' +
+    '<button class="btn-reset" onclick="resetAllSingleChoice()">🔄 一次清空重練</button>' +
+  '</div>' +
+  '<div class="grade-res" id="gres-all"></div>' +
+'</div>');
+
+// ==================== 第貳部分：非選擇題 ====================
+// 一、中譯英
+let transHtml = '<h2 id="sec-trans">第貳部分：非選擇題 — 一、中譯英（占 8 分）</h2>';
+transHtml += '<section class="pas" id="pas-trans">' +
+  '<h3>中譯英題目與詳解（每題 4 分，共 8 分）</h3>' +
+  '<div class="prompt-text" style="margin-bottom:12px;">' +
+    '<b>說明：</b>1. 請將以下中文句子譯成正確、通順、達意的英文，並將答案寫在「答案卷」上。<br>' +
+    '   2. 請依序作答，並標明子題號（1、2）。每題 4 分，共 8 分。' +
+  '</div>' +
+  '<div class="para">' +
+    '<div class="s">' +
+      '<div class="prompt-text"><b>1. 有些我們認為安全的包裝食品可能含有對人體有害的成分。</b></div>' +
+      '<input type="text" class="trans-input" placeholder="請在此輸入第 1 題英文翻譯練習...">' +
+      '<div class="en trans-ans" style="margin-top:6px;color:var(--ok);font-weight:600;">✔ 參考正解 1：Some packaged foods (that) we think are safe (consider safe) may contain ingredients harmful to the human body (our health).</div>' +
+      '<div class="en trans-ans" style="color:var(--ok);">✔ 參考正解 2：Some of the packaged food which we regard as safe might contain ingredients that are harmful to human beings.</div>' +
+      '<div class="note">' +
+        '<b>📌 考點與字詞解析：</b><br>' +
+        '• <b>包裝食品</b>：<i>packaged foods / food</i>（注意過去分詞 <i>packaged</i> 表「被包裝好的」）。<br>' +
+        '• <b>我們認為安全的</b>：關係子句 <i>(that/which) we consider / think (to be) safe</i> 或 <i>(that/which) we think are safe</i> 或 <i>(that/which) we regard as safe</i>。<br>' +
+        '• <b>含有……成分</b>：<i>contain ingredients (elements / substances)</i>。<br>' +
+        '• <b>對人體有害的</b>：<i>(which/that are) harmful / hazardous / detrimental to the human body (human health / our bodies)</i>。' +
+      '</div>' +
+    '</div>' +
+    '<div class="s" style="margin-top:16px;">' +
+      '<div class="prompt-text"><b>2. 為了我們自身的健康，在購買食物前我們應仔細閱讀包裝上的說明。</b></div>' +
+      '<input type="text" class="trans-input" placeholder="請在此輸入第 2 題英文翻譯練習...">' +
+      '<div class="en trans-ans" style="margin-top:6px;color:var(--ok);font-weight:600;">✔ 參考正解 1：For the sake of our own health, we should carefully read the instructions (directions / labels) on the package before buying (purchasing) food.</div>' +
+      '<div class="en trans-ans" style="color:var(--ok);">✔ 參考正解 2：For our own health, before we buy food, we ought to read the descriptions on the packaging carefully.</div>' +
+      '<div class="note">' +
+        '<b>📌 考點與字詞解析：</b><br>' +
+        '• <b>為了我們自身的健康</b>：<i>For (the sake of) our own health</i>。<br>' +
+        '• <b>在購買食物前</b>：<i>before buying (purchasing) food</i> 或 <i>before we buy food</i>。<br>' +
+        '• <b>仔細閱讀包裝上的說明</b>：<i>read the instructions (directions / descriptions / labels) on the package (packaging) carefully</i>。' +
+      '</div>' +
+    '</div>' +
+  '</div>' +
+'</section>';
+
+transHtml += '<div class="grade-box" id="gbox-trans">' +
+  '<div class="grade-title">📝 一、中譯英批改與對答（共 8 分）</div>' +
+  '<div class="grade-btns">' +
+    '<button class="btn-grade" onclick="gradeTrans()">✅ 顯示中譯英正解與解析</button>' +
+    '<button class="btn-reset" onclick="resetTrans()">🔄 清空重練中譯英</button>' +
+  '</div>' +
+  '<div class="grade-res" id="gres-trans"></div>' +
+'</div>';
+appendApp(transHtml);
+
+// 二、英文作文
+let essayHtml = '<h2 id="sec-essay">第貳部分：非選擇題 — 二、英文作文（占 20 分）</h2>';
+
+essayHtml += '<section class="pas graded" id="pas-essay-prompt">' +
+  '<h3>英文作文題目與寫作提示</h3>' +
+  '<div class="prompt-text">' +
+    '<b>說明：</b>1. 依提示在「答案卷」上寫一篇英文作文。<br>' +
+    '   2. 文長至少 120 個單詞（words）。<br>' +
+    '<b>提示：</b>請以運動為主題，寫一篇至少 120 個單詞的文章，說明你最常從事的運動是什麼。文分兩段，第一段描述這項運動如何進行（如地點、活動方式、及可能需要的相關用品等），第二段說明你從事這項運動的原因及這項運動對你生活的影響。' +
+  '</div>' +
+'</section>';
+
+essayHtml += passage('滿分範文賞析：Finding Strength and Serenity in Beach Volleyball and Bodyweight Training（約 280 字，逐句中英對照）', [
+  [
+    ['Among all the physical activities I engage in, beach volleyball is the sport I play most regularly on weekends.', '在我參與的所有體能活動中，「沙灘排球」是我每逢週末最常從事的運動。'],
+    ['Unlike indoor volleyball played on a hard wooden court, beach volleyball takes place outdoors on a sun-drenched sand court near the coast or a riverside park.', '不同於在堅硬木地板球場上進行的室內排球，沙灘排球是在海岸邊或河濱公園陽光普照的沙地球場上進行的戶外運動。'],
+    ['A typical game is played by two teams of two to four players separated by a high net, where we take turns serving, passing, setting, and spiking the ball to ground it on the opponent\'s side.', '一場典型的比賽由兩支二至四人的隊伍隔著高網對戰，我們輪流發球、接發、舉球並扣殺，試圖讓球落在對手的場地內。'],
+    ['One of the best things about this sport is that it requires minimal equipment: since we play barefoot on the soft sand, we do not even need athletic shoes.', '這項運動最棒的特點之一是它需要的裝備極少：因為我們是赤腳在柔軟的沙地上打球，甚至連運動鞋都不需要。'],
+    ['All I need to pack in my backpack are a durable outdoor volleyball, breathable sportswear, a pair of UV-blocking sunglasses, and high-SPF sunscreen to protect my skin from the scorching sun.', '我只需要在背包裡裝進一顆耐用的戶外排球、透氣的運動服、一副抗紫外線太陽眼鏡，以及高防曬係數的防曬乳，以保護皮膚免受烈日曬傷。']
+  ],
+  [
+    ['I was initially drawn to beach volleyball because I wanted to step out of air-conditioned rooms and embrace nature while staying fit.', '我最初會被沙灘排球吸引，是因為我想走出冷氣房，在保持體態健康的同時擁抱大自然。'],
+    ['Running and jumping on shifting sand require twice as much muscular effort as moving on solid ground, which has significantly strengthened my core muscles and lower-body endurance without putting excessive stress on my knees.', '在鬆軟流動的沙地上奔跑與跳躍，需要耗費比硬地移動多一倍的肌肉力量，這顯著強化了我的核心肌群與下肢肌耐力，同時又不會對膝蓋造成過度的負擔。'],
+    ['Beyond the physical benefits, this sport has had a profound, positive impact on my mental well-being and social life.', '除了身體上的益處，這項運動對我的心理健康與社交生活也產生了深遠且正面的影響。'],
+    ['After a hectic week of work and study, diving into the warm sand to save a ball and laughing off mistakes with my teammates instantly washes away all my tension and fatigue.', '在結束一週繁忙的工作與學習後，飛身撲向溫暖的沙地救球、並與隊友們對失誤一笑置之，瞬間就能洗去我所有的緊繃與疲憊。'],
+    ['It has taught me resilience, teamwork, and how to stay fully present in the moment under the open sky.', '它教會了我韌性、團隊合作，以及如何在廣闊的天空下全心活在當下。']
+  ]
+], '💡 <b>範文結構與高分亮點解析：</b><br>1. <b>第一段（精準涵蓋地點、方式與用品三要素）</b>：以「沙灘排球（<i>beach volleyball</i>）」為題，清楚交代<b>地點</b>（海岸或河濱的陽光沙地球場 <i>sun-drenched sand court</i>）、<b>活動方式</b>（隔網對戰、輪流發球、接球、舉球與扣球 <i>serving, passing, setting, and spiking</i>），以及<b>相關用品</b>（赤腳不需穿鞋，只需準備耐用的球、透氣運動服、抗 UV 墨鏡與高係數防曬乳），細節真實生動。<br>2. <b>第二段（從事原因＋身心與社交雙重影響）</b>：先點出走出室內親近自然、同時沙地緩衝能鍛鍊核心肌群又不傷膝蓋的生理好處；接著昇華至心理與人際層面，巧妙運用本卷第 36–39 題組片語 <i>laughing off mistakes</i>（對失誤一笑置之），展現運動帶來的紓壓與團隊情誼！', 'essay-model', 'graded');
+
+appendApp(essayHtml);
+</script>
+<script src="bookmark.js"></script>
+<script>
+  let secretClickCount = 0;
+  let secretTimer;
+  document.getElementById('secret-trigger').addEventListener('click', function() {
+    secretClickCount++;
+    if (secretClickCount === 3) {
+      const counter = document.getElementById('secret-counter');
+      counter.style.display = counter.style.display === 'none' ? 'block' : 'none';
+      secretClickCount = 0;
+    }
+    clearTimeout(secretTimer);
+    secretTimer = setTimeout(() => { secretClickCount = 0; }, 2000);
+  });
+</script>
+</body>
+</html>
