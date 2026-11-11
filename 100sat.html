@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>100學年度指定科目考試 英文考科詳解</title>
+<style>
+:root{--bg:#faf8f4;--fg:#222;--card:#fff;--line:#e4ded3;--acc:#9a3b2e;--ok:#1f7a4d;--no:#b3261e;--mut:#6b6558;--hl:#fff1c9}
+@media(prefers-color-scheme:dark){:root{--bg:#161512;--fg:#e8e4da;--card:#201f1b;--line:#3a372f;--acc:#e08a78;--ok:#6fcf9a;--no:#f08a82;--mut:#a39d8f;--hl:#4a3f1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+.top{max-width:900px;margin:auto;padding:28px 18px 10px}
+.top h1{margin:0 0 4px;font-size:1.6rem;color:var(--acc)}
+.top p{margin:2px 0;color:var(--mut);font-size:.92rem}
+.feature-box{background:var(--hl);border-left:4px solid var(--acc);padding:8px 12px;border-radius:0 6px 6px 0;margin:10px 0;font-size:0.9rem;color:var(--fg);}
+nav{position:sticky;top:0;z-index:9;background:var(--bg);border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px;padding:8px 12px}
+nav a,nav button{flex:none;padding:5px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--fg);text-decoration:none;font:inherit;font-size:.88rem;cursor:pointer}
+nav a:hover,nav button:hover{border-color:var(--acc);color:var(--acc)}
+nav a.review-btn{background:var(--acc);color:#fff;border-color:var(--acc);font-weight:bold;}
+nav button.pm-active { background:var(--acc); color:#fff; border-color:var(--acc); }
+main{max-width:900px;margin:auto;padding:0 16px 70px}
+h2{margin:36px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--acc);font-size:1.3rem}
+h3{margin:0 0 8px;font-size:1.05rem;color:var(--acc)}
+.pas,.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.para{margin-bottom:14px}
+.s{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--line)}
+.en{font-family:Georgia,"Times New Roman",serif;font-size:1.02rem}
+.zh{color:var(--mut);font-size:.93rem}
+.prompt-text{color:var(--fg);font-size:.96rem;line-height:1.8}
+.note{color:var(--mut);font-size:.85rem;margin:6px 0 0}
+.bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 4px;border-radius:3px;font-weight:600}
+.bl sup{color:var(--acc);margin-right:3px;font-size:.7em}
+.bank{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.92rem;margin-bottom:8px}
+details.q>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+details.q>summary::-webkit-details-marker{display:none}
+.n{background:var(--acc);color:#fff;border-radius:6px;padding:0 10px;font-weight:700;font-size:1.05rem}
+.tag{font-size:.78rem;border:1px solid var(--acc);color:var(--acc);border-radius:99px;padding:0 9px;line-height:1.6}
+.tag.pos{border-color:var(--ok);color:var(--ok)}
+.ans{margin-left:auto;font-weight:700;color:var(--ok)}
+.qb{margin-top:10px}
+.stem{margin-bottom:8px;padding:8px 10px;background:var(--bg);border-radius:6px}
+.clue{margin:8px 0;padding:8px 12px;border-left:4px solid var(--acc);background:var(--bg);border-radius:0 6px 6px 0}
+.clue h4,.qb h4{margin:0 0 2px;font-size:.92rem;color:var(--acc)}
+ul.op{list-style:none;margin:6px 0 0;padding:0}
+ul.op li{padding:7px 10px;margin:5px 0;border-radius:6px;border:1px solid var(--line);font-size:.95rem;transition:background 0.2s;cursor:pointer}
+ul.op li.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 9%,transparent)}
+ul.op li.no{border-color:color-mix(in srgb,var(--no) 45%,transparent)}
+ul.op i{font-style:normal;font-weight:700;font-size:.82rem}
+li.ok i{color:var(--ok)}li.no i{color:var(--no)}
+.exp{margin-top:4px}
+small{color:var(--mut)}
+
+/* === 練習模式與批改狀態樣式 === */
+body.practice-mode details.q:not(.graded) .ans { visibility: hidden; }
+body.practice-mode details.q:not(.graded) .clue { display: none; }
+body.practice-mode details.q:not(.graded) .tag { display: none; }
+body.practice-mode details.q:not(.graded) .stem .zh { display: none; }
+body.practice-mode .pas:not(.graded) .zh { display: none; }
+body.practice-mode .pas:not(.graded) .trans-ans { display: none; }
+body.practice-mode .pas:not(.graded) .note { display: none; }
+.trans-input {
+  display: none;
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1rem;
+}
+.trans-input:focus { outline: none; border-color: var(--acc); }
+body.practice-mode .trans-input { display: block; }
+body.practice-mode .bl:not(.revealed) {
+  color: transparent;
+  background: var(--bg);
+  border-bottom: 2px solid var(--acc);
+  padding: 0 18px;
+  user-select: none;
+  display: inline-block;
+  min-width: 64px;
+  text-align: center;
+}
+body.practice-mode .bl:not(.revealed) sup {
+  color: var(--acc);
+  font-weight: 700;
+}
+body.practice-mode .bank:not(.graded) small { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li small { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li.ok,
+body.practice-mode details.q:not(.graded) ul.op li.no { border-color: var(--line); background: transparent; }
+body.practice-mode details.q:not(.graded) ul.op li i { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li .exp { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li:hover { background: var(--hl); }
+ul.op li.selected { border-color: var(--acc) !important; background: color-mix(in srgb, var(--acc) 12%, transparent) !important; font-weight: 600; }
+
+/* 已批改題目的作答回饋樣式 */
+details.q.graded ul.op li.selected.ok { border: 2px solid var(--ok) !important; background: color-mix(in srgb, var(--ok) 15%, transparent) !important; }
+details.q.graded ul.op li.selected.no { border: 2px solid var(--no) !important; background: color-mix(in srgb, var(--no) 14%, transparent) !important; }
+.user-status { font-weight: 700; font-size: .88rem; padding: 1px 8px; border-radius: 99px; margin-left: 6px; }
+.user-status.st-ok { background: color-mix(in srgb, var(--ok) 15%, transparent); color: var(--ok); border: 1px solid var(--ok); }
+.user-status.st-no { background: color-mix(in srgb, var(--no) 15%, transparent); color: var(--no); border: 1px solid var(--no); }
+.user-status.st-blank { background: var(--hl); color: var(--acc); border: 1px solid var(--acc); }
+
+/* 題組批改面板與全卷總批改面板 */
+.grade-box {
+  background: var(--card);
+  border: 2px dashed var(--acc);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin: 18px 0 32px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.grade-box.all-box {
+  border: 2px solid var(--acc);
+  background: color-mix(in srgb, var(--hl) 45%, var(--card));
+  padding: 20px 22px;
+  margin: 30px 0 40px;
+}
+.grade-title { font-weight: 700; color: var(--acc); font-size: 1.02rem; }
+.all-box .grade-title { font-size: 1.2rem; }
+.grade-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn-grade, .btn-reset {
+  padding: 6px 16px;
+  border-radius: 99px;
+  font: inherit;
+  font-size: .92rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid var(--acc);
+  transition: transform 0.1s, opacity 0.2s;
+}
+.btn-grade { background: var(--acc); color: #fff; }
+.all-box .btn-grade, .all-box .btn-reset { padding: 8px 22px; font-size: 1rem; }
+.btn-reset { background: var(--card); color: var(--mut); border-color: var(--line); }
+.btn-grade:hover, .btn-reset:hover { opacity: 0.9; transform: translateY(-1px); }
+.grade-res {
+  width: 100%;
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  font-size: .95rem;
+  display: none;
+}
+.grade-res.show { display: block; }
+.q-Jump {
+  display: inline-block;
+  padding: 1px 8px;
+  margin: 2px 3px;
+  border-radius: 6px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  color: var(--acc);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: .86rem;
+}
+.q-Jump:hover { background: var(--acc); color: #fff; border-color: var(--acc); }
+
+footer{max-width:900px;margin:auto;padding:20px 16px 40px;color:var(--mut);font-size:.85rem;line-height:1.6;border-top:1px solid var(--line);margin-top:40px;}
+footer a{color:var(--acc);text-decoration:none;font-weight:bold;}
+footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1><span id="exam-title">100學年度指定科目考試 英文考科詳解</span> <span id="completed-badge" style="display:none;font-size:1rem;color:var(--ok);">✅ 已完成</span></h1>
+  <p>每題含：考點標籤 → 題幹逐句中英對照 → 解題線索 → 正解與全部誤答分析</p>
+  <div class="feature-box">
+    💡 <b>複習與作答指南：</b> 點擊「🎯 切換練習模式」可自動挖空題幹答案並隱藏中譯與解析（含中譯英答案與詳解）；直接點選各題選項作答後，可點擊各題組下方的「<b>✅ 批改本題組</b>」或單選題最後的「<b>🏆 一次批改全卷</b>」查看得分並自動展開詳解（亦可點擊「<b>🔄 一次清空重練</b>」重新作答）！點擊每題右上角的「標記此題」可收錄錯題；滑鼠反白任何英文字句可「收藏單字」。請前往 <a href="review.html" target="_blank" style="color:var(--acc);font-weight:bold;">錯題與單字總複習頁面</a>。
+  </div>
+  <p>圖例：<span class="bl revealed">黃底</span> ＝ 正確答案填入處 ｜ <span class="tag" id="secret-trigger" style="user-select:none;cursor:default;">考點</span> <span class="tag pos">詞性需求</span></p>
+  <div id="secret-counter" style="display:none; margin-top:8px; font-size:0.9rem; color:var(--mut);">
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    👁️ <b>本頁瀏覽人次：</b><span id="busuanzi_value_page_pv"></span> 次
+  </div>
+</div>
+<nav id="nav">
+  <button id="pm-toggle">🎯 切換練習模式</button>
+  <button id="complete-btn">📝 標記為已完成</button>
+  <a href="review.html" class="review-btn" target="_blank">📚 前往總複習</a>
+</nav>
+<main id="app"></main>
+<footer>
+  限定用途教學教材。本詳解為教學輔助，題目版權屬原出版單位（大考中心）。<br>
+  💡 <b>問題回報與建議：</b> Line: etpaul ｜ IG: <a href="https://www.instagram.com/etpaul" target="_blank">@etpaul</a>
+</footer>
+
+<script>
+const L="ABCD";
+const fx=s=>s.replace(/\*([^*]+)\*/g,'<i>$1</i>').replace(/\[\[(\d*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl"'+(n?' data-q="'+n+'"':'')+'>'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const SENT={};
+const Q_ANS={};
+
+function passage(title,paras,note,gid,extraCls){
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[(\d+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  return '<section class="pas'+(extraCls?' '+extraCls:'')+'"'+(gid?' id="pas-'+gid+'"':'')+'><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
+}
+function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
+const clue=t=>'<div class="clue"><h4>解題線索</h4>'+t+'</div>';
+function ops(list,ans,lab){
+  lab=lab||'ABCDEF';
+  return '<ul class="op">'+list.map((o,i)=>{
+    const optCode = (lab==='ABCDEF'&&list.length<=4) ? L[i] : lab[i];
+    const k=ans.indexOf(optCode)>=0;
+    return '<li class="'+(k?'ok':'no')+'" data-opt="'+optCode+'" onclick="selectOpt(this)"><b>('+optCode+') '+fx(o[0])+'</b>'+(o[1]?' <small>'+o[1]+'</small>':'')+' <i>'+(k?'✔ 正解':'✘ 誤答')+'</i><div class="exp">'+o[2]+'</div></li>';
+  }).join('')+'</ul>';
+}
+function card(n,tags,ans,body){
+  Q_ANS[n] = ans;
+  return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="user-status" id="st'+n+'" style="display:none"></span><span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
+}
+
+// 產生各題組批改面板 HTML
+function groupGradeBox(gid, title, startQ, endQ, ptsPerQ) {
+  ptsPerQ = ptsPerQ || 1;
+  const totalPts = (endQ - startQ + 1) * ptsPerQ;
+  return '<div class="grade-box" id="gbox-'+gid+'">' +
+    '<div class="grade-title">📝 '+title+'（第 '+startQ+'–'+endQ+' 題，共 '+totalPts+' 分）</div>' +
+    '<div class="grade-btns">' +
+      '<button class="btn-grade" onclick="gradeGroup(\''+gid+'\','+startQ+','+endQ+','+ptsPerQ+')">✅ 批改本題組</button>' +
+      '<button class="btn-reset" onclick="resetGroup(\''+gid+'\','+startQ+','+endQ+')">🔄 重練本題組</button>' +
+    '</div>' +
+    '<div class="grade-res" id="gres-'+gid+'"></div>' +
+  '</div>';
+}
+
+// 點擊選項作答
+window.selectOpt = function(li) {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  const qEl = li.closest('details.q');
+  if (qEl && qEl.classList.contains('graded')) {
+    qEl.classList.remove('graded');
+    const qNum = qEl.id.replace('q', '');
+    const st = document.getElementById('st' + qNum);
+    if (st) st.style.display = 'none';
+  }
+  li.parentNode.querySelectorAll('li').forEach(el => el.classList.remove('selected'));
+  li.classList.add('selected');
+};
+
+// 批改單一題目並回傳狀態 ('ok' | 'no' | 'blank')
+function evaluateSingleQ(n) {
+  const qEl = document.getElementById('q' + n);
+  if (!qEl) return 'blank';
+  qEl.classList.add('graded');
+  qEl.open = true;
+
+  document.querySelectorAll('.bl[data-q="'+n+'"]').forEach(el => el.classList.add('revealed'));
+
+  const sel = qEl.querySelector('ul.op li.selected');
+  const st = document.getElementById('st' + n);
+  const ans = Q_ANS[n];
+
+  if (!sel) {
+    if (st) {
+      st.className = 'user-status st-blank';
+      st.textContent = '⚠️ 未作答';
+      st.style.display = 'inline-block';
+    }
+    return 'blank';
+  }
+
+  const userOpt = sel.getAttribute('data-opt');
+  if (ans.indexOf(userOpt) >= 0) {
+    if (st) {
+      st.className = 'user-status st-ok';
+      st.textContent = '✔ 答對 (' + userOpt + ')';
+      st.style.display = 'inline-block';
+    }
+    return 'ok';
+  } else {
+    if (st) {
+      st.className = 'user-status st-no';
+      st.textContent = '✘ 答錯 (選 ' + userOpt + ')';
+      st.style.display = 'inline-block';
+    }
+    return 'no';
+  }
+}
+
+// 批改特定題組
+window.gradeGroup = function(gid, startQ, endQ, ptsPerQ) {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  let okCount = 0, wrongList = [], blankList = [];
+  for (let n = startQ; n <= endQ; n++) {
+    const res = evaluateSingleQ(n);
+    if (res === 'ok') okCount++;
+    else if (res === 'no') wrongList.push(n);
+    else blankList.push(n);
+  }
+  const pasEl = document.getElementById('pas-' + gid);
+  if (pasEl) pasEl.classList.add('graded');
+  if (gid === 'wbank') {
+    const bankEl = document.getElementById('bank-wbank');
+    if (bankEl) bankEl.classList.add('graded');
+  }
+
+  const totalQ = endQ - startQ + 1;
+  const earnedPts = okCount * ptsPerQ;
+  const maxPts = totalQ * ptsPerQ;
+  const resEl = document.getElementById('gres-' + gid);
+
+  let html = '<div><b>📊 批改結果：</b>答對 <b>' + okCount + ' / ' + totalQ + '</b> 題，得分 <b style="color:var(--acc);font-size:1.15rem;">' + earnedPts + ' / ' + maxPts + '</b> 分' + (okCount === totalQ ? ' 🎉 全部答對！' : '') + '</div>';
+  if (wrongList.length > 0) {
+    html += '<div style="margin-top:4px;">❌ <b>答錯題號：</b>' + wrongList.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  if (blankList.length > 0) {
+    html += '<div style="margin-top:4px;">⚠️ <b>未作答題號：</b>' + blankList.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  resEl.innerHTML = html;
+  resEl.classList.add('show');
+};
+
+// 重練特定題組
+window.resetGroup = function(gid, startQ, endQ) {
+  enablePracticeMode();
+  for (let n = startQ; n <= endQ; n++) {
+    const qEl = document.getElementById('q' + n);
+    if (qEl) {
+      qEl.classList.remove('graded');
+      qEl.querySelectorAll('ul.op li').forEach(li => li.classList.remove('selected'));
+    }
+    const st = document.getElementById('st' + n);
+    if (st) st.style.display = 'none';
+    document.querySelectorAll('.bl[data-q="'+n+'"]').forEach(el => el.classList.remove('revealed'));
+  }
+  const pasEl = document.getElementById('pas-' + gid);
+  if (pasEl) pasEl.classList.remove('graded');
+  if (gid === 'wbank') {
+    const bankEl = document.getElementById('bank-wbank');
+    if (bankEl) bankEl.classList.remove('graded');
+  }
+  const resEl = document.getElementById('gres-' + gid);
+  if (resEl) {
+    resEl.innerHTML = '';
+    resEl.classList.remove('show');
+  }
+};
+
+// 展開與重置中譯英詳解
+window.gradeTrans = function() {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  const pasEl = document.getElementById('pas-trans');
+  if (pasEl) pasEl.classList.add('graded');
+  const resEl = document.getElementById('gres-trans');
+  if (resEl) {
+    resEl.innerHTML = '<div>✅ 已展開中譯英參考正解與句型解析，請自行核對作答內容！</div>';
+    resEl.classList.add('show');
+  }
+};
+
+window.resetTrans = function() {
+  enablePracticeMode();
+  const pasEl = document.getElementById('pas-trans');
+  if (pasEl) {
+    pasEl.classList.remove('graded');
+    pasEl.querySelectorAll('.trans-input').forEach(inp => inp.value = '');
+  }
+  const resEl = document.getElementById('gres-trans');
+  if (resEl) {
+    resEl.innerHTML = '';
+    resEl.classList.remove('show');
+  }
+};
+
+// === 功能初始化：練習模式與完成標記 ===
+const pmBtn = document.getElementById('pm-toggle');
+function enablePracticeMode() {
+  document.body.classList.add('practice-mode');
+  pmBtn.classList.add('pm-active');
+  pmBtn.textContent = '退出練習模式（顯示全部詳解）';
+  document.querySelectorAll('details.q').forEach(d => d.open = true);
+}
+function disablePracticeMode() {
+  document.body.classList.remove('practice-mode');
+  pmBtn.classList.remove('pm-active');
+  pmBtn.textContent = '🎯 切換練習模式';
+}
+pmBtn.onclick = function() {
+  if (document.body.classList.contains('practice-mode')) {
+    disablePracticeMode();
+  } else {
+    enablePracticeMode();
+  }
+};
+
+const examTitle = document.getElementById('exam-title').innerText;
+const compBtn = document.getElementById('complete-btn');
+const badge = document.getElementById('completed-badge');
+let comps = JSON.parse(localStorage.getItem('completed_exams')||'[]');
+
+if(comps.includes(examTitle)) {
+  badge.style.display = 'inline-block';
+  compBtn.innerText = '取消完成標記';
+}
+
+compBtn.onclick = function() {
+  comps = JSON.parse(localStorage.getItem('completed_exams')||'[]');
+  if(comps.includes(examTitle)) {
+    comps = comps.filter(t => t !== examTitle);
+    this.innerText = '📝 標記為已完成';
+    badge.style.display = 'none';
+  } else {
+    comps.push(examTitle);
+    this.innerText = '取消完成標記';
+    badge.style.display = 'inline-block';
+  }
+  localStorage.setItem('completed_exams', JSON.stringify(comps));
+};
+
+// === 各題組與全卷批改設定 ===
+const ALL_GROUPS = [
+  { gid: 'vocab', title: '一、詞彙題', startQ: 1, endQ: 10, pts: 1 },
+  { gid: 'cloze1', title: '二、綜合測驗（第 11–15 題）', startQ: 11, endQ: 15, pts: 1 },
+  { gid: 'cloze2', title: '二、綜合測驗（第 16–20 題）', startQ: 16, endQ: 20, pts: 1 },
+  { gid: 'wbank', title: '三、文意選填（第 21–30 題）', startQ: 21, endQ: 30, pts: 1 },
+  { gid: 'disc', title: '四、篇章結構（第 31–35 題）', startQ: 31, endQ: 35, pts: 2 },
+  { gid: 'rc1', title: '五、閱讀測驗（第 36–39 題）', startQ: 36, endQ: 39, pts: 2 },
+  { gid: 'rc2', title: '五、閱讀測驗（第 40–43 題）', startQ: 40, endQ: 43, pts: 2 },
+  { gid: 'rc3', title: '五、閱讀測驗（第 44–47 題）', startQ: 44, endQ: 47, pts: 2 },
+  { gid: 'rc4', title: '五、閱讀測驗（第 48–51 題）', startQ: 48, endQ: 51, pts: 2 }
+];
+
+window.gradeAllSingleChoice = function() {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  let totalOk = 0, totalQ = 0, earnedPts = 0, maxPts = 0;
+  let wrongList = [], blankList = [];
+
+  ALL_GROUPS.forEach(g => {
+    gradeGroup(g.gid, g.startQ, g.endQ, g.pts);
+    for (let n = g.startQ; n <= g.endQ; n++) {
+      totalQ++;
+      maxPts += g.pts;
+      const st = document.getElementById('st' + n);
+      if (st && st.classList.contains('st-ok')) {
+        totalOk++;
+        earnedPts += g.pts;
+      } else if (st && st.classList.contains('st-no')) {
+        wrongList.push(n);
+      } else {
+        blankList.push(n);
+      }
+    }
+  });
+
+  const resEl = document.getElementById('gres-all');
+  let html = '<div style="font-size:1.05rem;"><b>🏆 全卷選擇題總成績：</b>答對 <b>' + totalOk + ' / ' + totalQ + '</b> 題，總分 <b style="color:var(--acc);font-size:1.35rem;">' + earnedPts + ' / ' + maxPts + '</b> 分' + (totalOk === totalQ ? ' 🎉 滿分全對！太強了！' : '') + '</div>';
+  if (wrongList.length > 0) {
+    html += '<div style="margin-top:6px;">❌ <b>全卷答錯題號（點擊跳轉）：</b>' + wrongList.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  if (blankList.length > 0) {
+    html += '<div style="margin-top:6px;">⚠️ <b>全卷未作答題號（點擊跳轉）：</b>' + blankList.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  resEl.innerHTML = html;
+  resEl.classList.add('show');
+};
+
+window.resetAllSingleChoice = function() {
+  ALL_GROUPS.forEach(g => {
+    resetGroup(g.gid, g.startQ, g.endQ);
+  });
+  const resEl = document.getElementById('gres-all');
+  if (resEl) {
+    resEl.innerHTML = '';
+    resEl.classList.remove('show');
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+// === 一、詞彙題資料 (1–10) ===
+const VOCAB = [
+  [1, ['考點：生活與材質名詞辨析', '詞性需求：單數名詞'], 'A',
+    ['Many people think cotton is the most comfortable [[1|fabric]] to wear in hot weather.', '許多人認為棉布是在炎熱天氣裡穿起來最舒適的布料。'],
+    '主詞補語說明「棉（*cotton*）」屬於哪一種「可穿戴（*to wear*）的材質」，故選指紡織品、布料的 *fabric*。',
+    [
+      ['fabric', 'n. 布料；織物；結構', '指用來製作衣服的「布料、織物」，完美對應 *cotton* 與 *to wear in hot weather*。'],
+      ['coverage', 'n. 新聞報導；保險承保範圍；覆蓋範圍', '與衣物材質無關。<br><b>何時才對：</b>談新聞媒體對事件的「報導（*media coverage*）」或保險的「理賠範圍（*insurance coverage*）」時。'],
+      ['software', 'n. 電腦軟體', '指電腦程式，無法穿在身上。<br><b>何時才對：</b>搭配 *install / update computer software*（安裝／更新電腦軟體）時。'],
+      ['wardrobe', 'n. 衣櫥；全部服裝（行頭）', '指衣櫃或一個人的所有衣物總稱，棉（*cotton*）本身是一種材質而非衣櫥。<br><b>何時才對：</b>表示「添購春季新行頭（*update one\'s spring wardrobe*）」或「把大衣掛進衣櫥」時。']
+    ]
+  ],
+  [2, ['考點：商業與品管動詞搭配', '詞性需求：原形及物動詞'], 'A',
+    ['Because of the engine problem in the new vans, the auto company decided to [[2|recall]] them from the market.', '由於新款廂型車的引擎問題，該汽車公司決定將它們從市場上召回。'],
+    '前半句點出新款廂型車有「引擎問題（*engine problem*）」，後半句搭配介系詞片語 *from the market*（從市場上……），代表廠商回收瑕疵品的商業行為，固定用 *recall*。',
+    [
+      ['recall', 'v. 召回（瑕疵品）；回想起', '*recall + 瑕疵產品 + from the market* 為標準商業搭配，意為「從市面上召回瑕疵品」。'],
+      ['clarify', 'v. 澄清；闡明', '受詞通常是「立場、誤會、聲明（*position / misunderstanding / statement*）」，不能把廂型車「從市場上澄清」。<br><b>何時才對：</b>表示汽車公司發表聲明以「澄清（*clarify*）」引擎問題的原因時。'],
+      ['transform', 'v. 使徹底轉變；改造', '常搭配 *transform A into B*（把 A 轉變為 B），與 *from the market* 不合。<br><b>何時才對：</b>描述將舊工廠「改造成（*transform ... into*）」藝術園區時。'],
+      ['polish', 'v. 擦亮；磨光；潤飾（文章）', '指打蠟擦亮車身或潤飾文稿，無法搭配 *from the market*。<br><b>何時才對：</b>指「把鞋子擦亮（*polish shoes*）」或「潤飾演講稿（*polish a speech*）」時。']
+    ]
+  ],
+  [3, ['考點：身心狀態副詞辨析', '詞性需求：情態副詞'], 'C',
+    ['After a day\'s tiring work, Peter walked [[3|wearily]] back to his house, hungry and sleepy.', '在一天累人的工作之後，彼得疲憊地走回家，又餓又想睡。'],
+    '前後文皆強調極度疲勞：*After a day\'s tiring work*（一天累人的工作後）以及句尾補語 *hungry and sleepy*（又餓又想睡），修飾動詞 *walked* 應選表示「疲倦地、無精打采地」的 *wearily*（源自形容詞 *weary* 疲憊的）。',
+    [
+      ['splendidly', 'adv. 華麗地；極好地；燦爛地', '語意正面歡快，與 *tiring work* 及 *hungry and sleepy* 衝突。<br><b>何時才對：</b>形容派對辦得「極為出色（*went splendidly*）」或宮殿裝飾得「金碧輝煌」時。'],
+      ['thoroughly', 'adv. 徹底地；完全地', '常用來修飾「檢查、清潔、享受（*clean / investigate / enjoy thoroughly*）」，不修飾走路回家的姿態。<br><b>何時才對：</b>表示「徹底檢查引擎（*examine the engine thoroughly*）」時。'],
+      ['wearily', 'adv. 疲憊地；厭倦地', '由 *weary*（疲倦的）變化而來，貼切描繪下班後拖著沉重步伐走回家的模樣。'],
+      ['vaguely', 'adv. 模糊地；隱約地', '常修飾記憶或印象（如 *vaguely remember* 隱約記得），不能用來形容走路的體力狀態。<br><b>何時才對：</b>表示「我只隱約記得他的長相（*I only vaguely remember his face*）」時。']
+    ]
+  ],
+  [4, ['考點：對比語境副詞辨析', '詞性需求：副詞'], 'C',
+    ['In team sports, how all members work as a group is more important than how [[4|individually]] they perform.', '在團隊運動中，所有成員如何作為一個團隊合作，比他們個人表現如何更重要。'],
+    '句中比較級 *more important than* 形成鮮明對比：前半句是 *work as a group*（作為團體合作），後半句對應的必然是「個別地、單獨地（*individually*）」表現。',
+    [
+      ['frequently', 'adv. 頻繁地；時常', '指頻率高低，無法與 *as a group*（作為團隊）構成「團體 vs. 個人」的邏輯對比。<br><b>何時才對：</b>描述運動員「頻繁地練習（*practice frequently*）」時。'],
+      ['typically', 'adv. 通常；典型地', '指一般常態，不具「個人單打獨鬥」的對比語意。<br><b>何時才對：</b>陳述「這類比賽通常（*typically*）持續兩小時」時。'],
+      ['individually', 'adv. 個別地；各自地', '與前面的 *as a group*（作為一個團隊）形成完美反義對照。'],
+      ['completely', 'adv. 完全地；徹底地', '表程度百分之百，無法與團體合作形成對比。<br><b>何時才對：</b>形容運動員從傷勢中「完全康復（*recover completely*）」時。']
+    ]
+  ],
+  [5, ['考點：逆境與克服動詞搭配', '詞性需求：複數名詞'], 'D',
+    ['Despite her physical disability, the young blind pianist managed to overcome all [[5|obstacles]] to win the first prize in the international contest.', '儘管身體有殘疾，這位年輕的盲人鋼琴家仍設法克服一切障礙，在國際比賽中贏得首獎。'],
+    '句首讓步介系詞 *Despite her physical disability*（儘管身體殘障）與動詞 *overcome*（克服、戰勝）為核心線索；「克服一切障礙／困難」的標準搭配即為 *overcome all obstacles*。',
+    [
+      ['privacy', 'n. 隱私（不可數名詞）', '不可數名詞不可加 *-s*，且語意與克服殘疾獲獎無關。<br><b>何時才對：</b>談論公眾人物要求媒體尊重其「個人隱私（*protect/invade one\'s privacy*）」時。'],
+      ['ambition', 'n. 野心；抱負', '抱負是用來「追求、實現（*pursue / achieve / fulfill*）」而非「克服（*overcome*）」，且題幹為複數形。<br><b>何時才對：</b>表示「實現成為鋼琴家的抱負（*achieve her ambition*）」時。'],
+      ['fortunes', 'n. 財富；命運（際遇）', '*fortune* 指好運或巨額財富，並非需要被「克服（*overcome*）」的負面阻礙。<br><b>何時才對：</b>表示「賺大錢（*make a fortune*）」或「人生際遇的起伏（*the ups and downs of fortunes*）」時。'],
+      ['obstacles', 'n. 障礙；阻礙', '*overcome obstacles*（克服障礙）為高頻必考搭配，呼應盲人鋼琴家突破身體限制。']
+    ]
+  ],
+  [6, ['考點：天文科學專有名詞', '詞性需求：單數名詞'], 'C',
+    ['Each of the planets in the solar system circles around the sun in its own [[6|orbit]], and this prevents them from colliding with each other.', '太陽系中的每一顆行星都在自己的軌道上繞著太陽轉，這防止了它們彼此相撞。'],
+    '主詞為 *planets in the solar system*（太陽系的行星），動詞為 *circles around the sun*（繞行太陽），且能防止彼此相撞（*colliding with each other*），指的正是行星運行的「軌道（*orbit*）」。',
+    [
+      ['entry', 'n. 進入；入口；參賽作品；條目', '無法用來指天體繞日運行的路線。<br><b>何時才對：</b>指「禁止進入（*No Entry*）」或「字典詞條／比賽參賽作品」時。'],
+      ['haste', 'n. 匆忙；急忙', '*in haste* 意為「匆忙地」，不可說 *in its own haste* 來解釋為何行星不會相撞。<br><b>何時才對：</b>諺語 *Haste makes waste*（欲速則不達）或 *marry in haste*（倉促結婚）時。'],
+      ['orbit', 'n. （天體或人造衛星的）運行軌道', '*in its own orbit*（在各自的軌道上）精準符合太陽系行星繞日運行的天文常識。'],
+      ['range', 'n. 範圍；射程；山脈', '指變動幅度或距離範圍（如 *price range*、*in range*），非天體環繞的封閉路徑。<br><b>何時才對：</b>指「在射程／視線範圍內（*within range*）」或「山脈（*mountain range*）」時。']
+    ]
+  ],
+  [7, ['考點：人事招募與被動語態', '詞性需求：過去分詞 (Vp.p.)'], 'A',
+    ['Professor Wang is well known for his contributions to the field of economics. He has been [[7|recruited]] to help the government with its financial reform programs.', '王教授以其在經濟學領域的貢獻而聞名。他已被延攬來協助政府進行財政改革計畫。'],
+    '前句指出王教授在經濟學界貢獻卓著，後句接 *has been ___ to help the government*（被……來協助政府推動財改），此處需填表示「延攬、招募、徵召（專家人才）」的 *recruited*。',
+    [
+      ['recruited', 'v. 延攬；招募；徵兵', '*be recruited to V* 意為「被延攬／招募去執行某任務」，符合政府聘請知名學者協助改革的語境。'],
+      ['contradicted', 'v. 反駁；與……矛盾', '若填 *contradicted*（被反駁），後面接不定詞 *to help...* 在語意與句法上皆不通。<br><b>何時才對：</b>表示「證詞自相矛盾（*The witness contradicted himself*）」時。'],
+      ['mediated', 'v. 調停；斡旋', '*mediate* 的受詞通常是「爭端、衝突（*a dispute / conflict*）」，不以「人」當被動主詞說 *He was mediated to help...*。<br><b>何時才對：</b>表示「聯合國出面調停兩國衝突（*mediate the conflict between the two nations*）」時。'],
+      ['generated', 'v. 產生（電力、熱能、利潤）；引起', '受詞為能量、收益或想法（*electricity / revenue / ideas*），不可說「人被產生」。<br><b>何時才對：</b>表示「這項改革產生了龐大效益（*generated great benefits*）」時。']
+    ]
+  ],
+  [8, ['考點：精密科學儀器形容詞', '詞性需求：形容詞'], 'B',
+    ['Most earthquakes are too small to be noticed; they can only be detected by [[8|sensitive]] instruments.', '大多數地震都太微小而無法被察覺；它們只能被靈敏的儀器偵測出來。'],
+    '前半句說大多數地震「微小到人類感覺不到（*too small to be noticed*）」，因此必須仰賴極為「靈敏的、高感光／高感應度的（*sensitive*）」地震儀器才能偵測（*detected*）。',
+    [
+      ['manual', 'adj. 手動的；體力的；n. 使用手冊', '手動儀器並不能解釋為何能偵測到極微小的地震。<br><b>何時才對：</b>對比自動排檔與「手排車（*manual transmission*）」或指「體力勞動（*manual labor*）」時。'],
+      ['sensitive', 'adj. 靈敏的（儀器）；敏感的；體貼的', '修飾科學儀器（*instruments*）時，*sensitive* 指「高靈敏度的、能偵測微小變化的」，完全契合微震偵測。'],
+      ['portable', 'adj. 可攜式的；輕便的', '便於攜帶與否，和能否偵測到極微小地震毫無因果關係。<br><b>何時才對：</b>形容筆記型電腦或行動電源「輕便易攜（*portable devices*）」時。'],
+      ['dominant', 'adj. 占主導地位的；顯性的（基因）', '不修飾偵測儀器的性能。<br><b>何時才對：</b>形容某企業「稱霸市場（*play a dominant role in the market*）」時。']
+    ]
+  ],
+  [9, ['考點：機密外洩與新聞詞彙', '詞性需求：過去分詞 (Vp.p.)'], 'B',
+    ['With Wikileaks releasing secrets about governments around the world, many countries are worried that their national security information might be [[9|disclosed]].', '隨著維基解密公布世界各國政府的祕密，許多國家擔心他們的國家安全資訊可能會被揭露。'],
+    '前半句伴隨狀況 *With Wikileaks releasing secrets*（維基解密公布祕密）已給出同義線索：各國擔心「國安資訊（*national security information*）」會被「公開、揭露、洩漏（*disclosed*）」，即 *releasing secrets* 的換句話說。',
+    [
+      ['relieved', 'v. 緩解（疼痛）；解除（職務）；使鬆一口氣', '若國安機密被公布，各國是感到擔憂而非「鬆一口氣或緩解」。<br><b>何時才對：</b>表示「得知大家都平安，他鬆了一口氣（*He was relieved to hear the news*）」時。'],
+      ['disclosed', 'v. 揭露；公開（機密資訊）', '*disclose information / secrets* 意為「揭露／洩漏機密資訊」，直接呼應前文的 *releasing secrets*。'],
+      ['condensed', 'v. 濃縮；精簡（文章）；（水氣）凝結', '指水蒸氣凝結成水滴，或將長篇報告濃縮，與機密外洩無關。<br><b>何時才對：</b>指「煉乳（*condensed milk*）」或「將十頁報告精簡為一頁」時。'],
+      ['provoked', 'v. 挑釁；激怒；引發（負面反應）', '受詞通常是「人」或「憤怒、衝突（*anger / violence*）」，資訊不會「被激怒」。<br><b>何時才對：</b>表示「洩密事件引發了外交危機（*provoked a diplomatic crisis*）」時。']
+    ]
+  ],
+  [10, ['考點：形容詞與介系詞搭配', '詞性需求：形容詞'], 'B',
+    ['I\'m afraid we can\'t take your word, for the evidence we\'ve collected so far is not [[10|consistent]] with what you said.', '恐怕我們不能相信你的話，因為我們目前蒐集到的證據與你所說的不一致。'],
+    '前半句說「我們無法採信你的話（*can\'t take your word*）」，原因（*for*）是蒐集到的證據與你的說詞「不一致、不吻合」；搭配介系詞 *with* 表「與……一致／相符」的固定片語為 *be consistent with*。',
+    [
+      ['familiar', 'adj. 熟悉的', '雖可搭配 *with*，但 *Person + be familiar with + Thing* 的主詞必須是「人」，不能說「證據（*evidence*）對你的話很熟悉」。<br><b>何時才對：</b>主詞為人，如 *I am not familiar with this computer program*（我不熟悉這個電腦程式）時。'],
+      ['consistent', 'adj. 一致的；吻合的；始終如一的', '*be consistent with...*（與……一致／相符）為高頻考點，證據與供詞不符故無法採信。'],
+      ['durable', 'adj. 耐用的；持久的', '形容物品堅固耐用，不搭配 *with*，亦不修飾 *evidence*。<br><b>何時才對：</b>形容行李箱或登山鞋「非常耐用（*made of durable materials*）」時。'],
+      ['sympathetic', 'adj. 同情的；有同理心的', '常搭配 *to / toward*，且主詞為人而非證據。<br><b>何時才對：</b>表示「她很同情受災戶的處境（*She is sympathetic to the victims*）」時。']
+    ]
+  ]
+];
+
+// === 二、綜合測驗 第一篇 (11–15) ===
+const CLOZE1_PAS = [
+  [
+    ['Handling customer claims is a common task for most business firms.', '處理客戶索賠（客訴要求）對大多數商業公司而言是一項常見的任務。'],
+    ['These claims include requests to exchange merchandise, requests for refunds, requests that work [[11|be corrected]], and other requests for adjustments.', '這些訴求包括要求換貨、要求退款、要求修正工作缺失，以及其他要求補償調整的請求。'],
+    ['Most of these claims are approved because they are legitimate.', '這些訴求大多數都會獲得批准，因為它們是合情合理的。'],
+    ['However, some requests for adjustment must be [[12|denied]] and an adjustment refusal message must be sent.', '然而，有些調整補償的請求必須被拒絕，並且必須發送拒絕調整的通知訊息。'],
+    ['Adjustment refusals are negative messages for the customer.', '拒絕調整對客戶而言是負面的訊息。'],
+    ['They are necessary when the customer is [[13|at fault]] or when the vendor has done all that can reasonably or legally be expected.', '當錯在客戶，或者當賣方已經盡了一切合理或法律上所應盡的責任時，這些拒絕信就是必要的。']
+  ],
+  [
+    ['An adjustment refusal message requires your best communication skills [[14|because]] it is bad news to the receiver.', '一封拒絕補償的訊息需要你發揮最佳的溝通技巧，因為這對收信人來說是壞消息。'],
+    ['You have to refuse the claim and retain the customer [[15|at the same time]].', '你必須拒絕該項索賠，同時還要留住這位客戶。'],
+    ['You may refuse the request for adjustment and even try to sell the customer more merchandise or service.', '你可能會拒絕其補償請求，甚至還試圖向客戶推銷更多商品或服務。'],
+    ['All this is happening when the customer is probably angry, disappointed, or inconvenienced.', '而這一切都發生在客戶可能感到生氣、失望或不便的時候。']
+  ]
+];
+
+const CLOZE1_Q = [
+  [11, ['考點：要求／建議名詞從句之假設語氣', '詞性需求：原形被動 (should) be + Vp.p.'], 'D',
+    '前面出現表「要求」的名詞 *requests*，其後接同位語名詞子句 *that work ___* 時，子句動詞須用「*(should) + 原形動詞*」；且「工作（*work*）」是被修正，故用被動原形 *(should) be corrected*。',
+    [
+      ['is correct', '直說法現在式 + 形容詞', '違反 *request that + S + (should) + V* 的假設語氣規則，且語意應為「被修正（動作）」而非單純狀態。<br><b>何時才對：</b>一般名詞子句陳述事實，如 *I know that his answer is correct* 時。'],
+      ['to be correct', '不定詞片語', '*that* 引導的完整子句中必須有正式動詞，不能只放不定詞 *to be*。<br><b>何時才對：</b>不接 *that* 子句，直接用 *requests for the work to be corrected* 時。'],
+      ['is corrected', '直說法現在式被動', '雖用了被動，但未省略 *should* 還原為原形動詞 *be*。<br><b>何時才對：</b>陳述日常事實，如 *Every mistake is corrected immediately* 時。'],
+      ['be corrected', '(should) + 原形被動語態', '符合 *requests that + S + (should) be + Vp.p.* 的要求類名詞同位語子句文法。']
+    ]
+  ],
+  [12, ['考點：轉折語境與被動動詞辨析', '詞性需求：過去分詞 (Vp.p.)'], 'B',
+    '前句說大多數請求都會「獲准（*approved*）」，本句由轉折詞 *However*（然而）開頭，且後半句提到必須寄出「拒絕信（*an adjustment refusal message*）」，可知這些請求必須被「拒絕、駁回（*denied*）」。',
+    [
+      ['retailed', 'v. 零售', '主詞是 *requests*（請求），請求不能「被零售」。<br><b>何時才對：</b>主詞為商品，如 *These shoes are retailed at $80 a pair*（這雙鞋零售價 80 美元）時。'],
+      ['denied', 'v. 拒絕；駁回；否認', '*deny a request / claim* 意為「拒絕／駁回請求」，與前句 *approved* 相反，並直接呼應後文的 *refusal message*。'],
+      ['appreciated', 'v. 感激；欣賞；升值', '若感激並接受請求，就不必寄發拒絕信（*refusal message*）。<br><b>何時才對：</b>表達「非常感謝您的協助（*Your help is greatly appreciated*）」時。'],
+      ['elaborated', 'v. 詳細闡述（常搭配 on）', '語意與拒絕賠償無關。<br><b>何時才對：</b>請對方「進一步詳述計畫（*elaborate on the plan*）」時。']
+    ]
+  ],
+  [13, ['考點：介系詞慣用片語辨析', '詞性需求：介系詞片語（作主詞補語）'], 'A',
+    '本句說明何時必須拒絕客戶的索賠：一是賣方已盡一切合理與法律責任，另一種情況自然是「錯在客戶自己（商品損壞是客戶自己造成的）」，英文固定片語為 *be at fault*（有錯、應負責任）。',
+    [
+      ['at fault', 'phr. 有過錯；應負責任', '*be at fault* 指「有錯、理虧」，當客戶自己弄壞商品卻要求退換時，廠商即有權拒絕。'],
+      ['on call', 'phr. 待命；隨傳隨到', '常形容醫護或維修人員「待命值班」，與客訴責任歸屬無關。<br><b>何時才對：</b>形容「王醫師今晚待命值班（*Dr. Wang is on call tonight*）」時。'],
+      ['in tears', 'phr. 流著淚；哭泣中', '客戶哭泣並不是廠商「必須拒絕賠償」的合理條件。<br><b>何時才對：</b>描述某人「傷心落淚地離開房間（*left the room in tears*）」時。'],
+      ['off guard', 'phr. 措手不及；失去戒心', '常搭配 *catch sb off guard*（使某人措手不及），不符合句意。<br><b>何時才對：</b>表示「這個突如其來的問題讓他措手不及（*caught him off guard*）」時。']
+    ]
+  ],
+  [14, ['考點：因果副詞連接詞辨析', '詞性需求：從屬連接詞'], 'C',
+    '主句說「拒絕補償的信件需要你最佳的溝通技巧」，從屬子句說「這對收信人而言是壞消息（*it is bad news to the receiver*）」，後者顯然是前者的「原因」，故用 *because*。',
+    [
+      ['till', 'conj. 直到……為止', '表時間延續，無法連接「需要溝通技巧」與「這是壞消息」。<br><b>何時才對：</b>表示「等到雨停為止（*Wait till the rain stops*）」時。'],
+      ['unless', 'conj. 除非（= if... not）', '代入後變成「除非這是壞消息，否則需要溝通技巧」，邏輯完全顛倒。<br><b>何時才對：</b>表示「除非你提早預約，否則進不去」時。'],
+      ['because', 'conj. 因為', '引導原因副詞子句，合理解釋為何撰寫拒絕信極度考驗溝通手腕。'],
+      ['therefore', 'adv. 因此（副詞，非連接詞）', '一則因果方向顛倒，二則 *therefore* 是轉折副詞，前面若無分號或 *and*，不能直接連接兩個子句。<br><b>何時才對：</b>前句為因、後句為果，且寫成 *It is bad news; therefore, it requires great skill* 時。']
+    ]
+  ],
+  [15, ['考點：商業溝通雙重目標片語', '詞性需求：副詞片語'], 'C',
+    '句中兩個動作 *refuse the claim*（拒絕索賠）與 *retain the customer*（留住客戶）在現實中互相衝突，卻必須「同時（*at the same time*）」兼顧，這正是需要高超溝通技巧的原因。',
+    [
+      ['by and large', 'phr. 大體而言；總的來說', '同 *generally speaking* / *on the whole*，無法凸顯「既要拒絕又要留客」的雙重挑戰。<br><b>何時才對：</b>總結評價「大體而言，這項計畫算是成功的（*By and large, the project was a success*）」時。'],
+      ['over and over', 'phr. 一再地；反覆地', '客服人員不可能對同一個客訴「反覆不斷地拒絕又留客」。<br><b>何時才對：</b>形容「把同一個單字反覆念好幾遍（*read the word over and over*）」時。'],
+      ['at the same time', 'phr. 同時', '強調必須「同時」達成拒絕無理要求與維繫客戶關係兩項任務。'],
+      ['for the same reason', 'phr. 基於同樣的理由', '拒絕索賠（因為客戶理虧）與留住客戶（為了公司業績）並非基於同一個理由。<br><b>何時才對：</b>表示兩人「因為同樣的原因遲到（*were late for the same reason*）」時。']
+    ]
+  ]
+];
+
+// === 二、綜合測驗 第二篇 (16–20) ===
+const CLOZE2_PAS = [
+  [
+    ['People may express their feelings differently on different occasions.', '人們在不同的場合可能會以不同的方式表達他們的情感。'],
+    ['Cultures sometimes vary greatly in this regard.', '不同文化在這方面有時差異極大。'],
+    ['A group of researchers in Japan, [[16|for example]], studied the facial reactions of students to a horror film.', '舉例來說，日本的一群研究人員研究了學生對恐怖片的臉部反應。'],
+    ['When the Japanese students watched the film [[17|with]] the teacher present, their faces showed only the slightest hints of reaction.', '當日本學生在有老師在場的情況下觀看這部電影時，他們的臉上只流露出極其微小的反應跡象。'],
+    ['But when they thought they were alone (though they [[18|were being taped]] by a secret camera), their faces twisted into vivid mixes of anguished distress, fear, and disgust.', '但當他們以為自己獨處時（儘管他們正被隱藏攝影機拍攝下來），他們的臉扭曲成痛苦、恐懼與厭惡交織的生動表情。']
+  ],
+  [
+    ['The study also shows that there are several unspoken rules about how feelings should be shown on different occasions.', '這項研究也顯示，關於在不同場合應該如何表現情感，存在著幾條不成文的潛規則。'],
+    ['One of the most common rules is minimizing the show of emotion.', '最常見的規則之一就是將情緒的流露降到最低。'],
+    ['This is the Japanese norm for [[19|properly]] expressing feelings of distress [[20|in the presence of]] someone in authority, which explains why the students masked their upset with a poker face in the experiment.', '這是日本人面對權威人士在場時，「得體地」表達痛苦情緒的社會規範，這也解釋了為什麼學生在實驗中會用面無表情的撲克臉來掩飾他們的不安。']
+  ]
+];
+
+const CLOZE2_Q = [
+  [16, ['考點：轉折語與舉例過渡詞', '詞性需求：副詞片語'], 'D',
+    '前兩句提出抽象通則：「不同文化在情感表達上差異很大」，本句接著具體引述「日本研究團隊針對學生看恐怖片的實驗」作為實證，屬於標準的「舉例說明」，故選 *for example*。',
+    [
+      ['as usual', 'phr. 像往常一樣；照例', '前文並未提及該日本研究團隊「經常做這類實驗」，語意無從銜接。<br><b>何時才對：</b>描述某人習慣性動作，如 *As usual, he arrived ten minutes early* 時。'],
+      ['in some cases', 'phr. 在某些情況下', '通常用來說明通則下的局部例外或特定情境，不如 *for example* 能精準引出具體研究案例。<br><b>何時才對：</b>說明某藥物「在某些病例中會引起副作用（*In some cases, the drug causes side effects*）」時。'],
+      ['to be frank', 'phr. 坦白說；老實說', '用於說話者表達個人直率的主觀意見，不適用於客觀引述科學實驗。<br><b>何時才對：</b>口語表達個人看法，如 *To be frank, I don\'t agree with your plan* 時。'],
+      ['for example', 'phr. 舉例來說', '承接前句「不同文化差異極大」，引出日本心理學實驗作為具體例證。']
+    ]
+  ],
+  [17, ['考點：附帶狀況結構 with + O + OC', '詞性需求：介系詞'], 'D',
+    '空格後為受詞 *the teacher* 加形容詞補語 *present*（在場的），構成「*with + O + OC (adj.)*」的附帶狀況片語，表示「在老師在場的情況下」。',
+    [
+      ['of', 'prep. ……的', '*of* 無法構成「介系詞 + 受詞 + 受詞補語」的附帶狀況結構。<br><b>何時才對：</b>表所屬關係，如 *the presence of the teacher* 時。'],
+      ['as', 'prep./conj. 作為；當……時', '若當連接詞後須接完整子句（*as the teacher was present*），不可只接名詞與形容詞。<br><b>何時才對：</b>寫成完整子句 *as the teacher was present* 時。'],
+      ['from', 'prep. 從……；來自', '無法接複合受詞結構表伴隨狀態。<br><b>何時才對：</b>表示「離老師很遠（*far from the teacher*）」時。'],
+      ['with', 'prep. 在……情況下（附帶狀況）', '*with + the teacher (O) + present (OC)* 為核心文法結構，意為「有老師在場時」。']
+    ]
+  ],
+  [18, ['考點：過去進行式被動語態', '詞性需求：過去進行被動 were being + Vp.p.'], 'A',
+    '主要子句為過去式（*thought* / *twisted*），且空格後有表被動動作執行者的 *by a secret camera*（被隱藏攝影機……）；強調學生當時看電影的過程中「正在被錄影」，故用過去進行式被動 *were being taped*。',
+    [
+      ['were being taped', '過去進行式被動語態', '主詞 *they*（學生）搭配 *by a secret camera*，表過去某時刻「正在被拍攝記錄」。'],
+      ['had taped', '過去完成式主動語態', '主動語態代表「學生自己去錄影」，與後面的 *by a secret camera* 及文意完全相反。<br><b>何時才對：</b>主詞為研究人員（*The researchers had taped the students*）時。'],
+      ['are taping', '現在進行式主動語態', '時態（現在式）與語態（主動）皆錯。<br><b>何時才對：</b>描述現在研究人員「正在錄製影片（*The researchers are taping the session now*）」時。'],
+      ['have been taped', '現在完成式被動語態', '全文敘述過去完成的實驗（*studied / watched / thought / twisted*），不可混用現在完成式。<br><b>何時才對：</b>主要子句為現在式，強調截至目前為止已被錄下時。']
+    ]
+  ],
+  [19, ['考點：文化規範與副詞辨析', '詞性需求：副詞（修飾動名詞 expressing）'], 'C',
+    '前文提到研究發現不同場合有不成文的規矩（*unspoken rules*），而壓抑情緒正是日本社會規範（*the Japanese norm*）中認為「得體地、恰當地（*properly*）」表達負面情緒的方式。',
+    [
+      ['rarely', 'adv. 很少；罕見地', '若填入 *rarely*，會變成「日本很少表達痛苦的規範」，但規範是教人「如何得體表現（也就是盡量不外露）」，而非規定頻率。<br><b>何時才對：</b>直接修飾動詞，如 *Japanese people rarely show distress in public* 時。'],
+      ['similarly', 'adv. 同樣地；類似地', '用於比較兩個相似事物，不適合放在 *for ___ expressing* 之中修飾表達方式。<br><b>何時才對：</b>置於句首連接兩個相似的研究發現時。'],
+      ['properly', 'adv. 得體地；恰當地；正確地', '呼應前段提到的 *how feelings should be shown*（情感應該如何得體地表現），符合社會規範（*norm*）的定義。'],
+      ['critically', 'adv. 批判性地；危急地；嚴重地', '壓抑情緒與「批判性地」或「命危地」表達情緒無關。<br><b>何時才對：</b>搭配 *think critically*（批判性思考）或 *critically ill*（病危）時。']
+    ]
+  ],
+  [20, ['考點：介系詞片語與前後文呼應', '詞性需求：介系詞片語'], 'B',
+    '本句總結第一段的實驗結果：第一段說 *with the teacher present*（老師在場時）學生會掩飾情緒，此處將「老師」換成上位概念 *someone in authority*（權威人士），並將 *present* 換成同義名詞片語 *in the presence of*（在……在場／面前時）。',
+    [
+      ['with the help of', 'phr. 在……的協助下', '實驗中老師只是在旁觀看，並未「協助」學生表達痛苦。<br><b>何時才對：</b>表示「在老師的協助下完成研究（*completed the study with the help of the teacher*）」時。'],
+      ['in the presence of', 'phr. 在……在場時；當著……的面', '直接對應第一段的 *with the teacher present*，說明面對長輩或權威人士在場時的日本社交規範。'],
+      ['on top of', 'phr. 除……之外（還有）；在……上方', '語意完全不合。<br><b>何時才對：</b>表示「除了工作忙碌之外，他還感冒了（*On top of his busy work, he caught a cold*）」時。'],
+      ['in place of', 'phr. 代替；取代（= instead of）', '學生並沒有「取代」權威人士。<br><b>何時才對：</b>表示「用植物油代替奶油（*use vegetable oil in place of butter*）」時。']
+    ]
+  ]
+];
+
+// === 三、文意選填 (21–30) ===
+const WBANK_ITEMS = [
+  ['A','expense','n. 代價；費用'],['B','fading','V-ing/adj. 消退；黯淡'],['C','colors','n. 色彩；顏色（複數）'],
+  ['D','research','n./v. 研究'],['E','replacing','V-ing 取代'],['F','offer','v. 提供'],
+  ['G','users','n. 使用者（複數）'],['H','rapid','adj. 快速的；急遽的'],['I','gaining','V-ing 獲得；取得（進展）'],
+  ['J','medium','n. 媒介；媒體'],['K','circular','adj. 圓形的；循環的'],['L','unknown','n./adj. 未知的事物／未知的']
+];
+
+const WBANK_PAS = [
+  [
+    ['The history of the written word goes back 6,000 years.', '書寫文字的歷史可以追溯到六千年前。'],
+    ['Words express feelings, open doors into the [[21|unknown]], create pictures of worlds never seen, and allow adventures never dared.', '文字表達情感、開啟通往未知世界的大門、描繪出從未見過的世界圖像，並讓人體驗從未敢嘗試的冒險。'],
+    ['Therefore, the original [[22|users]] of words, such as storytellers, poets, and singers, were respected in all cultures in the past.', '因此，最初的文字使用者——例如說書人、詩人與歌手——在過去所有文化中都備受尊敬。'],
+    ['But now the romance is [[23|fading]].', '但如今，這份浪漫情懷正在消退。'],
+    ['Imagination is being surpassed by the instant picture.', '想像力正被即時影像所超越。'],
+    ['In a triumphant march, movies, TV, videos, and DVDs are [[24|replacing]] storytellers and books.', '電影、電視、錄影帶與 DVD 正以凱旋進軍之姿，取代說書人與書籍。'],
+    ['A visual culture is taking over the world at the [[25|expense]] of the written word.', '視覺文化正以犧牲書寫文字為代價，席捲全世界。'],
+    ['Our literacy, and with it our verbal and communication skills, are in [[26|rapid]] decline.', '我們的讀寫能力，以及隨之而來的語言與溝通能力，正在急遽衰退。']
+  ],
+  [
+    ['The only category of novel that is [[27|gaining]] ground in our increasingly visual world is the graphic novel.', '在我們這個日益視覺化的世界中，唯一正在拓展版圖（獲得青睞）的小說類別就是圖像小說（繪本小說）。'],
+    ['A growing number of adults and young people worldwide are reading graphic novels, and educators are beginning to realize the power of this [[28|medium]].', '全球有越來越多的成年人與年輕人在閱讀圖像小說，而教育工作者也開始意識到這種媒介的力量。'],
+    ['The graphic novel looks like a comic book, but it is longer, more sophisticated, and may come in black and white or multiple [[29|colors]] and appear in many sizes.', '圖像小說看起來像漫畫書，但它篇幅更長、內容更精深複雜，而且可能以黑白或多種色彩呈現，並有各種不同的尺寸。'],
+    ['In fact, some of the most interesting, daring, and most heartbreaking art being created right now is being published in graphic novels.', '事實上，目前正在創作的一些最有趣、最大膽且最令人心碎的藝術作品，都是以圖像小說的形式出版的。'],
+    ['Graphic novels [[30|offer]] the opportunity to examine the increasingly visual world of communications today while exploring serious social and literary topics.', '圖像小說提供了檢視當今日益視覺化的傳播世界的機會，同時也能探討嚴肅的社會與文學議題。'],
+    ['The graphic novel can be used to develop a sense of visual literacy, in much the same way that students are introduced to art appreciation.', '圖像小說可以用來培養視覺讀寫能力（視覺素養），其方式與引導學生接觸藝術鑑賞非常相似。']
+  ]
+];
+
+const WBANK_Q = [
+  [21, ['考點：the + 形容詞 = 抽象名詞', '詞性需求：形容詞／名詞（置於 the 後）'], 'L',
+    '定冠詞 *the* 後接形容詞可轉為抽象名詞；後文平行結構 *worlds never seen*（從未見過的世界）與 *adventures never dared*（從未敢嘗試的冒險）皆指向「未知的事物（*the unknown*）」。',
+    [
+      ['(L) unknown', 'n./adj. 未知的事物', '*open doors into the unknown* 意為「開啟通往未知領域的大門」，與後文 *never seen*、*never dared* 完美呼應。'],
+      ['(A) expense / (D) research / (G) users / (J) medium', 'n. 其他名詞選項', '語意皆無法與 *open doors into the...* 搭配成合理文意。<br><b>何時才對：</b>分別用於 *at the expense of*（第 25 題）、學術研究、使用者（第 22 題）、傳播媒介（第 28 題）時。'],
+      ['(H) rapid / (K) circular', 'adj. 其他形容詞選項', '*the rapid* 或 *the circular* 無法構成「未知境界」的抽象概念。']
+    ]
+  ],
+  [22, ['考點：舉例同位語與複數名詞', '詞性需求：複數可數名詞'], 'G',
+    '後方 *such as storytellers, poets, and singers*（例如說書人、詩人與歌手）與複數動詞 *were respected* 點出空格必須是「人（複數）」，亦即最初「使用文字的人（*the original users of words*）」。',
+    [
+      ['(G) users', 'n. 使用者（複數）', '說書人、詩人與歌手都是早期的「文字使用者（*users of words*）」，主詞複數對應 *were respected*。'],
+      ['(C) colors', 'n. 顏色（複數）', '雖為複數名詞，但說書人與詩人不是「顏色」。<br><b>何時才對：</b>第 29 題對比黑白與「多種色彩（*multiple colors*）」時。']
+    ]
+  ],
+  [23, ['考點：轉折對比與進行式分詞', '詞性需求：現在分詞 V-ing（構成現在進行式）'], 'B',
+    '前句說過去文字使用者備受尊崇，本句以 *But now*（但如今）轉折，後句接著說「想像力正被即時影像超越」，可見文字的浪漫情懷正在「消退、式微（*is fading*）」。',
+    [
+      ['(B) fading', 'V-ing 消退；逐漸消失', '*the romance is fading* 意為「這份浪漫正在消退」，承上啟下帶出文字式微的趨勢。'],
+      ['(E) replacing / (I) gaining', 'V-ing 其他分詞選項', '*replacing* 與 *gaining* 為及物動詞，後面必須接賓語，而本句在空格後直接以句號結尾。<br><b>何時才對：</b>後面有受詞時，如第 24 題 *replacing storytellers* 與第 27 題 *gaining ground*。']
+    ]
+  ],
+  [24, ['考點：現在進行式及物動詞', '詞性需求：現在分詞 V-ing（及物）'], 'E',
+    '主詞是「電影、電視、錄影帶與 DVD」，受詞是「說書人與書籍（*storytellers and books*）」，且前有 *are*，表示影音媒體正在「取代（*replacing*）」傳統說書人與紙本書籍。',
+    [
+      ['(E) replacing', 'V-ing 取代；接替', '精準描述影音媒體對傳統書籍與說書人的替代效應，呼應後句 *A visual culture is taking over the world*。'],
+      ['(I) gaining', 'V-ing 獲得', '若填 *gaining* 會變成「電影與電視正在獲得說書人與書籍」，語意不通。<br><b>何時才對：</b>第 27 題搭配 *gaining ground*（拓展版圖／獲得進展）時。']
+    ]
+  ],
+  [25, ['考點：固定介系詞慣用片語', '詞性需求：單數名詞'], 'A',
+    '空格位於固定片語 *at the ___ of...* 中，視覺文化席捲全球是以「犧牲書寫文字為代價」，標準搭配為 *at the expense of*（以犧牲……為代價）。',
+    [
+      ['(A) expense', 'n. 代價；開銷', '*at the expense of...* 為高中必背核心片語，意為「以損害／犧牲……為代價」。'],
+      ['(D) research / (J) medium', 'n. 其他單數名詞', '無 *at the research of* 或 *at the medium of* 之用法。']
+    ]
+  ],
+  [26, ['考點：修飾名詞之形容詞辨析', '詞性需求：形容詞（修飾名詞 decline）'], 'H',
+    '空格位於介系詞 *in* 與名詞 *decline*（衰退、下滑）之間，需填形容詞；由前文影音大舉取代文字可知，讀寫與溝通能力正在「急遽、快速（*rapid*）」衰退（*in rapid decline*）。',
+    [
+      ['(H) rapid', 'adj. 快速的；急遽的', '*in rapid decline* 意為「正在急遽衰退中」，符合全段對文字能力下滑的憂慮。'],
+      ['(K) circular', 'adj. 圓形的；循環的', '能力衰退不是「圓形的」。<br><b>何時才對：</b>形容圓桌（*a circular table*）或循環經濟（*circular economy*）時。']
+    ]
+  ],
+  [27, ['考點：慣用動詞搭配 gain ground', '詞性需求：現在分詞 V-ing'], 'I',
+    '第一段末尾說文字閱讀正在衰退（*in rapid decline*），第二段首句指出「唯一在視覺化世界中逆勢成長的小說類別」是圖像小說；*gain ground* 為固定慣用語，意為「拓展地盤、獲得進展、日漸普及」。',
+    [
+      ['(I) gaining', 'V-ing 獲得；推進', '*is gaining ground*（正在拓展版圖／日益盛行）與上一段的 *in rapid decline* 形成鮮明對比。'],
+      ['(B) fading / (E) replacing', 'V-ing 其他分詞', '*fading* 不接賓語 *ground*；*replacing ground* 語意不通。']
+    ]
+  ],
+  [28, ['考點：指示形容詞與上位概念名詞', '詞性需求：單數可數名詞'], 'J',
+    '空格前有單數指示形容詞 *this*，回指前半句提到的 *graphic novels*（圖像小說）；結合文字與圖像的圖像小說正是一種傳播與藝術表達的「媒介（*medium*）」。',
+    [
+      ['(J) medium', 'n. 媒介；媒體（單數）', '指圖像小說這種結合圖文的創作與傳播「媒介（*this medium*）」。'],
+      ['(D) research', 'n. 研究', '前文只提到讀者閱讀圖像小說，並未提及任何學術「研究」，故 *this research* 無所指涉。<br><b>何時才對：</b>前文剛引述某項科學調查或實驗時。']
+    ]
+  ],
+  [29, ['考點：對比並列結構與複數名詞', '詞性需求：複數可數名詞'], 'C',
+    '空格前為 *black and white or multiple ___*（黑白或多種……），且有形容詞 *multiple*（多種的，後接複數名詞），與「黑白（*black and white*）」相對的自然是「彩色／多種色彩（*multiple colors*）」。',
+    [
+      ['(C) colors', 'n. 顏色；色彩（複數）', '與 *black and white* 構成印刷色彩上的對比，且符合 *multiple + 複數名詞* 的文法要求。'],
+      ['(G) users', 'n. 使用者（複數）', '書籍印刷格式不會是「黑白或多個使用者」。']
+    ]
+  ],
+  [30, ['考點：句子主要及物動詞', '詞性需求：複數現在式及物動詞'], 'F',
+    '本句主詞為複數名詞 *Graphic novels*，受詞為 *the opportunity to examine...*（檢視……的機會），句中缺少主要動詞，故選複數原形動詞 *offer*（提供機會）。',
+    [
+      ['(F) offer', 'v. 提供；給予', '*offer the opportunity to V*（提供做某事的機會）為極常見的寫作與閱讀搭配。'],
+      ['(D) research', 'v./n. 研究', '「圖像小說研究這個機會」在語意上完全不通。<br><b>何時才對：</b>主詞為學者，受詞為某項議題（*Scholars research the topic*）時。']
+    ]
+  ]
+];
+
+// === 四、篇章結構 (31–35) ===
+const DISC_OPTS = [
+  ['A','Hitler, for example, is claimed to have been a victim of bullying in his childhood.','舉例來說，據稱希特勒在童年時期就曾是霸凌的受害者。'],
+  ['B','Campus bullying is becoming a serious problem in some high schools in big cities.','校園霸凌在一些大城市的高中正成為一個嚴重的問題。'],
+  ['C','The friends and classmates of the bully and the victim may accept the violence as normal.','霸凌者與受害者的朋友和同學，也可能會把暴力當成常態而接受。'],
+  ['D','Research indicates that bullying may form a chain reaction and the victim often becomes the bully.','研究顯示，霸凌可能會形成連鎖反應，而受害者往往會變成霸凌者。'],
+  ['E','Psychologists have been puzzled by the inactivity of crowds and bystanders in urban centers when crimes occur in crowded places.','心理學家一直對都會中心擁擠場所發生犯罪時，群眾與旁觀者的冷漠無作為感到困惑。'],
+  ['F','The link between bullying and school violence has attracted increasing attention since the 1999 tragedy at a Colorado high school.','自從 1999 年科羅拉多州一所高中發生悲劇以來，霸凌與校園暴力之間的關聯已引起越來越多的關注。']
+];
+
+const DISC_PAS = [
+  [
+    ['The effect of bullying can be serious and even lead to tragedy.', '霸凌的影響可能非常嚴重，甚至導致悲劇。'],
+    ['Unfortunately, it is still a mostly unresearched area.', '不幸的是，這在很大程度上仍是一個缺乏研究的領域。']
+  ],
+  [
+    ['[[31|(F) The link between bullying and school violence has attracted increasing attention since the 1999 tragedy at a Colorado high school.]]', '自從 1999 年科羅拉多州一所高中發生悲劇以來，霸凌與校園暴力之間的關聯已引起越來越多的關注。'],
+    ['That year two shotgun-wielding students, both of whom had been identified as gifted and who had been bullied for years, killed 13 people, wounded 24 and then committed suicide.', '那一年，兩名持霰彈槍的學生——兩人都曾被鑑定為資優生，且多年來一直遭受霸凌——殺害了 13 人、造成 24 人受傷，隨後飲彈自盡。'],
+    ['A year later an analysis by the US government found that bullying played a major role in more than two-thirds of the campus violence.', '一年後，美國政府的一項分析發現，霸凌在超過三分之二的校園暴力事件中扮演了主要角色。']
+  ],
+  [
+    ['[[32|(D) Research indicates that bullying may form a chain reaction and the victim often becomes the bully.]]', '研究顯示，霸凌可能會形成連鎖反應，而受害者往往會變成霸凌者。'],
+    ['Numerous dictators and invaders throughout history have tried to justify their bullying behavior by claiming that they themselves were bullied.', '歷史上無數的獨裁者與侵略者都曾試圖藉由聲稱自己過去也曾被霸凌，來合理化他們的霸凌行為。'],
+    ['[[33|(A) Hitler, for example, is claimed to have been a victim of bullying in his childhood.]]', '舉例來說，據稱希特勒在童年時期就曾是霸凌的受害者。'],
+    ['Although it is no justification for bullying, many of the worst humans in history have indeed been bullies and victims of bullying.', '儘管這並不能作為霸凌的合理化藉口，但歷史上許多最惡劣的人確實既曾是霸凌者，也曾是霸凌的受害者。']
+  ],
+  [
+    ['Since bullying is mostly ignored, it may provide an important clue in crowd behavior and passer-by behavior.', '由於霸凌大多被忽視，它可能為群眾行為與路人（旁觀者）行為提供一個重要線索。'],
+    ['[[34|(E) Psychologists have been puzzled by the inactivity of crowds and bystanders in urban centers when crimes occur in crowded places.]]', '心理學家一直對都會中心擁擠場所發生犯罪時，群眾與旁觀者的冷漠無作為感到困惑。'],
+    ['Many of them have suggested bullying as one of the reasons of this decline in emotional sensitivity and acceptance of violence as normal.', '他們當中有許多人提出，霸凌正是這種情感敏感度下降以及將暴力視為常態的原因之一。'],
+    ['When someone is bullied, it is not only the bully and the victim who are becoming less sensitive to violence.', '當有人遭受霸凌時，對暴力變得越來越麻木的，並不僅僅是霸凌者與受害者而已。'],
+    ['[[35|(C) The friends and classmates of the bully and the victim may accept the violence as normal.]]', '霸凌者與受害者的朋友和同學，也可能會把暴力當成常態而接受。'],
+    ['In this sense, bullying affects not only the bullied but his friends and classmates and the whole society.', '從這個意義上來說，霸凌影響的不僅是被霸凌者，還包括他的朋友、同學以及整個社會。']
+  ]
+];
+
+const DISC_Q = [
+  [31, ['考點：時間指示詞指代（That year）', '詞性需求：完整句子'], 'F',
+    '空格後句以時間指示詞 *That year*（那一年）開頭，描述兩名長期遭霸凌的高中生持槍殺害 13 人、傷 24 人後自殺的校園慘案；因此第 31 題必須出現明確的「年份」與「高中悲劇事件」，唯有 **(F)** 提到 *since the 1999 tragedy at a Colorado high school*（1999 年科羅拉多州哥倫拜高中槍擊悲劇）。',
+    DISC_OPTS.map(o => [o[1], o[2], o[0]==='F' ? '提供明確年份 *1999* 與 *Colorado high school tragedy*，完美銜接後句的 *That year* 與校園槍擊細節。' : '未提供任何具體年份，後句的 *That year* 將失去指代對象。<br><b>何時才對：</b>' + (o[0]==='B'?'本項為干擾選項，全文未聚焦大城市高中的比較。':'用於對應其他段落主題時。')])
+  ],
+  [32, ['考點：段落主題句（受害者轉為加害者）', '詞性需求：完整句子'], 'D',
+    '本段後文指出「歷史上許多獨裁者與侵略者宣稱自己曾被霸凌，藉此合理化自己的霸凌行為」，段末又總結「許多歷史惡人同時兼具霸凌者與受害者雙重身分（*bullies and victims of bullying*）」，可見本段主題句為 **(D)**「霸凌會形成連鎖反應，受害者往往變成霸凌者（*the victim often becomes the bully*）」。',
+    DISC_OPTS.map(o => [o[1], o[2], o[0]==='D' ? '點出「受害者變成霸凌者」的連鎖反應，作為本段主題句統攝後文的獨裁者論述。' : '無法總括整段「被霸凌者轉變為加害者」的核心論點。'])
+  ],
+  [33, ['考點：歷史人物具體例證', '詞性需求：完整句子'], 'A',
+    '前句提到歷史上無數「獨裁者與侵略者（*Numerous dictators and invaders throughout history*）」宣稱自己曾受霸凌，後句又出現 *justification* 呼應前句的 *justify*；夾在中間的第 33 題最適合舉出史上最知名的獨裁者「希特勒（*Hitler, for example*）」作為具體實例，故選 **(A)**。',
+    DISC_OPTS.map(o => [o[1], o[2], o[0]==='A' ? '以 *Hitler, for example* 具體例證前句的 *dictators and invaders*，以及「童年曾為霸凌受害者」的說法。' : '未舉出獨裁者實例。'])
+  ],
+  [34, ['考點：代名詞指代（Many of them）與群眾旁觀行為', '詞性需求：完整句子'], 'E',
+    '前句點出霸凌可解釋「群眾行為與路人行為（*crowd behavior and passer-by behavior*）」，而空格後句以代名詞 *Many of them*（他們當中有許多人……）開頭，代表第 34 題必須出現複數的「學者／專家」名詞，且探討群眾旁觀現象；**(E)** 的主詞 *Psychologists*（心理學家）正是 *them* 的先行詞，且 *crowds and bystanders* 直接對應前句的 *crowd behavior and passer-by behavior*。',
+    DISC_OPTS.map(o => [o[1], o[2], o[0]==='E' ? '*Psychologists* 為後句 *Many of them* 的先行詞，且 *crowds and bystanders* 緊扣前句的群眾與路人行為。' : '無複數專家名詞可供後句 *Many of them* 指代。'])
+  ],
+  [35, ['考點：遞進結構（not only...）與詞彙重現', '詞性需求：完整句子'], 'C',
+    '前句說「對暴力麻木的，不只是霸凌者與受害者而已（*not only the bully and the victim*）」，後句總結「霸凌不僅影響被霸凌者，也影響他的朋友與同學（*his friends and classmates*）」；因此第 35 題必然是說明「霸凌者與受害者的朋友和同學（*The friends and classmates of the bully and the victim*）也會把暴力當成常態」，故選 **(C)**。',
+    DISC_OPTS.map(o => [o[1], o[2], o[0]==='C' ? '承接前句 *not only the bully and the victim*，點出週遭的 *friends and classmates* 也會把暴力正常化，並與末句完美扣合。' : '未提及 *friends and classmates*，無法銜接前後句邏輯。'])
+  ]
+];
+
+// === 五、閱讀測驗 第一篇：松露 (36–39) ===
+const RC1_PAS = [
+  [
+    ['Since the times of the Greeks and Romans, truffles have been used in Europe as delicacies and even as medicines.', '自希臘與羅馬時代以來，松露在歐洲一直被當作珍饈美食，甚至被用作藥材。'],
+    ['They are among the most expensive of the world\'s natural foods, often commanding as much as US$250 to US$450 per pound.', '它們是世界上最昂貴的天然食材之一，每磅售價往往高達 250 至 450 美元。'],
+    ['Truffles are actually mushrooms, but unusual ones.', '松露其實是蕈菇類，但屬於非常特殊的一種。'],
+    ['They live in close association with the roots of specific trees and their fruiting bodies grow underground.', '它們與特定樹木的根部緊密共生，且其子實體生長在地面下。'],
+    ['This is why they are difficult to find.', '這就是為什麼它們很難被找到。']
+  ],
+  [
+    ['Truffles are harvested in Europe with the aid of female pigs or truffle dogs, which are able to detect the strong smell of mature truffles underneath the surface of the ground.', '在歐洲，人們會藉助母豬或松露犬來採收松露，牠們能夠偵測到地底下成熟松露所散發出的強烈氣味。'],
+    ['Female pigs are especially sensitive to the odor of the truffles because it is similar to the smell given off by male pigs.', '母豬對松露的氣味特別敏感，因為這種氣味與公豬散發出的氣味相似。'],
+    ['The use of pigs is risky, though, because of their natural tendency to eat any remotely edible thing.', '然而，使用豬隻是有風險的，因為牠們天生傾向把任何稍微可以吃的東西都吃掉。'],
+    ['For this reason, dogs have been trained to dig into the ground wherever they find this odor, and they willingly exchange their truffle for a piece of bread and a pat on the head.', '基於這個原因，人們訓練狗在聞到這種氣味的地方挖掘地面，而且牠們很樂意用找到的松露換取一片麵包和摸頭獎勵。'],
+    ['Some truffle merchants dig for their prizes themselves when they see truffle flies hovering around the base of a tree.', '有些松露商人在看到松露蠅在樹根底部盤旋時，會自己動手挖掘這些珍寶。'],
+    ['Once a site has been discovered, truffles can be collected in subsequent years.', '一旦發現某個產地，接下來幾年都可以在該處採集到松露。']
+  ],
+  [
+    ['To enjoy the wonderful flavor of what has been described as an earthly jewel, you must eat fresh, uncooked specimens shortly after they have been harvested.', '若要品嚐這種被譽為「大地寶石」的絕妙風味，你必須在松露採收後不久，趁新鮮且未經烹煮時食用。'],
+    ['The strength of their flavor decreases rapidly with time, and much of it is lost before some truffles reach the market.', '它們的風味強度會隨著時間迅速遞減，有些松露在運抵市場之前，大部分風味就已經流失了。'],
+    ['To preserve them, gourmet experts suggest putting them in closed glass jars in a refrigerator.', '為了保存它們，美食專家建議將它們放入密封玻璃罐中冷藏。'],
+    ['Another recommendation is to store them whole in bland oil.', '另一項建議是將整顆松露浸泡在氣味清淡的油中保存。']
+  ]
+];
+
+const RC1_Q = [
+  [36, ['考點：細節理解（因果關係）', '詞性需求：完整子句'], 'B',
+    '定位第二段第 3–4 句：使用豬隻很有風險，因為牠們天生會吃掉任何能吃的東西（*because of their natural tendency to eat any remotely edible thing*）；基於此原因（*For this reason*），人們改訓練狗，而狗樂意用松露換一片麵包（不會把松露吃掉）。',
+    [
+      ['Dogs have stronger paws to dig.', '狗有更強壯的爪子可以挖掘。', '文中未比較豬蹄與狗爪的挖掘力道。<br><b>何時才對：</b>文章提及豬無法挖開堅硬土壤而狗爪較有力時。'],
+      ['Dogs usually won\'t eat the truffles found.', '狗通常不會把找到的松露吃掉。', '對應第二段：豬會把找到的松露吃掉，而狗願意用松露換一片麵包與摸頭獎勵（*exchange their truffle for a piece of bread*）。'],
+      ['Dogs have a better sense of smell than pigs.', '狗的嗅覺比豬更好。', '與內文相反！第二段說母豬對松露氣味「特別敏感（*especially sensitive*）」，狗是後天訓練的。<br><b>何時才對：</b>若文章指出犬隻嗅覺靈敏度超越母豬時。'],
+      ['Dogs are less likely to get excited than pigs.', '狗比豬更不容易興奮。', '文中未比較兩者的情緒興奮程度。']
+    ]
+  ],
+  [37, ['考點：細節事實定位', '詞性需求：動名詞片語'], 'C',
+    '定位第三段第 1 句：*To enjoy the wonderful flavor..., you must eat fresh, uncooked specimens shortly after they have been harvested.*（必須在採收後不久，趁新鮮且未烹煮時食用）。',
+    [
+      ['Eating them cooked with pork.', '將它們與豬肉一起煮熟吃。', '與第三段 *uncooked*（未烹煮的）直接衝突。<br><b>何時才對：</b>若文章建議高溫燉煮能釋放香氣時。'],
+      ['Eating them uncooked with bland oil.', '將它們未烹煮搭配清淡的油一起吃。', '第三段末句提到 *store them whole in bland oil* 是「保存（*preserve*）」方式，而非最佳品嚐方式。<br><b>何時才對：</b>題幹詢問「如何保存（*preserve*）松露」時。'],
+      ['Eating them fresh right after being collected.', '在採集後立即趁新鮮食用。', '*fresh right after being collected* 完全同義替換原文的 *eat fresh, uncooked specimens shortly after they have been harvested*。'],
+      ['Eating them after being refrigerated.', '將它們冷藏過後再吃。', '放入冰箱密封罐同樣是「保存」手段，並非最佳賞味方式。']
+    ]
+  ],
+  [38, ['考點：是非細節判斷', '詞性需求：完整句子'], 'C',
+    '逐一核對第二段第 1 句：母豬與松露犬能偵測到地底下「成熟松露的強烈氣味（*the strong smell of mature truffles*）」，故 **(C)** 完全正確。',
+    [
+      ['Truffles are roots of some old trees.', '松露是某些老樹的根。', '第一段說松露是「與特定樹根共生的蕈菇（*mushrooms... live in close association with the roots*）」，本身不是樹根。<br><b>何時才對：</b>改為 *Truffles grow near the roots of specific trees* 時。'],
+      ['Truffles can be found only by dogs and pigs.', '松露只能靠狗和豬找到。', '第二段倒數第 2 句指出，有些商人看到「松露蠅（*truffle flies*）」在樹底盤旋也能自己挖到。<br><b>何時才對：</b>刪去絕對化字眼 *only* 時。'],
+      ['Truffles send out a strong odor when they mature.', '松露成熟時會散發出強烈的氣味。', '完全吻合第二段首句 *the strong smell of mature truffles*。'],
+      ['Truffles cannot be collected at the same place repeatedly.', '松露無法在同一個地點重複採集。', '與第二段末句 *Once a site has been discovered, truffles can be collected in subsequent years*（之後幾年都可繼續採收）完全相反。']
+    ]
+  ],
+  [39, ['考點：邏輯推論（Inference）', '詞性需求：完整句子'], 'D',
+    '定位第一段：第 2 句先說松露是世界上最昂貴的天然食材之一（每磅 250–450 美元），接著第 3–5 句解釋松露與特定樹根共生且長在地底下，「這就是為什麼它們很難被找到（*This is why they are difficult to find*）」，緊接著第二段又描述採集有多費工；由此可合理推論「松露之所以昂貴，是因為極難尋獲」。',
+    [
+      ['Truffles sold in glass jars are tasteless.', '裝在玻璃罐裡販售的松露毫無味道。', '第三段只說風味會隨時間遞減，專家建議用玻璃罐密封冷藏來保存，並未說「毫無味道（*tasteless*）」。<br><b>何時才對：</b>改為風味不如剛採收時濃郁（*less flavorful than freshly harvested ones*）時。'],
+      ['Truffles taste like fruit when eaten fresh.', '松露趁新鮮吃時嚐起來像水果。', '第一段提到的 *fruiting bodies* 是生物學專有名詞「（真菌的）子實體／孢子果」，絕非味道像水果！<br><b>何時才對：</b>此為利用 *fruiting bodies* 字面設計的典型陷阱。'],
+      ['Truffles are only used for cooking nowadays.', '松露如今只被用來烹飪。', '第三段明確建議松露應「不經烹煮生食（*eat fresh, uncooked specimens*）」，且文中未說現代只用於烹飪。'],
+      ['Truffles are expensive because they are difficult to find.', '松露之所以昂貴，是因為它們很難被找到。', '由第一段鋪陳「價格高昂 → 生長於地下 → 極難尋獲」的上下文邏輯可合理推論。']
+    ]
+  ]
+];
+
+// === 五、閱讀測驗 第二篇：動物實驗 (40–43) ===
+const RC2_PAS = [
+  [
+    ['In an ideal world, people would not test medicines on animals.', '在一個理想的世界裡，人們不會在動物身上測試藥物。'],
+    ['Such experiments are stressful and sometimes painful for animals, and expensive and time-consuming for people.', '這類實驗對動物來說充滿壓力且有時相當痛苦，對人類而言既昂貴又耗時。'],
+    ['Yet animal experimentation is still needed to help bridge vast gaps in medical knowledge.', '然而，為了協助彌補醫學知識上的巨大鴻溝，動物實驗仍然是必要的。'],
+    ['That is why there are some 50 to 100 million animals used in research around the world each year.', '這就是為什麼全球每年約有五千萬至一億隻動物被用於研究。']
+  ],
+  [
+    ['Europe, on the whole, has the world\'s most restrictive laws on animal experiments.', '整體而言，歐洲擁有全世界最嚴格的動物實驗法規。'],
+    ['Even so, its scientists use some 12 million animals a year, most of them mice and rats, for medical research.', '即便如此，其科學家每年仍使用約一千兩百萬隻動物進行醫學研究，其中大部分是大小白鼠。'],
+    ['Official statistics show that just 1.1 million animals are used in research in America each year.', '官方統計數據顯示，美國每年只有一百一十萬隻動物被用於研究。'],
+    ['But that is misleading.', '但這個數據具有誤導性。'],
+    ['The American authorities do not think mice and rats are worth counting and, as these are the most common laboratory animals, the true figure is much higher.', '美國當局認為大小白鼠不值得列入計算，而由於牠們是最常見的實驗動物，實際數字其實高得多。'],
+    ['Japan and China have even less comprehensive data than America.', '日本與中國的數據甚至比美國更不完整。']
+  ],
+  [
+    ['Now Europe is reforming the rules governing animal experiments by restricting the number of animals used in labs.', '如今，歐洲正在改革管理動物實驗的法規，限制實驗室所使用的動物數量。'],
+    ['Alternatives to animal testing, such as using human tissue or computer models, are now strongly recommended.', '動物實驗的替代方案——例如使用人體組織或電腦模型——現在受到強烈推薦。'],
+    ['In addition, sharing all research results freely should help to reduce the number of animals for scientific use.', '此外，自由分享所有研究結果應該有助於減少科學用途的動物數量。'],
+    ['At present, scientists often share only the results of successful experiments.', '目前，科學家往往只分享成功實驗的結果。'],
+    ['If their findings do not fit the hypothesis being tested, the work never sees the light of day.', '如果他們的發現不符合所測試的假設，這項研究就永遠不會公諸於世。'],
+    ['This practice means wasting time, money, and animals\' lives in endlessly repeating the failed experiments.', '這種做法意味著在無止盡地重複失敗實驗中，浪費時間、金錢以及動物的生命。']
+  ],
+  [
+    ['Animal experimentation has taught humanity a great deal and saved countless lives.', '動物實驗教會了人類許多知識，並拯救了無數生命。'],
+    ['It needs to continue, even if that means animals sometimes suffer.', '它必須繼續下去，即使這意味著動物有時會受苦。'],
+    ['Europe\'s new measures should eventually both reduce the number of animals used in experiments and improve the way in which scientific research is conducted.', '歐洲的新措施最終應該既能減少實驗中使用的動物數量，又能改善科學研究進行的方式。']
+  ]
+];
+
+const RC2_Q = [
+  [40, ['考點：全文主旨歸納（Main Idea）', '詞性需求：完整句子'], 'C',
+    '綜觀全文：第一段指出動物實驗雖有必要但數量龐大且痛苦；第二段揭露各國實際使用的動物數量驚人；第三、四段重點提出歐洲的改革措施（限制數量、採用替代方案、公開失敗實驗結果），核心目標皆是為了「減少實驗動物的使用數量（*reduce the number of animals used in experiments*）」，故選 **(C)**。',
+    [
+      ['The success of animal experiments should be ensured.', '應該確保動物實驗的成功。', '科學實驗本就有成有敗，文章是呼籲「公開失敗結果以避免重複浪費」，而非要求每次實驗都必須成功。<br><b>何時才對：</b>文章探討如何提升實驗成功率之技術時。'],
+      ['Ban on the use of animals in the lab should be enforced.', '應該強制禁止在實驗室中使用動物。', '與第一段（*still needed*）及末段（*It needs to continue*）明確立場相反！作者支持繼續但應減少數量。<br><b>何時才對：</b>作者採取激進動保立場要求全面廢除動物實驗時。'],
+      ['Greater efforts need to be taken to reduce the number of lab animals.', '需要採取更大的努力來減少實驗動物的數量。', '精準涵蓋全文核心論點與第三、四段的改革目標。'],
+      ['Scientists should be required to share their research results with each other.', '應該要求科學家彼此分享他們的研究結果。', '「分享研究結果」僅為第三段後半提出的其中一項具體作法（以 *In addition* 引出），屬於局部細節而非全文主旨。<br><b>何時才對：</b>題幹詢問「文中提到除替代方案外，還有什麼方法能減少重複實驗」時。']
+    ]
+  ],
+  [41, ['考點：跨國數據細節比對', '詞性需求：完整句子'], 'D',
+    '定位第二段末句：*Japan and China have even less comprehensive data than America.*（日本與中國的數據甚至比美國更不完整／更有限），直接對應 **(D)** *Japan has limited data...*。',
+    [
+      ['America uses only about 1.1 million lab animals per year.', '美國每年只使用約 110 萬隻實驗動物。', '第二段明確指出這個官方數字「具有誤導性（*misleading*）」，因為沒算進最常見的大小白鼠，實際數字高得多（*the true figure is much higher*）。<br><b>何時才對：</b>加上 *Official statistics claim that... excluding mice and rats* 時。'],
+      ['Europe does not use mice and rats as lab animals at all.', '歐洲完全不使用大小白鼠作為實驗動物。', '與第二段第 2 句相反：歐洲每年使用的 1200 萬隻動物中，「大部分都是大小白鼠（*most of them mice and rats*）」。'],
+      ['Britain does not use as many lab animals as China does.', '英國使用的實驗動物沒有中國多。', '文中完全未提及英國（*Britain*），亦未比較英中兩國數量。'],
+      ['Japan has limited data on the number of lab animals used each year.', '日本對於每年使用的實驗動物數量只有有限的數據。', '*limited data* 完美替換原文的 *even less comprehensive data*。']
+    ]
+  ],
+  [42, ['考點：細節檢索（替代方案）', '詞性需求：名詞片語'], 'B',
+    '定位第三段第 2 句：*Alternatives to animal testing, such as using human tissue or computer models, are now strongly recommended.*（替代方案包括使用人體組織或電腦模型）。',
+    [
+      ['Statistical studies.', '統計研究。', '第二段提到官方統計數據（*Official statistics*），並非作為動物實驗的替代方案。'],
+      ['Computer models.', '電腦模型。', '完全吻合第三段第 2 句列舉的 *using human tissue or computer models*。'],
+      ['DNA planted in animals.', '植入動物體內的 DNA。', '文中未提及，且植入動物體內依然是在做動物實驗。'],
+      ['Tissue from dead animals.', '來自死去動物的組織。', '原文是 *human tissue*（人體組織），而非死去動物的組織。']
+    ]
+  ],
+  [43, ['考點：慣用語理解（never sees the light of day）', '詞性需求：完整句子'], 'A',
+    '定位第三段倒數第 2–3 句：目前科學家往往只分享成功實驗的結果；如果研究發現不符合假設，該研究就「永遠不會見光／不會公諸於世（*never sees the light of day*）」，也就是不會對外公開，故選 **(A)**。',
+    [
+      ['They are not revealed to the public.', '它們不會被公開披露。', '*not revealed to the public* 正是 *never sees the light of day*（永不見天日／不公開發表）的精確解釋。'],
+      ['They are made into teaching materials.', '它們被製作成教材。', '文中完全未提及製成教材。'],
+      ['They are collected for future publication.', '它們被收集起來供未來出版。', '與 *never sees the light of day*（永遠不發表）相反。'],
+      ['They are not removed from the research topic list.', '它們不會從研究主題清單中被移除。', '文中無「研究主題清單」之說，僅說其他不知情的科學家會不斷重複做這些失敗的實驗。']
+    ]
+  ]
+];
+
+// === 五、閱讀測驗 第三篇：蜘蛛網結構 (44–47) ===
+const RC3_PAS = [
+  [
+    ['Spider webs are one of the most fascinating examples of animal architecture.', '蜘蛛網是動物建築中最迷人的例子之一。'],
+    ['The most beautiful and structurally ordered are the orb webs.', '其中最美麗且結構最井然有序的是圓網（八卦網）。'],
+    ['The main function of the web is to intercept and hold flying prey, such as flies, bees and other insects, long enough for the spider to catch them.', '蜘蛛網的主要功能是攔截並困住飛行的獵物（如蒼蠅、蜜蜂和其他昆蟲），維持夠長的時間讓蜘蛛能捉住牠們。'],
+    ['In order to do so, the threads of the web have to withstand the impact forces from large and heavy prey as well as environmental forces from wind and rain for at least a day in most cases.', '為了做到這一點，網絲在大多數情況下必須能夠承受來自大型沉重獵物的衝擊力，以及來自風雨的環境力量至少一天。']
+  ],
+  [
+    ['The orb web is found to have two main characteristics.', '研究發現圓網具有兩個主要特徵。'],
+    ['The first is its geometry, which consists of an outer frame and a central part from which threads radiate outward.', '第一個特徵是它的幾何結構，由外框和一個向外輻射出絲線的中心部分所組成。'],
+    ['Enclosed in the frame are capture spirals winding round and round from the web center out to the frame.', '包圍在外框內的是捕食螺旋絲，從網中心一圈又一圈地向外纏繞至外框。'],
+    ['The whole web is in tension and held in place by anchor threads, which connect the frame to the surrounding vegetation or objects.', '整張網處於張力狀態，並由錨絲（固定絲）固定在適當位置，錨絲將外框連接到周圍的植物或物體上。'],
+    ['The second and perhaps most important characteristic is the material with which it is built.', '第二個、或許也是最重要的特徵，是建造它的材料。'],
+    ['Spider silk is a kind of natural composite that gives this lightweight fiber a tensile strength comparable to that of steel, while at the same time making it very elastic.', '蜘蛛絲是一種天然複合材料，賦予這種輕量纖維媲美鋼鐵的抗拉強度，同時又使它極具彈性。'],
+    ['Two types of silk threads are used in the web.', '網中使用了兩種蜘蛛絲。'],
+    ['One is highly elastic and can stretch to almost twice its original length before breaking and, for most types of spiders, is covered in glue.', '一種具有高度彈性，在斷裂前可拉伸至原長度的近兩倍，而且對大多數種類的蜘蛛而言，上面覆蓋著黏液。'],
+    ['This type is used in the capture spiral for catching and holding prey.', '這種類型用於捕食螺旋絲，用來捕捉並黏住獵物。'],
+    ['The other is stiffer and stronger, and is used for the radius, frames and anchor threads, which allows the web to withstand prey impact and to keep its structural strength through a wide range of environmental conditions.', '另一種則較堅硬且強韌，用於輻射絲、外框與錨絲，這使蜘蛛網能夠承受獵物的衝擊，並在各種環境條件下保持其結構強度。']
+  ]
+];
+
+const RC3_Q = [
+  [44, ['考點：全文主旨歸納', '詞性需求：名詞片語'], 'B',
+    '第一段介紹圓網（*orb webs*）的功能與耐受力，第二段詳細剖析圓網的兩大構造特徵：幾何結構（外框、輻射絲、捕食螺旋絲、錨絲）與兩種蜘蛛絲建材；因此全文主旨在於說明「圓網的構造與建造方式（*The construction of orb webs*）」。',
+    [
+      ['The food network in nature.', '自然界中的食物網。', '看到 *web* 誤聯想到生態學的「食物網（*food web*）」，本文談的是實體的蜘蛛網構造。<br><b>何時才對：</b>文章探討生態系中掠食者與獵物的能量傳遞關係時。'],
+      ['The construction of orb webs.', '圓網的構造（建造）。', '涵蓋第二段介紹的幾何結構（*geometry*）與建築材料（*material*），為全文核心主題。'],
+      ['The network of geometrical studies.', '幾何學研究的網路。', '幾何形狀（*geometry*）只是圓網的第一個特徵，本文並非在談數學幾何學界的研究網路。'],
+      ['The environmental challenges for spider webs.', '蜘蛛網面臨的環境挑戰。', '風雨等環境力量僅在第一段末句與第二段末句附帶提及，用來凸顯蛛絲的強韌，並非全文主旨。']
+    ]
+  ],
+  [45, ['考點：代名詞／指示詞指代（do so）', '詞性需求：不定詞片語'], 'A',
+    '定位第一段第 3–4 句：第 3 句說「蜘蛛網的主要功能是攔截並困住飛行的獵物（*to intercept and hold flying prey...*）」，第 4 句緊接著說「為了做到這一點（*In order to do so*），網絲必須承受衝擊力……」，可見 *do so* 直接指代前一句的 *intercept and hold flying prey*（捕捉並困住小生物）。',
+    [
+      ['To catch and keep small creatures.', '捕捉並困住小生物。', '*catch and keep small creatures* 完全對應前句的 *intercept and hold flying prey, such as flies, bees and other insects*。'],
+      ['To find a good material for the web.', '為蜘蛛網尋找良好的材料。', '建材（*material*）到第二段才出現，且蜘蛛是自己吐絲而非去「尋找材料」。'],
+      ['To observe the behavior patterns of spiders.', '觀察蜘蛛的行為模式。', '前文完全未提及人類觀察蜘蛛行為。'],
+      ['To present a fantastic architecture by animals.', '展示動物奇妙的建築。', '蜘蛛結網的目的是為了捕食獵物，而非為了向人類「展示建築」。']
+    ]
+  ],
+  [46, ['考點：圖表與細節對應（支撐固定功能）', '詞性需求：名詞片語'], 'C',
+    '定位第二段第 4 句：*The whole web is in tension and held in place by anchor threads, which connect the frame to the surrounding vegetation or objects.*（整張網由錨絲固定在適當位置，連接外框與周圍植物或物體），且末句亦指出 *anchor threads* 負責維持結構強度（*keep its structural strength*）。',
+    [
+      ['The center of the web.', '網的中心。', '網中心是輻射絲與螺旋絲的起點，並非將整張網支撐固定在周遭環境的部位。'],
+      ['The glue on the lines.', '絲線上的黏液。', '黏液（*glue*）塗在捕食螺旋絲上，功能是黏住獵物，而非支撐網體結構。'],
+      ['The anchor threads.', '錨絲（固定絲）。', '負責將整張網拉緊並固定於周圍植物或物體上（*held in place by anchor threads*），支撐整張網。'],
+      ['The capture spiral.', '捕食螺旋絲。', '第二段倒數第 2 句說明 *capture spiral* 的功能是 *catching and holding prey*（捕捉並困住獵物）。']
+    ]
+  ],
+  [47, ['考點：細節是非判斷', '詞性需求：完整句子'], 'B',
+    '定位第一段最後一句：*...the threads of the web have to withstand the impact forces... as well as environmental forces from wind and rain for at least a day in most cases.*（在大多數情況下，網絲必須能承受衝擊力與風雨至少一天），與 **(B)** 完全相符。',
+    [
+      ['They are all sticky and extendable.', '它們全部都具有黏性且可延展。', '第二段指出蛛絲分為兩種：只有第一種（捕食螺旋絲）有黏液且高彈性，第二種（輻射絲、外框、錨絲）則是較堅硬強韌（*stiffer and stronger*）且不含黏液。<br><b>何時才對：</b>將 *all* 改為 *The threads used in the capture spiral* 時。'],
+      ['They are usually strong enough to last for a day.', '它們通常強韌到足以維持一天。', '對應第一段末句 *withstand... forces... for at least a day in most cases*。'],
+      ['They remove harmful chemicals from insects.', '它們能去除昆蟲身上的有害化學物質。', '文中完全未提及任何去除昆蟲化學物質的功能。'],
+      ['They are made of rare plants in the environment.', '它們是由環境中的稀有植物製成的。', '蜘蛛絲是蜘蛛體內分泌的天然複合纖維（*Spider silk is a kind of natural composite*），只是固定在周圍植物（*surrounding vegetation*）上，並非由植物製成。']
+    ]
+  ]
+];
+
+// === 五、閱讀測驗 第四篇：博士學位供過於求 (48–51) ===
+const RC4_PAS = [
+  [
+    ['Doctor of Philosophy, usually abbreviated as PhD or Ph.D., is an advanced academic degree awarded by universities.', '哲學博士（通常縮寫為 PhD 或 Ph.D.）是由大學授予的高階學術學位。'],
+    ['The first Doctor of Philosophy degree was awarded in Paris in 1150, but the degree did not acquire its modern status until the early 19th century.', '第一個哲學博士學位是於 1150 年在巴黎頒發的，但該學位直到 19 世紀初才獲得其現代地位。'],
+    ['The doctorate of philosophy as it exists today originated at Humboldt University.', '今日所見的哲學博士學位制度起源於洪堡大學。'],
+    ['The German practice was later adopted by American and Canadian universities, eventually becoming common in large parts of the world in the 20th century.', '這項德國的做法後來被美國與加拿大的大學所採納，最終在 20 世紀普及於世界大部分地區。']
+  ],
+  [
+    ['For most of history, even a bachelor\'s degree at a university was the privilege of a rich few, and many academic staff did not hold doctorates.', '在歷史上的大部分時間裡，連大學的學士學位都是少數富人的特權，許多大學教職員甚至沒有博士學位。'],
+    ['But as higher education expanded after the Second World War, the number of PhDs increased accordingly.', '但隨著第二次世界大戰後高等教育的擴張，博士的人數也隨之增加。'],
+    ['American universities geared up first: By 1970, America was graduating half of the world\'s PhDs in science and technology.', '美國的大學率先加速發展：到了 1970 年，全球有一半的科技領域博士畢業於美國。'],
+    ['Since then, America\'s annual output of PhDs has doubled, to 64,000.', '從那時起，美國每年的博士產量翻了一倍，達到 64,000 人。'],
+    ['Other countries are catching up.', '其他國家也正在急起直追。'],
+    ['PhD production has sped up most dramatically in Mexico, Portugal, Italy, and Slovakia.', '墨西哥、葡萄牙、義大利與斯洛伐克的博士培育速度增加得最為驚人。'],
+    ['Even Japan, where the number of young people is shrinking, has churned out about 46% more PhDs.', '就連年輕人口正在萎縮的日本，也大量產出了約多達 46% 的博士。']
+  ],
+  [
+    ['Researchers now warn that the supply of PhDs has far outstripped demand.', '研究人員現在警告，博士的供給已經遠遠超過了需求。'],
+    ['America produced more than 100,000 doctoral degrees between 2005 and 2009, while there were just 16,000 new professorships.', '美國在 2005 年至 2009 年間產出了超過十萬個博士學位，但期間卻只有一萬六千個新教授職缺。'],
+    ['In research, the story is similar.', '在研究領域，情況也是如此。'],
+    ['Even graduates who find work outside universities may not fare all that well.', '即使是那些在大學以外找到工作的畢業生，處境可能也沒有那麼好。'],
+    ['Statistics show that five years after receiving their degrees, more than 60% of PhDs in Slovakia and more than 45% in Belgium, the Czech Republic, Germany, and Spain are still on temporary contracts.', '統計數據顯示，在取得學位五年後，斯洛伐克有超過 60% 的博士，以及比利時、捷克、德國和西班牙有超過 45% 的博士，仍然處於臨時約聘合約狀態。'],
+    ['About one-third of Austria\'s PhD graduates take jobs unrelated to their degrees.', '奧地利約有三分之一的博士畢業生從事與其學位無關的工作。']
+  ],
+  [
+    ['Today, top universities around the world are still picking bright students and grooming them as potential PhDs.', '如今，世界各地的頂尖大學仍在挑選聰明的學生，並將他們培育成未來的博士。'],
+    ['After all, it isn\'t in their interests to turn the smart students away: The more bright students stay at universities, the better it is for academics.', '畢竟，把聰明的學生拒之門外並不符合大學的利益：越多優秀學生留在大學裡，對學術界就越有利。'],
+    ['But considering the oversupply of PhDs, some people have already begun to wonder whether doing a PhD is a good choice for an individual.', '但考量到博士供過於求的現象，有些人已經開始懷疑，攻讀博士對個人而言是否還是一個好選擇。']
+  ]
+];
+
+const RC4_Q = [
+  [48, ['考點：細節定位與指代（modern practice）', '詞性需求：專有名詞（國家）'], 'B',
+    '定位第一段第 2–4 句：雖然史上第一個博士學位 1150 年頒發於巴黎（法國），但「今日所見的現代博士制度起源於洪堡大學（*The doctorate of philosophy as it exists today originated at Humboldt University*）」，下句緊接著說「這項德國的做法（*The German practice*）後來被美加採納」，故現代頒授博士學位的做法起源於德國（*Germany*）。',
+    [
+      ['France.', '法國。', '巴黎頒發的是 1150 年中世紀的第一個學位，但原文明確指出「直到 19 世紀初才取得現代地位」，且現代制度起源於德國洪堡大學。<br><b>何時才對：</b>題幹詢問 *Where was the very first PhD degree awarded in 1150?* 時。'],
+      ['Germany.', '德國。', '由 *originated at Humboldt University* 與下句 *The German practice* 可知現代博士制度始於德國。'],
+      ['Canada.', '加拿大。', '加拿大與美國是後來「採納（*adopted*）」德國制度的國家。'],
+      ['The U.S.', '美國。', '同上，美國是後來引進德國做法，並非發源地。']
+    ]
+  ],
+  [49, ['考點：上下文猜測詞義（churned out）', '詞性需求：過去分詞'], 'D',
+    '定位第二段最後三句：前文反覆使用 *output of PhDs*（博士產量）、*PhD production*（博士生產），末句接著說「就連年輕人口萎縮的日本，也 *churned out* 了多出 46% 的博士」；*churn out* 原指機器大量快速生產，在此即同義替換前文的 *produced*（產出、培育出）。',
+    [
+      ['Failed.', '失敗；不及格。', '與本段描述各國博士人數大幅成長（*increased / doubled / sped up*）的語境完全相反。'],
+      ['Warned.', '警告。', '*warn* 出現在第三段首句（研究人員警告供過於求），而非第二段各國培育人數統計。'],
+      ['Demanded.', '要求；需求。', '本段講的是大學端的「供給產量（*output / production*）」，而非就業市場的需求。'],
+      ['Produced.', '生產；產出。', '*churn out* 意為「大量生產、源源不斷地製造出」，直接呼應前句的 *PhD production* 與第三段的 *America produced...*。']
+    ]
+  ],
+  [50, ['考點：段落數據比較與推論', '詞性需求：完整句子'], 'D',
+    '定位第三段倒數第 2 句：畢業五年後，斯洛伐克有「超過 60%（*more than 60%*）」的博士仍在簽臨時約聘合約（*still on temporary contracts*），而西班牙則是「超過 45%（*more than 45%*）」；由於斯洛伐克任職臨時工的比例顯著高於西班牙，可推知在斯洛伐克要找到正職（*permanent job*）比在西班牙更困難，故選 **(D)**。',
+    [
+      ['PhD graduates in Austria are not encouraged to work outside university.', '奧地利的博士畢業生不被鼓勵在大學以外工作。', '末句僅陳述客觀事實「奧地利約三分之一博士從事與學位無關的工作」，並未說政府或學校「不鼓勵他們去業界工作」。'],
+      ['Most German PhDs work at permanent jobs immediately after graduation.', '大多數德國博士在畢業後立即從事永久正職工作。', '原文說畢業五年後德國仍有超過 45% 博士是臨時約聘（*temporary contracts*），並無「畢業立即擁有正職」之事實。'],
+      ['It is much easier for American PhD holders to find a teaching position than a research job.', '對美國博士而言，找教職比找研究工作容易得多。', '第三段第 2–3 句說美國十萬名博士只搶 16,000 個教職，接著說「在研究領域，情況也是如此（*In research, the story is similar*）」，兩者一樣困難！'],
+      ['It is more difficult for PhDs to get a permanent job five years after graduation in Slovakia than in Spain.', '畢業五年後，博士在斯洛伐克要比在西班牙更難獲得永久正職工作。', '斯洛伐克畢業五年後仍有 >60% 為臨時約聘，高於西班牙的 >45%，推論完全正確。']
+    ]
+  ],
+  [51, ['考點：作者態度判斷（Author\'s Attitude）', '詞性需求：形容詞'], 'A',
+    '作者在第三段引述警告指出博士嚴重供過於求（*supply of PhDs has far outstripped demand*），教職與研究缺極少，大量博士只能簽臨時約或學非所用；第四段末句更直言「考量到博士供過於求，人們開始懷疑讀博士對個人是否為好選擇」，足見作者對近年博士人數暴增抱持「擔憂、關切（*Concerned*）」的態度。',
+    [
+      ['Concerned.', '擔憂的；關切的。', '從第三、四段對就業困境與供過於求（*oversupply*）的剖析，可清楚看出作者的憂慮。'],
+      ['Supportive.', '支持的。', '作者指出頂尖大學為了自身利益繼續招收博士生，但對個人前途而言卻未必是好選擇，並非支持博士擴招。'],
+      ['Indifferent.', '漠不關心的；冷淡的。', '作者深入列舉各國統計數據與就業困境，態度嚴謹關切而非冷漠。'],
+      ['Optimistic.', '樂觀的。', '全文聚焦於職缺不足與臨時合約困境，語氣絕非樂觀。']
+    ]
+  ]
+];
+
+// === 渲染全部內容至 #app ===
+let html = '';
+
+// 一、詞彙題
+html += '<h2 id="sec-vocab">一、詞彙題（第 1–10 題，每題 1 分，共 10 分）</h2>';
+VOCAB.forEach(q => {
+  SENT[q[0]] = q[3];
+  html += card(q[0], q[1], q[2], stem(q[0]) + clue(q[4]) + ops(q[5], q[2]));
+});
+html += groupGradeBox('vocab', '一、詞彙題', 1, 10, 1);
+
+// 二、綜合測驗
+html += '<h2 id="sec-cloze">二、綜合測驗（第 11–20 題，每題 1 分，共 10 分）</h2>';
+html += passage('第 11 至 15 題題組：客戶索賠與拒絕補償通知信', CLOZE1_PAS, '', 'cloze1');
+CLOZE1_Q.forEach(q => {
+  html += card(q[0], q[1], q[2], stem(q[0]) + clue(q[3]) + ops(q[4], q[2]));
+});
+html += groupGradeBox('cloze1', '二、綜合測驗（第 11–15 題）', 11, 15, 1);
+
+html += passage('第 16 至 20 題題組：跨文化情緒表達與日本社會規範', CLOZE2_PAS, '', 'cloze2');
+CLOZE2_Q.forEach(q => {
+  html += card(q[0], q[1], q[2], stem(q[0]) + clue(q[3]) + ops(q[4], q[2]));
+});
+html += groupGradeBox('cloze2', '二、綜合測驗（第 16–20 題）', 16, 20, 1);
+
+// 三、文意選填
+html += '<h2 id="sec-wbank">三、文意選填（第 21–30 題，每題 1 分，共 10 分）</h2>';
+html += '<div class="pas"><div class="bank" id="bank-wbank">' + WBANK_ITEMS.map(it => '<span><b>('+it[0]+') '+it[1]+'</b> <small>'+it[2]+'</small></span>').join('') + '</div></div>';
+html += passage('第 21 至 30 題題組：從文字式微到圖像小說的興起', WBANK_PAS, '', 'wbank');
+WBANK_Q.forEach(q => {
+  const fullOpts = WBANK_ITEMS.map(it => {
+    const found = q[4].find(x => x[0].indexOf('('+it[0]+')') === 0);
+    return [it[1], it[2], found ? found[2] : '詞性或語意不符合本題空格需求。'];
+  });
+  html += card(q[0], q[1], q[2], stem(q[0]) + clue(q[3]) + ops(fullOpts, q[2], 'ABCDEFGHIJKL'));
+});
+html += groupGradeBox('wbank', '三、文意選填（第 21–30 題）', 21, 30, 1);
+
+// 四、篇章結構
+html += '<h2 id="sec-disc">四、篇章結構（第 31–35 題，每題 2 分，共 10 分）</h2>';
+html += '<div class="pas"><h3>選項列表</h3>' + DISC_OPTS.map(o => '<div class="s"><div class="en"><b>('+o[0]+')</b> '+o[1]+'</div><div class="zh">'+o[2]+'</div></div>').join('') + '</div>';
+html += passage('第 31 至 35 題題組：霸凌的連鎖反應與社會旁觀效應', DISC_PAS, '', 'disc');
+DISC_Q.forEach(q => {
+  html += card(q[0], q[1], q[2], stem(q[0]) + clue(q[3]) + ops(q[4], q[2], 'ABCDEF'));
+});
+html += groupGradeBox('disc', '四、篇章結構（第 31–35 題）', 31, 35, 2);
+
+// 五、閱讀測驗
+html += '<h2 id="sec-rc">五、閱讀測驗（第 36–51 題，每題 2 分，共 32 分）</h2>';
+
+html += passage('第 36 至 39 題題組：大地寶石——松露的採集與保存', RC1_PAS, '', 'rc1');
+RC1_Q.forEach(q => {
+  const qStem = '<div class="stem"><div class="en"><b>'+q[0]+'. ' + (
+    q[0]===36 ? 'Why do some people prefer using dogs than pigs in search of truffles?' :
+    q[0]===37 ? 'What is the best way to enjoy truffles as a delicacy?' :
+    q[0]===38 ? 'Which of the following statements is true?' :
+    'Which of the following can be inferred from the passage?'
+  ) + '</b></div><div class="zh">' + (
+    q[0]===36 ? '為什麼有些人在尋找松露時，比起豬更喜歡使用狗？' :
+    q[0]===37 ? '將松露作為珍饈美食享用的最佳方式是什麼？' :
+    q[0]===38 ? '下列哪一項敘述為真？' :
+    '從文章中可以推論出下列何者？'
+  ) + '</div></div>';
+  html += card(q[0], q[1], q[2], qStem + clue(q[3]) + ops(q[4], q[2]));
+});
+html += groupGradeBox('rc1', '五、閱讀測驗（第 36–39 題）', 36, 39, 2);
+
+html += passage('第 40 至 43 題題組：醫學動物實驗的現況與歐洲改革措施', RC2_PAS, '', 'rc2');
+RC2_Q.forEach(q => {
+  const qStem = '<div class="stem"><div class="en"><b>'+q[0]+'. ' + (
+    q[0]===40 ? 'What is the main idea of this passage?' :
+    q[0]===41 ? 'Which of the following statements is true about animals used in the lab?' :
+    q[0]===42 ? 'Which of the following is mentioned as an alternative to replace animal experiments?' :
+    'What usually happens to unsuccessful animal experiments?'
+  ) + '</b></div><div class="zh">' + (
+    q[0]===40 ? '這篇文章的主旨是什麼？' :
+    q[0]===41 ? '關於實驗室中使用的動物，下列哪一項敘述為真？' :
+    q[0]===42 ? '下列何者被提及作為取代動物實驗的替代方案？' :
+    '不成功的動物實驗通常會發生什麼情況？'
+  ) + '</div></div>';
+  html += card(q[0], q[1], q[2], qStem + clue(q[3]) + ops(q[4], q[2]));
+});
+html += groupGradeBox('rc2', '五、閱讀測驗（第 40–43 題）', 40, 43, 2);
+
+html += passage('第 44 至 47 題題組：蜘蛛圓網的幾何結構與蛛絲材料', RC3_PAS, '', 'rc3');
+RC3_Q.forEach(q => {
+  const qStem = '<div class="stem"><div class="en"><b>'+q[0]+'. ' + (
+    q[0]===44 ? 'What is this passage mainly about?' :
+    q[0]===45 ? 'What does the word "so" in the first paragraph refer to?' :
+    q[0]===46 ? 'Which part of the web is used for supporting the web itself?' :
+    'According to the passage, which statement is true about the silk threads?'
+  ) + '</b></div><div class="zh">' + (
+    q[0]===44 ? '這篇文章主要關於什麼？' :
+    q[0]===45 ? '第一段中的字詞「so」指的是什麼？' :
+    q[0]===46 ? '蜘蛛網的哪個部分是用來支撐網子本身的？' :
+    '根據本文，關於蜘蛛絲的敘述下列何者為真？'
+  ) + '</div></div>';
+  html += card(q[0], q[1], q[2], qStem + clue(q[3]) + ops(q[4], q[2]));
+});
+html += groupGradeBox('rc3', '五、閱讀測驗（第 44–47 題）', 44, 47, 2);
+
+html += passage('第 48 至 51 題題組：全球博士學位擴張與供過於求之隱憂', RC4_PAS, '', 'rc4');
+RC4_Q.forEach(q => {
+  const qStem = '<div class="stem"><div class="en"><b>'+q[0]+'. ' + (
+    q[0]===48 ? 'In which country did the modern practice of granting doctoral degrees start?' :
+    q[0]===49 ? 'Which of the following words is closest in meaning to "churned out" in the second paragraph?' :
+    q[0]===50 ? 'Which of the following may be inferred from the third paragraph?' :
+    'Which of the following best describes the author\'s attitude toward the increase of PhDs in recent years?'
+  ) + '</b></div><div class="zh">' + (
+    q[0]===48 ? '現代授予博士學位的做法始於哪一個國家？' :
+    q[0]===49 ? '下列哪一個字詞的意思最接近第二段中的「churned out」？' :
+    q[0]===50 ? '從第三段中可以推論出下列何者？' :
+    '下列何者最能描述作者對近年來博士人數增加的態度？'
+  ) + '</div></div>';
+  html += card(q[0], q[1], q[2], qStem + clue(q[3]) + ops(q[4], q[2]));
+});
+html += groupGradeBox('rc4', '五、閱讀測驗（第 48–51 題）', 48, 51, 2);
+
+// 全卷選擇題總批改面板
+html += '<div class="grade-box all-box" id="gbox-all">' +
+  '<div class="grade-title">🏆 第壹部分：選擇題全卷總批改（第 1–51 題，滿分 72 分）</div>' +
+  '<div class="grade-btns">' +
+    '<button class="btn-grade" onclick="gradeAllSingleChoice()">🏆 一次批改全卷</button>' +
+    '<button class="btn-reset" onclick="resetAllSingleChoice()">🔄 一次清空重練</button>' +
+  '</div>' +
+  '<div class="grade-res" id="gres-all"></div>' +
+'</div>';
+
+// 第貳部分：非選擇題 — 一、中譯英
+html += '<h2 id="sec-trans">第貳部分：非選擇題 — 一、中譯英（占 8 分）</h2>';
+html += '<section class="pas" id="pas-trans">' +
+  '<h3>中譯英題目與解析</h3>' +
+  '<p class="prompt-text"><b>說明：</b>1. 請將以下中文句子譯成正確、通順、達意的英文。<br>2. 請依序作答，並標明題號。每題 4 分，共 8 分。</p>' +
+  '<div class="para">' +
+    '<div class="s">' +
+      '<div class="prompt-text"><b>1. 日本的核電廠爆炸已經引起全球對核子能源安全的疑慮。</b></div>' +
+      '<input type="text" class="trans-input" placeholder="請在此輸入第 1 題英文翻譯練習...">' +
+      '<div class="en trans-ans" style="margin-top:6px;color:var(--ok);font-weight:600;">參考正解 1：The explosion(s) of the nuclear power plant(s) in Japan has (have) raised global doubts/concerns about the safety of nuclear energy.</div>' +
+      '<div class="en trans-ans" style="color:var(--ok);">參考正解 2：The nuclear power plant explosion in Japan has aroused/caused doubts about nuclear energy safety all over the world.</div>' +
+      '<p class="note">💡 <b>句構與詞彙解析：</b><br>• 「核電廠爆炸」：<i>the explosion of the nuclear power plant</i> 或複合名詞 <i>the nuclear power plant explosion</i>。<br>• 「已經引起……的疑慮」：搭配現在完成式 <i>has raised / aroused / caused doubts (concerns) about...</i>。<br>• 「核子能源安全」：<i>the safety of nuclear energy (power)</i> 或 <i>nuclear energy safety</i>；「全球」可用形容詞 <i>global / worldwide</i> 或副詞片語 <i>around the world / all over the world</i>。</p>' +
+    '</div>' +
+    '<div class="s" style="margin-top:16px;">' +
+      '<div class="prompt-text"><b>2. 科學家正尋求安全、乾淨又不昂貴的綠色能源，以滿足我們對電的需求。</b></div>' +
+      '<input type="text" class="trans-input" placeholder="請在此輸入第 2 題英文翻譯練習...">' +
+      '<div class="en trans-ans" style="margin-top:6px;color:var(--ok);font-weight:600;">參考正解 1：Scientists are looking for (seeking) safe, clean, and inexpensive green energy to satisfy (meet) our need (demand) for electricity.</div>' +
+      '<div class="en trans-ans" style="color:var(--ok);">參考正解 2：Scientists are searching for safe, clean, and affordable green energy in order to fulfill our demand for electricity (power).</div>' +
+      '<p class="note">💡 <b>句構與詞彙解析：</b><br>• 「正尋求」：現在進行式 <i>are looking for / are seeking / are searching for / are in search of</i>。<br>• 「安全、乾淨又不昂貴的綠色能源」：<i>safe, clean, and inexpensive (cheap / affordable) green energy</i>。<br>• 「以滿足我們對電的需求」：表目的不定詞 <i>to satisfy / meet / fulfill our need (demand) for electricity</i>（注意「對……的需求」介系詞固定用 <i>for</i>）。</p>' +
+    '</div>' +
+  '</div>' +
+'</section>';
+
+html += '<div class="grade-box" id="gbox-trans">' +
+  '<div class="grade-title">📝 中譯英對照批改（共 8 分）</div>' +
+  '<div class="grade-btns">' +
+    '<button class="btn-grade" onclick="gradeTrans()">✅ 顯示中譯英正解與解析</button>' +
+    '<button class="btn-reset" onclick="resetTrans()">🔄 清空重練中譯英</button>' +
+  '</div>' +
+  '<div class="grade-res" id="gres-trans"></div>' +
+'</div>';
+
+// 第貳部分：非選擇題 — 二、英文作文
+html += '<h2 id="sec-essay">第貳部分：非選擇題 — 二、英文作文（占 20 分）</h2>';
+html += '<section class="pas graded">' +
+  '<h3>英文作文題目提示</h3>' +
+  '<p class="prompt-text"><b>說明：</b>1. 依提示在「答案卷」上寫一篇英文作文。<br>2. 文長至少 120 個單詞（words）。</p>' +
+  '<p class="prompt-text"><b>提示：</b>你認為畢業典禮應該是個溫馨感人、活潑熱鬧、或是嚴肅傷感的場景？請寫一篇英文作文說明你對畢業典禮的看法，第一段寫出畢業典禮對你而言意義是什麼，第二段說明要如何安排或進行活動才能呈現出這個意義。</p>' +
+'</section>';
+
+const ESSAY_MODEL = [
+  [
+    ['To me, a graduation ceremony is far more than a formal ritual marking the end of high school; it is a heartwarming milestone that celebrates both gratitude and new beginnings.', '對我而言，畢業典禮遠不止是一個標誌高中生活結束的正式儀式；它是一個溫馨感人的里程碑，同時頌揚感恩之情與嶄新的開始。'],
+    ['Rather than being a solemn or sorrowful occasion filled with heavy tears, it should be a touching gathering where graduates reflect on their shared journey with warmth and appreciation.', '它不應該是一個充滿沉重淚水、嚴肅或傷感的場合，而應該是一場溫馨動人的聚會，讓畢業生帶著溫暖與感謝回顧他們共同走過的旅程。'],
+    ['Over the past three years, we have weathered countless academic challenges side by side, and none of our growth would have been possible without the patient guidance of our teachers and the unwavering support of our families.', '在過去三年裡，我們並肩度過了無數的學業挑戰，若沒有師長耐心的指導與家人堅定不移的支持，我們不可能獲得今日的成長。'],
+    ['Therefore, the true meaning of graduation lies in cherishing the bonds we have built while gathering the courage to step into the next chapter of our lives.', '因此，畢業真正的意義在於珍惜我們所建立的情誼，同時鼓起勇氣邁向人生的下一個篇章。']
+  ],
+  [
+    ['To bring this heartwarming spirit to life, the ceremony should be thoughtfully arranged around genuine human connection rather than lengthy official speeches.', '為了將這種溫馨感人的精神具體呈現出來，典禮應該圍繞著真摯的人際連結來精心安排，而非冗長的官方致詞。'],
+    ['First, the venue can be decorated with a photo wall displaying candid snapshots from our freshman orientation, sports meets, and late-night study sessions, instantly evoking fond memories as students and parents walk in.', '首先，會場可以佈置一面照片牆，展示我們從高一新生訓練、運動會到挑燈夜戰讀書的真實抓拍照片，讓學生與家長一走進會場就立刻喚起美好回憶。'],
+    ['During the ceremony, a short documentary filmed by the graduates could be screened, featuring humorous classroom moments alongside sincere interviews with teachers.', '在典禮期間，可以播放一段由畢業生親自拍攝的短紀錄片，內容穿插幽默的課堂瞬間以及對老師們的真摯訪談。'],
+    ['Next, a "Gratitude Time" should be included, allowing every student to present a handwritten card and a single flower to their teachers and parents with a warm hug.', '接著，應該安排一段「感恩時刻」，讓每位學生都能送上親手寫的卡片與一朵花給師長和父母，並給予一個溫暖的擁抱。'],
+    ['Finally, the ceremony can conclude with the entire graduating class singing an acoustic farewell song written by students, turning bittersweet nostalgia into hopeful blessings for the future.', '最後，典禮可以在全體畢業生合唱一首由學生創作的不插電木吉他告別歌曲中畫下句點，將苦樂參半的懷舊之情化為對未來充滿希望的祝福。']
+  ]
+];
+
+html += passage('高分範文賞析（268 字，逐句中英對照）', ESSAY_MODEL, '💡 <b>寫作架構解析：</b>第一段開門見山定義畢業典禮應為「溫馨感人（heartwarming and touching）」的場合，闡述其核心意義在於「感恩師長親友」與「邁向新起點」；第二段透過四個具體活動安排（回憶照片牆、自製訪談紀錄片、親手獻花與手寫卡的感恩時刻、全體合唱自創畢業歌）層層推進，完美呼應第一段所定義的溫馨主題。', 'essay-model', 'graded');
+
+document.getElementById('app').innerHTML = html;
+
+// 動態建立導覽列錨點
+const nav = document.getElementById('nav');
+[
+  ['#sec-vocab', '一、詞彙'],
+  ['#sec-cloze', '二、綜合測驗'],
+  ['#sec-wbank', '三、文意選填'],
+  ['#sec-disc', '四、篇章結構'],
+  ['#sec-rc', '五、閱讀測驗'],
+  ['#gbox-all', '🏆 全卷批改'],
+  ['#sec-trans', '中譯英'],
+  ['#sec-essay', '英文作文']
+].forEach(item => {
+  const a = document.createElement('a');
+  a.href = item[0];
+  a.textContent = item[1];
+  nav.appendChild(a);
+});
+</script>
+<script src="bookmark.js"></script>
+<script>
+  let secretClickCount = 0;
+  let secretTimer;
+  document.getElementById('secret-trigger').addEventListener('click', function() {
+    secretClickCount++;
+    if (secretClickCount === 3) {
+      const counter = document.getElementById('secret-counter');
+      counter.style.display = counter.style.display === 'none' ? 'block' : 'none';
+      secretClickCount = 0;
+    }
+    clearTimeout(secretTimer);
+    secretTimer = setTimeout(() => { secretClickCount = 0; }, 2000);
+  });
+</script>
+</body>
+</html>

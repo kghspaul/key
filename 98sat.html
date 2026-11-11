@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>98學年度指定科目考試 英文考科詳解</title>
+<style>
+:root{--bg:#faf8f4;--fg:#222;--card:#fff;--line:#e4ded3;--acc:#9a3b2e;--ok:#1f7a4d;--no:#b3261e;--mut:#6b6558;--hl:#fff1c9}
+@media(prefers-color-scheme:dark){:root{--bg:#161512;--fg:#e8e4da;--card:#201f1b;--line:#3a372f;--acc:#e08a78;--ok:#6fcf9a;--no:#f08a82;--mut:#a39d8f;--hl:#4a3f1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+.top{max-width:900px;margin:auto;padding:28px 18px 10px}
+.top h1{margin:0 0 4px;font-size:1.6rem;color:var(--acc)}
+.top p{margin:2px 0;color:var(--mut);font-size:.92rem}
+.feature-box{background:var(--hl);border-left:4px solid var(--acc);padding:8px 12px;border-radius:0 6px 6px 0;margin:10px 0;font-size:0.9rem;color:var(--fg);}
+nav{position:sticky;top:0;z-index:9;background:var(--bg);border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px;padding:8px 12px}
+nav a,nav button{flex:none;padding:5px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--fg);text-decoration:none;font:inherit;font-size:.88rem;cursor:pointer}
+nav a:hover,nav button:hover{border-color:var(--acc);color:var(--acc)}
+nav a.review-btn{background:var(--acc);color:#fff;border-color:var(--acc);font-weight:bold;}
+nav button.pm-active { background:var(--acc); color:#fff; border-color:var(--acc); }
+main{max-width:900px;margin:auto;padding:0 16px 70px}
+h2{margin:36px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--acc);font-size:1.3rem}
+h3{margin:0 0 8px;font-size:1.05rem;color:var(--acc)}
+.pas,.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.para{margin-bottom:14px}
+.s{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--line)}
+.en{font-family:Georgia,"Times New Roman",serif;font-size:1.02rem}
+.zh{color:var(--mut);font-size:.93rem}
+.prompt-text{color:var(--fg);font-size:.96rem;line-height:1.8}
+.note{color:var(--mut);font-size:.85rem;margin:6px 0 0}
+.bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 4px;border-radius:3px;font-weight:600}
+.bl sup{color:var(--acc);margin-right:3px;font-size:.7em}
+.bank{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.92rem;margin-bottom:8px}
+details.q>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+details.q>summary::-webkit-details-marker{display:none}
+.n{background:var(--acc);color:#fff;border-radius:6px;padding:0 10px;font-weight:700;font-size:1.05rem}
+.tag{font-size:.78rem;border:1px solid var(--acc);color:var(--acc);border-radius:99px;padding:0 9px;line-height:1.6}
+.tag.pos{border-color:var(--ok);color:var(--ok)}
+.ans{margin-left:auto;font-weight:700;color:var(--ok)}
+.qb{margin-top:10px}
+.stem{margin-bottom:8px;padding:8px 10px;background:var(--bg);border-radius:6px}
+.clue{margin:8px 0;padding:8px 12px;border-left:4px solid var(--acc);background:var(--bg);border-radius:0 6px 6px 0}
+.clue h4,.qb h4{margin:0 0 2px;font-size:.92rem;color:var(--acc)}
+ul.op{list-style:none;margin:6px 0 0;padding:0}
+ul.op li{padding:7px 10px;margin:5px 0;border-radius:6px;border:1px solid var(--line);font-size:.95rem;transition:background 0.2s;cursor:pointer}
+ul.op li.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 9%,transparent)}
+ul.op li.no{border-color:color-mix(in srgb,var(--no) 45%,transparent)}
+ul.op i{font-style:normal;font-weight:700;font-size:.82rem}
+li.ok i{color:var(--ok)}li.no i{color:var(--no)}
+.exp{margin-top:4px}
+small{color:var(--mut)}
+
+/* === 練習模式與批改狀態樣式 === */
+body.practice-mode details.q:not(.graded) .ans { visibility: hidden; }
+body.practice-mode details.q:not(.graded) .clue { display: none; }
+body.practice-mode details.q:not(.graded) .tag { display: none; }
+body.practice-mode details.q:not(.graded) .stem .zh { display: none; }
+body.practice-mode .pas:not(.graded) .zh { display: none; }
+body.practice-mode .pas:not(.graded) .trans-ans { display: none; }
+body.practice-mode .pas:not(.graded) .note { display: none; }
+.trans-input {
+  display: none;
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1rem;
+}
+.trans-input:focus { outline: none; border-color: var(--acc); }
+body.practice-mode .trans-input { display: block; }
+body.practice-mode .bl:not(.revealed) {
+  color: transparent;
+  background: var(--bg);
+  border-bottom: 2px solid var(--acc);
+  padding: 0 18px;
+  user-select: none;
+  display: inline-block;
+  min-width: 64px;
+  text-align: center;
+}
+body.practice-mode .bl:not(.revealed) sup {
+  color: var(--acc);
+  font-weight: 700;
+}
+body.practice-mode .bank:not(.graded) small { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li small { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li.ok,
+body.practice-mode details.q:not(.graded) ul.op li.no { border-color: var(--line); background: transparent; }
+body.practice-mode details.q:not(.graded) ul.op li i { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li .exp { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li:hover { background: var(--hl); }
+ul.op li.selected { border-color: var(--acc) !important; background: color-mix(in srgb, var(--acc) 12%, transparent) !important; font-weight: 600; }
+
+/* 已批改題目的作答回饋樣式 */
+details.q.graded ul.op li.selected.ok { border: 2px solid var(--ok) !important; background: color-mix(in srgb, var(--ok) 15%, transparent) !important; }
+details.q.graded ul.op li.selected.no { border: 2px solid var(--no) !important; background: color-mix(in srgb, var(--no) 14%, transparent) !important; }
+.user-status { font-weight: 700; font-size: .88rem; padding: 1px 8px; border-radius: 99px; margin-left: 6px; }
+.user-status.st-ok { background: color-mix(in srgb, var(--ok) 15%, transparent); color: var(--ok); border: 1px solid var(--ok); }
+.user-status.st-no { background: color-mix(in srgb, var(--no) 15%, transparent); color: var(--no); border: 1px solid var(--no); }
+.user-status.st-blank { background: var(--hl); color: var(--acc); border: 1px solid var(--acc); }
+
+/* 題組批改面板與全卷總批改面板 */
+.grade-box {
+  background: var(--card);
+  border: 2px dashed var(--acc);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin: 18px 0 32px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.grade-box.all-box {
+  border: 2px solid var(--acc);
+  background: color-mix(in srgb, var(--hl) 45%, var(--card));
+  padding: 20px 22px;
+  margin: 30px 0 40px;
+}
+.grade-title { font-weight: 700; color: var(--acc); font-size: 1.02rem; }
+.all-box .grade-title { font-size: 1.2rem; }
+.grade-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn-grade, .btn-reset {
+  padding: 6px 16px;
+  border-radius: 99px;
+  font: inherit;
+  font-size: .92rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid var(--acc);
+  transition: transform 0.1s, opacity 0.2s;
+}
+.btn-grade { background: var(--acc); color: #fff; }
+.all-box .btn-grade, .all-box .btn-reset { padding: 8px 22px; font-size: 1rem; }
+.btn-reset { background: var(--card); color: var(--mut); border-color: var(--line); }
+.btn-grade:hover, .btn-reset:hover { opacity: 0.9; transform: translateY(-1px); }
+.grade-res {
+  width: 100%;
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  font-size: .95rem;
+  display: none;
+}
+.grade-res.show { display: block; }
+.q-Jump {
+  display: inline-block;
+  padding: 1px 8px;
+  margin: 2px 3px;
+  border-radius: 6px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  color: var(--acc);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: .86rem;
+}
+.q-Jump:hover { background: var(--acc); color: #fff; border-color: var(--acc); }
+
+footer{max-width:900px;margin:auto;padding:20px 16px 40px;color:var(--mut);font-size:.85rem;line-height:1.6;border-top:1px solid var(--line);margin-top:40px;}
+footer a{color:var(--acc);text-decoration:none;font-weight:bold;}
+footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1><span id="exam-title">98學年度指定科目考試 英文考科詳解</span> <span id="completed-badge" style="display:none;font-size:1rem;color:var(--ok);">✅ 已完成</span></h1>
+  <p>每題含：考點標籤 → 題幹逐句中英對照 → 解題線索 → 正解與全部誤答分析</p>
+  <div class="feature-box">
+    💡 <b>複習與作答指南：</b> 點擊「🎯 切換練習模式」可自動挖空題幹答案並隱藏中譯與解析（含中譯英答案與詳解）；直接點選各題選項作答後，可點擊各題組下方的「<b>✅ 批改本題組</b>」或單選題最後的「<b>🏆 一次批改全卷</b>」查看得分並自動展開詳解（亦可點擊「<b>🔄 一次清空重練</b>」重新作答）！點擊每題右上角的「標記此題」可收錄錯題；滑鼠反白任何英文字句可「收藏單字」。請前往 <a href="review.html" target="_blank" style="color:var(--acc);font-weight:bold;">錯題與單字總複習頁面</a>。
+  </div>
+  <p>圖例：<span class="bl revealed">黃底</span> ＝ 正確答案填入處 ｜ <span class="tag" id="secret-trigger" style="user-select:none;cursor:default;">考點</span> <span class="tag pos">詞性需求</span></p>
+  <div id="secret-counter" style="display:none; margin-top:8px; font-size:0.9rem; color:var(--mut);">
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    👁️ <b>本頁瀏覽人次：</b><span id="busuanzi_value_page_pv"></span> 次
+  </div>
+</div>
+<nav id="nav">
+  <button id="pm-toggle">🎯 切換練習模式</button>
+  <button id="complete-btn">📝 標記為已完成</button>
+  <a href="review.html" class="review-btn" target="_blank">📚 前往總複習</a>
+</nav>
+<main id="app"></main>
+<footer>
+  限定用途教學教材。本詳解為教學輔助，題目版權屬原出版單位（大考中心）。<br>
+  💡 <b>問題回報與建議：</b> Line: etpaul ｜ IG: <a href="https://www.instagram.com/etpaul" target="_blank">@etpaul</a>
+</footer>
+
+<script>
+const L="ABCD";
+const fx=s=>s.replace(/\*([^*]+)\*/g,'<i>$1</i>').replace(/\[\[(\d*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl"'+(n?' data-q="'+n+'"':'')+'>'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const SENT={};
+const Q_ANS={};
+
+function passage(title,paras,note,gid,extraCls){
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[(\d+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  return '<section class="pas'+(extraCls?' '+extraCls:'')+'"'+(gid?' id="pas-'+gid+'"':'')+'><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
+}
+function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
+const clue=t=>'<div class="clue"><h4>解題線索</h4>'+t+'</div>';
+function ops(list,ans,lab){
+  lab=lab||'ABCDEF';
+  return '<ul class="op">'+list.map((o,i)=>{
+    const optCode = (lab==='ABCDEF'&&list.length<=4) ? L[i] : lab[i];
+    const k=ans.indexOf(optCode)>=0;
+    return '<li class="'+(k?'ok':'no')+'" data-opt="'+optCode+'" onclick="selectOpt(this)"><b>('+optCode+') '+fx(o[0])+'</b>'+(o[1]?' <small>'+o[1]+'</small>':'')+' <i>'+(k?'✔ 正解':'✘ 誤答')+'</i><div class="exp">'+o[2]+'</div></li>';
+  }).join('')+'</ul>';
+}
+function card(n,tags,ans,body){
+  Q_ANS[n] = ans;
+  return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="user-status" id="st'+n+'" style="display:none"></span><span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
+}
+
+// 產生各題組批改面板 HTML
+function groupGradeBox(gid, title, startQ, endQ, ptsPerQ) {
+  ptsPerQ = ptsPerQ || 1;
+  const totalPts = (endQ - startQ + 1) * ptsPerQ;
+  return '<div class="grade-box" id="gbox-'+gid+'">' +
+    '<div class="grade-title">📝 '+title+'（第 '+startQ+'–'+endQ+' 題，共 '+totalPts+' 分）</div>' +
+    '<div class="grade-btns">' +
+      '<button class="btn-grade" onclick="gradeGroup(\''+gid+'\','+startQ+','+endQ+','+ptsPerQ+')">✅ 批改本題組</button>' +
+      '<button class="btn-reset" onclick="resetGroup(\''+gid+'\','+startQ+','+endQ+')">🔄 重練本題組</button>' +
+    '</div>' +
+    '<div class="grade-res" id="gres-'+gid+'"></div>' +
+  '</div>';
+}
+
+// 點擊選項作答
+window.selectOpt = function(li) {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  const qEl = li.closest('details.q');
+  if (qEl && qEl.classList.contains('graded')) {
+    qEl.classList.remove('graded');
+    const qNum = qEl.id.replace('q', '');
+    const st = document.getElementById('st' + qNum);
+    if (st) st.style.display = 'none';
+  }
+  li.parentNode.querySelectorAll('li').forEach(el => el.classList.remove('selected'));
+  li.classList.add('selected');
+};
+
+// 批改單一題目並回傳狀態 ('ok' | 'no' | 'blank')
+function evaluateSingleQ(n) {
+  const qEl = document.getElementById('q' + n);
+  if (!qEl) return 'blank';
+  qEl.classList.add('graded');
+  qEl.open = true;
+
+  document.querySelectorAll('.bl[data-q="'+n+'"]').forEach(el => el.classList.add('revealed'));
+
+  const sel = qEl.querySelector('ul.op li.selected');
+  const st = document.getElementById('st' + n);
+  const ans = Q_ANS[n];
+
+  if (!sel) {
+    if (st) {
+      st.className = 'user-status st-blank';
+      st.textContent = '⚠️ 未作答';
+      st.style.display = 'inline-block';
+    }
+    return 'blank';
+  }
+
+  const userOpt = sel.getAttribute('data-opt');
+  if (ans.indexOf(userOpt) >= 0) {
+    if (st) {
+      st.className = 'user-status st-ok';
+      st.textContent = '✔ 答對 (' + userOpt + ')';
+      st.style.display = 'inline-block';
+    }
+    return 'ok';
+  } else {
+    if (st) {
+      st.className = 'user-status st-no';
+      st.textContent = '✘ 答錯 (選 ' + userOpt + ')';
+      st.style.display = 'inline-block';
+    }
+    return 'no';
+  }
+}
+
+// 批改特定題組
+window.gradeGroup = function(gid, startQ, endQ, ptsPerQ) {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  let okCount = 0, wrongList = [], blankList = [];
+  for (let n = startQ; n <= endQ; n++) {
+    const res = evaluateSingleQ(n);
+    if (res === 'ok') okCount++;
+    else if (res === 'no') wrongList.push(n);
+    else blankList.push(n);
+  }
+  const pasEl = document.getElementById('pas-' + gid);
+  if (pasEl) pasEl.classList.add('graded');
+  if (gid === 'wbank') {
+    const bankEl = document.getElementById('bank-wbank');
+    if (bankEl) bankEl.classList.add('graded');
+  }
+
+  const totalQ = endQ - startQ + 1;
+  const earnedPts = okCount * ptsPerQ;
+  const maxPts = totalQ * ptsPerQ;
+  const resEl = document.getElementById('gres-' + gid);
+
+  let html = '<div><b>📊 批改結果：</b>答對 <b>' + okCount + ' / ' + totalQ + '</b> 題，得分 <b style="color:var(--acc);font-size:1.15rem;">' + earnedPts + ' / ' + maxPts + '</b> 分' + (okCount === totalQ ? ' 🎉 全部答對！' : '') + '</div>';
+  if (wrongList.length > 0) {
+    html += '<div style="margin-top:4px;">❌ <b>答錯題號：</b>' + wrongList.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  if (blankList.length > 0) {
+    html += '<div style="margin-top:4px;">⚠️ <b>未作答題號：</b>' + blankList.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  resEl.innerHTML = html;
+  resEl.classList.add('show');
+};
+
+// 重練特定題組
+window.resetGroup = function(gid, startQ, endQ) {
+  enablePracticeMode();
+  for (let n = startQ; n <= endQ; n++) {
+    const qEl = document.getElementById('q' + n);
+    if (qEl) {
+      qEl.classList.remove('graded');
+      qEl.querySelectorAll('ul.op li').forEach(li => li.classList.remove('selected'));
+    }
+    const st = document.getElementById('st' + n);
+    if (st) st.style.display = 'none';
+    document.querySelectorAll('.bl[data-q="'+n+'"]').forEach(el => el.classList.remove('revealed'));
+  }
+  const pasEl = document.getElementById('pas-' + gid);
+  if (pasEl) pasEl.classList.remove('graded');
+  if (gid === 'wbank') {
+    const bankEl = document.getElementById('bank-wbank');
+    if (bankEl) bankEl.classList.remove('graded');
+  }
+  const resEl = document.getElementById('gres-' + gid);
+  if (resEl) {
+    resEl.innerHTML = '';
+    resEl.classList.remove('show');
+  }
+};
+
+// 展開與重置中譯英詳解
+window.gradeTrans = function() {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  const pasEl = document.getElementById('pas-trans');
+  if (pasEl) pasEl.classList.add('graded');
+  const resEl = document.getElementById('gres-trans');
+  if (resEl) {
+    resEl.innerHTML = '<div>✅ 已展開中譯英參考正解與句型解析，請自行核對作答內容！</div>';
+    resEl.classList.add('show');
+  }
+};
+
+window.resetTrans = function() {
+  enablePracticeMode();
+  const pasEl = document.getElementById('pas-trans');
+  if (pasEl) {
+    pasEl.classList.remove('graded');
+    pasEl.querySelectorAll('.trans-input').forEach(inp => inp.value = '');
+  }
+  const resEl = document.getElementById('gres-trans');
+  if (resEl) {
+    resEl.innerHTML = '';
+    resEl.classList.remove('show');
+  }
+};
+
+// === 功能初始化：練習模式與完成標記 ===
+const pmBtn = document.getElementById('pm-toggle');
+function enablePracticeMode() {
+  document.body.classList.add('practice-mode');
+  pmBtn.classList.add('pm-active');
+  pmBtn.textContent = '退出練習模式（顯示全部詳解）';
+  document.querySelectorAll('details.q').forEach(d => d.open = true);
+}
+function disablePracticeMode() {
+  document.body.classList.remove('practice-mode');
+  pmBtn.classList.remove('pm-active');
+  pmBtn.textContent = '🎯 切換練習模式';
+}
+pmBtn.onclick = function() {
+  if (document.body.classList.contains('practice-mode')) {
+    disablePracticeMode();
+  } else {
+    enablePracticeMode();
+  }
+};
+
+const examTitle = document.getElementById('exam-title').innerText;
+const compBtn = document.getElementById('complete-btn');
+const badge = document.getElementById('completed-badge');
+let comps = JSON.parse(localStorage.getItem('completed_exams')||'[]');
+
+if(comps.includes(examTitle)) {
+  badge.style.display = 'inline-block';
+  compBtn.innerText = '取消完成標記';
+}
+
+compBtn.onclick = function() {
+  comps = JSON.parse(localStorage.getItem('completed_exams')||'[]');
+  if(comps.includes(examTitle)) {
+    comps = comps.filter(t => t !== examTitle);
+    this.innerText = '📝 標記為已完成';
+    badge.style.display = 'none';
+  } else {
+    comps.push(examTitle);
+    this.innerText = '取消完成標記';
+    badge.style.display = 'inline-block';
+  }
+  localStorage.setItem('completed_exams', JSON.stringify(comps));
+};
+
+// === 各題組與全卷批改設定 ===
+const ALL_GROUPS = [
+  { gid: 'vocab', title: '一、詞彙', startQ: 1, endQ: 10, pts: 1 },
+  { gid: 'cloze1', title: '二、綜合測驗（第 11–15 題）', startQ: 11, endQ: 15, pts: 1 },
+  { gid: 'cloze2', title: '二、綜合測驗（第 16–20 題）', startQ: 16, endQ: 20, pts: 1 },
+  { gid: 'wbank', title: '三、文意選填（第 21–30 題）', startQ: 21, endQ: 30, pts: 1 },
+  { gid: 'disc', title: '四、篇章結構（第 31–35 題）', startQ: 31, endQ: 35, pts: 2 },
+  { gid: 'rc1', title: '五、閱讀測驗（第 36–39 題）', startQ: 36, endQ: 39, pts: 2 },
+  { gid: 'rc2', title: '五、閱讀測驗（第 40–43 題）', startQ: 40, endQ: 43, pts: 2 },
+  { gid: 'rc3', title: '五、閱讀測驗（第 44–47 題）', startQ: 44, endQ: 47, pts: 2 },
+  { gid: 'rc4', title: '五、閱讀測驗（第 48–51 題）', startQ: 48, endQ: 51, pts: 2 }
+];
+
+window.gradeAllSingleChoice = function() {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  let totalOk = 0, totalQ = 0, earnedPts = 0, maxPts = 0;
+  let wrongList = [], blankList = [];
+
+  ALL_GROUPS.forEach(g => {
+    gradeGroup(g.gid, g.startQ, g.endQ, g.pts);
+    for (let n = g.startQ; n <= g.endQ; n++) {
+      totalQ++;
+      maxPts += g.pts;
+      const st = document.getElementById('st' + n);
+      if (st && st.classList.contains('st-ok')) {
+        totalOk++;
+        earnedPts += g.pts;
+      } else if (st && st.classList.contains('st-no')) {
+        wrongList.push(n);
+      } else {
+        blankList.push(n);
+      }
+    }
+  });
+
+  const resEl = document.getElementById('gres-all');
+  let html = '<div style="font-size:1.05rem;"><b>🏆 全卷選擇題總成績：</b>答對 <b>' + totalOk + ' / ' + totalQ + '</b> 題，總分 <b style="color:var(--acc);font-size:1.35rem;">' + earnedPts + ' / ' + maxPts + '</b> 分' + (totalOk === totalQ ? ' 🎉 滿分全對！太強了！' : '') + '</div>';
+  if (wrongList.length > 0) {
+    html += '<div style="margin-top:6px;">❌ <b>全卷答錯題號（點擊跳轉）：</b>' + wrongList.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  if (blankList.length > 0) {
+    html += '<div style="margin-top:6px;">⚠️ <b>全卷未作答題號（點擊跳轉）：</b>' + blankList.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  resEl.innerHTML = html;
+  resEl.classList.add('show');
+};
+
+window.resetAllSingleChoice = function() {
+  ALL_GROUPS.forEach(g => {
+    resetGroup(g.gid, g.startQ, g.endQ);
+  });
+  const resEl = document.getElementById('gres-all');
+  if (resEl) {
+    resEl.innerHTML = '';
+    resEl.classList.remove('show');
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+// === 一、詞彙題資料 (1–10) ===
+const VOCAB = [
+  [1, ['考點：購物與退貨商業名詞', '詞性需求：單數名詞'], 'D',
+    ['You\'ll need the store [[1|receipt]] to show proof of purchase if you want to return any items you bought.', '如果你想要退還任何你購買的商品，你會需要商店收據來出示購買證明。'],
+    '後方不定詞 *to show proof of purchase*（出示購買證明）以及條件句 *return any items you bought*（退還所購商品）點出退貨時必備的單據即為「商店收據（*store receipt*）」。',
+    [
+      ['credit', 'n. 信用；學分；讚揚；店內折抵金', '*store credit* 指退貨後換取的「店內購物抵用金」，並非用來證明已購買的「購買憑證（*proof of purchase*）」。<br><b>何時才對：</b>表示「商家不退現金，僅退還店內抵用金（*offer store credit instead of a cash refund*）」時。'],
+      ['guide', 'n. 指南；導遊', '購物指南無法作為退貨時的購買證明。<br><b>何時才對：</b>指「旅遊指南（*a travel guide*）」或「買家購物指南（*a buyer\'s guide*）」時。'],
+      ['license', 'n. 執照；許可證', '指駕照或營業執照，與證明自己買過該商品無關。<br><b>何時才對：</b>搭配 *driver\'s license*（駕照）或 *business license*（營業執照）時。'],
+      ['receipt', 'n. 收據；發票', '*store receipt*（商店收據／發票）正是退換貨時用來作為 *proof of purchase*（購買證明）的單據。']
+    ]
+  ],
+  [2, ['考點：語言流利度形容詞搭配', '詞性需求：形容詞（搭配介系詞 in）'], 'C',
+    ['Spending most of his childhood in Spain, John, a native speaker of English, is also [[2|fluent]] in Spanish.', '由於童年大部分時間都在西班牙度過，母語為英語的約翰也能說一口流利的西班牙語。'],
+    '句首分詞構句說明他童年大多在西班牙度過，句末結構為 *is also ___ in Spanish*；表示「精通某語言、某語言說得很流利」的固定搭配為 *be fluent in + 語言*。',
+    [
+      ['promising', 'adj. 有前途的；有希望的', '用來形容年輕人才或新計畫「前途無量」，不搭配 *in Spanish*。<br><b>何時才對：</b>形容 *a promising young pianist*（前途無量的年輕鋼琴家）時。'],
+      ['grateful', 'adj. 感激的', '搭配為 *be grateful to sb for sth*，不能說「對西班牙文很感激」。<br><b>何時才對：</b>表示「我很感激你的幫忙（*I am grateful for your help*）」時。'],
+      ['fluent', 'adj. 流利的；流暢的', '*be fluent in + 語言*（某語言很流利）為必考搭配，完美呼應童年旅居西班牙的背景。'],
+      ['definite', 'adj. 明確的；肯定的', '指答案或日期確定（*a definite answer*），無法搭配 *in Spanish*。']
+    ]
+  ],
+  [3, ['考點：玻璃碎裂四散動詞辨析', '詞性需求：過去式動詞或分詞'], 'A',
+    ['The mirror slipped out of the little girl\'s hand, and the broken pieces [[3|scattered]] all over the floor.', '鏡子從小女孩的手中滑落，碎片散落一地。'],
+    '前半句說鏡子從手中滑落摔破，後半句主詞是 *the broken pieces*（碎片），地點是 *all over the floor*（滿地都是），描述碎片「四處散落、撒落一地」的動詞即為 *scattered*。',
+    [
+      ['scattered', 'v. 散落；四散；撒播', '*scatter all over the floor* 生動描繪鏡子摔破後碎片四處飛散在地板上的畫面。'],
+      ['circulated', 'v. （血液、空氣、貨幣、謠言）循環；流通；流傳', '指沿著迴路循環或在人群中流傳，地板上的鏡子碎片不會「循環流通」。<br><b>何時才對：</b>表示「謠言在辦公室裡流傳（*Rumors circulated in the office*）」或血液循環時。'],
+      ['featured', 'v. 以……為特色；由……主演', '及物動詞，後須接賓語，且與鏡子摔破毫無關聯。<br><b>何時才對：</b>表示「這部電影由知名演員主演（*featured a famous actor*）」時。'],
+      ['released', 'v. 釋放；公布；上映', '及物動詞，碎片不會自己「釋放」在地板上。<br><b>何時才對：</b>表示「釋放人質（*release hostages*）」或「推出新專輯（*release a new album*）」時。']
+    ]
+  ],
+  [4, ['考點：警方調查與介系詞 into 搭配', '詞性需求：單數可數名詞（置於 an 後）'], 'D',
+    ['No one knows how the fire broke out. The police have started an [[4|investigation]] into the cause of it.', '沒有人知道這場火災是如何發生的。警方已經針對起火原因展開調查。'],
+    '前句說沒人知道火災如何發生（*how the fire broke out*），後句主詞是警方（*The police*），搭配後方介系詞片語 *into the cause of it*（針對其原因……），「對……展開調查」的固定搭配為 *start / launch / conduct an investigation into...*。',
+    [
+      ['appreciation', 'n. 感激；欣賞；升值', '搭配介系詞 *of / for*，且警方不會對火災原因展開「欣賞或感激」。<br><b>何時才對：</b>表達「對藝術的鑑賞（*appreciation of art*）」時。'],
+      ['extension', 'n. 延長；擴建；電話分機', '與警方追查起火原因無關。<br><b>何時才對：</b>申請「延後截稿期限（*ask for an extension of the deadline*）」時。'],
+      ['operation', 'n. 手術；運作；軍事／警方行動', '雖可指警方行動，但「針對某事件原因進行調查」搭配 *into the cause* 必須用 *investigation into*。<br><b>何時才對：</b>指病患「接受心臟手術（*undergo a heart operation*）」或「救援行動（*a rescue operation*）」時。'],
+      ['investigation', 'n. 調查；偵查', '*an investigation into the cause of...*（針對……原因的調查）為標準警政與新聞英文搭配。']
+    ]
+  ],
+  [5, ['考點：交通安全情態副詞辨析', '詞性需求：情態副詞（修飾動詞 drive）'], 'A',
+    ['When there is a heavy rain, you have to drive very [[5|cautiously]] so as to avoid traffic accidents.', '下大雨時，你必須非常謹慎地開車，以避免發生交通事故。'],
+    '前有天氣狀況 *a heavy rain*（大雨），後有目的片語 *so as to avoid traffic accidents*（為了避免車禍），因此開車必須非常「小心地、謹慎地（*cautiously*）」。',
+    [
+      ['cautiously', 'adv. 小心地；謹慎地', '源自形容詞 *cautious*（謹慎的），大雨中小心駕駛才能避免車禍。'],
+      ['recklessly', 'adv. 魯莽地；不顧後果地', '與 *cautiously* 完全相反！魯莽駕駛（*drive recklessly*）會「導致」車禍而非「避免」車禍。<br><b>何時才對：</b>描述肇事原因，如 *He was fined for driving recklessly in the rain* 時。'],
+      ['smoothly', 'adv. 順暢地；平穩地', '常用來形容計畫、會議或機器「進行得很順利（*go smoothly*）」，大雨視線不良時的防禦駕駛重點在於「謹慎（*cautiously*）」。<br><b>何時才對：</b>表示「活動進行得非常順利（*Everything went smoothly*）」時。'],
+      ['passively', 'adv. 被動地；消極地', '開車不能「被動消極地開」。<br><b>何時才對：</b>形容學生「只是被動地聽課（*listen passively in class*）」時。']
+    ]
+  ],
+  [6, ['考點：家用電器上位概念名詞', '詞性需求：複數可數名詞'], 'C',
+    ['We decided to buy some [[6|appliances]] for our new apartment, including a refrigerator, a vacuum cleaner, and a dishwasher.', '我們決定為新公寓添購一些家電用品，包括一台冰箱、一台吸塵器和一台洗碗機。'],
+    '句末 *including a refrigerator, a vacuum cleaner, and a dishwasher*（包括冰箱、吸塵器與洗碗機）列舉的都是插電使用的「家用電器」，其英文總稱即為 *(home / household / electrical) appliances*。',
+    [
+      ['utensils', 'n. （廚房）器皿、用具、餐具', '*kitchen / cooking utensils* 指鍋鏟、湯勺、刀叉等「非插電的手持廚具／餐具」，不包含冰箱與吸塵器等大型家電。<br><b>何時才對：</b>後方列舉 *forks, spoons, and spatulas* 時。'],
+      ['facilities', 'n. （公共或大型場所的）設施、設備', '指體育館、圖書館、無障礙設施或飯店內的公共設施（*sports / medical / public facilities*），不用來指家裡的冰箱和吸塵器。<br><b>何時才對：</b>指「社區運動設施（*community sports facilities*）」時。'],
+      ['appliances', 'n. 家用電器；電器設備', '專指冰箱、洗衣機、吸塵器、洗碗機等「家用電器（*household appliances*）」。'],
+      ['extensions', 'n. 延長；擴建部分；分機', '與購買冰箱、洗碗機無關。']
+    ]
+  ],
+  [7, ['考點：課程負擔沉重形容詞辨析', '詞性需求：形容詞（作主詞補語）'], 'C',
+    ['This math class is very [[7|demanding]]; I have to spend at least two hours every day doing the assignments.', '這門數學課要求非常高（非常吃重）；我每天都得花至少兩個小時寫作業。'],
+    '分號後半句解釋：「我每天必須花至少兩小時寫作業（*spend at least two hours every day doing the assignments*）」，可見這門數學課「要求很高的、費時費力的、負荷沉重的（*demanding*）」。',
+    [
+      ['confidential', 'adj. 機密的；保密的', '用來形容文件或資訊需保密（*strictly confidential*），數學課不是國家機密。<br><b>何時才對：</b>形容「機密醫療紀錄（*confidential medical records*）」時。'],
+      ['logical', 'adj. 合乎邏輯的；有條理的', '雖然數學講求邏輯，但「這門課很合邏輯」並不能解釋為什麼「每天得花兩小時才寫得完作業」。<br><b>何時才對：</b>形容某人的推論或論點「非常有邏輯（*a logical conclusion*）」時。'],
+      ['demanding', 'adj. （工作或課業）要求高的、吃重的、費力的', '完美對應後句每天需耗費兩小時寫作業的高強度課業負擔。'],
+      ['resistant', 'adj. 抵抗的；耐……的（搭配 to）', '常構成 *water-resistant*（防水的）或 *resistant to change*（抗拒改變的），不可修飾課程。']
+    ]
+  ],
+  [8, ['考點：外觀檢視句子副詞辨析', '詞性需求：副詞（修飾全句）'], 'B',
+    ['One can generally judge the quality of eggs with the naked eye. [[8|Externally]], good eggs must be clean, free of cracks, and smooth-shelled.', '一般人通常可以用肉眼判斷雞蛋的品質。從外觀上來看，好蛋必須乾淨、無裂痕且蛋殼光滑。'],
+    '前句說可以用「肉眼（*with the naked eye*）」判斷雞蛋品質，後句列舉的 *clean, free of cracks, and smooth-shelled*（乾淨、無裂痕、蛋殼光滑）全部都是雞蛋「外部、表面外觀」的特徵，故選 *Externally*（從外部來看、在外觀上）。',
+    [
+      ['Agriculturally', 'adv. 在農業上', '從肉眼看蛋殼有沒有裂痕、滑不光滑，是看「外部表面」而非「農業上」。<br><b>何時才對：</b>討論某地區「在農業上相當仰賴灌溉系統」時。'],
+      ['Externally', 'adv. 在外部；從外觀上來看', '呼應前句的 *with the naked eye*（用肉眼看）以及後句的蛋殼表面特徵（乾淨、無裂痕、殼光滑）。'],
+      ['Influentially', 'adv. 有影響力地', '與肉眼挑雞蛋完全無關。'],
+      ['Occasionally', 'adv. 偶爾；有時候', '若填 *Occasionally* 會變成「好蛋偶爾必須乾淨無裂痕」，語意荒謬。']
+    ]
+  ],
+  [9, ['考點：修改調整演講內容動詞', '詞性需求：過去式及物動詞'], 'D',
+    ['The scientist [[9|modified]] his speech to make it easier for children to understand the threat of global warming.', '這位科學家修改了他的演講內容，好讓孩童更容易理解全球暖化的威脅。'],
+    '後方目的不定詞 *to make it easier for children to understand...*（為了讓小孩子更容易聽懂）點出科學家針對聽眾年齡層「修改、調整（*modified*）」了原本深奧的演講稿。',
+    [
+      ['estimated', 'v. 估計；估算', '不能說「估計他的演講好讓小孩聽懂」。<br><b>何時才對：</b>表示「科學家估計海平面將上升兩公尺（*estimated that the sea level would rise*）」時。'],
+      ['documented', 'v. 記錄；以文件證明', '將演講記錄存檔並不會讓內容變得更容易讓小孩理解。<br><b>何時才對：</b>表示「詳細記錄氣候變遷的數據（*documented the climate data*）」時。'],
+      ['abolished', 'v. 廢除（法律、制度、習俗）', '*abolish* 的受詞是奴隸制度、死刑或舊法律（*slavery / the death penalty / a law*），不能用來接 *speech*，且若取消演講小孩就根本聽不到了。<br><b>何時才對：</b>表示「廢除一項不公平的法律（*abolish an unfair law*）」時。'],
+      ['modified', 'v. 修改；調整；緩和', '*modify one\'s speech*（修改／調整演講內容）以配合兒童聽眾的理解程度，語意完全契合。']
+    ]
+  ],
+  [10, ['考點：媒體地位超越及物動詞', '詞性需求：過去分詞 (Vp.p.)'], 'B',
+    ['The Internet has [[10|surpassed]] newspapers as a medium of mass communication. It has become the main source for national and international news for people.', '作為大眾傳播媒介，網際網路已經超越了報紙。它已成為人們獲取國內外新聞的主要來源。'],
+    '後句指出網路「已成為人們獲取國內外新聞的主要來源（*has become the main source...*）」，可見網路作為大眾傳播媒介的地位已經「超越、勝過（*surpassed*）」傳統報紙。',
+    [
+      ['reformed', 'v. 改革；改造', '網際網路是取代並超越了報紙，而非去「改革」報紙。<br><b>何時才對：</b>表示「政府改革教育制度（*reformed the education system*）」時。'],
+      ['surpassed', 'v. 超越；勝過', '*surpass newspapers as...*（作為……超越了報紙）直接呼應後句網路躍居第一大新聞來源的事實。'],
+      ['promoted', 'v. 促進；推銷；升遷', '網路搶走了報紙的讀者，並未「推銷或提振」報紙。'],
+      ['convinced', 'v. 說服；使確信', '受詞必須是「人」，不能說「網際網路說服了報紙」。<br><b>何時才對：</b>表示「說服讀者訂閱電子報（*convinced readers to subscribe*）」時。']
+    ]
+  ]
+];
+
+// === 二、綜合測驗 第一篇：虛擬病人與藥學訓練 (11–15) ===
+const CLOZE1_PAS = [
+  [
+    ['Keele University in the United Kingdom has developed a "virtual patient," created by a computer, to help train the pharmacists of the future.', '英國基爾大學（Keele University）開發了一種由電腦創造的「虛擬病人」，用來協助訓練未來的藥劑師。'],
+    ['Students in the university\'s School of [[11|Pharmacy]] work with the "patient" to gain experience in effective communication and decision-making.', '該大學藥學院的學生與這位「病人」互動練習，以獲得有效溝通與決策的經驗。']
+  ],
+  [
+    ['Students talk with the "patient" directly or by typing questions into a computer.', '學生可以直接與這位「病人」交談，或透過在電腦中輸入問題來溝通。'],
+    ['The "patient" responds verbally or with gestures to indicate [[12|emotions]] such as pain, stress or anxiety.', '這位「病人」會以口語或肢體動作回應，以表現出諸如疼痛、壓力或焦慮等情緒感受。'],
+    ['As a result, students are forced to communicate clearly [[13|in order]] that the "patient" understands them completely.', '因此，學生必須清楚地溝通，好讓這位「病人」能完全理解他們的意思。'],
+    ['The Virtual Patient can also be used to explore various medical situations.', '虛擬病人也可以用來探索各種不同的醫療狀況。'],
+    ['For example, the "patient" can be programmed to be allergic to certain medicine and can [[14|suffer from]] serious reactions if student learners are not aware of the situation.', '舉例來說，可以將「病人」設定為對某種藥物過敏，如果實習學生沒有察覺這個狀況，「病人」就會出現（遭受）嚴重的過敏反應。'],
+    ['This kind of practice allows students to learn from mistakes in a safe environment that would not be [[15|possible]] with textbooks alone.', '這種練習能讓學生在一個單靠教科書所不可能達成的安全環境中，從錯誤中學習。'],
+    ['The unique system can both be used in a classroom setting or for distance learning.', '這套獨特的系統既可以在教室環境中使用，也可以用於遠距教學。']
+  ]
+];
+
+const CLOZE1_Q = [
+  [11, ['考點：同根詞重現與上下文呼應', '詞性需求：專有名詞（學院名稱）'], 'C',
+    '前句明確指出開發這套系統是為了「訓練未來的藥劑師（*to help train the pharmacists of the future*）」，因此使用這套系統的學生自然是就讀於該大學的「藥學院（*School of Pharmacy*）」。',
+    [
+      ['Education', 'n. 教育', '教育學院培養的是教師而非藥劑師（*pharmacists*）。'],
+      ['Business', 'n. 商業；商學', '商學院與醫療處方訓練無關。'],
+      ['Pharmacy', 'n. 藥學；藥房', '與前句的 *pharmacists*（藥劑師）為同根詞，*School of Pharmacy* 即「藥學院」。'],
+      ['Humanities', 'n. 人文科學', '人文學院與臨床用藥過敏測試無關。']
+    ]
+  ],
+  [12, ['考點：上位概念名詞（such as）', '詞性需求：複數名詞'], 'B',
+    '空格後方以 *such as pain, stress or anxiety*（例如痛苦、壓力或焦慮）舉例說明，這三者皆屬於病患內心的「情緒、感受（*emotions*）」。',
+    [
+      ['expressions', 'n. 表情；表達；措辭', '前文說病人用「口語或手勢（*verbally or with gestures*）」來表示痛苦、壓力或焦慮；手勢本身是表達方式，而壓力與焦慮（*stress or anxiety*）則是內在的「情緒感受（*emotions*）」。'],
+      ['emotions', 'n. 情緒；情感；身心感受', '涵蓋後方列舉的 *pain, stress or anxiety*。'],
+      ['elements', 'n. 元素；要素', '疼痛與焦慮不是化學或構造上的「元素」。'],
+      ['events', 'n. 事件；活動', '焦慮與壓力是病人的身心感受，而非發生的「事件」。']
+    ]
+  ],
+  [13, ['考點：目的副詞子句連接詞 in order that', '詞性需求：名詞（構成複合連接詞 in order that）'], 'A',
+    '空格後接 `that + 完整子句`（*that the "patient" understands them completely*），且語意為「學生必須清楚溝通，『以便／好讓』病人能完全聽懂」；英文中引導目的副詞子句的複合連接詞為 *so that* 或 *in order that*。',
+    [
+      ['in order', '構成 in order that（以便；為了）', '*in order that + S + V* 等於 *so that + S + V*，引導目的副詞子句。'],
+      ['in return', 'phr. 作為回報', '後面不接 *that* 子句（若接名詞需用 *in return for*），且語意非利益交換。'],
+      ['in case', 'conj. 萬一；以防', '*in case* 本身即可直接接子句（不加 *that*，或極少數古典用法表「萬一」），若代入會變成「清楚溝通以防病人聽懂」，語意完全相反！'],
+      ['in addition', 'phr. 此外', '後面不接 *that* 子句（需用 *in addition to + N*）。']
+    ]
+  ],
+  [14, ['考點：醫療症狀動詞片語搭配', '詞性需求：原形動詞片語'], 'D',
+    '前半句說虛擬病人被設定為「對某種藥物過敏（*allergic to certain medicine*）」，如果學生沒注意到而給錯藥，病人就會「遭受、出現（*suffer from*）」嚴重的過敏反應（*serious reactions*）。',
+    [
+      ['adapt to', 'phr. 適應……', '對藥物過敏的病人不會「適應」嚴重過敏反應。<br><b>何時才對：</b>表示「適應新環境（*adapt to the new environment*）」時。'],
+      ['break into', 'phr. 闖入；突然開始（大笑／哭／歡呼）', '無 *break into serious reactions* 的用法。<br><b>何時才對：</b>表示「小偷闖入民宅（*broke into the house*）」或「突然放聲大笑（*broke into laughter*）」時。'],
+      ['provide with', 'phr. 提供……', '為及物片語，結構應為 *provide sb with sth*，此處既無受詞「人」，病人也不會「提供嚴重反應」。'],
+      ['suffer from', 'phr. 遭受（病痛、不良反應）；罹患', '*suffer from serious reactions*（出現／遭受嚴重過敏反應）符合醫療語境。']
+    ]
+  ],
+  [15, ['考點：關係子句與虛擬實境優勢形容詞', '詞性需求：形容詞'], 'C',
+    '本句說明虛擬病人系統的教學價值：「這種練習讓學生能在一個安全的環境中從錯誤中學習，而這是單靠教科書所不可能做到的（*that would not be possible with textbooks alone*）」（因為紙本課本無法跟學生即時互動並模擬給錯藥的後果）。',
+    [
+      ['exciting', 'adj. 令人興奮的', '醫藥臨床訓練的核心優勢在於「單靠課本無法達成的互動模擬（*not possible with textbooks alone*）」，而非追求刺激興奮。'],
+      ['necessary', 'adj. 必要的', '若填 *not be necessary with textbooks alone* 會變成「單靠課本就不必有安全環境／不必從錯誤中學習」，邏輯不通。'],
+      ['possible', 'adj. 可能的；辦得到的', '*would not be possible with textbooks alone*（單靠教科書是不可能辦到的）精準點出電腦模擬技術突破了傳統紙本教材的限制。'],
+      ['important', 'adj. 重要的', '「單靠課本就不重要」完全偏離文意。']
+    ]
+  ]
+];
+
+// === 二、綜合測驗 第二篇：印度嫁妝制度 (16–20) ===
+const CLOZE2_PAS = [
+  [
+    ['In spite of modernization and the increasing role of women in all walks of life, the practice of the dowry in India is still widespread.', '儘管現代化發展以及女性在各行各業中扮演的角色日益吃重，嫁妝習俗在印度仍然十分普遍。'],
+    ['The dowry system, money or property brought by a bride to her husband at marriage, was started centuries ago with the intention of providing security for a girl [[16|in case of]] difficulties and unexpected circumstances after marriage.', '嫁妝制度——即新娘在結婚時帶給丈夫的金錢或財產——始於數百年前，原本的用意是在女孩婚後萬一遇到困難與突發狀況時，為她提供保障。'],
+    ['For this purpose, the parents gave [[17|whatever]] they could to their daughter, which consequently went to the groom\'s family.', '為了這個目的，父母會盡其所能把所有能給的財物都給女兒，而這些財物最終都落入了新郎家庭手中。'],
+    ['By the beginning of the 21st century, however, the custom had deteriorated to a point whereby the groom and his family had become very [[18|greedy]].', '然而，到了二十一世紀初，這項習俗已經惡化到新郎及其家人變得極為貪婪的地步。'],
+    ['When demands for dowry are not met, the bride is [[19|subject to]] torture, and often even killed.', '當對嫁妝的要求未被滿足時，新娘常會遭受虐待，甚至經常被殺害。'],
+    ['The more educated a man is, the [[20|higher]] is the expectation for dowry at the time of marriage.', '男方受教育的程度越高，結婚時對嫁妝的期望也就越高。'],
+    ['Girls who are highly educated are required to have larger dowries because they usually marry more educated men.', '受過高等教育的女孩被要求準備更豐厚的嫁妝，因為她們通常嫁給教育程度較高的男性。']
+  ]
+];
+
+const CLOZE2_Q = [
+  [16, ['考點：預防突發狀況之介系詞片語', '詞性需求：複合介系詞'], 'C',
+    '前半句說數百年前創立嫁妝制度的初衷是「為女孩提供生活保障（*providing security for a girl*）」，後方接名詞 *difficulties and unexpected circumstances after marriage*（婚後的困難與意外狀況）；為了「以防萬一、萬一發生……」而預作準備，固定用 *in case of*。',
+    [
+      ['due to', 'phr. 由於；因為', '當時還沒結婚，困難與意外尚未發生，是「以防萬一遇到困難」而非「已經因為困難」。'],
+      ['apart from', 'phr. 除……之外', '代入後變成「除了婚後的困難之外為女孩提供保障」，語意不通。'],
+      ['in case of', 'phr. 萬一；以防（後接名詞）', '*providing security... in case of difficulties*（提供保障以防萬一遭遇困難）完美契合保險與防範未然的語境。'],
+      ['with reference to', 'phr. 關於；參考……', '商業書信慣用語（如 *With reference to your letter...*），不適用於防範意外狀況。']
+    ]
+  ],
+  [17, ['考點：複合關係代名詞 whatever', '詞性需求：複合關係代名詞（= anything that）'], 'C',
+    '動詞 *gave* 需要直接受詞，且從屬子句 *they could (give)* 也缺受詞；表示父母「盡其所能把任何能給的東西（*anything that they could give*）」都給女兒，應選指「任何事物」的複合關係代名詞 *whatever*。',
+    [
+      ['whoever', 'pron. 無論誰（指人）', '父母給女兒的是嫁妝財物（*money or property*），不是給「人」。'],
+      ['whenever', 'conj./adv. 無論何時（指時間）', '時間副詞連接詞不能當及物動詞 *gave* 的受詞。'],
+      ['whatever', 'pron. 無論什麼；任何……的事物（= anything that）', '*gave whatever they could* 意為「傾盡所能給出任何他們能給的財物」。'],
+      ['whichever', 'pron. （特定範圍內）無論哪一個', '前文並未設定特定幾個選項供父母挑一個，而是泛指所有能力所及的財物。']
+    ]
+  ],
+  [18, ['考點：負面轉折語境形容詞辨析', '詞性需求：形容詞（作主詞補語）'], 'A',
+    '本句有轉折詞 *however* 與負面動詞 *had deteriorated*（已經惡化、敗壞），且下句接著說「當嫁妝要求未被滿足時（*When demands for dowry are not met*），新娘甚至會受虐致死」，可見新郎與婆家變得非常「貪婪（*greedy*）」。',
+    [
+      ['greedy', 'adj. 貪婪的；貪心的', '完美呼應前文的 *deteriorated*（習俗惡化）與下句索討嫁妝不成便虐殺新娘的惡行。'],
+      ['pleasant', 'adj. 令人愉快的；和藹可親的', '正面字眼，與 *deteriorated*（惡化）完全相反。'],
+      ['regretful', 'adj. 後悔的；遺憾的', '新郎一家是強勢索討嫁妝，並非感到後悔。'],
+      ['sympathetic', 'adj. 同情的', '若婆家有同理心，就不會因嫁妝不足而虐待新娘。']
+    ]
+  ],
+  [19, ['考點：遭受苦難之固定片語 be subject to', '詞性需求：形容詞 + 介系詞'], 'D',
+    '當嫁妝要求未被滿足時，新娘就會「遭受、承受（*is subject to*）」酷刑虐待（*torture*），甚至被殺害；*be subject to + N* 為高頻核心片語，意為「易遭受……、承受……」。',
+    [
+      ['aware of', 'phr. 意識到；知道', '新娘是被動「遭受」虐待，而非單純「知道」有虐待這回事。'],
+      ['required by', 'phr. 被……所要求', '*torture*（虐待）是施加在新娘身上的暴行，不能說「新娘被虐待所要求」。'],
+      ['furious with', 'phr. 對（某人）極度憤怒', '*furious with* 後接「人」，且本句後半對等結構為 *, and often even killed*（甚至常被殺害），前半必然也是新娘「遭受」迫害而非新娘生氣。'],
+      ['subject to', 'phr. 遭受……；易受……影響', '*be subject to torture, and often even killed*（遭受虐待，甚至常被殺害）句法與語意完全契合。']
+    ]
+  ],
+  [20, ['考點：The + 比較級, the + 比較級 與後句呼應', '詞性需求：比較級形容詞'], 'B',
+    '本句為「*The + 比較級..., the + 比較級...*（越……，就越……）」句型，主詞是 *the expectation for dowry*（對嫁妝的期望值）；後句明確解釋：「受高等教育的女孩被要求準備更龐大的嫁妝（*required to have larger dowries*），因為她們通常嫁給教育程度較高的男性」，可見男方學歷越高，對嫁妝的期望值就「越高（*higher*）」。',
+    [
+      ['lower', 'adj. 較低的', '與下句 *required to have larger dowries*（被要求準備更多嫁妝）直接矛盾！'],
+      ['higher', 'adj. 較高的', '修飾 *expectation*（期望值高低用 *high / low*），完美對應下句的 *larger dowries*。'],
+      ['better', 'adj. 較好的', '修飾期望值（*expectation*）的多寡高低應搭配 *higher*，且嫁妝勒索越重並非「越好」。'],
+      ['worse', 'adj. 較糟的', '後句說明的是嫁妝金額要求「更大、更高（*larger*）」，故期望值是用高低（*higher*）而非好壞來衡量。']
+    ]
+  ]
+];
+
+// === 三、文意選填 (21–30) ===
+const WBANK_ITEMS = [
+  ['A','support','n. 支持；支柱'],['B','qualify','v. 符合資格；被歸類為'],['C','affection','n. 關愛；慈愛'],
+  ['D','ashamed','adj. 感到羞愧的'],['E','make up for','phr. 彌補；補償'],['F','leaving','V-ing 離開'],
+  ['G','turn to','phr. 求助於；轉而訴諸'],['H','buying','V-ing 購買'],['I','self-esteem','n. 自尊'],
+  ['J','contentment','n. 滿足感']
+];
+
+const WBANK_PAS = [
+  [
+    ['Oniomania is the technical term for the compulsive desire to shop, more commonly referred to as compulsive shopping or shopping addiction.', '「強迫性購物症（Oniomania）」是強迫性購物慾望的專業術語，一般更常被稱為強迫性購物或購物成癮。'],
+    ['Victims often experience feelings of [[21|contentment]] when they are in the process of purchasing, which seems to give their life meaning while letting them forget about their sorrows.', '患者在購物過程中往往會體驗到滿足感，這似乎賦予了他們生命意義，同時讓他們忘卻悲傷。'],
+    ['Once [[22|leaving]] the environment where the purchasing occurred, the feeling of a personal reward would be gone.', '一旦離開購物的環境，那種自我犒賞的感覺就會消失殆盡。'],
+    ['To compensate, the addicted person would go shopping again.', '為了彌補這種失落，成癮者會再次去購物。'],
+    ['Eventually a feeling of suppression will overcome the person.', '最終，一股壓抑感會淹沒當事人。'],
+    ['For example, cases have shown that the bought goods will be hidden or destroyed, because the person concerned feels [[23|ashamed]] of their addiction and tries to conceal it.', '舉例來說，案例顯示買來的商品會被藏起來或銷毀，因為當事人對自己的成癮行為感到羞愧，並試圖掩飾它。'],
+    ['He or she is either regretful or depressed.', '他或她不是感到後悔就是陷入沮喪。'],
+    ['In order to cope with the feelings, the addicted person is prompted to [[24|turn to]] another purchase.', '為了應付這些負面情緒，成癮者又被驅使轉而訴諸另一次購物。']
+  ],
+  [
+    ['Compulsive shopping often begins at an early age.', '強迫性購物往往始於年幼時期。'],
+    ['Children who experienced parental neglect often grew up with low [[25|self-esteem]] because throughout much of their childhood they felt that they were not important as a person.', '經歷過父母忽視的孩童，長大後往往自尊心低落，因為在童年大部分時間裡，他們覺得自己作為一個人並不重要。'],
+    ['As a result, they used toys to [[26|make up for]] their feelings of loneliness.', '因此，他們利用玩具來彌補自己的孤獨感。'],
+    ['Because of the ongoing sentiment of deprivation they endured as children, adults that have depended on materials for emotional [[27|support]] when they were much younger are more likely to become addicted to shopping.', '由於童年時期持續忍受被剝奪感，年輕時曾依賴物質來獲取情感支持的成年人，更有可能對購物成癮。'],
+    ['During adulthood, the purchase, instead of the toy, is substituted for [[28|affection]].', '到了成年時期，購物取代了玩具，被用來作為親情關愛的替代品。'],
+    ['The victims are unable to deal with their everyday problems, especially those that alter their self-esteem.', '患者無法處理他們的日常問題，尤其是那些會動搖他們自尊的問題。'],
+    ['Important issues in their lives are repressed by [[29|buying]] something.', '他們生命中的重要問題，都透過買東西而被壓抑下來。'],
+    ['According to studies, as many as 8.9 percent of the American population [[30|qualify]] as compulsive buyers.', '根據研究，有多達 8.9% 的美國人口符合強迫性購物者的標準。'],
+    ['Research has also found that men and women suffer from this problem at about the same rate.', '研究也發現，男性與女性罹患此問題的比例大約相同。']
+  ]
+];
+
+const WBANK_Q = [
+  [21, ['考點：of + 抽象名詞與上下文正向情緒呼應', '詞性需求：不可數名詞'], 'J',
+    '空格位於 *feelings of ___ when they are in the process of purchasing*，後方關係子句說明這種感覺「似乎賦予生命意義並讓他們忘卻悲傷」，且下句稱之為 *the feeling of a personal reward*（自我犒賞感），故在購物當下體驗到的是正面的「滿足感（*contentment*）」。',
+    [
+      ['(J) contentment', 'n. 滿足；滿足感', '*feelings of contentment*（滿足感）完美呼應購物當下忘卻悲傷與下句的 *personal reward*。'],
+      ['(C) affection / (I) self-esteem', 'n. 關愛／自尊', '*feelings of affection* 指對他人的喜愛之情，而非買東西時的快感；*self-esteem* 用於第 25 題 *low self-esteem*。']
+    ]
+  ],
+  [22, ['考點：從屬連接詞 Once + 分詞構句', '詞性需求：現在分詞 V-ing（及物）'], 'F',
+    '連接詞 *Once*（一旦……）後接分詞構句，其後有受詞 *the environment where the purchasing occurred*（發生購物的環境／商場）；前句說「在購物過程中」有滿足感，本句則說「一旦離開（*Once leaving*）購物場所，犒賞感就會消失」。',
+    [
+      ['(F) leaving', 'V-ing 離開', '*Once leaving the environment...*（一旦離開該購物環境），與前句 *in the process of purchasing* 形成空間與時間轉換的對比。'],
+      ['(H) buying', 'V-ing 購買', '不能說「一旦購買那個環境（*buying the environment*）」。']
+    ]
+  ],
+  [23, ['考點：連綴動詞 feels + 形容詞 + of 搭配', '詞性需求：形容詞'], 'D',
+    '前文說患者會把買來的東西「藏起來或銷毀（*hidden or destroyed*）」，後半句也有 *tries to conceal it*（試圖隱瞞），搭配結構 *feels ___ of their addiction*，固定片語為 *feel ashamed of*（對……感到羞愧）。',
+    [
+      ['(D) ashamed', 'adj. 感到羞愧的；慚愧的', '*feel ashamed of...* 為全題組唯一可接 *of* 的形容詞，合理解釋為何要把戰利品藏起來。']
+    ]
+  ],
+  [24, ['考點：不定詞 to + 原形動詞片語', '詞性需求：原形及物動詞（片語）'], 'G',
+    '為了應付後悔與沮喪的情緒，成癮者又被驅使「轉而訴諸、求助於（*turn to*）」另一次購物（*another purchase*）。',
+    [
+      ['(G) turn to', 'phr. 求助於；轉而訴諸', '*turn to another purchase* 意為「再度訴諸購物來排解負面情緒」。'],
+      ['(E) make up for', 'phr. 彌補', '成癮者是彌補「孤獨感（第 26 題）」，而非「彌補另一次購物」。']
+    ]
+  ],
+  [25, ['考點：心理學高頻搭配 low self-esteem', '詞性需求：不可數名詞'], 'I',
+    '前半句說孩童經歷父母忽視（*parental neglect*），後半句解釋「因為在童年大部分時間裡，他們覺得自己作為一個人並不重要（*felt that they were not important as a person*）」，且本段倒數第 3 句亦重現 *alter their self-esteem*，故填 *self-esteem*（*low self-esteem* 低自尊）。',
+    [
+      ['(I) self-esteem', 'n. 自尊；自尊心', '*grow up with low self-esteem*（長大後自尊低落）直接對應後半句「覺得自己不重要」與後文重現的 *self-esteem*。']
+    ]
+  ],
+  [26, ['考點：不定詞 to + 原形動詞片語（彌補孤獨）', '詞性需求：原形及物動詞（片語）'], 'E',
+    '由於遭到父母冷落，孩子們便利用玩具來「彌補、補償（*make up for*）」他們的孤獨感（*their feelings of loneliness*）。',
+    [
+      ['(E) make up for', 'phr. 彌補；補償', '*use toys to make up for their feelings of loneliness*（用玩具來彌補孤獨感）亦呼應第一段的 *To compensate*。']
+    ]
+  ],
+  [27, ['考點：形容詞 emotional + 名詞搭配', '詞性需求：不可數名詞'], 'A',
+    '空格前有形容詞 *emotional*（情感上的），小時缺乏父母關愛的孩子會依賴物質（玩具）來獲得「情感支持／慰藉（*emotional support*）」。',
+    [
+      ['(A) support', 'n. 支持；依靠', '*emotional support*（情感支持／精神支柱）為常見心理學搭配詞。'],
+      ['(C) affection', 'n. 關愛；喜愛', '通常不說 *emotional affection*（語意重疊），*affection* 用於下一題單獨作名詞。']
+    ]
+  ],
+  [28, ['考點：be substituted for + 名詞（取代父母關愛）', '詞性需求：不可數名詞'], 'C',
+    '本段首句從 *parental neglect*（父母忽視、缺乏親情關愛）談起：小時候用「玩具」代替父母的愛，長大後則用「購物（*the purchase, instead of the toy*）」來作為「關愛、親情（*affection*）」的替代品（*is substituted for affection*）。',
+    [
+      ['(C) affection', 'n. 關愛；疼愛；感情', '呼應本段核心成因 *parental neglect* 與 *sentiment of deprivation*，成年後以購物取代原本渴望得到的「關愛（*affection*）」。']
+    ]
+  ],
+  [29, ['考點：介系詞 by + 動名詞 V-ing + 受詞 something', '詞性需求：及物動名詞 V-ing'], 'H',
+    '空格位於介系詞 *by* 之後、受詞 *something* 之前，表示生命中的重要問題都被他們透過「買東西（*by buying something*）」給壓抑逃避掉了。',
+    [
+      ['(H) buying', 'V-ing 購買', '*by buying something*（藉由買東西）完美契合全文主題且可接直接受詞 *something*。'],
+      ['(F) leaving', 'V-ing 離開', '「藉由離開某物來壓抑問題」與購物成癮主題不合。']
+    ]
+  ],
+  [30, ['考點：句子主要動詞 qualify as', '詞性需求：複數現在式動詞'], 'B',
+    '本句主詞為 *as many as 8.9 percent of the American population*（百分比 + 集合名詞 *population* 指人口成員時視為複數），空格後接介系詞 *as compulsive buyers*，缺少主要動詞；*qualify as...* 意為「符合……的資格／標準、被歸類為……」。',
+    [
+      ['(B) qualify', 'v. 符合標準；夠格稱為（搭配 as）', '*qualify as compulsive buyers*（符合強迫性購物者的定義標準）為全句唯一的複數現在式動詞。']
+    ]
+  ]
+];
+
+// === 四、篇章結構 (31–35) ===
+const DISC_OPTS = [
+  ['A','For some reason, Whitney said something entirely different.','不知為何，惠妮說出了完全不同的答案。'],
+  ['B','Whitney smiled and stretched her hand out and a friendship was formed.','惠妮微笑著伸出手，一段友誼就此建立。'],
+  ['C','She had no idea how she was going to make friends in this new environment.','她完全不知道自己要在這個新環境中如何交朋友。'],
+  ['D','In her English Composition class, she was asked to share a little about herself.','在她的英文作文課上，她被要求分享一些關於自己的事。'],
+  ['E','She never really wanted to be popular, but she did want to have someone to share secrets and laughs with.','她從未真正想要成為風雲人物，但她確實渴望能有個人一起分享祕密與歡笑。']
+];
+
+const DISC_PAS = [
+  [
+    ['There was a time when Whitney didn\'t have a lot of friends.', '曾經有一段時間，惠妮沒有很多朋友。'],
+    ['She was a bit shy and reserved.', '她有點害羞且內向矜持。'],
+    ['[[31|(E) She never really wanted to be popular, but she did want to have someone to share secrets and laughs with.]]', '她從未真正想要成為風雲人物，但她確實渴望能有個人一起分享祕密與歡笑。'],
+    ['All through high school, though, she wasn\'t able to make good friends or find companionship.', '然而，在整個高中時期，她一直無法交到好朋友或找到陪伴。']
+  ],
+  [
+    ['When it was time to go to college, Whitney was quite nervous.', '到了上大學的時候，惠妮相當緊張。'],
+    ['She was going to be rooming with someone she didn\'t know and living in a town 300 miles away from home.', '她即將與一個不認識的人同住一間寢室，並住在離家三百英里遠的小鎮上。'],
+    ['There wouldn\'t be a single person she knew in town.', '鎮上沒有半個她認識的人。'],
+    ['[[32|(C) She had no idea how she was going to make friends in this new environment.]]', '她完全不知道自己要在這個新環境中如何交朋友。']
+  ],
+  [
+    ['The first week of classes, something happened that changed Whitney\'s life forever.', '開學第一週，發生了一件永遠改變惠妮一生的事。'],
+    ['[[33|(D) In her English Composition class, she was asked to share a little about herself.]]', '在她的英文作文課上，她被要求分享一些關於自己的事。'],
+    ['She told everyone where she came from and all of the other ordinary details that students share in such situations.', '她告訴大家她來自哪裡，以及學生在這種場合會分享的所有其他日常細節。'],
+    ['The final question for each student to answer was, "what is your goal for this class?"', '每位學生要回答的最後一個問題是：「你對這門課的目標是什麼？」'],
+    ['Most of the students said that they would like to get a good grade, pass the class or something similar.', '大多數學生都說他們想要拿到好成績、通過這門課或類似的目標。'],
+    ['[[34|(A) For some reason, Whitney said something entirely different.]]', '不知為何，惠妮說出了完全不同的答案。'],
+    ['She said that her goal was to make just one good friend.', '她說她的目標只是交到一個好朋友。']
+  ],
+  [
+    ['While most of the students sat in silence, one student came to Whitney and held out her hand and introduced herself.', '當大多數學生靜靜坐著時，一名學生走向惠妮，伸出手並自我介紹。'],
+    ['She asked if they could be friends.', '她問她們是否可以做朋友。'],
+    ['The whole room was silent.', '整個教室鴉雀無聲。'],
+    ['All eyes focused on Whitney and the hand extended just in front of her.', '所有人的目光都集中在惠妮以及伸在她面前的那隻手上。'],
+    ['[[35|(B) Whitney smiled and stretched her hand out and a friendship was formed.]]', '惠妮微笑著伸出手，一段友誼就此建立。']
+  ],
+  [
+    ['Whitney learned the power of asking for what she wanted and taking action on that day.', '惠妮在那天學會了開口要求自己想要的事物並付諸行動的力量。']
+  ]
+];
+
+const DISC_Q = [
+  [31, ['考點：轉折詞（though）前後對比與渴望陪伴', '詞性需求：完整句子'], 'E',
+    '前句說她有點害羞內向，而空格後句有轉折副詞 *though*（然而）：「然而，整個高中時期她都無法交到好朋友或找到陪伴（*wasn\'t able to make good friends or find companionship*）」；後句用「然而卻無法交到知心好友」轉折，代表第 31 題必須先說「她內心其實渴望擁有知心好友」，故選 **(E)**「她從不想當風雲人物，但她確實渴望有個人能分享祕密與歡笑」。',
+    DISC_OPTS.map(o => [o[1], o[2], o[0]==='E' ? '承接前句害羞個性，點出她「雖不想出風頭，但渴望知心好友」，與後句 *though, she wasn\'t able to make good friends* 構成完美轉折。' : '無法與第一段的高中背景及後句的 *though* 銜接。'])
+  ],
+  [32, ['考點：指示詞指代（this new environment）', '詞性需求：完整句子'], 'C',
+    '第二段描述她剛上大學時的緊張處境：要跟陌生室友同住、住在離家 300 英里遠的城鎮、鎮上沒有半個認識的人；第 32 題以 *in this new environment*（在這個新環境中）總結上述離家到陌生大學城鎮的處境，並說明她不知如何交友，故選 **(C)**。',
+    DISC_OPTS.map(o => [o[1], o[2], o[0]==='C' ? '*this new environment* 精準指代前兩句離家 300 英里的大學新環境，並呼應段首的 *quite nervous*。' : '未呼應剛上大學陌生環境的焦慮。'])
+  ],
+  [33, ['考點：場景設定與指示詞呼應（in such situations / this class）', '詞性需求：完整句子'], 'D',
+    '前句說「開學第一週發生了一件改變她一生的事」，空格後句緊接著說「她告訴大家她來自哪裡，以及學生在這種場合（*in such situations*）會分享的其他細節」，且下句問 *what is your goal for this class?*（你對這門課的目標是什麼？）；可見第 33 題必須先交代「在哪一門課上、被要求自我介紹」，故選 **(D)**。',
+    DISC_OPTS.map(o => [o[1], o[2], o[0]==='D' ? '點出 *In her English Composition class* 與 *asked to share a little about herself*，直接對應後句的 *told everyone where she came from* 與 *this class*。' : '未交代課堂名稱與自我介紹的情境，使後句的 *such situations* 與 *this class* 失去依據。'])
+  ],
+  [34, ['考點：前後對比過渡句（大多數人 vs. 惠妮）', '詞性需求：完整句子'], 'A',
+    '前句說「大多數學生都回答想拿高分或通過這門課」，而空格後句說「她說她的目標只是交到一個好朋友」；夾在「大多數人的標準答案」與「惠妮想交朋友的答案」中間，需要一句承上啟下的對比句，故選 **(A)**「不知為何，惠妮說出了完全不同的答案（*something entirely different*）」。',
+    DISC_OPTS.map(o => [o[1], o[2], o[0]==='A' ? '*said something entirely different* 對比前句大多數同學的回答，並引出後句惠妮想交一個好朋友的獨特答案。' : '無法連接「多數人想拿好成績」與「她只想交一個朋友」的強烈反差。'])
+  ],
+  [35, ['考點：動作呼應（held out her hand -> stretched her hand out）', '詞性需求：完整句子'], 'B',
+    '前文描述一位女同學走到惠妮面前伸出手（*held out her hand*）問能不能當朋友，全班屏息注視著惠妮以及「伸在她面前的那隻手（*the hand extended just in front of her*）」；面對對方伸出的手，第 35 題自然是惠妮的回應動作——「惠妮微笑著伸出手，一段友誼就此建立」，故選 **(B)**。',
+    DISC_OPTS.map(o => [o[1], o[2], o[0]==='B' ? '*smiled and stretched her hand out* 直接回應前句對方伸出的手（*the hand extended just in front of her*），並為末段的 *taking action* 畫下完美句點。' : '未回應對方伸手交友的舉動。'])
+  ]
+];
+
+// === 五、閱讀測驗 第一篇：帶女兒去上班日 TOD (36–39) ===
+const RC1_PAS = [
+  [
+    ['April 22, 2010 will be the 18th celebration of the annual Take Our Daughters to Work Day (TOD), a project the National Ms. Foundation for Women of America (NFW) developed to expose girls to expanding opportunities for women in the workplace.', '2010 年 4 月 22 日將是一年一度「帶女兒去上班日（TOD）」的第 18 屆慶祝活動，這是由美國國家婦女基金會（NFW）所發起的計畫，旨在讓女孩們接觸女性在職場上日益擴展的機會。']
+  ],
+  [
+    ['The program offers millions of girls a first-hand view of the many career opportunities available in their futures.', '這項計畫讓數百萬名女孩親眼見識她們未來可選擇的眾多職涯機會。'],
+    ['Now that women make up 46 percent of the U.S. workforce, girls can find role models in every occupational field—from politics to molecular biology to professional athletics, to name just a few.', '既然女性目前已占美國勞動力的 46%，女孩們可以在每一個職業領域中找到學習榜樣——略舉數例，從政治、分子生物學到職業運動皆然。'],
+    ['TOD encourages girls to focus on their abilities and opportunities, not just their appearance.', '「帶女兒去上班日」鼓勵女孩專注於自己的能力與機會，而不僅僅是她們的外表。']
+  ],
+  [
+    ['The NFW developed the project more than a decade ago to address the self-esteem problems that many girls experience when they enter adolescence.', '美國國家婦女基金會在十多年前開發這項計畫，以解決許多女孩進入青春期時所經歷的自尊問題。'],
+    ['At school, boys often receive more encouragement in the classroom, especially in math, science and computer science, the academic fields that tend to lead to the highest salaries.', '在學校裡，男孩在課堂上往往獲得較多鼓勵，尤其是在數學、科學與電腦科學方面，而這些學術領域往往能帶來最高的薪資。'],
+    ['Women receive on average only 73 cents for every dollar that men are paid, and remain vastly underrepresented in top executive positions and technology fields.', '男性每賺一美元，女性平均只獲得 73 美分，而且女性在高階主管職位與科技領域中的比例仍然嚴重偏低。'],
+    ['TOD aims to give girls the confidence and inspiration they need to develop successful careers, particularly in non-traditional fields.', '「帶女兒去上班日」旨在給予女孩們發展成功職涯所需的自信與啟發，特別是在非傳統女性從事的領域中。']
+  ],
+  [
+    ['Perhaps because the program had become so widespread and successful, TOD had been criticized for excluding boys, and it was expanded in 2003 to include boys.', '或許是因為這項計畫變得如此普及且成功，「帶女兒去上班日」曾因排除男孩而受到批評，並於 2003 年擴大將男孩也納入其中。'],
+    ['The program\'s official website states that the program was changed in order to provide both boys and girls with opportunities to explore careers at an age when they are more flexible in terms of gender stereotyped roles.', '該計畫的官方網站指出，變更計畫是為了在男孩與女孩對性別刻板印象角色仍較具彈性的年齡，提供雙方探索職涯的機會。'],
+    ['"We should also show boys that becoming a child care provider is as acceptable a choice as becoming a police officer or CEO," added Sara K. Gould, executive director of the NFW.', '「我們也應該讓男孩知道，成為一名育兒保母，是與成為警察或執行長一樣可被接受的選擇，」美國國家婦女基金會執行長莎拉・古爾德補充道。']
+  ]
+];
+
+const RC1_Q = [
+  [36, ['考點：細節理解（活動創立宗旨）', '詞性需求：不定詞片語'], 'C',
+    '定位第一段末句 *to expose girls to expanding opportunities for women in the workplace*（讓女孩接觸女性在職場上日益擴展的機會）與第二段首句 *offers millions of girls a first-hand view of the many career opportunities available in their futures*（讓女孩親眼見識未來的眾多職涯機會），直接對應 **(C)** *to show girls possibilities for work and careers*。',
+    [
+      ['to encourage girls to pursue top paying jobs', '鼓勵女孩追求最高薪的工作', '文中第三段提到數理電腦常通往高薪，旨在說明女孩在非傳統領域缺乏鼓勵，但活動宗旨是探索多元職涯可能性（甚至第四段提到保母工作），而非只追求最高薪工作。'],
+      ['to let girls spend more time with their mothers', '讓女孩有更多時間陪伴母親', '活動目的是職場探索與建立自信，而非母女親子陪伴。'],
+      ['to show girls possibilities for work and careers', '向女孩展示工作與職涯的各種可能性', '完全吻合第一段 *expose girls to expanding opportunities... in the workplace* 與第二段 *career opportunities*。'],
+      ['to give girls a chance to visit their mothers\' offices', '給女孩參觀母親辦公室的機會', '帶女孩去工作場所不限於母親的辦公室，重點在於見識各行各業（政治、生物、運動等）的職涯機會。']
+    ]
+  ],
+  [37, ['考點：因果細節定位（遭受批評原因）', '詞性需求：完整子句'], 'A',
+    '定位第四段第 1 句：*...TOD had been criticized for excluding boys, and it was expanded in 2003 to include boys.*（TOD 曾因為「排除男孩」而受到批評），排除男孩亦即人們認為這對男孩不公平（*not fair to boys*），故選 **(A)**。',
+    [
+      ['thought it was not fair to boys', '認為這對男孩不公平', '對應第四段首句 *criticized for excluding boys*（因排除男孩而受批評）。'],
+      ['did not like having children at work', '不喜歡在工作場所有小孩', '文中未提及職場人士嫌小孩吵鬧。'],
+      ['did not have daughters to take to work', '沒有女兒可以帶去上班', '批評點在於「男孩被排除在職涯探索機會之外」，而非大人沒女兒可帶。'],
+      ['would rather have their daughters stay at home', '寧願讓女兒待在家裡', '與活動「極為普及且成功（*so widespread and successful*）」的事實相反。']
+    ]
+  ],
+  [38, ['考點：細節是非判斷', '詞性需求：完整句子'], 'A',
+    '定位第四段第 1–2 句：*...and it was expanded in 2003 to include boys... provide both boys and girls with opportunities to explore careers*（2003 年擴大將男孩也納入其中），故 **(A)** 完全正確。',
+    [
+      ['Boys are now included on Take Our Daughters to Work Day.', '男孩現在也被納入「帶女兒去上班日」活動中。', '完全符合第四段 *expanded in 2003 to include boys*。'],
+      ['Women and men have always been treated equally at work.', '女性與男性在職場上一向受到平等對待。', '與第三段相反：男性每賺 1 美元，女性平均只賺 73 美分，且高階主管與科技業女性比例極低。'],
+      ['Homemaking and rearing children are jobs for girls only.', '家務與育兒是只屬於女孩的工作。', '與第四段末句相反：執行長強調應讓男孩知道「當育兒保母（*child care provider*）也是完全可接受的職涯選擇」。'],
+      ['Girls grow up receiving more attention than boys.', '女孩在成長過程中獲得比男孩更多的關注。', '與第三段第 2 句相反：在學校課堂上，「男孩往往獲得較多鼓勵（*boys often receive more encouragement in the classroom*）」。']
+    ]
+  ],
+  [39, ['考點：跨句因果邏輯理解', '詞性需求：完整句子'], 'B',
+    '定位第三段第 2–4 句：第 2 句先指出「在學校課堂上，男孩在數學、科學與電腦科學方面往往獲得較多鼓勵（即女孩較少受到鼓勵）」，第 3 句接著說女性在科技領域（*technology fields*）比例嚴重偏低，第 4 句總結 TOD 旨在給予女孩發展非傳統領域所需的「自信與啟發（*confidence and inspiration*）」；可見女性在科技領域比例偏低是因為從小在這些領域較未受到鼓勵，故選 **(B)**。',
+    [
+      ['They are not interested in these fields.', '她們對這些領域不感興趣。', '第三段指出問題出在青春期自尊低落與學校課堂缺乏鼓勵，而非女性天生沒興趣。'],
+      ['They are not encouraged to work in these fields.', '她們未被鼓勵在這些領域發展。', '對應第三段第 2 句（學校在數理電腦領域多半鼓勵男孩）與末句（TOD 旨在提供她們所需的自信與鼓舞）。'],
+      ['They are not paid the same as men in these fields.', '她們在這些領域的薪資與男性不同。', '73 美分是全體女性與男性的「整體平均薪資差距（*on average*）」，且「同工不同酬」與「高階主管及科技業女性比例偏低」在句中是以 *and* 並列的兩個現象，並非因為科技業不給錢所以不去。'],
+      ['They are not allowed to be educated in these fields.', '她們不被允許在這些領域接受教育。', '美國女學生當然可以上數理電腦課（只是在課堂上獲得的鼓勵較少 *boys often receive more encouragement in the classroom*），並非禁止受教！']
+    ]
+  ]
+];
+
+// === 五、閱讀測驗 第二篇：髮型的文化與歷史象徵意義 (40–43) ===
+const RC2_PAS = [
+  [
+    ['In all cultures and throughout history hair has had a special significance.', '在所有文化中且縱觀歷史，頭髮一直具有特殊的意義。'],
+    ['In ancient Egypt, as long ago as 1500 BC, the outward appearance expressed the person\'s status, role in society and political position.', '在古埃及，早在西元前 1500 年，外在容貌就表達了一個的身分地位、社會角色與政治立場。'],
+    ['Wigs played an important role in this: they were crafted with great artistry and often sprinkled with powdered gold.', '假髮在這方面扮演了重要角色：它們以高超的工藝精心製作，且常撒上金粉。']
+  ],
+  [
+    ['In the 8th century BC, the pre-Roman Celts in Northern Europe wore their hair long.', '在西元前八世紀，北歐前羅馬時期的凱爾特人留著長髮。'],
+    ['In a man it was the expression of his strength, in a woman of her fertility.', '對男人而言，長髮是力量的展現；對女人而言，則是生育能力的象徵。'],
+    ['The idea of long hair as a symbol of male strength is even mentioned in the Bible, in the story of Samson and Delilah.', '長髮作為男性力量象徵的觀念，甚至在《聖經》中參孫與大利拉的故事裡也有提及。'],
+    ['Samson was a leader of the Israelites.', '參孫是以色列人的領袖。'],
+    ['His long hair, which he never cut, gave him superhuman powers.', '他從不修剪的長髮賦予了他超人般的力量。'],
+    ['The only person who knew his secret was Delilah.', '唯一知道他這個祕密的人是大利拉。'],
+    ['However, she spied for the enemy and betrayed him.', '然而，她為敵人做間諜並背叛了他。'],
+    ['One night she cut off his hair and thus robbed him of his strength.', '某天夜裡，她剪掉了他的頭髮，從而奪走了他的力量。']
+  ],
+  [
+    ['In the classical Greek period, curly hair was not only the fashion, but it also represented an attitude towards life.', '在古典希臘時期，捲髮不僅是流行時尚，更代表了一種生活態度。'],
+    ['Curls or locks were the metaphor for change, freedom and the joy of living.', '捲髮或髮綹是改變、自由與生活樂趣的隱喻。'],
+    ['The ancient Greek word for curls and locks is related to intriguing and tempting someone.', '古希臘文中表示「捲髮與髮綹」的字詞，與挑起興趣及誘惑某人有關。']
+  ],
+  [
+    ['Hair is also used as a symbol of opposition.', '頭髮也被用作反抗的象徵。'],
+    ['The punk protest movement today uses hair as a symbol of disapproval of the "middle-class, conventional lifestyle" by wearing provocative haircuts and shockingly colored hair.', '今日的龐克抗議運動透過留著挑釁意味的髮型與驚世駭俗的染髮顏色，將頭髮作為不認同「中產階級傳統生活方式」的象徵。'],
+    ['A different form of objection could be seen in the women\'s hairstyles in the 1960s.', '另一種不同形式的反抗，則可見於 1960 年代的女性髮型。'],
+    ['Women\'s liberation was expressed in a short-cut, straight and simple hairstyle which underlined equality with men without neglecting female attributes.', '婦女解放運動展現在剪短、筆直且簡潔的髮型上，這種髮型強調與男性平等，同時又不失女性特質。'],
+    ['To this day hair has kept its importance as a symbol of power, youth, vitality and health.', '時至今日，頭髮依然保有其作為力量、青春、活力與健康象徵的重要性。']
+  ]
+];
+
+const RC2_Q = [
+  [40, ['考點：全文主題歸納（Topic）', '詞性需求：名詞片語'], 'B',
+    '綜觀全文：首句即破題 *In all cultures and throughout history hair has had a special significance.*（在所有文化與歷史中，頭髮一直有特殊意義），接著依序介紹古埃及（社會地位）、凱爾特人與聖經參孫（力量與生育力象徵）、古希臘（自由與生活樂趣的隱喻）、當代龐克與 1960 年代女權運動（反抗與平權象徵），末句再次總結 *symbol of power, youth, vitality and health*；故全文主題為「髮型的象徵意義（*the symbolic meanings of hairstyles*）」。',
+    [
+      ['the scientific study of hairstyles', '髮型的科學研究', '本文屬於歷史與文化探討，完全未涉及毛髮生物學或科學實驗。'],
+      ['the symbolic meanings of hairstyles', '髮型的象徵意義', '完美統攝全文各時代、各文化中髮型所代表的象徵意義（*significance / expression / symbol / metaphor*）。'],
+      ['the art of designing different hairstyles', '設計不同髮型的藝術', '文中未教導美髮設計技術。'],
+      ['the contemporary development of hairstyles', '當代髮型的發展', '前三段都在談西元前的古代歷史（古埃及、古凱爾特、古希臘），僅第四段談及當代與 1960 年代，故不能以「當代發展」概括全文。']
+    ]
+  ],
+  [41, ['考點：細節理解（古希臘捲髮字源意義）', '詞性需求：不定詞片語'], 'A',
+    '定位第三段最後一句：*The ancient Greek word for curls and locks is related to intriguing and tempting someone.*（古希臘文中表示捲髮的字詞，與「引起他人好奇／興趣以及誘惑某人」有關），而「引起興趣並誘惑某人（*intriguing and tempting someone*）」亦即「吸引他人（*To attract others*）」。',
+    [
+      ['To attract others.', '為了吸引他人。', '*attract others* 精準對應第三段末句的 *intriguing and tempting someone*。'],
+      ['To show off their artistry.', '為了炫耀他們的精湛工藝。', '*artistry*（高超工藝）出現在第一段古埃及人製作假髮（*Wigs... were crafted with great artistry*），而非第三段的古希臘。'],
+      ['To hide their real identity.', '為了隱藏他們的真實身分。', '文中完全未提及隱藏身分。'],
+      ['To represent power and status.', '為了代表權力與地位。', '代表社會地位與政治立場的是第一段的「古埃及」，代表力量的是第二段的「凱爾特人與參孫」，古希臘捲髮代表的是改變、自由、生活樂趣與吸引他人。']
+    ]
+  ],
+  [42, ['考點：細節定位（1960 年代女性髮型）', '詞性需求：完整句子'], 'C',
+    '定位第四段倒數第 2–3 句：*A different form of objection could be seen in the women\'s hairstyles in the 1960s. Women\'s liberation was expressed in a short-cut, straight and simple hairstyle...*（1960 年代的婦女解放運動展現在「剪短、筆直且簡潔」的髮型上），故選 **(C)** *They cut their hair short*。',
+    [
+      ['They grew long hair.', '她們留長髮。', '留長髮是第二段西元前八世紀的凱爾特人與參孫，1960 年代女性是剪短髮（*short-cut*）。'],
+      ['They dyed their hair.', '她們染頭髮。', '染成驚世駭俗顏色（*shockingly colored hair*）的是第四段前半的「龐克抗議運動（*punk protest movement*）」，而非 1960 年代婦女運動。'],
+      ['They cut their hair short.', '她們把頭髮剪短。', '完全吻合第四段 *expressed in a short-cut, straight and simple hairstyle*。'],
+      ['They shaved their heads.', '她們剃光頭。', '原文是剪短直髮（*short-cut, straight*），並非剃光頭（*shaved their heads*）。']
+    ]
+  ],
+  [43, ['考點：細節邏輯推論（參孫的故事）', '詞性需求：完整句子'], 'D',
+    '定位第二段後半：參孫從不剪的長髮賦予他超人般的力量，「唯一知道他這個祕密的人是大利拉。然而，她為敵人做間諜並背叛了他。某天夜裡她剪掉了他的頭髮，從而奪走了他的力量」；由此可合理推論：如果參孫當初守住祕密沒告訴大利拉，他就不會被剪掉頭髮並失去力量（被打敗），故選 **(D)**。',
+    [
+      ['Long curly hair has always been popular since ancient times.', '長捲髮自古以來一直都很流行。', '與第四段 1960 年代流行「短直髮（*short-cut, straight*）」不符，且並非每個時代都流行長捲髮。'],
+      ['Ancient Egyptians did not pay much attention to their hairstyles.', '古埃及人不太重視他們的髮型。', '與第一段相反：古埃及人極為重視外貌與假髮，甚至以精湛工藝製作假髮並撒上金粉！'],
+      ['The punk movement is one of the most successful movements in history.', '龐克運動是史上最成功的運動之一。', '第四段僅提到龐克運動利用怪異髮型與染髮表達對中產階級傳統生活的不滿，完全未評價其是否「成功」。'],
+      ['Samson might never have been defeated if he had kept the secret to himself.', '如果參孫當時自己守住祕密，他或許就永遠不會被打敗了。', '基於第二段「唯有大利拉知道祕密 → 背叛他剪去長髮 → 奪走他的神力」的因果鏈所做的正確反事實推論。']
+    ]
+  ]
+];
+
+// === 五、閱讀測驗 第三篇：全球兒童志工服務 (44–47) ===
+const RC3_PAS = [
+  [
+    ['Camille Mahlknecht, 9, has some big fun planned for this weekend.', '九歲的卡蜜兒・馬爾克內西特為這個週末規劃了一些非常有趣的事。'],
+    ['She and other residents of Agoura Hills, California, plan to pick up trash during their city\'s annual cleanup.', '她與加州阿古拉山的其他居民計畫在該市一年一度的清潔日期間撿拾垃圾。'],
+    ['At the same time, Wissam Raed, 12, will be busy volunteering too.', '與此同時，十二歲的維薩姆・拉德也將忙於志工服務。'],
+    ['Thousands of miles away in Lebanon, Wissam plans to put on a play at an orphanage and bring potted plants to elderly people at a senior citizen center.', '在數千英里外的黎巴嫩，維薩姆計畫在一家孤兒院演出戲劇，並帶盆栽去敬老院送給長者。']
+  ],
+  [
+    ['Some other children like Nathan White, 10, have personal reasons for volunteering.', '其他一些像十歲的奈森・懷特這樣的孩子，則有從事志工服務的個人原因。'],
+    ['Nathan\'s grandmother died of a heart attack.', '奈森的祖母死於心臟病發作。'],
+    ['To help raise money for medical research, Nathan participated in Jump Rope for Heart.', '為了協助替醫學研究募款，奈森參加了「為心臟跳繩（Jump Rope for Heart）」活動。'],
+    ['He and five other boys took turns jumping rope for two and half hours and collected more than US$1,200 in donations for the American Heart Association.', '他與另外五名男孩輪流跳繩兩個半小時，為美國心臟協會募得了超過 1,200 美元的捐款。']
+  ],
+  [
+    ['Millions of children around the globe lend a hand to their communities every year.', '全球每年有數百萬名兒童向他們的社區伸出援手。'],
+    ['Schools and parents also contribute to the rise in youth service.', '學校與家長也對青少年志工服務的興起有所貢獻。'],
+    ['For example, many schools offer community service activities for students to join.', '舉例來說，許多學校提供社區服務活動讓學生參加。'],
+    ['Teachers either combine volunteer work with classroom lessons or make service work a requirement.', '老師們不是將志工服務與課堂課程結合，就是把服務學習列為必修要求。'],
+    ['Parents, on the other hand, encourage their kids to volunteer and do it with them.', '另一方面，家長則鼓勵孩子擔任志工，並與他們一起參與。']
+  ],
+  [
+    ['Community service is particularly important in this recession time.', '在這個經濟衰退時期，社區服務顯得格外重要。'],
+    ['As the need for monetary support and other aid has increased, many charitable organizations have experienced a significant drop in donations.', '隨著對金錢資助與其他援助的需求增加，許多慈善機構卻經歷了捐款大幅下滑的困境。'],
+    ['Camille and other children who volunteer thousands of hours annually can fill in some of the gaps.', '卡蜜兒與其他每年投入數千小時擔任志工的孩子們，正好能填補其中一部分的缺口。']
+  ],
+  [
+    ['According to research, kids who start volunteering are twice as likely to continue doing good deeds when they are adults.', '根據研究，從小開始擔任志工的孩子，長大成人後繼續行善的可能性是一般人的兩倍。'],
+    ['So, grab a paintbrush, a trash bag, or whatever you need to help your community.', '所以，拿起油漆刷、垃圾袋，或任何你用來幫助社區所需的工具吧！'],
+    ['You\'ll love how you feel after helping others.', '你一定會愛上幫助他人之後的感受。'],
+    ['Even dirty work can be lots of fun, if it\'s for a good cause.', '只要是為了公益善舉，即使是弄髒雙手的粗活也能充滿樂趣。']
+  ]
+];
+
+const RC3_Q = [
+  [44, ['考點：作者寫作目的（Writer\'s Purpose）', '詞性需求：不定詞片語'], 'C',
+    '文章前兩段以三位 9–12 歲兒童的志工故事開場，中間說明學校家長的推動與經濟不景氣下兒童志工的重要性，最後一段直接以祈使句向小讀者疾呼：*So, grab a paintbrush, a trash bag, or whatever you need to help your community. You\'ll love how you feel after helping others.*（所以，拿起油漆刷或垃圾袋去幫助社區吧！你會愛上助人的感覺）；足見作者寫作目的在於「鼓勵、敦促兒童參與志工活動（*urge children to take part in volunteering activities*）」。',
+    [
+      ['To recommend youth service programs to schools.', '向學校推薦青少年服務計畫。', '學校（*schools*）僅在第三段作為背景說明提及，末段祈使句喊話的對象顯然是兒童讀者本身，而非學校行政人員。'],
+      ['To ask charity organizations to serve the community.', '要求慈善機構服務社區。', '第四段指出慈善機構在經濟衰退期欠缺捐款、需要兒童志工幫忙填補缺口，並非作者去要求慈善機構服務。'],
+      ['To urge children to take part in volunteering activities.', '敦促（鼓勵）孩童參與志工活動。', '從前三段的同齡楷模故事到末段熱情的祈使句號召（*So, grab a paintbrush...*），完全旨在鼓勵孩童投入志工服務。'],
+      ['To propose alternatives for doing community services.', '提出替代社區服務的其他方案。', '作者全力支持並推廣社區服務，並未提出「取代社區服務的替代方案」。']
+    ]
+  ],
+  [45, ['考點：段落主旨歸納（第三段）', '詞性需求：完整句子'], 'B',
+    '檢視第三段結構：第 1 句承上啟下說全球數百萬兒童投入社區服務，第 2 句點出本段主題句：*Schools and parents also contribute to the rise in youth service.*（學校與家長也對青少年服務的興起有所貢獻），接著第 3–4 句舉例說明「學校與老師」怎麼做，第 5 句說明「家長」怎麼做；故整段主旨為 **(B)**「家庭與學校協助促使社區服務普及盛行」。',
+    [
+      ['Community service is gaining popularity among children.', '社區服務在孩童間越來越受歡迎。', '僅涵蓋第一句的現象引子，忽略了後面四句真正聚焦的核心主體——「學校與家長（*Schools and parents*）如何推動此風氣」。'],
+      ['Families and schools help to make community service popular.', '家庭與學校協助使社區服務變得普及。', '精準對應主題句 *Schools and parents also contribute to the rise in youth service* 及全段展開內容。'],
+      ['Children now depend more on their teachers than on their parents.', '孩童現在依賴老師勝過依賴父母。', '文中僅並列學校與父母雙方的做法，完全沒有比較孩童比較依賴誰。'],
+      ['Nathan White had a special reason to raise money for medical research.', '奈森・懷特有個特殊原因為醫學研究募款。', '這是「第二段」的內容，並非第三段（*the 3rd paragraph*）的主旨！']
+    ]
+  ],
+  [46, ['考點：細節理解（經濟衰退期的重要性）', '詞性需求：完整句子'], 'C',
+    '定位第四段：在經濟衰退時期，社會對援助的需求增加，但「許多慈善機構的捐款卻大幅下滑（*many charitable organizations have experienced a significant drop in donations*）」，而孩子們每年投入數千小時的志工服務「正好能填補其中一部分的缺口（*can fill in some of the gaps*）」，亦即提供慈善機構急需的協助，故選 **(C)**。',
+    [
+      ['It raises money for school activities.', '它為學校活動募款。', '募款或服務是為了幫助慈善機構與社區，而非為了辦學校活動。'],
+      ['It teaches children to take care of the sick.', '它教導孩童照顧病人。', '第四段完全未提及照顧病人。'],
+      ['It gives charity organizations some needed help.', '它給予慈善機構一些急需的協助。', '完全吻合第四段「慈善機構捐款大減、援助需求卻增加 → 兒童志工能填補部分缺口（*fill in some of the gaps*）」。'],
+      ['It encourages parents and teachers to work together.', '它鼓勵家長與老師合作。', '這是第三段提到的相關人員，並非第四段解釋「為何在經濟衰退期特別重要」的原因。']
+    ]
+  ],
+  [47, ['考點：細節邏輯推論（第五段研究數據）', '詞性需求：完整句子'], 'D',
+    '定位第五段第 1 句：*According to research, kids who start volunteering are twice as likely to continue doing good deeds when they are adults.*（研究顯示，從小開始當志工的孩子，長大成人後繼續行善的可能性是兩倍），「長大後繼續行善（*continue doing good deeds when they are adults*）」亦即「長大後更有可能成為關懷他人、樂於助人的成年人（*grow up to be caring adults*）」，故選 **(D)**。',
+    [
+      ['Community service can help prevent juvenile delinquency.', '社區服務有助於預防青少年犯罪。', '文中完全未提及青少年犯罪（*juvenile delinquency*）。'],
+      ['Children will probably leave school and work as volunteers.', '孩童可能會輟學去當志工。', '荒謬推論！第三段說學校是把志工服務結合課程，並非讓孩子休學當志工。'],
+      ['Organizing sports events for the school is a kind of community service.', '為學校舉辦運動賽事是一種社區服務。', '第二段的跳繩是為了替美國心臟協會募款，文中未說幫學校辦運動會算社區服務。'],
+      ['Children who do volunteer work are more likely to grow up to be caring adults.', '從事志工服務的孩童長大後更有可能成為關懷他人的成年人。', '直接對應末段首句 *twice as likely to continue doing good deeds when they are adults*。']
+    ]
+  ]
+];
+
+// === 五、閱讀測驗 第四篇：學生非法下載音樂與版權訴訟 (48–51) ===
+const RC4_PAS = [
+  [
+    ['Downloading music over the Internet is pretty common among high school and college students.', '在網路上下載音樂在高中生與大學生之間相當普遍。'],
+    ['However, when students download and share copyrighted music without permission, they are violating the law.', '然而，當學生未經許可在網路上下載並分享受版權保護的音樂時，他們就違法了。']
+  ],
+  [
+    ['A survey of young people\'s music ownership has found that teenagers and college students have an average of more than 800 illegally copied songs each on their digital music players.', '一項針對年輕人音樂持有狀況的調查發現，青少年與大學生的數位音樂播放器裡，平均每人擁有超過 800 首非法複製的歌曲。'],
+    ['Half of those surveyed share all the music on their hard drive, enabling others to copy hundreds of songs at any one time.', '受訪者中有一半的人會分享他們硬碟裡的所有音樂，讓其他人隨時都能一次複製數百首歌曲。'],
+    ['Some students were found to have randomly linked their personal blogs to music sites, so as to allow free trial listening of copyrighted songs for blog visitors, or adopted some of the songs as the background music for their blogs.', '有些學生被發現隨意將個人部落格連結到音樂網站，好讓部落格訪客免費試聽受版權保護的歌曲，或是將某些歌曲設為自己部落格的背景音樂。'],
+    ['Such practices may be easy and free, but there are consequences.', '這類做法或許既簡單又免費，但卻要承擔後果。']
+  ],
+  [
+    ['Sandra Dowd, a student of Central Michigan University, was fined US$7,500 for downloading 501 files from LimeWire, a peer-to-peer file sharing program.', '中密西根大學的學生珊卓拉・道徳因為從點對點檔案分享程式 LimeWire 下載了 501 個檔案，被處以 7,500 美元的罰款。'],
+    ['Sandra claimed that she was unaware that her downloads were illegal until she was contacted by authorities.', '珊卓拉聲稱，直到有關當局聯繫她之前，她並不知道自己的下載行為是違法的。'],
+    ['Similarly, Mike Lewinski paid US$4,000 to settle a lawsuit against him for copyright violation.', '同樣地，麥克・陸文斯基支付了 4,000 美元，以就一起控告他侵犯版權的訴訟達成和解。'],
+    ['Mike expressed shock and couldn\'t believe that this was happening to him.', '麥克表示震驚，不敢相信這種事竟然會發生在自己身上。'],
+    ['"I just wanted to save some money and I always thought the threat was just a scare tactic."', '「我只是想省點錢，而且我一直以為那種警告威脅只是嚇唬人的伎倆而已。」'],
+    ['"You know, everyone does it," added Mike.', '「你知道的，每個人都這麼做啊，」麥克補充道。']
+  ],
+  [
+    ['The RIAA (Recording Industry Association of America), the organization that files lawsuits against illegal downloaders, states that suing students was by no means their first choice.', '對非法下載者提起訴訟的機構「美國唱片業協會（RIAA）」表示，控告學生絕非他們的第一選擇。'],
+    ['Unfortunately, without the threat of consequences, students are just not changing their behavior.', '不幸的是，如果沒有承擔後果的威脅，學生根本不會改變他們的行為。'],
+    ['Education alone is not enough to stop the extraordinary growth of the illegal downloading practice.', '單靠教育宣導，並不足以遏止非法下載行為驚人的增長趨勢。']
+  ]
+];
+
+const RC4_Q = [
+  [48, ['考點：細節理解（非法下載普遍之原因）', '詞性需求：完整句子'], 'A',
+    '定位第三段兩個學生案例的心態：珊卓拉說被當局聯繫前不知違法，而麥克被罰 4,000 美元時大感震驚、不敢相信會發生在自己身上（*expressed shock and couldn\'t believe that this was happening to him*），並說：「我一直以為那種警告只是嚇唬人的伎倆（*scare tactic*），每個人都這麼做啊！」可見學生之所以普遍非法下載，是因為「他們不認為自己真的會被抓到受罰（*They don\'t think that they will be caught*）」。',
+    [
+      ['They don\'t think that they will be caught.', '他們不認為自己會被抓到。', '吻合第三段麥克被抓時的震驚反應以及「以為警告只是嚇唬人、大家都這樣做」的僥倖心態。'],
+      ['They want their friends to know that they are smart.', '他們想讓朋友知道自己很聰明。', '第二段說這種做法很簡單（*easy and free*），第三段說只是為了省錢（*save some money*），並非為了炫耀聰明。'],
+      ['They think it is a good way to make some extra money.', '他們認為這是賺外快的好方法。', '學生是免費分享並為了「省錢（*save some money*）」，並未藉此收費賺外快。'],
+      ['They are against copyright protection over Internet music.', '他們反對網路音樂的版權保護。', '學生是因為貪圖免費方便或不知違法，並非出於反對著作權法的政治理念。']
+    ]
+  ],
+  [49, ['考點：慣用語理解（scare tactic）', '詞性需求：完整句子'], 'D',
+    '定位第三段倒數第 2–3 句：麥克不敢相信自己真的挨告賠了 4,000 美元，他說：「我一直以為那個威脅只是個 *scare tactic*（嚇唬人的把戲／虛張聲勢）」，意思是以為官方只是口頭恐嚇大家而已，不會真的去告人、不會帶來什麼嚴重的實際後果（*No serious consequence will follow the threat*），故選 **(D)**。',
+    [
+      ['One should not be afraid of threats.', '人不應該害怕威脅。', '麥克不是在宣揚勇敢不怕威脅的人生哲學，而是誤以為唱片協會只是虛張聲勢不會真的開罰。'],
+      ['A lawsuit will result from the threat.', '該威脅將會導致法律訴訟。', '相反！就是因為他原本以為「不會」真的挨告，所以收到傳票時才會震驚不已（*expressed shock*）。'],
+      ['It is unfair to scare people with a threat.', '用威脅來嚇人是不公平的。', '*scare tactic* 指「用來嚇阻他人的虛張聲勢手段」，並非抱怨不公平。'],
+      ['No serious consequence will follow the threat.', '該威脅之後不會伴隨任何嚴重後果。', '精準解釋「以為警告只是光說不練、嚇唬人而已，不會真的有嚴重後果」。']
+    ]
+  ],
+  [50, ['考點：機構態度與立場理解（RIAA）', '詞性需求：完整句子'], 'D',
+    '定位第四段：美國唱片業協會（RIAA）表示，控告學生絕非他們的第一選擇（*by no means their first choice*）；但遺憾的是，「如果沒有承擔後果的威脅，學生根本不會改變行為。單靠教育並不足以遏止非法下載的驚人成長（*Education alone is not enough to stop...*）」；可見 RIAA 認為必須採取「強硬的法律懲罰手段（*tough measures*）」才能糾正非法下載行為，故選 **(D)**。',
+    [
+      ['They believe that education will help greatly in protecting copyrights.', '他們相信教育對於保護版權會有極大幫助。', '與第四段末句 *Education alone is not enough...*（單靠教育是不夠的）相反！'],
+      ['They profit from the fines illegal downloaders pay for copyright violations.', '他們從非法下載者支付的侵權罰款中獲利。', '興訟目的是為了遏止盜版歪風（迫使學生改變行為），文中未說他們靠罰款獲利。'],
+      ['They like to sue students for downloading music illegally from the Internet.', '他們喜歡控告從網路非法下載音樂的學生。', '與第四段首句 *suing students was by no means their first choice*（告學生絕非他們的第一選擇，實屬不得已）相反！'],
+      ['They think that illegal downloading behavior needs tough measures to correct.', '他們認為非法下載行為需要強硬的措施來糾正。', '吻合第四段「單靠教育不夠，沒有實質懲罰後果的威脅，學生根本不會改變行為」的立場。']
+    ]
+  ],
+  [51, ['考點：全文最佳標題（Best Title）', '詞性需求：標題片語'], 'A',
+    '全文主線：第一、二段點出學生免費下載與分享音樂雖普遍但其實違法，且「必須承擔後果（*there are consequences*）」；第三段舉出兩名大學生遭重罰數千美元的慘痛案例；第四段說明唱片業協會為何必須祭出法律訴訟鐵腕。因此最能涵蓋全文核心主旨與警示語氣的標題為 **(A)** *Copyright Violators, Beware!*（侵犯版權者，當心了！）。',
+    [
+      ['Copyright Violators, Beware!', '侵犯版權者，當心了！', '精準點出「違反著作權（*Copyright Violators*）」與「面臨重罰訴訟後果，切勿心存僥倖（*Beware!*）」的全文主旨。'],
+      ['How to Get Free Music Online!', '如何在網路上取得免費音樂！', '本文是警告讀者切勿非法下載免費音樂，絕非教你如何找免費音樂的教學文！'],
+      ['A Survey of Students\' Downloading Habits', '學生下載習慣之調查', '調查（*A survey*）僅占第二段前半，用來引出問題嚴重性，第三、四段的重罰案例與法律警告才是全文核心。'],
+      ['Eliminate Illegal Music Download? Impossible!', '消除非法音樂下載？不可能！', '末段說的是「單靠教育不足以遏止，因此必須動用法律訴訟」，並未宣稱「不可能消除」。']
+    ]
+  ]
+];
+
+// === 渲染全部內容至 #app ===
+let html = '';
+
+// 一、詞彙
+html += '<h2 id="sec-vocab">一、詞彙（第 1–10 題，每題 1 分，共 10 分）</h2>';
+VOCAB.forEach(q => {
+  SENT[q[0]] = q[3];
+  html += card(q[0], q[1], q[2], stem(q[0]) + clue(q[4]) + ops(q[5], q[2]));
+});
+html += groupGradeBox('vocab', '一、詞彙', 1, 10, 1);
+
+// 二、綜合測驗
+html += '<h2 id="sec-cloze">二、綜合測驗（第 11–20 題，每題 1 分，共 10 分）</h2>';
+html += passage('第 11 至 15 題題組：英國基爾大學「虛擬病人」藥學訓練系統', CLOZE1_PAS, '', 'cloze1');
+CLOZE1_Q.forEach(q => {
+  html += card(q[0], q[1], q[2], stem(q[0]) + clue(q[3]) + ops(q[4], q[2]));
+});
+html += groupGradeBox('cloze1', '二、綜合測驗（第 11–15 題）', 11, 15, 1);
+
+html += passage('第 16 至 20 題題組：印度嫁妝制度的歷史初衷與現代變質', CLOZE2_PAS, '', 'cloze2');
+CLOZE2_Q.forEach(q => {
+  html += card(q[0], q[1], q[2], stem(q[0]) + clue(q[3]) + ops(q[4], q[2]));
+});
+html += groupGradeBox('cloze2', '二、綜合測驗（第 16–20 題）', 16, 20, 1);
+
+// 三、文意選填
+html += '<h2 id="sec-wbank">三、文意選填（第 21–30 題，每題 1 分，共 10 分）</h2>';
+html += '<div class="pas"><div class="bank" id="bank-wbank">' + WBANK_ITEMS.map(it => '<span><b>('+it[0]+') '+it[1]+'</b> <small>'+it[2]+'</small></span>').join('') + '</div></div>';
+html += passage('第 21 至 30 題題組：強迫性購物症（購物成癮 Oniomania）的心理成因與循環', WBANK_PAS, '', 'wbank');
+WBANK_Q.forEach(q => {
+  const fullOpts = WBANK_ITEMS.map(it => {
+    const found = q[4].find(x => x[0].indexOf('('+it[0]+')') === 0);
+    return [it[1], it[2], found ? found[2] : '詞性或語意不符合本題空格需求。'];
+  });
+  html += card(q[0], q[1], q[2], stem(q[0]) + clue(q[3]) + ops(fullOpts, q[2], 'ABCDEFGHIJ'));
+});
+html += groupGradeBox('wbank', '三、文意選填（第 21–30 題）', 21, 30, 1);
+
+// 四、篇章結構
+html += '<h2 id="sec-disc">四、篇章結構（第 31–35 題，每題 2 分，共 10 分）</h2>';
+html += '<div class="pas"><h3>選項列表</h3>' + DISC_OPTS.map(o => '<div class="s"><div class="en"><b>('+o[0]+')</b> '+o[1]+'</div><div class="zh">'+o[2]+'</div></div>').join('') + '</div>';
+html += passage('第 31 至 35 題題組：開口說出心願的力量——害羞女孩惠妮的大學第一堂課', DISC_PAS, '', 'disc');
+DISC_Q.forEach(q => {
+  html += card(q[0], q[1], q[2], stem(q[0]) + clue(q[3]) + ops(q[4], q[2], 'ABCDE'));
+});
+html += groupGradeBox('disc', '四、篇章結構（第 31–35 題）', 31, 35, 2);
+
+// 五、閱讀測驗
+html += '<h2 id="sec-rc">五、閱讀測驗（第 36–51 題，每題 2 分，共 32 分）</h2>';
+
+html += passage('第 36 至 39 題題組：美國「帶女兒去上班日（TOD）」的宗旨與演變', RC1_PAS, '', 'rc1');
+RC1_Q.forEach(q => {
+  const qStem = '<div class="stem"><div class="en"><b>'+q[0]+'. ' + (
+    q[0]===36 ? 'The purpose for having a Take Our Daughters to Work Day is ____.' :
+    q[0]===37 ? 'TOD was criticized because some people ____.' :
+    q[0]===38 ? 'Which of the following is true according to the passage?' :
+    'Why are women underrepresented in some fields such as technology?'
+  ) + '</b></div><div class="zh">' + (
+    q[0]===36 ? '舉辦「帶女兒去上班日」的目的是什麼？' :
+    q[0]===37 ? '「帶女兒去上班日」曾受到批評，是因為有些人認為如何？' :
+    q[0]===38 ? '根據本文，下列何者為真？' :
+    '為什麼女性在科技等部分領域中的比例偏低？'
+  ) + '</div></div>';
+  html += card(q[0], q[1], q[2], qStem + clue(q[3]) + ops(q[4], q[2]));
+});
+html += groupGradeBox('rc1', '五、閱讀測驗（第 36–39 題）', 36, 39, 2);
+
+html += passage('第 40 至 43 題題組：從古埃及到現代龐克——髮型的歷史與文化象徵意義', RC2_PAS, '', 'rc2');
+RC2_Q.forEach(q => {
+  const qStem = '<div class="stem"><div class="en"><b>'+q[0]+'. ' + (
+    q[0]===40 ? 'The topic of this passage could best be described as ____.' :
+    q[0]===41 ? 'Why did ancient Greeks like to wear curls and locks?' :
+    q[0]===42 ? 'How did women in the 1960s use hair to show objection?' :
+    'What can be inferred from the passage?'
+  ) + '</b></div><div class="zh">' + (
+    q[0]===40 ? '這篇文章的主題最能被描述為下列何者？' :
+    q[0]===41 ? '為什麼古希臘人喜歡留捲髮與髮綹？' :
+    q[0]===42 ? '1960 年代的女性如何利用頭髮來表達反抗（異議）？' :
+    '從文章中可以推論出下列何者？'
+  ) + '</div></div>';
+  html += card(q[0], q[1], q[2], qStem + clue(q[3]) + ops(q[4], q[2]));
+});
+html += groupGradeBox('rc2', '五、閱讀測驗（第 40–43 題）', 40, 43, 2);
+
+html += passage('第 44 至 47 題題組：全球兒童志工服務的興起與重要價值', RC3_PAS, '', 'rc3');
+RC3_Q.forEach(q => {
+  const qStem = '<div class="stem"><div class="en"><b>'+q[0]+'. ' + (
+    q[0]===44 ? 'What\'s the writer\'s purpose of writing this passage?' :
+    q[0]===45 ? 'What is the main idea of the 3rd paragraph?' :
+    q[0]===46 ? 'Why is community service important in a time of recession?' :
+    'What can be inferred from the passage?'
+  ) + '</b></div><div class="zh">' + (
+    q[0]===44 ? '作者撰寫這篇文章的目的是什麼？' :
+    q[0]===45 ? '第三段的主旨是什麼？' :
+    q[0]===46 ? '為什麼在經濟衰退時期，社區服務顯得格外重要？' :
+    '從文章中可以推論出下列何者？'
+  ) + '</div></div>';
+  html += card(q[0], q[1], q[2], qStem + clue(q[3]) + ops(q[4], q[2]));
+});
+html += groupGradeBox('rc3', '五、閱讀測驗（第 44–47 題）', 44, 47, 2);
+
+html += passage('第 48 至 51 題題組：校園網路非法下載音樂的盛行與侵權法律代價', RC4_PAS, '', 'rc4');
+RC4_Q.forEach(q => {
+  const qStem = '<div class="stem"><div class="en"><b>'+q[0]+'. ' + (
+    q[0]===48 ? 'Why is it common for students to download copyrighted music?' :
+    q[0]===49 ? 'What does Mike mean by saying that "the threat was just a scare tactic"?' :
+    q[0]===50 ? 'What is RIAA\'s attitude towards students\' illegal downloading behavior?' :
+    'What\'s the best title for this passage?'
+  ) + '</b></div><div class="zh">' + (
+    q[0]===48 ? '為什麼學生下載受版權保護的音樂會如此普遍？' :
+    q[0]===49 ? '麥克說「那種威脅只是嚇唬人的伎倆（scare tactic）」是什麼意思？' :
+    q[0]===50 ? '美國唱片業協會（RIAA）對學生非法下載行為的態度為何？' :
+    '這篇文章的最佳標題是什麼？'
+  ) + '</div></div>';
+  html += card(q[0], q[1], q[2], qStem + clue(q[3]) + ops(q[4], q[2]));
+});
+html += groupGradeBox('rc4', '五、閱讀測驗（第 48–51 題）', 48, 51, 2);
+
+// 全卷選擇題總批改面板
+html += '<div class="grade-box all-box" id="gbox-all">' +
+  '<div class="grade-title">🏆 第壹部分：選擇題全卷總批改（第 1–51 題，滿分 72 分）</div>' +
+  '<div class="grade-btns">' +
+    '<button class="btn-grade" onclick="gradeAllSingleChoice()">🏆 一次批改全卷</button>' +
+    '<button class="btn-reset" onclick="resetAllSingleChoice()">🔄 一次清空重練</button>' +
+  '</div>' +
+  '<div class="grade-res" id="gres-all"></div>' +
+'</div>';
+
+// 第貳部分：非選擇題 — 一、中譯英
+html += '<h2 id="sec-trans">第貳部分：非選擇題 — 一、中譯英（佔 8 分）</h2>';
+html += '<section class="pas" id="pas-trans">' +
+  '<h3>中譯英題目與解析</h3>' +
+  '<p class="prompt-text"><b>說明：</b>1. 將下列兩句中文翻譯成適當之英文，並將答案寫在「答案卷」上。<br>2. 請依序作答，並標明題號。每題 4 分，共 8 分。</p>' +
+  '<div class="para">' +
+    '<div class="s">' +
+      '<div class="prompt-text"><b>1. 玉山是東亞第一高峰，以生態多樣聞名。</b></div>' +
+      '<input type="text" class="trans-input" placeholder="請在此輸入第 1 題英文翻譯練習...">' +
+      '<div class="en trans-ans" style="margin-top:6px;color:var(--ok);font-weight:600;">參考正解 1：Jade Mountain (Mt. Jade / Yushan) is the highest mountain (peak) in East Asia and is famous (well-known / renowned) for its ecological diversity (biodiversity).</div>' +
+      '<div class="en trans-ans" style="color:var(--ok);">參考正解 2：Yushan, the highest peak in East Asia, is known for its diverse ecology (ecological variety).</div>' +
+      '<p class="note">💡 <b>句構與詞彙解析：</b><br>• 「玉山」：<i>Jade Mountain</i>、<i>Mt. Jade</i> 或音譯 <i>Yushan</i>。<br>• 「東亞第一高峰」：<i>the highest mountain / peak in East Asia</i>（可用同位語或對等連接詞 <i>and</i> 連接後半句）。<br>• 「以生態多樣聞名」：<i>be famous / well-known / renowned / noted for its ecological diversity (biodiversity / diverse ecology)</i>。</p>' +
+    '</div>' +
+    '<div class="s" style="margin-top:16px;">' +
+      '<div class="prompt-text"><b>2. 大家在網路上投票給它，要讓它成為世界七大奇觀之一。</b></div>' +
+      '<input type="text" class="trans-input" placeholder="請在此輸入第 2 題英文翻譯練習...">' +
+      '<div class="en trans-ans" style="margin-top:6px;color:var(--ok);font-weight:600;">參考正解 1：People voted (are voting) for it on the Internet (online) to make it one of the Seven Wonders of the World.</div>' +
+      '<div class="en trans-ans" style="color:var(--ok);">參考正解 2：Everyone is voting for it online in order to make it become one of the world\'s seven wonders.</div>' +
+      '<p class="note">💡 <b>句構與詞彙解析：</b><br>• 「在網路上投票給它」：<i>vote for it on the Internet (online)</i>（注意「投票支持……」必須加介系詞 <i>for</i>）。<br>• 「要讓它成為……」：表目的不定詞 <i>(in order) to make it (become) one of...</i>。<br>• 「世界七大奇觀之一」：<i>one of the Seven Wonders of the World</i> 或 <i>one of the world\'s seven wonders</i>（<i>one of</i> 後面的複數名詞 <i>wonders</i> 務必加 <i>-s</i>）。</p>' +
+    '</div>' +
+  '</div>' +
+'</section>';
+
+html += '<div class="grade-box" id="gbox-trans">' +
+  '<div class="grade-title">📝 中譯英對照批改（共 8 分）</div>' +
+  '<div class="grade-btns">' +
+    '<button class="btn-grade" onclick="gradeTrans()">✅ 顯示中譯英正解與解析</button>' +
+    '<button class="btn-reset" onclick="resetTrans()">🔄 清空重練中譯英</button>' +
+  '</div>' +
+  '<div class="grade-res" id="gres-trans"></div>' +
+'</div>';
+
+// 第貳部分：非選擇題 — 二、英文作文
+html += '<h2 id="sec-essay">第貳部分：非選擇題 — 二、英文作文（佔 20 分）</h2>';
+html += '<section class="pas graded">' +
+  '<h3>英文作文題目提示</h3>' +
+  '<p class="prompt-text"><b>說明：</b>1. 依提示在「答案卷」上寫一篇英文作文。<br>2. 文長約 120 至 150 個單詞（words）。</p>' +
+  '<p class="prompt-text"><b>提示：</b>如果你可以不用擔心預算，隨心所欲的度過一天，你會怎麼過？請寫一篇短文，第一段說明你會邀請誰和你一起度過這一天？為什麼？第二段描述你會去哪裡？做些什麼事？為什麼？</p>' +
+'</section>';
+
+const ESSAY_MODEL = [
+  [
+    ['If I were given the luxury of spending an entire day doing whatever my heart desires without any budget constraints, the only people I would invite are my parents.', '如果我有幸能夠毫無預算限制、隨心所欲地度過一整天，我唯一會邀請的人就是我的父母。'],
+    ['For nearly two decades, they have worked tirelessly and lived frugally so that I could enjoy a comfortable life and receive the best education.', '近二十年來，他們不知疲倦地辛勤工作且省吃儉用，只為了讓我能享有舒適的生活並接受最好的教育。'],
+    ['Whenever we went traveling in the past, my parents always checked price tags first, hesitating to book a nicer hotel room or order a sumptuous meal for themselves.', '過去每當我們出遊時，父母總是先看價格標籤，捨不得為自己預訂較好的飯店房間或點一頓豐盛的大餐。'],
+    ['Having watched subtle silver threads gradually appear in their hair, I deeply wish to pamper them for a day where money is no longer a concern and their happiness is the sole priority.', '看著白髮悄悄爬上他們的雙鬢，我由衷希望能好好寵愛他們一天，讓金錢不再是顧慮，而他們的快樂就是唯一的優先考量。']
+  ],
+  [
+    ['To make this dream day truly unforgettable, I would charter a private helicopter to fly us directly to a secluded hot spring resort nestled in the misty mountains of Kyoto, Japan.', '為了讓這夢幻的一天真正令人難忘，我會包下一架私人直升機，直接載我們飛往隱身於日本京都雲霧山林間的一處靜謐溫泉渡假村。'],
+    ['In the morning, we would stroll leisurely through a private bamboo grove and savor freshlywhisked matcha in a historic wooden teahouse without any noisy crowds around us.', '早晨，我們會在私人的竹林小徑中悠閒漫步，並在歷史悠久的木造茶屋裡品嚐現刷抹茶，周遭沒有任何喧囂擁擠的人潮。'],
+    ['In the afternoon, my parents could soak in an open-air thermal bath overlooking the maple valley to wash away years of physical fatigue, followed by a private kaiseki banquet prepared by a master chef.', '午後，父母可以浸泡在俯瞰楓葉山谷的露天溫泉中，洗去多年來的身體疲憊，接著享用由名廚親自料理的私人懷石料理晚宴。'],
+    ['The reason I would choose this peaceful retreat over extravagant shopping sprees is that what my parents need most is pure relaxation and quality family time.', '我之所以選擇這趟寧靜的療癒之旅而非奢華的瘋狂購物，是因為我父母最需要的是純粹的放鬆以及高品質的家庭相聚時光。'],
+    ['Watching their carefree smiles under the starry Kyoto sky would be the most priceless treasure money could ever buy.', '在京都璀璨的星空下看著他們無憂無慮的笑容，將是金錢所能買到最無價的珍寶。']
+  ]
+];
+
+html += passage('高分範文賞析（282 字，逐句中英對照）', ESSAY_MODEL, '💡 <b>寫作架構解析：</b>第一段以與現在事實相反的假設語氣（<i>If I were given...</i>）破題，明確點出邀請對象為「父母」，並以具體生活細節（看標價捨不得花錢、雙鬢漸白）闡述想回報父母辛勞的真摯理由；第二段具體描繪搭乘私人直升機前往「日本京都深山溫泉渡假村」的早、午、晚行程（竹林漫步品茗、露天溫泉洗去疲憊、名廚懷石料理），最後點出選擇寧靜療癒之旅而非揮霍購物的深層原因，完美扣合題目所有提問。', 'essay-model', 'graded');
+
+document.getElementById('app').innerHTML = html;
+
+// 動態建立導覽列錨點
+const nav = document.getElementById('nav');
+[
+  ['#sec-vocab', '一、詞彙'],
+  ['#sec-cloze', '二、綜合測驗'],
+  ['#sec-wbank', '三、文意選填'],
+  ['#sec-disc', '四、篇章結構'],
+  ['#sec-rc', '五、閱讀測驗'],
+  ['#gbox-all', '🏆 全卷批改'],
+  ['#sec-trans', '中譯英'],
+  ['#sec-essay', '英文作文']
+].forEach(item => {
+  const a = document.createElement('a');
+  a.href = item[0];
+  a.textContent = item[1];
+  nav.appendChild(a);
+});
+</script>
+<script src="bookmark.js"></script>
+<script>
+  let secretClickCount = 0;
+  let secretTimer;
+  document.getElementById('secret-trigger').addEventListener('click', function() {
+    secretClickCount++;
+    if (secretClickCount === 3) {
+      const counter = document.getElementById('secret-counter');
+      counter.style.display = counter.style.display === 'none' ? 'block' : 'none';
+      secretClickCount = 0;
+    }
+    clearTimeout(secretTimer);
+    secretTimer = setTimeout(() => { secretClickCount = 0; }, 2000);
+  });
+</script>
+</body>
+</html>
