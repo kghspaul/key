@@ -174,6 +174,68 @@ details.q.graded ul.op li.selected.no { border: 2px solid var(--no) !important; 
 }
 .q-Jump:hover { background: var(--acc); color: #fff; border-color: var(--acc); }
 
+
+/* 洞洞卷拼字填空輸入框與練習模式提示樣式 */
+.spell-box {
+  display: none;
+  margin: 8px 0;
+  padding: 10px 14px;
+  background: var(--bg);
+  border: 1px dashed var(--acc);
+  border-radius: 8px;
+}
+body.practice-mode .spell-box {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.spell-hint {
+  font-weight: 700;
+  color: var(--acc);
+  font-size: .95rem;
+}
+.spell-input {
+  flex: 1;
+  min-width: 180px;
+  padding: 7px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--card);
+  color: var(--fg);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1rem;
+}
+.spell-input:focus {
+  outline: none;
+  border-color: var(--acc);
+}
+details.q.graded .spell-input.ok {
+  border: 2px solid var(--ok);
+  background: color-mix(in srgb, var(--ok) 12%, var(--card));
+  font-weight: 700;
+}
+details.q.graded .spell-input.no {
+  border: 2px solid var(--no);
+  background: color-mix(in srgb, var(--no) 12%, var(--card));
+  font-weight: 700;
+}
+/* 拼字題在練習模式且未批改時，隱藏四選一易混淆字比較列表，只留文字輸入框；批改後自動展開比較表 */
+body.practice-mode details.q.spell-q:not(.graded) ul.op {
+  display: none;
+}
+.pm-inline-hint {
+  display: none;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: .93rem;
+  color: var(--acc);
+  font-weight: 700;
+  margin-left: 3px;
+}
+body.practice-mode .bl:not(.revealed) + .pm-inline-hint {
+  display: inline;
+}
+
 footer{max-width:900px;margin:auto;padding:20px 16px 40px;color:var(--mut);font-size:.85rem;line-height:1.6;border-top:1px solid var(--line);margin-top:40px;}
 footer a{color:var(--acc);text-decoration:none;font-weight:bold;}
 footer a:hover{text-decoration:underline;}
@@ -207,13 +269,18 @@ footer a:hover{text-decoration:underline;}
 </footer>
 <script>
 const L="ABCD";
+const PM_HINTS = {"202": "p_______（禁止）", "205": "o________t（整夜的）", "210": "r__________ns（限制）", "213": "s________n（加強）", "214": "c_____t（內容）", "215": "C____cs（批評家）", "217": "i_________t（參與）", "220": "m____l's（哺乳動物）", "222": "a________hing（驚人的）", "224": "c_______y（明星／名人）", "225": "u___________e（令人難忘的）", "226": "f________ting（吸引人的）", "229": "s_____tly（稍微地）", "233": "p______rs（掠食者）", "238": "b_____ding（繁殖）", "240": "r___ls（競爭對手）", "241": "r____ms（節奏）", "242": "p_______l（潛在的）", "246": "(= As _____ as，請自填一字)", "249": "c___ks（裂縫）", "254": "w______e（野生動物）", "255": "d_________n（目的地）", "256": "a________ns（吸引人的事物）", "264": "p_______ed（保存）", "265": "m_______y（機械轉動部分）", "266": "c______es（戲服）", "268": "l_______e（風景）", "269": "a__h（拱門）", "273": "m_________t（壯觀的）", "275": "s___t（聖徒）", "276": "m____s（礦工）", "278": "r_____t（反映）", "282": "s____s（地位）", "286": "s_____ing（引人注目的）", "207": "(moreover / however / therefore / firstly)", "209": "(expected / expecting / expectations / expect)", "211": "(rising / arousing / raising / arising)", "219": "(As / With / For / While)", "221": "(wondered / wondering / to wonder)", "244": "(much / many / far / long)", "251": "(it became / did it become / it become / had it become)", "252": "(Regardless of / In addition to / Thanks to / In spite of)", "257": "(locate / stand / lie / situate / sit 選出所有正確選項)", "281": "(Furthermore / In response / However / After all)", "284": "(when / where / that / which)"};
 const fx=s=>s.replace(/\*([^*]+)\*/g,'<i>$1</i>').replace(/\[\[(\d*)\|([^\]]+)\]\]/g,(m,n,a)=>{
   let dispSup = '';
+  let hintHtml = '';
   if (n) {
     const num = Number(n);
     dispSup = num > 200 ? (num - 200) : (num > 100 ? (num - 100) : num);
+    if (PM_HINTS[num]) {
+      hintHtml = '<span class="pm-inline-hint">' + PM_HINTS[num] + '</span>';
+    }
   }
-  return '<span class="bl"'+(n?' data-q="'+n+'"':'')+'>'+(dispSup?'<sup>'+dispSup+'</sup>':'')+a+'</span>';
+  return '<span class="bl"'+(n?' data-q="'+n+'"':'')+'>'+(dispSup?'<sup>'+dispSup+'</sup>':'')+a+'</span>' + hintHtml;
 });
 const SENT={};
 const Q_ANS={};
@@ -230,18 +297,45 @@ function dialStem(lines, hintText){
     '</div>';
 }
 const clue=t=>'<div class="clue"><h4>解題線索</h4>'+t+'</div>';
-function ops(list,ans,lab,hideOptInPM){
+function ops(list,ans,lab,hideOptInPM,isMulti){
   lab=lab||'ABCDEF';
-  return '<ul class="op">'+list.map((o,i)=>{
+  const ansCodes = isMulti ? ans.split(' ')[0].replace(/[^A-Z]/g, '') : ans.charAt(0);
+  return '<ul class="op"'+(isMulti?' data-multi="1"':'')+'>'+list.map((o,i)=>{
     const optCode = (lab==='ABCDEF'&&list.length<=4) ? L[i] : lab[i];
-    const k=ans.indexOf(optCode)>=0;
+    const k=ansCodes.indexOf(optCode)>=0;
     const optTextHtml = hideOptInPM ? '<span class="pic-opt-text"> '+fx(o[0])+'</span>' : ' '+fx(o[0]);
     return '<li class="'+(k?'ok':'no')+'" data-opt="'+optCode+'" onclick="selectOpt(this)"><b>('+optCode+')'+optTextHtml+'</b>'+(o[1]?' <small>'+o[1]+'</small>':'')+' <i>'+(k?'✔ 正解':'✘ 誤答')+'</i><div class="exp">'+o[2]+'</div></li>';
   }).join('')+'</ul>';
 }
-function card(n,dispNum,tags,ans,body){
+function spellBox(n, hintStr, targetWord) {
+  return '<div class="spell-box">' +
+    '<span class="spell-hint">✍️ 原卷提示：' + hintStr + '</span>' +
+    '<input type="text" class="spell-input" data-q="' + n + '" data-word="' + targetWord + '" placeholder="請輸入完整英文單字（按 Enter 跳下一格）..." onkeydown="handleSpellKey(event, ' + n + ')" oninput="ungradeSpell(' + n + ')">' +
+  '</div>';
+}
+window.handleSpellKey = function(e, n) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    const allInps = Array.from(document.querySelectorAll('input.spell-input'));
+    const idx = allInps.indexOf(e.target);
+    if (idx >= 0 && idx + 1 < allInps.length) {
+      allInps[idx + 1].focus();
+    }
+  }
+};
+window.ungradeSpell = function(n) {
+  const qEl = document.getElementById('q' + n);
+  if (qEl && qEl.classList.contains('graded')) {
+    qEl.classList.remove('graded');
+    const inp = qEl.querySelector('input.spell-input');
+    if (inp) inp.classList.remove('ok', 'no');
+    const st = document.getElementById('st' + n);
+    if (st) st.style.display = 'none';
+  }
+};
+function card(n,dispNum,tags,ans,body,extraQCls){
   Q_ANS[n] = ans;
-  return '<details class="q" id="q'+n+'" open><summary><span class="n">'+dispNum+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="user-status" id="st'+n+'" style="display:none"></span><span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
+  return '<details class="q'+(extraQCls?' '+extraQCls:'')+'" id="q'+n+'" open><summary><span class="n">'+dispNum+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="user-status" id="st'+n+'" style="display:none"></span><span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
 }
 function renderBankBox(gid, bankList, letters) {
   return '<div class="bank" id="bank-' + gid + '"><b>📚 本區共用字庫：</b>' +
@@ -261,7 +355,7 @@ function groupGradeBox(gid, title, ptsLabel) {
   '</div>';
 }
 
-// 點擊選項作答
+// 點擊選項作答（支援單選與 data-multi="1" 複選）
 window.selectOpt = function(li) {
   if (!document.body.classList.contains('practice-mode')) {
     enablePracticeMode();
@@ -273,8 +367,13 @@ window.selectOpt = function(li) {
     const st = document.getElementById('st' + qNum);
     if (st) st.style.display = 'none';
   }
-  li.parentNode.querySelectorAll('li').forEach(el => el.classList.remove('selected'));
-  li.classList.add('selected');
+  const ul = li.parentNode;
+  if (ul.getAttribute('data-multi') === '1') {
+    li.classList.toggle('selected');
+  } else {
+    ul.querySelectorAll('li').forEach(el => el.classList.remove('selected'));
+    li.classList.add('selected');
+  }
 };
 
 // 批改單一題目並回傳狀態 ('ok' | 'no' | 'blank')
@@ -286,11 +385,46 @@ function evaluateSingleQ(n) {
 
   document.querySelectorAll('.bl[data-q="'+n+'"]').forEach(el => el.classList.add('revealed'));
 
-  const sel = qEl.querySelector('ul.op li.selected');
   const st = document.getElementById('st' + n);
   const ans = Q_ANS[n];
 
-  if (!sel) {
+  // 若為洞洞卷拼字填空題（含 input.spell-input）
+  const spellInp = qEl.querySelector('input.spell-input');
+  if (spellInp) {
+    const userVal = spellInp.value.trim();
+    const targetWord = spellInp.getAttribute('data-word');
+    spellInp.classList.remove('ok', 'no');
+    if (!userVal) {
+      if (st) {
+        st.className = 'user-status st-blank';
+        st.textContent = '⚠️ 未作答';
+        st.style.display = 'inline-block';
+      }
+      return 'blank';
+    }
+    if (userVal.toLowerCase() === targetWord.toLowerCase()) {
+      spellInp.classList.add('ok');
+      if (st) {
+        st.className = 'user-status st-ok';
+        st.textContent = '✔ 答對 (' + userVal + ')';
+        st.style.display = 'inline-block';
+      }
+      return 'ok';
+    } else {
+      spellInp.classList.add('no');
+      if (st) {
+        st.className = 'user-status st-no';
+        st.textContent = '✘ 答錯 (填 ' + userVal + ')';
+        st.style.display = 'inline-block';
+      }
+      return 'no';
+    }
+  }
+
+  // 選擇題（單選或複選）
+  const ul = qEl.querySelector('ul.op');
+  const selectedLis = qEl.querySelectorAll('ul.op li.selected');
+  if (!selectedLis || selectedLis.length === 0) {
     if (st) {
       st.className = 'user-status st-blank';
       st.textContent = '⚠️ 未作答';
@@ -299,18 +433,23 @@ function evaluateSingleQ(n) {
     return 'blank';
   }
 
-  const userOpt = sel.getAttribute('data-opt');
-  if (ans.indexOf(userOpt) >= 0) {
+  const userOpts = Array.from(selectedLis).map(el => el.getAttribute('data-opt')).sort().join('');
+  const isMulti = ul && ul.getAttribute('data-multi') === '1';
+  const expectedOpts = isMulti
+    ? ans.split(' ')[0].replace(/[^A-Z]/g, '').split('').sort().join('')
+    : ans.charAt(0);
+
+  if (userOpts === expectedOpts) {
     if (st) {
       st.className = 'user-status st-ok';
-      st.textContent = '✔ 答對 (' + userOpt + ')';
+      st.textContent = '✔ 答對 (' + userOpts + ')';
       st.style.display = 'inline-block';
     }
     return 'ok';
   } else {
     if (st) {
       st.className = 'user-status st-no';
-      st.textContent = '✘ 答錯 (選 ' + userOpt + ')';
+      st.textContent = '✘ 答錯 (選 ' + userOpts + ')';
       st.style.display = 'inline-block';
     }
     return 'no';
@@ -937,14 +1076,14 @@ const U1_CARDS = [
     u1BankOps("E", "<b>access</b> 後接介系詞 <b>to</b>，<b>limit their access to social media</b> 精準表達「限制他們接觸社群媒體的管道」。")
   ),
   card(202, "洞洞卷 2", ["考點：字首字尾提示拼字（prohibit ... from V-ing）", "詞性需求：原形及物動詞"], "A (prohibit)",
-    stem(202) +
+    stem(202) + spellBox(202, "p_______（禁止）", "prohibit") +
     clue("題目給出字首 <b>p_______</b> 與中文提示「<b>禁止</b>」，且後方結構為 <b>children under 16 from having...</b>。符合「禁止某人做某事」的句型 <b>prohibit + 人 + from + V-ing</b>，不定詞 to 後接原形動詞 <b>prohibit</b>。") +
     ops([
       ["prohibit", "vt. 禁止；阻止（原形動詞）", "<b>本題正解：</b>不定詞 <b>to</b> 後須接原形動詞，且 <b>prohibit sb. from V-ing</b> 為標準搭配。"],
       ["prohibited", "v. 禁止（過去式／過去分詞）", "不定詞 to 後不可接過去式或過去分詞。<br><b>何時才對：</b>Smoking is strictly <b>prohibited</b> inside the hospital."],
       ["prohibition", "n. 禁令；禁止（名詞）", "此處為不定詞片語 to + V 修飾 the first country，不能填名詞。<br><b>何時才對：</b>The government issued a <b>prohibition</b> against underage drinking."],
       ["prevent", "vt. 阻止；預防（原形動詞）", "雖可接 from V-ing，但字尾與中文題幹指定之「禁止（p_______t，8字母）」對應本課核心單字 prohibit。<br><b>何時才對：</b>Vaccines help <b>prevent</b> the spread of serious diseases."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
   card(203, "洞洞卷 3", ["考點：文意選填（慣用片語 follow suit）", "詞性需求：名詞"], "B (suit)",
     stem(203) +
@@ -957,14 +1096,14 @@ const U1_CARDS = [
     u1BankOps("G", "<b>age-verification rules</b> 指「年齡驗證規定」，用來確認使用者是否達到法定年齡。")
   ),
   card(205, "洞洞卷 5", ["考點：字首字尾提示拼字（時間副詞／形容詞）", "詞性需求：形容詞"], "A (overnight)",
-    stem(205) +
+    stem(205) + spellBox(205, "o________t（整夜的）", "overnight") +
     clue("題目給出字首 <b>o________t</b> 與中文提示「<b>整夜的</b>」，且後方說明時間為 <b>between midnight and 6 a.m.</b>（午夜到清晨六點），修飾後方名詞 curfew，應填形容詞 <b>overnight</b>。") +
     ops([
       ["overnight", "adj. 整夜的；夜間的", "<b>本題正解：</b>字首 o、字尾 t，精準對應「整夜的、通宵的」，修飾名詞 curfew。"],
       ["overall", "adj. 整體的；全面的", "字尾為 l 而非 t，且語意為「整體的」，不符「整夜的」提示。<br><b>何時才對：</b>The <b>overall</b> cost of the project was lower than expected."],
       ["overtime", "n./adv. 加班；超時", "指工作或比賽超時，非指午夜至清晨的「整夜」。<br><b>何時才對：</b>Many nurses had to work <b>overtime</b> during the flu season."],
       ["overseas", "adj./adv. 海外的；在國外", "指跨海或國外的，與夜間時段無關。<br><b>何時才對：</b>She plans to pursue her master's degree <b>overseas</b>."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
   card(206, "洞洞卷 6", ["考點：文意選填（核心名詞搭配）", "詞性需求：單數可數名詞"], "F (curfew)",
     stem(206) +
@@ -997,14 +1136,14 @@ const U1_CARDS = [
     ], "A")
   ),
   card(210, "洞洞卷 10", ["考點：字首字尾提示拼字（名詞複數）", "詞性需求：複數可數名詞"], "A (restrictions)",
-    stem(210) +
+    stem(210) + spellBox(210, "r__________ns（限制）", "restrictions") +
     clue("題目給出字首 <b>r__________ns</b> 與中文提示「<b>限制</b>」，前有定冠詞與形容詞 <b>the new</b>，且字尾提示為複數 <b>-ns</b>，應填複數名詞 <b>restrictions</b>。") +
     ops([
       ["restrictions", "n. 限制規定；約束（複數）", "<b>本題正解：</b>字首 r、字尾 ns，搭配 <b>despite the new restrictions</b>（儘管有新的限制規定）。"],
       ["restriction", "n. 限制（單數）", "題目字尾明確提示 <b>ns</b>，須用複數形。<br><b>何時才對：</b>There is a strict speed <b>restriction</b> in school zones."],
       ["regulations", "n. 法規；條例（複數）", "語意為「法規」，但中文提示明確指定為「限制（restrictions）」。<br><b>何時才對：</b>All factories must comply with environmental <b>regulations</b>."],
       ["reputations", "n. 名聲；聲譽（複數）", "語意為「名聲」，與上下文年齡限制無關。<br><b>何時才對：</b>The scandal damaged the company's <b>reputation</b>."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
   card(211, "洞洞卷 11", ["考點：分詞構句與易混淆動詞（rise / arouse / raise / arise）", "詞性需求：現在分詞（及物）"], "C (raising)",
     stem(211) +
@@ -1022,34 +1161,34 @@ const U1_CARDS = [
     u1BankOps("C", "<b>regulators</b>（監管機構）作主詞，符合對社群媒體公司施壓並要求強化系統的角色。")
   ),
   card(213, "洞洞卷 13", ["考點：字首字尾提示拼字（動詞字尾 -en）", "詞性需求：原形及物動詞"], "A (strengthen)",
-    stem(213) +
+    stem(213) + spellBox(213, "s________n（加強）", "strengthen") +
     clue("題目給出字首 <b>s________n</b> 與中文提示「<b>加強</b>」，前有不定詞 <b>to</b>，後接受詞 <b>their verification systems</b>。由名詞 strength（力量）加上動詞字尾 <b>-en</b> 形成原形動詞 <b>strengthen</b>。") +
     ops([
       ["strengthen", "vt. 加強；強化；鞏固", "<b>本題正解：</b>字首 s、字尾 n，<b>strengthen their verification systems</b> 表「強化他們的驗證系統」。"],
       ["strength", "n. 力量；強度（名詞）", "不定詞 to 後需要原形動詞，不可填名詞。<br><b>何時才對：</b>She didn't have the <b>strength</b> to lift the heavy box."],
       ["strong", "adj. 強壯的；堅固的（形容詞）", "形容詞不可接在不定詞 to 後作及物動詞。<br><b>何時才對：</b>You need a <b>strong</b> password to protect your account."],
       ["straighten", "vt. 弄直；整理", "字形相近但語意為「把彎曲的東西弄直」，不符「加強」提示。<br><b>何時才對：</b>He stood up to <b>straighten</b> his tie before the interview."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
   card(214, "洞洞卷 14", ["考點：字首字尾提示拼字（不可數名詞）", "詞性需求：不可數名詞"], "A (content)",
-    stem(214) +
+    stem(214) + spellBox(214, "c_____t（內容）", "content") +
     clue("題目給出字首 <b>c_____t</b> 與中文提示「<b>內容</b>」，前有形容詞 <b>harmful</b>（有害的），指網路上的「有害內容（harmful content）」，故填不可數名詞 <b>content</b>。") +
     ops([
       ["content", "n. 內容（指網站、媒體或書籍的資訊，不可數）", "<b>本題正解：</b><b>harmful content</b> 為網路安全議題的高頻搭配詞，指「有害內容」。"],
       ["context", "n. 背景；上下文；脈絡", "字首字尾相同但語意為「背景、語境」，非「內容」。<br><b>何時才對：</b>You can guess the meaning of the word from the <b>context</b>."],
       ["contact", "n. 接觸；聯繫", "字首字尾相同但語意為「聯繫、接觸」。<br><b>何時才對：</b>Have you kept in <b>contact</b> with your high school friends?"],
       ["contest", "n. 比賽；競賽", "語意為「競賽」，與網路有害資訊無關。<br><b>何時才對：</b>She won first prize in the national speech <b>contest</b>."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
   card(215, "洞洞卷 15", ["考點：字首字尾提示拼字（人物名詞複數）", "詞性需求：複數可數名詞"], "A (Critics)",
-    stem(215) +
+    stem(215) + spellBox(215, "C____cs（批評家）", "Critics") +
     clue("題目給出字首 <b>C____cs</b> 與中文提示「<b>批評家</b>」，且與前句的 <i>Supporters</i>（支持者）形成對比，後接複數動詞 <b>argue</b>，位於句首字首大寫，應填 <b>Critics</b>。") +
     ops([
       ["Critics", "n. 批評家；反對者（複數）", "<b>本題正解：</b>字首 C、字尾 cs，與前句 Supporters 相呼應，後接複數動詞 argue。"],
       ["Criticisms", "n. 批評；指責（言論，非人）", "指「批評的言論」而非「批評的人」，不會主動 argue。<br><b>何時才對：</b>The new policy has faced strong <b>criticism</b> from the public."],
       ["Critical", "adj. 批判的；關鍵的（形容詞）", "形容詞不可單獨作主詞。<br><b>何時才對：</b>Critical thinking is an important skill in the digital age."],
       ["Criticize", "vt. 批評；指責（動詞）", "動詞原形不可直接作句首主詞。<br><b>何時才對：</b>It is easy to <b>criticize</b> others, but hard to offer solutions."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
   card(216, "洞洞卷 16", ["考點：文意選填（複合名詞 support communities）", "詞性需求：複數可數名詞"], "D (communities)",
     stem(216) +
@@ -1057,14 +1196,14 @@ const U1_CARDS = [
     u1BankOps("D", "<b>support communities</b> 指「支持社群／互助團體」，批評者認為一刀切的禁令會讓弱勢青少年失去求助社群的管道。")
   ),
   card(217, "洞洞卷 17", ["考點：字首字尾提示拼字（名詞字尾 -ment）", "詞性需求：不可數名詞"], "A (involvement)",
-    stem(217) +
+    stem(217) + spellBox(217, "i_________t（參與）", "involvement") +
     clue("題目給出字首 <b>i_________t</b>，前有形容詞 <b>parental</b>（父母的）。表示解決方案應包含「父母的參與／介入」，由動詞 involve 加上名詞字尾 <b>-ment</b> 構成 <b>involvement</b>。") +
     ops([
       ["involvement", "n. 參與；投入；介入", "<b>本題正解：</b><b>parental involvement</b> 指「家長的參與及陪伴」，為教育與兒少議題常考搭配詞。"],
       ["improvement", "n. 改善；進步", "雖為 i 開頭、t 結尾，但「父母的改善」語意不通。<br><b>何時才對：</b>There has been a significant <b>improvement</b> in his grades."],
       ["investment", "n. 投資", "語意為金錢或時間的「投資」，不符兒童網路安全督導的語境。<br><b>何時才對：</b>Buying solar panels is a good long-term <b>investment</b>."],
       ["instrument", "n. 樂器；儀器；工具", "語意為「儀器、樂器」，不與 parental 搭配。<br><b>何時才對：</b>Learning to play a musical <b>instrument</b> takes patience."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
   card(218, "洞洞卷 18", ["考點：文意選填（複合名詞 digital literacy）", "詞性需求：名詞"], "A (literacy)",
     stem(218) +
@@ -1182,14 +1321,14 @@ const U2A_CARDS = [
     ], "A")
   ),
   card(220, "洞洞卷 20", ["考點：字首字尾提示拼字（生物分類名詞）", "詞性需求：單數可數名詞"], "A (mammal)",
-    stem(220) +
+    stem(220) + spellBox(220, "m____l's（哺乳動物）", "mammal") +
     clue("題目給出字首 <b>m____l</b>（後接所有格 's）與中文提示「<b>哺乳動物</b>」，前有形容詞 <b>the small</b>，指岩蹄兔這隻小型「哺乳動物」，故填 <b>mammal</b>。") +
     ops([
       ["mammal", "n. 哺乳動物", "<b>本題正解：</b>字首 m、字尾 l，<b>the small mammal's dramatic cries</b> 指「這種小型哺乳動物戲劇性的叫聲」。"],
       ["mineral", "n. 礦物；礦物質", "雖為 m 開頭、l 結尾，但語意為「礦物」，不會發出尖叫聲。<br><b>何時才對：</b>Spring water contains many natural <b>minerals</b>."],
       ["memorial", "n. 紀念碑；紀念物", "語意為「紀念碑」，與動物無關。<br><b>何時才對：</b>They built a <b>memorial</b> to honor the fallen soldiers."],
       ["material", "n. 材料；素材", "語意為「材料」，不符「哺乳動物」提示。<br><b>何時才對：</b>Cotton is a breathable <b>material</b> for summer clothes."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
   card(221, "洞洞卷 21", ["考點：感官／狀態動詞受詞補語（leave + O + OC）", "詞性需求：現在分詞（主動）"], "B (wondering)",
     stem(221) +
@@ -1201,14 +1340,14 @@ const U2A_CARDS = [
     ], "B")
   ),
   card(222, "洞洞卷 22", ["考點：字首字尾提示拼字（情緒分詞形容詞）", "詞性需求：形容詞（修飾事物）"], "A (astonishing)",
-    stem(222) +
+    stem(222) + spellBox(222, "a________hing（驚人的）", "astonishing") +
     clue("題目給出字首 <b>a_________hing</b> 與中文提示「<b>驚人的</b>」，修飾後方名詞 <b>sounds</b>（聲音，指物）。表示事物「令人驚訝的、驚人的」，應填現在分詞形容詞 <b>astonishing</b>。") +
     ops([
       ["astonishing", "adj. 驚人的；令人驚訝的", "<b>本題正解：</b>字首 a、字尾 hing，修飾事物 sounds，<b>such astonishing sounds</b> 表「如此驚人的聲音」。"],
       ["astonished", "adj. 感到驚訝的（修飾人）", "字尾為 -ed，用來修飾「人感到驚訝」，不可修飾 sounds。<br><b>何時才對：</b>The audience looked <b>astonished</b> when the magician disappeared."],
       ["approaching", "adj. 接近中的；即將來臨的", "雖為 a 開頭、hing 結尾，但語意為「接近中的」，不符「驚人的」。<br><b>何時才對：</b>Drivers slowed down because of the <b>approaching</b> storm."],
       ["accomplishing", "V-ing. 完成；達成", "語意為「完成」，不符句意。<br><b>何時才對：</b>She felt proud after <b>accomplishing</b> her fitness goal."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
   card(223, "洞洞卷 23", ["考點：文意選填（外貌形容詞）", "詞性需求：形容詞"], "B (furry)",
     stem(223) +
@@ -1216,34 +1355,34 @@ const U2A_CARDS = [
     u2aBankOps("B", "<b>The furry celebrity</b> 意為「這位毛茸茸的網路名人」，生動代稱爆紅的岩蹄兔。")
   ),
   card(224, "洞洞卷 24", ["考點：字首字尾提示拼字（人物名詞）", "詞性需求：單數可數名詞"], "A (celebrity)",
-    stem(224) +
+    stem(224) + spellBox(224, "c_______y（明星／名人）", "celebrity") +
     clue("題目給出字首 <b>c_______y</b> 與中文提示「<b>名人／明星</b>」，前有 <b>The furry</b>，後接單數動詞 <b>is</b>，呼應第一段 <i>became an internet star</i>，故填單數名詞 <b>celebrity</b>。") +
     ops([
       ["celebrity", "n. 名人；明星（單數）", "<b>本題正解：</b>字首 c、字尾 y，後接單數動詞 is，指這位爆紅的「毛茸茸名人」。"],
       ["celebrities", "n. 名人（複數）", "後方主要動詞為單數 <b>is</b>（<i>is a fascinating creature</i>），主詞必須是單數。<br><b>何時才對：</b>Many <b>celebrities</b> attended the charity gala last night."],
       ["celebration", "n. 慶祝；慶典", "字尾為 -n 而非 -y，且語意為「慶典」。<br><b>何時才對：</b>The family held a big <b>celebration</b> for Grandpa's 80th birthday."],
       ["ceremony", "n. 典禮；儀式", "語意為「典禮」，不能指代動物。<br><b>何時才對：</b>The graduation <b>ceremony</b> will take place in the main hall."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
   card(225, "洞洞卷 25", ["考點：字首字尾提示拼字（否定字首 un- + -able）", "詞性需求：形容詞"], "A (unforgettable)",
-    stem(225) +
+    stem(225) + spellBox(225, "u___________e（令人難忘的）", "unforgettable") +
     clue("題目給出字首 <b>u___________e</b> 與中文提示「<b>令人難忘的</b>」，置於指示形容詞 <b>those</b> 與名詞 <b>screams</b> 之間，由 forget 加上否定字首 <b>un-</b> 與形容詞字尾 <b>-table</b>（雙寫 t）構成 <b>unforgettable</b>。") +
     ops([
       ["unforgettable", "adj. 令人難忘的；難以忘懷的", "<b>本題正解：</b>注意拼字須雙寫 t（un- + forget + -table），修飾 screams。"],
       ["uncomfortable", "adj. 不舒服的；令人不安的", "雖為 u 開頭、e 結尾，但中文提示明確指定為「令人難忘的」。<br><b>何時才對：</b>Sitting in that wooden chair for hours was very <b>uncomfortable</b>."],
       ["unbelievable", "adj. 難以置信的", "語意為「難以置信的」，不符「令人難忘的」提示。<br><b>何時才對：</b>He told an <b>unbelievable</b> story about his trip to the jungle."],
       ["unpredictable", "adj. 無法預測的", "語意為「難以預料的」。<br><b>何時才對：</b>Mountain weather in spring is notoriously <b>unpredictable</b>."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
   card(226, "洞洞卷 26", ["考點：字首字尾提示拼字（分詞形容詞）", "詞性需求：形容詞（修飾事物／生物）"], "A (fascinating)",
-    stem(226) +
+    stem(226) + spellBox(226, "f________ting（吸引人的）", "fascinating") +
     clue("題目給出字首 <b>f________ting</b> 與中文提示「<b>吸引人的／迷人的</b>」，置於冠詞 <b>a</b> 與名詞 <b>creature</b>（生物）之間，應填現在分詞形容詞 <b>fascinating</b>。") +
     ops([
       ["fascinating", "adj. 迷人的；極具吸引力的", "<b>本題正解：</b>字首 f、字尾 ting，<b>a fascinating creature</b> 表「一種迷人的生物」。"],
       ["fascinated", "adj. 著迷的；被吸引的（修飾人）", "字尾為 -ed，主詞通常是人（<i>be fascinated by</i>），不可修飾 creature。<br><b>何時才對：</b>The children were <b>fascinated</b> by the dinosaur fossils."],
       ["frustrating", "adj. 令人沮喪的；令人挫折的", "字首字尾相近，但語意為負面的「令人挫折的」。<br><b>何時才對：</b>It is <b>frustrating</b> to be stuck in traffic when you are late."],
       ["fluctuating", "adj. 波動的；起伏不定的", "語意為價格或溫度「波動的」，不修飾動物。<br><b>何時才對：</b>Farmers are worried about <b>fluctuating</b> crop prices."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
   card(227, "洞洞卷 27", ["考點：文意選填（慣用片語 At first glance）", "詞性需求：名詞"], "J (glance)",
     stem(227) +
@@ -1256,14 +1395,14 @@ const U2A_CARDS = [
     u2aBankOps("C", "<b>an oversized guinea pig</b> 指「一隻超大號的天竺鼠」，同時符合冠詞 <b>an</b> 的母音開頭限制與外觀描述。")
   ),
   card(229, "洞洞卷 29", ["考點：字首字尾提示拼字（程度副詞修飾形容詞）", "詞性需求：副詞"], "A (slightly)",
-    stem(229) +
+    stem(229) + spellBox(229, "s_____tly（稍微地）", "slightly") +
     clue("題目給出字首 <b>s_____tly</b> 與中文提示「<b>稍微地</b>」，置於連綴動詞 <b>stay</b> 與形容詞補語 <b>moist</b>（濕潤的）之間，需用程度副詞修飾形容詞 moist，故填 <b>slightly</b>。") +
     ops([
       ["slightly", "adv. 稍微地；略微地", "<b>本題正解：</b>字首 s、字尾 tly，<b>stay slightly moist</b> 表「保持略微濕潤（以增加摩擦力與吸力）」。"],
       ["shortly", "adv. 不久；很快地", "雖為 s 開頭、tly 結尾，但語意為時間上的「不久之後（shortly after）」。<br><b>何時才對：</b>The plane will take off <b>shortly</b>; please fasten your seatbelt."],
       ["strictly", "adv. 嚴格地", "語意為「嚴格地」，不修飾 moist。<br><b>何時才對：</b>Photography is <b>strictly</b> forbidden inside the art gallery."],
       ["silently", "adv. 安靜地；無聲地", "語意為「無聲地」，與腳掌濕潤度無關。<br><b>何時才對：</b>The cat crept <b>silently</b> toward the bird."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
   card(230, "洞洞卷 30", ["考點：文意選填（單數可數名詞）", "詞性需求：單數可數名詞"], "D (hollow)",
     stem(230) +
@@ -1281,14 +1420,14 @@ const U2A_CARDS = [
     u2aBankOps("E", "<b>scale</b> 作動詞意為「攀登、爬上（陡峭岩壁或高山）」，<b>scale steep cliffs</b> 即「攀登陡峭懸崖」。")
   ),
   card(233, "洞洞卷 33", ["考點：字首字尾提示拼字（生態名詞複數）", "詞性需求：複數可數名詞"], "A (predators)",
-    stem(233) +
+    stem(233) + spellBox(233, "p______rs（掠食者）", "predators") +
     clue("題目給出字首 <b>p______rs</b> 與中文提示「<b>掠食者</b>」，前有動詞 <b>escape</b>（逃脫），指攀上懸崖以逃避「掠食者／天敵」的追捕，故填複數名詞 <b>predators</b>。") +
     ops([
       ["predators", "n. 掠食者；天敵（複數）", "<b>本題正解：</b>字首 p、字尾 rs，<b>escape predators</b> 指「逃脫掠食者的追捕」。"],
       ["protectors", "n. 保護人；守衛者（複數）", "語意為「保護者」，岩蹄兔不需要逃離保護者。<br><b>何時才對：</b>Parent birds are fierce <b>protectors</b> of their young."],
       ["producers", "n. 生產者；製作人（複數）", "生態學指綠色植物等「生產者」，不會追捕岩蹄兔。<br><b>何時才對：</b>Green plants are primary <b>producers</b> in the food chain."],
       ["predecessors", "n. 前任；前輩；祖先（複數）", "語意為「前任者」，不符「掠食者」提示。<br><b>何時才對：</b>The new CEO promised to continue the policies of her <b>predecessor</b>."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
   card(234, "洞洞卷 34", ["考點：文意選填（助動詞後動詞片語）", "詞性需求：原形動詞片語"], "K (keep up)",
     stem(234) +
@@ -1314,14 +1453,14 @@ const U2A_CARDS = [
 
 const U2B_CARDS = [
   card(238, "洞洞卷 38", ["考點：字首字尾提示拼字（動名詞作定語）", "詞性需求：動名詞／形容詞"], "A (breeding)",
-    stem(238) +
+    stem(238) + spellBox(238, "b_____ding（繁殖）", "breeding") +
     clue("題目給出字首 <b>b_____ding</b> 與中文提示「<b>繁殖</b>」，後接名詞 <b>season</b> 與說明「雄性發出叫聲吸引雌性（attract females）」，構成固定搭配 <b>the breeding season</b>（繁殖季），故填 <b>breeding</b>。") +
     ops([
       ["breeding", "n./adj. 繁殖；交配（breeding season 繁殖季）", "<b>本題正解：</b>字首 b、字尾 ding，<b>the breeding season</b> 為生物學常考搭配詞。"],
       ["bleeding", "adj./n. 流血的；出血", "雖為 b 開頭、ding 結尾，但語意為「流血」，與求偶無關。<br><b>何時才對：</b>Press a clean cloth against the wound to stop the <b>bleeding</b>."],
       ["boarding", "n. 登機；寄宿", "搭配 boarding pass（登機證）或 boarding school（寄宿學校）。<br><b>何時才對：</b>Passengers must show their <b>boarding</b> passes at the gate."],
       ["building", "n. 建築物；建造", "語意為「建築」，不與求偶季節搭配。<br><b>何時才對：</b>The old office <b>building</b> will be torn down next month."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
   card(239, "洞洞卷 39", ["考點：文意選填（形容詞修飾名詞）", "詞性需求：形容詞"], "D (complex)",
     stem(239) +
@@ -1329,34 +1468,34 @@ const U2B_CARDS = [
     u2bBankOps("D", "<b>long, complex calls</b> 指「冗長而複雜的叫聲」，呼應後文包含多種節奏與規律的描述。")
   ),
   card(240, "洞洞卷 40", ["考點：字首字尾提示拼字（複數名詞）", "詞性需求：複數可數名詞"], "A (rivals)",
-    stem(240) +
+    stem(240) + spellBox(240, "r___ls（競爭對手）", "rivals") +
     clue("題目給出字首 <b>r___ls</b> 與中文提示「<b>競爭對手</b>」，前有動詞片語 <b>warn away</b>（警告驅離）。雄性在繁殖季除了吸引雌性，還要嚇退同性「情敵／競爭對手」，故填複數名詞 <b>rivals</b>。") +
     ops([
       ["rivals", "n. 競爭對手；情敵（複數）", "<b>本題正解：</b>字首 r、字尾 ls，<b>warn away rivals</b> 表「警告並驅離競爭對手」。"],
       ["rebels", "n. 叛軍；反叛者（複數）", "雖為 r 開頭、ls 結尾，但語意為「叛亂者」，不符求偶競爭語境。<br><b>何時才對：</b>The <b>rebels</b> took control of the radio station."],
       ["rituals", "n. 儀式；慣例（複數）", "語意為「儀式」，不會是被警告驅離的對象。<br><b>何時才對：</b>Many ancient tribes performed dances as religious <b>rituals</b>."],
       ["royals", "n. 王室成員（複數）", "語意為「皇室貴族」，與動物求偶無關。<br><b>何時才對：</b>Thousands of citizens gathered to wave at the visiting <b>royals</b>."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
   card(241, "洞洞卷 41", ["考點：字首字尾提示拼字（音樂特徵複數名詞）", "詞性需求：複數可數名詞"], "A (rhythms)",
-    stem(241) +
+    stem(241) + spellBox(241, "r____ms（節奏）", "rhythms") +
     clue("題目給出字首 <b>r____ms</b>，後接 <b>and patterns, almost like songs</b>（以及模式，幾乎就像歌曲一樣）。歌曲中與規律模式並列的核心元素為「節奏、韻律」，注意拼字為 <b>rhythms</b>。") +
     ops([
       ["rhythms", "n. 節奏；韻律（複數）", "<b>本題正解：</b>字首 r、字尾 ms，注意中間無母音字母（r-h-y-t-h-m-s），呼應後文的 songs。"],
       ["rhymes", "n. 押韻；韻腳（複數）", "字尾為 -mes 而非 -ms，且動物叫聲只有「節奏（rhythms）」而無人類語言的「押韻字詞（rhymes）」。<br><b>何時才對：</b>Nursery <b>rhymes</b> help young children learn language sounds."],
       ["realms", "n. 領域；王國（複數）", "語意為「王國、領域」，與聲音無關。<br><b>何時才對：</b>This discovery opens up new <b>realms</b> of scientific research."],
       ["reforms", "n. 改革（複數）", "語意為制度「改革」，不符句意。<br><b>何時才對：</b>The government introduced major tax <b>reforms</b> this year."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
   card(242, "洞洞卷 42", ["考點：字首字尾提示拼字（形容詞）", "詞性需求：形容詞"], "A (potential)",
-    stem(242) +
+    stem(242) + spellBox(242, "p_______l（潛在的）", "potential") +
     clue("題目給出字首 <b>p_______l</b> 與中文提示「<b>潛在的</b>」，置於介系詞 <b>to</b> 與名詞 <b>mates</b>（伴侶）之間，指對「潛在的伴侶（potential mates）」更具吸引力，故填 <b>potential</b>。") +
     ops([
       ["potential", "adj. 潛在的；可能的", "<b>本題正解：</b>字首 p、字尾 l，<b>potential mates</b>（潛在伴侶／可能的交配對象）為生物科普文章高頻搭配。"],
       ["powerful", "adj. 強大的；有力的", "語意為「強大的」，不符「潛在的」中文提示。<br><b>何時才對：</b>The telescope has a <b>powerful</b> lens for observing distant stars."],
       ["practical", "adj. 實用的；實際的", "語意為「實用的」，不修飾伴侶。<br><b>何時才對：</b>She gave me some <b>practical</b> advice on saving money."],
       ["personal", "adj. 個人的；私人的", "語意為「私人的」，不符提示。<br><b>何時才對：</b>Never share your <b>personal</b> password with strangers."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
   card(243, "洞洞卷 43", ["考點：文意選填（動詞片語 depend on）", "詞性需求：不及物動詞（第三人稱單數）"], "E (depends)",
     stem(243) +
@@ -1379,14 +1518,14 @@ const U2B_CARDS = [
     u2bBankOps("A", "<b>stand guard</b> 為固定搭配，意為「站崗、警戒、放哨」。")
   ),
   card(246, "洞洞卷 46", ["考點：時間連接詞同義轉換（The moment = As soon as）", "詞性需求：副詞"], "A (soon)",
-    stem(246) +
+    stem(246) + spellBox(246, "(= As _____ as，請自填一字)", "soon") +
     clue("題目要求將句首名詞片語連接詞 <b>The moment</b>（一…就…）改寫為等義的三字片語連接詞 <b>As _____ as</b>。表達「一…就…」的標準句型為 <b>As soon as + S + V</b>，故自填 <b>soon</b>。") +
     ops([
       ["soon", "adv. 很快；不久（as soon as 一…就…）", "<b>本題正解：</b><b>The moment + S + V</b> = <b>The instant + S + V</b> = <b>As soon as + S + V</b>，皆表「一…就…」。"],
       ["long", "adv. 長久（as long as 只要）", "<i>as long as</i> 表條件「只要…」，非表時間「一…就…」。<br><b>何時才對：</b>You can borrow my bike <b>as long as</b> you return it by Friday."],
       ["well", "adv. 好地（as well as 以及）", "<i>as well as</i> 為對等連接詞片語「以及、還有」，不引導時間副詞子句。<br><b>何時才對：</b>She speaks fluent French <b>as well as</b> English."],
       ["far", "adv. 遠（as far as 就…而言）", "<i>as far as</i> 表範圍或距離，不能替換 The moment。<br><b>何時才對：</b><b>As far as</b> safety is concerned, this car is top-rated."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
   card(247, "洞洞卷 47", ["考點：文意選填（單數可數名詞作主詞）", "詞性需求：單數可數名詞"], "B (lookout)",
     stem(247) +
@@ -1399,14 +1538,14 @@ const U2B_CARDS = [
     u2bBankOps("F", "<b>dashes into narrow cracks</b> 生動描繪岩蹄兔群聽到警報後「迅速衝進狹窄岩縫」避難的動作。")
   ),
   card(249, "洞洞卷 49", ["考點：字首字尾提示拼字（地形複數名詞）", "詞性需求：複數可數名詞"], "A (cracks)",
-    stem(249) +
+    stem(249) + spellBox(249, "c___ks（裂縫）", "cracks") +
     clue("題目給出字首 <b>c___ks</b>，前有形容詞 <b>narrow</b>（狹窄的），後接地點修飾語 <b>between the rocks, where larger hunters cannot easily follow</b>（岩石之間、大型掠食者無法輕易鑽入的地方），即岩石間的「裂縫、縫隙」，故填 <b>cracks</b>。") +
     ops([
       ["cracks", "n. 裂縫；縫隙（複數）", "<b>本題正解：</b>字首 c、字尾 ks，<b>narrow cracks between the rocks</b> 指「岩石間的狹窄裂縫」。"],
       ["creeks", "n. 小溪；溪流（複數）", "雖為 c 開頭、ks 結尾，但語意為「小溪」，岩蹄兔是躲進岩縫而非跳進溪流。<br><b>何時才對：</b>We waded across the shallow <b>creek</b> in the forest."],
       ["clocks", "n. 時鐘（複數）", "語意為「時鐘」，與自然岩石地形無關。<br><b>何時才對：</b>All the <b>clocks</b> in the house were five minutes fast."],
       ["cheeks", "n. 臉頰（複數）", "語意為「臉頰」，不符文意。<br><b>何時才對：</b>Her <b>cheeks</b> turned red with embarrassment."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
   card(250, "洞洞卷 50", ["考點：文意選填（固定搭配 chances of survival）", "詞性需求：複數可數名詞"], "G (chances)",
     stem(250) +
@@ -1439,14 +1578,14 @@ const U2B_CARDS = [
     u2bBankOps("C", "<b>this tiny cliff climber</b> 指「這隻微小的懸崖攀爬者」，生動總結岩蹄兔的習性。")
   ),
   card(254, "洞洞卷 54", ["考點：字首字尾提示拼字（考卷漏標題號題：野生動物）", "詞性需求：不可數名詞（作定語）"], "A (wildlife)",
-    stem(254) +
+    stem(254) + spellBox(254, "w______e（野生動物）", "wildlife") +
     clue("【對應原卷第 53 題後方漏標題號題】題目給出字首 <b>w______e</b> 與中文提示「<b>野生動物</b>」，修飾後方名詞 <b>stars</b>（明星），指網路上最出人意料的「野生動物明星（wildlife stars）」，故填複合名詞 <b>wildlife</b>。") +
     ops([
       ["wildlife", "n. 野生動物；野生生物（不可數）", "<b>本題正解：</b>字首 w、字尾 e，<b>wildlife stars</b> 指「野生動物明星」。"],
       ["wildfire", "n. 野火；森林大火", "雖為 wild- 開頭、e 結尾，但語意為「森林野火」。<br><b>何時才對：</b>The dry weather caused the <b>wildfire</b> to spread rapidly."],
       ["worldwide", "adj./adv. 全世界的", "語意為「全球的」，不符「野生動物」中文提示。<br><b>何時才對：</b>The singer has gained <b>worldwide</b> fame."],
       ["worthwhile", "adj. 值得花時間／精力的", "語意為「值得的」，不符提示。<br><b>何時才對：</b>Volunteering at the animal shelter is a very <b>worthwhile</b> experience."]
-    ], "A")
+    ], "A"), "spell-q"
   )
 ];
 
@@ -1550,34 +1689,36 @@ function u3bBankOps(ansLetter, okReason) {
 
 const U3A_CARDS = [
   card(255, "洞洞卷 55", ["考點：字首字尾提示拼字（旅遊名詞）", "詞性需求：單數可數名詞"], "A (destination)",
-    stem(255) +
+    stem(255) + spellBox(255, "d_________n（目的地）", "destination") +
     clue("【原卷標號 54】題目給出字首 <b>d_________n</b> 與中文提示「<b>目的地</b>」，前有最高級形容詞 <b>Czechia's best-known</b>（捷克最知名的…），指布拉格是捷克最知名的「旅遊目的地」，故填 <b>destination</b>。") +
     ops([
       ["destination", "n. 目的地；旅遊勝地", "<b>本題正解：</b>字首 d、字尾 n，<b>best-known destination</b> 指「最知名的旅遊目的地」。"],
       ["description", "n. 描述；描寫", "雖為 d 開頭、n 結尾，但語意為「描述」，不符「目的地」提示。<br><b>何時才對：</b>The witness gave a detailed <b>description</b> of the suspect."],
       ["decoration", "n. 裝飾；裝潢", "語意為「裝飾品」，不能指城市布拉格。<br><b>何時才對：</b>They put up colorful <b>decorations</b> for the Christmas party."],
       ["foundation", "n. 基礎；基金會", "語意為「地基、基金會」，不符文意。<br><b>何時才對：</b>Respect and trust form the <b>foundation</b> of a good marriage."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
   card(256, "洞洞卷 56", ["考點：字首字尾提示拼字（景點複數名詞）", "詞性需求：複數可數名詞"], "A (attractions)",
-    stem(256) +
+    stem(256) + spellBox(256, "a________ns（吸引人的事物）", "attractions") +
     clue("【原卷標號 55】題目給出字首 <b>a________ns</b> 與中文提示「<b>吸引人的事物／景點</b>」，前有 <b>many of the country's greatest</b>（許多該國最棒的…），故填複數名詞 <b>attractions</b>。") +
     ops([
       ["attractions", "n. 景點；吸引人的事物（複數）", "<b>本題正解：</b>字首 a、字尾 ns，<b>tourist attractions / greatest attractions</b> 指「最棒的觀光景點」。"],
       ["attentions", "n. 注意力（通常不可數）", "attention 表「注意力」時為不可數名詞，且語意不符「景點」。<br><b>何時才對：</b>The speaker's humorous story caught everyone's <b>attention</b>."],
       ["applications", "n. 申請；應用程式（複數）", "語意為「申請書或軟體應用」，與旅遊無關。<br><b>何時才對：</b>The university received thousands of <b>applications</b> this fall."],
       ["associations", "n. 協會；聯想（複數）", "語意為「協會」，不符提示。<br><b>何時才對：</b>She is a member of the national medical <b>association</b>."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
-  card(257, "洞洞卷 57", ["考點：表示「位於…」之及物與不及物動詞辨析（複選全對題）", "詞性需求：不及物動詞（主動表示位於）"], "A (stand / lie / sit)",
+  card(257, "洞洞卷 57", ["考點：表示「位於…」之及物與不及物動詞辨析（複選全對題）", "詞性需求：不及物動詞（主動表示位於）"], "BCE (stand / lie / sit)",
     stem(257) +
-    clue("【原卷標號 56】主詞為 <b>many of the country's greatest attractions</b>，空格後直接接介系詞片語 <b>beyond the capital</b>（無受詞，且非被動 be + V-pp）。<br>⚠️ 關鍵文法：<b>locate</b> 與 <b>situate</b> 都是「及物動詞（使…坐落於）」，表示「位於…」時**必須用被動語態**（<i>are located / are situated</i>）；而 <b>stand / lie / sit</b> 為「不及物動詞」，可直接以主動形式加地方介系詞片語表示「位於、坐落於…」，故正確答案為 <b>stand、lie、sit</b> 三者。") +
+    '<div class="pm-student-hint">📌 <b>複選題作答提示（原卷標號 56）：</b>請從下方 5 個選項 <code>(locate // stand // lie // situate // sit)</code> 中點選<b>所有正確選項</b>（可複選，全對才給分）！</div>' +
+    clue("【原卷標號 56：選出所有正確選項，全對才給分】主詞為 <b>many of the country's greatest attractions</b>，空格後直接接介系詞片語 <b>beyond the capital</b>（無受詞，且非被動 be + V-pp）。<br>⚠️ 關鍵文法：<b>(A) locate</b> 與 <b>(D) situate</b> 都是「及物動詞（使…坐落於）」，表示「位於…」時**必須用被動語態**（<i>are located / are situated</i>）；而 <b>(B) stand</b>、<b>(C) lie</b>、<b>(E) sit</b> 為「不及物動詞」，可直接以主動形式加地方介系詞片語表示「位於、坐落於…」，故正確答案為 <b>(B) stand、(C) lie、(E) sit</b> 三者。") +
     ops([
-      ["stand / lie / sit（三者皆對）", "vi. 位於；坐落於（不及物動詞，主動用法）", "<b>本題正解：</b><b>stand</b>（矗立於）、<b>lie</b>（位於、展布於）、<b>sit</b>（坐落於）皆為不及物動詞，可直接接介系詞片語 <i>beyond the capital</i>。"],
-      ["locate（不可選）", "vt. 使…坐落於；找出…的位置（及物動詞）", "<b>locate</b> 是及物動詞，主詞若為地點，必須寫成被動 <b>are located</b> 才對，不可直接寫主動 locate。<br><b>何時才對：</b>Many of the country's greatest attractions <b>are located</b> beyond the capital."],
-      ["situate（不可選）", "vt. 使…位於（及物動詞）", "<b>situate</b> 也是及物動詞，必須寫成被動 <b>are situated</b> 才對，不可直接用主動 situate。<br><b>何時才對：</b>The luxury resort <b>is situated</b> on a quiet hillside overlooking the sea."],
-      ["stand / lie / locate（誤含 locate）", "混淆 locate 的及物性", "誤將及物動詞 locate 視為不及物動詞。<br><b>何時才對：</b>Rescue teams used GPS to <b>locate</b> the missing hikers."]
-    ], "A")
+      ["locate", "vt. 使…坐落於；找出…的位置（及物動詞）", "<b>locate</b> 是及物動詞，主詞若為地點，必須寫成被動 <b>are located</b> 才對，不可直接寫主動 locate。<br><b>何時才對：</b>Many of the country's greatest attractions <b>are located</b> beyond the capital."],
+      ["stand", "vi. 矗立於；位於（不及物動詞，主動用法）", "<b>本題正解之一：</b><b>stand</b> 為不及物動詞，可直接接介系詞片語 <i>beyond the capital</i>。"],
+      ["lie", "vi. 位於；展布於（不及物動詞，主動用法）", "<b>本題正解之一：</b><b>lie</b> 為不及物動詞，可直接接地方介系詞片語表「位於…」。"],
+      ["situate", "vt. 使…位於（及物動詞）", "<b>situate</b> 也是及物動詞，必須寫成被動 <b>are situated</b> 才對，不可直接用主動 situate。<br><b>何時才對：</b>The luxury resort <b>is situated</b> on a quiet hillside overlooking the sea."],
+      ["sit", "vi. 坐落於；位於（不及物動詞，主動用法）", "<b>本題正解之一：</b><b>sit</b> 為不及物動詞，常用於形容建築或景點「坐落於…」某處。"]
+    ], "BCE", "ABCDE", false, true)
   ),
   card(258, "洞洞卷 58", ["考點：文意選填（城市地理名詞）", "詞性需求：單數可數名詞"], "C (capital)",
     stem(258) +
@@ -1610,34 +1751,34 @@ const U3A_CARDS = [
     u3aBankOps("A", "<b>a five-petaled rose</b> 指「一朵五瓣玫瑰」，是羅森伯格家族著名的家徽圖騰。")
   ),
   card(264, "洞洞卷 64", ["考點：字首字尾提示拼字（複合分詞形容詞 best-preserved）", "詞性需求：過去分詞"], "A (preserved)",
-    stem(264) +
+    stem(264) + spellBox(264, "p_______ed（保存）", "preserved") +
     clue("【原卷標號 63】題目給出字首 <b>p_______ed</b> 與中文提示「<b>保存</b>」，前有最高級副詞 <b>one of Europe's best-</b>，後接名詞 <b>baroque theaters</b>（巴洛克式劇院）。劇院是「被保存下來的」，故填過去分詞 <b>preserved</b>。") +
     ops([
       ["preserved", "V-pp./adj. 被保存的（best-preserved 保存最完好的）", "<b>本題正解：</b>字首 p、字尾 ed，<b>best-preserved</b> 為歷史古蹟介紹的高頻複合形容詞，意為「保存最完好的」。"],
       ["presented", "V-pp. 被呈現的；被頒發的", "雖為 p 開頭、ed 結尾，但語意為「呈現、頒贈」，不符「保存」提示。<br><b>何時才對：</b>The winners were <b>presented</b> with gold medals."],
       ["protected", "V-pp. 被保護的", "語意為「受保護的」，但中文提示與歷史古蹟完好留存搭配為「保存（preserved）」。<br><b>何時才對：</b>Endangered animals are <b>protected</b> by national laws."],
       ["prepared", "V-pp. 準備好的", "語意為「準備好的」，不符古蹟保存語境。<br><b>何時才對：</b>Emergency supplies should be <b>prepared</b> before a typhoon."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
   card(265, "洞洞卷 65", ["考點：字首字尾提示拼字（機械集合名詞）", "詞性需求：不可數名詞"], "A (machinery)",
-    stem(265) +
+    stem(265) + spellBox(265, "m_______y（機械轉動部分）", "machinery") +
     clue("【原卷標號 64】題目給出字首 <b>m_______y</b> 與中文提示「<b>機械裝置／機械部件</b>」，前有 <b>Its wooden stage</b>，後接單數動詞 <b>still works</b>（依然能運作），應填不可數集合名詞 <b>machinery</b>。") +
     ops([
       ["machinery", "n. 機械裝置；機器設備（不可數集合名詞）", "<b>本題正解：</b>字首 m、字尾 y，且為不可數名詞，與後方單數動詞 <b>works</b> 一致，<b>stage machinery</b> 指「舞台機關設備」。"],
       ["machines", "n. 機器（複數名詞）", "字尾為 -s 而非 -y，且若用複數 machines，後方動詞應為 work 而非單數 works。<br><b>何時才對：</b>Modern washing <b>machines</b> save a lot of water."],
       ["mystery", "n. 神祕；謎團", "雖為 m 開頭、y 結尾，但語意為「謎團」，不會與 works（運轉）搭配。<br><b>何時才對：</b>How the ancient stones were moved remains a <b>mystery</b>."],
       ["memory", "n. 記憶；回憶", "語意為「記憶」，不符「機械」提示。<br><b>何時才對：</b>She has a very clear <b>memory</b> of her first day at school."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
   card(266, "洞洞卷 66", ["考點：字首字尾提示拼字（戲劇服裝複數名詞）", "詞性需求：複數可數名詞"], "A (costumes)",
-    stem(266) +
+    stem(266) + spellBox(266, "c______es（戲服）", "costumes") +
     clue("【原卷標號 65】題目給出字首 <b>c______es</b>，前有 <b>many of the original sets and _____</b>（許多原始的舞台佈景與…）。在巴洛克劇院（theater）中，與舞台佈景（sets）並列留存至今的物品即為演員穿的「戲服、服裝」，故填 <b>costumes</b>。") +
     ops([
       ["costumes", "n. 戲服；演出服裝（複數）", "<b>本題正解：</b>字首 c、字尾 es，<b>sets and costumes</b>（舞台佈景與戲服）為戲劇領域標準搭配。"],
       ["customs", "n. 習俗；海關（複數）", "字尾為 -ms 而非 -mes，且語意為「風俗習慣」或「海關」，非劇院服裝。<br><b>何時才對：</b>Travelers should respect local <b>customs</b> and traditions."],
       ["creatures", "n. 生物（複數）", "語意為「生物」，與劇院舞台設備無關。<br><b>何時才對：</b>Blue whales are the largest <b>creatures</b> on Earth."],
       ["colleagues", "n. 同事（複數）", "語意為「同事」，不可能從 250 年前存活至今。<br><b>何時才對：</b>He discussed the project with his <b>colleagues</b>."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
   card(267, "洞洞卷 67", ["考點：文意選填（慣用句型 No trip is complete without...）", "詞性需求：形容詞（主詞補語）"], "B (complete)",
     stem(267) +
@@ -1645,24 +1786,24 @@ const U3A_CARDS = [
     u3aBankOps("B", "<b>No trip to ... is complete without ...</b> 為必背旅遊寫作句型，意為「去…旅遊若少了…就不算完整」。")
   ),
   card(268, "洞洞卷 68", ["考點：字首字尾提示拼字（自然地景名詞）", "詞性需求：單數名詞"], "A (landscape)",
-    stem(268) +
+    stem(268) + spellBox(268, "l_______e（風景）", "landscape") +
     clue("【原卷標號 67】題目給出字首 <b>l_______e</b> 與中文提示「<b>風景／地景</b>」，說明兩位瑞士畫家覺得這座國家公園的「自然風景」讓他們想起家鄉瑞士，故填 <b>landscape</b>。") +
     ops([
       ["landscape", "n. 風景；地景；景色", "<b>本題正解：</b>字首 l、字尾 e，指國家公園壯麗的陸地自然景觀。"],
       ["lifestyle", "n. 生活方式", "雖為 l 開頭、e 結尾，但語意為「生活型態」，非自然風景。<br><b>何時才對：</b>Regular exercise is part of a healthy <b>lifestyle</b>."],
       ["literature", "n. 文學", "語意為「文學作品」，不符畫家看風景的語境。<br><b>何時才對：</b>She majored in English <b>literature</b> at university."],
       ["longitude", "n. 經度", "地理術語「經度」，不符提示。<br><b>何時才對：</b>Lines of <b>longitude</b> run from the North Pole to the South Pole."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
   card(269, "洞洞卷 69", ["考點：字首字尾提示拼字（地形建築名詞）", "詞性需求：單數可數名詞"], "A (arch)",
-    stem(269) +
+    stem(269) + spellBox(269, "a__h（拱門）", "arch") +
     clue("【原卷標號 68】題目給出字首 <b>a__h</b> 與中文提示「<b>拱門</b>」，前有 <b>the largest natural sandstone _____ in Europe</b>（歐洲最大的天然砂岩拱門），呼應景點名稱 Pravčická Gate（門），故填 <b>arch</b>。") +
     ops([
       ["arch", "n. 拱門；拱形結構", "<b>本題正解：</b>字首 a、字尾 h（共 4 字母），<b>natural sandstone arch</b> 指「天然砂岩拱門」。"],
       ["area", "n. 區域；面積", "字尾為 a 而非 h，且語意為「區域」。<br><b>何時才對：</b>Smoking is not allowed in this dining <b>area</b>."],
       ["ash", "n. 灰燼；骨灰", "雖為 a 開頭、h 結尾，但語意為「灰燼」。<br><b>何時才對：</b>Volcanic <b>ash</b> covered the entire village."],
       ["approach", "n. 方法；途徑；接近", "語意為「方法或途徑」，非地形「拱門」。<br><b>何時才對：</b>We need a new <b>approach</b> to solving this problem."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
   card(270, "洞洞卷 70", ["考點：文意選填（地質作用名詞）", "詞性需求：不可數名詞"], "G (erosion)",
     stem(270) +
@@ -1683,14 +1824,14 @@ const U3B_CARDS = [
     u3bBankOps("D", "<b>brings Czechia's past to life</b> 意為「使捷克的過往歷史重現生機、活靈活現地呈現在眼前」。")
   ),
   card(273, "洞洞卷 73", ["考點：字首字尾提示拼字（讚美建築形容詞）", "詞性需求：形容詞"], "A (magnificent)",
-    stem(273) +
+    stem(273) + spellBox(273, "m_________t（壯觀的）", "magnificent") +
     clue("【原卷標號 72】題目給出字首 <b>m_________t</b> 與中文提示「<b>壯觀的／宏偉的</b>」，置於定冠詞 <b>The</b> 與專有名詞 <b>St. Barbara's Church</b>（聖芭芭拉教堂）之間，故填形容詞 <b>magnificent</b>。") +
     ops([
       ["magnificent", "adj. 壯觀的；宏偉的；華麗的", "<b>本題正解：</b>字首 m、字尾 t，常用來形容宏偉的教堂、宮殿或自然景觀。"],
       ["management", "n. 管理；經營（名詞）", "雖為 m 開頭、t 結尾，但為名詞「管理」，不可修飾教堂。<br><b>何時才對：</b>Good time <b>management</b> helps reduce work stress."],
       ["measurement", "n. 測量；尺寸（名詞）", "語意為「測量」，詞性與語意皆不符。<br><b>何時才對：</b>Accurate <b>measurement</b> is crucial in scientific experiments."],
       ["modest", "adj. 謙虛的；樸素的；小規模的", "語意為「樸素的、不起眼的」，與「宏偉壯觀的」相反。<br><b>何時才對：</b>They live in a <b>modest</b> house in the suburbs."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
   card(274, "洞洞卷 74", ["考點：文意選填（不定詞目的片語 to honor）", "詞性需求：原形及物動詞"], "C (honor)",
     stem(274) +
@@ -1698,24 +1839,24 @@ const U3B_CARDS = [
     u3bBankOps("C", "<b>was built to honor the patron saint...</b> 意為「是為了紀念（向…致敬）主保聖人而建造」。")
   ),
   card(275, "洞洞卷 75", ["考點：字首字尾提示拼字（宗教人物名詞）", "詞性需求：單數可數名詞"], "A (saint)",
-    stem(275) +
+    stem(275) + spellBox(275, "s___t（聖徒）", "saint") +
     clue("【原卷標號 74】題目給出字首 <b>s___t</b> 與中文提示「<b>聖徒／聖人</b>」，前有 <b>the patron _____</b>，呼應前面的教堂名稱 <i>St. Barbara's Church</i>（St. 即 Saint 之縮寫），<b>patron saint</b> 指「主保聖人／守護聖徒」，故填 <b>saint</b>。") +
     ops([
       ["saint", "n. 聖徒；聖人（patron saint 主保聖人）", "<b>本題正解：</b>字首 s、字尾 t，聖芭芭拉（St. Barbara）即為礦工的守護聖人。"],
       ["spirit", "n. 精神；靈魂", "雖為 s 開頭、t 結尾，但 <i>patron saint</i> 為固定專有搭配，不說 patron spirit。<br><b>何時才對：</b>Team <b>spirit</b> is the key to winning the championship."],
       ["servant", "n. 僕人；公僕", "語意為「僕人」，不符「聖徒」提示。<br><b>何時才對：</b>Civil <b>servants</b> work for government departments."],
       ["scientist", "n. 科學家", "語意為「科學家」，不符宗教背景。<br><b>何時才對：</b>The <b>scientist</b> spent years researching renewable energy."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
   card(276, "洞洞卷 76", ["考點：字首字尾提示拼字（職業複數名詞）", "詞性需求：複數可數名詞"], "A (miners)",
-    stem(276) +
+    stem(276) + spellBox(276, "m____s（礦工）", "miners") +
     clue("【原卷標號 75】題目給出字首 <b>m____s</b> 與中文提示「<b>礦工</b>」，前句提到庫特納霍拉因豐富的「銀礦（silver mines）」致富，因此聖芭芭拉是「礦工們（miners）」的主保聖人，故填複數名詞 <b>miners</b>。") +
     ops([
       ["miners", "n. 礦工（複數）", "<b>本題正解：</b>由前句的 mine（礦坑）加上字尾 <b>-r</b> 與複數 <b>-s</b> 構成 <b>miners</b>（礦工）。"],
       ["minors", "n. 未成年人（複數）", "字形極易混淆！<b>minor</b>（o）指「未成年人」或「次要的」；<b>miner</b>（e）才是指「礦工」。<br><b>何時才對：</b>It is illegal to sell alcohol or tobacco to <b>minors</b>."],
       ["mines", "n. 礦坑；礦井（複數）", "指「礦坑（地點）」而非「礦工（人）」，主保聖人守護的是從事危險採礦工作的「礦工」。<br><b>何時才對：</b>Several old coal <b>mines</b> in the area have been closed."],
       ["ministers", "n. 部長；牧師（複數）", "語意為「部長或牧師」，不符「礦工」提示。<br><b>何時才對：</b>Prime <b>ministers</b> from several countries attended the summit."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
   card(277, "洞洞卷 77", ["考點：文意選填（建築高度形容詞）", "詞性需求：形容詞"], "J (soaring)",
     stem(277) +
@@ -1723,14 +1864,14 @@ const U3B_CARDS = [
     u3bBankOps("J", "<b>soaring Gothic towers</b> 指「高聳入雲的哥德式尖塔」，展現中世紀銀礦城的雄厚財力。")
   ),
   card(278, "洞洞卷 78", ["考點：字首字尾提示拼字（及物動詞）", "詞性需求：複數及物動詞"], "A (reflect)",
-    stem(278) +
+    stem(278) + spellBox(278, "r_____t（反映）", "reflect") +
     clue("【原卷標號 77】題目給出字首 <b>r_____t</b> 與中文提示「<b>反映</b>」，主詞為複數名詞 <b>its soaring Gothic towers</b>，後接受詞 <b>the town's former wealth</b>（該鎮昔日的財富），故填複數原形動詞 <b>reflect</b>。") +
     ops([
       ["reflect", "vt. 反映；映出；顯示", "<b>本題正解：</b>字首 r、字尾 t，主詞 towers 為複數，<b>reflect the town's former wealth</b> 表「反映出小鎮昔日的富裕」。"],
       ["respect", "vt. 尊敬；尊重", "雖為 r 開頭、t 結尾，但語意為「尊重」，不符「反映」提示。<br><b>何時才對：</b>We should <b>respect</b> different cultural backgrounds."],
       ["restrict", "vt. 限制；約束", "語意為「限制」，不符文意。<br><b>何時才對：</b>New laws <b>restrict</b> the use of plastic bags."],
       ["reject", "vt. 拒絕；駁回", "語意為「拒絕」，不符提示。<br><b>何時才對：</b>The committee decided to <b>reject</b> the proposal."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
   card(279, "洞洞卷 79", ["考點：文意選填（助動詞後及物動詞）", "詞性需求：原形及物動詞"], "H (tour)",
     stem(279) +
@@ -1753,14 +1894,14 @@ const U3B_CARDS = [
     ], "C")
   ),
   card(282, "洞洞卷 82", ["考點：字首字尾提示拼字（社會階層名詞）", "詞性需求：不可數名詞"], "A (status)",
-    stem(282) +
+    stem(282) + spellBox(282, "s____s（地位）", "status") +
     clue("【原卷標號 81】題目給出字首 <b>s____s</b> 與中文提示「<b>地位</b>」，與前方的 <b>wealth, power, and _____</b>（財富、權力與地位）並列為世俗追求的事物，故填單數不可數名詞 <b>status</b>。") +
     ops([
       ["status", "n. 地位；身分（social status 社會地位）", "<b>本題正解：</b>字首 s、字尾 s（本身即為 s 結尾的單數不可數名詞），與 wealth, power 並列。"],
       ["statues", "n. 雕像；塑像（複數）", "字形極易混淆！<b>statue</b> 是「雕像」，<b>status</b> 才是「地位」。<br><b>何時才對：</b>Ancient Greek <b>statues</b> were often carved from white marble."],
       ["states", "n. 狀態；州；國家（複數）", "語意為「狀態或州」，不符「社會地位」提示。<br><b>何時才對：</b>Water exists in three <b>states</b>: solid, liquid, and gas."],
       ["statistics", "n. 統計數據", "語意為「統計數字」，與財富權力無關。<br><b>何時才對：</b>Recent <b>statistics</b> show a decline in birth rates."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
   card(283, "洞洞卷 83", ["考點：文意選填（不及物動詞 fade with time）", "詞性需求：複數原形不及物動詞"], "F (fade)",
     stem(283) +
@@ -1783,14 +1924,14 @@ const U3B_CARDS = [
     u3bBankOps("A", "<b>in the face of death</b> 意為「在死亡面前、面對死亡時」。")
   ),
   card(286, "洞洞卷 86", ["考點：字首字尾提示拼字（視覺特色形容詞）", "詞性需求：形容詞"], "A (striking)",
-    stem(286) +
+    stem(286) + spellBox(286, "s_____ing（引人注目的）", "striking") +
     clue("【原卷標號 85】題目給出字首 <b>s_____ing</b> 與中文提示「<b>引人注目的</b>」，前有最高級 <b>Its most _____</b>，後接名詞 <b>feature</b>（特色），指教堂裡最「引人注目的、顯著的」特色，故填 <b>striking</b>。") +
     ops([
       ["striking", "adj. 引人注目的；顯著的；驚人的", "<b>本題正解：</b>字首 s、字尾 ing，<b>Its most striking feature</b>（它最引人注目的特色）為描寫景點亮點的高頻搭配。"],
       ["struggling", "adj. 苦苦掙扎的；奮鬥的", "雖為 s 開頭、ing 結尾，但語意為「掙扎的」，不修飾景點特色。<br><b>何時才對：</b>The government offered aid to <b>struggling</b> small businesses."],
       ["surrounding", "adj. 周圍的；附近的", "語意為「周圍的」，不與最高級 most 搭配修飾內部吊燈。<br><b>何時才對：</b>From the hill, you can see the <b>surrounding</b> countryside."],
       ["satisfying", "adj. 令人滿意的", "語意為「令人滿意的」，不符「引人注目的」提示。<br><b>何時才對：</b>Helping others is a deeply <b>satisfying</b> experience."]
-    ], "A")
+    ], "A"), "spell-q"
   ),
   card(287, "洞洞卷 87", ["考點：文意選填（室內裝飾單數名詞）", "詞性需求：單數可數名詞"], "E (chandelier)",
     stem(287) +
@@ -1916,6 +2057,7 @@ window.resetGroup = function(gid) {
     if (qEl) {
       qEl.classList.remove('graded');
       qEl.querySelectorAll('ul.op li').forEach(li => li.classList.remove('selected'));
+      qEl.querySelectorAll('input.spell-input').forEach(inp => { inp.value = ''; inp.classList.remove('ok', 'no'); });
     }
     const st = document.getElementById('st' + n);
     if (st) st.style.display = 'none';
