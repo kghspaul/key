@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>95學年度指定科目考試 英文考科詳解</title>
+<style>
+:root{--bg:#faf8f4;--fg:#222;--card:#fff;--line:#e4ded3;--acc:#9a3b2e;--ok:#1f7a4d;--no:#b3261e;--mut:#6b6558;--hl:#fff1c9}
+@media(prefers-color-scheme:dark){:root{--bg:#161512;--fg:#e8e4da;--card:#201f1b;--line:#3a372f;--acc:#e08a78;--ok:#6fcf9a;--no:#f08a82;--mut:#a39d8f;--hl:#4a3f1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+.top{max-width:900px;margin:auto;padding:28px 18px 10px}
+.top h1{margin:0 0 4px;font-size:1.6rem;color:var(--acc)}
+.top p{margin:2px 0;color:var(--mut);font-size:.92rem}
+.feature-box{background:var(--hl);border-left:4px solid var(--acc);padding:8px 12px;border-radius:0 6px 6px 0;margin:10px 0;font-size:0.9rem;color:var(--fg);}
+nav{position:sticky;top:0;z-index:9;background:var(--bg);border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px;padding:8px 12px}
+nav a,nav button{flex:none;padding:5px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--fg);text-decoration:none;font:inherit;font-size:.88rem;cursor:pointer}
+nav a:hover,nav button:hover{border-color:var(--acc);color:var(--acc)}
+nav a.review-btn{background:var(--acc);color:#fff;border-color:var(--acc);font-weight:bold;}
+nav button.pm-active { background:var(--acc); color:#fff; border-color:var(--acc); }
+main{max-width:900px;margin:auto;padding:0 16px 70px}
+h2{margin:36px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--acc);font-size:1.3rem}
+h3{margin:0 0 8px;font-size:1.05rem;color:var(--acc)}
+.pas,.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.para{margin-bottom:14px}
+.s{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--line)}
+.en{font-family:Georgia,"Times New Roman",serif;font-size:1.02rem}
+.zh{color:var(--mut);font-size:.93rem}
+.prompt-text{color:var(--fg);font-size:.96rem;line-height:1.8}
+.note{color:var(--mut);font-size:.85rem;margin:6px 0 0}
+.bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 4px;border-radius:3px;font-weight:600}
+.bl sup{color:var(--acc);margin-right:3px;font-size:.7em}
+.bank{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.92rem;margin-bottom:8px}
+details.q>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+details.q>summary::-webkit-details-marker{display:none}
+.n{background:var(--acc);color:#fff;border-radius:6px;padding:0 10px;font-weight:700;font-size:1.05rem}
+.tag{font-size:.78rem;border:1px solid var(--acc);color:var(--acc);border-radius:99px;padding:0 9px;line-height:1.6}
+.tag.pos{border-color:var(--ok);color:var(--ok)}
+.ans{margin-left:auto;font-weight:700;color:var(--ok)}
+.qb{margin-top:10px}
+.stem{margin-bottom:8px;padding:8px 10px;background:var(--bg);border-radius:6px}
+.clue{margin:8px 0;padding:8px 12px;border-left:4px solid var(--acc);background:var(--bg);border-radius:0 6px 6px 0}
+.clue h4,.qb h4{margin:0 0 2px;font-size:.92rem;color:var(--acc)}
+ul.op{list-style:none;margin:6px 0 0;padding:0}
+ul.op li{padding:7px 10px;margin:5px 0;border-radius:6px;border:1px solid var(--line);font-size:.95rem;transition:background 0.2s;cursor:pointer}
+ul.op li.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 9%,transparent)}
+ul.op li.no{border-color:color-mix(in srgb,var(--no) 45%,transparent)}
+ul.op i{font-style:normal;font-weight:700;font-size:.82rem}
+li.ok i{color:var(--ok)}li.no i{color:var(--no)}
+.exp{margin-top:4px}
+small{color:var(--mut)}
+
+/* === 練習模式與批改狀態樣式 === */
+body.practice-mode details.q:not(.graded) .ans { visibility: hidden; }
+body.practice-mode details.q:not(.graded) .clue { display: none; }
+body.practice-mode details.q:not(.graded) .tag { display: none; }
+body.practice-mode details.q:not(.graded) .stem .zh { display: none; }
+body.practice-mode .pas:not(.graded) .zh { display: none; }
+body.practice-mode .pas:not(.graded) .trans-ans { display: none; }
+body.practice-mode .pas:not(.graded) .note { display: none; }
+.trans-input {
+  display: none;
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1rem;
+}
+.trans-input:focus { outline: none; border-color: var(--acc); }
+body.practice-mode .trans-input { display: block; }
+body.practice-mode .bl:not(.revealed) {
+  color: transparent;
+  background: var(--bg);
+  border-bottom: 2px solid var(--acc);
+  padding: 0 18px;
+  user-select: none;
+  display: inline-block;
+  min-width: 64px;
+  text-align: center;
+}
+body.practice-mode .bl:not(.revealed) sup {
+  color: var(--acc);
+  font-weight: 700;
+}
+body.practice-mode .bank:not(.graded) small { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li small { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li.ok,
+body.practice-mode details.q:not(.graded) ul.op li.no { border-color: var(--line); background: transparent; }
+body.practice-mode details.q:not(.graded) ul.op li i { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li .exp { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li:hover { background: var(--hl); }
+ul.op li.selected { border-color: var(--acc) !important; background: color-mix(in srgb, var(--acc) 12%, transparent) !important; font-weight: 600; }
+
+details.q.graded ul.op li.selected.ok { border: 2px solid var(--ok) !important; background: color-mix(in srgb, var(--ok) 15%, transparent) !important; }
+details.q.graded ul.op li.selected.no { border: 2px solid var(--no) !important; background: color-mix(in srgb, var(--no) 14%, transparent) !important; }
+.user-status { font-weight: 700; font-size: .88rem; padding: 1px 8px; border-radius: 99px; margin-left: 6px; }
+.user-status.st-ok { background: color-mix(in srgb, var(--ok) 15%, transparent); color: var(--ok); border: 1px solid var(--ok); }
+.user-status.st-no { background: color-mix(in srgb, var(--no) 15%, transparent); color: var(--no); border: 1px solid var(--no); }
+.user-status.st-blank { background: var(--hl); color: var(--acc); border: 1px solid var(--acc); }
+
+.grade-box {
+  background: var(--card);
+  border: 2px dashed var(--acc);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin: 18px 0 32px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.grade-box.all-box {
+  border: 2px solid var(--acc);
+  background: color-mix(in srgb, var(--hl) 45%, var(--card));
+  padding: 20px 22px;
+  margin: 30px 0 40px;
+}
+.grade-title { font-weight: 700; color: var(--acc); font-size: 1.02rem; }
+.all-box .grade-title { font-size: 1.2rem; }
+.grade-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn-grade, .btn-reset {
+  padding: 6px 16px;
+  border-radius: 99px;
+  font: inherit;
+  font-size: .92rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid var(--acc);
+  transition: transform 0.1s, opacity 0.2s;
+}
+.btn-grade { background: var(--acc); color: #fff; }
+.all-box .btn-grade, .all-box .btn-reset { padding: 8px 22px; font-size: 1rem; }
+.btn-reset { background: var(--card); color: var(--mut); border-color: var(--line); }
+.btn-grade:hover, .btn-reset:hover { opacity: 0.9; transform: translateY(-1px); }
+.grade-res {
+  width: 100%;
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  font-size: .95rem;
+  display: none;
+}
+.grade-res.show { display: block; }
+.q-Jump {
+  display: inline-block;
+  padding: 1px 8px;
+  margin: 2px 3px;
+  border-radius: 6px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  color: var(--acc);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: .86rem;
+}
+.q-Jump:hover { background: var(--acc); color: #fff; border-color: var(--acc); }
+
+footer{max-width:900px;margin:auto;padding:20px 16px 40px;color:var(--mut);font-size:.85rem;line-height:1.6;border-top:1px solid var(--line);margin-top:40px;}
+footer a{color:var(--acc);text-decoration:none;font-weight:bold;}
+footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1><span id="exam-title">95學年度指定科目考試 英文考科詳解</span> <span id="completed-badge" style="display:none;font-size:1rem;color:var(--ok);">✅ 已完成</span></h1>
+  <p>每題含：考點標籤 → 題幹逐句中英對照 → 解題線索 → 正解與全部誤答分析</p>
+  <div class="feature-box">
+    💡 <b>複習與作答指南：</b> 點擊「🎯 切換練習模式」可自動挖空題幹答案並隱藏中譯與解析（含中譯英答案與詳解）；直接點選各題選項作答後，可點擊各題組下方的「<b>✅ 批改本題組</b>」或單選題最後的「<b>🏆 一次批改全卷</b>」查看得分並自動展開詳解（亦可點擊「<b>🔄 一次清空重練</b>」重新作答）！點擊每題右上角的「標記此題」可收錄錯題；滑鼠反白任何英文字句可「收藏單字」。請前往 <a href="review.html" target="_blank" style="color:var(--acc);font-weight:bold;">錯題與單字總複習頁面</a>。
+  </div>
+  <p>圖例：<span class="bl revealed">黃底</span> ＝ 正確答案填入處 ｜ <span class="tag" id="secret-trigger" style="user-select:none;cursor:default;">考點</span> <span class="tag pos">詞性需求</span></p>
+  <div id="secret-counter" style="display:none; margin-top:8px; font-size:0.9rem; color:var(--mut);">
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    👁️ <b>本頁瀏覽人次：</b><span id="busuanzi_value_page_pv"></span> 次
+  </div>
+</div>
+<nav id="nav">
+  <button id="pm-toggle">🎯 切換練習模式</button>
+  <button id="complete-btn">📝 標記為已完成</button>
+  <a href="review.html" class="review-btn" target="_blank">📚 前往總複習</a>
+  <a href="#sec-vocab">一、詞彙</a>
+  <a href="#sec-cloze">二、綜合測驗</a>
+  <a href="#sec-wbank">三、文意選填</a>
+  <a href="#sec-disc">四、篇章結構</a>
+  <a href="#sec-rc">五、閱讀測驗</a>
+  <a href="#gbox-all">🏆 全卷批改</a>
+  <a href="#sec-trans">英文翻譯</a>
+  <a href="#sec-essay">英文作文</a>
+</nav>
+<main id="app"></main>
+<footer>
+  限定用途教學教材。本詳解為教學輔助，題目版權屬原出版單位。<br>
+  💡 <b>問題回報與建議：</b> Line: etpaul ｜ IG: <a href="https://www.instagram.com/etpaul" target="_blank">@etpaul</a>
+</footer>
+
+<script>
+const L="ABCD";
+const fx=s=>s.replace(/\*([^*]+)\*/g,'<i>$1</i>').replace(/\[\[(\d*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl"'+(n?' data-q="'+n+'"':'')+'>'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const SENT={};
+const Q_ANS={};
+const appEl = document.getElementById('app');
+function appendApp(html){ appEl.insertAdjacentHTML('beforeend', html); }
+
+function passage(title,paras,note,gid,extraCls){
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[(\d+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  return '<section class="pas'+(extraCls?' '+extraCls:'')+'"'+(gid?' id="pas-'+gid+'"':'')+'><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
+}
+function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
+const clue=t=>'<div class="clue"><h4>解題線索</h4>'+t+'</div>';
+function ops(list,ans,lab){
+  lab=lab||'ABCDEF';
+  return '<ul class="op">'+list.map((o,i)=>{
+    const optCode = (lab==='ABCDEF'&&list.length<=4) ? L[i] : lab[i];
+    const k=ans.indexOf(optCode)>=0;
+    return '<li class="'+(k?'ok':'no')+'" data-opt="'+optCode+'" onclick="selectOpt(this)"><b>('+optCode+') '+fx(o[0])+'</b>'+(o[1]?' <small>'+o[1]+'</small>':'')+' <i>'+(k?'✔ 正解':'✘ 誤答')+'</i><div class="exp">'+o[2]+'</div></li>';
+  }).join('')+'</ul>';
+}
+function card(n,tags,ans,body){
+  Q_ANS[n] = ans;
+  return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="user-status" id="st'+n+'" style="display:none"></span><span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
+}
+
+function groupGradeBox(gid, title, startQ, endQ, ptsPerQ) {
+  ptsPerQ = ptsPerQ || 1;
+  const totalPts = (endQ - startQ + 1) * ptsPerQ;
+  return '<div class="grade-box" id="gbox-'+gid+'">' +
+    '<div class="grade-title">📝 '+title+'（第 '+startQ+'–'+endQ+' 題，共 '+totalPts+' 分）</div>' +
+    '<div class="grade-btns">' +
+      '<button class="btn-grade" onclick="gradeGroup(\''+gid+'\','+startQ+','+endQ+','+ptsPerQ+')">✅ 批改本題組</button>' +
+      '<button class="btn-reset" onclick="resetGroup(\''+gid+'\','+startQ+','+endQ+')">🔄 重練本題組</button>' +
+    '</div>' +
+    '<div class="grade-res" id="gres-'+gid+'"></div>' +
+  '</div>';
+}
+
+window.selectOpt = function(li) {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  const qEl = li.closest('details.q');
+  if (qEl && qEl.classList.contains('graded')) {
+    qEl.classList.remove('graded');
+    const qNum = qEl.id.replace('q', '');
+    const st = document.getElementById('st' + qNum);
+    if (st) st.style.display = 'none';
+  }
+  li.parentNode.querySelectorAll('li').forEach(el => el.classList.remove('selected'));
+  li.classList.add('selected');
+};
+
+function evaluateSingleQ(n) {
+  const qEl = document.getElementById('q' + n);
+  if (!qEl) return 'blank';
+  qEl.classList.add('graded');
+  qEl.open = true;
+
+  document.querySelectorAll('.bl[data-q="'+n+'"]').forEach(el => el.classList.add('revealed'));
+
+  const sel = qEl.querySelector('ul.op li.selected');
+  const st = document.getElementById('st' + n);
+  const ans = Q_ANS[n];
+
+  if (!sel) {
+    if (st) {
+      st.className = 'user-status st-blank';
+      st.textContent = '⚠️ 未作答';
+      st.style.display = 'inline-block';
+    }
+    return 'blank';
+  }
+
+  const userOpt = sel.getAttribute('data-opt');
+  if (ans.indexOf(userOpt) >= 0) {
+    if (st) {
+      st.className = 'user-status st-ok';
+      st.textContent = '✔ 答對 (' + userOpt + ')';
+      st.style.display = 'inline-block';
+    }
+    return 'ok';
+  } else {
+    if (st) {
+      st.className = 'user-status st-no';
+      st.textContent = '✘ 答錯 (選 ' + userOpt + ')';
+      st.style.display = 'inline-block';
+    }
+    return 'no';
+  }
+}
+
+window.gradeGroup = function(gid, startQ, endQ, ptsPerQ) {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  let okCount = 0, wrongList = [], blankList = [];
+  for (let n = startQ; n <= endQ; n++) {
+    const res = evaluateSingleQ(n);
+    if (res === 'ok') okCount++;
+    else if (res === 'no') wrongList.push(n);
+    else blankList.push(n);
+  }
+  const pasEl = document.getElementById('pas-' + gid);
+  if (pasEl) pasEl.classList.add('graded');
+  if (gid === 'wbank') {
+    const bankEl = document.getElementById('bank-wbank');
+    if (bankEl) bankEl.classList.add('graded');
+  }
+  if (gid === 'disc') {
+    const bankEl = document.getElementById('bank-disc');
+    if (bankEl) bankEl.classList.add('graded');
+  }
+
+  const totalQ = endQ - startQ + 1;
+  const earnedPts = okCount * ptsPerQ;
+  const maxPts = totalQ * ptsPerQ;
+  const resEl = document.getElementById('gres-' + gid);
+
+  let html = '<div><b>📊 批改結果：</b>答對 <b>' + okCount + ' / ' + totalQ + '</b> 題，得分 <b style="color:var(--acc);font-size:1.15rem;">' + earnedPts + ' / ' + maxPts + '</b> 分' + (okCount === totalQ ? ' 🎉 全部答對！' : '') + '</div>';
+  if (wrongList.length > 0) {
+    html += '<div style="margin-top:4px;">❌ <b>答錯題號：</b>' + wrongList.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  if (blankList.length > 0) {
+    html += '<div style="margin-top:4px;">⚠️ <b>未作答題號：</b>' + blankList.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  resEl.innerHTML = html;
+  resEl.classList.add('show');
+};
+
+window.resetGroup = function(gid, startQ, endQ) {
+  enablePracticeMode();
+  for (let n = startQ; n <= endQ; n++) {
+    const qEl = document.getElementById('q' + n);
+    if (qEl) {
+      qEl.classList.remove('graded');
+      qEl.querySelectorAll('ul.op li').forEach(li => li.classList.remove('selected'));
+    }
+    const st = document.getElementById('st' + n);
+    if (st) st.style.display = 'none';
+    document.querySelectorAll('.bl[data-q="'+n+'"]').forEach(el => el.classList.remove('revealed'));
+  }
+  const pasEl = document.getElementById('pas-' + gid);
+  if (pasEl) pasEl.classList.remove('graded');
+  if (gid === 'wbank') {
+    const bankEl = document.getElementById('bank-wbank');
+    if (bankEl) bankEl.classList.remove('graded');
+  }
+  if (gid === 'disc') {
+    const bankEl = document.getElementById('bank-disc');
+    if (bankEl) bankEl.classList.remove('graded');
+  }
+  const resEl = document.getElementById('gres-' + gid);
+  if (resEl) {
+    resEl.innerHTML = '';
+    resEl.classList.remove('show');
+  }
+};
+
+window.gradeTrans = function() {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  const pasEl = document.getElementById('pas-trans');
+  if (pasEl) pasEl.classList.add('graded');
+  const resEl = document.getElementById('gres-trans');
+  if (resEl) {
+    resEl.innerHTML = '<div>✅ 已展開中譯英參考正解與句型解析，請自行核對作答內容！</div>';
+    resEl.classList.add('show');
+  }
+};
+
+window.resetTrans = function() {
+  enablePracticeMode();
+  const pasEl = document.getElementById('pas-trans');
+  if (pasEl) {
+    pasEl.classList.remove('graded');
+    pasEl.querySelectorAll('.trans-input').forEach(inp => inp.value = '');
+  }
+  const resEl = document.getElementById('gres-trans');
+  if (resEl) {
+    resEl.innerHTML = '';
+    resEl.classList.remove('show');
+  }
+};
+
+const pmBtn = document.getElementById('pm-toggle');
+function enablePracticeMode() {
+  document.body.classList.add('practice-mode');
+  pmBtn.classList.add('pm-active');
+  pmBtn.textContent = '退出練習模式（顯示全部詳解）';
+  document.querySelectorAll('details.q').forEach(d => d.open = true);
+}
+function disablePracticeMode() {
+  document.body.classList.remove('practice-mode');
+  pmBtn.classList.remove('pm-active');
+  pmBtn.textContent = '🎯 切換練習模式';
+}
+pmBtn.onclick = function() {
+  if (document.body.classList.contains('practice-mode')) {
+    disablePracticeMode();
+  } else {
+    enablePracticeMode();
+  }
+};
+
+const examTitle = document.getElementById('exam-title').innerText;
+const compBtn = document.getElementById('complete-btn');
+const badge = document.getElementById('completed-badge');
+let comps = JSON.parse(localStorage.getItem('completed_exams')||'[]');
+
+if(comps.includes(examTitle)) {
+  badge.style.display = 'inline-block';
+  compBtn.innerText = '取消完成標記';
+}
+
+compBtn.onclick = function() {
+  comps = JSON.parse(localStorage.getItem('completed_exams')||'[]');
+  if(comps.includes(examTitle)) {
+    comps = comps.filter(t => t !== examTitle);
+    this.innerText = '📝 標記為已完成';
+    badge.style.display = 'none';
+  } else {
+    comps.push(examTitle);
+    this.innerText = '取消完成標記';
+    badge.style.display = 'inline-block';
+  }
+  localStorage.setItem('completed_exams', JSON.stringify(comps));
+};
+
+const ALL_GROUPS = [
+  { gid: 'vocab', title: '一、詞彙題', startQ: 1, endQ: 10, ptsPerQ: 1 },
+  { gid: 'cloze1', title: '二、綜合測驗（第 11–15 題）', startQ: 11, endQ: 15, ptsPerQ: 1 },
+  { gid: 'cloze2', title: '二、綜合測驗（第 16–20 題）', startQ: 16, endQ: 20, ptsPerQ: 1 },
+  { gid: 'cloze3', title: '二、綜合測驗（第 21–25 題）', startQ: 21, endQ: 25, ptsPerQ: 1 },
+  { gid: 'cloze4', title: '二、綜合測驗（第 26–30 題）', startQ: 26, endQ: 30, ptsPerQ: 1 },
+  { gid: 'wbank', title: '三、文意選填（第 31–40 題）', startQ: 31, endQ: 40, ptsPerQ: 1 },
+  { gid: 'disc', title: '四、篇章結構（第 41–45 題）', startQ: 41, endQ: 45, ptsPerQ: 2 },
+  { gid: 'rc1', title: '五、閱讀測驗（第 46–48 題）', startQ: 46, endQ: 48, ptsPerQ: 2 },
+  { gid: 'rc2', title: '五、閱讀測驗（第 49–52 題）', startQ: 49, endQ: 52, ptsPerQ: 2 },
+  { gid: 'rc3', title: '五、閱讀測驗（第 53–56 題）', startQ: 53, endQ: 56, ptsPerQ: 2 }
+];
+
+window.gradeAllSingleChoice = function() {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  let totalOk = 0, totalQ = 0, totalEarned = 0, totalMax = 0;
+  let allWrong = [], allBlank = [];
+
+  ALL_GROUPS.forEach(g => {
+    gradeGroup(g.gid, g.startQ, g.endQ, g.ptsPerQ);
+    for (let n = g.startQ; n <= g.endQ; n++) {
+      totalQ++;
+      totalMax += g.ptsPerQ;
+      const st = document.getElementById('st' + n);
+      if (st && st.classList.contains('st-ok')) {
+        totalOk++;
+        totalEarned += g.ptsPerQ;
+      } else if (st && st.classList.contains('st-no')) {
+        allWrong.push(n);
+      } else {
+        allBlank.push(n);
+      }
+    }
+  });
+
+  const resEl = document.getElementById('gres-all');
+  let html = '<div style="font-size:1.08rem;"><b>🏆 全卷選擇題總成績：</b>答對 <b>' + totalOk + ' / ' + totalQ + '</b> 題，總分 <b style="color:var(--acc);font-size:1.35rem;">' + totalEarned + ' / ' + totalMax + '</b> 分' + (totalEarned === totalMax ? ' 🎉 滿分全對！' : '') + '</div>';
+  if (allWrong.length > 0) {
+    html += '<div style="margin-top:6px;">❌ <b>全卷答錯題號（共 '+allWrong.length+' 題）：</b>' + allWrong.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  if (allBlank.length > 0) {
+    html += '<div style="margin-top:6px;">⚠️ <b>全卷未作答題號（共 '+allBlank.length+' 題）：</b>' + allBlank.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  resEl.innerHTML = html;
+  resEl.classList.add('show');
+};
+
+window.resetAllSingleChoice = function() {
+  enablePracticeMode();
+  ALL_GROUPS.forEach(g => {
+    resetGroup(g.gid, g.startQ, g.endQ);
+  });
+  const resEl = document.getElementById('gres-all');
+  if (resEl) {
+    resEl.innerHTML = '';
+    resEl.classList.remove('show');
+  }
+};
+
+// ==================== 一、詞彙題 ====================
+appendApp('<h2 id="sec-vocab">一、詞彙題（第 1–10 題，每題 1 分，共 10 分）</h2>');
+
+const VOCAB = [
+  [1, ['考點：動詞片語搭配（equip sb. with sth.）','詞性需求：第三人稱單數現在式及物動詞 (v.)'], 'D',
+    'Mastery of English [[1|equips]] us with a very important tool for acquiring knowledge and information.',
+    '精通英語使我們具備（裝備有）一項獲取知識與資訊的極重要工具。',
+    '關鍵搭配結構為「_____ **us with a very important tool**（使我們配備有／具備一項非常重要的工具）」。固定搭配 **equip sb. with sth.** 意為「使某人具備（某種技能、工具或知識）」。',
+    [
+      ['accesses','v. 存取（資料）、進入','直接接地點或資料作受詞，不構成 *access sb. with a tool*。<br><b>何時才對：</b>描述上網存取檔案（*access files on the computer*）時。'],
+      ['conveys','v. 傳達、表達（訊息或情感）；運送','搭配 *convey sth. to sb.*，不可接 *us with a tool*。<br><b>何時才對：</b>傳達謝意或想法（*convey my gratitude to her*）時。'],
+      ['deprives','v. 剝奪（固定搭配 deprive sb. of sth.）','介系詞搭配為 *of* 而非 *with*，且精通英語是提供工具而非「剝奪」工具。<br><b>何時才對：</b>描述戰爭剝奪兒童受教權（*deprive children of education*）時。'],
+      ['equips','v. 裝備、配備、使具備（固定搭配 equip sb. with sth.）','*equip us with a very important tool*（使我們具備一項重要工具），語法與語意完全吻合。']
+    ]
+  ],
+  [2, ['考點：語言演變與惯用片語（in current use）','詞性需求：形容詞 (adj.)'], 'B',
+    'Languages change all the time. Many words that were found in Shakespeare\'s works are no longer in [[2|current]] use.',
+    '語言無時無刻不在改變。許多出現在莎士比亞作品中的字詞，在現今（當代）已不再使用了。',
+    '前句點出「Languages change all the time（語言一直在變）」，後句對比四百年前莎士比亞作品中的古字與「**現今、目前**的使用（in **current** use）」。固定片語 **in current use** 意為「目前通用、現今仍在使用中」。',
+    [
+      ['absolute','adj. 絕對的、完全的','不構成 *in absolute use*。<br><b>何時才對：</b>形容絕對的權力或信任（*absolute power*）時。'],
+      ['current','adj. 現今的、當前的、通用的','*no longer in current use*（現今已不再通用），與前文四百年前的 *Shakespeare\'s works* 形成古今對比。'],
+      ['repetitive','adj. 重複的、反覆乏味的','古字退流行與「重複性使用」無關。<br><b>何時才對：</b>形容工廠單調重複的工作（*repetitive tasks*）時。'],
+      ['valuable','adj. 珍貴的、有價值的','不可說 *in valuable use*。<br><b>何時才對：</b>形容寶貴的經驗或建議時。']
+    ]
+  ],
+  [3, ['考點：前後句反義對比（take the initiative vs. sit and wait passively）','詞性需求：副詞 (adv.)'], 'B',
+    'Do not just sit and wait [[3|passively]] for a good chance to come to you. You have to take the initiative and create chances for yourself.',
+    '不要只是消極被動地坐等好機會自己找上門。你必須採取主動，為自己創造機會。',
+    '第二句給出強烈的反義線索：「You have to **take the initiative** and **create chances for yourself**（你必須**採取主動**並為自己創造機會）」。與「採取主動（take the initiative）」完全相反的態度，就是「**被動地、消極地**坐著乾等（sit and wait **passively**）」。',
+    [
+      ['consciously','adv. 有意識地、自覺地','無法與 *take the initiative*（採取主動）形成「被動等待 vs. 主動創造」的對比。<br><b>何時才對：</b>與 *unconsciously*（不自覺地）相對時。'],
+      ['passively','adv. 被動地、消極地','修飾 *sit and wait*，與後句的 *take the initiative and create chances*（採取主動創造機會）構成完美反義對比。'],
+      ['reasonably','adv. 合理地、尚可地','坐等機會上門不是「合理地等待」。<br><b>何時才對：</b>形容價格合理（*reasonably priced*）或要求合情合理時。'],
+      ['subjectively','adv. 主觀地','與主動／被動的行為態度無關。<br><b>何時才對：</b>與 *objectively*（客觀地）相對時。']
+    ]
+  ],
+  [4, ['考點：先天基因相同與後天環境差異（in common vs. variation）','詞性需求：單數／不可數名詞 (n.)'], 'D',
+    'Identical twins have almost all of their genes in common, so any [[4|variation]] between them is in large part due to the effects of the environment.',
+    '同卵雙胞胎幾乎擁有完全相同的基因，因此他們之間的任何差異（變化），很大程度上都是源於後天環境的影響。',
+    '前半句指出同卵雙胞胎的基因「幾乎完全相同（have almost all of their genes **in common**）」，那麼雙胞胎之間如果出現任何「不同之處、差異、變異（variation between them）」，自然要歸因於後天環境的影響（due to the effects of the environment）。',
+    [
+      ['adoption','n. 領養、收養；採用','基因相同與「他們之間的任何領養」語意不通。<br><b>何時才對：</b>討論收養兒童或採納新政策時。'],
+      ['familiarity','n. 熟悉、通曉','雙胞胎彼此熟不熟悉不是基因與環境探討的相對概念。<br><b>何時才對：</b>表達對某事物的熟悉度（*familiarity with the subject*）時。'],
+      ['stability','n. 穩定（性）、穩固','與前半句 *in common*（相同）無法構成「同中有異」的生物學邏輯。<br><b>何時才對：</b>討論經濟或情緒穩定時。'],
+      ['variation','n. 差異、變化、變異','源自 *vary*（不同、變化），與前半句的 *have... genes in common*（基因相同）形成「先天相同 vs. 後天差異」的精準呼應。']
+    ]
+  ],
+  [5, ['考點：法官收賄醜聞反差與操守名詞（integrity）','詞性需求：不可數名詞 (n.)'], 'B',
+    'People believed in the [[5|integrity]] of the judge, so they were shocked to hear that he was involved in the bribery scandal.',
+    '人們原本深信這位法官的廉潔操守（正直），因此聽到他捲入收賄醜聞時全都震驚不已。',
+    '結果子句指出：「當人們聽到這位法官**捲入收賄醜聞（involved in the bribery scandal）**時，全都感到**無比震驚（shocked）**」。之所以會對他收賄感到震驚，正是因為大家原本深信他為人清廉、品格「正直、廉潔、有操守（integrity）」。',
+    [
+      ['inferiority','n. 次等、低劣、自卑（感）','人們不會「深信法官的低劣」，卻對他收賄感到震驚。<br><b>何時才對：</b>描述自卑感（*an inferiority complex*）或社經地位低落時。'],
+      ['integrity','n. 正直、廉潔、誠實操守；完整性','形容法官、政治人物或學者「清廉正直、有道德操守」的核心字彙，與後文的 *shocked* 及 *bribery scandal*（收賄醜聞）構成強烈反差。'],
+      ['intimacy','n. 親密（關係）','大眾與法官之間並非私密情侶關係，且與收賄無關。<br><b>何時才對：</b>描述伴侶或摯友間的親密關係時。'],
+      ['ingenuity','n. 巧思、獨創性、心靈手巧','收賄是道德敗壞問題，而非「缺乏巧思」。<br><b>何時才對：</b>讚賞發明家解決難題的巧思與智慧時（如 107 指考第 50 題題組：*compete with their ingenuity*）。']
+    ]
+  ],
+  [6, ['考點：醫學研發成就名詞（an important breakthrough）','詞性需求：單數可數名詞 (n.)'], 'A',
+    'The discovery of the new vaccine is an important [[6|breakthrough]] in the fight against avian flu.',
+    '這種新疫苗的發現（研發成功），是對抗禽流感之戰中的一項重大突破。',
+    '主詞為「The **discovery of the new vaccine**（新疫苗的發現）」，背景為「in the fight against avian flu（在對抗禽流感的戰役中）」。成功研發出新疫苗在醫學防疫上無疑是一項重大的「突破、進展（breakthrough）」。',
+    [
+      ['breakthrough','n. 重大突破、重要進展','*a medical / scientific breakthrough*（醫學／科學上的重大突破）為高頻固定搭配（如 109 指考第 7 題：*consider it a medical breakthrough*）。'],
+      ['commitment','n. 承諾；投入、奉獻','新疫苗的發現是一項科學「成果突破」，而非一項「承諾」。<br><b>何時才對：</b>表達對家庭或工作的承諾與投入時。'],
+      ['demonstration','n. 示範、展示；遊行示威；證明','發現新疫苗不是一場「遊行示威」或「操作示範」。<br><b>何時才對：</b>描述烹飪示範或街頭抗議遊行時。'],
+      ['interpretation','n. 解讀、詮釋；口譯','疫苗是實體醫藥發明，不是文字或藝術的「解讀」。<br><b>何時才對：</b>解讀研究數據（如 109 指考第 3 題：*interpreted with caution*）時。']
+    ]
+  ],
+  [7, ['考點：媒體識讀動詞搭配（distinguish between A and B）','詞性需求：原形不及物動詞 (v.)'], 'A',
+    'To avoid being misled by news reports, we should learn to [[7|distinguish]] between facts and opinions.',
+    '為了避免被新聞報導誤導，我們應該學會分辨（區分）「事實」與「個人意見」。',
+    '句首目的為「To avoid being misled by news reports（為了避免被新聞報導誤導）」，後方搭配「_____ **between facts and opinions**（在事實與意見之間做出……）」。固定搭配 **distinguish between A and B**（＝ *distinguish A from B* / *tell A from B*）意為「區分、分辨 A 與 B」。',
+    [
+      ['distinguish','v. 區分、辨別、分辨（搭配 between A and B 或 A from B）','*distinguish between facts and opinions*（分辨事實與意見），媒體素養核心搭配。'],
+      ['complicate','v. 使複雜化（及物動詞）','及物動詞，不接 *between*，且把事實與意見弄得更複雜反而更容易被誤導。<br><b>何時才對：</b>描述某突發狀況使問題變得更複雜時。'],
+      ['reinforce','v. 強化、加固、增援（及物動詞）','及物動詞，不接 *between*。<br><b>何時才對：</b>強化論點或加固建築結構時。'],
+      ['speculate','v. 推測、猜測（常搭配 on / about）','不搭配 *between facts and opinions*。<br><b>何時才對：</b>描述對未知原因進行揣測時。']
+    ]
+  ],
+  [8, ['考點：洪災過後景象與後文 only one or two homes 對比','詞性需求：過去分詞形容詞 (adj.)'], 'B',
+    'After the big flood, the area was mostly [[8|deserted]], with only one or two homes still clinging to their last relics.',
+    '大洪水過後，該地區幾乎變得荒無人煙（人去樓空），只剩下一、兩戶人家仍死守著他們最後僅存的殘破家園。',
+    '前半句點出災難背景「After the big flood（大洪水過後）」，逗號後的附帶狀況「**with only one or two homes still clinging to** their last relics（只剩下一、兩戶人家還留守在殘破遺物旁）」直接提供線索：既然只剩一兩戶人家還留著，代表整個災區絕大多數的地方都已經被居民棄守、變得「荒蕪的、空無一人的、被遺棄的（mostly **deserted**）」。',
+    [
+      ['condensed','adj./p.p. 濃縮的、凝結的、精簡的','如煉乳（*condensed milk*）或水氣凝結，不可形容洪災後人去樓空的地區。<br><b>何時才對：</b>描述水蒸氣凝結或濃縮報告篇幅時。'],
+      ['deserted','adj. 荒無人煙的、空無一人的、被棄守的','源自動詞 *desert*（遺棄、離棄，發音為 /dɪˈzɜːrt/），完美呼應洪水過後只剩一兩戶留守、其餘皆已撤離的淒涼景象。'],
+      ['excluded','v.(p.p.) 被排除在外的','災區不會「被排除在外」。<br><b>何時才對：</b>搭配 *excluded from the list*（被排除於名單之外）時。'],
+      ['removed','v.(p.p.) 被移除的、被搬走的','整片地理區域（the area）不會「被搬走」。<br><b>何時才對：</b>受詞為家具、障礙物或汙漬時。']
+    ]
+  ],
+  [9, ['考點：演講目的與及物動詞辨析（highlight the need）','詞性需求：原形及物動詞 (v.)'], 'C',
+    'In his speech, Dr. Huang presented all the reports about the energy crisis to [[9|highlight]] the need for developing new energy resources.',
+    '在演講中，黃博士提出了所有關於能源危機的報告，以凸顯（強調）開發新能源的必要性。',
+    '黃博士在演講中拿出所有關於「能源危機（the energy crisis）」的報告，其目的（to _____）自然是為了讓聽眾意識到並「凸顯、強調（highlight）」開發替代新能源的迫切需求（the need for developing new energy resources）。',
+    [
+      ['command','v. 命令、指揮；博得（尊敬）；俯瞰','演講者不會「命令開發新能源的需求」。<br><b>何時才對：</b>將軍指揮軍隊或贏得敬重（*command respect*）時。'],
+      ['formulate','v. 擬定、規劃（政策、計畫或公式）','受詞通常為 *policy / plan / strategy*，不可說「擬定需求（formulate the need）」。<br><b>何時才對：</b>政府擬定新經濟政策時。'],
+      ['highlight','v. 強調、凸顯、使受到關注','*highlight the need / importance of...*（凸顯／強調……的必要性與重要性），完全符合引用能源危機報告的目的。'],
+      ['regulate','v. 規範、管制、調節','提出危機報告是為了「強調」開發新能源的需求，而非「管制限制」這個需求。<br><b>何時才對：</b>描述立法規範市場或調節溫度時。']
+    ]
+  ],
+  [10, ['考點：對等負面形容詞（bitter and outrageous comments）與激烈爭吵因果','詞性需求：形容詞 (adj.)'], 'A',
+    'Hearing the art critic\'s bitter and [[10|outrageous]] comments on her new painting, Molly started a heated argument with him.',
+    '聽到藝評家對她新畫作尖酸刻薄且蠻橫無理（令人憤慨）的評論，茉莉與他展開了一場激烈的爭論。',
+    '線索一：空格與負面形容詞 **bitter**（尖酸刻薄的、充滿敵意的）由 *and* 對等並列修飾 *comments*；線索二：主要子句結果為「Molly **started a heated argument with him**（茉莉氣得跟他展開激烈爭吵）」。能與 *bitter* 並列、讓畫家氣到當場大吵一架的評論，必然是「令人憤慨的、蠻橫無理的、太過分的（outrageous）」。',
+    [
+      ['outrageous','adj. 令人憤慨的、太過分的、蠻橫無理的','源自名詞 *outrage*（憤怒、暴行），與 *bitter*（尖酸刻薄的）並列，完美解釋為何茉莉聽了會氣到跟藝評家大吵一架（started a heated argument）。'],
+      ['unreliable','adj. 不可靠的、不可信賴的','審美評論是主觀評價而非消息來源「可不可靠」，且與 *bitter* 搭配不如 *outrageous* 貼切。<br><b>何時才對：</b>形容證人、數據或破舊汽車不可靠時。'],
+      ['urgent','adj. 緊急的、迫切的','對畫作的批評不是「緊急的評論」。<br><b>何時才對：</b>描述十萬火急的任務或急診時。'],
+      ['glorious','adj. 光榮的、輝煌的、壯麗的','正面讚美詞，與 *bitter* 及大吵一架完全相反。<br><b>何時才對：</b>形容輝煌勝利（*a glorious victory*）時。']
+    ]
+  ]
+];
+
+SENT[1]=[VOCAB[0][3], VOCAB[0][4]];
+SENT[2]=[VOCAB[1][3], VOCAB[1][4]];
+SENT[3]=[VOCAB[2][3], VOCAB[2][4]];
+SENT[4]=[VOCAB[3][3], VOCAB[3][4]];
+SENT[5]=[VOCAB[4][3], VOCAB[4][4]];
+SENT[6]=[VOCAB[5][3], VOCAB[5][4]];
+SENT[7]=[VOCAB[6][3], VOCAB[6][4]];
+SENT[8]=[VOCAB[7][3], VOCAB[7][4]];
+SENT[9]=[VOCAB[8][3], VOCAB[8][4]];
+SENT[10]=[VOCAB[9][3], VOCAB[9][4]];
+
+let vocabHtml = '';
+VOCAB.forEach(q => {
+  vocabHtml += card(q[0], q[1], q[2], stem(q[0]) + clue(q[5]) + ops(q[6], q[2]));
+});
+vocabHtml += groupGradeBox('vocab', '一、詞彙題', 1, 10, 1);
+appendApp(vocabHtml);
+
+// ==================== 二、綜合測驗 ====================
+appendApp('<h2 id="sec-cloze">二、綜合測驗（第 11–30 題，每題 1 分，共 20 分）</h2>');
+
+// 第 11–15 題題組
+let cloze1Html = passage('第 11 至 15 題為題組：日常生活與科學實驗中的度量衡（Measurements）', [
+  [
+    ['Measurements are needed in many everyday activities.', '在許多日常活動中都需要進行測量。'],
+    ['In kitchens you will find measures for volume (measuring cups), mass (scales and weights), and temperature (cooking thermometers).', '在廚房裡，你會找到測量體積（量杯）、質量（磅秤與砝碼）以及溫度（料理溫度計）的量具。'],
+    ['Accurate measurements are [[11|particularly]] important for scientific experiments.', '精確的測量對於科學實驗而言「尤其」重要。'],
+    ['In a laboratory, make sure your measure meets your needs.', '在實驗室裡，務必確保你的測量工具符合你的需求。'],
+    ['[[12|Before]] using any thermometer, double check that it covers the right temperature [[13|range]] for your activity or experiment.', '在使用任何溫度計「之前」，務必再次確認它涵蓋了適合你活動或實驗的正確溫度「範圍」。'],
+    ['A garden thermometer, [[14|for instance]], will burst if you try to use it for boiling liquids.', '「舉例來說」，如果你試圖拿園藝溫度計去量沸騰的液體，溫度計就會爆裂。']
+  ],
+  [
+    ['There are different systems of measures.', '世上有不同的度量衡系統。'],
+    ['Most scientists now use the International System of measures, with meters for length, kilograms for [[15|mass]], and seconds for time.', '現今大多數科學家都使用「國際單位制（公制）」，以公尺測量長度、以公斤測量「質量」，並以秒測量時間。'],
+    ['If the measures in your experiment show other units, appropriate conversion tables for different systems may prove to be very useful.', '如果你實驗中的量具顯示的是其他單位，那麼不同度量衡系統的適當換算表就會非常實用。']
+  ]
+], '', 'cloze1');
+
+const CLOZE1 = [
+  [11, ['考點：由一般日常推進至科學實驗之強調副詞','詞性需求：副詞 (adv.)'], 'C',
+    '前兩句先說一般日常活動（如在廚房做菜）需要測量；本句進一步推進到嚴謹的「科學實驗（scientific experiments）」：「**Accurate** measurements are _____ **important for scientific experiments**.（**精確的**測量對於科學實驗而言**尤其／特別**重要。）」由廣泛日常聚焦到更講求精準的科學實驗，應選 **particularly**（尤其、特別）。',
+    [
+      ['deliberately','adv. 故意地、蓄意地；從容不迫地','修飾人故意做某動作，不可修飾形容詞 *important* 表「故意重要」。<br><b>何時才對：</b>描述故意違規或蓄意破壞時。'],
+      ['instantly','adv. 立即地、瞬間地','修飾瞬間發生的動作，不修飾狀態形容詞 *important*。<br><b>何時才對：</b>描述泡麵立即沖泡或瞬間走紅時。'],
+      ['particularly','adv. 尤其、特別（= especially）','修飾形容詞 *important*，突顯精確測量在科學實驗中的特殊重要性。'],
+      ['scarcely','adv. 幾乎不（準否定副詞）','科學實驗最講求精確測量，絕非「幾乎不重要」。<br><b>何時才對：</b>表否定語氣時。']
+    ]
+  ],
+  [12, ['考點：實驗安全操作時間先後邏輯（Before using...）','詞性需求：介系詞 / 連接詞'], 'B',
+    '後文警告：「如果你拿園藝溫度計去量沸水，溫度計就會爆裂（will burst）」。為了防止溫度計在實驗中爆裂，你當然必須在「使用任何溫度計**之前**（**Before** using any thermometer）」，就先確認它的溫度範圍是否符合需求！',
+    [
+      ['After','在使用……之後','若等拿去插進沸水「使用之後」才檢查溫度範圍，溫度計早就爆裂了！<br><b>何時才對：</b>描述使用完器材後的清潔收納步驟時。'],
+      ['Before','在使用……之前','*Before using any thermometer, double check...*（在使用任何溫度計前，請再次確認……），完全合乎實驗室安全操作邏輯。'],
+      ['For','為了','不接 *using any thermometer* 作時間條件。<br><b>何時才對：</b>表目的或原因時。'],
+      ['Without','在沒有……的情況下','若「不使用任何溫度計」，又何必去檢查溫度計（*it*）的刻度範圍呢？<br><b>何時才對：</b>無。']
+    ]
+  ],
+  [13, ['考點：溫度計刻度上限與後句爆裂呼應（temperature range）','詞性需求：單數名詞 (n.)'], 'A',
+    '動詞為「covers（涵蓋）」，且後一句舉例說明：「園藝溫度計如果拿去量沸騰的液體（100°C）就會爆裂（因為園藝溫度計最高只到 50°C 左右）」。可見不同溫度計所能測量的「最高與最低溫度**範圍**（temperature **range**）」不同，使用前必須確認它涵蓋（covers）了實驗所需的溫度範圍。',
+    [
+      ['range','n. 範圍、區間','*cover the right temperature range*（涵蓋正確的溫度範圍），完美搭配動詞 *covers* 並解釋後句園藝溫度計因超出上限而爆裂的原因。'],
+      ['record','n. 紀錄','溫度計上標示的是可測量的刻度「範圍」，而非歷史最高溫「紀錄」。<br><b>何時才對：</b>打破氣象史上的高溫紀錄時。'],
+      ['system','n. 系統、體制','公制或英制等「度量衡系統（systems of measures）」是在第二段才討論，且無論攝氏或華氏系統，園藝溫度計量沸水會爆裂是因為超過了它的測量「範圍（range）」。<br><b>何時才對：</b>指第二段的公制與英制系統時。'],
+      ['unit','n. 單位','單一溫度計通常只涵蓋特定的溫度「範圍（covers the right temperature range）」，而非涵蓋一個單位。<br><b>何時才對：</b>討論攝氏度或華氏度等單位換算時。']
+    ]
+  ],
+  [14, ['考點：通則後舉出具體器材實例（for instance）','詞性需求：轉折副詞片語'], 'D',
+    '前一句提出通則：「使用任何溫度計前，務必確認它涵蓋了符合你實驗的正確溫度範圍」。本句提出一個具體例子：「拿『園藝溫度計（A garden thermometer）』去量沸水就會爆裂」。由通則引出具體例證，應選 **for instance**（舉例來說）。',
+    [
+      ['in short','簡言之、總之','本句是舉出園藝溫度計的單一具體例子，而非總結前文。<br><b>何時才對：</b>在段落末尾做總結時。'],
+      ['in turn','輪流；進而、反過來','無舉例功能。<br><b>何時才對：</b>描述輪流做某事或連鎖反應時。'],
+      ['by contrast','相較之下','前句是通則而非另一種溫度計，無從構成對比。<br><b>何時才對：</b>比較兩種不同溫度計時。'],
+      ['for instance','舉例來說、例如','完美銜接前句「確認溫度計涵蓋正確溫度範圍」的原則與「園藝溫度計量沸水會爆裂」的具體實例。']
+    ]
+  ],
+  [15, ['考點：國際單位制（kilograms 公斤）與首段平行呼應','詞性需求：不可數名詞 (n.)'], 'B',
+    '線索一：本句列舉國際單位制：「with meters for length（公尺測量長度）, **kilograms for _____**（**公斤**測量……）, and seconds for time（秒測量時間）」；線索二：第一段第 2 句早已直接給出答案：「measures for volume (measuring cups), **mass (scales and weights)**, and temperature (cooking thermometers)」。「公斤（kilograms）」正是用來測量物體「**質量（mass）**」的國際標準單位！',
+    [
+      ['distance','n. 距離','距離與長度（length）是用前面的「公尺（meters）」測量，不是用公斤。<br><b>何時才對：</b>搭配 *meters / kilometers* 時。'],
+      ['mass','n. 質量；大量','物理與度量衡常識：公斤（kilograms）是「質量（mass）」的單位，且直接重現第一段第 2 句的 *mass (scales and weights)*！'],
+      ['temperature','n. 溫度','溫度是用克耳文（K）或攝氏度（°C）測量，不是用公斤。<br><b>何時才對：</b>搭配 *degrees Celsius / Kelvin* 時。'],
+      ['volume','n. 體積、容積；音量','體積是用公升（liters）或立方公尺測量，不是用公斤。<br><b>何時才對：</b>搭配 *liters* 時。']
+    ]
+  ]
+];
+
+CLOZE1.forEach(q => {
+  cloze1Html += card(q[0], q[1], q[2], stem(q[0]) + clue(q[3]) + ops(q[4], q[2]));
+});
+cloze1Html += groupGradeBox('cloze1', '二、綜合測驗（第 11–15 題）', 11, 15, 1);
+appendApp(cloze1Html);
+
+// 第 16–20 題題組
+let cloze2Html = passage('第 16 至 20 題為題組：墨西哥卡特馬科鎮（Catemaco）的「年度巫師大會」', [
+  [
+    ['Every year Catemaco, a small town in the south of Mexico, hosts the Annual Witch Gathering.', '每年，墨西哥南部的小鎮卡特馬科（Catemaco）都會舉辦「年度巫師（女巫）大會」。'],
+    ['Healers and witch doctors converge on this beautiful lakeside town in March to make their yearly trade.', '民俗治療師與巫醫會在三月齊聚於這座美麗的湖畔小鎮，進行他們一年一度的生意買賣。'],
+    ['[[16|Ever]] since pre-Hispanic times, Lake Catemaco has been a centre for alternative medicine and strange treatments.', '自從西班牙人到來之前的前哥倫布時期（印第安古文明時期）以來，卡特馬科湖就一直是另類醫療與奇特療法的中心。'],
+    ['[[17|In fact]], the area\'s association with witchcraft dates back to Olmec times more than 2,000 years ago.', '事實上，該地區與巫術的淵源可追溯至兩千多年前的奧爾梅克（Olmec）文明時期。'],
+    ['If you\'ve ever seen the Sean Connery movie *Medicine Man*, [[18|then]] the annual convention of wizards and witches will be familiar to you.', '如果你曾看過史恩．康納萊主演的電影《燃燒的天堂（Medicine Man）》，那麼你對這場男巫與女巫的年度盛會就會感到似曾相識。'],
+    ['[[19|If not]], get prepared for the overwhelming attack of wizards and witches here.', '如果沒看過的話，那就做好心理準備，迎接這裡鋪天蓋地的男女巫師陣仗吧。'],
+    ['Most witch doctors are guaranteed to be charlatans, not real doctors, who [[20|go after]] some quick money from tourists.', '大多數的巫醫保證都是江湖郎中（騙子）而非真正的醫生，他們追求（企圖賺取）的是觀光客身上的快錢。'],
+    ['Yet, don\'t be surprised if the occasional remedy offered is effective.', '不過，如果他們偶爾提供的偏方真的有效，你也別太驚訝。']
+  ]
+], '', 'cloze2');
+
+const CLOZE2 = [
+  [16, ['考點：現在完成式時間片語固定搭配（Ever since...）','詞性需求：強調副詞 (adv.)'], 'A',
+    '主要子句動詞為現在完成式「**has been** a centre for alternative medicine」，句首時間介系詞片語為「_____ **since pre-Hispanic times**（**早自**西班牙殖民前的古印第安時期**以來**，就一直是……）」。在英文中，用來修飾 *since*（自從……以來）以強調「從那時起一直持續至今從未間斷」的固定搭配即為 **Ever since...**！',
+    [
+      ['Ever','adv. 始終、一直（構成 Ever since... 自從……以來一直）','*Ever since + 過去時間點, S + has/have + p.p.* 為最標準的現在完成式搭配，呼應下句長達兩千多年的歷史。'],
+      ['Not','adv. 不','若填 *Not since...* 或 *Only since...*、*Rarely* 等否定／準否定詞置於句首，主要子句必須倒裝（*has Lake Catemaco been...*），但原句 *Lake Catemaco has been* 並未倒裝，且語意為肯定。<br><b>何時才對：</b>主句倒裝且語意為否定時。'],
+      ['Only','adv. 只有、直到……才','同 (B)，*Only since...* 置於句首時主句必須助動詞倒裝，且後句說兩千多年前就有巫術了，並非「直到那時才有」。<br><b>何時才對：</b>主句倒裝且強調時間很晚才開始時。'],
+      ['Rarely','adv. 很少、罕見地','不可修飾 *since*，且置於句首主句須倒裝。<br><b>何時才對：</b>置於句首搭配倒裝句表「很少發生」時。']
+    ]
+  ],
+  [17, ['考點：進一步強化並推進前句論點之轉折片語（In fact）','詞性需求：轉折副詞片語'], 'C',
+    '前一句說：「自西班牙人到來之前（約五百多年前），卡特馬科湖就一直是另類療法的中心」。本句進一步把歷史淵源往前推得更深更久遠：「_____ , **the area\'s association with witchcraft dates back to Olmec times more than 2,000 years ago**.（**事實上／其實**，該地區與巫術的淵源更可追溯到**兩千多年前**的奧爾梅克時期。）」用來進一步補充更具體、更深層事實以強化前句說法的轉折片語即為 **In fact**（事實上、其實）。',
+    [
+      ['In advance','事先、預先','用於時間上「提前預約或準備」，不可作句首評註副詞說明歷史淵源。<br><b>何時才對：</b>描述事先買票或預約（*book tickets in advance*）時。'],
+      ['In all','總計、一共（= in total）','用於加總數量或金額（如 *There were twenty people in all*）。<br><b>何時才對：</b>統計總數時。'],
+      ['In fact','事實上、其實（用於進一步深化或補充更確切的資訊）','完美承接前句的 *pre-Hispanic times*，進一步指出「事實上，這段淵源可遠溯至兩千多年前的奧爾梅克時期」。'],
+      ['In sum','總而言之、簡言之（= in short）','此處是文章剛開始介紹歷史背景的第二句，並非全文總結。<br><b>何時才對：</b>於文章結尾總結前文多項要點時。']
+    ]
+  ],
+  [18, ['考點：條件句配對結構（If..., then...）','詞性需求：承接副詞 (adv.)'], 'C',
+    '前半句為 *If* 引導的條件副詞子句：「**If** you\'ve ever seen the Sean Connery movie *Medicine Man*（**如果**你曾看過史恩．康納萊主演的電影《燃燒的天堂》）」，逗號後為主要子句：「, _____ the annual convention of wizards and witches will be familiar to you（，**那麼**你對這場年度巫師大會就會感到很熟悉）」。與條件連接詞 **If...** 最標準的配對承接副詞即為 **then**（那麼）！',
+    [
+      ['since','conj./prep. 因為；自從','從屬連接詞 *If* 子句不能再用另一個從屬連接詞 *since* 來接主要子句。<br><b>何時才對：</b>單獨引導原因或時間副詞子句時。'],
+      ['so','conj. 所以','英文中 *Because / Since* 與 *so* 不可同時出現在同一個句子裡，同理 *If* 條件子句後也不可加對等連接詞 *so*。<br><b>何時才對：</b>前句無從屬連接詞 *If* 時。'],
+      ['then','adv. 那麼（構成 If..., then... 句型）','標準的條件推論句型 **If + 條件子句, then + 主要子句**。'],
+      ['though','adv./conj. 不過、然而','看過相關電影，就會對巫師大會感到熟悉，前後為順理成章的條件結果，而非轉折。<br><b>何時才對：</b>前後語意相反時。']
+    ]
+  ],
+  [19, ['考點：承接前句 If 條件之反向省略結構（If not = 如果沒有的話）','詞性需求：省略條件子句'], 'B',
+    '前一句剛假設：「**If you\'ve ever seen** the Sean Connery movie *Medicine Man*, then the annual convention... will be familiar to you.（**如果你曾看過**這部電影，你對巫師大會就會很熟悉。）」本句緊接著假設相反的情況：「**_____**, get prepared for the overwhelming attack of wizards and witches here.（**如果沒看過的話**，那就做好心理準備迎接這裡鋪天蓋地的巫師陣仗吧！）」代替前句否定條件（*If you have **not** seen the movie*）的標準省略結構即為 **If not**！',
+    [
+      ['If any','即便有的話（數量也極少）','用於修飾名詞數量極少，不可代替否定條件 *If you haven\'t seen it*。<br><b>何時才對：</b>補充說明錯誤或例外極少時。'],
+      ['If not','如果沒有的話、要不然的話','與前一句的肯定條件 *If you\'ve ever seen...* 形成「如果有看過……；如果沒看過（If not）……」的完美對偶！'],
+      ['If ever','如果曾經有的話（常搭配 seldom, if ever）','不表否定條件「如果沒看過」。<br><b>何時才對：</b>用於 *He seldom, if ever, travels abroad* 時。'],
+      ['If only','要是……就好了！（引導與事實相反的感嘆虛擬句，後須接完整子句）','不可單獨加逗號使用，且語意不合。<br><b>何時才對：</b>感嘆「要是他有來就好了（*If only he were here!*）」時。']
+    ]
+  ],
+  [20, ['考點：江湖郎中動機與動詞片語辨析（go after quick money）','詞性需求：複數現在式動詞片語'], 'A',
+    '前半句指出：「Most witch doctors are guaranteed to be **charlatans, not real doctors**（大多數巫醫保證都是**江湖騙子而非真醫生**）」，關係子句說明這些騙子的目的：「who _____ **some quick money from tourists**（他們想從觀光客身上……一些快錢）」。江湖騙子聚集在觀光小鎮，當然是為了「追求、設法獲取、賺取（go after）」觀光客口袋裡的快錢！',
+    [
+      ['go after','追求、設法得到、追逐（金錢、目標或獵物）','*go after some quick money from tourists*（想從觀光客身上賺取快錢），完全符合江湖郎中（charlatans）趁年度集會撈錢的動機。'],
+      ['turn down','拒絕、回絕；調低（音量）','江湖騙子怎麼會「拒絕」觀光客的錢呢？<br><b>何時才對：</b>婉拒邀約或工作提議時。'],
+      ['give away','免費贈送、捐出；洩露（秘密）','本段第二句已點出他們來此是為了「做年度生意買賣（make their yearly trade）」，騙子是來賺觀光客的錢，不是來向觀光客「大放送發錢」的。<br><b>何時才對：</b>描述慈善家捐出財富（如 96 指考卡內基：*given away 350 million dollars*）時。'],
+      ['complain about','抱怨、投訴','騙子撈快錢高興都來不及，不會「抱怨快錢」。<br><b>何時才對：</b>顧客抱怨服務品質不佳時。']
+    ]
+  ]
+];
+
+CLOZE2.forEach(q => {
+  cloze2Html += card(q[0], q[1], q[2], stem(q[0]) + clue(q[3]) + ops(q[4], q[2]));
+});
+cloze2Html += groupGradeBox('cloze2', '二、綜合測驗（第 16–20 題）', 16, 20, 1);
+appendApp(cloze2Html);
+
+// 第 21–25 題題組
+let cloze3Html = passage('第 21 至 25 題為題組：如何避免兒童逛博物館產生「博物館腿痠倦怠症（Museum Feet）」？', [
+  [
+    ['Young visitors to museums often complain about having museum feet, the tired feeling one gets after spending too much time in a museum.', '造訪博物館的年幼遊客常抱怨得了「博物館腿（museum feet）」，也就是在博物館裡待太久之後所產生的疲累感。'],
+    ['A case of museum feet makes one feel like saying: "This is [[21|boring]]. I could have done the painting myself. When can we sit down? What time is it?"', '發作「博物館腿」的人會想這麼抱怨：「這好無聊喔。這幅畫我自己都畫得出來。我們什麼時候可以坐下？現在幾點了？」']
+  ],
+  [
+    ['Studies of museum behavior show that the average visitor spends about four seconds looking at one object.', '針對博物館參觀行為的研究顯示，一般遊客平均只花大約四秒鐘觀看一件展品。'],
+    ['For young visitors, the time span can be [[22|even]] shorter.', '對於年幼的遊客而言，這個時間長度甚至可能更短。'],
+    ['Children are more interested in smells, sounds, and the "feel" of a place than looking at a work of art.', '比起靜靜觀賞一件藝術品，孩子們對一個場所的氣味、聲音與整體「感覺」更感興趣。'],
+    ['If they stay in a museum too long, a feeling of boredom and monotony will build up, leading [[23|eventually]] to impatience and fatigue.', '如果他們在博物館裡待太久，無聊與單調乏味的感覺就會不斷累積，最終導致不耐煩與疲勞。']
+  ],
+  [
+    ['To [[24|avoid]] museum feet, try not to have children look at too many things in one visit.', '為了避免「博物館腿」，請試著不要讓孩子在單次造訪中看太多東西。'],
+    ['It is reported that young visitors get more out of a visit if they focus on [[25|no more than]] nine objects.', '據報導指出，如果年幼遊客專注觀看的展品不超過九件，他們在單次參觀中的收穫反而更多。'],
+    ['One and a half hours is the ideal time to keep their eyes and minds sharp, and their feet happy!', '一個半小時是讓他們的眼睛與頭腦保持敏銳、同時讓雙腳開心的理想時間！']
+  ]
+], '', 'cloze3');
+
+const CLOZE3 = [
+  [21, ['考點：前後文抱怨語境與第二段 boredom 直接呼應','詞性需求：形容詞 (adj.)'], 'A',
+    '引號內模擬小孩逛博物館逛到腳痠不耐煩的抱怨台詞：「"This is _____. **I could have done the painting myself. When can we sit down? What time is it?**"（這好……喔。這幅畫我自己都畫得出來。我們什麼時候可以坐下？現在幾點了？）」且第二段末句更直接點出名詞：「a feeling of **boredom** and monotony will build up（**無聊**與單調感會累積）」。因此小孩抱怨的自然是「這好**無聊**喔（This is **boring**）」！',
+    [
+      ['boring','adj. 令人無聊的、乏味的','完全契合後句嫌棄畫作、吵著要坐下與看時間的不耐煩語氣，並直接呼應第二段的 *a feeling of boredom*。'],
+      ['difficult','adj. 困難的','小孩後句誇口說「這幅畫連我自己都畫得出來（I could have done the painting myself）」，顯然覺得這一點也不難，而是覺得很無聊。<br><b>何時才對：</b>面對看不懂的深奧科學解說時。'],
+      ['cool','adj. 很酷的、很棒的','正面讚美詞，與抱怨腳痠想走完全相反。<br><b>何時才對：</b>小孩對互動展品大感驚奇時。'],
+      ['exciting','adj. 令人興奮的','同 (C)，若覺得很刺激興奮，就不會一直問「幾點了？什麼時候可以坐下？」了。<br><b>何時才對：</b>形容遊樂園雲霄飛車時。']
+    ]
+  ],
+  [22, ['考點：修飾比較級形容詞 shorter 之程度副詞（even shorter）','詞性需求：程度副詞 (adv.)'], 'C',
+    '前一句說：「一般遊客（the average visitor）平均只花約四秒鐘看一件展品」。本句進一步比較定力更差的兒童：「For young visitors, the time span can be _____ **shorter**.（對年幼遊客而言，時間跨度甚至可能**更短**。）」空格後方是比較級形容詞 **shorter**，四個選項中唯一能用來修飾比較級形容詞、表「甚至更……、還要更……」的程度副詞即為 **even**（其他常考修飾比較級的副詞還有 *much / far / still / a lot*）！',
+    [
+      ['almost','adv. 幾乎、差不多','不可修飾比較級形容詞 *shorter*。<br><b>何時才對：</b>修飾原級、數量或最高級時。'],
+      ['also','adv. 也','既然比一般人的四秒「還要更短（shorter）」，程度已經不同，不能說「也是更短」。<br><b>何時才對：</b>兩者表現相同時。'],
+      ['even','adv. 甚至（更……）（專門修飾比較級）','*can be even shorter*（甚至可能更短），文法與語意完全正確。'],
+      ['meanwhile','adv. 與此同時','時間副詞，不可夾在 *be* 與形容詞比較級 *shorter* 之間。<br><b>何時才對：</b>置於句首連接同時發生的另一件事時。']
+    ]
+  ],
+  [23, ['考點：累積過程與最終結果副詞（build up → leading eventually to...）','詞性需求：副詞 (adv.)'], 'B',
+    '注意因果演變過程：「If they stay in a museum too long, a feeling of boredom and monotony **will build up**（無聊與單調感會**逐漸累積**）, **leading _____ to impatience and fatigue**（**最終**導致不耐煩與疲勞）」。無聊感一點一滴累積（build up），到最後自然「最終、終於（eventually）」引發不耐煩與雙腳疲勞。',
+    [
+      ['efficiently','adv. 有效率地','正面字彙，產生不耐煩與疲勞是負面後果，不稱為「有效率地導致疲勞」。<br><b>何時才對：</b>形容工作處理有效率時。'],
+      ['eventually','adv. 最終、終於、到頭來','完美呼應前半句 *stay too long* 與 *build up*（逐漸累積）的時間演進，說明累積到最後「終將」導致不耐煩與疲勞。'],
+      ['fortunately','adv. 幸運地','小孩逛到不耐煩又疲累不是一件「幸運」的事。<br><b>何時才對：</b>發生好結果時。'],
+      ['permanently','adv. 永久地','逛博物館腳痠與不耐煩只是暫時的生理心理反應，回家休息就好了，不會「永久地」疲勞一輩子。<br><b>何時才對：</b>描述不可逆的永久損傷時。']
+    ]
+  ],
+  [24, ['考點：解決建議目的動詞（To avoid museum feet）','詞性需求：原形及物動詞 (v.)'], 'D',
+    '前兩段都在說明「博物館腿（museum feet）」帶來的無聊、不耐煩與疲勞；第三段提出具體解決建議：「**To _____ museum feet**, try **not** to have children look at too many things in one visit.（為了**避免／預防**『博物館腿』，試著不要讓孩子一次看太多展品。）」',
+    [
+      ['affect','v. 影響','父母不會「為了影響博物館腿」而少看展品。<br><b>何時才對：</b>討論某因素對健康的影響時。'],
+      ['approach','v. 接近、靠近；處理（問題）','我們是要「避開」博物館腿痠症，而非去「接近」它。<br><b>何時才對：</b>描述火車進站或著手處理難題時。'],
+      ['assure','v. 向（某人）保證（搭配 assure sb. that...）；確保','若填「確保得到博物館腿」，就與後句建議完全相反了。<br><b>何時才對：</b>向客戶保證品質時。'],
+      ['avoid','v. 避免、防止、避開','*To avoid museum feet*（為了避免博物館腿痠倦怠症），完美開啟第三段「重質不重量、控制在九件展品與一小時半內」的實用建議。']
+    ]
+  ],
+  [25, ['考點：數量限制片語（not... too many → no more than nine）','詞性需求：比較級數量片語'], 'C',
+    '前一句剛建議：「try **not** to have children **look at too many things** in one visit（試著**不要**讓孩子一次**看太多東西**）」。本句接著給出具體的數量上限數字：「如果年幼遊客專注於**不超過（最多）九件**展品（focus on **no more than** nine objects），他們的收穫反而更多！」',
+    [
+      ['no better than','不比……好、簡直跟……一樣糟','修飾品質好壞，不可接數字 *nine objects*。<br><b>何時才對：</b>比較兩者同樣糟糕時。'],
+      ['no less than','多達……、不少於……（= as many/much as，強調數量之多）','若填「不少於九件（嫌九件太少，要看更多）」，就與前一句「不要一次看太多東西（not look at too many things）」完全矛盾！<br><b>何時才對：</b>強調數量龐大驚人時。'],
+      ['no more than','不超過……、最多只有……（= at most / only，限制數量上限）','*focus on no more than nine objects*（專注於不超過九件展品），直接呼應前句的 *not look at too many things*。'],
+      ['no sooner than','一……就……（時間連接詞片語）','用於時間先後，不可修飾數量 *nine objects*。<br><b>何時才對：</b>搭配過去完成式 *No sooner had he arrived than...* 時。']
+    ]
+  ]
+];
+
+CLOZE3.forEach(q => {
+  cloze3Html += card(q[0], q[1], q[2], stem(q[0]) + clue(q[3]) + ops(q[4], q[2]));
+});
+cloze3Html += groupGradeBox('cloze3', '二、綜合測驗（第 21–25 題）', 21, 25, 1);
+appendApp(cloze3Html);
+
+// 第 26–30 題題組
+let cloze4Html = passage('第 26 至 30 題為題組：秘魯沙漠中的千古未解之謎——「納斯卡線（The Nazca Lines）」', [
+  [
+    ['In the desert of southwest Peru, enormous shapes, complex patterns, and thousands of perfectly straight lines are cut into the desert\'s surface.', '在秘魯西南部的沙漠中，巨大的幾何圖形、複雜的圖案以及數千條筆直的線條，被刻畫在沙漠地表上。'],
+    ['They are known as the Nazca lines and they [[26|cover]] 500 square kilometers.', '它們被稱為「納斯卡線（Nazca lines）」，涵蓋面積達 500 平方公里。'],
+    ['There are about fifty animal figures [[27|up to]] 275 meters long, including a monkey, a spider, and an "owl man."', '其中有大約五十個長度達（長達）275 公尺的動物圖形，包括猴子、蜘蛛與一個「貓頭鷹人（太空人）」。'],
+    ['The last of these lines were drawn about 1,000 years ago.', '這些線條中最後完成的部分，是大約一千年前所繪製的。'],
+    ['More [[28|amazing]] is the fact that they can be viewed only from the air.', '更令人驚奇的是，這些圖案只有從高空中才能看得見全貌。'],
+    ['Some people believe the Nazca Indians were [[29|somehow]] able to fly, perhaps in balloons.', '有些人相信納斯卡印第安人當時不知怎麼地（以某種方式）能夠飛行，或許是搭乘熱氣球。'],
+    ['Others say the lines were landing areas for alien spaceships.', '另一些人則說這些線條是外星人太空船的降落跑道區。'],
+    ['Maybe the lines were to carry water for farming, or were used as a calendar.', '也許這些線條是用來引水灌溉農田的，或是被當作天文曆法使用。'],
+    ['The only thing certain is that the Nazca lines remain one of the world\'s most fascinating [[30|unsolved]] mysteries.', '唯一確定的一點是，納斯卡線至今依然是世界上最引人入勝的未解之謎之一。']
+  ]
+], '', 'cloze4');
+
+const CLOZE4 = [
+  [26, ['考點：地理面積涵蓋動詞搭配（cover + 面積）','詞性需求：複數現在式及物動詞 (v.)'], 'C',
+    '主詞 *they*（指納斯卡線），受詞為面積單位「**500 square kilometers**（500 平方公里）」。在英文地理描寫中，表示某地景、森林或遺址「占地面積達……、涵蓋……面積」，固定使用動詞 **cover (+ an area of) + 平方公里/英畝**！',
+    [
+      ['circle','v. 環繞、圍繞；圈出','線條刻在沙漠表面，是「涵蓋」500 平方公里的面積，而非在外面「繞一圈」。<br><b>何時才對：</b>描述飛機在機場上空盤旋繞圈或衛星繞地球時。'],
+      ['contain','v. 包含、容納（容器內部裝有某物）','線條本身不是容器，不可說「線條內部裝有 500 平方公里」。<br><b>何時才對：</b>描述飲料含有糖分或書籍包含十個章節時。'],
+      ['cover','v. 涵蓋（面積）、占地；覆蓋','*cover (an area of) 500 square kilometers*（涵蓋／占地 500 平方公里），地理面積必考標準搭配。'],
+      ['wrap','v. 包裹、包裝（禮品或衣物）','地面線條不會去「包裝 500 平方公里」。<br><b>何時才對：</b>描述用包裝紙包禮物時。']
+    ]
+  ],
+  [27, ['考點：數量／尺寸上限介系詞片語（up to 275 meters long）','詞性需求：介系詞片語'], 'C',
+    '「There are about fifty animal figures _____ **275 meters long**（有大約五十個動物圖形，長度**最長可達／高達** 275 公尺）」。這五十個動物圖形大小不一，其中最大的可長達 275 公尺。置於數字與長度單位前，表「多達、長達、高達（上限）」的片語即為 **up to**。',
+    [
+      ['far from','遠非、一點也不','後接形容詞表否定（如 *far from perfect*），不可接 *275 meters long*。<br><b>何時才對：</b>表達距離完美還差得遠時。'],
+      ['such as','例如（後接具體名詞例子）','後方是長度尺寸 *275 meters long*，並非動物種類例子（例子在逗號後的 *including a monkey, a spider...*）。<br><b>何時才對：</b>後接 *monkeys and spiders* 時。'],
+      ['up to','多達、長達、高達（表最大數值上限）','*animal figures up to 275 meters long*（長達 275 公尺的動物圖形），語意與結構完全正確。'],
+      ['as much as','多達……（用於不可數數量、金額、重量或程度）','注意：*275 meters long* 是形容詞片語，若用同級比較表「長達 275 公尺」，必須用 **as long as 275 meters**，而非 *as much as 275 meters long*！<br><b>何時才對：</b>修飾不可數的金額或重量（如 *weighs as much as 500 kilograms*）時。']
+    ]
+  ],
+  [28, ['考點：倒裝句主詞補語形容詞（More amazing is the fact that...）','詞性需求：現在分詞形容詞 (adj.)'], 'A',
+    '本句為表語（主詞補語）提前的倒裝句，還原正常語序即：「**The fact** that they can be viewed only from the air **is more _____**.（『這些一千年前畫的巨大圖案竟然只有從高空中才能看得見』這件事實，更加**令人驚奇**。）」主詞是「這件事實（the fact）」，修飾事物「令人驚訝、令人稱奇的」應選 **amazing**。',
+    [
+      ['amazing','adj. 令人驚奇的、驚人的','一千年前還沒有飛機，古人畫出的圖案卻只有從高空才看得到全貌，這件事實自然非常「令人驚奇（amazing）」。'],
+      ['hesitating','v. 猶豫、躊躇','主詞是「事實（the fact）」，事實不會「猶豫」。<br><b>何時才對：</b>主詞為人且表遲疑不決時。'],
+      ['interacting','v. 互動','事實不會「互動」。<br><b>何時才對：</b>描述人與人之間的交流互動時。'],
+      ['satisfying','adj. 令人滿意的、令人滿足的','只有從高空才看得到並引發後文一連串未解之謎，這讓人感到「驚奇困惑（amazing）」而非「滿意」。<br><b>何時才對：</b>形容餐點或成果令人滿意時。']
+    ]
+  ],
+  [29, ['考點：方式不明之副詞（somehow = 以某種方式／不知怎麼地）','詞性需求：副詞 (adv.)'], 'B',
+    '「Some people believe the Nazca Indians **were _____ able to fly, perhaps in balloons**.（有些人相信納斯卡印第安人當時**不知怎麼地／以某種方式**能夠飛行，也許是搭熱氣球。）」因為一千年前古人到底怎麼飛上天看圖案至今沒有確切證據，後文也只能加個 *perhaps in balloons*（也許是搭氣球吧）來猜測，因此在 *able to fly* 前方表示「以某種未知的方式、不知怎麼地、設法」的副詞即為 **somehow**！',
+    [
+      ['someday','adv. 有朝一日、將來總有一天（用於未來式）','納斯卡印第安人是一千多年前的古人（動詞為過去式 *were*），不可用未來時間副詞 *someday*。<br><b>何時才對：</b>搭配未來式表達對未來的期許時。'],
+      ['somehow','adv. 以某種方式、不知怎麼地','完美契合「雖然不知道確切方法（也許是搭熱氣球），但古人當時設法以某種方式飛上了天空」的語境。'],
+      ['sometime','adv. 在（過去或未來的）某個時候','此處探討的是古人「如何（how）」在千年前具備飛行能力（後接方式猜測 *perhaps in balloons*），而非「在某個時間點會飛」。<br><b>何時才對：</b>搭配時間點（如 *sometime last week*）時。'],
+      ['somewhere','adv. 在某處（地點）','後句猜測的是飛行工具方式（*perhaps in balloons*），而非地點。<br><b>何時才對：</b>指未知的某個地方時。']
+    ]
+  ],
+  [30, ['考點：前文眾說紛紜無定論與固定搭配（unsolved mysteries）','詞性需求：過去分詞形容詞 (adj.)'], 'D',
+    '前四句連續列出四種不同的猜測（Some people believe... / Others say... / Maybe... or...），沒有人知道真正答案。因此最後一句總結：「唯一確定的是，納斯卡線至今依然是世界上最迷人的**未解之謎**（**unsolved** mysteries）之一！」',
+    [
+      ['unchanged','adj. 未改變的、維持原樣的','謎團是「尚未被解開的（unsolved）」，不稱為「未改變的謎團」。<br><b>何時才對：</b>形容古法製程或風景維持不變時。'],
+      ['undetermined','adj. 尚未決定的、未確定的（常指日期、死因或數額尚未裁定）','英文中與 *mysteries*（謎團）或 *crimes / cases*（懸案）最固定的慣用搭配是 **unsolved**（來自 *solve a mystery* 解開謎團）。<br><b>何時才對：</b>形容會議日期或數量尚未拍板決定時。'],
+      ['unfolded','v.(pt./p.p.) 展開、揭露','若謎團已經「被揭開（unfolded）」，就不再是謎團了。<br><b>何時才對：</b>描述故事劇情展開時。'],
+      ['unsolved','adj. 未解決的、未解開的','*unsolved mysteries*（未解之謎）為最道地的固定搭配，完美總結前文眾說紛紜、莫衷一是的各種假說。']
+    ]
+  ]
+];
+
+CLOZE4.forEach(q => {
+  cloze4Html += card(q[0], q[1], q[2], stem(q[0]) + clue(q[3]) + ops(q[4], q[2]));
+});
+cloze4Html += groupGradeBox('cloze4', '二、綜合測驗（第 26–30 題）', 26, 30, 1);
+appendApp(cloze4Html);
+
+// ==================== 三、文意選填 ====================
+appendApp('<h2 id="sec-wbank">三、文意選填（第 31–40 題，每題 1 分，共 10 分）</h2>');
+
+const WBANK_OPTS = [
+  ['award', 'v. 判給、裁定給予（監護權或賠償）；頒發 / n. 獎項'],
+  ['challenged', 'v.(p.p.) 被挑戰、受到質疑'],
+  ['concerned', 'adj. 關心的、重視的、在意的（be concerned about...）'],
+  ['consequence', 'n. 結果、後果（as a consequence 結果、因此）'],
+  ['divorce', 'n./v. 離婚'],
+  ['fight', 'v./n. 爭取、打官司爭奪（fight for...）'],
+  ['increase', 'n./v. 增加、上升（搭配 in）'],
+  ['took place', 'phr. v. 發生（過去式）'],
+  ['traditional', 'adj. 傳統的'],
+  ['unusual', 'adj. 不尋常的、罕見的（not unusual 並不罕見）']
+];
+const WBANK_LAB = 'ABCDEFGHIJ';
+
+let wbankHtml = '<div class="pas"><div class="bank" id="bank-wbank">' +
+  WBANK_OPTS.map((o,i)=>'<span><b>('+WBANK_LAB[i]+') '+o[0]+'</b> <small>'+o[1]+'</small></span>').join('') +
+'</div></div>';
+
+wbankHtml += passage('第 31 至 40 題為題組：美國離婚子女監護權（Child Custody）的法律演變與性別角色轉變', [
+  [
+    ['With one out of every two American marriages ending in divorce, custody of children has become an issue in the American society.', '隨著美國每兩段婚姻中就有一段以離婚收場，子女的「監護權（custody）」已成為美國社會的一大議題。'],
+    ['Up until the late 1970s, it had been common practice in the United States to automatically [[31|award]] custody to the mother when a divorce occurred.', '直到 1970 年代末期為止，美國的普遍慣例是在離婚發生時，自動將子女監護權判給母親。']
+  ],
+  [
+    ['However, since the 1970s, this practice has been [[32|challenged]].', '然而，自 1970 年代以來，這項慣例已經受到了挑戰（質疑）。'],
+    ['Most custody battles today are decided, in theory, on the basis of who is the more fit parent for the child.', '現今大多數的監護權爭奪戰，理論上都是根據「誰是對孩子而言更稱職合適的家長」來做裁決。'],
+    ['The reality, nevertheless, is that most women still win custody of their children in a [[33|divorce]].', '儘管如此，現實情況是，大多數女性在離婚官司中依然贏得孩子的監護權。']
+  ],
+  [
+    ['This legal change was the result of the social changes that [[34|took place]] in the United States during the 1960s and 1970s.', '這項法律上的改變，是源於 1960 與 1970 年代在美國所發生的社會變遷。'],
+    ['These changes challenged many of the [[35|traditional]] roles men and women were expected to play.', '這些社會變遷挑戰了許多過去社會期望男性與女性所扮演的傳統角色。'],
+    ['As a [[36|consequence]], it is not uncommon nowadays to find women working outside their homes and being very [[37|concerned]] about their careers and personal lives.', '因此（結果），現今看到女性外出工作、並非常關注（重視）自己的事業與個人生活，已是一點也不罕見的事。'],
+    ['It is also not [[38|unusual]] to see men accepting roles that were once considered the exclusive domain of women, such as shopping for groceries, driving their children to and from school, or cleaning their homes.', '看到男性接受過去被視為女性專屬領域的角色——例如採買日常食品雜貨、接送孩子上下學或打掃家裡——也同樣並不罕見。']
+  ],
+  [
+    ['Because of the [[39|increase]] in the divorce rate, the change in the roles that men and women are expected to play, and the changing attitude of the judicial system toward child custody, more men have started to [[40|fight]] for and win custody of their children when divorce occurs.', '由於離婚率的上升、社會對男女角色期待的轉變，以及司法體系對子女監護權態度的改變，有更多男性在離婚發生時，已經開始爭取並贏得自己孩子的監護權。']
+  ]
+], '', 'wbank');
+
+function makeWbankOps(ansCode, correctExp, wrongHint) {
+  return WBANK_OPTS.map((o, i) => {
+    const code = WBANK_LAB[i];
+    if (code === ansCode) {
+      return [o[0], o[1], correctExp];
+    } else {
+      return [o[0], o[1], wrongHint + '（本選項為 ' + o[1] + '，對應第 ' + ({A:31,B:32,C:37,D:36,E:33,F:40,G:39,H:34,I:35,J:38}[code]) + ' 題）。'];
+    }
+  });
+}
+
+const WBANK_Q = [
+  [31, ['考點：法院裁定監護權動詞搭配（award custody to...）','詞性需求：原形及物動詞 (v.)'], 'A',
+    '結構為「to automatically _____ **custody to the mother** when a divorce occurred（在離婚發生時，自動將監護權……給母親）」。在法律英文中，法院或法官「將監護權、賠償金或合約**判給、裁定給予**某人」，標準動詞即為 **award**（`award custody / damages to sb.`）！',
+    '*award custody to the mother*（將監護權判給母親），為法律與家庭議題的固定搭配。',
+    '此處位於不定詞 *to automatically* 與 *custody to the mother* 之間，需填原形及物動詞 *award* 表「判給（監護權）」'
+  ],
+  [32, ['考點：現在完成式被動語態（has been challenged）与轉折對比','詞性需求：過去分詞 (p.p.)'], 'B',
+    '第一段末說 1970 年代末以前，慣例都是自動把監護權判給母親；第二段首句以 **However**（然而）轉折：「However, since the 1970s, **this practice has been _____**.（然而，自 1970 年代以來，這項慣例已經受到……）」，後句接著說現在改為看誰是更稱職的家長（不再自動判給母親），且第三段第 2 句也重現了同一個動詞「These changes **challenged** many of the... roles」。因此助動詞 *has been* 後應填過去分詞 **challenged**（受到挑戰／質疑）。',
+    '構成現在完成式被動語態 *has been challenged*（已受到挑戰與質疑），呼應後句改以誰更適任為裁決基準。',
+    '此處位於 *this practice has been* 後構成被動語態，搭配句首轉折詞 *However*，需填過去分詞 *challenged*（被挑戰）'
+  ],
+  [33, ['考點：不定冠詞 a 後接單數名詞與上下文主題重現','詞性需求：單數名詞 (n.)'], 'E',
+    '「most women still win custody of their children **in a _____**.（大多數女性在……之中依然贏得孩子的監護權。）」全文探討的正是夫妻「**離婚（divorce）**」時的子女監護權歸屬（呼應第一段末句 *when a divorce occurred* 與末段末句 *when divorce occurs*）。',
+    '*win custody of their children in a divorce*（在離婚案中贏得孩子的監護權）。',
+    '此處位於 *win custody of their children in a* 後方，需填單數名詞 *divorce*（離婚）'
+  ],
+  [34, ['考點：關係子句過去式動詞片語（social changes that took place...）','詞性需求：過去式不及物動詞片語'], 'H',
+    '分析關係子句：「the social changes **that _____ in the United States during the 1960s and 1970s**（在 1960 與 1970 年代於美國**發生**的社會變遷）」。關係代名詞 *that*（指代先行詞 *the social changes*）在子句中當主詞，後方缺少搭配過去時間 `during the 1960s and 1970s` 的**過去式不及物動詞**！十個選項中唯一符合的即為 **(H) took place**（發生）。',
+    '*the social changes that took place... during the 1960s and 1970s*（在 1960 與 1970 年代發生的社會變遷）。',
+    '此處在關係代名詞 *that* 後擔任子句的過去式不及物動詞（搭配 *during the 1960s and 1970s*），需填 *took place*（發生）'
+  ],
+  [35, ['考點：社會變遷挑戰之舊有性別角色形容詞','詞性需求：形容詞 (adj.)'], 'I',
+    '「These changes challenged many of **the _____ roles men and women were expected to play**.（這些社會變遷挑戰了許多過去社會期望男女所扮演的……角色。）」後兩句具體說明：以前認為男主外、女主內（買菜、接送小孩、打掃曾被視為女性專屬領域），而 60、70 年代社會變遷所打破挑戰的，正是這些「**傳統的（traditional）**」男女刻板角色！',
+    '*the traditional roles men and women were expected to play*（過去期望男女扮演的傳統角色）。',
+    '此處位於定冠詞 *the* 與複數名詞 *roles* 之間，指被社會變遷所打破的舊有男女分工，需填形容詞 *traditional*（傳統的）'
+  ],
+  [36, ['考點：轉折因果固定片語（As a consequence = As a result）','詞性需求：單數名詞 (n.)'], 'D',
+    '句首結構為「**As a _____**, it is not uncommon nowadays to find women working outside their homes...（**因此／結果**，現今看到女性外出工作已不罕見）」。固定轉折片語 **As a consequence**（＝ *As a result*，結果、因此）用來引出傳統性別角色被打破後的現代現象。',
+    '*As a consequence* 為高頻固定片語，意為「因此、結果（= As a result）」。',
+    '此處構成句首固定因果轉折片語 *As a _____*，需填單數名詞 *consequence*（結果）'
+  ],
+  [37, ['考點：形容詞片語搭配（be concerned about...）','詞性需求：形容詞 (adj.)'], 'C',
+    '「find women working outside their homes and **being very _____ about** their careers and personal lives（發現女性外出工作，並且非常**關注／重視**她們的事業與個人生活）」。空格前有 *being very*，空格後接介系詞 **about**。固定搭配 **be concerned about...** 在此意為「關心、關注、重視（自己的事業與個人生活）」。',
+    '*being very concerned about their careers and personal lives*（非常重視／關心她們的事業與個人生活）。',
+    '此處位於 *being very* 與介系詞 *about* 之間，描述現代職業女性對事業的重視，需填形容詞 *concerned*'
+  ],
+  [38, ['考點：平行雙重否定句型（It is not uncommon... / It is also not unusual...）','詞性需求：形容詞 (adj.)'], 'J',
+    '破題關鍵在前一句完全對稱的平行句型！<br>• 前一句講女性：「**It is not uncommon** nowadays to find women working outside their homes...（看到女性外出工作**並不罕見**）」<br>• 本句加 **also** 講男性：「**It is also not _____** to see men accepting roles that were once considered the exclusive domain of women...（看到男性做買菜、接送小孩、打掃家裡等家務，**也同樣並不罕見**！）」<br>與前一句 `not uncommon`（不罕見）完全同義平行的形容詞即為 **unusual**（`not unusual` ＝ 並不罕見、很常見）！',
+    '*It is also not unusual to see...*（看到……也並不罕見），與前一句的 *it is not uncommon to find...* 形成完美平行對稱。',
+    '此處與前一句的 *it is not uncommon* 構成平行句型 *It is also not _____ to see...*，需填同義形容詞 *unusual*（不尋常的、罕見的）'
+  ],
+  [39, ['考點：名詞搭配介系詞 in（the increase in the divorce rate）','詞性需求：單數名詞 (n.)'], 'G',
+    '「Because of **the _____ in the divorce rate**...（由於**離婚率的上升／增加**……）」。定冠詞 *the* 後缺名詞，且後方搭配介系詞 **in**（`in the divorce rate`），同時呼應全文第一句「美國每兩段婚姻就有一段離婚」的高離婚率背景。表示比率、數量或價格「在……方面的增加、上升」，固定搭配 **the increase / rise in...**！',
+    '*the increase in the divorce rate*（離婚率的上升），名詞 *increase* 後接介系詞 *in* 為標準搭配。',
+    '此處位於 *Because of the* 與 *in the divorce rate* 之間，需填單數名詞 *increase*（增加、上升）'
+  ],
+  [40, ['考點：不定詞 to V 與介系詞 for 搭配（fight for and win custody）','詞性需求：原形不及物動詞 (v.)'], 'F',
+    '「more men have started **to _____ for and win** custody of their children when divorce occurs（更多男性在離婚發生時，已經開始**爭取**並贏得自己孩子的監護權）」。不定詞 *to* 後缺原形動詞，且後方搭配介系詞 **for**，並與 *and win*（並贏得）構成共同受詞 *custody of their children*（亦呼應第二段的 *custody battles* 監護權爭奪戰）。固定片語 **fight for...** 意為「為……而戰、努力爭取……」。',
+    '*fight for and win custody of their children*（爭取並贏得孩子的監護權），呼應第二段的 *custody battles*。',
+    '此處位於 *started to* 與介系詞 *for* 之間，並與 *and win custody* 並列，需填原形動詞 *fight*（爭取）'
+  ]
+];
+
+WBANK_Q.forEach(q => {
+  wbankHtml += card(q[0], q[1], q[2], stem(q[0]) + clue(q[3]) + ops(makeWbankOps(q[2], q[4], q[5]), q[2], WBANK_LAB));
+});
+wbankHtml += groupGradeBox('wbank', '三、文意選填（第 31–40 題）', 31, 40, 1);
+appendApp(wbankHtml);
+
+// ==================== 四、篇章結構 ====================
+appendApp('<h2 id="sec-disc">四、篇章結構（第 41–45 題，每題 2 分，共 10 分）</h2>');
+
+const DISC_OPTS = [
+  ['E-mail is different.', '電子郵件則截然不同。'],
+  ['The downside is, I might be less likely to say something deeper.', '缺點是，我可能比較不會在信中談論更深層的想法。'],
+  ['The time and distance, as a matter of fact, influence the letter-writer.', '事實上，這段時間與距離會影響寫信的人。'],
+  ['I can zap a message to Kenya whenever I want to, and it gets there almost in a second.', '我可以隨時隨地將一則訊息瞬間傳送到肯亞，而且幾乎在一秒鐘之內就會送達。'],
+  ['I will also take more care with my style, trying to write in a way that is interesting and worth reading.', '我也會更加用心雕琢自己的文筆風格，試著寫得既有趣又值得一讀。']
+];
+const DISC_LAB = 'ABCDE';
+
+let discHtml = '<div class="pas"><div class="bank" id="bank-disc">' +
+  DISC_OPTS.map((o,i)=>'<div style="width:100%;"><b>('+DISC_LAB[i]+') '+o[0]+'</b> <small>'+o[1]+'</small></div>').join('') +
+'</div></div>';
+
+discHtml += passage('第 41 至 45 題為題組：傳統書信（Letter Writing）與電子郵件（E-mail）的本質差異', [
+  [
+    ['Many people say that e-mail is just a faster way to deliver letters.', '許多人說，電子郵件只是一種傳遞信件更快的方式。'],
+    ['The fact is that letter writing and e-mail are completely different processes.', '事實上，寫傳統書信與寫電子郵件是截然不同的過程。'],
+    ['Handwritten or typed, letters travel in envelopes through actual space and take time getting from one place to another.', '無論是手寫還是打字，傳統信件都裝在信封裡，穿越真實的物理空間，並需要花費時間才能從一個地方寄達另一個地方。'],
+    ['[[41|(C) The time and distance, as a matter of fact, influence the letter-writer.]]', '事實上，這段時間與距離會影響寫信的人。'],
+    ['If I am writing on paper to my brother in Kenya, I will be less likely to complain about the breakfast I had this morning.', '如果我是在紙上寫信給我遠在肯亞的兄弟，我就比較不可能在信裡抱怨今天早上吃的早餐。'],
+    ['I will probably write about my relationships and some things that I\'ve been thinking about.', '我可能會寫些關於我的人際感情關係，以及我近期一直在思考的一些事情。'],
+    ['[[42|(E) I will also take more care with my style, trying to write in a way that is interesting and worth reading.]]', '我也會更加用心雕琢自己的文筆風格，試著寫得既有趣又值得一讀。'],
+    ['People tend to regard letters as important.', '人們往往將傳統書信視為重要的東西。'],
+    ['My brother might save my letter; he might read it back to me years from now.', '我的兄弟可能會把我的信保存下來；甚至可能在多年後拿出來重讀給我聽。']
+  ],
+  [
+    ['[[43|(A) E-mail is different.]]', '電子郵件則截然不同。'],
+    ['It is instant, traveling from point to point.', '它是即時的，直接從端點傳送到端點。'],
+    ['If you don\'t print it out, the message doesn\'t physically exist.', '如果你不把它列印出來，這則訊息在物理世界中甚至不存在。'],
+    ['With e-mail, geography is no obstacle and time is not important.', '有了電子郵件，地理距離不再是障礙，時間也不再重要。'],
+    ['[[44|(D) I can zap a message to Kenya whenever I want to, and it gets there almost in a second.]]', '我可以隨時隨地將一則訊息瞬間傳送到肯亞，而且幾乎在一秒鐘之內就會送達。'],
+    ['The ease of this kind of writing and sending probably makes for a different kind of communication.', '這種書寫與寄送的便利性，很可能會造就出另一種截然不同的溝通型態。'],
+    ['I can complain about the breakfast I had this morning or rattle on about friends and movies.', '我可以抱怨今天早上吃的早餐，或是喋喋不休地閒聊朋友與電影。'],
+    ['That is because I am not so focused on style and profundity.', '那是因為我不再那麼專注於文筆風格與思想深度。'],
+    ['[[45|(B) The downside is, I might be less likely to say something deeper.]]', '缺點是，我可能比較不會在信中談論更深層的想法。'],
+    ['My brother might glance at my mail, have a laugh, and then delete it.', '我的兄弟可能只會掃一眼我的郵件、笑一笑，然後就把它刪掉了。']
+  ]
+], '', 'disc');
+
+function makeDiscOps(ansCode, correctExp) {
+  return DISC_OPTS.map((o, i) => {
+    const code = DISC_LAB[i];
+    if (code === ansCode) {
+      return [o[0], o[1], correctExp];
+    } else {
+      const qMap = {C:41, E:42, A:43, D:44, B:45};
+      return [o[0], o[1], '此選項屬於第 ' + qMap[code] + ' 題的上下文邏輯，不符合本題空格前後的銜接線索。'];
+    }
+  });
+}
+
+const DISC_Q = [
+  [41, ['考點：指代詞 The time and distance 回指前句 actual space and take time','詞性需求：完整句子'], 'C',
+    '破題關鍵在空格前一句結尾：「letters travel in envelopes **through actual space and take time** getting from one place to another.（傳統信件穿越**真實空間［距離］**並**花費時間**才能寄達。）」而空格後兩句則說明這如何影響寫信內容（寄去肯亞不會抱怨今早的早餐，而會寫深刻思考的事）。**(C)**「**The time and distance**, as a matter of fact, **influence the letter-writer**.（事實上，**這段時間與距離**會影響寫信的人。）」以定冠詞 *The time and distance* 直接回指前句的 *through actual space and take time*，並開啟後文對寫信者下筆內容的影響！'
+  ],
+  [42, ['考點：平行結構（I will probably write... / I will also take more care with my style...）与第二段呼應','詞性需求：完整句子'], 'E',
+    '空格前一句為：「**I will** probably write about my relationships and some things that I\'ve been thinking about.（我可能會寫些人際關係與深刻思考的事［即第二段提到的 *profundity* 深度］）」，空格後兩句說：「人們把信視為重要之物，我兄弟可能會把信珍藏起來，多年後拿出來重讀」。**(E)**「**I will also** take more care with **my style**, trying to write in a way that is **interesting and worth reading**.」不僅以 *I will also...* 承接前句的 *I will probably...*，解釋為何值得珍藏重讀，更與第二段倒數第三句的「I am not so focused on **style and profundity**（文筆風格與思想深度）」形成完美跨段對照！'
+  ],
+  [43, ['考點：跨段轉折主題句（第一段傳統書信 → 第二段電子郵件）','詞性需求：完整句子'], 'A',
+    '第一段整段都在談「傳統紙本書信（letters）」，而第 43 題位於第二段句首，後方緊接著為：「**It** is instant, traveling from point to point. If you don\'t print **it** out... With **e-mail**...（它是即時的……如果不把它印出來……有了電子郵件……）」。因此第二段首句必須先引出單數主詞 **E-mail** 並點出它與第一段傳統書信的不同，讓後句的代名詞 *It* 有先行詞可指代——即 **(A)**「**E-mail is different.**（電子郵件則截然不同。）」！'
+  ],
+  [44, ['考點：具體例證呼應（geography is no obstacle and time is not important → zap a message to Kenya in a second）','詞性需求：完整句子'], 'D',
+    '空格前一句提出通則：「With e-mail, **geography is no obstacle and time is not important**.（有了電子郵件，**地理距離不再是障礙，時間也不再重要**。）」空格後一句則說：「**The ease of this kind of writing and sending**...（這種書寫與**寄送的便利性**……）」。中間第 44 題具體舉例說明地理（寄到肯亞）與時間（一秒送達）如何不再是障礙，並對照第一段寄信去肯亞的例子：**(D)**「**I can zap a message to Kenya whenever I want to, and it gets there almost in a second.**」！'
+  ],
+  [45, ['考點：同義因果承接（not so focused on profundity → less likely to say something deeper）','詞性需求：完整句子'], 'B',
+    '空格前兩句說：「用電子郵件我可以抱怨今早的早餐或閒聊朋友與電影。那是因為**我不再那麼專注於文筆風格與思想深度（profundity）**。」空格後一句則說：「我兄弟可能只會掃一眼、笑一笑，**然後就把它刪掉了（and then delete it）**。」中間第 45 題點出隨手寫雞毛蒜皮小事、不重思想深度的「缺點（The downside）」：**(B)**「**缺點是，我可能比較不會在信中談論更深層的想法（say something deeper，直接呼應前句的 profundity）**」，所以兄弟看完笑一笑就刪了，不會像第一段紙本書信那樣珍藏多年！'
+  ]
+];
+
+DISC_Q.forEach(q => {
+  discHtml += card(q[0], q[1], q[2], stem(q[0]) + clue(q[3]) + ops(makeDiscOps(q[2], q[3]), q[2], DISC_LAB));
+});
+discHtml += groupGradeBox('disc', '四、篇章結構（第 41–45 題）', 41, 45, 2);
+appendApp(discHtml);
+
+// ==================== 五、閱讀測驗 ====================
+appendApp('<h2 id="sec-rc">五、閱讀測驗（第 46–56 題，每題 2 分，共 22 分）</h2>');
+
+// 第 46–48 題題組
+let rc1Html = passage('第 46 至 48 題為題組：日本商品包裝文化（Japanese Packaging Culture）與市場競爭', [
+  [
+    ['Rice balls with folded plastic wrappers separating the rice from the seaweed; a dozen kinds of cold tea in a dozen different bottles—enter any convenience store in Japan, and you\'re immediately struck by the great variety and quality of the packaging!', '用摺疊塑膠包裝膜將米飯與海苔隔開的御飯糰、裝在十幾種不同瓶子裡的十幾種冷泡茶——走進日本任何一家便利商店，你都會立刻對商品包裝的極致多樣性與高品質讚嘆不已！']
+  ],
+  [
+    ['Japanese companies have been accused of over-packaging; but within the Japanese cultural context, that\'s not really true.', '日本企業一直被指責「過度包裝」；但在日本的文化脈絡下，事實並非如此。'],
+    ['The Japanese tend to use more packaging because of a cultural emphasis on freshness and a lack of storage space at home.', '日本人之所以傾向使用較多包裝，是因為文化上對「新鮮度」的重視，以及家中缺乏儲藏空間（因此習慣買小包裝）。'],
+    ['Moreover, they believe nice packaging adds value because it\'s a strong signal of quality.', '此外，他們相信精美的包裝能增加產品價值，因為那是高品質的強烈象徵。'],
+    ['What\'s more, compared with Westerners, the Japanese are more connected with packaging as a symbol of appreciation, love and care.', '更有甚者，與西方人相比，日本人更將包裝視為表達感激、愛與關懷的象徵。'],
+    ['Packaging has, therefore, attained an important place in Japan\'s economy.', '因此，包裝已在日本經濟中占據了舉足輕重的地位。'],
+    ['The packaging market is worth over ¥7.4 trillion.', '日本包裝市場的產值超過 7.4 兆日圓。'],
+    ['New packaging is introduced to Japanese store shelves at a rate of 20 percent per year, the highest rate in the world.', '新包裝以每年 20% 的更新率被推上日本商店貨架，這個比率高居世界第一。'],
+    ['In such an environment, a product has to have more than just a nice graphic design to differentiate it from its shelf-mates.', '在這樣的環境中，一項商品不能只有好看的平面圖案設計，才能讓自己與貨架上的「鄰居夥伴（其他同類商品）」有所區隔。'],
+    ['The product has to speak to the consumer\'s needs with both personality and practical value.', '商品必須同時具備個性特色與實用價值，才能打動消費者的需求。'],
+    ['In this changing industry, nothing is really certain except one thing.', '在這個瞬息萬變的產業中，除了這件事之外，沒有什麼是確定的：'],
+    ['You can be sure that the goods out there on display on the shelves of the convenience store will soon be looking rather different.', '你可以確信，目前陳列在便利商店貨架上的那些商品，很快就會換上截然不同的新外貌。']
+  ]
+], '', 'rc1');
+
+const RC1_Q = [
+  [46, ['考點：文章出處推論題（Source of the Passage）','詞性需求：名詞片語'], 'C',
+    '46. This passage is most likely taken from a ______.',
+    '46. 本文最可能摘錄自下列何處？',
+    '檢視全文內容：文章從日本便利商店的飯糰與茶飲包裝切入，接著深入分析日本消費者的購買心理（對保鮮、居家收納空間、品質象徵與送禮心意的需求）、包裝產業高達 7.4 兆日圓的經濟產值、每年 20% 的貨架包裝更新率，以及商品如何滿足消費者需求（**speak to the consumer\'s needs**）。這是一篇典型的市場與消費趨勢分析，最可能出自「**消費者報告／消費市場觀察雜誌（consumer report）**」，故選 **(C)**。',
+    [
+      ['cookbook','食譜。','第一段雖然提到御飯糰與冷泡茶，但重點在於它們的「塑膠包裝與瓶身（wrappers and bottles）」，全文並未教導如何烹飪做菜。<br><b>何時才對：</b>當文章列出食材份量與烹調步驟時。'],
+      ['user\'s manual','（電器或產品的）使用說明書。','本文是宏觀分析日本的包裝文化與市場產值，並非某樣產品的操作說明書。<br><b>何時才對：</b>當文章逐步說明如何組裝或操作某機器時。'],
+      ['consumer report','消費者報告（消費市場觀察報導）。','全文探討消費者文化心理、7.4 兆日圓包裝市場規模、上架更新率與如何迎合消費者需求（*consumer\'s needs*），完全符合消費市場報導的性質。'],
+      ['fashion magazine','時尚雜誌。','本文討論的是便利商店食品飲料的商品包裝（packaging），而非服裝穿搭或名牌時尚。<br><b>何時才對：</b>當文章介紹巴黎時裝週與服裝流行趨勢時。']
+    ]
+  ],
+  [47, ['考點：細節否定題（NOT a reason）','詞性需求：完整句子'], 'D',
+    '47. Which of the following is NOT a reason for the Japanese to use more packaging?',
+    '47. 下列何者「不是」日本人使用較多包裝的原因？',
+    '定位第二段第 2–4 句列出的原因：<br>• 第 2 句：「because of a cultural **emphasis on freshness** (A) and a lack of storage space at home.」<br>• 第 3 句：「Moreover, they believe nice packaging adds value because **it\'s a strong signal of quality** (C).」<br>• 第 4 句：「What\'s more, compared with Westerners, the Japanese are more connected with packaging **as a symbol of appreciation**, love and care (B).」<br>第 4 句提到西方人（compared with Westerners），只是比較東西方對包裝文化感受的差異，並未說日本人多用包裝是「**為了在經濟上與西方人競爭（compete with Westerners in economy）**」，故 **(D)** 為本題正解！',
+    [
+      ['Packaging helps to keep food fresh.','包裝有助於保持食物新鮮。','符合第二段第 2 句「because of a cultural emphasis on freshness」。<br><b>何時才對：</b>此為文中提及的原因，本題選 NOT。'],
+      ['Packaging helps the Japanese to show appreciation.','包裝幫助日本人表達感激與心意。','符合第二段第 4 句「as a symbol of appreciation, love and care」。<br><b>何時才對：</b>此為文中提及的原因，本題選 NOT。'],
+      ['The Japanese consider packaging a symbol of quality.','日本人將包裝視為品質的象徵。','符合第二段第 3 句「because it\'s a strong signal of quality」。<br><b>何時才對：</b>此為文中提及的原因，本題選 NOT。'],
+      ['Packaging is a way to compete with Westerners in economy.','包裝是一種在經濟上與西方人競爭的方式。','文中僅比較日本人比西方人更視包裝為感謝與關懷的象徵，從未說包裝是為了跟西方國家進行經濟競爭，符合題幹 NOT 的要求。']
+    ]
+  ],
+  [48, ['考點：上下文合成詞猜測詞義（shelf-mates）','詞性需求：名詞片語'], 'B',
+    '48. The word "shelf-mates" in the second paragraph most likely refers to ______.',
+    '48. 第二段中的「shelf-mates」一詞最可能指的是什麼？',
+    '定位第二段第 7–8 句：「New packaging is introduced to Japanese **store shelves** at a rate of 20 percent per year... In such an environment, **a product** has to have more than just a nice graphic design **to differentiate it from its shelf-mates**.」字根 **-mate** 表「同處一地的夥伴／同伴」（如 *classmate* 同班同學、*roommate* 同房室友）。一項**商品（a product）**被擺在**商店貨架（store shelves）**上展示時，跟它一起擺在同一個貨架上、需要與之做出區隔（differentiate it from...）的「貨架室友（shelf-mates）」，自然就是**店裡貨架上的其他商品（other products in the store）**！',
+    [
+      ['co-workers on the job','工作上的同事。','主詞是 *a product*（一件商品），商品的「貨架同伴」也是商品，不是人類店員同事。<br><b>何時才對：</b>解釋 *workmates* 時。'],
+      ['other products in the store','店裡的其他商品。','*shelf*（貨架）+ *mates*（同伴），指與該商品並排陳列在商店貨架上的其他競爭商品。'],
+      ['customers\' need for other products','顧客對其他商品的需求。','「需求（need）」不會擺在貨架上，也無法在視覺設計上與商品區隔。<br><b>何時才對：</b>無。'],
+      ['other graphic designs on the package','同一個包裝上的其他平面圖案設計。','是讓「這件商品（it = a product）」與「貨架上的其他商品（its shelf-mates）」做出區隔，而非跟自己包裝上的圖案區隔。<br><b>何時才對：</b>無。']
+    ]
+  ]
+];
+
+RC1_Q.forEach(q => {
+  SENT[q[0]]=[q[3], q[4]];
+  rc1Html += card(q[0], q[1], q[2], stem(q[0]) + clue(q[5]) + ops(q[6], q[2]));
+});
+rc1Html += groupGradeBox('rc1', '五、閱讀測驗（第 46–48 題）', 46, 48, 2);
+appendApp(rc1Html);
+
+// 第 49–52 題題組
+let rc2Html = passage('第 49 至 52 題為題組：北美原住民的敬狼傳統 vs. 美國西部白人對灰狼（Gray Wolves）的滅絕捕殺戰', [
+  [
+    ['Native Americans could not understand the white man\'s war on the wolf.', '美國原住民（印第安人）無法理解白人對「狼」發動的滅絕戰爭。'],
+    ['The Lakota, Blackfeet, and Shoshone, among other tribes, considered the wolf their spiritual brother.', '拉科塔族、黑腳族與休休尼族等原住民部落，都將狼視為他們靈魂上的兄弟。'],
+    ['They respected the animals\' endurance and hunting ability, and warriors prayed to hunt like them.', '他們敬重這種動物的耐力與狩獵能力，部落戰士們甚至祈禱自己能像狼一樣狩獵。'],
+    ['They draped themselves in wolf skins and paws, hoping they could acquire the wolf\'s hunting skills of stealth, courage, and stamina.', '他們身披狼皮與狼爪，希望能獲得狼在狩獵時的隱蔽潛行、勇氣與持久體力等技巧。'],
+    ['Plains Indians wore wolf-skin disguises on raiding parties.', '平原印第安人在突襲出征時，會穿戴狼皮作為偽裝。'],
+    ['Elite Comanche warriors were called wolves.', '科曼奇族的精銳戰士更直接被尊稱為「狼」。']
+  ],
+  [
+    ['The white settlers\' war on the wolf raged on.', '白人屯墾者對狼的戰爭持續肆虐。'],
+    ['Western ranchers continued to claim that thousands of cattle were killed every year by wolves.', '西部牧場主人持續宣稱，每年都有數千頭牛隻被狼咬死。'],
+    ['In 1884, Montana created its first wolf bounty—one dollar for every dead wolf, which increased to eight dollars in 1893.', '1884 年，蒙大拿州設立了第一筆「捕狼懸賞金」——每上繳一隻死狼可領一美元，到了 1893 年更調高到八美元。'],
+    ['Over a period of thirty-five years, more than eighty thousand wolf carcasses were submitted for bounty payments in Montana.', '在三十五年間，蒙大拿州有超過八萬具狼屍被送交領取懸賞金。'],
+    ['Moreover, the government even provided free poison.', '此外，政府甚至提供免費的毒藥。'],
+    ['Finally, in 1914, ranchers persuaded the United States Congress to provide funds to exterminate wolves on public lands.', '最後在 1914 年，牧場主人說服美國國會撥款，以徹底撲滅公有土地上的狼群。']
+  ],
+  [
+    ['The last wolves in the American West died hard.', '美國西部最後的狼群在垂死掙扎中悲壯滅絕。'],
+    ['No place was safe, not even the nation\'s first national park, Yellowstone.', '沒有任何地方是安全的，就連全美第一座國家公園——黃石國家公園——也不例外。'],
+    ['The park was created in 1872, and from its very beginning, poisoned carcasses were set out to kill wolves.', '黃石公園成立於 1872 年，從成立之初，人們就放置下毒的動物屍體來毒殺狼群。'],
+    ['Nearly 140 wolves were killed by park rangers in Yellowstone from 1914 to 1926.', '從 1914 年到 1926 年間，黃石公園的巡邏員撲殺了將近 140 隻狼。'],
+    ['In October 1926, two wolf cubs were trapped near a bison carcass.', '1926 年 10 月，兩隻小狼崽在一具野牛屍體附近落入陷阱被捕。'],
+    ['They were the last animals killed in the park\'s wolf control programs.', '牠們是該公園滅狼計畫中最後被撲殺的動物。']
+  ],
+  [
+    ['Ranchers had won the war against the wolf.', '牧場主人贏得了這場對抗狼的戰爭。'],
+    ['Only in the northern woods of Wisconsin, Minnesota, and Michigan could the howl of native gray wolves be heard.', '如今只有在威斯康辛州、明尼蘇達州與密西根州的北方森林裡，還聽得見本土灰狼的嚎叫聲。'],
+    ['The vast lands of the American West fell silent.', '美國西部廣袤的大地陷入了一片死寂。'],
+    ['The country had lost its greatest predator.', '這個國家失去了它最偉大的掠食者。']
+  ]
+], '', 'rc2');
+
+const RC2_Q = [
+  [49, ['考點：細節因果題（白人撲殺灰狼的原因）','詞性需求：完整子句'], 'D',
+    '49. The white man tried to kill the gray wolf because ______.',
+    '49. 白人試圖撲殺灰狼是因為什麼？',
+    '定位第二段第 1–2 句：「The white settlers\' war on the wolf raged on. **Western ranchers continued to claim that thousands of cattle were killed every year by wolves.**（西部牧場主人持續宣稱，每年都有數千頭**牛隻**被狼咬死。）」牛隻（cattle）即牧場主人飼養的「**家畜、牲畜（livestock）**」，因為灰狼威脅到他們牲畜的性命（threatened the life of his livestock），所以牧場主人與白人政府全面撲殺灰狼，故選 **(D)**。',
+    [
+      ['it attacked people','牠會攻擊人類','文中說的是咬死牧場的牛隻（cattle），並未說灰狼攻擊人類。<br><b>何時才對：</b>無。'],
+      ['it damaged the crops','牠會破壞農作物','狼是肉食性掠食者（predator），不吃農作物。<br><b>何時才對：</b>無。'],
+      ['it was adored by the Indians','牠受到印第安人的崇拜喜愛','白人殺狼是為了保護牧場牛隻財產，並非因為嫉妒或憎恨印第安人敬狼。<br><b>何時才對：</b>無。'],
+      ['it threatened the life of his livestock','牠威脅到他所飼養牲畜（牛隻）的性命','*livestock*（牲畜、家畜）完美對應第二段第 2 句的 *cattle*（牛隻）。']
+    ]
+  ],
+  [50, ['考點：作者立場與語氣推論題（Author\'s Stance）','詞性需求：關係子句'], 'C',
+    '50. This passage was most likely written by someone who ______.',
+    '50. 本文最可能是由下列哪一種人所撰寫的？',
+    '體會作者在第三、四段的筆觸與悲嘆語氣：「The last wolves in the American West died hard. **No place was safe, not even the nation\'s first national park, Yellowstone**... **The vast lands of the American West fell silent. The country had lost its greatest predator.**（就連黃石國家公園也不安全……美國西部廣袤的大地陷入一片死寂。這個國家失去了它最偉大的掠食者。）」作者對白人發動「滅狼戰爭」導致灰狼在美西絕跡深感惋惜與悲痛，並稱灰狼為「最偉大的掠食者（its greatest predator）」，顯然是由一位**提倡保護灰狼（advocated the protection of the gray wolf）**的生態保育支持者所寫！',
+    [
+      ['liked hunting wild animals','喜歡獵殺野生動物的人','作者對灰狼遭懸賞、毒殺與陷阱撲殺至絕跡充滿惋惜，絕非喜愛打獵殺生之人。<br><b>何時才對：</b>無。'],
+      ['made laws against the gray wolf','制定法律撲殺灰狼的人','立法懸賞殺狼的是當年蒙大拿州政府與國會，作者對此抱持批判與感傷態度。<br><b>何時才對：</b>無。'],
+      ['advocated the protection of the gray wolf','提倡保護灰狼的人','由末段「廣袤美西大地陷入死寂、國家失去了最偉大的掠食者」的沉痛結尾，足見作者站在生態保育、提倡保護灰狼的立場。'],
+      ['appreciated the gray wolf\'s hunting skills','讚賞灰狼狩獵技巧的人','第一段讚賞灰狼狩獵技巧並披狼皮祈禱的是「北美印第安原住民戰士（Native Americans）」，這只是作者用來與白人滅狼作對比的第一段背景，而貫穿全文四段的作者核心關懷是「灰狼慘遭人類撲殺殆盡的生態悲劇」。<br><b>何時才對：</b>題目若問第一段印第安人的態度時（即第 52 題）。']
+    ]
+  ],
+  [51, ['考點：細節因果題（灰狼迅速消失的主因）','詞性需求：完整句子'], 'D',
+    '51. What was an important reason for the fast disappearance of the wolf?',
+    '51. 灰狼迅速消失的一個重要原因為何？',
+    '定位第二段第 3–6 句：「In 1884, **Montana created its first wolf bounty**—one dollar for every dead wolf, which increased to eight dollars in 1893. Over a period of thirty-five years, more than eighty thousand wolf carcasses were submitted for bounty payments in Montana. **Moreover, the government even provided free poison. Finally, in 1914, ranchers persuaded the United States Congress to provide funds to exterminate wolves on public lands.**」無論是州政府設立高額懸賞金（致八萬多隻狼被殺）、免費提供毒藥，還是美國國會撥款撲滅公有地上的狼，全都是因為**政府鼓勵並資助撲殺灰狼（The government encouraged the killing of wolves）**！',
+    [
+      ['The wolf could not have the cattle as food.','狼無法吃到牛隻作為食物。','狼並非餓死，而是被人用槍、懸賞金、免費毒藥與陷阱大量撲殺殆盡。<br><b>何時才對：</b>無。'],
+      ['The Indians killed the wolves for their skins.','印第安人為了狼皮而大量撲殺灰狼。','第一段指出印第安人視狼為靈魂兄弟，極為敬重狼，是白人屯墾者與政府（white settlers and the government）懸賞消滅了八萬多隻狼。<br><b>何時才對：</b>無。'],
+      ['National park rangers killed most of the wolves.','國家公園巡邏員殺死了絕大多數的狼。','數據對比：第三段指出黃石公園巡邏員在 12 年間殺了「約 **140 隻**狼（Nearly 140 wolves）」，而第二段指出光蒙大拿州的政府懸賞金就讓民間獵殺了「**超過 80,000 隻**狼（more than eighty thousand wolf carcasses）」！因此絕大多數的狼並非國家公園巡邏員殺的。<br><b>何時才對：</b>無。'],
+      ['The government encouraged the killing of wolves.','政府鼓勵撲殺灰狼。','完全符合第二段州政府發放懸賞金、提供免費毒藥，以及美國國會撥款全面滅狼的事實。']
+    ]
+  ],
+  [52, ['考點：細節定位題（印第安人敬重狼的原因）','詞性需求：動詞片語'], 'A',
+    '52. The Indians respected the wolf because it ______.',
+    '52. 印第安人之所以敬重狼，是因為牠怎麼樣？',
+    '定位第一段第 3–4 句：「**They respected the animals\' endurance and hunting ability**, and warriors prayed to hunt like them. They draped themselves in wolf skins and paws, **hoping they could acquire the wolf\'s hunting skills** of stealth, courage, and stamina.」明確指出印第安人敬重狼是因為牠**擅長狩獵（was good at hunting ＝ respected the animals\' hunting ability / hunting skills）**，故選 **(A)**！',
+    [
+      ['was good at hunting','擅長狩獵','直接對應第一段第 3 句「They respected the animals\' endurance and hunting ability」。'],
+      ['was good at disguising','擅長偽裝','主客體顛倒：第一段第 5 句說的是「**印第安人**在突襲時穿戴狼皮作為偽裝（Plains Indians wore wolf-skin disguises）」，而非狼自己擅長偽裝！<br><b>何時才對：</b>無。'],
+      ['had beautiful skins and paws','擁有美麗的皮毛與腳爪','印第安人披戴狼皮與狼爪，是因為「希望藉此獲得狼的狩獵技能與勇氣（hoping they could acquire the wolf\'s hunting skills）」，而非因為狼皮漂亮。<br><b>何時才對：</b>無。'],
+      ['was an enemy to the white man','是白人的敵人','印第安人自古就視狼為靈魂兄弟並敬重其狩獵能力，並非因為狼跟白人作對才敬重牠。<br><b>何時才對：</b>無。']
+    ]
+  ]
+];
+
+RC2_Q.forEach(q => {
+  SENT[q[0]]=[q[3], q[4]];
+  rc2Html += card(q[0], q[1], q[2], stem(q[0]) + clue(q[5]) + ops(q[6], q[2]));
+});
+rc2Html += groupGradeBox('rc2', '五、閱讀測驗（第 49–52 題）', 49, 52, 2);
+appendApp(rc2Html);
+
+// 第 53–56 題題組
+let rc3Html = passage('第 53 至 56 題為題組：3D/4D 超音波胎兒微笑照片引發之墮胎論戰（Pro-Abortion vs. Anti-Abortion）', [
+  [
+    ['Recently, Dr. Stuart Campbell of a private health center in London published some ultrasound images of unborn babies between 26 and 34 weeks.', '最近，倫敦一家私人醫療中心的史都華．坎貝爾醫師（Dr. Stuart Campbell）發表了一些懷孕 26 至 34 週未出生胎兒的超音波影像。'],
+    ['The smiles of the babies in the pictures greatly shocked the public and were widely circulated on the Internet.', '照片中胎兒的微笑令社會大眾大為震撼，並在網際網路上被廣泛流傳。']
+  ],
+  [
+    ['For the past two years, the doctor has used the medical facility in the center and has offered state-of-the-art 3-D/4-D scanning services to expectant parents.', '在過去兩年裡，這位醫師利用該中心的醫療設備，為準父母們提供最尖端的 3D／4D 立體超音波掃描服務。'],
+    ['He performs an average of 30 scans a week.', '他平均每週進行 30 次掃描。'],
+    ['His outspoken enthusiasm for this blessed technology is refreshing.', '他對這項美好技術直言不諱的熱情令人耳目一新。'],
+    ['"Parents love them," he said. "I hear so many couples laughing when they see the pictures—it\'s wonderful."', '他說：「父母們愛死這些照片了。當他們看到照片時，我聽到好多夫妻開心地笑出來——這真是太美妙了。」']
+  ],
+  [
+    ['How have pro-abortion activists reacted after seeing the happy, grinning photos of these unborn babies?', '在看到這些未出生胎兒快樂露齒微笑的照片後，支持墮胎權（選擇權派）的運動人士做出了什麼反應呢？']
+  ],
+  [
+    ['Anne Carp, a commentator for the *Guardian* who bills herself as a "medical sociologist," says the photos are simply misleading, and ridicules the anti-abortion lobby for being "intoxicated with evidence of a fetus\' humanity."', '自稱為「醫療社會學家」的英國《衛報》評論員安．卡普（Anne Carp）表示，這些照片根本是在誤導大眾，並嘲諷反墮胎遊說團體「陶醉於胎兒具有人性的證據之中」。'],
+    ['Australian Birth Control Services medical director Geoff Brodie complained that the photos "will be picked up by those groups that use anything and everything to stop abortions but ignore the fact that women have a right to choice."', '澳洲節育服務中心醫療總監傑夫．布羅迪（Geoff Brodie）則抱怨說，這些照片「將會被那些無所不用其極阻止墮胎、卻無視女性擁有選擇權之事實的團體拿去大做文章」。']
+  ],
+  [
+    ['In America, the pro-abortion lobby is having the same hostile reaction.', '在美國，支持墮胎的遊說團體也出現了同樣充滿敵意的反應。'],
+    ['It was bad enough when conventional 2-D sonograms revealed unborn hearts beating and blurry hands waving, but the abortionists are absolutely aghast over rapidly spreading access to 3-D/4-D ultrasound technology.', '過去當傳統 2D 超音波顯示出未出生胎兒的心跳與模糊小手揮動時，對他們而言就已經夠糟了；如今對於迅速普及的 3D／4D 超音波技術，支持墮胎者更是感到驚駭萬分。'],
+    ['A writer for the liberal *American Prospect* said that the new technology "blurred the distinction between a fetus and a newborn infant."', '自由派雜誌《美國展望（American Prospect）》的一位作者便表示，這項新技術「模糊了腹中胎兒與初生嬰兒之間的界線」。']
+  ],
+  [
+    ['Despite these strong reactions from the pro-abortionists, the right of life takes precedence over a woman\'s right to choice.', '儘管支持墮胎者出現了這些強烈的反彈，但「生命權」依然優先於（高於）女性的選擇權。'],
+    ['After all, nothing can be more persuasive than an unborn child\'s beaming face.', '畢竟，沒有任何事物比一個未出生孩子燦爛微笑的臉龐更有說服力了。']
+  ]
+], '', 'rc3');
+
+const RC3_Q = [
+  [53, ['考點：作者立場與態度題（Author\'s Attitude）','詞性需求：介系詞片語 / 形容詞'], 'B',
+    '53. What is the author\'s attitude toward abortion?',
+    '53. 作者對於「墮胎（abortion）」抱持什麼態度？',
+    '直接定位最後一段（作者總結自身立場）：「Despite these strong reactions from the pro-abortionists, **the right of life takes precedence over a woman\'s right to choice. After all, nothing can be more persuasive than an unborn child\'s beaming face.**（儘管支持墮胎者出現強烈反彈，**但『生命權』依然優先於女性的選擇權**。畢竟，沒有什麼比一個未出生孩子燦爛微笑的臉龐更有說服力了。）」作者明確主張胎兒的生命權高於墮胎選擇權，因此作者對墮胎的態度是**反對的（Against it）**！',
+    [
+      ['For it.','贊成墮胎。','與末段「生命權優先於女性選擇權（the right of life takes precedence over a woman\'s right to choice）」完全相反。<br><b>何時才對：</b>無。'],
+      ['Against it.','反對墮胎。','完全符合第二段稱 3D/4D 超音波為 *this blessed technology*（受祝福的美好技術）以及末段明確主張「生命權高於選擇權」的反墮胎立場。'],
+      ['Neutral.','中立的。','作者在最後一段鮮明表態支持胎兒生命權，並非保持中立。<br><b>何時才對：</b>當末段不作價值判斷、僅並陳正反雙方觀點時。'],
+      ['Indifferent.','漠不關心的。','作者對此議題立場鮮明且充滿情感，絕非漠不關心。<br><b>何時才對：</b>無。']
+    ]
+  ],
+  [54, ['考點：細節歸納題（支持墮胎者的反應）','詞性需求：代名詞與介系詞片語'], 'A',
+    '54. How have the pro-abortionists reacted to the photos of smiling unborn babies?',
+    '54. 支持墮胎者（pro-abortionists）對未出生胎兒微笑的照片做出了什麼反應？',
+    '檢視第四段與第五段所列舉的所有支持墮胎陣營人士反應：<br>• 英國《衛報》評論員 Anne Carp：批評照片根本是誤導（**simply misleading** ＝ **disbelief** 不相信其真實性），並嘲諷反墮胎團體（**ridicules** ＝ **scorn** 嘲笑、鄙視）。<br>• 澳洲節育中心總監 Geoff Brodie：抱怨（**complained**）照片會被反墮胎團體拿去阻止墮胎。<br>• 美國支持墮胎團體：第五段首句總括「In America, the pro-abortion lobby is having **the same hostile reaction**... **absolutely aghast**...（出現**同樣充滿敵意的反應**……感到驚駭萬分）」。<br>可見文中提到的所有支持墮胎者，全都抱持**不相信（認為誤導）與嘲諷排斥的敵意態度（All with disbelief and scorn）**，故選 **(A)**！',
+    [
+      ['All with disbelief and scorn.','全都抱持不信（質疑誤導）與嘲諷鄙視的態度。','完全對應第四段的 *simply misleading*（質疑誤導 = disbelief）、*ridicules*（嘲諷 = scorn）、*complained*，以及第五段的 *the same hostile reaction*（同樣充滿敵意的反應）。'],
+      ['All with applause and appreciation.','全都抱持喝采與讚賞的態度。','這是準父母與反墮胎者的反應，與支持墮胎者的敵意反應（hostile reaction）完全相反。<br><b>何時才對：</b>描述準父母（expectant parents）看到照片的反應時。'],
+      ['Some with respect and some with scorn.','有些人抱持尊重，有些人則嘲諷鄙視。','第四、五段列出的所有支持墮胎人士（pro-abortionists）全都持負面敵意態度，沒有任何一位支持墮胎者對照片表達尊重。<br><b>何時才對：</b>無。'],
+      ['Some with applause and some with disappointment.','有些人喝采，有些人失望。','同 (C)，支持墮胎陣營是一面倒地批評與排斥。<br><b>何時才對：</b>無。']
+    ]
+  ],
+  [55, ['考點：人物立場比對推論題（誰最可能是反墮胎者）','詞性需求：專有名詞（人名）'], 'C',
+    '55. Which of the following people is most likely an anti-abortionist?',
+    '55. 下列哪一個人最可能是「反對墮胎者（anti-abortionist）」？',
+    '逐一比對四個選項在文中的段落與立場：<br>• **(A) Anne Carp**：第四段首句，嘲諷反墮胎團體（ridicules the anti-abortion lobby），屬支持墮胎派（pro-abortion）。<br>• **(B) Geoff Brodie**：第四段第 2 句，澳洲節育中心總監，抱怨反墮胎團體無視女性選擇權，屬支持墮胎派。<br>• **(D) A writer for the *American Prospect***：第五段末句，隸屬自由派支持墮胎陣營，批評新技術模糊了胎兒與嬰兒的界線。<br>• **(C) Stuart Campbell**：第一、二段主動公開發表 26–34 週胎兒微笑超音波照片、對這項能展現胎兒人性與笑容的技術充滿熱情（outspoken enthusiasm）、看到父母開懷大笑覺得太美妙的倫敦醫師！正是他發表的胎兒微笑照片點燃了反墮胎陣營的士氣並引發支持墮胎派的敵意，故四人中唯有 **(C) Stuart Campbell** 最可能站在反墮胎（珍視胎兒生命）的一方！',
+    [
+      ['Anne Carp.','安．卡普。','第四段明確指出她嘲諷反墮胎團體（ridicules the anti-abortion lobby），為支持墮胎者。<br><b>何時才對：</b>題目若問誰是 *pro-abortionist* 時。'],
+      ['Geoff Brodie.','傑夫．布羅迪。','第四段指出他批評阻止墮胎的團體無視女性選擇權，為支持墮胎者。<br><b>何時才對：</b>題目若問誰是 *pro-abortionist* 時。'],
+      ['Stuart Campbell.','史都華．坎貝爾醫師。','唯一主動公開發表胎兒微笑照片、熱愛展現胎兒生命力並與後三段支持墮胎派（Anne Carp、Geoff Brodie、American Prospect 作者）站在對立面的核心人物。'],
+      ['A writer for the *American Prospect*.','《美國展望》雜誌的一位作者。','第五段將其歸類於對 3D/4D 超音波抱持敵意反應（hostile reaction）的美國支持墮胎陣營。<br><b>何時才對：</b>題目若問誰是 *pro-abortionist* 時。']
+    ]
+  ],
+  [56, ['考點：推論題（Inference）','詞性需求：完整句子'], 'D',
+    '56. Which of the following statements can be inferred from the passage?',
+    '56. 從本文中可以推論出下列哪一項敘述？',
+    '定位第四段：「Anne Carp... ridicules **the anti-abortion lobby for being "intoxicated with evidence of a fetus\' humanity."** Geoff Brodie complained that **the photos "will be picked up by those groups that use anything and everything to stop abortions**..."」反墮胎團體將這些胎兒微笑照片視為「胎兒具有人性的鐵證」而陶醉不已（intoxicated with...），並如獲至寶地拿這些照片來阻止墮胎（picked up by those groups... to stop abortions）。由此可明確推論：**反墮胎者對於這些未出生胎兒的超音波微笑照片感到非常高興與滿意（Anti-abortionists are pleased with the ultrasound photos of unborn babies）**，故選 **(D)**！',
+    [
+      ['It is wrong for doctors to publish pictures of unborn babies.','醫師發表未出生胎兒的照片是錯誤的。','作者在第二段與末段高度肯定坎貝爾醫師發表的照片極具說服力與美好價值，並未認為醫師發表照片是錯的。<br><b>何時才對：</b>無。'],
+      ['For anti-abortionists a fetus is not the same as a living human being.','對反墮胎者而言，腹中胎兒並不等同於活生生的人類。','立場完全顛倒！「反墮胎者（anti-abortionists）」正是認為腹中胎兒**就是**具有人性的活生生人類（evidence of a fetus\' humanity / right of life），所以才反對墮胎；認為胎兒不等同於嬰兒的是「支持墮胎者（pro-abortionists）」。<br><b>何時才對：</b>將 *anti-abortionists* 改為 *pro-abortionists* 時。'],
+      ['Everybody agrees that a woman can decide whether to abort or not.','每個人都同意女性可以自己決定是否要墮胎。','全文正是呈現「支持墮胎派（主張女性選擇權）」與「反墮胎派（主張胎兒生命權高於選擇權）」的激烈交鋒，絕非每個人都同意。<br><b>何時才對：</b>無。'],
+      ['Anti-abortionists are pleased with the ultrasound photos of unborn babies.','反墮胎者對未出生胎兒的超音波照片感到欣喜滿意。','由第四段反墮胎團體「陶醉於這項胎兒人性證據（intoxicated with evidence of a fetus\' humanity）」並積極引用這些照片阻止墮胎，可合理推論他們對這些照片非常滿意。']
+    ]
+  ]
+];
+
+RC3_Q.forEach(q => {
+  SENT[q[0]]=[q[3], q[4]];
+  rc3Html += card(q[0], q[1], q[2], stem(q[0]) + clue(q[5]) + ops(q[6], q[2]));
+});
+rc3Html += groupGradeBox('rc3', '五、閱讀測驗（第 53–56 題）', 53, 56, 2);
+appendApp(rc3Html);
+
+// ==================== 全卷單選題總批改面板 ====================
+appendApp('<div class="grade-box all-box" id="gbox-all">' +
+  '<div class="grade-title">🏆 全卷選擇題總批改（第 1–56 題，滿分 72 分）</div>' +
+  '<div class="grade-btns">' +
+    '<button class="btn-grade" onclick="gradeAllSingleChoice()">🏆 一次批改全卷</button>' +
+    '<button class="btn-reset" onclick="resetAllSingleChoice()">🔄 一次清空重練</button>' +
+  '</div>' +
+  '<div class="grade-res" id="gres-all"></div>' +
+'</div>');
+
+// ==================== 第貳部分：非選擇題 ====================
+// 一、英文翻譯
+let transHtml = '<h2 id="sec-trans">第貳部分：非選擇題 — 一、英文翻譯（佔 8 分）</h2>';
+transHtml += '<section class="pas" id="pas-trans">' +
+  '<h3>中譯英題目與詳解（每題 4 分，共 8 分）</h3>' +
+  '<div class="prompt-text" style="margin-bottom:12px;">' +
+    '<b>說明：</b>1. 將下列兩句中文翻譯成適當之英文，並將答案寫在「答案卷」上。<br>' +
+    '   2. 未按題意翻譯者，不予計分。' +
+  '</div>' +
+  '<div class="para">' +
+    '<div class="s">' +
+      '<div class="prompt-text"><b>1. 為提供一個無煙的用餐環境，許多餐廳不允許室內抽煙。</b></div>' +
+      '<input type="text" class="trans-input" placeholder="請在此輸入第 1 題英文翻譯練習...">' +
+      '<div class="en trans-ans" style="margin-top:6px;color:var(--ok);font-weight:600;">✔ 參考正解 1：To provide (offer) a smoke-free dining environment, many restaurants do not allow smoking indoors (indoor smoking).</div>' +
+      '<div class="en trans-ans" style="color:var(--ok);">✔ 參考正解 2：In order to provide a non-smoking dining environment, many restaurants prohibit (ban / forbid) people from smoking inside.</div>' +
+      '<div class="note">' +
+        '<b>📌 考點與字詞解析：</b><br>' +
+        '• <b>為提供……</b>：不定詞片語表目的 <i>(In order) To provide / offer...</i>。<br>' +
+        '• <b>無煙的用餐環境</b>：<i>a smoke-free (non-smoking) dining environment</i>。<br>' +
+        '• <b>不允許室內抽煙</b>：<i>do not allow / permit smoking indoors (indoor smoking)</i>（注意 <i>allow / permit</i> 若不接「人」當受詞，後方直接接動名詞 <i>smoking</i>；若接人則為 <i>do not allow customers to smoke indoors</i>）。' +
+      '</div>' +
+    '</div>' +
+    '<div class="s" style="margin-top:16px;">' +
+      '<div class="prompt-text"><b>2. 雖然遭到許多癮君子的反對，這對不抽煙的人的確是一大福音。</b></div>' +
+      '<input type="text" class="trans-input" placeholder="請在此輸入第 2 題英文翻譯練習...">' +
+      '<div class="en trans-ans" style="margin-top:6px;color:var(--ok);font-weight:600;">✔ 參考正解 1：Although opposed by many heavy smokers, this is indeed a great blessing (boon / good news) for non-smokers.</div>' +
+      '<div class="en trans-ans" style="color:var(--ok);">✔ 參考正解 2：Though it meets with opposition from many chain smokers, it is indeed a great blessing to people who do not smoke.</div>' +
+      '<div class="note">' +
+        '<b>📌 考點與字詞解析：</b><br>' +
+        '• <b>雖然遭到許多癮君子的反對</b>：可用從屬連接詞分詞簡化 <i>Although / Though (it is) opposed by many heavy (chain) smokers</i>，或用介系詞片語 <i>Despite the opposition from many heavy smokers</i>。<br>' +
+        '• <b>癮君子 vs. 不抽煙的人</b>：<i>heavy / chain smokers</i> vs. <i>non-smokers (people who do not smoke)</i>。<br>' +
+        '• <b>的確是一大福音</b>：<i>is indeed (truly / really) a great blessing (boon / a piece of good news) for / to...</i>。' +
+      '</div>' +
+    '</div>' +
+  '</div>' +
+'</section>';
+
+transHtml += '<div class="grade-box" id="gbox-trans">' +
+  '<div class="grade-title">📝 一、英文翻譯批改與對答（共 8 分）</div>' +
+  '<div class="grade-btns">' +
+    '<button class="btn-grade" onclick="gradeTrans()">✅ 顯示中譯英正解與解析</button>' +
+    '<button class="btn-reset" onclick="resetTrans()">🔄 清空重練中譯英</button>' +
+  '</div>' +
+  '<div class="grade-res" id="gres-trans"></div>' +
+'</div>';
+appendApp(transHtml);
+
+// 二、英文作文
+let essayHtml = '<h2 id="sec-essay">第貳部分：非選擇題 — 二、英文作文（佔 20 分）</h2>';
+
+essayHtml += '<section class="pas graded" id="pas-essay-prompt">' +
+  '<h3>英文作文題目與寫作提示</h3>' +
+  '<div class="prompt-text">' +
+    '<b>說明：</b>1. 依提示在「答案卷」上寫一篇英文作文。<br>' +
+    '   2. 文長至少 120 個單詞。<br>' +
+    '<b>提示：</b>人的生活中，難免有遭人誤解因而感到委屈的時候。請以此為主題，寫一篇至少 120 字的英文作文；第一段描述個人被誤解的經驗，第二段談這段經驗對個人的影響與啟示。' +
+  '</div>' +
+'</section>';
+
+essayHtml += passage('滿分範文賞析：The Sting of Misunderstanding and the Wisdom of Empathy（約 280 字，逐句中英對照）', [
+  [
+    ['Being misunderstood by someone we care about is one of the most bitter experiences in life, and an incident from my sophomore year in high school still remains vivid in my memory.', '被我們在乎的人誤解是人生中最苦澀的經歷之一，而我高二那年發生的一件事，至今仍歷歷在目。'],
+    ['At that time, our class was preparing for the annual charity fair, and I was elected treasurer in charge of keeping the class fund of NT$5,000.', '當時，我們班正在籌備年度愛心園遊會，而我被選為總務股長，負責保管五千元的班費。'],
+    ['One afternoon after physical education class, we returned to our classroom only to discover that the envelope containing the money had vanished from my desk drawer.', '某天下午體育課結束後，我們回到教室，卻震驚地發現裝有那筆錢的信封從我的書桌抽屜裡不翼而飛了。'],
+    ['Before I could even figure out what had happened, a few classmates started whispering and casting suspicious glances at me, since I had recently mentioned wanting to buy a new pair of sneakers.', '在我甚至還沒弄清楚發生什麼事之前，幾個同學就開始竊竊私語，並對我投以懷疑的眼光，因為我前陣子才提過想買一雙新球鞋。'],
+    ['Even my best friend hesitated to defend me, asking me in private whether I had "borrowed" the money.', '就連我最要好的朋友也遲疑著沒有替我辯護，甚至私下問我是不是「借用」了那筆錢。'],
+    ['Overwhelmed by grievance and helplessness, I held back my tears until the next morning, when the school janitor found the envelope inside a recycling bin where a stray cat had knocked it from my desk.', '被委屈與無助感淹沒的我強忍著淚水，直到隔天早上，學校工友在資源回收桶裡找到了那個信封——原來是一隻流浪貓把它從我的桌上撥進了桶子裡。']
+  ],
+  [
+    ['Although my name was eventually cleared and my classmates apologized sincerely, that painful experience left a lasting mark on me and taught me two invaluable lessons.', '雖然我的清白最終獲得洗刷，同學們也誠懇地向我道歉，但那段痛苦的經歷在我心裡留下了長久的印記，並教會了我兩個寶貴的課題。'],
+    ['First, having tasted the sharp sting of false accusation firsthand, I vowed never to jump to conclusions or judge others based on rumors and superficial evidence.', '首先，在親身嚐過被冤枉的刺痛後，我發誓絕不再妄下定論，或僅憑謠言與表面證據就評斷他人。'],
+    ['Whenever a conflict or scandal arises, I now remind myself to distinguish between facts and assumptions, giving others the benefit of the doubt until the truth comes to light.', '每當有衝突或流言發生時，我現在都會提醒自己分辨「事實」與「主觀臆測」，在真相水落石出前先選擇相信對方的清白。'],
+    ['Second, I learned that silent grievance solves nothing; instead of retreating into sorrow when misunderstood, we must stay calm and communicate openly to clarify the facts.', '其次，我學會了沉默的委屈無濟於事；當遭到誤解時，與其退縮到悲傷之中，我們更必須保持冷靜並坦誠溝通以釐清事實。'],
+    ['In retrospect, that moment of injustice did not make me cynical; rather, it shaped me into a more empathetic and fair-minded person.', '回首過往，那場受冤屈的時刻並未讓我變得憤世嫉俗；相反地，它將我塑造成一個更具同理心且公正客觀的人。']
+  ]
+], '💡 <b>範文結構與高分亮點解析：</b><br>1. <b>第一段（完整敘事弧線：背景 → 起因 → 委屈高潮 → 真相大白）</b>：以高二擔任園遊會總務股長保管班費為背景，透過「體育課回來信封消失」、「因曾提過想買新鞋而遭同學竊語懷疑，連好友都私下質疑」堆疊出極具感染力的委屈感（<i>Overwhelmed by grievance and helplessness</i>），最後以工友在回收桶找到被野貓撥落的信封洗刷冤屈。<br>2. <b>第二段（雙層次深刻啟示，自然融入本卷核心字彙）</b>：巧妙運用本卷第 2 題的 <i>assumptions</i>（臆測）與第 7 題的 <i>distinguish between facts and assumptions</i>（分辨事實與臆測），從「推己及人、絕不未審先判（<i>give others the benefit of the doubt</i>）」與「面對誤解應冷靜溝通而非沉默自憐」雙向剖析，結尾以 <i>not... rather...</i> 昇華心境！', 'essay-model', 'graded');
+
+appendApp(essayHtml);
+</script>
+<script src="bookmark.js"></script>
+<script>
+  let secretClickCount = 0;
+  let secretTimer;
+  document.getElementById('secret-trigger').addEventListener('click', function() {
+    secretClickCount++;
+    if (secretClickCount === 3) {
+      const counter = document.getElementById('secret-counter');
+      counter.style.display = counter.style.display === 'none' ? 'block' : 'none';
+      secretClickCount = 0;
+    }
+    clearTimeout(secretTimer);
+    secretTimer = setTimeout(() => { secretClickCount = 0; }, 2000);
+  });
+</script>
+</body>
+</html>
