@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>歷屆學測＆指考英文詳解數位題庫</title>
+<style>
+:root{--bg:#faf8f4;--fg:#222;--card:#fff;--line:#e4ded3;--acc:#9a3b2e;--ok:#1f7a4d;--no:#b3261e;--mut:#6b6558;--hl:#fff1c9}
+@media(prefers-color-scheme:dark){:root{--bg:#161512;--fg:#e8e4da;--card:#201f1b;--line:#3a372f;--acc:#e08a78;--ok:#6fcf9a;--no:#f08a82;--mut:#a39d8f;--hl:#4a3f1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.7 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+.wrap{max-width:980px;margin:auto;padding:28px 18px 60px}
+header{border-bottom:2px solid var(--acc);padding-bottom:18px;margin-bottom:22px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px}
+header h1{margin:0 0 6px;font-size:1.75rem;color:var(--acc)}
+header p{margin:4px 0;color:var(--mut);font-size:.95rem}
+
+/* 儀表板與總複習橫幅 */
+.dashboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:18px 0}
+.stat-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;justify-content:space-between}
+.stat-card.review-card{background:color-mix(in srgb,var(--hl) 55%,var(--card));border-color:var(--acc)}
+.stat-title{font-weight:700;font-size:.95rem;color:var(--mut);margin-bottom:6px}
+.stat-num{font-size:1.45rem;font-weight:800;color:var(--fg)}
+.stat-num span{color:var(--ok)}
+.stat-sub{font-size:.82rem;color:var(--mut);margin-top:4px}
+.bar-bg{width:100%;height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:8px}
+.bar-fill{height:100%;background:var(--ok);width:0%;transition:width .4s ease}
+.review-btn{display:inline-block;margin-top:10px;padding:8px 16px;background:var(--acc);color:#fff;text-decoration:none;border-radius:99px;font-weight:700;font-size:.92rem;text-align:center;transition:opacity .2s}
+.review-btn:hover{opacity:.9}
+
+/* 篩選與搜尋列 */
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin:20px 0 16px}
+.tabs{display:flex;flex-wrap:wrap;gap:6px}
+.tab-btn{padding:6px 14px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--fg);font:inherit;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .15s}
+.tab-btn:hover{border-color:var(--acc);color:var(--acc)}
+.tab-btn.active{background:var(--acc);color:#fff;border-color:var(--acc)}
+.search-box{padding:6px 14px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--fg);font:inherit;font-size:.9rem;min-width:210px}
+.search-box:focus{outline:none;border-color:var(--acc)}
+
+/* 考卷卡片網格 */
+.sec-title{margin:28px 0 12px;font-size:1.25rem;color:var(--acc);display:flex;align-items:center;gap:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:12px}
+.exam-card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;text-decoration:none;color:var(--fg);display:flex;flex-direction:column;justify-content:space-between;transition:transform .15s,border-color .15s,box-shadow .15s;position:relative}
+.exam-card:hover{transform:translateY(-2px);border-color:var(--acc);box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.exam-card.done{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 6%,var(--card))}
+.card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.yr-badge{background:var(--acc);color:#fff;font-weight:800;font-size:.9rem;padding:2px 10px;border-radius:6px}
+.exam-card.done .yr-badge{background:var(--ok)}
+.status-tag{font-size:.78rem;font-weight:700;color:var(--mut)}
+.exam-card.done .status-tag{color:var(--ok)}
+.card-title{font-weight:700;font-size:1.02rem;margin:4px 0}
+.card-meta{font-size:.8rem;color:var(--mut);margin-top:6px}
+
+/* === 後台管理面板樣式 === */
+#admin-panel{display:none;background:var(--card);border:2px solid var(--acc);border-radius:12px;padding:20px;margin:20px 0;box-shadow:0 6px 24px rgba(0,0,0,.1)}
+#admin-panel h3{margin:0 0 12px;color:var(--acc);display:flex;justify-content:space-between;align-items:center}
+.gh-config{background:color-mix(in srgb,var(--hl) 45%,var(--bg));border:1px dashed var(--acc);border-radius:8px;padding:12px 14px;margin-bottom:14px}
+.gh-config summary{font-weight:700;color:var(--acc);cursor:pointer;font-size:.92rem}
+.admin-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:14px;background:var(--bg);padding:14px;border-radius:8px;border:1px solid var(--line)}
+.form-group{display:flex;flex-direction:column;gap:4px}
+.form-group label{font-size:.82rem;font-weight:700;color:var(--mut)}
+.form-group input,.form-group select{padding:7px 10px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--fg);font:inherit;font-size:.9rem}
+.btn{padding:7px 16px;border-radius:99px;font:inherit;font-size:.88rem;font-weight:700;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--fg);transition:opacity .2s}
+.btn:hover{opacity:.9}
+.btn-primary{background:var(--acc);color:#fff;border-color:var(--acc)}
+.btn-ok{background:var(--ok);color:#fff;border-color:var(--ok)}
+.btn-danger{color:var(--no);border-color:var(--no)}
+.sync-status{font-size:.88rem;font-weight:700;margin-left:8px}
+.admin-table-wrap{max-height:340px;overflow-y:auto;border:1px solid var(--line);border-radius:8px;margin-top:12px}
+table.admin-tbl{width:100%;border-collapse:collapse;font-size:.85rem}
+table.admin-tbl th,table.admin-tbl td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left}
+table.admin-tbl th{background:var(--bg);position:sticky;top:0;color:var(--mut)}
+
+footer{margin-top:50px;padding-top:18px;border-top:1px solid var(--line);color:var(--mut);font-size:.85rem;line-height:1.6;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+footer a{color:var(--acc);text-decoration:none;font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1><span id="admin-trigger" style="user-select:none;cursor:pointer;" title="連點三下開啟後台管理">📚</span> 歷屆學測＆指考英文詳解數位題庫</h1>
+      <p>收錄 83–115 學測與 91–110 指考共 53 份完整詳解｜逐句中英對照・考點詞性標籤・解題線索・練習模式批改・錯題單字本</p>
+    </div>
+    <div id="secret-counter" style="display:none;font-size:0.88rem;color:var(--mut);align-self:center;">
+      <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+      👁️ 總瀏覽人次：<span id="busuanzi_value_page_pv"></span> 次
+    </div>
+  </header>
+
+  <!-- ⚙️ 後台管理面板（連點三下標題旁 📚 圖示或點擊頁尾「⚙️ 後台管理」開啟） -->
+  <section id="admin-panel">
+    <h3>
+      <span>⚙️ 題庫雲端後台管理系統（免手動上傳）</span>
+      <button class="btn" onclick="toggleAdmin(false)">✖ 關閉後台</button>
+    </h3>
+
+    <!-- GitHub 自動同步連線設定（已預填 kghspaul / key） -->
+    <details class="gh-config" id="gh-details">
+      <summary>🔑 GitHub 雲端直連設定（首次填入 Token 儲存後，新增或修改題目皆會直接自動更新至全站）</summary>
+      <div class="admin-form" style="margin-top:10px;margin-bottom:6px;background:var(--card);">
+        <div class="form-group">
+          <label>GitHub 帳號 (Owner)</label>
+          <input type="text" id="gh-owner" value="kghspaul">
+        </div>
+        <div class="form-group">
+          <label>倉庫名稱 (Repository)</label>
+          <input type="text" id="gh-repo" value="key">
+        </div>
+        <div class="form-group">
+          <label>分支名稱 (Branch)</label>
+          <input type="text" id="gh-branch" value="main" placeholder="預設為 main 或 master">
+        </div>
+        <div class="form-group" style="grid-column: span 2;">
+          <label>GitHub 個人存取金鑰 (Personal Access Token，需勾選 repo 權限)</label>
+          <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+        </div>
+        <div class="form-group" style="justify-content:flex-end;">
+          <button class="btn btn-ok" onclick="saveGhConfig()">💾 儲存連線設定</button>
+        </div>
+      </div>
+      <small>※ 金鑰僅儲存於您本機瀏覽器的 <code>localStorage</code>，學生端完全無法看到或讀取。</small>
+    </details>
+
+    <!-- 新增／編輯考卷表單 -->
+    <div class="admin-form">
+      <input type="hidden" id="f-idx" value="-1">
+      <div class="form-group">
+        <label>考試類別</label>
+        <select id="f-type">
+          <option value="gsat">🎓 學測 (GSAT)</option>
+          <option value="ast">🔥 指考/分科 (AST)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>學年度（數字，用於自動排序）</label>
+        <input type="number" id="f-year" placeholder="例如：116 或 111">
+      </div>
+      <div class="form-group">
+        <label>卡片標籤（可留空自動產生）</label>
+        <input type="text" id="f-label" placeholder="例如：116 學測">
+      </div>
+      <div class="form-group">
+        <label>詳解網址（URL）</label>
+        <input type="text" id="f-file" placeholder="例如：https://kghspaul.github.io/key/116gsat">
+      </div>
+      <div class="form-group" style="grid-column: span 2;">
+        <label>詳解內頁標題（可留空自動產生）</label>
+        <input type="text" id="f-title" placeholder="例如：116學年度學科能力測驗 英文考科詳解">
+      </div>
+      <div class="form-group" style="grid-column: span 2;">
+        <label>卡片下方簡介（Meta，可留空自動產生）</label>
+        <input type="text" id="f-meta" placeholder="例如：新制學測｜選擇・混合題・中譯英・英文作文">
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+      <button class="btn btn-primary" id="f-submit-btn" onclick="saveExamItem()">🚀 新增並直接雲端更新</button>
+      <button class="btn" onclick="clearForm()">🧹 清空表單</button>
+      <button class="btn btn-danger" style="margin-left:auto;" onclick="resetToDefault()">🔄 還原為內建 53 份預設清單</button>
+      <span id="sync-msg" class="sync-status"></span>
+    </div>
+
+    <div class="admin-table-wrap">
+      <table class="admin-tbl">
+        <thead>
+          <tr>
+            <th>類別</th>
+            <th>年度</th>
+            <th>標籤</th>
+            <th>連結網址</th>
+            <th>簡介</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody id="admin-tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 學習進度與複習儀表板 -->
+  <div class="dashboard">
+    <div class="stat-card">
+      <div>
+        <div class="stat-title">📈 歷屆試題完卷進度</div>
+        <div class="stat-num"><span id="done-count">0</span> / <small id="total-count">53</small> 份</div>
+        <div class="stat-sub" id="sub-progress">學測：0 / 33 ｜ 指考：0 / 20</div>
+      </div>
+      <div class="bar-bg"><div class="bar-fill" id="prog-bar"></div></div>
+    </div>
+
+    <div class="stat-card review-card">
+      <div>
+        <div class="stat-title" style="color:var(--acc)">🔖 個人錯題與單字收藏庫</div>
+        <div style="font-size:.9rem;color:var(--fg)">自動彙整您在各份歷屆試題中標記的錯題與反白收藏的單字，支援閃卡與篩選複習。</div>
+      </div>
+      <a href="review.html" class="review-btn">📚 前往錯題與單字總複習 →</a>
+    </div>
+  </div>
+
+  <!-- 篩選器與搜尋框 -->
+  <div class="controls">
+    <div class="tabs">
+      <button class="tab-btn active" data-filter="all">全部試卷 (53)</button>
+      <button class="tab-btn" data-filter="gsat">🎓 歷屆學測 (33)</button>
+      <button class="tab-btn" data-filter="ast">🔥 歷屆指考 (20)</button>
+      <button class="tab-btn" data-filter="recent">⚡ 近十年必練 (106–115)</button>
+      <button class="tab-btn" data-filter="todo">⏳ 尚未完成</button>
+      <button class="tab-btn" data-filter="done">✅ 已完成</button>
+    </div>
+    <input type="text" id="search-inp" class="search-box" placeholder="🔍 搜尋年份（如：115、109）...">
+  </div>
+
+  <div id="list-container"></div>
+
+  <footer>
+    <div>
+      限定用途教學教材。本詳解庫為教學輔助，題目版權屬大考中心。<br>
+      💡 <b>問題回報與建議：</b> Line: etpaul ｜ IG: <a href="https://www.instagram.com/etpaul" target="_blank">@etpaul</a>
+    </div>
+    <div>
+      <span onclick="toggleAdmin(true)" style="cursor:pointer;opacity:0.55;" title="開啟後台管理">⚙️ 後台管理</span>
+    </div>
+  </footer>
+</div>
+
+<script>
+// === 內建完整 53 份歷屆學測（83–115）與指考（91–110）清單 ===
+const DEFAULT_EXAMS = [
+  // ==================== 學測 (GSAT: 115 ~ 83，共 33 份) ====================
+  { type: 'gsat', year: 115, label: '115 學測', file: 'https://kghspaul.github.io/key/115gsat', examTitle: '115學年度學科能力測驗 英文考科詳解', meta: '新制學測｜選擇・混合題・中譯英・作文' },
+  { type: 'gsat', year: 114, label: '114 學測', file: 'https://kghspaul.github.io/key/114gsat', examTitle: '114學年度學科能力測驗 英文考科詳解', meta: '新制學測｜選擇・混合題・中譯英・作文' },
+  { type: 'gsat', year: 113, label: '113 學測', file: 'https://kghspaul.github.io/key/113gsat', examTitle: '113學年度學科能力測驗 英文考科詳解', meta: '新制學測｜選擇・混合題・中譯英・作文' },
+  { type: 'gsat', year: 112, label: '112 學測', file: 'https://kghspaul.github.io/key/112gsat', examTitle: '112學年度學科能力測驗 英文考科詳解', meta: '新制學測｜選擇・混合題・中譯英・作文' },
+  { type: 'gsat', year: 111, label: '111 學測', file: 'https://kghspaul.github.io/key/111gsat', examTitle: '111學年度學科能力測驗 英文考科詳解', meta: '新制學測｜選擇・混合題・中譯英・作文' },
+  { type: 'gsat', year: 110, label: '110 學測', file: 'https://kghspaul.github.io/key/110gsat', examTitle: '110學年度學科能力測驗 英文考科詳解', meta: '選擇 56 題・中譯英・英文作文' },
+  { type: 'gsat', year: 109, label: '109 學測', file: 'https://kghspaul.github.io/key/109gsat', examTitle: '109學年度學科能力測驗 英文考科詳解', meta: '選擇 56 題・中譯英・英文作文' },
+  { type: 'gsat', year: 108, label: '108 學測', file: 'https://kghspaul.github.io/key/108gsat', examTitle: '108學年度學科能力測驗 英文考科詳解', meta: '選擇 56 題・中譯英・英文作文' },
+  { type: 'gsat', year: 107, label: '107 學測', file: 'https://kghspaul.github.io/key/107gsat', examTitle: '107學年度學科能力測驗 英文考科詳解', meta: '選擇 56 題・中譯英・英文作文' },
+  { type: 'gsat', year: 106, label: '106 學測', file: 'https://kghspaul.github.io/key/106gsat', examTitle: '106學年度學科能力測驗 英文考科詳解', meta: '選擇 56 題・中譯英・英文作文' },
+  { type: 'gsat', year: 105, label: '105 學測', file: 'https://kghspaul.github.io/key/105gsat', examTitle: '105學年度學科能力測驗 英文考科詳解', meta: '選擇 56 題・中譯英・英文作文' },
+  { type: 'gsat', year: 104, label: '104 學測', file: 'https://kghspaul.github.io/key/104gsat', examTitle: '104學年度學科能力測驗 英文考科詳解', meta: '選擇 56 題・中譯英・英文作文' },
+  { type: 'gsat', year: 103, label: '103 學測', file: 'https://kghspaul.github.io/key/103gsat', examTitle: '103學年度學科能力測驗 英文考科詳解', meta: '選擇 56 題・中譯英・英文作文' },
+  { type: 'gsat', year: 102, label: '102 學測', file: 'https://kghspaul.github.io/key/102gsat', examTitle: '102學年度學科能力測驗 英文考科詳解', meta: '選擇 56 題・中譯英・英文作文' },
+  { type: 'gsat', year: 101, label: '101 學測', file: 'https://kghspaul.github.io/key/101gsat', examTitle: '101學年度學科能力測驗 英文考科詳解', meta: '選擇 56 題・中譯英・英文作文' },
+  { type: 'gsat', year: 100, label: '100 學測', file: 'https://kghspaul.github.io/key/100gsat', examTitle: '100學年度學科能力測驗 英文考科詳解', meta: '選擇 56 題・中譯英・英文作文' },
+  { type: 'gsat', year: 99,  label: '99 學測',  file: 'https://kghspaul.github.io/key/99gsat',  examTitle: '99學年度學科能力測驗 英文考科詳解',  meta: '選擇 56 題・中譯英・英文作文' },
+  { type: 'gsat', year: 98,  label: '98 學測',  file: 'https://kghspaul.github.io/key/98gsat',  examTitle: '98學年度學科能力測驗 英文考科詳解',  meta: '選擇 56 題・中譯英・英文作文' },
+  { type: 'gsat', year: 97,  label: '97 學測',  file: 'https://kghspaul.github.io/key/97gsat',  examTitle: '97學年度學科能力測驗 英文考科詳解',  meta: '選擇 56 題・中譯英・英文作文' },
+  { type: 'gsat', year: 96,  label: '96 學測',  file: 'https://kghspaul.github.io/key/96gsat',  examTitle: '96學年度學科能力測驗 英文考科詳解',  meta: '選擇 56 題・中譯英・英文作文' },
+  { type: 'gsat', year: 95,  label: '95 學測',  file: 'https://kghspaul.github.io/key/95gsat',  examTitle: '95學年度學科能力測驗 英文考科詳解',  meta: '選擇 56 題・中譯英・英文作文' },
+  { type: 'gsat', year: 94,  label: '94 學測',  file: 'https://kghspaul.github.io/key/94gsat',  examTitle: '94學年度學科能力測驗 英文考科詳解',  meta: '選擇 56 題・中譯英・英文作文' },
+  { type: 'gsat', year: 93,  label: '93 學測',  file: 'https://kghspaul.github.io/key/93gsat',  examTitle: '93學年度學科能力測驗 英文考科詳解',  meta: '歷屆學測完整詳解' },
+  { type: 'gsat', year: 92,  label: '92 學測',  file: 'https://kghspaul.github.io/key/92gsat',  examTitle: '92學年度學科能力測驗 英文考科詳解',  meta: '歷屆學測完整詳解' },
+  { type: 'gsat', year: 91,  label: '91 學測',  file: 'https://kghspaul.github.io/key/91gsat',  examTitle: '91學年度學科能力測驗 英文考科詳解',  meta: '歷屆學測完整詳解' },
+  { type: 'gsat', year: 90,  label: '90 學測',  file: 'https://kghspaul.github.io/key/90gsat',  examTitle: '90學年度學科能力測驗 英文考科詳解',  meta: '歷屆學測完整詳解' },
+  { type: 'gsat', year: 89,  label: '89 學測',  file: 'https://kghspaul.github.io/key/89gsat',  examTitle: '89學年度學科能力測驗 英文考科詳解',  meta: '歷屆學測完整詳解' },
+  { type: 'gsat', year: 88,  label: '88 學測',  file: 'https://kghspaul.github.io/key/88gsat',  examTitle: '88學年度學科能力測驗 英文考科詳解',  meta: '歷屆學測完整詳解' },
+  { type: 'gsat', year: 87,  label: '87 學測',  file: 'https://kghspaul.github.io/key/87gsat',  examTitle: '87學年度學科能力測驗 英文考科詳解',  meta: '歷屆學測完整詳解' },
+  { type: 'gsat', year: 86,  label: '86 學測',  file: 'https://kghspaul.github.io/key/86gsat',  examTitle: '86學年度學科能力測驗 英文考科詳解',  meta: '歷屆學測完整詳解' },
+  { type: 'gsat', year: 85,  label: '85 學測',  file: 'https://kghspaul.github.io/key/85gsat',  examTitle: '85學年度學科能力測驗 英文考科詳解',  meta: '歷屆學測完整詳解' },
+  { type: 'gsat', year: 84,  label: '84 學測',  file: 'https://kghspaul.github.io/key/84gsat',  examTitle: '84學年度學科能力測驗 英文考科詳解',  meta: '歷屆學測完整詳解' },
+  { type: 'gsat', year: 83,  label: '83 學測',  file: 'https://kghspaul.github.io/key/83gsat',  examTitle: '83學年度學科能力測驗 英文考科詳解',  meta: '歷屆學測完整詳解' },
+
+  // ==================== 指考 (AST: 110 ~ 91，共 20 份) ====================
+  { type: 'ast', year: 110, label: '110 指考', file: 'https://kghspaul.github.io/key/110sat', examTitle: '110學年度指定科目考試 英文考科詳解', meta: '選擇 51 題・中譯英・英文作文' },
+  { type: 'ast', year: 109, label: '109 指考', file: 'https://kghspaul.github.io/key/109sat', examTitle: '109學年度指定科目考試 英文考科詳解', meta: '選擇 51 題・中譯英・校園安全作文' },
+  { type: 'ast', year: 108, label: '108 指考', file: 'https://kghspaul.github.io/key/108sat', examTitle: '108學年度指定科目考試 英文考科詳解', meta: '選擇 51 題・中譯英・新聞圖表作文' },
+  { type: 'ast', year: 107, label: '107 指考', file: 'https://kghspaul.github.io/key/107sat', examTitle: '107學年度指定科目考試 英文考科詳解', meta: '選擇 51 題・中譯英・社區活動作文' },
+  { type: 'ast', year: 106, label: '106 指考', file: 'https://kghspaul.github.io/key/106sat', examTitle: '106學年度指定科目考試 英文考科詳解', meta: '選擇 51 題・中譯英・排遣寂寞作文' },
+  { type: 'ast', year: 105, label: '105 指考', file: 'https://kghspaul.github.io/key/105sat', examTitle: '105學年度指定科目考試 英文考科詳解', meta: '選擇 51 題・中譯英・碩士清潔隊員作文' },
+  { type: 'ast', year: 104, label: '104 指考', file: 'https://kghspaul.github.io/key/104sat', examTitle: '104學年度指定科目考試 英文考科詳解', meta: '選擇 51 題・中譯英・指導學習經驗作文' },
+  { type: 'ast', year: 103, label: '103 指考', file: 'https://kghspaul.github.io/key/103sat', examTitle: '103學年度指定科目考試 英文考科詳解', meta: '選擇 51 題・中譯英・時間分配圖表作文' },
+  { type: 'ast', year: 102, label: '102 指考', file: 'https://kghspaul.github.io/key/102sat', examTitle: '102學年度指定科目考試 英文考科詳解', meta: '選擇 51 題・中譯英・未來科技產品作文' },
+  { type: 'ast', year: 101, label: '101 指考', file: 'https://kghspaul.github.io/key/101sat', examTitle: '101學年度指定科目考試 英文考科詳解', meta: '選擇 51 題・中譯英・最常從事運動作文' },
+  { type: 'ast', year: 100, label: '100 指考', file: 'https://kghspaul.github.io/key/100sat', examTitle: '100學年度指定科目考試 英文考科詳解', meta: '選擇 51 題・中譯英・英文作文' },
+  { type: 'ast', year: 99,  label: '99 指考',  file: 'https://kghspaul.github.io/key/99sat',  examTitle: '99學年度指定科目考試 英文考科詳解',  meta: '選擇 51 題・中譯英・英文作文' },
+  { type: 'ast', year: 98,  label: '98 指考',  file: 'https://kghspaul.github.io/key/98sat',  examTitle: '98學年度指定科目考試 英文考科詳解',  meta: '選擇 56 題・中譯英・英文作文' },
+  { type: 'ast', year: 97,  label: '97 指考',  file: 'https://kghspaul.github.io/key/97sat',  examTitle: '97學年度指定科目考試 英文考科詳解',  meta: '選擇 56 題・中譯英・英文作文' },
+  { type: 'ast', year: 96,  label: '96 指考',  file: 'https://kghspaul.github.io/key/96sat',  examTitle: '96學年度指定科目考試 英文考科詳解',  meta: '選擇 56 題・中譯英・沒有電的世界作文' },
+  { type: 'ast', year: 95,  label: '95 指考',  file: 'https://kghspaul.github.io/key/95sat',  examTitle: '95學年度指定科目考試 英文考科詳解',  meta: '選擇 56 題・中譯英・遭人誤解經驗作文' },
+  { type: 'ast', year: 94,  label: '94 指考',  file: 'https://kghspaul.github.io/key/94sat',  examTitle: '94學年度指定科目考試 英文考科詳解',  meta: '選擇 56 題・中譯英・籌辦同學會作文' },
+  { type: 'ast', year: 93,  label: '93 指考',  file: 'https://kghspaul.github.io/key/93sat',  examTitle: '93學年度指定科目考試 英文考科詳解',  meta: '選擇 56 題・中譯英・英文作文' },
+  { type: 'ast', year: 92,  label: '92 指考',  file: 'https://kghspaul.github.io/key/92sat',  examTitle: '92學年度指定科目考試 英文考科詳解',  meta: '選擇 56 題・中譯英・英文作文' },
+  { type: 'ast', year: 91,  label: '91 指考',  file: 'https://kghspaul.github.io/key/91sat',  examTitle: '91學年度指定科目考試 英文考科詳解',  meta: '歷屆指考完整詳解' }
+];
+
+let EXAMS = JSON.parse(localStorage.getItem('custom_exams_list') || 'null') || DEFAULT_EXAMS.slice();
+let currentFilter = 'all';
+let searchKeyword = '';
+
+// 讀取全站共用的 exams.json（若未來您在後台新增考卷，雲端會自動生成此檔供所有學生讀取）
+fetch('exams.json?t=' + Date.now())
+  .then(r => r.ok ? r.json() : null)
+  .then(data => {
+    if (Array.isArray(data) && data.length > 0) {
+      EXAMS = data;
+      localStorage.setItem('custom_exams_list', JSON.stringify(EXAMS));
+      renderAll();
+    }
+  })
+  .catch(() => {});
+
+// 智慧判斷該份試卷是否已完成（相容各種標題命名格式，如「109指考」、「96年指考」、「九十六學年度...」）
+function isExamDone(e, comps) {
+  if (!Array.isArray(comps) || comps.length === 0) return false;
+  if (comps.includes(e.examTitle) || comps.includes(e.label)) return true;
+  const yrStr = String(e.year);
+  const isGsat = e.type === 'gsat';
+  return comps.some(title => {
+    const matchYr = title.includes(yrStr);
+    const matchType = isGsat ? (title.includes('學測') || title.includes('學科能力')) : (title.includes('指考') || title.includes('指定科目') || title.includes('分科'));
+    return matchYr && matchType;
+  });
+}
+
+function initGhConfig() {
+  const saved = JSON.parse(localStorage.getItem('gh_sync_config') || '{}');
+  document.getElementById('gh-owner').value = saved.owner || 'kghspaul';
+  document.getElementById('gh-repo').value = saved.repo || 'key';
+  document.getElementById('gh-branch').value = saved.branch || 'main';
+  document.getElementById('gh-token').value = saved.token || '';
+  if (!saved.token) {
+    document.getElementById('gh-details').open = true;
+  }
+}
+
+window.saveGhConfig = function() {
+  const cfg = {
+    owner: document.getElementById('gh-owner').value.trim() || 'kghspaul',
+    repo: document.getElementById('gh-repo').value.trim() || 'key',
+    branch: document.getElementById('gh-branch').value.trim() || 'main',
+    token: document.getElementById('gh-token').value.trim()
+  };
+  localStorage.setItem('gh_sync_config', JSON.stringify(cfg));
+  document.getElementById('gh-details').open = false;
+  showSyncMsg('✅ 已儲存 GitHub 連線設定！', 'var(--ok)');
+};
+
+function showSyncMsg(text, color) {
+  const el = document.getElementById('sync-msg');
+  el.textContent = text;
+  el.style.color = color || 'var(--fg)';
+}
+
+// 透過 GitHub REST API 直接將 EXAMS 寫入雲端 exams.json（完全免手動上傳）
+async function syncToGitHub() {
+  const cfg = JSON.parse(localStorage.getItem('gh_sync_config') || '{}');
+  if (!cfg.owner || !cfg.repo || !cfg.token) {
+    showSyncMsg('⚠️ 已儲存於本機（若要全站學生同步，請展開上方填入 GitHub Token 金鑰）', 'var(--acc)');
+    document.getElementById('gh-details').open = true;
+    return;
+  }
+
+  showSyncMsg('⏳ 正在自動同步至 GitHub 雲端...', 'var(--mut)');
+  const apiUrl = 'https://api.github.com/repos/' + cfg.owner + '/' + cfg.repo + '/contents/exams.json';
+  const headers = {
+    'Authorization': 'Bearer ' + cfg.token,
+    'Accept': 'application/vnd.github+json',
+    'Content-Type': 'application/json'
+  };
+
+  try {
+    let sha = null;
+    const getRes = await fetch(apiUrl + '?ref=' + cfg.branch, { headers });
+    if (getRes.ok) {
+      const fileData = await getRes.json();
+      sha = fileData.sha;
+    }
+
+    const jsonStr = JSON.stringify(EXAMS, null, 2);
+    const base64Content = btoa(unescape(encodeURIComponent(jsonStr)));
+    const body = {
+      message: 'Update exams.json via Web Admin Panel',
+      content: base64Content,
+      branch: cfg.branch
+    };
+    if (sha) body.sha = sha;
+
+    const putRes = await fetch(apiUrl, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify(body)
+    });
+
+    if (putRes.ok) {
+      showSyncMsg('🎉 雲端同步成功！全站學生畫面已自動更新！', 'var(--ok)');
+    } else {
+      const err = await putRes.json();
+      showSyncMsg('❌ 雲端同步失敗：' + (err.message || putRes.status), 'var(--no)');
+    }
+  } catch (e) {
+    showSyncMsg('❌ 網路連線錯誤：' + e.message, 'var(--no)');
+  }
+}
+
+function renderAll() {
+  renderList();
+  renderAdminTable();
+}
+
+function renderList() {
+  const comps = JSON.parse(localStorage.getItem('completed_exams') || '[]');
+  const allGsat = EXAMS.filter(e => e.type === 'gsat');
+  const allAst = EXAMS.filter(e => e.type === 'ast');
+  const doneGsat = allGsat.filter(e => isExamDone(e, comps)).length;
+  const doneAst = allAst.filter(e => isExamDone(e, comps)).length;
+  const totalCount = EXAMS.length;
+  const doneCount = doneGsat + doneAst;
+
+  document.getElementById('total-count').textContent = totalCount;
+  document.getElementById('done-count').textContent = doneCount;
+  document.getElementById('sub-progress').textContent = '🎓 學測：' + doneGsat + ' / ' + allGsat.length + ' 份 ｜ 🔥 指考：' + doneAst + ' / ' + allAst.length + ' 份';
+  document.getElementById('prog-bar').style.width = totalCount ? Math.round((doneCount / totalCount) * 100) + '%' : '0%';
+
+  const filtered = EXAMS.filter(e => {
+    const isDone = isExamDone(e, comps);
+    if (currentFilter === 'gsat' && e.type !== 'gsat') return false;
+    if (currentFilter === 'ast' && e.type !== 'ast') return false;
+    if (currentFilter === 'recent' && e.year < 106) return false;
+    if (currentFilter === 'todo' && isDone) return false;
+    if (currentFilter === 'done' && !isDone) return false;
+    if (searchKeyword && !(e.label.includes(searchKeyword) || e.examTitle.includes(searchKeyword) || (e.meta && e.meta.includes(searchKeyword)) || String(e.year).includes(searchKeyword))) return false;
+    return true;
+  });
+
+  const gsatList = filtered.filter(e => e.type === 'gsat').sort((a,b) => b.year - a.year);
+  const astList = filtered.filter(e => e.type === 'ast').sort((a,b) => b.year - a.year);
+
+  let html = '';
+  if (gsatList.length > 0) {
+    html += '<h2 class="sec-title">🎓 歷屆學科能力測驗（顯示 ' + gsatList.length + ' 份）</h2><div class="grid">' +
+      gsatList.map(e => makeCard(e, isExamDone(e, comps))).join('') + '</div>';
+  }
+  if (astList.length > 0) {
+    html += '<h2 class="sec-title">🔥 歷屆指定科目考試（顯示 ' + astList.length + ' 份）</h2><div class="grid">' +
+      astList.map(e => makeCard(e, isExamDone(e, comps))).join('') + '</div>';
+  }
+  if (filtered.length === 0) {
+    html = '<p style="text-align:center;color:var(--mut);padding:40px 0;">找不到符合篩選條件的試卷。</p>';
+  }
+  document.getElementById('list-container').innerHTML = html;
+}
+
+function makeCard(e, isDone) {
+  return '<a href="' + e.file + '" class="exam-card' + (isDone ? ' done' : '') + '">' +
+    '<div>' +
+      '<div class="card-top">' +
+        '<span class="yr-badge">' + e.label + '</span>' +
+        '<span class="status-tag">' + (isDone ? '✅ 已完成' : '⏳ 未完成') + '</span>' +
+      '</div>' +
+      '<div class="card-title">' + e.year + ' 學年度' + (e.type === 'gsat' ? '學測' : '指考') + '英文</div>' +
+    '</div>' +
+    '<div class="card-meta">' + (e.meta || '') + '</div>' +
+  '</a>';
+}
+
+// === 後台管理操作 ===
+window.toggleAdmin = function(show) {
+  const panel = document.getElementById('admin-panel');
+  panel.style.display = show ? 'block' : 'none';
+  if (show) {
+    initGhConfig();
+    renderAdminTable();
+    panel.scrollIntoView({ behavior: 'smooth' });
+  }
+};
+
+// 連點三下標題旁 📚 圖示：同時切換後台與瀏覽人次計數器
+let adminClickCount = 0, adminTimer;
+document.getElementById('admin-trigger').addEventListener('click', function() {
+  adminClickCount++;
+  if (adminClickCount === 3) {
+    const p = document.getElementById('admin-panel');
+    const c = document.getElementById('secret-counter');
+    const show = p.style.display !== 'block';
+    toggleAdmin(show);
+    c.style.display = show ? 'block' : 'none';
+    adminClickCount = 0;
+  }
+  clearTimeout(adminTimer);
+  adminTimer = setTimeout(() => { adminClickCount = 0; }, 1500);
+});
+
+function renderAdminTable() {
+  const tbody = document.getElementById('admin-tbody');
+  EXAMS.sort((a,b) => (a.type === b.type ? b.year - a.year : (a.type === 'gsat' ? -1 : 1)));
+  tbody.innerHTML = EXAMS.map((e, idx) =>
+    '<tr>' +
+      '<td>' + (e.type === 'gsat' ? '學測' : '指考') + '</td>' +
+      '<td><b>' + e.year + '</b></td>' +
+      '<td>' + e.label + '</td>' +
+      '<td><code style="font-size:.78rem;">' + e.file + '</code></td>' +
+      '<td>' + (e.meta || '') + '</td>' +
+      '<td style="white-space:nowrap;">' +
+        '<button class="btn" style="padding:2px 8px;font-size:.78rem;" onclick="editExamItem(' + idx + ')">✏️ 編輯</button> ' +
+        '<button class="btn btn-danger" style="padding:2px 8px;font-size:.78rem;" onclick="deleteExamItem(' + idx + ')">🗑️ 刪除</button>' +
+      '</td>' +
+    '</tr>'
+  ).join('');
+}
+
+window.saveExamItem = async function() {
+  const idx = parseInt(document.getElementById('f-idx').value, 10);
+  const type = document.getElementById('f-type').value;
+  const year = parseInt(document.getElementById('f-year').value, 10);
+  let file = document.getElementById('f-file').value.trim();
+  if (!year) {
+    alert('請填寫「學年度」！');
+    return;
+  }
+  if (!file) {
+    file = 'https://kghspaul.github.io/key/' + year + (type === 'gsat' ? 'gsat' : 'sat');
+  }
+  const label = document.getElementById('f-label').value.trim() || (year + (type === 'gsat' ? ' 學測' : ' 指考'));
+  const examTitle = document.getElementById('f-title').value.trim() || (year + '學年度' + (type === 'gsat' ? '學科能力測驗' : '指定科目考試') + ' 英文考科詳解');
+  const meta = document.getElementById('f-meta').value.trim() || (type === 'gsat' ? '新制學測｜選擇・混合題・中譯英・作文' : '包含完整選擇題與非選擇題詳解');
+
+  const item = { type, year, label, file, examTitle, meta };
+  if (idx >= 0 && idx < EXAMS.length) {
+    EXAMS[idx] = item;
+  } else {
+    EXAMS.push(item);
+  }
+  localStorage.setItem('custom_exams_list', JSON.stringify(EXAMS));
+  clearForm();
+  renderAll();
+  await syncToGitHub();
+};
+
+window.editExamItem = function(idx) {
+  const e = EXAMS[idx];
+  document.getElementById('f-idx').value = idx;
+  document.getElementById('f-type').value = e.type;
+  document.getElementById('f-year').value = e.year;
+  document.getElementById('f-label').value = e.label;
+  document.getElementById('f-file').value = e.file;
+  document.getElementById('f-title').value = e.examTitle;
+  document.getElementById('f-meta').value = e.meta;
+  document.getElementById('f-submit-btn').textContent = '💾 儲存修改並雲端同步（' + e.label + '）';
+};
+
+window.deleteExamItem = async function(idx) {
+  if (!confirm('確定要刪除「' + EXAMS[idx].label + '」並同步更新至雲端嗎？')) return;
+  EXAMS.splice(idx, 1);
+  localStorage.setItem('custom_exams_list', JSON.stringify(EXAMS));
+  renderAll();
+  await syncToGitHub();
+};
+
+window.clearForm = function() {
+  document.getElementById('f-idx').value = '-1';
+  document.getElementById('f-year').value = '';
+  document.getElementById('f-label').value = '';
+  document.getElementById('f-file').value = '';
+  document.getElementById('f-title').value = '';
+  document.getElementById('f-meta').value = '';
+  document.getElementById('f-submit-btn').textContent = '🚀 新增並直接雲端更新';
+};
+
+window.resetToDefault = async function() {
+  if (!confirm('確定要還原為內建的 53 份預設清單並同步至雲端嗎？')) return;
+  localStorage.removeItem('custom_exams_list');
+  EXAMS = DEFAULT_EXAMS.slice();
+  renderAll();
+  await syncToGitHub();
+};
+
+// 篩選與搜尋事件
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    currentFilter = this.getAttribute('data-filter');
+    renderList();
+  });
+});
+
+document.getElementById('search-inp').addEventListener('input', function() {
+  searchKeyword = this.value.trim();
+  renderList();
+});
+
+window.addEventListener('pageshow', renderAll);
+renderAll();
+</script>
+</body>
+</html>
