@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>字彙字識+ Levels 3&4 複習卷（第三十一回）Chapter 11-4 互動詳解</title>
+<style>
+:root{--bg:#faf8f4;--fg:#222;--card:#fff;--line:#e4ded3;--acc:#9a3b2e;--ok:#1f7a4d;--no:#b3261e;--mut:#6b6558;--hl:#fff1c9}
+@media(prefers-color-scheme:dark){:root{--bg:#161512;--fg:#e8e4da;--card:#201f1b;--line:#3a372f;--acc:#e08a78;--ok:#6fcf9a;--no:#f08a82;--mut:#a39d8f;--hl:#4a3f1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+.top{max-width:900px;margin:auto;padding:28px 18px 10px}
+.top h1{margin:0 0 4px;font-size:1.6rem;color:var(--acc)}
+.top p{margin:2px 0;color:var(--mut);font-size:.92rem}
+.feature-box{background:var(--hl);border-left:4px solid var(--acc);padding:8px 12px;border-radius:0 6px 6px 0;margin:10px 0;font-size:0.9rem;color:var(--fg);}
+nav{position:sticky;top:0;z-index:9;background:var(--bg);border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px;padding:8px 12px}
+nav a,nav button{flex:none;padding:5px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--fg);text-decoration:none;font:inherit;font-size:.88rem;cursor:pointer}
+nav a:hover,nav button:hover{border-color:var(--acc);color:var(--acc)}
+nav a.review-btn{background:var(--acc);color:#fff;border-color:var(--acc);font-weight:bold;}
+nav button.pm-active { background:var(--acc); color:#fff; border-color:var(--acc); }
+main{max-width:900px;margin:auto;padding:0 16px 70px}
+h2{margin:36px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--acc);font-size:1.3rem}
+h3{margin:0 0 8px;font-size:1.05rem;color:var(--acc)}
+.pas,.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.para{margin-bottom:14px}
+.s{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--line)}
+.en{font-family:Georgia,"Times New Roman",serif;font-size:1.02rem}
+.zh{color:var(--mut);font-size:.93rem}
+.prompt-text{color:var(--fg);font-size:.96rem;line-height:1.8}
+.note{color:var(--mut);font-size:.85rem;margin:6px 0 0}
+.bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 4px;border-radius:3px;font-weight:600}
+.bl sup{color:var(--acc);margin-right:3px;font-size:.7em}
+.bank{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.95rem;margin-bottom:8px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+details.q>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+details.q>summary::-webkit-details-marker{display:none}
+.n{background:var(--acc);color:#fff;border-radius:6px;padding:0 10px;font-weight:700;font-size:1.05rem}
+.tag{font-size:.78rem;border:1px solid var(--acc);color:var(--acc);border-radius:99px;padding:0 9px;line-height:1.6}
+.tag.pos{border-color:var(--ok);color:var(--ok)}
+.ans{margin-left:auto;font-weight:700;color:var(--ok)}
+.qb{margin-top:10px}
+.stem{margin-bottom:8px;padding:8px 10px;background:var(--bg);border-radius:6px}
+.clue{margin:8px 0;padding:8px 12px;border-left:4px solid var(--acc);background:var(--bg);border-radius:0 6px 6px 0}
+.clue h4,.qb h4{margin:0 0 2px;font-size:.92rem;color:var(--acc)}
+ul.op{list-style:none;margin:6px 0 0;padding:0}
+ul.op li{padding:7px 10px;margin:5px 0;border-radius:6px;border:1px solid var(--line);font-size:.95rem;transition:background 0.2s;cursor:pointer}
+ul.op li.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 9%,transparent)}
+ul.op li.no{border-color:color-mix(in srgb,var(--no) 45%,transparent)}
+ul.op i{font-style:normal;font-weight:700;font-size:.82rem}
+li.ok i{color:var(--ok)}li.no i{color:var(--no)}
+.exp{margin-top:4px}
+small{color:var(--mut)}
+
+/* 拼字填空練習輸入框 */
+.spell-box {
+  display: none;
+  margin: 8px 0;
+  padding: 10px 12px;
+  background: var(--hl);
+  border-radius: 6px;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+body.practice-mode details.q:not(.graded) .spell-box { display: flex; }
+.spell-input {
+  padding: 6px 10px;
+  border: 1px solid var(--acc);
+  border-radius: 6px;
+  background: var(--card);
+  color: var(--fg);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1rem;
+  width: 220px;
+}
+.spell-input:focus { outline: none; box-shadow: 0 0 0 2px color-mix(in srgb, var(--acc) 25%, transparent); }
+
+/* === 練習模式與批改狀態樣式 === */
+body.practice-mode details.q:not(.graded) .ans { visibility: hidden; }
+body.practice-mode details.q:not(.graded) .clue { display: none; }
+body.practice-mode details.q:not(.graded) .tag { display: none; }
+body.practice-mode details.q:not(.graded) .stem .zh { display: none; }
+body.practice-mode .pas:not(.graded) .zh { display: none; }
+body.practice-mode .pas:not(.graded) .trans-ans { display: none; }
+body.practice-mode .pas:not(.graded) .note { display: none; }
+.trans-input {
+  display: none;
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1rem;
+}
+.trans-input:focus { outline: none; border-color: var(--acc); }
+body.practice-mode .trans-input { display: block; }
+body.practice-mode .bl:not(.revealed) {
+  color: transparent;
+  background: var(--bg);
+  border-bottom: 2px solid var(--acc);
+  padding: 0 18px;
+  user-select: none;
+  display: inline-block;
+  min-width: 64px;
+  text-align: center;
+}
+body.practice-mode .bl:not(.revealed) sup {
+  color: var(--acc);
+  font-weight: 700;
+}
+body.practice-mode .bank:not(.graded) small { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li small { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li.ok,
+body.practice-mode details.q:not(.graded) ul.op li.no { border-color: var(--line); background: transparent; }
+body.practice-mode details.q:not(.graded) ul.op li i { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li .exp { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li:hover { background: var(--hl); }
+ul.op li.selected { border-color: var(--acc) !important; background: color-mix(in srgb, var(--acc) 12%, transparent) !important; font-weight: 600; }
+
+/* 已批改題目的作答回饋樣式 */
+details.q.graded ul.op li.selected.ok { border: 2px solid var(--ok) !important; background: color-mix(in srgb, var(--ok) 15%, transparent) !important; }
+details.q.graded ul.op li.selected.no { border: 2px solid var(--no) !important; background: color-mix(in srgb, var(--no) 14%, transparent) !important; }
+.user-status { font-weight: 700; font-size: .88rem; padding: 1px 8px; border-radius: 99px; margin-left: 6px; }
+.user-status.st-ok { background: color-mix(in srgb, var(--ok) 15%, transparent); color: var(--ok); border: 1px solid var(--ok); }
+.user-status.st-no { background: color-mix(in srgb, var(--no) 15%, transparent); color: var(--no); border: 1px solid var(--no); }
+.user-status.st-blank { background: var(--hl); color: var(--acc); border: 1px solid var(--acc); }
+
+/* 題組批改面板與全卷總批改面板 */
+.grade-box {
+  background: var(--card);
+  border: 2px dashed var(--acc);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin: 18px 0 32px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.grade-box.all-box {
+  border: 2px solid var(--acc);
+  background: color-mix(in srgb, var(--hl) 45%, var(--card));
+  padding: 20px 22px;
+  margin: 30px 0 40px;
+}
+.grade-title { font-weight: 700; color: var(--acc); font-size: 1.02rem; }
+.all-box .grade-title { font-size: 1.2rem; }
+.grade-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn-grade, .btn-reset {
+  padding: 6px 16px;
+  border-radius: 99px;
+  font: inherit;
+  font-size: .92rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid var(--acc);
+  transition: transform 0.1s, opacity 0.2s;
+}
+.btn-grade { background: var(--acc); color: #fff; }
+.all-box .btn-grade, .all-box .btn-reset { padding: 8px 22px; font-size: 1rem; }
+.btn-reset { background: var(--card); color: var(--mut); border-color: var(--line); }
+.btn-grade:hover, .btn-reset:hover { opacity: 0.9; transform: translateY(-1px); }
+.grade-res {
+  width: 100%;
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  font-size: .95rem;
+  display: none;
+}
+.grade-res.show { display: block; }
+.q-Jump {
+  display: inline-block;
+  padding: 1px 8px;
+  margin: 2px 3px;
+  border-radius: 6px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  color: var(--acc);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: .86rem;
+}
+.q-Jump:hover { background: var(--acc); color: #fff; border-color: var(--acc); }
+
+footer{max-width:900px;margin:auto;padding:20px 16px 40px;color:var(--mut);font-size:.85rem;line-height:1.6;border-top:1px solid var(--line);margin-top:40px;}
+footer a{color:var(--acc);text-decoration:none;font-weight:bold;}
+footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1><span id="exam-title">字彙字識+ Levels 3&4 複習卷（第三十一回）Chapter 11-4</span> <span id="completed-badge" style="display:none;font-size:1rem;color:var(--ok);">✅ 已完成</span></h1>
+  <p>每題含：考點標籤 → 題幹逐句中英對照 → 解題線索 → 正解與全部誤答分析</p>
+  <div class="feature-box">
+    💡 <b>複習與作答指南：</b> 點擊「🎯 切換練習模式」可自動挖空題幹答案並隱藏中譯與解析；直接點選各題選項（或於第四大題輸入拼字）作答後，可點擊各題組下方的「<b>✅ 批改本題組</b>」或最後的「<b>🏆 一次批改全卷</b>」查看得分並自動展開詳解（亦可點擊「<b>🔄 一次清空重練</b>」重新作答）！點擊每題右上角的「標記此題」可收錄錯題；滑鼠反白任何英文字句可「收藏單字」。請前往 <a href="review.html" target="_blank" style="color:var(--acc);font-weight:bold;">錯題與單字總複習頁面</a>。
+  </div>
+  <p>圖例：<span class="bl revealed">黃底</span> ＝ 正確答案填入處 ｜ <span class="tag" id="secret-trigger" style="user-select:none;cursor:default;">考點</span> <span class="tag pos">詞性需求</span></p>
+  <div id="secret-counter" style="display:none; margin-top:8px; font-size:0.9rem; color:var(--mut);">
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    👁️ <b>本頁瀏覽人次：</b><span id="busuanzi_value_page_pv"></span> 次
+  </div>
+</div>
+<nav id="nav">
+  <button id="pm-toggle">🎯 切換練習模式</button>
+  <button id="complete-btn">📝 標記為已完成</button>
+  <a href="review.html" class="review-btn" target="_blank">📚 前往總複習</a>
+</nav>
+<main id="app"></main>
+<footer>
+  限定用途教學教材。本詳解為教學輔助，題目版權屬原出版單位（空中美語 AMC）。<br>
+  💡 <b>問題回報與建議：</b> Line: etpaul ｜ IG: <a href="https://www.instagram.com/etpaul" target="_blank">@etpaul</a>
+</footer>
+
+<script>
+const L="ABCD";
+const fx=s=>s.replace(/\*([^*]+)\*/g,'<i>$1</i>').replace(/\[\[(\d*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl"'+(n?' data-q="'+n+'"':'')+'>'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const SENT={};
+const Q_ANS={};
+const Q_SPELL={};
+
+function passage(title,paras,note,gid,extraCls){
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[(\d+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  return '<section class="pas'+(extraCls?' '+extraCls:'')+'"'+(gid?' id="pas-'+gid+'"':'')+'><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
+}
+function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
+const clue=t=>'<div class="clue"><h4>解題線索</h4>'+t+'</div>';
+function ops(list,ans,lab){
+  lab=lab||'ABCDEF';
+  return '<ul class="op">'+list.map((o,i)=>{
+    const optCode = (lab==='ABCDEF'&&list.length<=4) ? L[i] : lab[i];
+    const k=ans.indexOf(optCode)>=0;
+    return '<li class="'+(k?'ok':'no')+'" data-opt="'+optCode+'" onclick="selectOpt(this)"><b>('+optCode+') '+fx(o[0])+'</b>'+(o[1]?' <small>'+o[1]+'</small>':'')+' <i>'+(k?'✔ 正解':'✘ 誤答')+'</i><div class="exp">'+o[2]+'</div></li>';
+  }).join('')+'</ul>';
+}
+function card(n,tags,ans,body,spellWord){
+  Q_ANS[n] = ans;
+  if(spellWord) Q_SPELL[n] = spellWord.toLowerCase();
+  return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="user-status" id="st'+n+'" style="display:none"></span><span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
+}
+
+function groupGradeBox(gid, title, startQ, endQ, ptsPerQ) {
+  ptsPerQ = ptsPerQ || 4;
+  const totalPts = (endQ - startQ + 1) * ptsPerQ;
+  return '<div class="grade-box" id="gbox-'+gid+'">' +
+    '<div class="grade-title">📝 '+title+'（第 '+startQ+'–'+endQ+' 題，每題 '+ptsPerQ+' 分，共 '+totalPts+' 分）</div>' +
+    '<div class="grade-btns">' +
+      '<button class="btn-grade" onclick="gradeGroup(\''+gid+'\','+startQ+','+endQ+','+ptsPerQ+')">✅ 批改本題組</button>' +
+      '<button class="btn-reset" onclick="resetGroup(\''+gid+'\','+startQ+','+endQ+')">🔄 重練本題組</button>' +
+    '</div>' +
+    '<div class="grade-res" id="gres-'+gid+'"></div>' +
+  '</div>';
+}
+
+window.selectOpt = function(li) {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  const qEl = li.closest('details.q');
+  if (qEl && qEl.classList.contains('graded')) {
+    qEl.classList.remove('graded');
+    const qNum = qEl.id.replace('q', '');
+    const st = document.getElementById('st' + qNum);
+    if (st) st.style.display = 'none';
+  }
+  li.parentNode.querySelectorAll('li').forEach(el => el.classList.remove('selected'));
+  li.classList.add('selected');
+};
+
+window.onSpellInput = function(inp, n) {
+  const qEl = document.getElementById('q' + n);
+  if (!qEl) return;
+  const val = inp.value.trim().toLowerCase();
+  const lis = qEl.querySelectorAll('ul.op li');
+  lis.forEach(li => li.classList.remove('selected'));
+  if (!val) return;
+  if (val === Q_SPELL[n]) {
+    const okLi = qEl.querySelector('ul.op li[data-opt="A"]');
+    if (okLi) okLi.classList.add('selected');
+  } else {
+    const noLi = qEl.querySelector('ul.op li[data-opt="B"]');
+    if (noLi) noLi.classList.add('selected');
+  }
+};
+
+function evaluateSingleQ(n) {
+  const qEl = document.getElementById('q' + n);
+  if (!qEl) return 'blank';
+
+  const spellInp = document.getElementById('spell-inp-' + n);
+  if (spellInp && spellInp.value.trim() !== '') {
+    onSpellInput(spellInp, n);
+  }
+
+  qEl.classList.add('graded');
+  qEl.open = true;
+
+  document.querySelectorAll('.bl[data-q="'+n+'"]').forEach(el => el.classList.add('revealed'));
+
+  const sel = qEl.querySelector('ul.op li.selected');
+  const st = document.getElementById('st' + n);
+  const ans = Q_ANS[n];
+
+  if (!sel) {
+    if (st) {
+      st.className = 'user-status st-blank';
+      st.textContent = '⚠️ 未作答';
+      st.style.display = 'inline-block';
+    }
+    return 'blank';
+  }
+
+  const userOpt = sel.getAttribute('data-opt');
+  const spellTyped = spellInp && spellInp.value.trim() ? ' [' + spellInp.value.trim() + ']' : '';
+  if (ans.indexOf(userOpt) >= 0) {
+    if (st) {
+      st.className = 'user-status st-ok';
+      st.textContent = '✔ 答對 (' + (Q_SPELL[n] ? Q_SPELL[n] : userOpt) + ')';
+      st.style.display = 'inline-block';
+    }
+    return 'ok';
+  } else {
+    if (st) {
+      st.className = 'user-status st-no';
+      st.textContent = '✘ 答錯' + (spellTyped ? spellTyped : ' (選 ' + userOpt + ')');
+      st.style.display = 'inline-block';
+    }
+    return 'no';
+  }
+}
+
+window.gradeGroup = function(gid, startQ, endQ, ptsPerQ) {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  let okCount = 0, wrongList = [], blankList = [];
+  for (let n = startQ; n <= endQ; n++) {
+    const res = evaluateSingleQ(n);
+    if (res === 'ok') okCount++;
+    else if (res === 'no') wrongList.push(n);
+    else blankList.push(n);
+  }
+  const pasEl = document.getElementById('pas-' + gid);
+  if (pasEl) pasEl.classList.add('graded');
+  const bankEl = document.getElementById('bank-' + gid);
+  if (bankEl) bankEl.classList.add('graded');
+
+  const totalQ = endQ - startQ + 1;
+  const earnedPts = okCount * ptsPerQ;
+  const maxPts = totalQ * ptsPerQ;
+  const resEl = document.getElementById('gres-' + gid);
+
+  let html = '<div><b>📊 批改結果：</b>答對 <b>' + okCount + ' / ' + totalQ + '</b> 題，得分 <b style="color:var(--acc);font-size:1.15rem;">' + earnedPts + ' / ' + maxPts + '</b> 分' + (okCount === totalQ ? ' 🎉 全部答對！' : '') + '</div>';
+  if (wrongList.length > 0) {
+    html += '<div style="margin-top:4px;">❌ <b>答錯題號：</b>' + wrongList.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  if (blankList.length > 0) {
+    html += '<div style="margin-top:4px;">⚠️ <b>未作答題號：</b>' + blankList.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  resEl.innerHTML = html;
+  resEl.classList.add('show');
+};
+
+window.resetGroup = function(gid, startQ, endQ) {
+  enablePracticeMode();
+  for (let n = startQ; n <= endQ; n++) {
+    const qEl = document.getElementById('q' + n);
+    if (qEl) {
+      qEl.classList.remove('graded');
+      qEl.querySelectorAll('ul.op li').forEach(li => li.classList.remove('selected'));
+    }
+    const spellInp = document.getElementById('spell-inp-' + n);
+    if (spellInp) spellInp.value = '';
+    const st = document.getElementById('st' + n);
+    if (st) st.style.display = 'none';
+    document.querySelectorAll('.bl[data-q="'+n+'"]').forEach(el => el.classList.remove('revealed'));
+  }
+  const pasEl = document.getElementById('pas-' + gid);
+  if (pasEl) pasEl.classList.remove('graded');
+  const bankEl = document.getElementById('bank-' + gid);
+  if (bankEl) bankEl.classList.remove('graded');
+  const resEl = document.getElementById('gres-' + gid);
+  if (resEl) {
+    resEl.innerHTML = '';
+    resEl.classList.remove('show');
+  }
+};
+
+const pmBtn = document.getElementById('pm-toggle');
+function enablePracticeMode() {
+  document.body.classList.add('practice-mode');
+  pmBtn.classList.add('pm-active');
+  pmBtn.textContent = '退出練習模式（顯示全部詳解）';
+  document.querySelectorAll('details.q').forEach(d => d.open = true);
+}
+function disablePracticeMode() {
+  document.body.classList.remove('practice-mode');
+  pmBtn.classList.remove('pm-active');
+  pmBtn.textContent = '🎯 切換練習模式';
+}
+pmBtn.onclick = function() {
+  if (document.body.classList.contains('practice-mode')) {
+    disablePracticeMode();
+  } else {
+    enablePracticeMode();
+  }
+};
+
+const examTitle = document.getElementById('exam-title').innerText;
+const compBtn = document.getElementById('complete-btn');
+const badge = document.getElementById('completed-badge');
+let comps = JSON.parse(localStorage.getItem('completed_exams')||'[]');
+
+if(comps.includes(examTitle)) {
+  badge.style.display = 'inline-block';
+  compBtn.innerText = '取消完成標記';
+}
+
+compBtn.onclick = function() {
+  comps = JSON.parse(localStorage.getItem('completed_exams')||'[]');
+  if(comps.includes(examTitle)) {
+    comps = comps.filter(t => t !== examTitle);
+    this.innerText = '📝 標記為已完成';
+    badge.style.display = 'none';
+  } else {
+    comps.push(examTitle);
+    this.innerText = '取消完成標記';
+    badge.style.display = 'inline-block';
+  }
+  localStorage.setItem('completed_exams', JSON.stringify(comps));
+};
+
+const ALL_GROUPS = [
+  { gid: 'sec1', title: 'I. Multiple Choice 單選詞彙題', startQ: 1, endQ: 10, ptsPerQ: 4 },
+  { gid: 'sec2', title: 'II. Complete each sentence 選詞填空', startQ: 11, endQ: 15, ptsPerQ: 4 },
+  { gid: 'cloze', title: 'III. Cloze 克漏字測驗', startQ: 16, endQ: 20, ptsPerQ: 4 },
+  { gid: 'sec4', title: 'IV. Fill in each blank 文意字彙填空', startQ: 21, endQ: 25, ptsPerQ: 4 }
+];
+
+window.gradeAllSingleChoice = function() {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  let totalOk = 0, totalQ = 0, totalEarned = 0, totalMax = 0;
+  let allWrong = [], allBlank = [];
+
+  ALL_GROUPS.forEach(g => {
+    gradeGroup(g.gid, g.startQ, g.endQ, g.ptsPerQ);
+    for (let n = g.startQ; n <= g.endQ; n++) {
+      totalQ++;
+      totalMax += g.ptsPerQ;
+      const st = document.getElementById('st' + n);
+      if (st && st.classList.contains('st-ok')) {
+        totalOk++;
+        totalEarned += g.ptsPerQ;
+      } else if (st && st.classList.contains('st-no')) {
+        allWrong.push(n);
+      } else {
+        allBlank.push(n);
+      }
+    }
+  });
+
+  const resEl = document.getElementById('gres-all');
+  let html = '<div style="font-size:1.08rem;"><b>🏆 全卷批改總結：</b>共答對 <b>' + totalOk + ' / ' + totalQ + '</b> 題，總分 <b style="color:var(--acc);font-size:1.35rem;">' + totalEarned + ' / ' + totalMax + '</b> 分' + (totalOk === totalQ ? ' 🎉 滿分全對！太優秀了！' : '') + '</div>';
+  if (allWrong.length > 0) {
+    html += '<div style="margin-top:6px;">❌ <b>全卷答錯題號：</b>' + allWrong.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  if (allBlank.length > 0) {
+    html += '<div style="margin-top:6px;">⚠️ <b>全卷未作答題號：</b>' + allBlank.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  resEl.innerHTML = html;
+  resEl.classList.add('show');
+};
+
+window.resetAllSingleChoice = function() {
+  ALL_GROUPS.forEach(g => resetGroup(g.gid, g.startQ, g.endQ));
+  const resEl = document.getElementById('gres-all');
+  if (resEl) {
+    resEl.innerHTML = '';
+    resEl.classList.remove('show');
+  }
+};
+
+// === 各大題題目與詳解資料（第三十一回 Chapter 11-4） ===
+
+// I. Multiple Choice (Q1-Q10)
+const SEC1_STEMS = [
+  ['Matty\'s sudden, [[1|mysterious]] disappearance from home worried all of his friends and family.', 'Matty 突然且神秘難解地從家中失蹤，使他所有的朋友與家人都憂心忡忡。'],
+  ['The [[2|maximum]] speed on the highway here is 100 kilometers per hour. Don\'t go faster than that.', '這裡高速公路的最高速限是每小時 100 公里。不要開得比那更快。'],
+  ['Sean felt [[3|miserable]] for months after his fiancée left him just before the wedding.', '在未婚妻於婚禮前夕離開他之後，Sean 覺得悲慘痛苦了好幾個月。'],
+  ['The performance was [[4|outstanding]]; it received very positive reviews from newspaper critics.', '這場演出非常傑出；它獲得了報紙評論家非常正面的評價。'],
+  ['My wedding was the most [[5|memorable]] day of my life; it seems like it was only yesterday.', '我的婚禮是我一生中最難忘的一天；感覺就像昨天才發生一樣。'],
+  ['The police have a(n) [[6|partial]] solution for the case, but they need more evidence before they can bring it to court.', '警方對這起案件有了初步（部分的）解答，但他們需要更多證據才能將案件移送法院。'],
+  ['Because of the war, many people lost their beloved family members and lived in [[7|misery]].', '因為這場戰爭，許多人失去了摯愛的家人，並生活在悲慘痛苦之中。'],
+  ['The judge decided the man\'s actions weren\'t [[8|lawful]] and sent him to jail.', '法官判定該男子的行為不合法，並將他送進監獄。'],
+  ['The speaker [[9|paused]] to let the man ask a question and then started talking again.', '演講者暫停了一下讓那名男子發問，然後又開始繼續講話。'],
+  ['The [[10|objective]] of chess is to trap your opponent\'s king.', '西洋棋的目標是困住對手的國王。']
+];
+SEC1_STEMS.forEach(s => {
+  let m, r = /\[\[(\d+)\|/g;
+  while ((m = r.exec(s[0]))) SENT[m[1]] = s;
+});
+
+const SEC1_DATA = [
+  [1, ['考點：形容詞語意（修飾 disappearance）', '詞性需求：形容詞（與 sudden 並列修飾 disappearance）'], 'B',
+    '空格與 <i>sudden</i>（突然的）並列修飾名詞 <i>disappearance from home</i>（從家中失蹤），且讓所有親友擔心不已，代表他失蹤的原因「神秘難解的、離奇的」，故選 <b>mysterious</b>。',
+    [
+      ['moist', 'adj. 潮濕的；濕潤的', '形容空氣、土壤或蛋糕濕潤，不可修飾失蹤（disappearance）。<br><b>何時才對：</b>形容剛烤好濕潤的蛋糕或微濕的物體表面時（即第 19 題）。'],
+      ['mysterious', 'adj. 神秘難解的；離奇的', '<i>mysterious disappearance</i>（神秘失蹤）為常見搭配，符合親友擔心的情境。'],
+      ['needy', 'adj. 貧困的；生活艱難的', '指經濟貧困需要救濟的人（如 needy families），不可修飾失蹤。<br><b>何時才對：</b>描述慈善機構幫助貧困兒童時（例：help needy children）。'],
+      ['numerous', 'adj. 許多的；眾多的', '後須接複數可數名詞，此處 <i>disappearance</i> 為單數。<br><b>何時才對：</b>修飾複數名詞表「許多」時（例：numerous occasions）。']
+    ]
+  ],
+  [2, ['考點：形容詞語意與後文線索對照', '詞性需求：形容詞（修飾名詞 speed）'], 'D',
+    '後句明確警告 <i>Don\'t go faster than that.</i>（不要開得比那更快），不能超過時速 100 公里，代表每小時 100 公里是這條高速公路的「最高、最大值的」速限，故選 <b>maximum</b>。',
+    [
+      ['minimum', 'adj. 最小值的；最低限度的', '若為最低速限（minimum speed），規定應該是「不要開得比那更慢（Don\'t go slower）」，與後句相反。<br><b>何時才對：</b>指基本工資（minimum wage）或最低年齡限制時。'],
+      ['manual', 'adj. 體力的；手動的', '不搭配高速公路速限。<br><b>何時才對：</b>修飾 <i>labor</i>（體力勞動）或手排變速箱（manual transmission）時。'],
+      ['memorable', 'adj. 難忘的', '不可用來形容道路速限。<br><b>何時才對：</b>形容婚禮或旅程令人難忘時（即第 5 題）。'],
+      ['maximum', 'adj. 最大值的；最高的', '<i>maximum speed</i>（最高速限），完美呼應後句 <i>Don\'t go faster than that</i>。']
+    ]
+  ],
+  [3, ['考點：情緒形容詞與情境因果', '詞性需求：形容詞（連綴動詞 felt 之主詞補語）'], 'C',
+    '時間與原因子句為 <i>after his fiancée left him just before the wedding</i>（在他的未婚妻於婚禮前夕拋棄他之後），遭遇悔婚打擊，Sean 必定好幾個月都覺得「悲慘的、極度痛苦難過的」，故選 <b>miserable</b>。',
+    [
+      ['plentiful', 'adj. 豐富的；充足的', '形容物資或食物充裕，不可形容被悔婚後的心情。<br><b>何時才對：</b>描述收成或水源充足時（例：Clean water is plentiful here）。'],
+      ['neat', 'adj. 整齊的；愛整潔的', '與未婚妻離開他的悲傷情境無關。<br><b>何時才對：</b>形容房間收拾得很整齊或字跡工整時（例：keep the desk neat）。'],
+      ['miserable', 'adj. 悲慘的；痛苦難過的', '準確描述在婚禮前夕被未婚妻拋棄後的悲痛心情。'],
+      ['moist', 'adj. 潮濕的', '不可用來形容人的悲傷情緒。<br><b>何時才對：</b>形容物體表面微濕時（即第 19 題）。']
+    ]
+  ],
+  [4, ['考點：形容詞語意與正負向評價呼應', '詞性需求：形容詞（主詞補語，修飾 performance）'], 'D',
+    '分號後補充說明 <i>it received very positive reviews from newspaper critics</i>（它獲得了報紙評論家非常正面的評價），能獲得高度正面劇評，表示這場演出非常「傑出的、優秀的」，故選 <b>outstanding</b>。',
+    [
+      ['odd', 'adj. 奇怪的；古怪的', '負面或中立偏怪的形容詞，無法直接導出「獲得非常正面的評價」。<br><b>何時才對：</b>形容某人舉止古怪或奇數（odd numbers）時。'],
+      ['needy', 'adj. 貧困的', '形容人經濟困頓或過度渴求關注，不形容演出。<br><b>何時才對：</b>修飾貧困家庭或弱勢群體時。'],
+      ['objective', 'adj. 客觀的', '「客觀的」通常用來形容評論家（critics）或報導的立場，而非形容舞台演出（performance）本身精彩。<br><b>何時才對：</b>形容法官、記者或科學報告公正客觀時（例：an objective report）。'],
+      ['outstanding', 'adj. 傑出的；極佳的', '正面讚譽演出的最高評價，與 <i>very positive reviews</i> 完全吻合。']
+    ]
+  ],
+  [5, ['考點：形容詞語意（回憶情境）', '詞性需求：形容詞（最高級 the most ... day）'], 'A',
+    '主詞為 <i>My wedding</i>（我的婚禮），分號後說 <i>it seems like it was only yesterday</i>（感覺就像昨天才發生一樣），歷歷在目如昨天的婚禮，自然是一生中最「難忘的」一天，故選 <b>memorable</b>。',
+    [
+      ['memorable', 'adj. 難忘的；值得紀念的', '與後文「彷彿昨日（seems like it was only yesterday）」的深刻記憶完美呼應。'],
+      ['original', 'adj. 最初的；原創的', '不搭配最高級 <i>the most original day</i> 來表達歷歷在目的回憶。<br><b>何時才對：</b>指原本的計畫（original plan）或真跡原稿時。'],
+      ['peculiar', 'adj. 奇怪的；獨特的', '帶有怪異色彩，不符合對自己婚禮的美好回憶。<br><b>何時才對：</b>形容食物有怪味或某人有奇特習慣時（例：a peculiar smell）。'],
+      ['ongoing', 'adj. 持續進行中的', '婚禮只有一天且已過去（<i>was</i>），並非仍在進行中。<br><b>何時才對：</b>修飾仍在進行中的調查或談判時（例：an ongoing investigation）。']
+    ]
+  ],
+  [6, ['考點：轉折語氣與形容詞語意', '詞性需求：形容詞（修飾名詞 solution）'], 'D',
+    '後半句由 <i>but</i> 轉折：<i>they need more evidence before they can bring it to court</i>（但他們需要更多證據才能將案件移送法院），既然還缺更多證據，代表警方目前掌握的只是「部分的、不完整的」解答，故選 <b>partial</b>。',
+    [
+      ['magnetic', 'adj. 有磁性的；有吸引力的', '與警方辦案進度無關。<br><b>何時才對：</b>描述磁場（magnetic field）或極具個人魅力時。'],
+      ['odd', 'adj. 奇怪的', '無法與後文「但還需要更多證據才能起訴」構成合理的不完整對比。<br><b>何時才對：</b>形容行為反常或怪異現象時。'],
+      ['plentiful', 'adj. 豐富的', '不可修飾單數可數名詞 <i>a(n) ... solution</i>，且若證據充分就不必再找更多證據了。<br><b>何時才對：</b>修飾複數或不可數名詞表數量充裕時。'],
+      ['partial', 'adj. 部分的；不完全的', '<i>a partial solution</i>（部分的解決／初步解答），準確呼應後文「仍需更多證據才完整」。']
+    ]
+  ],
+  [7, ['考點：固定搭配 live in misery', '詞性需求：不可數名詞（介系詞 in 之受詞）'], 'A',
+    '前半句 <i>Because of the war, many people lost their beloved family members</i>（因為戰爭，許多人失去了摯愛的家人），痛失親人的戰亂災民自然生活在「悲慘、痛苦」之中，構成片語 <b>live in misery</b>，故選 <b>misery</b>。',
+    [
+      ['misery', 'n. 悲慘；痛苦；不幸', '<i>live in misery</i>（生活在痛苦悲慘中），符合戰亂痛失親人的情境。'],
+      ['crush', 'n. 迷戀；擁擠的人群', '<i>have a crush on sb.</i> 指暗戀某人，與戰爭喪親無關。<br><b>何時才對：</b>描述暗戀對象時（例：have a secret crush on a classmate）。'],
+      ['pause', 'n. 停頓；暫停', '不構成 <i>lived in pause</i>。<br><b>何時才對：</b>描述說話或音樂中的短暫停頓時（例：after a brief pause）。'],
+      ['plug', 'n. 插頭；塞子', '具體物品名詞，與句意完全無關。<br><b>何時才對：</b>指電器插頭時（即第 17 題）。']
+    ]
+  ],
+  [8, ['考點：法律情境形容詞', '詞性需求：形容詞（主詞補語，修飾 actions）'], 'C',
+    '主詞為 <i>The judge</i>（法官），後半句結果為 <i>and sent him to jail</i>（並把他送進監獄），法官會將人判刑入獄，是因為判定該男子的行為是「不合法的（weren\'t lawful）」，故選 <b>lawful</b>。',
+    [
+      ['plentiful', 'adj. 豐富的', '行為不豐富不會被法官判刑入獄。<br><b>何時才對：</b>形容資源、食物充足時。'],
+      ['mighty', 'adj. 強大的；巨大的', '行為不強大不會被關進監獄。<br><b>何時才對：</b>形容強大的帝國或力量時（例：a mighty warrior）。'],
+      ['lawful', 'adj. 合法的；法定的', '<i>weren\'t lawful</i>（不合法＝illegal），完全符合法官（judge）判人入獄（sent him to jail）的法律邏輯。'],
+      ['loose', 'adj. 鬆的；寬鬆的', '與違法入獄無關。<br><b>何時才對：</b>形容衣服寬鬆或螺絲、牙齒鬆動時（例：a loose tooth）。']
+    ]
+  ],
+  [9, ['考點：動詞語意（演講停頓）', '詞性需求：過去式不及物動詞'], 'B',
+    '主詞為 <i>The speaker</i>（演講者），後接目的不定詞 <i>to let the man ask a question</i>（讓那名男子提問）以及後續動作 <i>and then started talking again</i>（然後又開始繼續講話），可知演講者中途先「暫停、停頓」了一下，故選 <b>paused</b>。',
+    [
+      ['glowed', 'v. 發光；容光煥發', '演講者不會為了讓人發問而「發光」。<br><b>何時才對：</b>描述螢火蟲、餘燼在暗處發亮或臉頰泛紅時（例：glow in the dark）。'],
+      ['paused', 'v. 停頓；暫停', '先「暫停（paused）」讓聽眾發問，接著「又開始講話（started talking again）」，動作先後邏輯嚴密。'],
+      ['multiplied', 'v. 成倍增加；乘；繁殖', '與演講中開放提問無關。<br><b>何時才對：</b>描述細菌繁殖或數學乘法時（例：Multiply 3 by 4）。'],
+      ['loosened', 'v. 鬆開；解開', '為及物動詞（如 loosen one\'s tie 鬆開領帶），不可直接接不定詞表暫停演講。<br><b>何時才對：</b>描述鬆開領帶或安全帶時。']
+    ]
+  ],
+  [10, ['考點：名詞語意（遊戲目標）', '詞性需求：單數名詞（The ... of chess）'], 'A',
+    '主詞為 <i>The <u>&nbsp;&nbsp;&nbsp;&nbsp;</u> of chess</i>（西洋棋的……），主詞補語為不定詞片語 <i>to trap your opponent\'s king</i>（困住對手的國王），將死對方國王正是下西洋棋的「目標、目的」，故選 <b>objective</b>。',
+    [
+      ['objective', 'n. 目標；目的', '作名詞時同義於 <i>goal / aim</i>，準確說明西洋棋的獲勝目標。'],
+      ['plug', 'n. 插頭', '與西洋棋規則無關。<br><b>何時才對：</b>指電源插頭時（即第 17 題）。'],
+      ['grave', 'n. 墳墓', '與下西洋棋的目的無關。<br><b>何時才對：</b>指墓地或掃墓時（例：visit her grandfather\'s grave）。'],
+      ['minimum', 'n. 最小值；最低限度', '困住對手國王是最終目標，而非最低限度。<br><b>何時才對：</b>指將開銷或風險降到最低限度時（例：keep costs to a minimum）。']
+    ]
+  ]
+];
+
+// II. Complete each sentence with the correct word (Q11-Q15)
+const SEC2_BANK = [
+  ['A', 'magnificent', 'adj. 壯麗的；宏偉的'],
+  ['B', 'normal', 'adj. 正常的；平常的'],
+  ['C', 'luxury', 'n. 奢華；奢侈品'],
+  ['D', 'liberty', 'n. 自由'],
+  ['E', 'messy', 'adj. 髒亂的；凌亂的']
+];
+
+const SEC2_STEMS = [
+  ['My mother told me to clean my room because it was very [[11|messy]].', '我媽媽叫我打掃我的房間，因為房間非常髒亂。'],
+  ['In the US Declaration of Independence, it says that all Americans have the right to life, [[12|liberty]], and the pursuit of happiness.', '在美國《獨立宣言》中寫道，所有美國人都享有生命權、自由權以及追求幸福的權利。'],
+  ['Ian\'s high salary allowed him to live in [[13|luxury]] and retire early.', 'Ian 的高薪使他得以過著奢華的生活並提早退休。'],
+  ['On a [[14|normal]] weekday, I get to the office by 9 a.m., and I usually leave the office by 6:30 p.m.', '在平常的工作日，我會在早上 9 點前到辦公室，且通常在傍晚 6 點半前離開辦公室。'],
+  ['The [[15|magnificent]] sight of the Great Wall of China left him amazed.', '中國萬里長城壯麗宏偉的景象讓他驚嘆不已。']
+];
+SEC2_STEMS.forEach(s => {
+  let m, r = /\[\[(\d+)\|/g;
+  while ((m = r.exec(s[0]))) SENT[m[1]] = s;
+});
+
+const SEC2_DATA = [
+  [11, ['考點：形容詞語意與因果邏輯', '詞性需求：形容詞（主詞補語，修飾 my room）'], 'E',
+    '前半句 <i>My mother told me to clean my room</i>（媽媽叫我打掃房間），需要打掃房間的原因自然是房間非常「髒亂的、凌亂的」，故選 <b>(E) messy</b>。',
+    [
+      ['magnificent', 'adj. 壯麗的', '房間若壯麗宏偉就不需要被媽媽叫去打掃了。<br><b>何時才對：</b>修飾萬里長城等壯觀景象時（即第 15 題）。'],
+      ['normal', 'adj. 正常的', '房間正常並非被要求打掃的原因。<br><b>何時才對：</b>修飾平日作息（On a normal weekday）時（即第 14 題）。'],
+      ['luxury', 'n. 奢華', '為名詞，不可放在副詞 <i>very</i> 後作形容詞補語。<br><b>何時才對：</b>構成片語 <i>live in luxury</i>（過奢華生活）時（即第 13 題）。'],
+      ['liberty', 'n. 自由', '為名詞，不可放在 <i>very</i> 後修飾房間。<br><b>何時才對：</b>用於美國《獨立宣言》名言中（即第 12 題）。'],
+      ['messy', 'adj. 髒亂的；凌亂的', '準確解釋媽媽要求打掃房間（<i>clean my room</i>）的原因。']
+    ]
+  ],
+  [12, ['考點：歷史名言與平行名詞結構', '詞性需求：不可數名詞（與 life, the pursuit of happiness 平行）'], 'D',
+    '本句引用美國《獨立宣言（US Declaration of Independence）》最著名的天賦人權名言：<i>the right to life, <u>&nbsp;&nbsp;&nbsp;&nbsp;</u>, and the pursuit of happiness</i>（生命權、自由權與追求幸福的權利），故選 <b>(D) liberty</b>。',
+    [
+      ['magnificent', 'adj. 壯麗的', '為形容詞，無法與名詞 <i>life</i> 平行。<br><b>何時才對：</b>修飾名詞 <i>sight</i> 時（即第 15 題）。'],
+      ['normal', 'adj. 正常的', '為形容詞，無法與名詞 <i>life</i> 平行。<br><b>何時才對：</b>修飾名詞 <i>weekday</i> 時（即第 14 題）。'],
+      ['luxury', 'n. 奢華', '《獨立宣言》保障的是基本人權「自由（liberty）」，而非奢華享樂。<br><b>何時才對：</b>搭配高薪（high salary）與 <i>live in luxury</i> 時（即第 13 題）。'],
+      ['liberty', 'n. 自由；自由權', '美國《獨立宣言》經典名言：<i>life, liberty, and the pursuit of happiness</i>。'],
+      ['messy', 'adj. 髒亂的', '為形容詞，語意與文法皆不合。<br><b>何時才對：</b>形容房間髒亂時（即第 11 題）。']
+    ]
+  ],
+  [13, ['考點：固定片語 live in luxury', '詞性需求：不可數名詞（介系詞 in 之受詞）'], 'C',
+    '主詞為 <i>Ian\'s high salary</i>（Ian 的高薪），且後接 <i>and retire early</i>（並提早退休），高薪讓他得以過著「奢華、優渥」的生活。構成固定搭配 <b>live in luxury</b>，故選 <b>(C) luxury</b>。',
+    [
+      ['magnificent', 'adj. 壯麗的', '為形容詞，不可單獨作介系詞 <i>in</i> 的受詞。<br><b>何時才對：</b>修飾 <i>sight</i> 時（即第 15 題）。'],
+      ['normal', 'adj. 正常的', '為形容詞，不可作介系詞 <i>in</i> 的受詞。<br><b>何時才對：</b>修飾 <i>weekday</i> 時（即第 14 題）。'],
+      ['luxury', 'n. 奢華；奢侈', '構成固定片語 <i>live in luxury</i>（過著奢華的生活），與 <i>high salary</i> 完美呼應。'],
+      ['liberty', 'n. 自由', '高薪帶來的是物質上的奢華（luxury），而非公民自由權。<br><b>何時才對：</b>用於第 12 題《獨立宣言》中。'],
+      ['messy', 'adj. 髒亂的', '為形容詞，不可作介系詞 <i>in</i> 的受詞。<br><b>何時才對：</b>形容房間凌亂時（即第 11 題）。']
+    ]
+  ],
+  [14, ['考點：形容詞語意（日常作息搭配）', '詞性需求：形容詞（修飾名詞 weekday）'], 'B',
+    '後半句 <i>I get to the office by 9 a.m., and I usually leave the office by 6:30 p.m.</i>（早上 9 點前到辦公室，通常 6 點半前下班）描述的是一般例行的上下班時間，即在一個「正常的、平常的」工作日，故選 <b>(B) normal</b>。',
+    [
+      ['magnificent', 'adj. 壯麗的', '不會把朝九晚六的普通上班日稱為「壯麗的工作日」。<br><b>何時才對：</b>形容萬里長城的壯觀景色時（即第 15 題）。'],
+      ['normal', 'adj. 正常的；平常的', '<i>On a normal weekday</i>（在平常的工作日），呼應後句 <i>usually</i> 的規律上下班時間。'],
+      ['luxury', 'n. 奢華', '名詞，與朝九晚六上下班不搭。<br><b>何時才對：</b>構成 <i>live in luxury</i> 時（即第 13 題）。'],
+      ['liberty', 'n. 自由', '名詞，不可修飾 <i>weekday</i>。<br><b>何時才對：</b>用於第 12 題《獨立宣言》中。'],
+      ['messy', 'adj. 髒亂的', '形容環境髒亂，不搭配例行上下班時間說明。<br><b>何時才對：</b>形容未打掃的房間時（即第 11 題）。']
+    ]
+  ],
+  [15, ['考點：形容詞語意（修飾自然與建築奇景）', '詞性需求：形容詞（修飾名詞 sight）'], 'A',
+    '空格修飾 <i>sight of the Great Wall of China</i>（中國萬里長城的景象），且結果為 <i>left him amazed</i>（讓他驚嘆不已），令遊客驚嘆的長城景觀必定是「壯麗的、宏偉的」，故選 <b>(A) magnificent</b>。',
+    [
+      ['magnificent', 'adj. 壯麗的；宏偉的；極好的', '<i>The magnificent sight of the Great Wall</i>（長城壯麗的景象），完美導出後文 <i>left him amazed</i>。'],
+      ['normal', 'adj. 正常的；普通的', '普通的景象不會讓人驚嘆不已（amazed）。<br><b>何時才對：</b>修飾平常的工作日（normal weekday）時（即第 14 題）。'],
+      ['luxury', 'n. 奢華', '為名詞，此處修飾 <i>sight</i> 需用形容詞。<br><b>何時才對：</b>構成 <i>live in luxury</i> 時（即第 13 題）。'],
+      ['liberty', 'n. 自由', '為名詞，不可修飾 <i>sight</i>。<br><b>何時才對：</b>用於第 12 題《獨立宣言》中。'],
+      ['messy', 'adj. 髒亂的', '髒亂的景象不會用來讚嘆萬里長城。<br><b>何時才對：</b>形容房間凌亂時（即第 11 題）。']
+    ]
+  ]
+];
+
+// III. Cloze (Q16-Q20)
+const CLOZE_BANK = [
+  ['A', 'moist', 'adj. 潮濕的；微濕的'],
+  ['B', 'manual', 'n. 使用手冊；說明書'],
+  ['C', 'missing', 'adj. 不見的；缺少的'],
+  ['D', 'plugs', 'n. 插頭'],
+  ['E', 'permanent', 'adj. 永久的；不可逆的']
+];
+
+const CLOZE_PARAS = [
+  [
+    ['Electronics are an increasingly big part of modern life.', '電子產品在現代生活中占據了越來越重要的地位。'],
+    ['Therefore, it\'s important that we take good care of them to make sure they stay useful.', '因此，妥善保養它們以確保它們維持正常堪用是很重要的。']
+  ],
+  [
+    ['The first step in properly caring for an electronic device is reading the [[16|manual]].', '妥善保養電子裝置的第一步是閱讀使用手冊。'],
+    ['This is where you\'ll find the manufacturer\'s care instructions for the product.', '在這裡你會找到製造商對該產品的保養說明。'],
+    ['It lists the things your new device is supposed to come with.', '它會列出你的新裝置應該隨附的所有配件。'],
+    ['Make sure everything that you\'re supposed to have is there in the box, like the power [[17|plugs]] and connecter cables.', '請確認所有你應該擁有的配件都在盒子裡，例如電源插頭和連接線。'],
+    ['If you notice that something is [[18|missing]], you may be able to get it replaced by the company.', '如果你發現有東西缺少（不見）了，你或許可以請公司補換給你。']
+  ],
+  [
+    ['Water is a common cause of damage to electronics, so make sure to keep your devices dry.', '水是造成電子產品損壞的常見原因，所以請務必保持你的裝置乾燥。'],
+    ['If water makes them [[19|moist]] or damp on the outside, that\'s probably OK, but if water gets into their cases, it can cause harm to both the device and people.', '如果水讓它們外部稍微潮濕，那可能還沒關係，但如果水滲入機殼內部，就可能對裝置和人造成傷害。'],
+    ['If water gets inside most electronics, it can cause [[20|permanent]] damage.', '如果水進入大多數電子產品內部，可能會造成永久性的損壞。'],
+    ['Keep your devices out of the rain, and be careful not to spill liquid on them.', '請讓你的電子裝置遠離雨水，並小心不要把液體潑灑在它們上面。']
+  ]
+];
+
+const CLOZE_DATA = [
+  [16, ['考點：名詞語意與後文指涉線索', '詞性需求：單數名詞（reading the 之受詞）'], 'B',
+    '空格前為動名詞 <i>reading the</i>（閱讀……），且下一句立刻說明：<i>This is where you\'ll find the manufacturer\'s care instructions for the product.</i>（在那裡你會找到製造商的產品保養說明），印有產品保養說明與隨附配件清單的冊子就是「使用手冊、說明書」，故選 <b>(B) manual</b>。',
+    [
+      ['moist', 'adj. 潮濕的', '為形容詞，不可作 <i>reading the</i> 的受詞。<br><b>何時才對：</b>與 <i>damp</i> 並列形容外殼微濕時（即第 19 題）。'],
+      ['manual', 'n. 使用手冊；說明書', '可作名詞指「使用手冊（user manual）」，完美對應 <i>reading</i> 及後句的 <i>care instructions</i>。'],
+      ['missing', 'adj. 不見的', '為形容詞，不可作 <i>reading the</i> 的受詞。<br><b>何時才對：</b>描述包裝盒內配件缺少時（即第 18 題）。'],
+      ['plugs', 'n. 插頭', '人不會「閱讀（reading）」插頭。<br><b>何時才對：</b>與 <i>power</i> 搭配指電源插頭時（即第 17 題）。'],
+      ['permanent', 'adj. 永久的', '為形容詞，不可單獨作 <i>reading the</i> 的受詞。<br><b>何時才對：</b>修飾名詞 <i>damage</i>（永久性損壞）時（即第 20 題）。']
+    ]
+  ],
+  [17, ['考點：複合名詞搭配 power plugs', '詞性需求：複數可數名詞（與 connecter cables 平行）'], 'D',
+    '本句舉例說明包裝盒裡應有的配件：<i>like the power <u>&nbsp;&nbsp;&nbsp;&nbsp;</u> and connecter cables</i>（例如電源……和連接線），與 <i>power</i> 搭配且與連接線並列的盒裝電子配件即「電源插頭」，故選 <b>(D) plugs</b>。',
+    [
+      ['moist', 'adj. 潮濕的', '為形容詞，不可與名詞 <i>power</i> 構成盒裝配件。<br><b>何時才對：</b>形容外殼微濕時（即第 19 題）。'],
+      ['manual', 'n. 使用手冊', '使用手冊已在第 16 題出現，且不稱為 <i>power manual</i>。<br><b>何時才對：</b>作 <i>reading the ...</i> 的受詞時（即第 16 題）。'],
+      ['missing', 'adj. 不見的', '為形容詞，無法與 <i>and connecter cables</i> 對等並列作配件名稱。<br><b>何時才對：</b>放在 <i>something is ...</i> 後表配件短缺時（即第 18 題）。'],
+      ['plugs', 'n. 插頭', '<i>power plugs</i>（電源插頭），與後面的 <i>connecter cables</i>（連接線）皆為電子產品盒裝標準配件。'],
+      ['permanent', 'adj. 永久的', '為形容詞，不可作配件名稱。<br><b>何時才對：</b>修飾 <i>damage</i> 時（即第 20 題）。']
+    ]
+  ],
+  [18, ['考點：形容詞語意與情境因果', '詞性需求：形容詞（something is ... 之補語）'], 'C',
+    '前句提醒檢查盒子裡應有的配件是否齊全，本句 <i>If you notice that something is <u>&nbsp;&nbsp;&nbsp;&nbsp;</u>, you may be able to get it replaced by the company</i>（如果你發現有某樣東西……，你可以請公司補換），需要請公司補寄替換，代表開箱時發現有配件「缺少的、不見的」，故選 <b>(C) missing</b>。',
+    [
+      ['moist', 'adj. 潮濕的', '第二段在討論清點盒內配件數量，尚未談到第三段的防水問題。<br><b>何時才對：</b>在第三段與 <i>water</i> 及 <i>damp</i> 搭配時（即第 19 題）。'],
+      ['manual', 'n. 使用手冊', '語意不通（「發現某樣東西是使用手冊」）。<br><b>何時才對：</b>用於第 16 題「閱讀使用手冊」。'],
+      ['missing', 'adj. 不見的；缺少的', '開箱清點配件時發現 <i>something is missing</i>（有配件短少），因此請廠商補寄。'],
+      ['plugs', 'n. 插頭', '代名詞 <i>something</i> 為單數，不可接複數名詞 <i>plugs</i>。<br><b>何時才對：</b>用於第 17 題 <i>power plugs</i>。'],
+      ['permanent', 'adj. 永久的', '「發現某樣東西是永久的」無法作為請公司補換的理由。<br><b>何時才對：</b>修飾進水造成的永久損壞（permanent damage）時（即第 20 題）。']
+    ]
+  ],
+  [19, ['考點：同義詞並列（or damp）', '詞性需求：形容詞（make + O + OC 之受詞補語）'], 'A',
+    '主詞為 <i>water</i>（水），句構為 <i>If water makes them <u>&nbsp;&nbsp;&nbsp;&nbsp;</u> or damp on the outside</i>，空格與後面的形容詞 <i>damp</i>（潮濕的）由 <i>or</i> 連接，代表同義或近義詞，指水讓裝置外殼變得「微濕的、潮濕的」，故選 <b>(A) moist</b>。',
+    [
+      ['moist', 'adj. 潮濕的；微濕的', '與 <i>damp</i> 同義並列，精準描述水沾濕電子產品外殼的狀態。'],
+      ['manual', 'n./adj. 使用手冊；手動的', '水不會讓電子產品變得「手動的」。<br><b>何時才對：</b>作名詞指使用手冊時（即第 16 題）。'],
+      ['missing', 'adj. 不見的', '水不會讓外殼變得「不見的」。<br><b>何時才對：</b>描述配件缺少時（即第 18 題）。'],
+      ['plugs', 'n. 插頭', '名詞無法與形容詞 <i>damp</i> 並列。<br><b>何時才對：</b>用於第 17 題 <i>power plugs</i>。'],
+      ['permanent', 'adj. 永久的', '外殼沾水微濕「可能還沒關係（that\'s probably OK）」，並非永久的。<br><b>何時才對：</b>描述水滲入內部造成永久性損壞時（即第 20 題）。']
+    ]
+  ],
+  [20, ['考點：形容詞語意（修飾 damage）', '詞性需求：形容詞（修飾不可數名詞 damage）'], 'E',
+    '前句對比：外殼微濕可能還沒關係，但如果水跑進大多數電子產品的內部（<i>If water gets inside most electronics</i>），就會造成無法修復的「永久性的」損壞，構成常見搭配 <b>permanent damage</b>，故選 <b>(E) permanent</b>。',
+    [
+      ['moist', 'adj. 潮濕的', '不可修飾抽象的 <i>damage</i>（損壞）。<br><b>何時才對：</b>修飾外殼表面微濕時（即第 19 題）。'],
+      ['manual', 'n./adj. 手冊；體力的', '不搭配 <i>damage</i>。<br><b>何時才對：</b>用於第 16 題 <i>reading the manual</i>。'],
+      ['missing', 'adj. 不見的', '不搭配 <i>cause ... damage</i>。<br><b>何時才對：</b>用於第 18 題 <i>something is missing</i>。'],
+      ['plugs', 'n. 插頭', '複數名詞不可修飾 <i>damage</i>。<br><b>何時才對：</b>用於第 17 題 <i>power plugs</i>。'],
+      ['permanent', 'adj. 永久的；不可逆的', '<i>cause permanent damage</i>（造成永久性的損壞）為標準搭配，強調內部進水後果的嚴重性。']
+    ]
+  ]
+];
+
+// IV. Read the sentences and fill in each blank (Q21-Q25)
+const SEC4_STEMS = [
+  ['Don\'t give up singing; you have such a [[21|marvelous]] talent.', '別放棄唱歌；你擁有如此極佳的（了不起的）才華。（字首與字尾提示：m_______s）'],
+  ['I thought the book was poorly written and not very [[22|meaningful]].', '我認為這本書寫得很糟，而且不太有意義。（字首與字尾提示：m______ful）'],
+  ['George owns a [[23|mobile]] coffee shop that he takes to different parts of the city each day.', 'George 擁有一間行動咖啡館，他每天都會把它開到城市的不同地方。（字首與字尾提示：m____le）'],
+  ['The products of our company are [[24|mostly]] imported from Japan. Only a few of them are made locally.', '我們公司的產品主要地（大多數）是從日本進口的。只有少數幾樣是在當地製造的。（字首與字尾提示：m____ly）'],
+  ['Don\'t cook the food at too high or too low a temperature; use [[25|moderate]] heat.', '不要用太高或太低的溫度烹調食物；請使用適度的（中等的）火候。（字首與字尾提示：m_____te）']
+];
+SEC4_STEMS.forEach(s => {
+  let m, r = /\[\[(\d+)\|/g;
+  while ((m = r.exec(s[0]))) SENT[m[1]] = s;
+});
+
+const SEC4_DATA = [
+  [21, ['考點：文意字彙填空（m_______s）', '詞性需求：形容詞（修飾名詞 talent）'], 'A', 'marvelous', 'm_______s',
+    '前半句鼓勵對方 <i>Don\'t give up singing</i>（別放棄唱歌），因為對方擁有非常「極好的、了不起的、絕妙的」歌唱才華（talent）。配合字首 <b>m</b> 與字尾 <b>s</b>，應填 <b>marvelous</b> [ˈmɑrvələs] (adj. 很好的；極佳的；不可思議的)。',
+    [
+      ['marvelous', 'adj. 很好的；絕妙的（正確拼寫）', '由名詞 <i>marvel</i>（奇蹟、令人驚奇的事物）加上形容詞字尾 <i>-ous</i> 構成。'],
+      ['需再複習拼字', '（若拼錯或未熟記請選此項）', '請拆解記憶：<b>mar-vel-ous</b>（美式拼法單一 l，字尾為 -ous）。']
+    ]
+  ],
+  [22, ['考點：文意字彙填空（m______ful）', '詞性需求：形容詞（連綴動詞 was 之補語）'], 'A', 'meaningful', 'm______ful',
+    '前半句批評這本書 <i>was poorly written</i>（寫得很糟），且 <i>and not very <u>&nbsp;&nbsp;&nbsp;&nbsp;</u></i>（而且不太有意義的）。配合字首 <b>m</b> 與字尾 <b>ful</b>，應填 <b>meaningful</b> [ˈminɪŋfəl] (adj. 有意義的；意味深長的)。',
+    [
+      ['meaningful', 'adj. 有意義的（正確拼寫）', '由名詞 <i>meaning</i>（意義）加上形容詞字尾 <i>-ful</i> 構成。'],
+      ['需再複習拼字', '（若拼錯或未熟記請選此項）', '請記住結構：<b>mean</b> + <b>ing</b> + <b>ful</b> = <b>meaningful</b>（切勿漏掉中間的 -ing-）。']
+    ]
+  ],
+  [23, ['考點：文意字彙填空（m____le）', '詞性需求：形容詞（修飾名詞詞組 coffee shop）'], 'A', 'mobile', 'm____le',
+    '後面的關係子句 <i>that he takes to different parts of the city each day</i>（他每天都會把它帶到城市的不同地方）說明這是一間「可移動的、行動式的」咖啡車／咖啡館。配合字首 <b>m</b> 與字尾 <b>le</b>，應填 <b>mobile</b> [ˈmobḷ] (adj. 可移動的；行動的)。',
+    [
+      ['mobile', 'adj. 可移動的；行動的（正確拼寫）', '<i>a mobile coffee shop</i>（行動咖啡館），精準呼應每天移動到城市不同角落。'],
+      ['需再複習拼字', '（若拼錯或未熟記請選此項）', '與「行動電話（<b>mobile</b> phone）」為同一個單字，拼法簡短好記。']
+    ]
+  ],
+  [24, ['考點：文意字彙填空（m____ly）與數量對比', '詞性需求：副詞（修飾過去分詞 imported）'], 'A', 'mostly', 'm____ly',
+    '後句對比說明 <i>Only a few of them are made locally.</i>（只有少數幾樣是在當地製造的），既然只有少數在當地製造，代表本公司產品「主要地、大多數」都是從日本進口的。配合字首 <b>m</b> 與副詞字尾 <b>ly</b>，應填 <b>mostly</b> [ˈmostlɪ] (adv. 主要地；大部分)。',
+    [
+      ['mostly', 'adv. 主要地；多半（正確拼寫）', '由 <i>most</i> 加上副詞字尾 <i>-ly</i> 構成，同義於 <i>mainly / chiefly</i>。'],
+      ['需再複習拼字', '（若拼錯或未熟記請選此項）', '請記住結構：<b>most</b> + <b>ly</b> = <b>mostly</b>。']
+    ]
+  ],
+  [25, ['考點：文意字彙填空（m_____te）與極端值對比', '詞性需求：形容詞（修飾不可數名詞 heat）'], 'A', 'moderate', 'm_____te',
+    '前半句提醒 <i>Don\'t cook the food at too high or too low a temperature</i>（不要用太高或太低的溫度烹調食物），既不要太高也不要太低，代表要用「中等的、適度的」火候（heat）。配合字首 <b>m</b> 與字尾 <b>te</b>，應填 <b>moderate</b> [ˈmɑdərɪt] (adj. 中等的；適度的；溫和的)。',
+    [
+      ['moderate', 'adj. 中等的；適度的（正確拼寫）', '<i>moderate heat</i>（中火／適度的熱度），與前文的 <i>too high or too low</i> 形成清晰對比。'],
+      ['需再複習拼字', '（若拼錯或未熟記請選此項）', '請拆解音節記憶：<b>mod-er-ate</b>（注意中間為 -er-，勿拼成 modarate）。']
+    ]
+  ]
+];
+
+// === 渲染全部內容至 #app ===
+let html = '';
+
+// Section I
+html += '<h2 id="sec-1">I. Multiple Choice 單選詞彙題（40%，每題 4 分）</h2>';
+SEC1_DATA.forEach(q => {
+  html += card(q[0], q[1], q[2], stem(q[0]) + clue(q[3]) + ops(q[4], q[2]));
+});
+html += groupGradeBox('sec1', 'I. Multiple Choice 單選詞彙題', 1, 10, 4);
+
+// Section II
+html += '<h2 id="sec-2">II. Complete each sentence with the correct word 選詞填空（20%，每題 4 分）</h2>';
+html += '<div class="bank" id="bank-sec2">' + SEC2_BANK.map(b => '<span><b>('+b[0]+') '+b[1]+'</b> <small>'+b[2]+'</small></span>').join('') + '</div>';
+SEC2_DATA.forEach(q => {
+  html += card(q[0], q[1], q[2], stem(q[0]) + clue(q[3]) + ops(q[4], q[2], 'ABCDE'));
+});
+html += groupGradeBox('sec2', 'II. Complete each sentence 選詞填空', 11, 15, 4);
+
+// Section III
+html += '<h2 id="sec-3">III. Cloze 克漏字測驗（20%，每題 4 分）</h2>';
+html += passage('克漏字全文：Properly Caring for Electronic Devices（妥善保養電子裝置）', CLOZE_PARAS, '💡 <b>文章主旨：</b>說明保養電子產品的兩大重點：第一是先閱讀使用手冊（manual），確認電源插頭（power plugs）與連接線等配件沒有短少（missing）；第二是保持乾燥，若外殼微濕（moist）或許無妨，但一旦水滲入機殼內部就會造成永久性損壞（permanent damage）。', 'cloze');
+html += '<div class="bank" id="bank-cloze">' + CLOZE_BANK.map(b => '<span><b>('+b[0]+') '+b[1]+'</b> <small>'+b[2]+'</small></span>').join('') + '</div>';
+CLOZE_DATA.forEach(q => {
+  html += card(q[0], q[1], q[2], stem(q[0]) + clue(q[3]) + ops(q[4], q[2], 'ABCDE'));
+});
+html += groupGradeBox('cloze', 'III. Cloze 克漏字測驗', 16, 20, 4);
+
+// Section IV
+html += '<h2 id="sec-4">IV. Read the sentences and fill in each blank 文意字彙填空（20%，每題 4 分）</h2>';
+html += '<div class="feature-box">✏️ <b>作答提示：</b>在「練習模式」下，您可以直接在每題的<b>拼字輸入框</b>輸入完整英文單字（不分大小寫），或點擊下方選項自我檢核，完成後點擊「批改本題組」即可自動核對拼字！</div>';
+SEC4_DATA.forEach(q => {
+  const spellBoxHtml = '<div class="spell-box"><b>✍️ 拼字作答（提示：<code>'+q[4]+'</code>）：</b><input type="text" class="spell-input" id="spell-inp-'+q[0]+'" placeholder="請輸入完整英文單字..." oninput="onSpellInput(this, '+q[0]+')"></div>';
+  html += card(q[0], q[1], q[2] + ' (' + q[3] + ')', stem(q[0]) + spellBoxHtml + clue(q[5]) + ops(q[6], q[2], 'AB'), q[3]);
+});
+html += groupGradeBox('sec4', 'IV. Read the sentences and fill in each blank 文意字彙填空', 21, 25, 4);
+
+// 全卷總批改面板
+html += '<div class="grade-box all-box" id="gbox-all">' +
+  '<div class="grade-title">🏆 全卷總批改（第 1–25 題，滿分 100 分）</div>' +
+  '<div class="grade-btns">' +
+    '<button class="btn-grade" onclick="gradeAllSingleChoice()">🏆 一次批改全卷</button>' +
+    '<button class="btn-reset" onclick="resetAllSingleChoice()">🔄 一次清空重練</button>' +
+  '</div>' +
+  '<div class="grade-res" id="gres-all"></div>' +
+'</div>';
+
+document.getElementById('app').innerHTML = html;
+
+const navEl = document.getElementById('nav');
+const navLinks = [
+  ['#sec-1', 'I. 單選題 (1–10)'],
+  ['#sec-2', 'II. 選詞填空 (11–15)'],
+  ['#sec-3', 'III. 克漏字 (16–20)'],
+  ['#sec-4', 'IV. 文意字彙 (21–25)'],
+  ['#gbox-all', '🏆 全卷總批改']
+];
+navLinks.forEach(item => {
+  const a = document.createElement('a');
+  a.href = item[0];
+  a.textContent = item[1];
+  navEl.appendChild(a);
+});
+</script>
+<script src="bookmark.js"></script>
+<script>
+  let secretClickCount = 0;
+  let secretTimer;
+  document.getElementById('secret-trigger').addEventListener('click', function() {
+    secretClickCount++;
+    if (secretClickCount === 3) {
+      const counter = document.getElementById('secret-counter');
+      counter.style.display = counter.style.display === 'none' ? 'block' : 'none';
+      secretClickCount = 0;
+    }
+    clearTimeout(secretTimer);
+    secretTimer = setTimeout(() => { secretClickCount = 0; }, 2000);
+  });
+</script>
+</body>
+</html>

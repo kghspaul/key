@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>字彙字識+ Levels 3&4 複習卷（第三十回）Chapter 11-3 互動詳解</title>
+<style>
+:root{--bg:#faf8f4;--fg:#222;--card:#fff;--line:#e4ded3;--acc:#9a3b2e;--ok:#1f7a4d;--no:#b3261e;--mut:#6b6558;--hl:#fff1c9}
+@media(prefers-color-scheme:dark){:root{--bg:#161512;--fg:#e8e4da;--card:#201f1b;--line:#3a372f;--acc:#e08a78;--ok:#6fcf9a;--no:#f08a82;--mut:#a39d8f;--hl:#4a3f1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+.top{max-width:900px;margin:auto;padding:28px 18px 10px}
+.top h1{margin:0 0 4px;font-size:1.6rem;color:var(--acc)}
+.top p{margin:2px 0;color:var(--mut);font-size:.92rem}
+.feature-box{background:var(--hl);border-left:4px solid var(--acc);padding:8px 12px;border-radius:0 6px 6px 0;margin:10px 0;font-size:0.9rem;color:var(--fg);}
+nav{position:sticky;top:0;z-index:9;background:var(--bg);border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px;padding:8px 12px}
+nav a,nav button{flex:none;padding:5px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--fg);text-decoration:none;font:inherit;font-size:.88rem;cursor:pointer}
+nav a:hover,nav button:hover{border-color:var(--acc);color:var(--acc)}
+nav a.review-btn{background:var(--acc);color:#fff;border-color:var(--acc);font-weight:bold;}
+nav button.pm-active { background:var(--acc); color:#fff; border-color:var(--acc); }
+main{max-width:900px;margin:auto;padding:0 16px 70px}
+h2{margin:36px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--acc);font-size:1.3rem}
+h3{margin:0 0 8px;font-size:1.05rem;color:var(--acc)}
+.pas,.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.para{margin-bottom:14px}
+.s{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--line)}
+.en{font-family:Georgia,"Times New Roman",serif;font-size:1.02rem}
+.zh{color:var(--mut);font-size:.93rem}
+.prompt-text{color:var(--fg);font-size:.96rem;line-height:1.8}
+.note{color:var(--mut);font-size:.85rem;margin:6px 0 0}
+.bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 4px;border-radius:3px;font-weight:600}
+.bl sup{color:var(--acc);margin-right:3px;font-size:.7em}
+.bank{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.95rem;margin-bottom:8px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+details.q>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+details.q>summary::-webkit-details-marker{display:none}
+.n{background:var(--acc);color:#fff;border-radius:6px;padding:0 10px;font-weight:700;font-size:1.05rem}
+.tag{font-size:.78rem;border:1px solid var(--acc);color:var(--acc);border-radius:99px;padding:0 9px;line-height:1.6}
+.tag.pos{border-color:var(--ok);color:var(--ok)}
+.ans{margin-left:auto;font-weight:700;color:var(--ok)}
+.qb{margin-top:10px}
+.stem{margin-bottom:8px;padding:8px 10px;background:var(--bg);border-radius:6px}
+.clue{margin:8px 0;padding:8px 12px;border-left:4px solid var(--acc);background:var(--bg);border-radius:0 6px 6px 0}
+.clue h4,.qb h4{margin:0 0 2px;font-size:.92rem;color:var(--acc)}
+ul.op{list-style:none;margin:6px 0 0;padding:0}
+ul.op li{padding:7px 10px;margin:5px 0;border-radius:6px;border:1px solid var(--line);font-size:.95rem;transition:background 0.2s;cursor:pointer}
+ul.op li.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 9%,transparent)}
+ul.op li.no{border-color:color-mix(in srgb,var(--no) 45%,transparent)}
+ul.op i{font-style:normal;font-weight:700;font-size:.82rem}
+li.ok i{color:var(--ok)}li.no i{color:var(--no)}
+.exp{margin-top:4px}
+small{color:var(--mut)}
+
+/* 拼字填空練習輸入框 */
+.spell-box {
+  display: none;
+  margin: 8px 0;
+  padding: 10px 12px;
+  background: var(--hl);
+  border-radius: 6px;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+body.practice-mode details.q:not(.graded) .spell-box { display: flex; }
+.spell-input {
+  padding: 6px 10px;
+  border: 1px solid var(--acc);
+  border-radius: 6px;
+  background: var(--card);
+  color: var(--fg);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1rem;
+  width: 220px;
+}
+.spell-input:focus { outline: none; box-shadow: 0 0 0 2px color-mix(in srgb, var(--acc) 25%, transparent); }
+
+/* === 練習模式與批改狀態樣式 === */
+body.practice-mode details.q:not(.graded) .ans { visibility: hidden; }
+body.practice-mode details.q:not(.graded) .clue { display: none; }
+body.practice-mode details.q:not(.graded) .tag { display: none; }
+body.practice-mode details.q:not(.graded) .stem .zh { display: none; }
+body.practice-mode .pas:not(.graded) .zh { display: none; }
+body.practice-mode .pas:not(.graded) .trans-ans { display: none; }
+body.practice-mode .pas:not(.graded) .note { display: none; }
+.trans-input {
+  display: none;
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1rem;
+}
+.trans-input:focus { outline: none; border-color: var(--acc); }
+body.practice-mode .trans-input { display: block; }
+body.practice-mode .bl:not(.revealed) {
+  color: transparent;
+  background: var(--bg);
+  border-bottom: 2px solid var(--acc);
+  padding: 0 18px;
+  user-select: none;
+  display: inline-block;
+  min-width: 64px;
+  text-align: center;
+}
+body.practice-mode .bl:not(.revealed) sup {
+  color: var(--acc);
+  font-weight: 700;
+}
+body.practice-mode .bank:not(.graded) small { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li small { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li.ok,
+body.practice-mode details.q:not(.graded) ul.op li.no { border-color: var(--line); background: transparent; }
+body.practice-mode details.q:not(.graded) ul.op li i { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li .exp { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li:hover { background: var(--hl); }
+ul.op li.selected { border-color: var(--acc) !important; background: color-mix(in srgb, var(--acc) 12%, transparent) !important; font-weight: 600; }
+
+/* 已批改題目的作答回饋樣式 */
+details.q.graded ul.op li.selected.ok { border: 2px solid var(--ok) !important; background: color-mix(in srgb, var(--ok) 15%, transparent) !important; }
+details.q.graded ul.op li.selected.no { border: 2px solid var(--no) !important; background: color-mix(in srgb, var(--no) 14%, transparent) !important; }
+.user-status { font-weight: 700; font-size: .88rem; padding: 1px 8px; border-radius: 99px; margin-left: 6px; }
+.user-status.st-ok { background: color-mix(in srgb, var(--ok) 15%, transparent); color: var(--ok); border: 1px solid var(--ok); }
+.user-status.st-no { background: color-mix(in srgb, var(--no) 15%, transparent); color: var(--no); border: 1px solid var(--no); }
+.user-status.st-blank { background: var(--hl); color: var(--acc); border: 1px solid var(--acc); }
+
+/* 題組批改面板與全卷總批改面板 */
+.grade-box {
+  background: var(--card);
+  border: 2px dashed var(--acc);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin: 18px 0 32px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.grade-box.all-box {
+  border: 2px solid var(--acc);
+  background: color-mix(in srgb, var(--hl) 45%, var(--card));
+  padding: 20px 22px;
+  margin: 30px 0 40px;
+}
+.grade-title { font-weight: 700; color: var(--acc); font-size: 1.02rem; }
+.all-box .grade-title { font-size: 1.2rem; }
+.grade-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn-grade, .btn-reset {
+  padding: 6px 16px;
+  border-radius: 99px;
+  font: inherit;
+  font-size: .92rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid var(--acc);
+  transition: transform 0.1s, opacity 0.2s;
+}
+.btn-grade { background: var(--acc); color: #fff; }
+.all-box .btn-grade, .all-box .btn-reset { padding: 8px 22px; font-size: 1rem; }
+.btn-reset { background: var(--card); color: var(--mut); border-color: var(--line); }
+.btn-grade:hover, .btn-reset:hover { opacity: 0.9; transform: translateY(-1px); }
+.grade-res {
+  width: 100%;
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  font-size: .95rem;
+  display: none;
+}
+.grade-res.show { display: block; }
+.q-Jump {
+  display: inline-block;
+  padding: 1px 8px;
+  margin: 2px 3px;
+  border-radius: 6px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  color: var(--acc);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: .86rem;
+}
+.q-Jump:hover { background: var(--acc); color: #fff; border-color: var(--acc); }
+
+footer{max-width:900px;margin:auto;padding:20px 16px 40px;color:var(--mut);font-size:.85rem;line-height:1.6;border-top:1px solid var(--line);margin-top:40px;}
+footer a{color:var(--acc);text-decoration:none;font-weight:bold;}
+footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1><span id="exam-title">字彙字識+ Levels 3&4 複習卷（第三十回）Chapter 11-3</span> <span id="completed-badge" style="display:none;font-size:1rem;color:var(--ok);">✅ 已完成</span></h1>
+  <p>每題含：考點標籤 → 題幹逐句中英對照 → 解題線索 → 正解與全部誤答分析</p>
+  <div class="feature-box">
+    💡 <b>複習與作答指南：</b> 點擊「🎯 切換練習模式」可自動挖空題幹答案並隱藏中譯與解析；直接點選各題選項（或於第四大題輸入拼字）作答後，可點擊各題組下方的「<b>✅ 批改本題組</b>」或最後的「<b>🏆 一次批改全卷</b>」查看得分並自動展開詳解（亦可點擊「<b>🔄 一次清空重練</b>」重新作答）！點擊每題右上角的「標記此題」可收錄錯題；滑鼠反白任何英文字句可「收藏單字」。請前往 <a href="review.html" target="_blank" style="color:var(--acc);font-weight:bold;">錯題與單字總複習頁面</a>。
+  </div>
+  <p>圖例：<span class="bl revealed">黃底</span> ＝ 正確答案填入處 ｜ <span class="tag" id="secret-trigger" style="user-select:none;cursor:default;">考點</span> <span class="tag pos">詞性需求</span></p>
+  <div id="secret-counter" style="display:none; margin-top:8px; font-size:0.9rem; color:var(--mut);">
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    👁️ <b>本頁瀏覽人次：</b><span id="busuanzi_value_page_pv"></span> 次
+  </div>
+</div>
+<nav id="nav">
+  <button id="pm-toggle">🎯 切換練習模式</button>
+  <button id="complete-btn">📝 標記為已完成</button>
+  <a href="review.html" class="review-btn" target="_blank">📚 前往總複習</a>
+</nav>
+<main id="app"></main>
+<footer>
+  限定用途教學教材。本詳解為教學輔助，題目版權屬原出版單位（空中美語 AMC）。<br>
+  💡 <b>問題回報與建議：</b> Line: etpaul ｜ IG: <a href="https://www.instagram.com/etpaul" target="_blank">@etpaul</a>
+</footer>
+
+<script>
+const L="ABCD";
+const fx=s=>s.replace(/\*([^*]+)\*/g,'<i>$1</i>').replace(/\[\[(\d*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl"'+(n?' data-q="'+n+'"':'')+'>'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const SENT={};
+const Q_ANS={};
+const Q_SPELL={};
+
+function passage(title,paras,note,gid,extraCls){
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[(\d+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  return '<section class="pas'+(extraCls?' '+extraCls:'')+'"'+(gid?' id="pas-'+gid+'"':'')+'><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
+}
+function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
+const clue=t=>'<div class="clue"><h4>解題線索</h4>'+t+'</div>';
+function ops(list,ans,lab){
+  lab=lab||'ABCDEF';
+  return '<ul class="op">'+list.map((o,i)=>{
+    const optCode = (lab==='ABCDEF'&&list.length<=4) ? L[i] : lab[i];
+    const k=ans.indexOf(optCode)>=0;
+    return '<li class="'+(k?'ok':'no')+'" data-opt="'+optCode+'" onclick="selectOpt(this)"><b>('+optCode+') '+fx(o[0])+'</b>'+(o[1]?' <small>'+o[1]+'</small>':'')+' <i>'+(k?'✔ 正解':'✘ 誤答')+'</i><div class="exp">'+o[2]+'</div></li>';
+  }).join('')+'</ul>';
+}
+function card(n,tags,ans,body,spellWord){
+  Q_ANS[n] = ans;
+  if(spellWord) Q_SPELL[n] = spellWord.toLowerCase();
+  return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="user-status" id="st'+n+'" style="display:none"></span><span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
+}
+
+function groupGradeBox(gid, title, startQ, endQ, ptsPerQ) {
+  ptsPerQ = ptsPerQ || 4;
+  const totalPts = (endQ - startQ + 1) * ptsPerQ;
+  return '<div class="grade-box" id="gbox-'+gid+'">' +
+    '<div class="grade-title">📝 '+title+'（第 '+startQ+'–'+endQ+' 題，每題 '+ptsPerQ+' 分，共 '+totalPts+' 分）</div>' +
+    '<div class="grade-btns">' +
+      '<button class="btn-grade" onclick="gradeGroup(\''+gid+'\','+startQ+','+endQ+','+ptsPerQ+')">✅ 批改本題組</button>' +
+      '<button class="btn-reset" onclick="resetGroup(\''+gid+'\','+startQ+','+endQ+')">🔄 重練本題組</button>' +
+    '</div>' +
+    '<div class="grade-res" id="gres-'+gid+'"></div>' +
+  '</div>';
+}
+
+window.selectOpt = function(li) {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  const qEl = li.closest('details.q');
+  if (qEl && qEl.classList.contains('graded')) {
+    qEl.classList.remove('graded');
+    const qNum = qEl.id.replace('q', '');
+    const st = document.getElementById('st' + qNum);
+    if (st) st.style.display = 'none';
+  }
+  li.parentNode.querySelectorAll('li').forEach(el => el.classList.remove('selected'));
+  li.classList.add('selected');
+};
+
+window.onSpellInput = function(inp, n) {
+  const qEl = document.getElementById('q' + n);
+  if (!qEl) return;
+  const val = inp.value.trim().toLowerCase();
+  const lis = qEl.querySelectorAll('ul.op li');
+  lis.forEach(li => li.classList.remove('selected'));
+  if (!val) return;
+  if (val === Q_SPELL[n]) {
+    const okLi = qEl.querySelector('ul.op li[data-opt="A"]');
+    if (okLi) okLi.classList.add('selected');
+  } else {
+    const noLi = qEl.querySelector('ul.op li[data-opt="B"]');
+    if (noLi) noLi.classList.add('selected');
+  }
+};
+
+function evaluateSingleQ(n) {
+  const qEl = document.getElementById('q' + n);
+  if (!qEl) return 'blank';
+
+  const spellInp = document.getElementById('spell-inp-' + n);
+  if (spellInp && spellInp.value.trim() !== '') {
+    onSpellInput(spellInp, n);
+  }
+
+  qEl.classList.add('graded');
+  qEl.open = true;
+
+  document.querySelectorAll('.bl[data-q="'+n+'"]').forEach(el => el.classList.add('revealed'));
+
+  const sel = qEl.querySelector('ul.op li.selected');
+  const st = document.getElementById('st' + n);
+  const ans = Q_ANS[n];
+
+  if (!sel) {
+    if (st) {
+      st.className = 'user-status st-blank';
+      st.textContent = '⚠️ 未作答';
+      st.style.display = 'inline-block';
+    }
+    return 'blank';
+  }
+
+  const userOpt = sel.getAttribute('data-opt');
+  const spellTyped = spellInp && spellInp.value.trim() ? ' [' + spellInp.value.trim() + ']' : '';
+  if (ans.indexOf(userOpt) >= 0) {
+    if (st) {
+      st.className = 'user-status st-ok';
+      st.textContent = '✔ 答對 (' + (Q_SPELL[n] ? Q_SPELL[n] : userOpt) + ')';
+      st.style.display = 'inline-block';
+    }
+    return 'ok';
+  } else {
+    if (st) {
+      st.className = 'user-status st-no';
+      st.textContent = '✘ 答錯' + (spellTyped ? spellTyped : ' (選 ' + userOpt + ')');
+      st.style.display = 'inline-block';
+    }
+    return 'no';
+  }
+}
+
+window.gradeGroup = function(gid, startQ, endQ, ptsPerQ) {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  let okCount = 0, wrongList = [], blankList = [];
+  for (let n = startQ; n <= endQ; n++) {
+    const res = evaluateSingleQ(n);
+    if (res === 'ok') okCount++;
+    else if (res === 'no') wrongList.push(n);
+    else blankList.push(n);
+  }
+  const pasEl = document.getElementById('pas-' + gid);
+  if (pasEl) pasEl.classList.add('graded');
+  const bankEl = document.getElementById('bank-' + gid);
+  if (bankEl) bankEl.classList.add('graded');
+
+  const totalQ = endQ - startQ + 1;
+  const earnedPts = okCount * ptsPerQ;
+  const maxPts = totalQ * ptsPerQ;
+  const resEl = document.getElementById('gres-' + gid);
+
+  let html = '<div><b>📊 批改結果：</b>答對 <b>' + okCount + ' / ' + totalQ + '</b> 題，得分 <b style="color:var(--acc);font-size:1.15rem;">' + earnedPts + ' / ' + maxPts + '</b> 分' + (okCount === totalQ ? ' 🎉 全部答對！' : '') + '</div>';
+  if (wrongList.length > 0) {
+    html += '<div style="margin-top:4px;">❌ <b>答錯題號：</b>' + wrongList.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  if (blankList.length > 0) {
+    html += '<div style="margin-top:4px;">⚠️ <b>未作答題號：</b>' + blankList.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  resEl.innerHTML = html;
+  resEl.classList.add('show');
+};
+
+window.resetGroup = function(gid, startQ, endQ) {
+  enablePracticeMode();
+  for (let n = startQ; n <= endQ; n++) {
+    const qEl = document.getElementById('q' + n);
+    if (qEl) {
+      qEl.classList.remove('graded');
+      qEl.querySelectorAll('ul.op li').forEach(li => li.classList.remove('selected'));
+    }
+    const spellInp = document.getElementById('spell-inp-' + n);
+    if (spellInp) spellInp.value = '';
+    const st = document.getElementById('st' + n);
+    if (st) st.style.display = 'none';
+    document.querySelectorAll('.bl[data-q="'+n+'"]').forEach(el => el.classList.remove('revealed'));
+  }
+  const pasEl = document.getElementById('pas-' + gid);
+  if (pasEl) pasEl.classList.remove('graded');
+  const bankEl = document.getElementById('bank-' + gid);
+  if (bankEl) bankEl.classList.remove('graded');
+  const resEl = document.getElementById('gres-' + gid);
+  if (resEl) {
+    resEl.innerHTML = '';
+    resEl.classList.remove('show');
+  }
+};
+
+const pmBtn = document.getElementById('pm-toggle');
+function enablePracticeMode() {
+  document.body.classList.add('practice-mode');
+  pmBtn.classList.add('pm-active');
+  pmBtn.textContent = '退出練習模式（顯示全部詳解）';
+  document.querySelectorAll('details.q').forEach(d => d.open = true);
+}
+function disablePracticeMode() {
+  document.body.classList.remove('practice-mode');
+  pmBtn.classList.remove('pm-active');
+  pmBtn.textContent = '🎯 切換練習模式';
+}
+pmBtn.onclick = function() {
+  if (document.body.classList.contains('practice-mode')) {
+    disablePracticeMode();
+  } else {
+    enablePracticeMode();
+  }
+};
+
+const examTitle = document.getElementById('exam-title').innerText;
+const compBtn = document.getElementById('complete-btn');
+const badge = document.getElementById('completed-badge');
+let comps = JSON.parse(localStorage.getItem('completed_exams')||'[]');
+
+if(comps.includes(examTitle)) {
+  badge.style.display = 'inline-block';
+  compBtn.innerText = '取消完成標記';
+}
+
+compBtn.onclick = function() {
+  comps = JSON.parse(localStorage.getItem('completed_exams')||'[]');
+  if(comps.includes(examTitle)) {
+    comps = comps.filter(t => t !== examTitle);
+    this.innerText = '📝 標記為已完成';
+    badge.style.display = 'none';
+  } else {
+    comps.push(examTitle);
+    this.innerText = '取消完成標記';
+    badge.style.display = 'inline-block';
+  }
+  localStorage.setItem('completed_exams', JSON.stringify(comps));
+};
+
+const ALL_GROUPS = [
+  { gid: 'sec1', title: 'I. Multiple Choice 單選詞彙題', startQ: 1, endQ: 10, ptsPerQ: 4 },
+  { gid: 'sec2', title: 'II. Complete each sentence 選詞填空', startQ: 11, endQ: 15, ptsPerQ: 4 },
+  { gid: 'cloze', title: 'III. Cloze 克漏字測驗', startQ: 16, endQ: 20, ptsPerQ: 4 },
+  { gid: 'sec4', title: 'IV. Fill in each blank 文意字彙填空', startQ: 21, endQ: 25, ptsPerQ: 4 }
+];
+
+window.gradeAllSingleChoice = function() {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  let totalOk = 0, totalQ = 0, totalEarned = 0, totalMax = 0;
+  let allWrong = [], allBlank = [];
+
+  ALL_GROUPS.forEach(g => {
+    gradeGroup(g.gid, g.startQ, g.endQ, g.ptsPerQ);
+    for (let n = g.startQ; n <= g.endQ; n++) {
+      totalQ++;
+      totalMax += g.ptsPerQ;
+      const st = document.getElementById('st' + n);
+      if (st && st.classList.contains('st-ok')) {
+        totalOk++;
+        totalEarned += g.ptsPerQ;
+      } else if (st && st.classList.contains('st-no')) {
+        allWrong.push(n);
+      } else {
+        allBlank.push(n);
+      }
+    }
+  });
+
+  const resEl = document.getElementById('gres-all');
+  let html = '<div style="font-size:1.08rem;"><b>🏆 全卷批改總結：</b>共答對 <b>' + totalOk + ' / ' + totalQ + '</b> 題，總分 <b style="color:var(--acc);font-size:1.35rem;">' + totalEarned + ' / ' + totalMax + '</b> 分' + (totalOk === totalQ ? ' 🎉 滿分全對！太優秀了！' : '') + '</div>';
+  if (allWrong.length > 0) {
+    html += '<div style="margin-top:6px;">❌ <b>全卷答錯題號：</b>' + allWrong.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  if (allBlank.length > 0) {
+    html += '<div style="margin-top:6px;">⚠️ <b>全卷未作答題號：</b>' + allBlank.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  resEl.innerHTML = html;
+  resEl.classList.add('show');
+};
+
+window.resetAllSingleChoice = function() {
+  ALL_GROUPS.forEach(g => resetGroup(g.gid, g.startQ, g.endQ));
+  const resEl = document.getElementById('gres-all');
+  if (resEl) {
+    resEl.innerHTML = '';
+    resEl.classList.remove('show');
+  }
+};
+
+// === 各大題題目與詳解資料（第三十回 Chapter 11-3） ===
+
+// I. Multiple Choice (Q1-Q10)
+const SEC1_STEMS = [
+  ['It\'s great to work here because the hours are very [[1|flexible]], and I don\'t have to punch in and out.', '在這裡工作很棒，因為工作時間非常有彈性，而且我不必上下班打卡。'],
+  ['The issue can\'t be handled in [[2|isolation]] from the other factors; everything is connected.', '這個問題不能脫離其他因素而孤立地處理；所有事情都是息息相關的。'],
+  ['Carl claims his book bag is a little bit different from mine, but I think they are [[3|identical]].', 'Carl 聲稱他的書包跟我的有一點不同，但我認為它們是完全相同的。'],
+  ['The wooden cane is [[4|hollow]], so you can hide things inside it.', '這根木製手杖是中空的，所以你可以把東西藏在裡面。'],
+  ['Please be careful when moving the vase; it\'s [[5|fragile]].', '搬動這個花瓶時請小心；它是易碎的。'],
+  ['The [[6|fertile]] soil ensured that the farmer was able to harvest a lot of crops.', '肥沃的土壤確保了農夫能夠收成大量的農作物。'],
+  ['I have saved all my exam papers; they may [[7|come in handy]] in the future.', '我保存了所有的考卷；它們在未來可能會派得上用場。'],
+  ['Could you help me [[8|fold]] the laundry and put the clothes in the closet, please?', '請問你能幫我把洗好的衣服摺好，並把衣服放進衣櫥裡嗎？'],
+  ['Kevin [[9|hastily]] packed up his belongings and stormed out the door.', 'Kevin 匆忙地收拾好他的隨身物品，怒氣沖沖地奪門而出。'],
+  ['You\'ll need two forms of [[10|identification]] to open an account at this bank.', '在這家銀行開戶，你會需要兩種身分證明文件。']
+];
+SEC1_STEMS.forEach(s => {
+  let m, r = /\[\[(\d+)\|/g;
+  while ((m = r.exec(s[0]))) SENT[m[1]] = s;
+});
+
+const SEC1_DATA = [
+  [1, ['考點：形容詞語意（彈性工時）', '詞性需求：形容詞（主詞補語，修飾 the hours）'], 'B',
+    '前半句說在這裡工作很棒，後半句 <i>and I don\'t have to punch in and out</i>（而且我不必上下班打卡）直接說明上班時間（the hours）非常有「彈性」，故選 <b>flexible</b>。',
+    [
+      ['fierce', 'adj. 強烈的；猛烈的；兇猛的', '形容競爭激烈、暴風雨猛烈或動物兇猛，不形容工時不用打卡。<br><b>何時才對：</b>修飾 <i>competition</i>（激烈競爭）或 <i>storm</i>（猛烈風暴）時。'],
+      ['flexible', 'adj. 有彈性的；可變通的', '<i>flexible working hours</i>（彈性工時），完美呼應不必打卡（<i>don\'t have to punch in and out</i>）。'],
+      ['grave', 'adj. 嚴重的；嚴肅的', '形容局勢危急或表情嚴肅，與工作環境很棒矛盾。<br><b>何時才對：</b>修飾 <i>situation / danger / mistake</i>（嚴重的錯誤或危機）時。'],
+      ['greasy', 'adj. 油膩的', '形容食物多油或雙手沾滿油污，不可修飾時間。<br><b>何時才對：</b>描述炸雞、薯條等油膩食物時（例：greasy fried food）。']
+    ]
+  ],
+  [2, ['考點：固定片語 in isolation (from...)', '詞性需求：名詞（介系詞 in 之受詞）'], 'D',
+    '分號後 <i>everything is connected</i>（所有事情都是相連的）說明這個問題不能與其他因素分開、「孤立地」處理。構成固定搭配 <b>in isolation (from...)</b>（孤立地；脫離……單獨地），故選 <b>isolation</b>。',
+    [
+      ['intensity', 'n. 強度；強烈', '不搭配 <i>in ... from the other factors</i>，且與 <i>everything is connected</i> 無對比邏輯。<br><b>何時才對：</b>描述光線、地震或情緒的強烈程度時（例：an earthquake of high intensity）。'],
+      ['identification', 'n. 辨認；身分證明', '指身分證件或鑑定，語意不合。<br><b>何時才對：</b>指開戶或登機需出示身分證明時（即第 10 題）。'],
+      ['incident', 'n. 事件；衝突', '為可數名詞，不構成 <i>in incident from...</i>。<br><b>何時才對：</b>指發生某起意外或小插曲時（例：a violent incident）。'],
+      ['isolation', 'n. 孤立；隔離', '構成片語 <i>in isolation from...</i>（與……隔絕／孤立地），與後文 <i>everything is connected</i> 形成完美對比。']
+    ]
+  ],
+  [3, ['考點：轉折語氣與形容詞語意', '詞性需求：形容詞（主詞補語）'], 'C',
+    '前半句 Carl 聲稱他的書包跟我的「有一點不同（a little bit different from mine）」，由對等連接詞 <i>but</i> 轉折，代表我認為兩個書包根本「完全相同、一模一樣」，故選 <b>identical</b>。',
+    [
+      ['icy', 'adj. 冰冷的；結冰的', '形容天氣、路面結冰或態度冷淡，與外觀是否不同無關。<br><b>何時才對：</b>形容冬天結冰的道路或冰冷的雙手時（例：icy roads）。'],
+      ['intense', 'adj. 強烈的；劇烈的', '形容疼痛、熱度或情緒強烈，不能與 <i>different</i> 構成反義對比。<br><b>何時才對：</b>形容劇痛或高溫時（例：intense heat / pain）。'],
+      ['identical', 'adj. 完全相同的；一模一樣的', '與前文的 <i>a little bit different</i> 構成直接反義對比。'],
+      ['intermediate', 'adj. 中級的；中間的', '指程度中等的，與比較兩個書包外觀無關。<br><b>何時才對：</b>描述課程或語言能力為中級程度時（例：intermediate English level）。']
+    ]
+  ],
+  [4, ['考點：因果邏輯與形容詞語意', '詞性需求：形容詞（主詞補語）'], 'D',
+    '後半句結果為 <i>so you can hide things inside it</i>（所以你可以把東西藏在裡面），木製手杖裡能藏東西，表示手杖內部是「中空的」，故選 <b>hollow</b>。',
+    [
+      ['grave', 'adj. 嚴重的；莊嚴的', '不可用來解釋為何木頭手杖內部能藏東西。<br><b>何時才對：</b>形容事態嚴重或神情凝重時（例：in grave danger）。'],
+      ['glorious', 'adj. 輝煌的；光榮的', '指壯麗或光榮的，與內部空間無關。<br><b>何時才對：</b>形容輝煌的勝利或燦爛的天氣時（例：a glorious victory）。'],
+      ['fragile', 'adj. 易碎的；脆弱的', '易碎並不能成為「可以把東西藏在手杖裡面」的原因。<br><b>何時才對：</b>提醒搬運花瓶或玻璃製品要小心時（即第 5 題）。'],
+      ['hollow', 'adj. 中空的；空心的', '因為手杖是「中空的（hollow）」，所以才能把東西藏在裡面（<i>hide things inside it</i>）。']
+    ]
+  ],
+  [5, ['考點：形容詞語意與情境常理', '詞性需求：形容詞（主詞補語）'], 'A',
+    '前半句提醒 <i>Please be careful when moving the vase</i>（搬動花瓶時請小心），花瓶需要小心翼翼搬動是因為它「易碎的」，故選 <b>fragile</b>。',
+    [
+      ['fragile', 'adj. 易碎的；脆弱的', '準確描述花瓶（vase）容易打破、搬動時必須小心的特性。'],
+      ['fierce', 'adj. 兇猛的；猛烈的', '花瓶是無生命物品，不會兇猛。<br><b>何時才對：</b>形容猛獸或猛烈的暴風雨時（例：a fierce lion）。'],
+      ['greasy', 'adj. 油膩的', '一般花瓶不會被形容為油膩的。<br><b>何時才對：</b>形容油炸食物或沾滿油污的盤子時。'],
+      ['icy', 'adj. 冰冷的；結冰的', '與搬運花瓶需小心打破的常理無關。<br><b>何時才對：</b>形容冰冷的風或結冰的路面時。']
+    ]
+  ],
+  [6, ['考點：形容詞語意（農業與土壤搭配）', '詞性需求：形容詞（修飾名詞 soil）'], 'B',
+    '空格修飾名詞 <i>soil</i>（土壤），且後文結果為 <i>ensured that the farmer was able to harvest a lot of crops</i>（確保農夫能夠收成大量農作物），能讓作物豐收的必定是「肥沃的」土壤，故選 <b>fertile</b>。',
+    [
+      ['fatal', 'adj. 致命的', '形容疾病、車禍或錯誤是致命的，不修飾土壤。<br><b>何時才對：</b>修飾 <i>accident / disease / mistake</i> 時（例：a fatal car crash）。'],
+      ['fertile', 'adj. 肥沃的；富饒的', '<i>fertile soil / land</i>（肥沃的土壤／土地）為標準搭配，與後文豐收（<i>harvest a lot of crops</i>）具直接因果關係。'],
+      ['hollow', 'adj. 中空的', '不修飾 soil，且中空無法讓農作物豐收。<br><b>何時才對：</b>形容中空的樹幹或木杖時（即第 4 題）。'],
+      ['inferior', 'adj. 次等的；較差的', '若土壤品質次等（inferior），農夫就無法收成大量作物，與句意相反。<br><b>何時才對：</b>比較產品品質較差時（即第 11 題）。']
+    ]
+  ],
+  [7, ['考點：常用慣用語片語', '詞性需求：原形動詞片語（助動詞 may 後）'], 'C',
+    '前半句說 <i>I have saved all my exam papers</i>（我把所有考卷都保存下來了），保存舊考卷的目的是因為它們未來可能會「派得上用場」，故選固定片語 <b>come in handy</b>。',
+    [
+      ['go to extremes', 'phr. 走極端', '主詞通常為人，指行事偏激走極端，考卷不會走極端。<br><b>何時才對：</b>勸人不要採取極端手段時（例：Don\'t go to extremes to lose weight）。'],
+      ['make my blood freeze', 'phr. 嚇得我毛骨悚然', '指恐怖的聲音或景象讓人嚇得血液凝固，與留存考卷無關。<br><b>何時才對：</b>描述聽到淒厲慘叫聲或恐怖故事時。'],
+      ['come in handy', 'phr. 派得上用場；很有用', '主詞為物品（they = exam papers），表示留著以後「派得上用場」。'],
+      ['dig my own grave', 'phr. 自掘墳墓；自取滅亡', '主詞為人，且與保存考卷的正面目的不合。<br><b>何時才對：</b>形容某人做出害死自己的愚蠢行為時。']
+    ]
+  ],
+  [8, ['考點：動詞語意（家務動作搭配）', '詞性需求：原形及物動詞（help me + (to) V）'], 'D',
+    '受詞為 <i>the laundry</i>（洗好的衣物），且後接連續動作 <i>and put the clothes in the closet</i>（並把衣服放進衣櫥裡），把洗乾的衣服放進衣櫥前要先「摺疊」整齊，故選 <b>fold</b>。',
+    [
+      ['freeze', 'v. 冷凍；結冰', '不會把洗好的衣服放進冷凍庫冷凍。<br><b>何時才對：</b>受詞為肉類、水或食物需冷凍保存時（例：freeze the meat）。'],
+      ['fax', 'v. 傳真', '衣服無法透過傳真機傳送。<br><b>何時才對：</b>受詞為文件或合約需傳真給客戶時（例：fax the document to the office）。'],
+      ['float', 'v. 漂浮', '與把衣服收進衣櫥無關。<br><b>何時才對：</b>描述氣球在空中飄或木頭浮在水面上時（即第 13 題）。'],
+      ['fold', 'v. 摺疊；對摺', '<i>fold the laundry / clothes</i>（摺衣服）為日常家務標準搭配。']
+    ]
+  ],
+  [9, ['考點：副詞語意與動作情境呼應', '詞性需求：副詞（修飾動詞片語 packed up）'], 'C',
+    '後半句 <i>and stormed out the door</i>（並怒氣沖沖地奪門而出）顯示 Kevin 當時情緒激動、急著離開，因此他是「匆忙地、急忙地」收拾行李，故選 <b>hastily</b>。',
+    [
+      ['fairly', 'adv. 公正地；相當地', '與怒氣沖沖奪門而出的急迫情境不符。<br><b>何時才對：</b>表示公平對待某人（treat everyone fairly）或修飾形容詞表「頗為、相當」時。'],
+      ['gloriously', 'adv. 輝煌地；光榮地', '收拾東西生氣奪門而出並非光榮輝煌的事。<br><b>何時才對：</b>形容英勇作戰或陽光燦爛照耀時。'],
+      ['hastily', 'adv. 匆忙地；倉促地', '準確修飾 <i>packed up his belongings</i>，與後文 <i>stormed out the door</i> 的急促動作一致。'],
+      ['fatally', 'adv. 致命地', '用於修飾受傷或中毒致死（如 fatally injured），不可修飾收拾物品。<br><b>何時才對：</b>描述在事故中受致命傷時（例：He was fatally wounded in the attack）。']
+    ]
+  ],
+  [10, ['考點：名詞語意（銀行開戶情境）', '詞性需求：名詞（介系詞 of 之受詞）'], 'D',
+    '後文目的不定詞 <i>to open an account at this bank</i>（在這家銀行開戶）點出關鍵情境：去銀行開戶必須準備兩種「身分證明文件（如身分證與駕照／健保卡）」，故選 <b>identification</b>（常簡稱為 ID）。',
+    [
+      ['disorder', 'n. 混亂；失調', '去銀行開戶不需要兩種「混亂」。<br><b>何時才對：</b>描述秩序混亂或身心疾病（mental disorder）時。'],
+      ['exposure', 'n. 暴露；接觸；揭露', '與銀行開戶查驗文件無關。<br><b>何時才對：</b>描述暴露於輻射、陽光或媒體曝光時（例：prolonged exposure to the sun）。'],
+      ['intensity', 'n. 強度；強烈', '語意與開戶手續無關。<br><b>何時才對：</b>描述訓練強度或光線強度時。'],
+      ['identification', 'n. 身分證明；辨認', '<i>two forms of identification</i>（兩種身分證明文件，即雙證件）為銀行開戶標準用語。']
+    ]
+  ]
+];
+
+// II. Complete each sentence with the correct word (Q11-Q15)
+const SEC2_BANK = [
+  ['A', 'floated', 'v. 漂浮；飄動'],
+  ['B', 'familiar', 'adj. 熟悉的'],
+  ['C', 'greasy', 'adj. 油膩的'],
+  ['D', 'halt', 'v. 停止；立定'],
+  ['E', 'inferior', 'adj. 次等的；較差的']
+];
+
+const SEC2_STEMS = [
+  ['That smartphone is less expensive than mine because its quality is [[11|inferior]].', '那支智慧型手機比我的便宜，因為它的品質比較差（次等）。'],
+  ['The police officer told the criminal to [[12|halt]], or else he would shoot him.', '警察喝令罪犯停下，否則他就要開槍射他。'],
+  ['The little boy lost his beach ball in the ocean and it [[13|floated]] away.', '小男孩在海裡弄丟了他的海灘球，球就漂走了。'],
+  ['I\'m not [[14|familiar]] with this TV show. Is it any good?', '我對這個電視節目不熟悉。它好看嗎？'],
+  ['I don\'t like to eat [[15|greasy]] food like fried chicken because it isn\'t very healthy.', '我不喜歡吃像炸雞這類油膩的食物，因為它不太健康。']
+];
+SEC2_STEMS.forEach(s => {
+  let m, r = /\[\[(\d+)\|/g;
+  while ((m = r.exec(s[0]))) SENT[m[1]] = s;
+});
+
+const SEC2_DATA = [
+  [11, ['考點：形容詞語意与因果邏輯', '詞性需求：形容詞（主詞補語，修飾 quality）'], 'E',
+    '前半句 <i>That smartphone is less expensive than mine</i>（那支手機比我的便宜），原因子句主詞為 <i>its quality</i>（它的品質），手機賣得比較便宜是因為品質「較差的、次等的」，故選 <b>(E) inferior</b>。',
+    [
+      ['floated', 'v. 漂浮', '為動詞，不可作 <i>its quality is...</i> 的形容詞補語。<br><b>何時才對：</b>描述海灘球在海上漂走時（即第 13 題）。'],
+      ['familiar', 'adj. 熟悉的', '需搭配介系詞 <i>with / to</i>，且不直接解釋為何價格較便宜。<br><b>何時才對：</b>構成 <i>be familiar with...</i>（對……熟悉）時（即第 14 題）。'],
+      ['greasy', 'adj. 油膩的', '形容油炸食物，不可形容手機品質。<br><b>何時才對：</b>修飾 <i>food like fried chicken</i> 時（即第 15 題）。'],
+      ['halt', 'v. 停止', '為原形動詞或名詞，不可形容品質。<br><b>何時才對：</b>放在不定詞 <i>told the criminal to...</i> 後表喝令停下時（即第 12 題）。'],
+      ['inferior', 'adj. 次等的；較差的', '準確修飾 <i>its quality</i>，解釋手機價格較低的原因。']
+    ]
+  ],
+  [12, ['考點：動詞語意（警察執法情境）', '詞性需求：原形不及物動詞（tell sb. to + V）'], 'D',
+    '主詞為 <i>The police officer</i>（警察），後文 <i>or else he would shoot him</i>（否則他就要開槍射他）顯示警察在追捕時命令罪犯「停下、立定」，故選原形動詞 <b>(D) halt</b>。',
+    [
+      ['floated', 'v. 漂浮', '為過去式，不可放在不定詞 <i>to</i> 後，且語意不合。<br><b>何時才對：</b>作過去式動詞描述球漂走時（即第 13 題）。'],
+      ['familiar', 'adj. 熟悉的', '為形容詞，不可放在不定詞 <i>to</i> 後。<br><b>何時才對：</b>放在 <i>I\'m not ... with</i> 中間時（即第 14 題）。'],
+      ['greasy', 'adj. 油膩的', '為形容詞，不可放在不定詞 <i>to</i> 後。<br><b>何時才對：</b>修飾名詞 <i>food</i> 時（即第 15 題）。'],
+      ['halt', 'v. 停止；立定', '原形動詞放在 <i>told the criminal to</i> 後，符合警察喝令嫌犯停下腳步的語境。'],
+      ['inferior', 'adj. 次等的', '為形容詞，不可放在不定詞 <i>to</i> 後。<br><b>何時才對：</b>形容品質較差時（即第 11 題）。']
+    ]
+  ],
+  [13, ['考點：動詞片語 float away（漂走）', '詞性需求：過去式不及物動詞'], 'A',
+    '前半句過去式 <i>lost his beach ball in the ocean</i>（在海裡弄丟了海灘球），充氣海灘球掉進海裡會順著水流「漂走」，搭配副詞 <i>away</i> 與過去式時態，故選 <b>(A) floated</b>。',
+    [
+      ['floated', 'v. 漂浮', '過去式動詞與前文 <i>lost</i> 時態一致，<i>floated away</i> 指海灘球在水面上漂走。'],
+      ['familiar', 'adj. 熟悉的', '為形容詞，無法作子句動詞。<br><b>何時才對：</b>搭配 <i>be familiar with</i> 時（即第 14 題）。'],
+      ['greasy', 'adj. 油膩的', '為形容詞，無法作子句動詞。<br><b>何時才對：</b>修飾 <i>food</i> 時（即第 15 題）。'],
+      ['halt', 'v. 停止', '時態不符（過去式應為 halted），且不搭配 <i>away</i>。<br><b>何時才對：</b>用於警察喝令罪犯停下時（即第 12 題）。'],
+      ['inferior', 'adj. 次等的', '為形容詞，無法作子句動詞。<br><b>何時才對：</b>形容手機品質較差時（即第 11 題）。']
+    ]
+  ],
+  [14, ['考點：固定片語 be familiar with...', '詞性需求：形容詞（主詞補語）'], 'B',
+    '空格前有 <i>I\'m not</i>，後有介系詞 <i>with this TV show</i>，且下一句問 <i>Is it any good?</i>（它好看嗎？），表示我對這部電視節目「不熟悉」，構成核心片語 <b>be familiar with...</b>，故選 <b>(B) familiar</b>。',
+    [
+      ['floated', 'v. 漂浮', '不搭配 <i>I\'m not ... with this TV show</i>。<br><b>何時才對：</b>描述物體在水上漂浮時（即第 13 題）。'],
+      ['familiar', 'adj. 熟悉的', '構成固定搭配 <i>be familiar with + 事物</i>（對某事物熟悉）。'],
+      ['greasy', 'adj. 油膩的', '人不會對電視節目感到油膩。<br><b>何時才對：</b>修飾炸雞等油膩食物時（即第 15 題）。'],
+      ['halt', 'v. 停止', '文法與語意皆不合。<br><b>何時才對：</b>作原形動詞表停止移動時（即第 12 題）。'],
+      ['inferior', 'adj. 次等的', '搭配介系詞應為 <i>to</i>（be inferior to 比……次等），不搭配 <i>with</i>。<br><b>何時才對：</b>描述品質較差時（即第 11 題）。']
+    ]
+  ],
+  [15, ['考點：形容詞語意（飲食特徵）', '詞性需求：形容詞（修飾名詞 food）'], 'C',
+    '空格修飾名詞 <i>food</i>，後面舉例 <i>like fried chicken because it isn\'t very healthy</i>（例如炸雞，因為它不太健康），炸雞屬於多油、「油膩的」食物，故選 <b>(C) greasy</b>。',
+    [
+      ['floated', 'v. 漂浮', '不可修飾炸雞等不健康食物。<br><b>何時才對：</b>作過去式動詞表漂浮時（即第 13 題）。'],
+      ['familiar', 'adj. 熟悉的', '「熟悉的食物」不會成為「像炸雞一樣不太健康」的分類特徵。<br><b>何時才對：</b>搭配 <i>with</i> 表對某事物熟悉時（即第 14 題）。'],
+      ['greasy', 'adj. 油膩的；多脂的', '<i>greasy food</i>（油膩的食物），與舉例的 <i>fried chicken</i>（炸雞）及不健康完全吻合。'],
+      ['halt', 'v. 停止', '非形容詞，不可修飾 <i>food</i>。<br><b>何時才對：</b>作原形動詞表停止時（即第 12 題）。'],
+      ['inferior', 'adj. 次等的', '炸雞並非因為「品質次等」而不健康，而是因為「油膩（greasy）」。<br><b>何時才對：</b>比較商品品質高下時（即第 11 題）。']
+    ]
+  ]
+];
+
+// III. Cloze (Q16-Q20)
+const CLOZE_BANK = [
+  ['A', 'idle', 'v. （引擎）空轉；閒置'],
+  ['B', 'lag', 'v. 落後；緩慢移動'],
+  ['C', 'handy', 'adj. 方便的；派得上用場的'],
+  ['D', 'hesitate', 'v. 猶豫'],
+  ['E', 'keen', 'adj. 敏銳的；熱切的']
+];
+
+const CLOZE_PARAS = [
+  [
+    ['Driving requires situational awareness at all times.', '開車需要隨時保持對周遭狀況的警覺。'],
+    ['It\'s crucial for every driver to keep a(n) [[16|keen]] eye on the road, paying attention to signs, signals, pedestrians, and other vehicles.', '對每位駕駛來說，密切（以敏銳的目光）注意路況是至關重要的，要留意標誌、號誌、行人和其他車輛。'],
+    ['Remember, every professional driver began as an amateur.', '請記住，每一位職業駕駛起初都是生手。'],
+    ['With careful practice, you can master the skills for safe driving.', '透過細心的練習，你就能掌握安全駕駛的技巧。']
+  ],
+  [
+    ['If you\'re unfamiliar with the route, don\'t [[17|hesitate]] to slow down.', '如果你對路線不熟悉，不要猶豫，請減速慢行。'],
+    ['For instance, if you find yourself getting stuck in heavy traffic and feeling overwhelmed, it\'s OK to [[18|lag]] behind other vehicles until you feel comfortable enough to continue.', '舉例來說，如果你發現自己困在擁擠的車陣中且感到不知所措，稍微落後在其他車輛後面也沒關係，直到你覺得夠安心再繼續前行。'],
+    ['Your safety and the safety of others should always be your top priority.', '你的安全以及他人的安全永遠都應該是你的第一要務。']
+  ],
+  [
+    ['Lastly, you must ensure that your car doesn\'t [[19|idle]] for long periods.', '最後，你必須確保你的車子不會長時間怠速空轉。'],
+    ['Turning off the engine if you think you\'ll be waiting for an extended time is both safe and environmentally friendly.', '如果你認為自己會等待很長一段時間，將引擎熄火既安全又環保。']
+  ],
+  [
+    ['Every second counts on the road, and being prepared can come in [[20|handy]] in various driving conditions.', '在路上每一秒都很關鍵，而做好準備在各種駕駛路況中都能派得上用場。'],
+    ['With time and patience, you\'ll become more confident and mature at handling the challenges of the road.', '隨著時間與耐心累積，你在應對道路挑戰時將會變得更有自信且更成熟。'],
+    ['Safe driving!', '祝行車安全！']
+  ]
+];
+
+const CLOZE_DATA = [
+  [16, ['考點：固定搭配 keep a keen eye on...', '詞性需求：形容詞（修飾名詞 eye）'], 'E',
+    '空格位於冠詞 <i>a(n)</i> 與名詞 <i>eye on the road</i> 之間，後文分詞構句 <i>paying attention to signs, signals, pedestrians, and other vehicles</i>（注意標誌、號誌、行人與其他車輛）說明駕駛要保持「敏銳的」目光密切注視路況。構成慣用語 <b>keep a keen eye on...</b>（密切關注……、敏銳地注視……），故選 <b>(E) keen</b>。',
+    [
+      ['idle', 'adj./v. 空轉的；閒散的', '若目光閒散（idle eye），就無法注意行人與號誌，與句意相反。<br><b>何時才對：</b>指汽車引擎怠速空轉時（即第 19 題）。'],
+      ['lag', 'v. 落後', '為動詞或名詞，不可修飾 <i>eye</i>。<br><b>何時才對：</b>搭配介系詞 <i>behind</i> 表落後於其他車輛時（即第 18 題）。'],
+      ['handy', 'adj. 方便的；手邊的', '不搭配 <i>keep a ... eye on the road</i>。<br><b>何時才對：</b>構成片語 <i>come in handy</i>（派上用場）時（即第 20 題）。'],
+      ['hesitate', 'v. 猶豫', '為動詞，不可放在冠詞與名詞 <i>eye</i> 之間。<br><b>何時才對：</b>構成 <i>don\'t hesitate to V</i>（不要猶豫去做某事）時（即第 17 題）。'],
+      ['keen', 'adj. 敏銳的；密切的', '構成片語 <i>keep a keen eye on...</i>（用敏銳的目光密切注意……）。']
+    ]
+  ],
+  [17, ['考點：常用句型 don\'t hesitate to V', '詞性需求：原形動詞（助動詞 don\'t 後）'], 'D',
+    '前文條件子句為 <i>If you\'re unfamiliar with the route</i>（如果你對路線不熟悉），主要子句為否定祈使句 <i>don\'t <u>&nbsp;&nbsp;&nbsp;&nbsp;</u> to slow down</i>（不要……去減速慢行）。構成核心句型 <b>don\'t hesitate to V</b>（別猶豫，儘管去做……），故選 <b>(D) hesitate</b>。',
+    [
+      ['idle', 'v. 空轉', '不接不定詞 <i>to slow down</i>。<br><b>何時才對：</b>主詞為 <i>your car</i> 表引擎空轉時（即第 19 題）。'],
+      ['lag', 'v. 落後', '搭配介系詞 <i>behind</i>，不接不定詞 <i>to slow down</i>。<br><b>何時才對：</b>構成 <i>lag behind other vehicles</i> 時（即第 18 題）。'],
+      ['handy', 'adj. 方便的', '為形容詞，不可放在助動詞 <i>don\'t</i> 後。<br><b>何時才對：</b>放在 <i>come in ...</i> 後作補語時（即第 20 題）。'],
+      ['hesitate', 'v. 猶豫', '構成固定句型 <i>don\'t hesitate to V</i>（不要猶豫去做某事）。'],
+      ['keen', 'adj. 敏銳的', '為形容詞，不可放在助動詞 <i>don\'t</i> 後。<br><b>何時才對：</b>修飾名詞 <i>eye</i> 時（即第 16 題）。']
+    ]
+  ],
+  [18, ['考點：動詞片語 lag behind...（落後於……）', '詞性需求：原形不及物動詞（it\'s OK to + V）'], 'B',
+    '空格前為不定詞 <i>it\'s OK to</i>，空格後緊接介系詞片語 <i>behind other vehicles</i>（在其他車輛後面），且前句剛提到要減速慢行（slow down），因此構成固定片語 <b>lag behind...</b>（落後於……、跟在……後頭慢行），故選 <b>(B) lag</b>。',
+    [
+      ['idle', 'v. 空轉', '引擎空轉是停在原地不動，不搭配 <i>behind other vehicles</i>。<br><b>何時才對：</b>指長時間停車等待不熄火時（即第 19 題）。'],
+      ['lag', 'v. 落後；緩慢移動', '構成固定搭配 <i>lag behind...</i>（落後於……），符合車多緊張時放慢車速跟在後方的建議。'],
+      ['handy', 'adj. 方便的', '為形容詞，不可放在不定詞 <i>to</i> 後。<br><b>何時才對：</b>構成 <i>come in handy</i> 時（即第 20 題）。'],
+      ['hesitate', 'v. 猶豫', '不搭配 <i>behind other vehicles</i>。<br><b>何時才對：</b>搭配不定詞 <i>to slow down</i> 時（即第 17 題）。'],
+      ['keen', 'adj. 敏銳的', '為形容詞，不可放在不定詞 <i>to</i> 後。<br><b>何時才對：</b>修飾名詞 <i>eye</i> 時（即第 16 題）。']
+    ]
+  ],
+  [19, ['考點：動詞語意（汽車引擎怠速空轉）', '詞性需求：原形不及物動詞（助動詞 doesn\'t 後）'], 'A',
+    '主詞為 <i>your car</i>（你的車），且下一句立刻解釋：<i>Turning off the engine if you think you\'ll be waiting for an extended time is both safe and environmentally friendly</i>（若會長時間等待，將引擎熄火既安全又環保），可見前句是提醒不要讓車子長時間不熄火「怠速空轉」，故選 <b>(A) idle</b>。',
+    [
+      ['idle', 'v. （引擎或機器）空轉、怠速運轉', '主詞為 <i>car / engine</i>，<i>idle for long periods</i> 指長時間怠速不熄火，與後句 <i>Turning off the engine</i> 完全呼應。'],
+      ['lag', 'v. 落後', '與下一句「長時間原地等待應將引擎熄火」無關。<br><b>何時才對：</b>搭配 <i>behind other vehicles</i> 時（即第 18 題）。'],
+      ['handy', 'adj. 方便的', '為形容詞，不可放在助動詞 <i>doesn\'t</i> 後。<br><b>何時才對：</b>構成 <i>come in handy</i> 時（即第 20 題）。'],
+      ['hesitate', 'v. 猶豫', '汽車不會自己「猶豫」。<br><b>何時才對：</b>主詞為人，構成 <i>don\'t hesitate to V</i> 時（即第 17 題）。'],
+      ['keen', 'adj. 敏銳的', '為形容詞，不可放在助動詞 <i>doesn\'t</i> 後。<br><b>何時才對：</b>修飾名詞 <i>eye</i> 時（即第 16 題）。']
+    ]
+  ],
+  [20, ['考點：固定慣用語 come in handy', '詞性需求：形容詞（構成片語 come in handy）'], 'C',
+    '空格前有 <i>can come in</i>，構成高頻慣用語 <b>come in handy</b>（派得上用場、很有用），說明事先做好準備在各種路況下都能派上用場，故選 <b>(C) handy</b>。',
+    [
+      ['idle', 'v./adj. 空轉；閒置的', '不構成 <i>come in idle</i>。<br><b>何時才對：</b>作原形動詞表引擎怠速空轉時（即第 19 題）。'],
+      ['lag', 'v. 落後', '不構成 <i>come in lag</i>。<br><b>何時才對：</b>搭配 <i>behind</i> 表落後時（即第 18 題）。'],
+      ['handy', 'adj. 方便的；有用的', '構成固定片語 <i>come in handy</i>（派得上用場）。'],
+      ['hesitate', 'v. 猶豫', '不構成 <i>come in hesitate</i>。<br><b>何時才對：</b>構成 <i>don\'t hesitate to V</i> 時（即第 17 題）。'],
+      ['keen', 'adj. 敏銳的', '不構成 <i>come in keen</i>。<br><b>何時才對：</b>修飾 <i>eye</i> 時（即第 16 題）。']
+    ]
+  ]
+];
+
+// IV. Read the sentences and fill in each blank (Q21-Q25)
+const SEC4_STEMS = [
+  ['Two of the most basic, [[21|fundamental]] operations of mathematics are addition and subtraction.', '數學中最基礎、最基本的兩種運算就是加法與減法。（字首與字尾提示：f_________l）'],
+  ['The criminal made fake money at home and told people it was [[22|genuine]].', '這名罪犯在家製造假鈔，並告訴人們那是真鈔。（字首與字尾提示：g_____e）'],
+  ['You will overcome this [[23|hardship]], and when you do, we\'ll have a good laugh.', '你將會克服這個艱難困苦，而當你克服時，我們會開懷大笑。（字首與字尾提示：h_____p）'],
+  ['When I traveled to India, I had to endure a 16-hour bus ride in a very old bus that was barely [[24|functional]].', '當我去印度旅行時，我必須忍受在一輛幾乎無法正常運作的老舊公車上搭車 16 小時。（字首與字尾提示：f________l）'],
+  ['The summer day\'s high [[25|humidity]] caused everyone to sweat a lot.', '夏日的高濕氣（濕度）使每個人都流了很多汗。（字首與字尾提示：h______y）']
+];
+SEC4_STEMS.forEach(s => {
+  let m, r = /\[\[(\d+)\|/g;
+  while ((m = r.exec(s[0]))) SENT[m[1]] = s;
+});
+
+const SEC4_DATA = [
+  [21, ['考點：文意字彙填空（f_________l）與同義並列', '詞性需求：形容詞（與 basic 並列修飾 operations）'], 'A', 'fundamental', 'f_________l',
+    '空格與前面的形容詞 <i>basic</i>（基礎的）以逗號並列，共同修飾名詞 <i>operations of mathematics</i>（數學運算：加法與減法），表示「最基本的、根本的」。配合字首 <b>f</b> 與字尾 <b>l</b>，應填 <b>fundamental</b> [ˌfʌndəˈmɛntḷ] (adj. 基本的；基礎的)。',
+    [
+      ['fundamental', 'adj. 基本的；基礎的（正確拼寫）', '與 <i>basic</i> 同義呼應，準確描述加減法是數學最基礎的運算。'],
+      ['需再複習拼字', '（若拼錯或未熟記請選此項）', '請拆解音節記憶：<b>fun-da-men-tal</b>（注意第二音節母音為 a，勿拼成 fundemental）。']
+    ]
+  ],
+  [22, ['考點：文意字彙填空（g_____e）與反義對比', '詞性需求：形容詞（主詞補語）'], 'A', 'genuine', 'g_____e',
+    '前半句說罪犯在家印製「假鈔（fake money）」，卻騙大家說那是「真的（真鈔）」。與 <i>fake</i>（假的）相反，配合字首 <b>g</b> 與字尾 <b>e</b>，應填 <b>genuine</b> [ˈdʒɛnjuɪn] (adj. 真正的；真品的)。',
+    [
+      ['genuine', 'adj. 真正的；非偽造的（正確拼寫）', '與前文的 <i>fake</i>（假的）構成反義對比。'],
+      ['需再複習拼字', '（若拼錯或未熟記請選此項）', '請注意中間母音組合為 <b>-u-i-</b>（gen-<b>ui</b>-ne），勿漏寫 u 或 i。']
+    ]
+  ],
+  [23, ['考點：文意字彙填空（h_____p）與動詞搭配', '詞性需求：單數名詞（overcome this 之受詞）'], 'A', 'hardship', 'h_____p',
+    '動詞 <i>overcome</i>（克服）後接負面困境名詞，表示你將會克服眼前的「艱難、困苦」。配合字首 <b>h</b> 與字尾 <b>p</b>，應填複合名詞 <b>hardship</b> [ˈhɑrdˌʃɪp] (n. 艱難；困苦)。',
+    [
+      ['hardship', 'n. 艱難；困苦（正確拼寫）', '<i>overcome this hardship</i>（克服這場艱難困苦），由形容詞 <i>hard</i> 加上名詞字尾 <i>-ship</i> 構成。'],
+      ['需再複習拼字', '（若拼錯或未熟記請選此項）', '請記住結構：<b>hard</b>（艱難的）+ <b>ship</b>（抽象名詞字尾）= <b>hardship</b>。']
+    ]
+  ],
+  [24, ['考點：文意字彙填空（f________l）', '詞性需求：形容詞（連綴動詞 was 之補語）'], 'A', 'functional', 'f________l',
+    '形容詞子句修飾 <i>a very old bus</i>（一輛非常老舊的公車），<i>that was barely <u>&nbsp;&nbsp;&nbsp;&nbsp;</u></i> 表示這輛老舊公車幾乎無法「正常運作的、有功能的」。配合字首 <b>f</b> 與字尾 <b>l</b>，應填 <b>functional</b> [ˈfʌŋkʃənḷ] (adj. 有功能的；能正常運作的)。',
+    [
+      ['functional', 'adj. 有功能的；能運作的（正確拼寫）', '<i>barely functional</i>（幾乎無法正常運作），由名詞 <i>function</i>（功能）加上形容詞字尾 <i>-al</i> 構成。'],
+      ['需再複習拼字', '（若拼錯或未熟記請選此項）', '請記住結構：<b>function</b>（功能）+ <b>al</b> = <b>functional</b>（勿與第 21 題的 fundamental 混淆）。']
+    ]
+  ],
+  [25, ['考點：文意字彙填空（h______y）與自然現象因果', '詞性需求：不可數名詞（主詞）'], 'A', 'humidity', 'h______y',
+    '主詞為 <i>The summer day\'s high <u>&nbsp;&nbsp;&nbsp;&nbsp;</u></i>（夏日的高……），結果為 <i>caused everyone to sweat a lot</i>（導致大家流了很多汗），夏天悶熱讓人狂流汗的是高「濕氣、濕度」。配合字首 <b>h</b> 與字尾 <b>y</b>，應填 <b>humidity</b> [hjuˈmɪdətɪ] (n. 濕氣；濕度)。',
+    [
+      ['humidity', 'n. 濕氣；濕度（正確拼寫）', '<i>high humidity</i>（高濕度／高濕氣），由形容詞 <i>humid</i>（潮濕的）加上名詞字尾 <i>-ity</i> 構成。'],
+      ['需再複習拼字', '（若拼錯或未熟記請選此項）', '請記住結構：<b>humid</b>（潮濕的）+ <b>ity</b>（名詞字尾）= <b>humidity</b>。']
+    ]
+  ]
+];
+
+// === 渲染全部內容至 #app ===
+let html = '';
+
+// Section I
+html += '<h2 id="sec-1">I. Multiple Choice 單選詞彙題（40%，每題 4 分）</h2>';
+SEC1_DATA.forEach(q => {
+  html += card(q[0], q[1], q[2], stem(q[0]) + clue(q[3]) + ops(q[4], q[2]));
+});
+html += groupGradeBox('sec1', 'I. Multiple Choice 單選詞彙題', 1, 10, 4);
+
+// Section II
+html += '<h2 id="sec-2">II. Complete each sentence with the correct word 選詞填空（20%，每題 4 分）</h2>';
+html += '<div class="bank" id="bank-sec2">' + SEC2_BANK.map(b => '<span><b>('+b[0]+') '+b[1]+'</b> <small>'+b[2]+'</small></span>').join('') + '</div>';
+SEC2_DATA.forEach(q => {
+  html += card(q[0], q[1], q[2], stem(q[0]) + clue(q[3]) + ops(q[4], q[2], 'ABCDE'));
+});
+html += groupGradeBox('sec2', 'II. Complete each sentence 選詞填空', 11, 15, 4);
+
+// Section III
+html += '<h2 id="sec-3">III. Cloze 克漏字測驗（20%，每題 4 分）</h2>';
+html += passage('克漏字全文：Safe Driving & Situational Awareness（安全駕駛與路況警覺）', CLOZE_PARAS, '💡 <b>文章主旨：</b>提醒駕駛人上路時應隨時保持敏銳的目光注意路況。若對路線不熟或遇到塞車，不要猶豫減速慢行並適度跟在其他車輛後方；長時間停車等待時應熄火避免引擎怠速空轉，做好萬全準備才能在各種路況中派上用場。', 'cloze');
+html += '<div class="bank" id="bank-cloze">' + CLOZE_BANK.map(b => '<span><b>('+b[0]+') '+b[1]+'</b> <small>'+b[2]+'</small></span>').join('') + '</div>';
+CLOZE_DATA.forEach(q => {
+  html += card(q[0], q[1], q[2], stem(q[0]) + clue(q[3]) + ops(q[4], q[2], 'ABCDE'));
+});
+html += groupGradeBox('cloze', 'III. Cloze 克漏字測驗', 16, 20, 4);
+
+// Section IV
+html += '<h2 id="sec-4">IV. Read the sentences and fill in each blank 文意字彙填空（20%，每題 4 分）</h2>';
+html += '<div class="feature-box">✏️ <b>作答提示：</b>在「練習模式」下，您可以直接在每題的<b>拼字輸入框</b>輸入完整英文單字（不分大小寫），或點擊下方選項自我檢核，完成後點擊「批改本題組」即可自動核對拼字！</div>';
+SEC4_DATA.forEach(q => {
+  const spellBoxHtml = '<div class="spell-box"><b>✍️ 拼字作答（提示：<code>'+q[4]+'</code>）：</b><input type="text" class="spell-input" id="spell-inp-'+q[0]+'" placeholder="請輸入完整英文單字..." oninput="onSpellInput(this, '+q[0]+')"></div>';
+  html += card(q[0], q[1], q[2] + ' (' + q[3] + ')', stem(q[0]) + spellBoxHtml + clue(q[5]) + ops(q[6], q[2], 'AB'), q[3]);
+});
+html += groupGradeBox('sec4', 'IV. Read the sentences and fill in each blank 文意字彙填空', 21, 25, 4);
+
+// 全卷總批改面板
+html += '<div class="grade-box all-box" id="gbox-all">' +
+  '<div class="grade-title">🏆 全卷總批改（第 1–25 題，滿分 100 分）</div>' +
+  '<div class="grade-btns">' +
+    '<button class="btn-grade" onclick="gradeAllSingleChoice()">🏆 一次批改全卷</button>' +
+    '<button class="btn-reset" onclick="resetAllSingleChoice()">🔄 一次清空重練</button>' +
+  '</div>' +
+  '<div class="grade-res" id="gres-all"></div>' +
+'</div>';
+
+document.getElementById('app').innerHTML = html;
+
+const navEl = document.getElementById('nav');
+const navLinks = [
+  ['#sec-1', 'I. 單選題 (1–10)'],
+  ['#sec-2', 'II. 選詞填空 (11–15)'],
+  ['#sec-3', 'III. 克漏字 (16–20)'],
+  ['#sec-4', 'IV. 文意字彙 (21–25)'],
+  ['#gbox-all', '🏆 全卷總批改']
+];
+navLinks.forEach(item => {
+  const a = document.createElement('a');
+  a.href = item[0];
+  a.textContent = item[1];
+  navEl.appendChild(a);
+});
+</script>
+<script src="bookmark.js"></script>
+<script>
+  let secretClickCount = 0;
+  let secretTimer;
+  document.getElementById('secret-trigger').addEventListener('click', function() {
+    secretClickCount++;
+    if (secretClickCount === 3) {
+      const counter = document.getElementById('secret-counter');
+      counter.style.display = counter.style.display === 'none' ? 'block' : 'none';
+      secretClickCount = 0;
+    }
+    clearTimeout(secretTimer);
+    secretTimer = setTimeout(() => { secretClickCount = 0; }, 2000);
+  });
+</script>
+</body>
+</html>

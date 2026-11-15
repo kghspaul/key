@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>字彙字識+ Levels 3&4 複習卷（第二十九回）Chapter 11-2 互動詳解</title>
+<style>
+:root{--bg:#faf8f4;--fg:#222;--card:#fff;--line:#e4ded3;--acc:#9a3b2e;--ok:#1f7a4d;--no:#b3261e;--mut:#6b6558;--hl:#fff1c9}
+@media(prefers-color-scheme:dark){:root{--bg:#161512;--fg:#e8e4da;--card:#201f1b;--line:#3a372f;--acc:#e08a78;--ok:#6fcf9a;--no:#f08a82;--mut:#a39d8f;--hl:#4a3f1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.8 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+.top{max-width:900px;margin:auto;padding:28px 18px 10px}
+.top h1{margin:0 0 4px;font-size:1.6rem;color:var(--acc)}
+.top p{margin:2px 0;color:var(--mut);font-size:.92rem}
+.feature-box{background:var(--hl);border-left:4px solid var(--acc);padding:8px 12px;border-radius:0 6px 6px 0;margin:10px 0;font-size:0.9rem;color:var(--fg);}
+nav{position:sticky;top:0;z-index:9;background:var(--bg);border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px;padding:8px 12px}
+nav a,nav button{flex:none;padding:5px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--fg);text-decoration:none;font:inherit;font-size:.88rem;cursor:pointer}
+nav a:hover,nav button:hover{border-color:var(--acc);color:var(--acc)}
+nav a.review-btn{background:var(--acc);color:#fff;border-color:var(--acc);font-weight:bold;}
+nav button.pm-active { background:var(--acc); color:#fff; border-color:var(--acc); }
+main{max-width:900px;margin:auto;padding:0 16px 70px}
+h2{margin:36px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--acc);font-size:1.3rem}
+h3{margin:0 0 8px;font-size:1.05rem;color:var(--acc)}
+.pas,.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.para{margin-bottom:14px}
+.s{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--line)}
+.en{font-family:Georgia,"Times New Roman",serif;font-size:1.02rem}
+.zh{color:var(--mut);font-size:.93rem}
+.prompt-text{color:var(--fg);font-size:.96rem;line-height:1.8}
+.note{color:var(--mut);font-size:.85rem;margin:6px 0 0}
+.bl{background:var(--hl);border-bottom:2px solid var(--acc);padding:0 4px;border-radius:3px;font-weight:600}
+.bl sup{color:var(--acc);margin-right:3px;font-size:.7em}
+.bank{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.95rem;margin-bottom:8px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+details.q>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+details.q>summary::-webkit-details-marker{display:none}
+.n{background:var(--acc);color:#fff;border-radius:6px;padding:0 10px;font-weight:700;font-size:1.05rem}
+.tag{font-size:.78rem;border:1px solid var(--acc);color:var(--acc);border-radius:99px;padding:0 9px;line-height:1.6}
+.tag.pos{border-color:var(--ok);color:var(--ok)}
+.ans{margin-left:auto;font-weight:700;color:var(--ok)}
+.qb{margin-top:10px}
+.stem{margin-bottom:8px;padding:8px 10px;background:var(--bg);border-radius:6px}
+.clue{margin:8px 0;padding:8px 12px;border-left:4px solid var(--acc);background:var(--bg);border-radius:0 6px 6px 0}
+.clue h4,.qb h4{margin:0 0 2px;font-size:.92rem;color:var(--acc)}
+ul.op{list-style:none;margin:6px 0 0;padding:0}
+ul.op li{padding:7px 10px;margin:5px 0;border-radius:6px;border:1px solid var(--line);font-size:.95rem;transition:background 0.2s;cursor:pointer}
+ul.op li.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 9%,transparent)}
+ul.op li.no{border-color:color-mix(in srgb,var(--no) 45%,transparent)}
+ul.op i{font-style:normal;font-weight:700;font-size:.82rem}
+li.ok i{color:var(--ok)}li.no i{color:var(--no)}
+.exp{margin-top:4px}
+small{color:var(--mut)}
+
+/* 拼字填空練習輸入框 */
+.spell-box {
+  display: none;
+  margin: 8px 0;
+  padding: 10px 12px;
+  background: var(--hl);
+  border-radius: 6px;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+body.practice-mode details.q:not(.graded) .spell-box { display: flex; }
+.spell-input {
+  padding: 6px 10px;
+  border: 1px solid var(--acc);
+  border-radius: 6px;
+  background: var(--card);
+  color: var(--fg);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1rem;
+  width: 220px;
+}
+.spell-input:focus { outline: none; box-shadow: 0 0 0 2px color-mix(in srgb, var(--acc) 25%, transparent); }
+
+/* === 練習模式與批改狀態樣式 === */
+body.practice-mode details.q:not(.graded) .ans { visibility: hidden; }
+body.practice-mode details.q:not(.graded) .clue { display: none; }
+body.practice-mode details.q:not(.graded) .tag { display: none; }
+body.practice-mode details.q:not(.graded) .stem .zh { display: none; }
+body.practice-mode .pas:not(.graded) .zh { display: none; }
+body.practice-mode .pas:not(.graded) .trans-ans { display: none; }
+body.practice-mode .pas:not(.graded) .note { display: none; }
+.trans-input {
+  display: none;
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1rem;
+}
+.trans-input:focus { outline: none; border-color: var(--acc); }
+body.practice-mode .trans-input { display: block; }
+body.practice-mode .bl:not(.revealed) {
+  color: transparent;
+  background: var(--bg);
+  border-bottom: 2px solid var(--acc);
+  padding: 0 18px;
+  user-select: none;
+  display: inline-block;
+  min-width: 64px;
+  text-align: center;
+}
+body.practice-mode .bl:not(.revealed) sup {
+  color: var(--acc);
+  font-weight: 700;
+}
+body.practice-mode .bank:not(.graded) small { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li small { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li.ok,
+body.practice-mode details.q:not(.graded) ul.op li.no { border-color: var(--line); background: transparent; }
+body.practice-mode details.q:not(.graded) ul.op li i { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li .exp { display: none; }
+body.practice-mode details.q:not(.graded) ul.op li:hover { background: var(--hl); }
+ul.op li.selected { border-color: var(--acc) !important; background: color-mix(in srgb, var(--acc) 12%, transparent) !important; font-weight: 600; }
+
+/* 已批改題目的作答回饋樣式 */
+details.q.graded ul.op li.selected.ok { border: 2px solid var(--ok) !important; background: color-mix(in srgb, var(--ok) 15%, transparent) !important; }
+details.q.graded ul.op li.selected.no { border: 2px solid var(--no) !important; background: color-mix(in srgb, var(--no) 14%, transparent) !important; }
+.user-status { font-weight: 700; font-size: .88rem; padding: 1px 8px; border-radius: 99px; margin-left: 6px; }
+.user-status.st-ok { background: color-mix(in srgb, var(--ok) 15%, transparent); color: var(--ok); border: 1px solid var(--ok); }
+.user-status.st-no { background: color-mix(in srgb, var(--no) 15%, transparent); color: var(--no); border: 1px solid var(--no); }
+.user-status.st-blank { background: var(--hl); color: var(--acc); border: 1px solid var(--acc); }
+
+/* 題組批改面板與全卷總批改面板 */
+.grade-box {
+  background: var(--card);
+  border: 2px dashed var(--acc);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin: 18px 0 32px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.grade-box.all-box {
+  border: 2px solid var(--acc);
+  background: color-mix(in srgb, var(--hl) 45%, var(--card));
+  padding: 20px 22px;
+  margin: 30px 0 40px;
+}
+.grade-title { font-weight: 700; color: var(--acc); font-size: 1.02rem; }
+.all-box .grade-title { font-size: 1.2rem; }
+.grade-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn-grade, .btn-reset {
+  padding: 6px 16px;
+  border-radius: 99px;
+  font: inherit;
+  font-size: .92rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid var(--acc);
+  transition: transform 0.1s, opacity 0.2s;
+}
+.btn-grade { background: var(--acc); color: #fff; }
+.all-box .btn-grade, .all-box .btn-reset { padding: 8px 22px; font-size: 1rem; }
+.btn-reset { background: var(--card); color: var(--mut); border-color: var(--line); }
+.btn-grade:hover, .btn-reset:hover { opacity: 0.9; transform: translateY(-1px); }
+.grade-res {
+  width: 100%;
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  font-size: .95rem;
+  display: none;
+}
+.grade-res.show { display: block; }
+.q-Jump {
+  display: inline-block;
+  padding: 1px 8px;
+  margin: 2px 3px;
+  border-radius: 6px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  color: var(--acc);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: .86rem;
+}
+.q-Jump:hover { background: var(--acc); color: #fff; border-color: var(--acc); }
+
+footer{max-width:900px;margin:auto;padding:20px 16px 40px;color:var(--mut);font-size:.85rem;line-height:1.6;border-top:1px solid var(--line);margin-top:40px;}
+footer a{color:var(--acc);text-decoration:none;font-weight:bold;}
+footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1><span id="exam-title">字彙字識+ Levels 3&4 複習卷（第二十九回）Chapter 11-2</span> <span id="completed-badge" style="display:none;font-size:1rem;color:var(--ok);">✅ 已完成</span></h1>
+  <p>每題含：考點標籤 → 題幹逐句中英對照 → 解題線索 → 正解與全部誤答分析</p>
+  <div class="feature-box">
+    💡 <b>複習與作答指南：</b> 點擊「🎯 切換練習模式」可自動挖空題幹答案並隱藏中譯與解析；直接點選各題選項（或於第四大題輸入拼字）作答後，可點擊各題組下方的「<b>✅ 批改本題組</b>」或最後的「<b>🏆 一次批改全卷</b>」查看得分並自動展開詳解（亦可點擊「<b>🔄 一次清空重練</b>」重新作答）！點擊每題右上角的「標記此題」可收錄錯題；滑鼠反白任何英文字句可「收藏單字」。請前往 <a href="review.html" target="_blank" style="color:var(--acc);font-weight:bold;">錯題與單字總複習頁面</a>。
+  </div>
+  <p>圖例：<span class="bl revealed">黃底</span> ＝ 正確答案填入處 ｜ <span class="tag" id="secret-trigger" style="user-select:none;cursor:default;">考點</span> <span class="tag pos">詞性需求</span></p>
+  <div id="secret-counter" style="display:none; margin-top:8px; font-size:0.9rem; color:var(--mut);">
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    👁️ <b>本頁瀏覽人次：</b><span id="busuanzi_value_page_pv"></span> 次
+  </div>
+</div>
+<nav id="nav">
+  <button id="pm-toggle">🎯 切換練習模式</button>
+  <button id="complete-btn">📝 標記為已完成</button>
+  <a href="review.html" class="review-btn" target="_blank">📚 前往總複習</a>
+</nav>
+<main id="app"></main>
+<footer>
+  限定用途教學教材。本詳解為教學輔助，題目版權屬原出版單位（空中美語 AMC）。<br>
+  💡 <b>問題回報與建議：</b> Line: etpaul ｜ IG: <a href="https://www.instagram.com/etpaul" target="_blank">@etpaul</a>
+</footer>
+
+<script>
+const L="ABCD";
+const fx=s=>s.replace(/\*([^*]+)\*/g,'<i>$1</i>').replace(/\[\[(\d*)\|([^\]]+)\]\]/g,(m,n,a)=>'<span class="bl"'+(n?' data-q="'+n+'"':'')+'>'+(n?'<sup>'+n+'</sup>':'')+a+'</span>');
+const SENT={};
+const Q_ANS={};
+const Q_SPELL={};
+
+function passage(title,paras,note,gid,extraCls){
+  paras.forEach(p=>p.forEach(s=>{let m,r=/\[\[(\d+)\|/g;while((m=r.exec(s[0])))SENT[m[1]]=s;}));
+  return '<section class="pas'+(extraCls?' '+extraCls:'')+'"'+(gid?' id="pas-'+gid+'"':'')+'><h3>'+title+'</h3>'+paras.map(p=>'<div class="para">'+p.map(s=>'<div class="s"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>').join('')+'</div>').join('')+(note?'<p class="note">'+note+'</p>':'')+'</section>';
+}
+function stem(n){const s=SENT[n];return s?'<div class="stem"><div class="en">'+fx(s[0])+'</div><div class="zh">'+s[1]+'</div></div>':'';}
+const clue=t=>'<div class="clue"><h4>解題線索</h4>'+t+'</div>';
+function ops(list,ans,lab){
+  lab=lab||'ABCDEF';
+  return '<ul class="op">'+list.map((o,i)=>{
+    const optCode = (lab==='ABCDEF'&&list.length<=4) ? L[i] : lab[i];
+    const k=ans.indexOf(optCode)>=0;
+    return '<li class="'+(k?'ok':'no')+'" data-opt="'+optCode+'" onclick="selectOpt(this)"><b>('+optCode+') '+fx(o[0])+'</b>'+(o[1]?' <small>'+o[1]+'</small>':'')+' <i>'+(k?'✔ 正解':'✘ 誤答')+'</i><div class="exp">'+o[2]+'</div></li>';
+  }).join('')+'</ul>';
+}
+function card(n,tags,ans,body,spellWord){
+  Q_ANS[n] = ans;
+  if(spellWord) Q_SPELL[n] = spellWord.toLowerCase();
+  return '<details class="q" id="q'+n+'" open><summary><span class="n">'+n+'</span>'+tags.map(t=>'<span class="tag'+(t.indexOf('詞性')==0?' pos':'')+'">'+t+'</span>').join('')+'<span class="user-status" id="st'+n+'" style="display:none"></span><span class="ans">答案：'+ans+'</span></summary><div class="qb">'+body+'</div></details>';
+}
+
+// 產生各題組批改面板 HTML
+function groupGradeBox(gid, title, startQ, endQ, ptsPerQ) {
+  ptsPerQ = ptsPerQ || 4;
+  const totalPts = (endQ - startQ + 1) * ptsPerQ;
+  return '<div class="grade-box" id="gbox-'+gid+'">' +
+    '<div class="grade-title">📝 '+title+'（第 '+startQ+'–'+endQ+' 題，每題 '+ptsPerQ+' 分，共 '+totalPts+' 分）</div>' +
+    '<div class="grade-btns">' +
+      '<button class="btn-grade" onclick="gradeGroup(\''+gid+'\','+startQ+','+endQ+','+ptsPerQ+')">✅ 批改本題組</button>' +
+      '<button class="btn-reset" onclick="resetGroup(\''+gid+'\','+startQ+','+endQ+')">🔄 重練本題組</button>' +
+    '</div>' +
+    '<div class="grade-res" id="gres-'+gid+'"></div>' +
+  '</div>';
+}
+
+// 點擊選項作答
+window.selectOpt = function(li) {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  const qEl = li.closest('details.q');
+  if (qEl && qEl.classList.contains('graded')) {
+    qEl.classList.remove('graded');
+    const qNum = qEl.id.replace('q', '');
+    const st = document.getElementById('st' + qNum);
+    if (st) st.style.display = 'none';
+  }
+  li.parentNode.querySelectorAll('li').forEach(el => el.classList.remove('selected'));
+  li.classList.add('selected');
+};
+
+// 拼字輸入框連動選項
+window.onSpellInput = function(inp, n) {
+  const qEl = document.getElementById('q' + n);
+  if (!qEl) return;
+  const val = inp.value.trim().toLowerCase();
+  const lis = qEl.querySelectorAll('ul.op li');
+  lis.forEach(li => li.classList.remove('selected'));
+  if (!val) return;
+  if (val === Q_SPELL[n]) {
+    const okLi = qEl.querySelector('ul.op li[data-opt="A"]');
+    if (okLi) okLi.classList.add('selected');
+  } else {
+    const noLi = qEl.querySelector('ul.op li[data-opt="B"]');
+    if (noLi) noLi.classList.add('selected');
+  }
+};
+
+// 批改單一題目並回傳狀態 ('ok' | 'no' | 'blank')
+function evaluateSingleQ(n) {
+  const qEl = document.getElementById('q' + n);
+  if (!qEl) return 'blank';
+
+  // 若為拼字題且有輸入文字，先同步選項狀態
+  const spellInp = document.getElementById('spell-inp-' + n);
+  if (spellInp && spellInp.value.trim() !== '') {
+    onSpellInput(spellInp, n);
+  }
+
+  qEl.classList.add('graded');
+  qEl.open = true;
+
+  document.querySelectorAll('.bl[data-q="'+n+'"]').forEach(el => el.classList.add('revealed'));
+
+  const sel = qEl.querySelector('ul.op li.selected');
+  const st = document.getElementById('st' + n);
+  const ans = Q_ANS[n];
+
+  if (!sel) {
+    if (st) {
+      st.className = 'user-status st-blank';
+      st.textContent = '⚠️ 未作答';
+      st.style.display = 'inline-block';
+    }
+    return 'blank';
+  }
+
+  const userOpt = sel.getAttribute('data-opt');
+  const spellTyped = spellInp && spellInp.value.trim() ? ' [' + spellInp.value.trim() + ']' : '';
+  if (ans.indexOf(userOpt) >= 0) {
+    if (st) {
+      st.className = 'user-status st-ok';
+      st.textContent = '✔ 答對 (' + (Q_SPELL[n] ? Q_SPELL[n] : userOpt) + ')';
+      st.style.display = 'inline-block';
+    }
+    return 'ok';
+  } else {
+    if (st) {
+      st.className = 'user-status st-no';
+      st.textContent = '✘ 答錯' + (spellTyped ? spellTyped : ' (選 ' + userOpt + ')');
+      st.style.display = 'inline-block';
+    }
+    return 'no';
+  }
+}
+
+// 批改特定題組
+window.gradeGroup = function(gid, startQ, endQ, ptsPerQ) {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  let okCount = 0, wrongList = [], blankList = [];
+  for (let n = startQ; n <= endQ; n++) {
+    const res = evaluateSingleQ(n);
+    if (res === 'ok') okCount++;
+    else if (res === 'no') wrongList.push(n);
+    else blankList.push(n);
+  }
+  const pasEl = document.getElementById('pas-' + gid);
+  if (pasEl) pasEl.classList.add('graded');
+  const bankEl = document.getElementById('bank-' + gid);
+  if (bankEl) bankEl.classList.add('graded');
+
+  const totalQ = endQ - startQ + 1;
+  const earnedPts = okCount * ptsPerQ;
+  const maxPts = totalQ * ptsPerQ;
+  const resEl = document.getElementById('gres-' + gid);
+
+  let html = '<div><b>📊 批改結果：</b>答對 <b>' + okCount + ' / ' + totalQ + '</b> 題，得分 <b style="color:var(--acc);font-size:1.15rem;">' + earnedPts + ' / ' + maxPts + '</b> 分' + (okCount === totalQ ? ' 🎉 全部答對！' : '') + '</div>';
+  if (wrongList.length > 0) {
+    html += '<div style="margin-top:4px;">❌ <b>答錯題號：</b>' + wrongList.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  if (blankList.length > 0) {
+    html += '<div style="margin-top:4px;">⚠️ <b>未作答題號：</b>' + blankList.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  resEl.innerHTML = html;
+  resEl.classList.add('show');
+};
+
+// 重練特定題組
+window.resetGroup = function(gid, startQ, endQ) {
+  enablePracticeMode();
+  for (let n = startQ; n <= endQ; n++) {
+    const qEl = document.getElementById('q' + n);
+    if (qEl) {
+      qEl.classList.remove('graded');
+      qEl.querySelectorAll('ul.op li').forEach(li => li.classList.remove('selected'));
+    }
+    const spellInp = document.getElementById('spell-inp-' + n);
+    if (spellInp) spellInp.value = '';
+    const st = document.getElementById('st' + n);
+    if (st) st.style.display = 'none';
+    document.querySelectorAll('.bl[data-q="'+n+'"]').forEach(el => el.classList.remove('revealed'));
+  }
+  const pasEl = document.getElementById('pas-' + gid);
+  if (pasEl) pasEl.classList.remove('graded');
+  const bankEl = document.getElementById('bank-' + gid);
+  if (bankEl) bankEl.classList.remove('graded');
+  const resEl = document.getElementById('gres-' + gid);
+  if (resEl) {
+    resEl.innerHTML = '';
+    resEl.classList.remove('show');
+  }
+};
+
+// === 功能初始化：練習模式與完成標記 ===
+const pmBtn = document.getElementById('pm-toggle');
+function enablePracticeMode() {
+  document.body.classList.add('practice-mode');
+  pmBtn.classList.add('pm-active');
+  pmBtn.textContent = '退出練習模式（顯示全部詳解）';
+  document.querySelectorAll('details.q').forEach(d => d.open = true);
+}
+function disablePracticeMode() {
+  document.body.classList.remove('practice-mode');
+  pmBtn.classList.remove('pm-active');
+  pmBtn.textContent = '🎯 切換練習模式';
+}
+pmBtn.onclick = function() {
+  if (document.body.classList.contains('practice-mode')) {
+    disablePracticeMode();
+  } else {
+    enablePracticeMode();
+  }
+};
+
+const examTitle = document.getElementById('exam-title').innerText;
+const compBtn = document.getElementById('complete-btn');
+const badge = document.getElementById('completed-badge');
+let comps = JSON.parse(localStorage.getItem('completed_exams')||'[]');
+
+if(comps.includes(examTitle)) {
+  badge.style.display = 'inline-block';
+  compBtn.innerText = '取消完成標記';
+}
+
+compBtn.onclick = function() {
+  comps = JSON.parse(localStorage.getItem('completed_exams')||'[]');
+  if(comps.includes(examTitle)) {
+    comps = comps.filter(t => t !== examTitle);
+    this.innerText = '📝 標記為已完成';
+    badge.style.display = 'none';
+  } else {
+    comps.push(examTitle);
+    this.innerText = '取消完成標記';
+    badge.style.display = 'inline-block';
+  }
+  localStorage.setItem('completed_exams', JSON.stringify(comps));
+};
+
+// === 全卷題組設定與總批改函數 ===
+const ALL_GROUPS = [
+  { gid: 'sec1', title: 'I. Multiple Choice 單選詞彙題', startQ: 1, endQ: 10, ptsPerQ: 4 },
+  { gid: 'sec2', title: 'II. Complete each sentence 選詞填空', startQ: 11, endQ: 15, ptsPerQ: 4 },
+  { gid: 'cloze', title: 'III. Cloze 克漏字測驗', startQ: 16, endQ: 20, ptsPerQ: 4 },
+  { gid: 'sec4', title: 'IV. Fill in each blank 文意字彙填空', startQ: 21, endQ: 25, ptsPerQ: 4 }
+];
+
+window.gradeAllSingleChoice = function() {
+  if (!document.body.classList.contains('practice-mode')) {
+    enablePracticeMode();
+  }
+  let totalOk = 0, totalQ = 0, totalEarned = 0, totalMax = 0;
+  let allWrong = [], allBlank = [];
+
+  ALL_GROUPS.forEach(g => {
+    gradeGroup(g.gid, g.startQ, g.endQ, g.ptsPerQ);
+    for (let n = g.startQ; n <= g.endQ; n++) {
+      totalQ++;
+      totalMax += g.ptsPerQ;
+      const st = document.getElementById('st' + n);
+      if (st && st.classList.contains('st-ok')) {
+        totalOk++;
+        totalEarned += g.ptsPerQ;
+      } else if (st && st.classList.contains('st-no')) {
+        allWrong.push(n);
+      } else {
+        allBlank.push(n);
+      }
+    }
+  });
+
+  const resEl = document.getElementById('gres-all');
+  let html = '<div style="font-size:1.08rem;"><b>🏆 全卷批改總結：</b>共答對 <b>' + totalOk + ' / ' + totalQ + '</b> 題，總分 <b style="color:var(--acc);font-size:1.35rem;">' + totalEarned + ' / ' + totalMax + '</b> 分' + (totalOk === totalQ ? ' 🎉 滿分全對！太優秀了！' : '') + '</div>';
+  if (allWrong.length > 0) {
+    html += '<div style="margin-top:6px;">❌ <b>全卷答錯題號：</b>' + allWrong.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  if (allBlank.length > 0) {
+    html += '<div style="margin-top:6px;">⚠️ <b>全卷未作答題號：</b>' + allBlank.map(n => '<a href="#q'+n+'" class="q-Jump">第 '+n+' 題</a>').join('') + '</div>';
+  }
+  resEl.innerHTML = html;
+  resEl.classList.add('show');
+};
+
+window.resetAllSingleChoice = function() {
+  ALL_GROUPS.forEach(g => resetGroup(g.gid, g.startQ, g.endQ));
+  const resEl = document.getElementById('gres-all');
+  if (resEl) {
+    resEl.innerHTML = '';
+    resEl.classList.remove('show');
+  }
+};
+
+// === 各大題題目與詳解資料 ===
+
+// I. Multiple Choice (Q1-Q10)
+const SEC1_STEMS = [
+  ['There was a(n) [[1|emergency]] that required the doctors\' immediate attention.', '有一件需要醫生立即關注處理的緊急事件。'],
+  ['Such a [[2|delicate]] matter must be dealt with very carefully.', '如此敏感棘手的事情必須非常小心地處理。'],
+  ['Your grade is [[3|dependent]] upon how hard you study and how much homework you turn in.', '你的成績取決於你多努力讀書以及你交了多少作業。'],
+  ['The color is starting to [[4|fade]] on this old pair of blue jeans, so I will buy a new pair.', '這條舊藍色牛仔褲的顏色開始褪色了，所以我會買一條新的。'],
+  ['Bob looked [[5|doubtful]], but I assured him that the roller coaster was safe.', 'Bob 看起來心存懷疑，但我向他保證雲霄飛車是安全的。'],
+  ['Eunice\'s assistance has [[6|enabled]] me to finish my research project.', 'Eunice 的協助使我能夠完成我的研究計畫。'],
+  ['As the crisis in the country [[7|deepened]], many people began to prepare for war.', '隨著該國的危機加深，許多人開始為戰爭做準備。'],
+  ['When the bomb [[8|exploded]], it caused a huge amount of damage and destroyed several buildings.', '當炸彈爆炸時，造成了巨大的破壞並摧毀了數棟建築物。'],
+  ['You should let your sweatshirt dry for a bit longer because it is still [[9|damp]].', '你應該讓你的長袖運動衫再多晾乾一會兒，因為它現在還是潮濕的。'],
+  ['Although the girls are twins, their attitudes on life [[10|differ]]; Mary is a positive person, while Phoebe is quite negative.', '雖然這對女孩是雙胞胎，但她們對生活的態度不同；Mary 是個正面樂觀的人，而 Phoebe 則相當負面悲觀。']
+];
+SEC1_STEMS.forEach(s => {
+  let m, r = /\[\[(\d+)\|/g;
+  while ((m = r.exec(s[0]))) SENT[m[1]] = s;
+});
+
+const SEC1_DATA = [
+  [1, ['考點：名詞語意與醫療情境搭配', '詞性需求：單數可數名詞（母音開頭）'], 'D',
+    '冠詞 <i>a(n)</i> 後接單數名詞，且後面關係子句 <i>that required the doctors\' immediate attention</i>（需要醫生立即關注處理）點出這是醫療上的「緊急事件」，故選母音開頭的 <b>emergency</b>。',
+    [
+      ['stereo', 'n. 立體聲音響', '指音響設備，與醫生需要立即處理的醫療情境無關。<br><b>何時才對：</b>討論播放音樂或家庭視聽設備時（例：listen to music on the new stereo）。'],
+      ['drain', 'n. 排水管；消耗', '指排水管或資源消耗，無須醫生關注。<br><b>何時才對：</b>描述水槽堵塞或水流排出的管道時（例：pour the dirty water down the drain）。'],
+      ['concrete', 'n. 混凝土', '為不可數名詞，指建築材料混凝土。<br><b>何時才對：</b>描述鋪設路面或建築結構材質時（例：a floor made of concrete）。'],
+      ['emergency', 'n. 緊急事件；急診', '符合「需要醫生立即處理（immediate attention）」的緊急醫療狀況。']
+    ]
+  ],
+  [2, ['考點：形容詞語意與前後文呼應', '詞性需求：形容詞（修飾名詞 matter）'], 'B',
+    '後半句 <i>must be dealt with very carefully</i>（必須非常小心地處理）說明這件事情性質「微妙、敏感、需要謹慎處理」，故選 <b>delicate</b>（delicate matter 敏感棘手的事）。',
+    [
+      ['doubtful', 'adj. 懷疑的；不大可能的', '通常修飾人的態度（感到懷疑的）或事情結果（未定的），不搭配 dealt with carefully。<br><b>何時才對：</b>表示對某事是否會發生感到懷疑時（例：It is doubtful whether he will come）。'],
+      ['delicate', 'adj. 敏感的；微妙的；纖細的；易碎的', '修飾 <i>matter / issue / situation</i> 時指「敏感的、需要小心處理的」，完美呼應 <i>dealt with very carefully</i>。'],
+      ['dusty', 'adj. 布滿灰塵的', '用於形容實體物品或房間積滿灰塵，不可修飾抽象的 matter。<br><b>何時才對：</b>形容久未打掃的書架、家具或道路時（例：dusty old books）。'],
+      ['dominant', 'adj. 占優勢的；主要的；支配的', '指居主導地位的，與「必須小心翼翼處理」無直接因果邏輯。<br><b>何時才對：</b>描述市場主導地位或顯性基因時（例：play a dominant role in the market）。']
+    ]
+  ],
+  [3, ['考點：形容詞固定搭配介系詞 upon/on', '詞性需求：形容詞（主詞補語）'], 'C',
+    '空格後有介系詞 <i>upon</i>（可替換為 <i>on</i>），形成固定片語 <b>be dependent on / upon...</b>（取決於……、依賴……），說明成績取決於讀書努力程度與繳交作業量。',
+    [
+      ['extreme', 'adj. 極端的；極度的', '不與 upon 搭配表「取決於」。<br><b>何時才對：</b>描述極端氣候、極度痛苦或極限運動時（例：extreme weather conditions）。'],
+      ['eventual', 'adj. 最後的；最終的', '只作限定形容詞放在名詞前（如 eventual outcome），不放在 be 動詞後接 upon。<br><b>何時才對：</b>修飾名詞表示事件最終的結果或勝利者時（例：the eventual winner of the tournament）。'],
+      ['dependent', 'adj. 取決於……的；依賴的', '構成固定句型 <i>be dependent upon / on + N / 名詞子句</i>（取決於……）。'],
+      ['elementary', 'adj. 基本的；初級的', '指基礎或小學階段的，不搭配 upon。<br><b>何時才對：</b>指國小（elementary school）或最基本的常識時（例：elementary knowledge）。']
+    ]
+  ],
+  [4, ['考點：動詞語意（衣物顏色變化）', '詞性需求：原形不及物動詞（to + V）'], 'B',
+    '主詞為 <i>The color</i>（顏色），後文提到 <i>on this old pair of blue jeans, so I will buy a new pair</i>（在這條舊藍色牛仔褲上，所以我會買一條新的），可見舊褲子的顏色開始「褪色」，故選 <b>fade</b>。',
+    [
+      ['curl', 'v. 捲曲；使捲曲', '指頭髮、紙張邊緣或身體蜷縮捲曲，不指顏色消退。<br><b>何時才對：</b>形容頭髮捲曲或煙霧裊裊上升時（例：The smoke curled into the air）。'],
+      ['fade', 'v. 褪色；（光線、聲音、記憶）逐漸消失', '專門用來形容衣物顏色「褪色（color fades）」。'],
+      ['endanger', 'v. 危及；使遭遇危險', '為及物動詞，指危害生命或物種，語意不合。<br><b>何時才對：</b>描述污染或狩獵危及野生動物生存時（例：endanger the lives of wild animals）。'],
+      ['dominate', 'v. 支配；主宰', '指控制或占主導地位，與牛仔褲顏色無關。<br><b>何時才對：</b>描述某人控制談話或某隊伍主宰比賽時（例：dominate the conversation）。']
+    ]
+  ],
+  [5, ['考點：轉折語氣與情緒形容詞', '詞性需求：形容詞（連綴動詞 looked 之主詞補語）'], 'D',
+    '後半句由對等連接詞 <i>but</i> 轉折：<i>I assured him that the roller coaster was safe</i>（但我向他保證雲霄飛車是安全的），代表 Bob 原本對雲霄飛車的安全性「感到懷疑、不確定」，故選 <b>doubtful</b>。',
+    [
+      ['dusty', 'adj. 布滿灰塵的', '形容物品積灰塵，與對雲霄飛車安全性的疑慮無關。<br><b>何時才對：</b>形容長途跋涉後鞋子或衣物沾滿灰塵時（例：dusty boots）。'],
+      ['distinct', 'adj. 清晰易辨的；截然不同的', '指明顯不同或清楚的，無法與後文「向他保證很安全」構成合理轉折。<br><b>何時才對：</b>比較兩事物有明顯差異或氣味、聲音很清晰時（例：two distinct styles）。'],
+      ['damp', 'adj. 潮濕的', '指微濕的，與擔心遊樂設施是否安全無關。<br><b>何時才對：</b>形容毛巾、衣服或空氣潮濕時（例：a cold and damp morning）。'],
+      ['doubtful', 'adj. 懷疑的；拿不準的', '形容人面露懷疑神色（<i>looked doubtful</i>），與後文 <i>assured him that... was safe</i> 完美呼應。']
+    ]
+  ],
+  [6, ['考點：動詞句型 V + O + to V', '詞性需求：過去分詞（現在完成式 has + V-pp）'], 'C',
+    '主詞為 <i>Eunice\'s assistance</i>（Eunice 的協助），受詞 <i>me</i> 後接不定詞 <i>to finish my research project</i>，構成核心句型 <b>enable sb. to V</b>（使某人能夠做某事），故選 <b>enabled</b>。',
+    [
+      ['drifted', 'v. 漂流；飄移', '為不及物動詞，不可接 <i>me to V</i>。<br><b>何時才對：</b>描述小船在水上漂流或雲朵、雪花飄動時（例：The boat drifted out to sea）。'],
+      ['drained', 'v. 排光；耗盡', '指把液體排乾或耗盡體力，協助不會耗盡我完成計畫。<br><b>何時才對：</b>描述排乾泳池的水或工作讓人精疲力竭時（例：feel completely drained after work）。'],
+      ['enabled', 'v. 使能夠', '符合句型 <i>enable + 受詞 + to V</i>，表「協助使我得以完成研究計畫」。'],
+      ['differed', 'v. 不同；有異', '為不及物動詞（常搭配 <i>from</i>），不可直接加受詞 <i>me</i>。<br><b>何時才對：</b>比較兩者意見或性質不同時（例：His opinion differed from mine）。']
+    ]
+  ],
+  [7, ['考點：動詞語意（危機加劇）', '詞性需求：過去式不及物動詞'], 'C',
+    '時間副詞子句主詞為 <i>the crisis in the country</i>（該國的危機），主要子句為 <i>many people began to prepare for war</i>（許多人開始為戰爭做準備），可知危機「加深、惡化」了，故選 <b>deepened</b>。',
+    [
+      ['drowned', 'v. 淹死；溺斃', '主詞應為人或動物，不可用抽象的 crisis（危機）。<br><b>何時才對：</b>描述落水溺斃或聲音被淹沒時（例：almost drowned in the river）。'],
+      ['faded', 'v. 褪色；逐漸平息', '若危機消退（faded），人們就不需要準備作戰了，與句意相反。<br><b>何時才對：</b>描述希望破滅或危機逐漸消散平息時（例：Hopes of a peace deal faded）。'],
+      ['deepened', 'v. 加深；加劇；惡化', '搭配 <i>crisis / mystery / recession</i> 指程度「加深、加劇」，符合人們開始備戰的因果。'],
+      ['curled', 'v. 捲曲', '指物體形狀捲曲，不可搭配 crisis。<br><b>何時才對：</b>描述貓咪蜷縮睡覺或紙張受潮捲曲時（例：The cat curled up on the sofa）。']
+    ]
+  ],
+  [8, ['考點：動詞語意（炸彈引爆）', '詞性需求：過去式不及物動詞'], 'A',
+    '時間副詞子句主詞為 <i>the bomb</i>（炸彈），後文 <i>caused a huge amount of damage and destroyed several buildings</i>（造成巨大損害並摧毀數棟建築物）明確指出炸彈「爆炸」了，故選 <b>exploded</b>。',
+    [
+      ['exploded', 'v. 爆炸；爆發', '主詞為 <i>bomb</i>（炸彈）且造成建築物損毀，必用 <b>exploded</b>。'],
+      ['exposed', 'v. 暴露；揭發', '為及物動詞（常作 <i>expose A to B</i>），炸彈本身不會主動暴露某物而摧毀建築。<br><b>何時才對：</b>描述揭發醜聞或皮膚暴露在陽光下時（例：expose skin to direct sunlight）。'],
+      ['faded', 'v. 褪色；逐漸消失', '與炸彈摧毀建築物的語境完全無關。<br><b>何時才對：</b>描述聲音、光線或顏色漸漸減弱時（例：The applause faded away）。'],
+      ['enlarged', 'v. 放大；擴大', '通常指放大照片或擴建空間，不指炸彈爆炸。<br><b>何時才對：</b>描述將照片洗大或擴大搜尋範圍時（例：have the photo enlarged）。']
+    ]
+  ],
+  [9, ['考點：形容詞語意（衣物未乾）', '詞性需求：形容詞（主詞補語）'], 'C',
+    '前半句 <i>let your sweatshirt dry for a bit longer</i>（讓你的長袖運動衫再多晾乾一會兒）直接點出原因是衣服現在還「潮濕的、未全乾的」，故選 <b>damp</b>。',
+    [
+      ['dense', 'adj. 密集的；濃密的', '形容森林茂密、人口稠密或濃霧，不指衣服潮濕。<br><b>何時才對：</b>修飾 <i>forest / fog / population</i> 時（例：dense fog 濃霧）。'],
+      ['dim', 'adj. 昏暗的；微弱的', '形容光線不足或視線模糊，不修飾衣服乾濕度。<br><b>何時才對：</b>描述房間燈光昏暗時（例：reading in dim light）。'],
+      ['damp', 'adj. 潮濕的；微濕的', '指含有水分尚未乾透，完美對應前文 <i>let your sweatshirt dry for a bit longer</i>。'],
+      ['delicate', 'adj. 纖細的；易碎的；敏感的', '雖然衣物材質可能精細（delicate fabric），但「還需要再晾久一點」的原因必定是「還是濕的（still damp）」。<br><b>何時才對：</b>提醒某件衣物材質嬌貴需手洗時（例：delicate silk clothes）。']
+    ]
+  ],
+  [10, ['考點：動詞語意與前後對比線索', '詞性需求：現在式複數不及物動詞'], 'D',
+    '從屬連接詞 <i>Although</i>（雖然她們是雙胞胎）與分號後的具體說明 <i>Mary is a positive person, while Phoebe is quite negative</i>（Mary 正面樂觀，而 Phoebe 相當負面）可知，兩人對生活的態度「不同」，故選 <b>differ</b>。',
+    [
+      ['enable', 'v. 使能夠', '為及物動詞，後須接 <i>受詞 + to V</i>，文法與語意皆不合。<br><b>何時才對：</b>表達某項技術或工具使人能做某事時（例：Technology enables us to work from home）。'],
+      ['drip', 'v. 滴下；滴水', '指液體一滴滴落下，不可修飾抽象的 attitudes（態度）。<br><b>何時才對：</b>描述水龍頭漏水或汗水滴落時（例：Water is dripping from the tap）。'],
+      ['drift', 'v. 漂流；逐漸偏離', '指隨波逐流或思緒飄忽，不符合雙胞胎一正一負的態度對比。<br><b>何時才對：</b>描述船隻漂流或兩國關係漸行漸遠時（例：drift apart over the years）。'],
+      ['differ', 'v. 不同；相異', '不及物動詞表「有所不同」，準確總結後文一樂觀、一悲觀的對比。']
+    ]
+  ]
+];
+
+// II. Complete each sentence with the correct word (Q11-Q15)
+const SEC2_BANK = [
+  ['A', 'curled', 'v. 捲曲；蜷縮'],
+  ['B', 'definite', 'adj. 明確的；肯定的'],
+  ['C', 'elastic', 'adj. 有彈性的'],
+  ['D', 'dominated', 'v. 主宰；支配'],
+  ['E', 'enlarged', 'v. 放大；擴大']
+];
+
+const SEC2_STEMS = [
+  ['When I came home from work, I [[11|curled]] up on the couch for a nap.', '當我下班回家時，我蜷縮在沙發上小睡片刻。'],
+  ['The basketball team [[12|dominated]] the game and easily beat their rivals.', '這支籃球隊主宰了整場比賽，輕鬆擊敗了他們的對手。'],
+  ['Mark had the photograph of his family [[13|enlarged]] and hung it on the wall.', 'Mark 請人把他的全家福照片放大，並把它掛在牆上。'],
+  ['Although the rubber band is [[14|elastic]], it will still break if you stretch it too far.', '雖然橡皮筋是有彈性的，但如果你把它拉得太長，它還是會斷裂。'],
+  ['Ruby wouldn\'t give us any [[15|definite]] answers, so we aren\'t sure what to do.', 'Ruby 不願給我們任何明確的答覆，所以我們不確定該怎麼辦。']
+];
+SEC2_STEMS.forEach(s => {
+  let m, r = /\[\[(\d+)\|/g;
+  while ((m = r.exec(s[0]))) SENT[m[1]] = s;
+});
+
+const SEC2_DATA = [
+  [11, ['考點：動詞片語 curl up（蜷縮）', '詞性需求：過去式動詞'], 'A',
+    '時間子句 <i>came</i> 為過去式，空格後有介系詞與地方副詞 <i>up on the couch for a nap</i>（在沙發上小睡），構成常用片語 <b>curl up</b>（把身體蜷縮起來休息），故選 <b>(A) curled</b>。',
+    [
+      ['curled', 'v. 捲曲；蜷縮', '構成片語 <i>curl up on the couch</i>（蜷縮在沙發上），符合下班回家小睡的情境。'],
+      ['definite', 'adj. 明確的', '為形容詞，無法作主要子句動詞。<br><b>何時才對：</b>放在名詞前修飾答案、計畫或日期時（例：a definite plan）。'],
+      ['elastic', 'adj. 有彈性的', '為形容詞，無法作主要子句動詞。<br><b>何時才對：</b>修飾橡皮筋或鬆緊帶等具伸縮性的物品時。'],
+      ['dominated', 'v. 主宰', '及物動詞，不搭配 <i>up on the couch</i>。<br><b>何時才對：</b>後直接加受詞（如比賽、市場）表示主導控制時。'],
+      ['enlarged', 'v. 放大', '及物動詞，不搭配 <i>up on the couch</i>。<br><b>何時才對：</b>指放大照片或擴建空間時。']
+    ]
+  ],
+  [12, ['考點：動詞語意（主宰比賽）', '詞性需求：過去式及物動詞'], 'D',
+    '主詞為 <i>The basketball team</i>（籃球隊），受詞為 <i>the game</i>（比賽），且後文 <i>and easily beat their rivals</i>（並輕鬆擊敗對手）說明該隊「主宰、稱霸」了整場球賽，故選 <b>(D) dominated</b>。',
+    [
+      ['curled', 'v. 捲曲', '語意與籃球比賽勝負無關。<br><b>何時才對：</b>搭配 <i>up</i> 表示蜷縮身體或物體捲曲時。'],
+      ['definite', 'adj. 明確的', '為形容詞，不可作句中及物動詞。<br><b>何時才對：</b>修飾名詞表示「確定的、明確的」時。'],
+      ['elastic', 'adj. 有彈性的', '為形容詞，不可作句中及物動詞。<br><b>何時才對：</b>形容物體有彈性可拉伸時。'],
+      ['dominated', 'v. 主宰；支配', '<i>dominated the game</i>（主宰了比賽），與後文 <i>easily beat their rivals</i> 完美呼應。'],
+      ['enlarged', 'v. 放大', '籃球隊無法「放大」比賽。<br><b>何時才對：</b>受詞為照片（photograph）或房間尺寸時。']
+    ]
+  ],
+  [13, ['考點：使役動詞 have + O + V-pp', '詞性需求：過去分詞（表被動）'], 'E',
+    '句構為使役動詞用法 <b>had + 受詞（the photograph of his family）+ 過去分詞（V-pp）</b>，表「請人把全家福照片……並掛在牆上（hung it on the wall）」，照片掛牆上前通常會先「放大」，故選 <b>(E) enlarged</b>。',
+    [
+      ['curled', 'v. 捲曲', '不會特意請人把全家福照片「弄捲曲」再掛到牆上。<br><b>何時才對：</b>描述請髮型師把頭髮燙捲（have one\'s hair curled）時。'],
+      ['definite', 'adj. 明確的', '為形容詞，不符合「把照片放大掛牆上」的語意。<br><b>何時才對：</b>修飾名詞如 <i>answers / date</i> 時。'],
+      ['elastic', 'adj. 有彈性的', '為形容詞，與沖洗照片無關。<br><b>何時才對：</b>修飾 <i>rubber band</i>（橡皮筋）時。'],
+      ['dominated', 'v. 主宰', '語意與處理家庭照片無關。<br><b>何時才對：</b>描述在競賽或領域中占主導地位時。'],
+      ['enlarged', 'v. 放大', '構成 <i>have the photograph enlarged</i>（請人把照片放大），符合洗大照片掛牆上的生活常理。']
+    ]
+  ],
+  [14, ['考點：形容詞語意與讓步子句', '詞性需求：形容詞（主詞補語）'], 'C',
+    '從屬子句主詞為 <i>the rubber band</i>（橡皮筋），主要子句 <i>it will still break if you stretch it too far</i>（如果你拉得太長它還是會斷）點出橡皮筋具有可拉伸的「有彈性的」特質，故選 <b>(C) elastic</b>。',
+    [
+      ['curled', 'v. 捲曲', '與後文「拉得太長（stretch it too far）還是會斷」無讓步對比邏輯。<br><b>何時才對：</b>描述物體捲曲或人蜷縮時。'],
+      ['definite', 'adj. 明確的', '不可用來形容橡皮筋的物理性質。<br><b>何時才對：</b>修飾抽象名詞如 <i>answers / proof</i> 時。'],
+      ['elastic', 'adj. 有彈性的', '準確描述 <i>rubber band</i>（橡皮筋）可伸展、具彈性的物理特性。'],
+      ['dominated', 'v. 主宰', '詞性與語意皆不合。<br><b>何時才對：</b>作過去式動詞表主導比賽或市場時。'],
+      ['enlarged', 'v. 放大', '不搭配 <i>Although the rubber band is...</i> 與 <i>stretch it too far</i> 的常理特性說明。<br><b>何時才對：</b>指照片或圖像被放大時。']
+    ]
+  ],
+  [15, ['考點：形容詞語意与因果邏輯', '詞性需求：形容詞（修飾名詞 answers）'], 'B',
+    '空格位於限定詞 <i>any</i> 與名詞 <i>answers</i> 之間，需填形容詞。後半句結果為 <i>so we aren\'t sure what to do</i>（所以我們不確定該怎麼辦），可見 Ruby 不給任何「明確的、肯定的」答覆，故選 <b>(B) definite</b>。',
+    [
+      ['curled', 'v. 捲曲', '不可修飾抽象的 <i>answers</i>（答覆）。<br><b>何時才對：</b>形容捲曲的樹葉或毛髮時。'],
+      ['definite', 'adj. 明確的；肯定的', '<i>definite answers</i>（明確的答覆），完美解釋為何後文「不確定該怎麼做」。'],
+      ['elastic', 'adj. 有彈性的', '通常形容物理彈性，不搭配 <i>give any... answers</i>。<br><b>何時才對：</b>修飾具伸縮彈性的物體（如橡皮筋、鬆緊帶）時。'],
+      ['dominated', 'v. 主宰', '無法修飾 <i>answers</i>。<br><b>何時才對：</b>作及物動詞表示主宰比賽或局勢時。'],
+      ['enlarged', 'v. 放大', '無法修飾 <i>answers</i>。<br><b>何時才對：</b>修飾被放大的照片或腫大的器官（如 enlarged heart）時。']
+    ]
+  ]
+];
+
+// III. Cloze (Q16-Q20)
+const CLOZE_BANK = [
+  ['A', 'drown', 'v. 淹死；溺斃'],
+  ['B', 'disorder', 'n. 混亂；失序'],
+  ['C', 'drained', 'v. 排光；（水）流乾、退去'],
+  ['D', 'distinct', 'adj. 明顯不同的；有區別的'],
+  ['E', 'destruction', 'n. 毀滅；破壞']
+];
+
+const CLOZE_PARAS = [
+  [
+    ['Thousands of years ago, ancient Egypt was built along the Nile River.', '數千年前，古埃及是沿著尼羅河建立起來的。'],
+    ['The Egyptians relied on the river for its annual flood, which covered their farms with mud and made crops grow.', '埃及人仰賴這條河每年的氾濫，河水氾濫會用泥土覆蓋他們的農田並使農作物生長。']
+  ],
+  [
+    ['Although the flood was necessary for civilization, it also brought [[16|destruction]].', '雖然洪水對文明來說是必要的，但它也帶來了破壞與毀滅。'],
+    ['It could ruin the ditches farmers used to bring water to their fields, and even [[17|drown]] people.', '它可能會毀掉農夫用來引水到農田裡的水溝，甚至把人淹死。'],
+    ['However, a flood that was too low could also be a disaster for Egypt, as the country would not be able to grow enough food.', '然而，水位太低的洪水對埃及來說也可能是一場災難，因為這個國家將無法種植足夠的糧食。']
+  ],
+  [
+    ['Most people in ancient Egypt were farmers, but while the floods covered their land they could not work.', '古埃及大多數人都是農夫，但當洪水淹沒他們的土地時，他們就無法務農工作。'],
+    ['Until the waters [[18|drained]] away, they worked for the King of Egypt, called the Pharaoh.', '在洪水排光退去之前，他們為被稱為法老的埃及國王工作。'],
+    ['This is how the Pyramids were built.', '金字塔就是這樣建造出來的。']
+  ],
+  [
+    ['The Egyptians saw the flood as something reliable and predictable, rather than a symbol of [[19|disorder]].', '埃及人將洪水視為可靠且可預測的事物，而不是混亂失序的象徵。'],
+    ['They even based their calendar on it.', '他們甚至根據它來制定曆法。'],
+    ['The flood was so important to the Egyptians that it even had its own god, called Hapi.', '洪水對埃及人來說是如此重要，以至於它甚至有自己專屬的神祇，名叫 Hapi（哈ピ神）。'],
+    ['This makes Egypt [[20|distinct]] from other civilizations, like ancient China.', '這使得埃及與其他文明（例如古代中國）截然不同。'],
+    ['There, floods could kill thousands of people and were considered terrifying and evil.', '在那裡（古代中國），洪水可能會奪走數千人的性命，並被認為是可怕且邪惡的。'],
+    ['Egypt, however, was called "the Gift of the Nile" for good reason.', '然而，埃及被稱為「尼羅河的贈禮」是有充分理由的。']
+  ]
+];
+
+const CLOZE_DATA = [
+  [16, ['考點：讓步轉折與名詞語意', '詞性需求：不可數名詞（作 brought 之受詞）'], 'E',
+    '前半句 <i>Although the flood was necessary for civilization</i>（雖然洪水對文明是必要的）帶出讓步轉折，且下一句具體說明 <i>It could ruin the ditches...</i>（它可能會毀掉農夫引水的水溝……），可知洪水也會帶來「破壞、毀滅」，故選 <b>(E) destruction</b>。',
+    [
+      ['drown', 'v. 淹死', '為動詞，不可直接作及物動詞 <i>brought</i> 的受詞。<br><b>何時才對：</b>放在助動詞 <i>could</i> 後作原形動詞（即第 17 題位置）。'],
+      ['disorder', 'n. 混亂；失調', '後文強調的是實質「摧毀水溝（ruin the ditches）與淹死人」，故填「破壞、毀滅（destruction）」最能精準總結物理災害；<i>disorder</i> 則用於第 19 題與「可靠且可預測（reliable and predictable）」對比。<br><b>何時才對：</b>與秩序、規律（predictable）作反義對比時（即第 19 題）。'],
+      ['drained', 'v. 排光', '為動詞過去式或過去分詞，不可作 <i>brought</i> 的名詞受詞。<br><b>何時才對：</b>搭配 <i>away</i> 描述積水退去時（即第 18 題）。'],
+      ['distinct', 'adj. 明顯不同的', '為形容詞，後方無名詞可修飾，不能單獨作 <i>brought</i> 的受詞。<br><b>何時才對：</b>搭配介系詞 <i>from</i> 表「與……截然不同」時（即第 20 題）。'],
+      ['destruction', 'n. 毀滅；破壞', '名詞作 <i>brought</i> 的受詞，精準呼應後句 <i>ruin the ditches</i> 的破壞力。']
+    ]
+  ],
+  [17, ['考點：對等連接詞與動詞語意', '詞性需求：原形及物動詞（與 ruin 平行）'], 'A',
+    '由對等連接詞 <i>and even</i> 連接兩個共用助動詞 <i>could</i> 的原形動詞：<i>could ruin the ditches..., and even <u>&nbsp;&nbsp;&nbsp;&nbsp;</u> people</i>。主詞為洪水（It），受詞為人（people），洪水甚至會把人「淹死」，故選 <b>(A) drown</b>。',
+    [
+      ['drown', 'v. 淹死；使溺斃', '原形及物動詞與 <i>ruin</i> 平行，符合洪水淹死人的語意。'],
+      ['disorder', 'n. 混亂', '名詞無法與動詞 <i>ruin</i> 平行接 <i>people</i>。<br><b>何時才對：</b>放在介系詞 <i>of</i> 後作受詞時（即第 19 題）。'],
+      ['drained', 'v. 排光', '助動詞 <i>could</i> 後須接原形動詞，且洪水不會「排光」人。<br><b>何時才對：</b>主詞為 <i>waters</i>（洪水）表水退去時（即第 18 題）。'],
+      ['distinct', 'adj. 明顯不同的', '為形容詞，無法作助動詞 <i>could</i> 後的原形動詞。<br><b>何時才對：</b>構成 <i>make A distinct from B</i> 句型時（即第 20 題）。'],
+      ['destruction', 'n. 毀滅', '為名詞，無法與動詞 <i>ruin</i> 平行。<br><b>何時才對：</b>作及物動詞 <i>brought</i> 的受詞時（即第 16 題）。']
+    ]
+  ],
+  [18, ['考點：動詞片語 drain away（水退去、排光）', '詞性需求：過去式不及物動詞'], 'C',
+    '前句提到當洪水淹沒土地時農夫無法耕作，本句 <i>Until the waters <u>&nbsp;&nbsp;&nbsp;&nbsp;</u> away, they worked for the King...</i>（在洪水排乾退去之前，他們為埃及國王工作），全段時態為過去式，搭配副詞 <i>away</i> 表水流走、退去，故選 <b>(C) drained</b>。',
+    [
+      ['drown', 'v. 淹死', '時態為現在式，且主詞為 <i>waters</i>（水），水不會淹死自己。<br><b>何時才對：</b>主詞為洪水、受詞為人，表把人淹死時（即第 17 題）。'],
+      ['disorder', 'n. 混亂', '為名詞，無法作 <i>Until</i> 從屬子句的過去式動詞。<br><b>何時才對：</b>作介系詞 <i>of</i> 的受詞時（即第 19 題）。'],
+      ['drained', 'v. 排光；流走', '構成片語 <i>drained away</i>（河水退去、排乾），時態與語意完全吻合。'],
+      ['distinct', 'adj. 明顯不同的', '為形容詞，無法作子句動詞。<br><b>何時才對：</b>搭配介系詞 <i>from</i> 表與其他文明不同時（即第 20 題）。'],
+      ['destruction', 'n. 毀滅', '為名詞，無法作子句動詞。<br><b>何時才對：</b>作 <i>brought</i> 的受詞時（即第 16 題）。']
+    ]
+  ],
+  [19, ['考點：對比轉折（rather than）與名詞語意', '詞性需求：名詞（介系詞 of 之受詞）'], 'B',
+    '句中 <i>rather than</i>（而不是）將前後兩概念作反義對比：前文說埃及人把洪水視為 <i>something reliable and predictable</i>（可靠且可預測的事物），甚至據此制定曆法，因此不是「混亂、失序（disorder）」的象徵，故選 <b>(B) disorder</b>。',
+    [
+      ['drown', 'v. 淹死', '為原形動詞，不可放在介系詞 <i>of</i> 後。<br><b>何時才對：</b>放在助動詞後作原形動詞時（即第 17 題）。'],
+      ['disorder', 'n. 混亂；失序；無規律', '與前文的 <i>reliable and predictable</i>（可靠且可預測的規律）形成最精準的反義對比。'],
+      ['drained', 'v. 排光', '為動詞，不可作介系詞 <i>of</i> 的受詞。<br><b>何時才對：</b>作過去式動詞搭配 <i>away</i> 時（即第 18 題）。'],
+      ['distinct', 'adj. 明顯不同的', '為形容詞，不可單獨作介系詞 <i>of</i> 的受詞。<br><b>何時才對：</b>作受詞補語並搭配 <i>from</i> 時（即第 20 題）。'],
+      ['destruction', 'n. 毀滅', '此處強調埃及人依洪水制定曆法（calendar），凸顯的是「規律可預測 vs. 混亂失序（disorder）」，而 <i>destruction</i> 已用於第 16 題。<br><b>何時才對：</b>在第 16 題直接帶出毀壞水溝的實質破壞時。']
+    ]
+  ],
+  [20, ['考點：固定搭配 distinct from（與……截然不同）', '詞性需求：形容詞（make + O + OC 之受詞補語）'], 'D',
+    '句構為 <i>This makes Egypt <u>&nbsp;&nbsp;&nbsp;&nbsp;</u> from other civilizations, like ancient China.</i>，空格作受詞 <i>Egypt</i> 的補語，且後接介系詞 <i>from</i>，構成核心片語 <b>distinct from...</b>（與……明顯不同），故選 <b>(D) distinct</b>。',
+    [
+      ['drown', 'v. 淹死', '語意與文法皆不合。<br><b>何時才對：</b>描述溺水或淹死人時（即第 17 題）。'],
+      ['disorder', 'n. 混亂', '名詞不搭配 <i>from other civilizations</i>。<br><b>何時才對：</b>在 <i>a symbol of disorder</i> 中表混亂失序時（即第 19 題）。'],
+      ['drained', 'v. 排光', '不搭配 <i>from other civilizations</i>。<br><b>何時才對：</b>描述積水排乾退去時（即第 18 題）。'],
+      ['distinct', 'adj. 明顯不同的；截然不同的', '構成固定搭配 <i>make A distinct from B</i>（使 A 與 B 截然不同），呼應後文古埃及與古代中國對洪水看法的差異。'],
+      ['destruction', 'n. 毀滅', '名詞無法構成 <i>makes Egypt ... from other civilizations</i>。<br><b>何時才對：</b>在 <i>brought destruction</i> 中表帶來破壞時（即第 16 題）。']
+    ]
+  ]
+];
+
+// IV. Read the sentences and fill in each blank (Q21-Q25)
+const SEC4_STEMS = [
+  ['The serious earthquake was a [[21|disaster]] that killed many people.', '這場嚴重的地震是一場奪走許多人性命的災難。（字首繼字尾提示：d_______r）'],
+  ['The Great Wall of China [[22|extends]] for over 6,000 kilometers.', '中國的萬里長城延伸超過六千公里。（字首與字尾提示：e_____ds）'],
+  ['I expect that the temperature will continue to [[23|decrease]], because winter has just begun.', '我預期氣溫將會持續下降，因為冬天才剛開始。（字首與字尾提示：d______se）'],
+  ['The St. Louis Cardinals [[24|defeated]] the New York Yankees 3-1 in the championship game.', '聖路易紅雀隊在冠軍賽中以 3 比 1 擊敗了紐約洋基隊。（字首與字尾提示：d_____ted）'],
+  ['I can\'t [[25|distinguish]] between Mr. Ho\'s hair piece and what\'s left of his real hair.', '我無法分辨何先生的假髮與他僅存的真髮。（字首與字尾提示：d_________h）']
+];
+SEC4_STEMS.forEach(s => {
+  let m, r = /\[\[(\d+)\|/g;
+  while ((m = r.exec(s[0]))) SENT[m[1]] = s;
+});
+
+const SEC4_DATA = [
+  [21, ['考點：文意字彙填空（d_______r）', '詞性需求：單數可數名詞'], 'A', 'disaster', 'd_______r',
+    '主詞為 <i>The serious earthquake</i>（這場嚴重的地震），後面關係子句 <i>that killed many people</i>（奪走許多人性命）說明這是一場嚴重的「災難」，配合字首 <b>d</b> 與字尾 <b>r</b>，應填 <b>disaster</b> [dɪˈzæstɚ] (n. 災難；天災)。',
+    [
+      ['disaster', 'n. 災難；災害（正確拼寫）', '符合字首 d、字尾 r 及「嚴重地震奪走多人性命」的語意。'],
+      ['需再複習拼字', '（若拼錯或未熟記請選此項）', '請留意 <b>disaster</b> 中間為 <b>-sas-</b>，勿拼成 dissaster 或 disater。']
+    ]
+  ],
+  [22, ['考點：文意字彙填空（e_____ds）與主詞動詞一致', '詞性需求：第三人稱單數現在式動詞'], 'A', 'extends', 'e_____ds',
+    '主詞為單數專有名詞 <i>The Great Wall of China</i>（中國萬里長城），後接長度 <i>for over 6,000 kilometers</i>（超過六千公里），描述客觀事實用現在簡單式，表示長城「延伸、綿延」超過六千公里。配合字首 <b>e</b> 與字尾 <b>ds</b>，應填 <b>extends</b> [ɪkˈstɛndz] (v. 延伸；綿延)。',
+    [
+      ['extends', 'v. 延伸；綿延（正確拼寫）', '原形為 <i>extend</i>，配合單數主詞 <i>The Great Wall of China</i> 加上字尾 <b>-s</b> 成為 <b>extends</b>。'],
+      ['需再複習拼字', '（若拼錯或漏加 s 請選此項）', '請注意主詞為第三人稱單數，務必加上 <b>-s</b> 寫成 <b>extends</b>（題目亦已提示字尾 ds）。']
+    ]
+  ],
+  [23, ['考點：文意字彙填空（d______se）', '詞性需求：原形動詞（to + V）'], 'A', 'decrease', 'd______se',
+    '主詞為 <i>the temperature</i>（氣溫），原因子句為 <i>because winter has just begun</i>（因為冬天才剛開始），可知氣溫會持續「下降、降低」。不定詞 <i>to</i> 後接原形動詞，配合字首 <b>d</b> 與字尾 <b>se</b>，應填 <b>decrease</b> [dɪˈkris] (v. 減少；下降)。',
+    [
+      ['decrease', 'v. 下降；減少（正確拼寫）', '符合不定詞 <i>continue to + V</i> 結構及「冬天剛開始、氣溫持續下降」的語意。'],
+      ['需再複習拼字', '（若拼錯或未熟記請選此項）', '請注意字首為 <b>de-</b>（向下）加上 <b>-crease</b>，反義詞為 <i>increase</i>（上升、增加）。']
+    ]
+  ],
+  [24, ['考點：文意字彙填空（d_____ted）與運動賽事搭配', '詞性需求：過去式及物動詞'], 'A', 'defeated', 'd_____ted',
+    '主詞與受詞為兩支棒球隊，後接比數與場合 <i>3-1 in the championship game</i>（在冠軍賽中以 3 比 1……），表示紅雀隊「擊敗、戰勝」了洋基隊。配合字首 <b>d</b> 與過去式字尾 <b>ted</b>，應填 <b>defeated</b> [dɪˈfitɪd] (v. 擊敗；戰勝)。',
+    [
+      ['defeated', 'v. 擊敗；戰勝（正確拼寫）', '原形為 <i>defeat</i>，描述已結束的冠軍賽結果須加 <b>-ed</b> 成為 <b>defeated</b>（同義於 beat）。'],
+      ['需再複習拼字', '（若拼錯或漏加 ed 請選此項）', '請注意中間母音組合為 <b>-ea-</b>（de-f<b>ea</b>-ted），且須配合過去時態加上 <b>-ed</b>。']
+    ]
+  ],
+  [25, ['考點：文意字彙填空（d_________h）與固定搭配', '詞性需求：原形動詞（助動詞 can\'t 後）'], 'A', 'distinguish', 'd_________h',
+    '助動詞 <i>can\'t</i> 後接原形動詞，且後方有典型搭配 <b>between A and B</b>（在何先生的假髮與真髮之間），構成核心片語 <b>distinguish between A and B</b>（分辨／區別 A 與 B），配合字首 <b>d</b> 與字尾 <b>h</b>，應填 <b>distinguish</b> [dɪˈstɪŋɡwɪʃ] (v. 分辨；區別；識別)。',
+    [
+      ['distinguish', 'v. 分辨；區別（正確拼寫）', '構成固定搭配 <i>distinguish between A and B</i>（分辨 A 與 B），助動詞 <i>can\'t</i> 後用原形。'],
+      ['需再複習拼字', '（若拼錯或未熟記請選此項）', '請特別留意字尾拼法為 <b>-guish</b>（dis-tin-<b>guish</b>），勿漏寫 u。']
+    ]
+  ]
+];
+
+// === 渲染全部內容至 #app ===
+let html = '';
+
+// Section I
+html += '<h2 id="sec-1">I. Multiple Choice 單選詞彙題（40%，每題 4 分）</h2>';
+SEC1_DATA.forEach(q => {
+  html += card(q[0], q[1], q[2], stem(q[0]) + clue(q[3]) + ops(q[4], q[2]));
+});
+html += groupGradeBox('sec1', 'I. Multiple Choice 單選詞彙題', 1, 10, 4);
+
+// Section II
+html += '<h2 id="sec-2">II. Complete each sentence with the correct word 選詞填空（20%，每題 4 分）</h2>';
+html += '<div class="bank" id="bank-sec2">' + SEC2_BANK.map(b => '<span><b>('+b[0]+') '+b[1]+'</b> <small>'+b[2]+'</small></span>').join('') + '</div>';
+SEC2_DATA.forEach(q => {
+  html += card(q[0], q[1], q[2], stem(q[0]) + clue(q[3]) + ops(q[4], q[2], 'ABCDE'));
+});
+html += groupGradeBox('sec2', 'II. Complete each sentence 選詞填空', 11, 15, 4);
+
+// Section III
+html += '<h2 id="sec-3">III. Cloze 克漏字測驗（20%，每題 4 分）</h2>';
+html += passage('克漏字全文：Ancient Egypt & The Gift of the Nile（古埃及與尼羅河的贈禮）', CLOZE_PARAS, '💡 <b>文章主旨：</b>介紹古埃及文明如何依賴尼羅河每年的定期氾濫。雖然洪水可能毀壞水溝甚至淹死人，但農民在淹水期為法老建造金字塔，且埃及人視洪水為可預測的規律並據此制定曆法與崇拜河神 Hapi，與古代中國視洪水為恐怖災禍截然不同。', 'cloze');
+html += '<div class="bank" id="bank-cloze">' + CLOZE_BANK.map(b => '<span><b>('+b[0]+') '+b[1]+'</b> <small>'+b[2]+'</small></span>').join('') + '</div>';
+CLOZE_DATA.forEach(q => {
+  html += card(q[0], q[1], q[2], stem(q[0]) + clue(q[3]) + ops(q[4], q[2], 'ABCDE'));
+});
+html += groupGradeBox('cloze', 'III. Cloze 克漏字測驗', 16, 20, 4);
+
+// Section IV
+html += '<h2 id="sec-4">IV. Read the sentences and fill in each blank 文意字彙填空（20%，每題 4 分）</h2>';
+html += '<div class="feature-box">✏️ <b>作答提示：</b>在「練習模式」下，您可以直接在每題的<b>拼字輸入框</b>輸入完整英文單字（不分大小寫），或點擊下方選項自我檢核，完成後點擊「批改本題組」即可自動核對拼字！</div>';
+SEC4_DATA.forEach(q => {
+  const spellBoxHtml = '<div class="spell-box"><b>✍️ 拼字作答（提示：<code>'+q[4]+'</code>）：</b><input type="text" class="spell-input" id="spell-inp-'+q[0]+'" placeholder="請輸入完整英文單字..." oninput="onSpellInput(this, '+q[0]+')"></div>';
+  html += card(q[0], q[1], q[2] + ' (' + q[3] + ')', stem(q[0]) + spellBoxHtml + clue(q[5]) + ops(q[6], q[2], 'AB'), q[3]);
+});
+html += groupGradeBox('sec4', 'IV. Read the sentences and fill in each blank 文意字彙填空', 21, 25, 4);
+
+// 全卷總批改面板
+html += '<div class="grade-box all-box" id="gbox-all">' +
+  '<div class="grade-title">🏆 全卷總批改（第 1–25 題，滿分 100 分）</div>' +
+  '<div class="grade-btns">' +
+    '<button class="btn-grade" onclick="gradeAllSingleChoice()">🏆 一次批改全卷</button>' +
+    '<button class="btn-reset" onclick="resetAllSingleChoice()">🔄 一次清空重練</button>' +
+  '</div>' +
+  '<div class="grade-res" id="gres-all"></div>' +
+'</div>';
+
+document.getElementById('app').innerHTML = html;
+
+// 動態插入導覽列錨點連結
+const navEl = document.getElementById('nav');
+const navLinks = [
+  ['#sec-1', 'I. 單選題 (1–10)'],
+  ['#sec-2', 'II. 選詞填空 (11–15)'],
+  ['#sec-3', 'III. 克漏字 (16–20)'],
+  ['#sec-4', 'IV. 文意字彙 (21–25)'],
+  ['#gbox-all', '🏆 全卷總批改']
+];
+navLinks.forEach(item => {
+  const a = document.createElement('a');
+  a.href = item[0];
+  a.textContent = item[1];
+  navEl.appendChild(a);
+});
+</script>
+<script src="bookmark.js"></script>
+<script>
+  let secretClickCount = 0;
+  let secretTimer;
+  document.getElementById('secret-trigger').addEventListener('click', function() {
+    secretClickCount++;
+    if (secretClickCount === 3) {
+      const counter = document.getElementById('secret-counter');
+      counter.style.display = counter.style.display === 'none' ? 'block' : 'none';
+      secretClickCount = 0;
+    }
+    clearTimeout(secretTimer);
+    secretTimer = setTimeout(() => { secretClickCount = 0; }, 2000);
+  });
+</script>
+</body>
+</html>
